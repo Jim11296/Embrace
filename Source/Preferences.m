@@ -52,7 +52,7 @@ static void sSetDefaultObject(id dictionary, NSString *key, id valueToSave, id d
         saveObject(valueToSave, key);
 
     } else if ([defaultValue isKindOfClass:[AudioDevice class]]) {
-        saveObject([valueToSave deviceUID], key);
+        saveObject([valueToSave dictionaryRepresentation], key);
 
     } else if ([defaultValue isKindOfClass:[NSData class]]) {
         saveObject(valueToSave, key);

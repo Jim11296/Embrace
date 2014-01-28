@@ -53,12 +53,12 @@
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Djo-0R-cRX"/>
                     <toolbarItem implicitItemIdentifier="064952C8-105A-4496-B3E6-B7244A8CBDBB" label="Custom View" paletteLabel="Custom View" id="KQx-SR-72V">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="71" height="25"/>
+                        <size key="minSize" width="67" height="24"/>
                         <size key="maxSize" width="72" height="25"/>
                         <segmentedControl key="view" verticalHuggingPriority="750" id="ITg-zo-Igb">
-                            <rect key="frame" x="3" y="14" width="71" height="25"/>
+                            <rect key="frame" x="5" y="14" width="67" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <segmentedCell key="cell" alignment="left" style="texturedRounded" trackingMode="selectOne" id="OdN-qe-wxh">
+                            <segmentedCell key="cell" alignment="left" style="texturedSquare" trackingMode="selectOne" id="OdN-qe-wxh">
                                 <font key="font" metaFont="system"/>
                                 <segments>
                                     <segment image="NSIconViewTemplate" width="32"/>
@@ -77,7 +77,7 @@
                         <popUpButton key="view" verticalHuggingPriority="750" id="Vhz-Hc-1lJ">
                             <rect key="frame" x="15" y="14" width="48" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="2zP-id-Rb6" id="ET6-Ie-CeB">
+                            <popUpButtonCell key="cell" type="squareTextured" title="Item 1" bezelStyle="texturedSquare" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="2zP-id-Rb6" id="ET6-Ie-CeB">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="menu"/>
                                 <menu key="menu" title="OtherViews" id="ofp-hi-2Ng">
@@ -105,12 +105,12 @@
                         <button key="view" verticalHuggingPriority="750" id="deo-mP-koQ">
                             <rect key="frame" x="10" y="14" width="58" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" title="Bypass" bezelStyle="texturedRounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cCn-7G-xPj">
+                            <buttonCell key="cell" type="squareTextured" title="Bypass" bezelStyle="texturedSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cCn-7G-xPj">
                                 <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
                             <connections>
-                                <binding destination="-2" name="value" keyPath="self.effect.bypass" id="iqs-yn-eoI"/>
+                                <binding destination="-2" name="value" keyPath="self.effect.bypass" id="0i9-Cq-8ne"/>
                             </connections>
                         </button>
                     </toolbarItem>

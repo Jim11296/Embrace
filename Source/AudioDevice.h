@@ -15,6 +15,8 @@
 + (instancetype) defaultOutputDevice;
 + (instancetype) audioDeviceWithDeviceUID:(NSString *)UID;
 
++ (instancetype) audioDeviceWithDictionary:(NSDictionary *)dictionary;
+
 @property (nonatomic, readonly) AudioObjectID objectID;
 
 @property (nonatomic, readonly, copy) NSString *deviceUID;

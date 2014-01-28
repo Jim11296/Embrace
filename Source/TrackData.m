@@ -140,8 +140,6 @@
         free(bytes);
     }
     
-    NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
-    
     __weak id weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf _finishedWithData:data streamDescription:clientFormat];
