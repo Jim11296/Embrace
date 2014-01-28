@@ -1,6 +1,6 @@
 //
 //  WaveformView.h
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-06.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -8,9 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class Waveform;
+@class Track;
 
 @interface WaveformView : NSView
 
-@property (nonatomic, strong) Waveform *waveform;
+@property (nonatomic, strong) Track *track;
+
+@property (nonatomic) float percentage;
+@property (nonatomic) NSColor *inactiveWaveformColor;
+@property (nonatomic) NSColor *activeWaveformColor;
+
 @end

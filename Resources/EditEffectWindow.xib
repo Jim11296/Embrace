@@ -41,13 +41,13 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="a4t-9F-ucl">
-                            <rect key="frame" x="225" y="1" width="16" height="160"/>
+                            <rect key="frame" x="226" y="1" width="15" height="160"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                 </subviews>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="5EA7A9ED-9BC9-445F-BB78-6FA70E749604" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="meN-VO-IvV">
+            <toolbar key="toolbar" implicitIdentifier="5EA7A9ED-9BC9-445F-BB78-6FA70E749604" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="meN-VO-IvV">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="F2a-ag-Lat"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Djo-0R-cRX"/>
@@ -79,7 +79,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="2zP-id-Rb6" id="ET6-Ie-CeB">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
+                                <font key="font" metaFont="menu"/>
                                 <menu key="menu" title="OtherViews" id="ofp-hi-2Ng">
                                     <items>
                                         <menuItem title="Item 1" state="on" image="NSActionTemplate" hidden="YES" id="3mf-q1-akD"/>

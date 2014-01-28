@@ -1,6 +1,6 @@
 //
 //  MainButton.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-09.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -30,12 +30,18 @@
 
 - (void) _setupCloseButton
 {
-    NSTrackingAreaOptions options = NSTrackingInVisibleRect|NSTrackingActiveInKeyWindow|NSTrackingMouseEnteredAndExited;
+    NSTrackingAreaOptions options = NSTrackingInVisibleRect|NSTrackingActiveAlways|NSTrackingMouseEnteredAndExited;
     NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:options owner:self userInfo:nil];
 
     [self addTrackingArea: trackingArea];
 
     [self setAlphaValue:0];
+}
+
+
+- (BOOL) acceptsFirstMouse:(NSEvent *)theEvent
+{
+    return YES;
 }
 
 
@@ -98,6 +104,7 @@
     [super mouseDown:theEvent];
     [self _setHighlighted:YES];
 }
+
 
 - (void) mouseUp:(NSEvent *)theEvent
 {

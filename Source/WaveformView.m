@@ -1,109 +1,235 @@
 //
 //  WaveformView.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-06.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
 #import "WaveformView.h"
-#import "Waveform.h"
+#import "TrackData.h"
+#import "Track.h"
+
+#import <Accelerate/Accelerate.h>
 
 
 @implementation WaveformView {
-    Waveform *_waveform;
-    CGPathRef _topPath;
-    CGPathRef _bottomPath;
-    NSInteger _count;
+    TrackData *_trackData;
+    NSData    *_shrunkedData;
+
+    CALayer   *_inactiveLayer;
+    CALayer   *_activeLayer;
+}
+
+- (id) initWithFrame:(NSRect)frameRect
+{
+    if ((self = [super initWithFrame:frameRect])) {
+        [self setWantsLayer:YES];
+        [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
+        
+        _inactiveLayer = [CALayer layer];
+        [_inactiveLayer setDelegate:self];
+        [_inactiveLayer setFrame:[self bounds]];
+        [_inactiveLayer setContentsGravity:kCAGravityRight];
+
+        _activeLayer = [CALayer layer];
+        [_activeLayer setDelegate:self];
+        [_activeLayer setFrame:[self bounds]];
+        [_activeLayer setContentsGravity:kCAGravityLeft];
+
+        [[self layer] addSublayer:_inactiveLayer];
+        [[self layer] addSublayer:_activeLayer];
+
+        _activeWaveformColor = [NSColor blackColor];
+        _inactiveWaveformColor = [NSColor grayColor];
+    }
+    
+    return self;
+}
+
+- (BOOL) wantsUpdateLayer { return YES; }
+- (void) updateLayer { }
+
+
+- (void) layout
+{
+    [super layout];
+    
+    [_inactiveLayer setFrame:[self bounds]];
+    [_activeLayer   setFrame:[self bounds]];
+
+    [_activeLayer   setNeedsDisplay];
+    [_inactiveLayer setNeedsDisplay];
+}
+
+- (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
+{
+    [_inactiveLayer setContentsScale:newScale];
+    [_activeLayer   setContentsScale:newScale];
+
+    return YES;
 }
 
 
-
-- (void) dealloc
+- (NSData *) _reduceData:(NSData *)data toCount:(NSUInteger)outCount
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (!_shrunkedData) return nil;
+
+    NSInteger inCount = [_shrunkedData length] / sizeof(float);
+    float *inFloats = (float *)[_shrunkedData bytes];
+
+    float *outFloats = malloc(outCount * sizeof(float));
+    
+    double stride = inCount / (double)outCount;
+
+    dispatch_apply(outCount, dispatch_get_global_queue(0, 0), ^(size_t o) {
+        NSInteger i = llrintf(o * stride);
+
+        NSInteger length = (NSInteger)stride;
+        
+        // Be paranoid, I saw a crash in vDSP_maxv() during development
+        if (i + length > inCount) {
+            length = (inCount - i);
+        }
+
+        float max;
+        vDSP_maxv(&inFloats[i], 1, &max, length);
+        
+        outFloats[o] = max;
+    });
+
+    return [NSData dataWithBytesNoCopy:outFloats length:outCount * sizeof(float) freeWhenDone:YES];
 }
 
 
-- (void) drawRect:(CGRect)rect
+- (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)context
 {
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    if (!_shrunkedData) return;
 
-    CGRect bounds = [self bounds];
+    CGSize size = [self bounds].size;
+    CGFloat scale = [[self window] backingScaleFactor];
 
+    NSData *data = [self _reduceData:_shrunkedData toCount:size.width * scale];
 
-    [GetRGBColor(0x0, 0.15) set];
-    
-    CGAffineTransform transform = CGAffineTransformMakeScale(bounds.size.width / (double)_count, 1);
-    transform = CGAffineTransformTranslate(transform, 0, bounds.size.height / 2);
-    transform = CGAffineTransformScale(transform, 1, bounds.size.height / 2);
-    
-    CGPathRef scaledTopPath    = CGPathCreateCopyByTransformingPath(_topPath,    &transform);
-    CGPathRef scaledBottomPath = CGPathCreateCopyByTransformingPath(_bottomPath, &transform);
-    
-    if (scaledTopPath) {
-        CGContextAddPath(context, scaledTopPath);
-        CGPathRelease(scaledTopPath);
+    CGContextSetInterpolationQuality(context, kCGInterpolationLow);
+
+    NSInteger sampleCount = [data length] / sizeof(float);
+    NSInteger start = 0;
+    NSInteger end = sampleCount;
+
+    CGAffineTransform transform = CGAffineTransformMakeScale(size.width / sampleCount, 1);
+
+    transform = CGAffineTransformTranslate(transform, -start, 0);
+
+    transform = CGAffineTransformTranslate(transform, 0, size.height / 2);
+    transform = CGAffineTransformScale(transform, 1, size.height / 2);
+
+    CGContextConcatCTM(context, transform);
+
+    float *floats = (float *)[data bytes];
+
+    if (start < end) {
+        CGContextMoveToPoint(context, start, floats[start]);
     }
 
-    if (scaledBottomPath) {
-        CGContextAddPath(context, scaledBottomPath);
-        CGPathRelease(scaledBottomPath);
+    for (NSInteger i = start + 1; i < end; i++) {
+        CGContextAddLineToPoint(context, i, floats[i]);
     }
+
+    for (NSInteger i = end - 1; i >= start; i--) {
+        CGContextAddLineToPoint(context, i, -floats[i]);
+    }
+    
+    CGContextClosePath(context);
+
+    NSColor *color = NULL;
+    if (layer == _activeLayer) {
+        color = _activeWaveformColor;
+    } else {
+        color = _inactiveWaveformColor;
+    }
+
+    CGContextSetFillColorWithColor(context, [color CGColor]);
 
     CGContextFillPath(context);
 }
 
-- (void) _update:(id)sender
+
+- (void) _worker_shrinkData:(TrackData *)trackData
 {
-    if (![_waveform mins]) {
-        return;
-    }
+    NSData   *inData = [trackData data];
+    float    *input   = (float *)[inData bytes];
+    NSInteger inCount = [inData length] / sizeof(float);
 
-    CGMutablePathRef topPath    = CGPathCreateMutable();
-    CGMutablePathRef bottomPath = CGPathCreateMutable();
-    
-    CGPathMoveToPoint(topPath, &CGAffineTransformIdentity, 0, 0);
-    CGPathMoveToPoint(bottomPath, &CGAffineTransformIdentity, 0, 0);
-    
-    NSEnumerator *mins = [[_waveform mins] objectEnumerator];
-    NSEnumerator *maxs = [[_waveform maxs] objectEnumerator];
-    
-    _count = [[_waveform mins] count];
+    NSInteger outCount = 32768;
 
-    for (NSInteger i = 0; i < _count; i++) {
-        CGFloat min = [[mins nextObject] doubleValue];
-        CGFloat max = [[maxs nextObject] doubleValue];
+    double stride = inCount / (double)outCount;
+    
+    float *output = malloc(outCount * sizeof(float));
 
-        CGPathAddLineToPoint(topPath,    &CGAffineTransformIdentity, i, min);
-        CGPathAddLineToPoint(bottomPath, &CGAffineTransformIdentity, i, max);
-    
-    }
-    
-    CGPathRelease(_topPath);
-    CGPathRelease(_bottomPath);
+    dispatch_apply(outCount, dispatch_get_global_queue(0, 0), ^(size_t o) {
+        NSInteger i = llrintf(o * stride);
 
-    CGPathCloseSubpath(topPath);
-    CGPathCloseSubpath(bottomPath);
+        // Just floor stride, this results in a skipped sample on occasion
+        NSInteger length = (NSInteger)stride;
+        
+        // Be paranoid, I saw a crash in vDSP_maxv() during development
+        if (i + length > inCount) {
+            length = (inCount - i);
+        }
 
-    _topPath = topPath;
-    _bottomPath = bottomPath;
+        float max;
+        vDSP_maxv(&input[i], 1, &max, length);
+        
+        output[o] = max;
+    });
     
-    CGPathRetain(_topPath);
-    CGPathRetain(_bottomPath);
     
-    [self setNeedsDisplay:YES];
+    NSData *data = [NSData dataWithBytesNoCopy:output length:(outCount * sizeof(float)) freeWhenDone:YES];
+
+    __weak id weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf _didShrinkData:data];
+    });
 }
 
 
-- (void) setWaveform:(Waveform *)waveform
+- (void) _didShrinkData:(NSData *)data
 {
-    if (_waveform != waveform) {
-        _waveform = waveform;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:WaveformDidFinishAnalysisNotificationName object:nil];
-        [self _update:nil];
+    _shrunkedData = data;
+    
+    [_activeLayer setNeedsDisplay];
+    [_inactiveLayer setNeedsDisplay];
+}
+
+
+- (void) setTrack:(Track *)track
+{
+    if (_track != track) {
+        _track = track;
+        
+        _trackData = [track trackData];
+
+        __weak TrackData *weakTrackData = _trackData;
+        __weak id weakSelf = self;
+
+        [_trackData addReadyCallback:^(TrackData *track) {
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                [weakSelf _worker_shrinkData:weakTrackData];
+            });
+        }];
     }
 }
 
+
+- (void) setPercentage:(float)percentage
+{
+    if (_percentage != percentage) {
+        _percentage = percentage;
+
+        [_inactiveLayer setContentsRect:CGRectMake(_percentage, 0, 1.0 - _percentage, 1)];
+        [_activeLayer   setContentsRect:CGRectMake(0, 0, _percentage, 1)];
+    }
+}
 
 @end

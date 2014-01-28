@@ -13,23 +13,23 @@
 #import "AppDelegate.h"
 #import "iTunesManager.h"
 #import "TrackTableCellView.h"
-#import "Waveform.h"
-#import "EditTrackController.h"
+#import "TrackData.h"
 #import "WaveformView.h"
 #import "BorderedView.h"
 #import "Button.h"
-#import "MainWindow.h"
+#import "WhiteWindow.h"
 #import "LevelMeter.h"
 #import "PlayBar.h"
 #import "Preferences.h"
 
 #import <AVFoundation/AVFoundation.h>
 
-static NSString * const sTracksKey  = @"tracks";
-static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
+static NSString * const sTracksKey = @"tracks";
+static NSString * const sMinimumSilenceKey = @"minimum-silence";
+static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 
-@interface PlaylistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerDelegate>
+@interface PlaylistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider>
 
 @end
 
@@ -42,7 +42,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 {
     if ((self = [super initWithWindow:window])) {
         [self _loadState];
-        [[Player sharedInstance] setDelegate:self];
     }
 
     return self;
@@ -65,7 +64,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 {
     [super windowDidLoad];
 
-    [(MainWindow *)[self window] setupWithHeaderView:[self headerView] mainView:[[self tableView] enclosingScrollView]];
+    [(WhiteWindow *)[self window] setupWithHeaderView:[self headerView] mainView:[[self tableView] enclosingScrollView]];
 
     [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, sTrackPasteboardType ]];
     [[self tableView] setDoubleAction:@selector(editSelectedTrack:)];
@@ -80,12 +79,11 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
     
     [[self tracksController] addObserver:self forKeyPath:@"selectedIndex" options:0 context:NULL];
 
-    [self playerDidUpdate:[Player sharedInstance]];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     [self _handlePreferencesDidChange:nil];
     
     [self setPlayer:[Player sharedInstance]];
+    [self _setupPlayer];
 }
 
 
@@ -106,9 +104,11 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 
 - (void) _loadState
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableArray *tracks = [NSMutableArray array];
 
-    NSArray *states = [[NSUserDefaults standardUserDefaults] objectForKey:sTracksKey];
+    NSArray  *states  = [defaults objectForKey:sTracksKey];
+    NSTimeInterval silence = [defaults doubleForKey:sMinimumSilenceKey];
 
     Track *trackToPlay = nil;
 
@@ -123,6 +123,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
         }
     }
     
+    [self setMinimumSilenceBetweenTracks:silence];
     [self setTracks:tracks];
 }
 
@@ -136,6 +137,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
         [tracksStateArray addObject:[track stateDictionary]];
     }
     [defaults setObject:tracksStateArray forKey:sTracksKey];
+    [defaults setDouble:_minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
     
     [defaults synchronize];
 }
@@ -199,11 +201,121 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 }
 
 
+- (NSString *) _historyAsString
+{
+    NSMutableString *result = [NSMutableString string];
+
+    for (Track *track in [[self tracksController] arrangedObjects]) {
+        if ([track trackStatus] == TrackStatusQueued) continue;
+        if ([track trackType] != TrackTypeAudioFile) continue;
+
+        NSString *artist = [track artist];
+        if (artist) [result appendFormat:@"%@ %C ", artist, (unichar)0x2014];
+        
+        NSString *title = [track title];
+        if (!title) title = @"???";
+        [result appendFormat:@"%@\n", title];
+    }
+    
+    return result;
+}
+
+
+#pragma mark - Debug
+
+- (void) debugPopulatePlaylist
+{
+    Track *(^getTrack)(NSString *) = ^(NSString *name) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:@"m4a"];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        
+        return [Track trackWithFileURL:url];
+    };
+    
+    NSMutableArray *tracks = [NSMutableArray array];
+    [tracks addObject:getTrack(@"test_c")];
+    [tracks addObject:getTrack(@"test_d")];
+    [tracks addObject:getTrack(@"test_e")];
+    [tracks addObject:getTrack(@"test_f")];
+    [tracks addObject:getTrack(@"test_g")];
+    
+    [self clearHistory];
+    [[self tracksController] addObjects:tracks];
+}
+
+
+
+#pragma mark - Public Methods
+
+- (void) clearHistory
+{
+    NSArrayController *tracksController = [self tracksController];
+
+    NSArray *tracks = [tracksController arrangedObjects];
+    [tracksController removeObjects:tracks];
+    [tracksController setSelectionIndexes:[NSIndexSet indexSet]];
+}
+
+
+- (void) openFileAtURL:(NSURL *)URL
+{
+    Track *track = [Track trackWithFileURL:URL];
+    [[self tracksController] addObject:track];
+}
+
+
+- (void) copyHistoryToPasteboard:(NSPasteboard *)pasteboard
+{
+    NSString *history = [self _historyAsString];
+
+    NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:history ofType:NSPasteboardTypeString];
+
+    [pasteboard clearContents];
+    [pasteboard writeObjects:[NSArray arrayWithObject:item]];
+}
+
+
+- (void) saveHistoryToFileAtURL:(NSURL *)url
+{
+    NSString *historyContents = [self _historyAsString];
+
+    NSError *error = nil;
+    [historyContents writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
+
+    if (error) {
+        NSLog(@"Error saving history: %@", error);
+        NSBeep();
+    }
+}
+
+
+- (void) exportHistory
+{
+    NSMutableArray *fileURLs = [NSMutableArray array];
+    
+    for (Track *track in _tracks) {
+        if ([track fileURL]) {
+            [fileURLs addObject:[track fileURL]];
+        }
+    }
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    
+    NSMutableString *name = [NSMutableString string];
+    NSString *dateString = [formatter stringFromDate:[NSDate date]];
+    [name appendFormat:@"%@ (%@)", NSLocalizedString(@"Embrace", nil), dateString];
+    
+    [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
+}
+
+
 #pragma mark - IBActions
 
-- (IBAction) playOrPause:(id)sender
+- (IBAction) playOrSoftPause:(id)sender
 {
-    [[Player sharedInstance] play];
+    [[Player sharedInstance] playOrSoftPause];
 }
 
 
@@ -247,14 +359,14 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
     Track *track = [self _selectedTrack];
     
     if ([track trackStatus] != TrackStatusPlayed) {
-        [track updatePausesAfterPlaying:![track pausesAfterPlaying]];
+        [track setPausesAfterPlaying:![track pausesAfterPlaying]];
     }
 }
 
 
 - (IBAction) addSilence:(id)sender
 {
-    Track *track = [Track silenceTrack];
+    Track *track = [SilentTrack silenceTrack];
 
     Track *selectedTrack = [self _selectedTrack];
     NSInteger index = selectedTrack ? [[[self tracksController] arrangedObjects] indexOfObject:selectedTrack] : NSNotFound;
@@ -265,6 +377,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
         [[self tracksController] addObject:track];
     }
 }
+
 
 - (IBAction) showGearMenu:(id)sender
 {
@@ -277,6 +390,12 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 - (IBAction) showEffects:(id)sender
 {
     [GetAppDelegate() showEffectsWindow:self];
+}
+
+
+- (IBAction) showCurrentTrack:(id)sender
+{
+    [GetAppDelegate() showCurrentTrack:self];
 }
 
 
@@ -314,6 +433,99 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 }
 
 
+#pragma mark - Player
+
+- (void) _setupPlayer
+{
+    Player *player = [Player sharedInstance];
+
+
+    [player addListener:self];
+    [player setTrackProvider:self];
+
+    [self player:player didUpdatePlaying:NO];
+}
+
+
+- (void) player:(Player *)player didUpdatePlaying:(BOOL)playing
+{
+    Button *playButton = [self playButton];
+
+    if (playing) {
+        [playButton setImage:[NSImage imageNamed:@"pause_template"]];
+
+        [[self playBar] setHidden:NO];
+        [[self playOffsetField] setHidden:NO];
+        [[self playRemainingField] setHidden:NO];
+
+        [[self levelMeter] setMetering:YES];
+        
+    } else {
+        [playButton setImage:[NSImage imageNamed:@"play_template"]];
+
+        [[self playBar] setHidden:YES];
+        [[self playOffsetField] setHidden:YES];
+        [[self playRemainingField] setHidden:YES];
+
+        [[self levelMeter] setMetering:NO];
+    }
+}
+
+- (void) playerDidTick:(Player *)player
+{
+    Track *track = [player currentTrack];
+    
+    NSTimeInterval timeElapsed   = [player timeElapsed];
+    NSTimeInterval timeRemaining = [player timeRemaining];
+
+    Float32 leftAveragePower  = [player leftAveragePower];
+    Float32 rightAveragePower = [player rightAveragePower];
+    Float32 leftPeakPower     = [player leftPeakPower];
+    Float32 rightPeakPower    = [player rightPeakPower];
+    
+    NSTimeInterval duration = timeElapsed + timeRemaining;
+    if (!duration) duration = 1;
+    
+    double percentage = 0;
+    if (timeElapsed > 0) {
+        percentage = timeElapsed / duration;
+    }
+
+    [[self playBar] setPercentage:percentage];
+    [[self levelMeter] setLeftAveragePower:leftAveragePower rightAveragePower:rightAveragePower leftPeakPower:leftPeakPower rightPeakPower:rightPeakPower];
+
+    BOOL silent = [track isSilentAtOffset:timeElapsed];
+    [[self playButton] setEnabled:silent];
+}
+
+
+- (void) player:(Player *)player getNextTrack:(Track **)outNextTrack getPadding:(NSTimeInterval *)outPadding
+{
+    Track *currentTrack = [player currentTrack];
+
+    [self _saveState];
+
+    Track *trackToPlay = nil;
+    NSTimeInterval padding = 0;
+    
+    for (Track *track in _tracks) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            trackToPlay = track;
+            break;
+        }
+    }
+    
+    if (currentTrack && trackToPlay) {
+        NSTimeInterval totalSilence = [currentTrack silenceAtEnd] + [trackToPlay silenceAtStart];
+        padding = [self minimumSilenceBetweenTracks] - totalSilence;
+        if (padding < 0) padding = 0;
+    }
+    
+    *outNextTrack = trackToPlay;
+    *outPadding   = padding;
+}
+
+
 #pragma mark - Table View Delegate
 
 - (BOOL) tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
@@ -340,6 +552,9 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
     NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];
     NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
 
+    // Let manager extract any metadata from the pasteboard 
+    [[iTunesManager sharedInstance] extractMetadataFromPasteboard:pboard];
+
     if ([pboard dataForType:sTrackPasteboardType]) {
         if (_rowOfDraggedTrack < row) {
             row--;
@@ -353,21 +568,21 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
         
         return YES;
 
-    } else if ([filenames count]) {
-        for (NSString *filename in filenames) {
+    } else if ([filenames count] >= 2) {
+        for (NSString *filename in [filenames reverseObjectEnumerator]) {
             NSURL *URL = [NSURL fileURLWithPath:filename];
 
             Track *track = [Track trackWithFileURL:URL];
-            [[self tracksController] addObject:track];
+            [[self tracksController] insertObject:track atArrangedObjectIndex:row];
         }
 
         return YES;
 
     } else if (URLString) {
         NSURL *URL = [NSURL URLWithString:URLString];
-        
+
         Track *track = [Track trackWithFileURL:URL];
-        [[self tracksController] addObject:track];
+        [[self tracksController] insertObject:track atArrangedObjectIndex:row];
 
         return YES;
     }
@@ -390,8 +605,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
         cellView = [tableView makeViewWithIdentifier:@"SilenceCell" owner:self];
     }
 
-    NSUInteger selectedRow = [[self tracksController] selectionIndex];
-    [cellView setSelected:(row == selectedRow)];
+    NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
+    [cellView setSelected:[selectionIndexes containsIndex:row]];
     
     return cellView;
 }
@@ -413,31 +628,33 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
 }
 
 
-
-
 - (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
     if (dropOperation == NSTableViewDropAbove) {
         Track *track = [self _trackAtRow:row];
 
         if (!track || [track trackStatus] == TrackStatusQueued) {
-            return NSDragOperationMove;
+            NSPasteboard *pasteboard = [info draggingPasteboard];
+            
+            if ([pasteboard dataForType:sTrackPasteboardType]) {
+                return NSDragOperationMove;
+            } else {
+                return NSDragOperationCopy;
+            }
         }
     }
 
     return NSDragOperationNone;
-
-//    return NSDragOperationCopy;
 }
 
 
 - (void) _handleTableViewSelectionDidChange:(NSNotification *)note
 {
-    NSUInteger selectedRow = [[self tracksController] selectionIndex];
+    NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
     
     [[self tableView] enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *view, NSInteger row) {
         TrackTableCellView *trackView = (TrackTableCellView *)[view viewAtColumn:0];
-        [trackView setSelected:(row == selectedRow)];
+        [trackView setSelected:[selectionIndexes containsIndex:row]];
     }];
 }
 
@@ -449,70 +666,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.MinimalBeat.Track";
         [self _saveState];
     }
 }
-
-
-#pragma mark - Other Delegates
-
-- (void) playerDidUpdatePlayState:(Player *)player
-{
-    Button *playButton = [self playButton];
-
-    if ([player isPlaying]) {
-        [playButton setImage:[NSImage imageNamed:@"pause_template"]];
-        [playButton setEnabled:[player canPause]];
-        
-    } else {
-        [playButton setImage:[NSImage imageNamed:@"play_template"]];
-        [playButton setEnabled:[player canPlay]];
-    }
-}
-
-
-- (void) playerDidUpdate:(Player *)player
-{
-    Track *track = [player currentTrack];
-    
-    if ([player isPlaying]) {
-        [[self levelMeter] updateWithTrack:track];
-
-        [[self playOffsetField]    setStringValue:[track playOffsetString]];
-        [[self playRemainingField] setStringValue:[track playRemainingString]];
-
-        float percentage = 0;
-        if ([track trackStatus] == TrackStatusPlaying) {
-            NSTimeInterval duration = [track playDuration];
-            if (!duration) duration = 1;
-            percentage = [track playOffset] / duration;
-        }
-
-
-        [[self playBar] setPercentage:percentage];
-        [[self playBar] setHidden:NO];
-        [[self playOffsetField] setHidden:NO];
-        [[self playRemainingField] setHidden:NO];
-
-    } else {
-        [[self levelMeter] updateWithTrack:nil];
-
-        [[self playBar] setHidden:YES];
-        [[self playOffsetField] setHidden:YES];
-        [[self playRemainingField] setHidden:YES];
-    }
-}
-
-- (Track *) playerNextTrack:(Player *)player
-{
-    [self _saveState];
-
-    for (Track *track in _tracks) {
-        if ([track trackStatus] != TrackStatusPlayed) {
-            return track;
-        }
-    }
-    
-    return nil;
-}
-
 
 
 @end

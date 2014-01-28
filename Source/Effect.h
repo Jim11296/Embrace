@@ -1,6 +1,6 @@
 //
 //  Effect.h
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-03.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -21,6 +21,7 @@ extern NSString * const EffectDidDeallocNotification;
 + (instancetype) effectWithEffectType:(EffectType *)effectType;
 - (id) initWithEffectType:(EffectType *)effectType;
 
+- (void) loadDefaultValues;
 - (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL;
 
 - (NSDictionary *) stateDictionary;

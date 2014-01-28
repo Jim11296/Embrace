@@ -1,6 +1,6 @@
 //
 //  OutputWindowController.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-05.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -87,6 +87,11 @@
     NSArrayController *arrayController = [self effectsArrayController];
 
     NSArray *selectedObjects = [arrayController selectedObjects];
+    
+    for (Effect *effect in selectedObjects) {
+        [GetAppDelegate() closeEditControllerForEffect:effect];
+    }
+    
     [arrayController removeObjects:selectedObjects];
 }
 

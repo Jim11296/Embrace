@@ -7,7 +7,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PlaylistController">
             <connections>
                 <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
-                <outlet property="closeButton" destination="jSD-mA-1Wx" id="Q6h-EQ-69r"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
                 <outlet property="headerView" destination="K7L-NV-xHB" id="KSF-t0-JoR"/>
@@ -24,7 +23,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application"/>
-        <arrayController objectClassName="Track" avoidsEmptySelection="NO" id="EU2-Wu-WIW" userLabel="Track Controller">
+        <arrayController objectClassName="Track" selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="EU2-Wu-WIW" userLabel="Track Controller">
             <connections>
                 <binding destination="-2" name="contentArray" keyPath="self.tracks" id="Jab-sI-RJt"/>
             </connections>
@@ -32,13 +31,13 @@
         <userDefaultsController representsSharedInstance="YES" id="Bui-lf-GNg"/>
         <menu id="trO-cQ-b0j">
             <items>
-                <menuItem title="Edit Track" id="dbH-p1-C9P">
+                <menuItem title="Edit Track" hidden="YES" id="dbH-p1-C9P">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="editSelectedTrack:" target="-2" id="NOv-CW-syZ"/>
                     </connections>
                 </menuItem>
-                <menuItem isSeparatorItem="YES" id="uIY-Ch-bIC"/>
+                <menuItem isSeparatorItem="YES" hidden="YES" id="uIY-Ch-bIC"/>
                 <menuItem title="Delete" id="93g-7I-3Pm">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -52,7 +51,7 @@
                         <action selector="togglePauseAfterPlaying:" target="-2" id="8TP-WX-byn"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Add silence" id="KDN-VF-nFK">
+                <menuItem title="Add silence" hidden="YES" id="KDN-VF-nFK">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="addSilence:" target="-2" id="k9R-S5-JFN"/>
@@ -63,12 +62,13 @@
                 <outlet property="delegate" destination="-2" id="SRi-5i-aw6"/>
             </connections>
         </menu>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" customClass="MainWindow">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" customClass="WhiteWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="159" width="320" height="354"/>
+            <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="533" y="338" width="320" height="354"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <view key="contentView" id="eL9-9a-De5" customClass="MainWindowContentView">
+            <value key="minSize" type="size" width="240" height="354"/>
+            <view key="contentView" id="eL9-9a-De5">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -114,9 +114,6 @@
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
-                                                                    <connections>
-                                                                        <binding destination="7VA-Gs-oX4" name="value" keyPath="objectValue.title" id="fVw-c1-pAJ"/>
-                                                                    </connections>
                                                                 </textField>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="KYa-Yb-9f5">
                                                                     <rect key="frame" x="18" y="1" width="252" height="17"/>
@@ -126,9 +123,6 @@
                                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
-                                                                    <connections>
-                                                                        <binding destination="7VA-Gs-oX4" name="value" keyPath="objectValue.artist" id="G87-Zg-Azb"/>
-                                                                    </connections>
                                                                 </textField>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="oJ2-ys-Q1u">
                                                                     <rect key="frame" x="262" y="20" width="44" height="17"/>
@@ -235,7 +229,10 @@
                             <slider appearanceType="lightContent" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
                                 <rect key="frame" x="41" y="4" width="228" height="25"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="15" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="15" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
+                                <connections>
+                                    <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
+                                </connections>
                             </slider>
                             <textField appearanceType="lightContent" verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="27g-A4-whb">
                                 <rect key="frame" x="270" y="5" width="36" height="18"/>
@@ -245,6 +242,13 @@
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                 </textFieldCell>
+                                <connections>
+                                    <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="3C2-33-gaV">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">TimeStringValueTransformer</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
                             </textField>
                             <imageView appearanceType="lightContent" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="rx0-fs-t7a">
                                 <rect key="frame" x="20" y="10" width="15" height="12"/>
@@ -255,6 +259,9 @@
                     </customView>
                 </subviews>
             </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="1eB-Ie-Ydm"/>
+            </connections>
         </window>
         <customView appearanceType="lightContent" id="K7L-NV-xHB" customClass="BorderedView">
             <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
@@ -287,6 +294,9 @@
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
+                    </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="rvF-zp-fPR">
                     <rect key="frame" x="239" y="7" width="36" height="14"/>
@@ -296,12 +306,15 @@
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
+                    </connections>
                 </textField>
                 <customView id="Twn-WM-C4J" customClass="Button">
                     <rect key="frame" x="20" y="24" width="16" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
-                        <action selector="playOrPause:" target="-2" id="Bmh-0T-cmH"/>
+                        <action selector="playOrSoftPause:" target="-2" id="4JI-Pb-lAn"/>
                     </connections>
                 </customView>
                 <customView id="4bi-5W-Bp7" customClass="Button">
@@ -310,13 +323,6 @@
                     <connections>
                         <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
                         <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
-                    </connections>
-                </customView>
-                <customView id="jSD-mA-1Wx" customClass="CloseButton">
-                    <rect key="frame" x="2" y="48" width="14" height="14"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <connections>
-                        <action selector="closeWindow:" target="-2" id="QPz-BI-R6G"/>
                     </connections>
                 </customView>
                 <customView appearanceType="lightContent" id="pkk-ZT-czS" customClass="PlayBar">
@@ -337,14 +343,20 @@
                         <action selector="showEffects:" target="-2" id="qoN-gy-Jh4"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Show Current Track" id="QWT-xx-UZK">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showCurrentTrack:" target="-2" id="xak-Ew-Nam"/>
+                    </connections>
+                </menuItem>
                 <menuItem isSeparatorItem="YES" id="tK8-qX-bNU"/>
-                <menuItem title="Edit Track" id="EcI-Wf-wpt">
+                <menuItem title="Edit Track" hidden="YES" id="EcI-Wf-wpt">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="editSelectedTrack:" target="-2" id="iSg-ep-ZGx"/>
                     </connections>
                 </menuItem>
-                <menuItem isSeparatorItem="YES" id="bkz-T0-Uo7"/>
+                <menuItem isSeparatorItem="YES" hidden="YES" id="bkz-T0-Uo7"/>
                 <menuItem title="Delete Track" id="Oa2-3e-ptz">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -358,7 +370,7 @@
                         <action selector="togglePauseAfterPlaying:" target="-2" id="hZh-eq-yDY"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Add silence" id="avl-p9-Vks">
+                <menuItem title="Add silence" hidden="YES" id="avl-p9-Vks">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="addSilence:" target="-2" id="Z1E-1M-09A"/>

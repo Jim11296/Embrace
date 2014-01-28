@@ -1,22 +1,17 @@
 //
 //  LevelMeter.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-11.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
 #import "LevelMeter.h"
-#import "Track.h"
+#import "Player.h"
 
 
 @implementation LevelMeter {
     NSGradient *_meterGradient;
-    float _leftAveragePower;
-    float _rightAveragePower;
-    float _leftPeakPower;
-    float _rightPeakPower;
-    
 }
 
 - (void) drawRect:(NSRect)dirtyRect
@@ -27,11 +22,32 @@
     bounds = NSInsetRect(bounds, 1, 0);
 
     void (^drawMeter)(NSRect, float, float) = ^(NSRect rect, float average, float peak) {
-        CGFloat averageX = (60 + average) * (bounds.size.width / 60);
-        CGFloat peakX    = (60 + peak)    * (bounds.size.width / 60);
+        BOOL didClip = NO;
+
+        if (average > 0) {
+            didClip = YES;
+            average = 0;
+        }
+        
+        if (peak > 0) {
+            didClip = YES;
+            peak = 0;
+        }
+    
+        CGFloat averageX = (60 + average) * ( bounds.size.width      / 60);
+        CGFloat peakX    = (60 + peak)    * ((bounds.size.width - 2) / 60);
+        
+        if (averageX < 0) averageX = 0;
+        if (peakX    < 0) peakX = 0;
+        
+        peakX += 1;
         
         NSRect leftRect, rightRect;
-        NSDivideRect(rect, &leftRect, &rightRect, averageX, NSMinXEdge);
+        if (_metering) {
+            NSDivideRect(rect, &leftRect, &rightRect, averageX, NSMinXEdge);
+        } else {
+            rightRect = leftRect = rect;
+        }
 
         CGFloat radius = rect.size.height > rect.size.width ? rect.size.width : rect.size.height;
         radius /= 2;
@@ -39,36 +55,35 @@
         NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:radius yRadius:radius];
 
         [NSGraphicsContext saveGraphicsState];
-        [NSGraphicsContext saveGraphicsState];
 
-        [GetRGBColor(0x0, 0.66) set];
-        [[NSBezierPath bezierPathWithRect:leftRect] addClip];
-        [roundedPath fill];
+        if (_metering) {
+            [NSGraphicsContext saveGraphicsState];
 
-        [NSGraphicsContext restoreGraphicsState];
-        
+            [GetRGBColor(0x0, 0.66) set];
+            [[NSBezierPath bezierPathWithRect:leftRect] addClip];
+            [roundedPath fill];
+
+            [NSGraphicsContext restoreGraphicsState];
+        }
+
         [GetRGBColor(0x0, 0.15) set];
         [[NSBezierPath bezierPathWithRect:rightRect] addClip];
         [roundedPath fill];
         
         [NSGraphicsContext restoreGraphicsState];
+        
+        if (_metering) {
+            rect.origin.x = peakX - 1;
+            rect.size.width = 3;
+        
+            if (didClip) {
+                [[NSColor redColor] set];
+            } else {
+                [[NSColor blackColor] set];
+            }
 
-        rect.origin.x = peakX - 1;
-        rect.size.width = 3;
-        
-        if (!_meterGradient) {
-            _meterGradient = [[NSGradient alloc] initWithStartingColor:GetRGBColor(0xFF0000, 1.0) endingColor:GetRGBColor(0x000000, 1.0)];
+            [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
         }
-        
-        if (peak > -12) {
-            CGFloat greenness = peak / -12;
-            [[_meterGradient interpolatedColorAtLocation:greenness] set];
-            
-        } else {
-            [[_meterGradient interpolatedColorAtLocation:1.0] set];
-        }
-        
-        [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
     };
 	
 
@@ -79,19 +94,42 @@
     NSRect rightChannelBar = leftChannelBar;
     rightChannelBar.origin.y -= 4;
 
-    drawMeter(leftChannelBar, _leftAveragePower, _leftPeakPower);
-    drawMeter(rightChannelBar, _rightAveragePower, _rightPeakPower);
+    if (_metering) {
+        drawMeter(leftChannelBar,  _leftAveragePower, _leftPeakPower);
+        drawMeter(rightChannelBar, _rightAveragePower, _rightPeakPower);
+    } else {
+        drawMeter(leftChannelBar,  0, 0);
+        drawMeter(rightChannelBar, 0, 0);
+    }
 }
 
 
-- (void) updateWithTrack:(Track *)track
+- (void) setLeftAveragePower: (Float32) leftAveragePower
+           rightAveragePower: (Float32) rightAveragePower
+               leftPeakPower: (Float32) leftPeakPower
+              rightPeakPower: (Float32) rightPeakPower
 {
-    _leftAveragePower  = [track leftAveragePower];
-    _rightAveragePower = [track rightAveragePower];
-    _leftPeakPower     = [track leftPeakPower];
-    _rightPeakPower    = [track rightPeakPower];
-    
-    [self setNeedsDisplay:YES];
+    if (_leftAveragePower  != leftAveragePower  ||
+        _rightAveragePower != rightAveragePower ||
+        _leftPeakPower     != leftPeakPower     ||
+        _rightPeakPower    != rightPeakPower)
+    {
+        _leftAveragePower  = leftAveragePower;
+        _rightAveragePower = rightAveragePower;
+        _leftPeakPower     = leftPeakPower;
+        _rightPeakPower    = rightPeakPower;
+        
+        [self setNeedsDisplay:YES];
+    }
+}
+
+
+- (void) setMetering:(BOOL)metering
+{
+    if (_metering != metering) {
+        _metering = metering;
+        [self setNeedsDisplay:YES];
+    }
 }
 
 

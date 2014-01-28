@@ -1,22 +1,17 @@
 //
 //  MainWindow.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-04.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
-#import "MainWindow.h"
+#import "WhiteWindow.h"
+#import "CloseButton.h"
 
 
-@implementation MainWindowContentView
-@end
-
-
-@implementation MainWindow {
-    NSView *_contentWrapper;
-    NSView *_actualContentView;
-    BOOL _preventWindowFrameChange;
+@implementation WhiteWindow {
+    CloseButton *_closeButton;
 }
 
 - (void) dealloc
@@ -38,6 +33,11 @@
     [self setBackgroundColor:backgroundColor];
 }
 
+
+- (void) _handleCloseButton:(id)sender
+{
+    NSLog(@"Close clicked");
+}
 
 - (void) setupWithHeaderView:(NSView *)headerView mainView:(NSView *)mainView
 {
@@ -63,7 +63,7 @@
     frame.origin = NSZeroPoint;
     
     NSView *contentView = [self contentView];
-    
+
     NSSize windowSize = [self frame].size;
     NSSize contentSize = [contentView frame].size;
     NSSize headerSize  = [headerView frame].size;
@@ -71,22 +71,57 @@
     CGFloat titlebarHeight = windowSize.height - contentSize.height;
     CGFloat contentTopPadding = headerSize.height - titlebarHeight;
     
-    NSRect mainViewFrame = [mainView frame];
-    mainViewFrame.size.height -= contentTopPadding;
-    [mainView setFrame:mainViewFrame];
+    if (mainView) {
+        NSRect mainViewFrame = mainView ? [mainView frame] : NSZeroRect;
+        mainViewFrame.size.height -= contentTopPadding;
+        [mainView setFrame:mainViewFrame];
+        
+        [[self contentView] addSubview:mainView];
+    }
     
-    NSRect headerFrame = [headerView frame];
-    headerFrame.origin.y = contentSize.height - contentTopPadding;
-    headerFrame.origin.x = 0;
-    headerFrame.size.width = frame.size.width;
+    if (headerView) {
+        NSRect headerFrame = [headerView frame];
+        headerFrame.origin.y = contentSize.height - contentTopPadding;
+        headerFrame.origin.x = 0;
+        headerFrame.size.width = frame.size.width;
 
-    NSView *frameView = [contentView superview];
-    [frameView addSubview:headerView];
-    [headerView setFrame:headerFrame];
+        NSView *frameView = [contentView superview];
+        [frameView addSubview:headerView];
+        [headerView setFrame:headerFrame];
 
-    [headerView setWantsLayer:YES];
-    [contentView setWantsLayer:YES];
-   
+        [headerView setWantsLayer:YES];
+        [contentView setWantsLayer:YES];
+    }
+
+    NSView *closeButtonSuperview = headerView ? headerView : [contentView superview];
+    NSRect  closeButtonFrame = NSMakeRect(2, 0, 12, 12);
+    
+    closeButtonFrame.origin.y = [closeButtonSuperview bounds].size.height - 14;
+    
+    CloseButton *whiteCloseButton = [[CloseButton alloc] initWithFrame:closeButtonFrame];
+    [whiteCloseButton setAutoresizingMask:NSViewMaxXMargin | NSViewMinYMargin];
+    [closeButtonSuperview addSubview:whiteCloseButton];
+    
+    [whiteCloseButton setTarget:self];
+    [whiteCloseButton setAction:@selector(_handleCloseButton:)];
+
+    _closeButton = whiteCloseButton;
+
+}
+
+- (void) setupAsParentWindow
+{
+    [self setupWithHeaderView:nil mainView:nil];
+}
+
+
+- (void) setFrame:(NSRect)frameRect display:(BOOL)flag
+{
+    [super setFrame:frameRect display:flag];
+    
+    for (NSWindow *childWindow in [self childWindows]) {
+        [childWindow setFrame:NSInsetRect(frameRect, 2, 2) display:flag];
+    }
 }
 
 

@@ -1,6 +1,6 @@
 //
 //  SongTableViewCell.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-05.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -31,6 +31,43 @@
     _observedObject   = nil;
 }
 
+
+- (BOOL) _tryToPresentContextMenuWithEvent:(NSEvent *)event
+{
+    NSView *superview = [self superview];
+    NSMenu *menu = nil;
+
+    while (superview) {
+        if ([superview isKindOfClass:[NSTableView class]]) {
+            menu = [superview menu];
+            if (menu) break;
+        }
+        
+        superview = [superview superview];
+    }
+    
+    if (menu) {
+        [NSMenu popUpContextMenu:menu withEvent:event forView:self];
+        return YES;
+    }
+    
+    return NO;
+
+}
+
+
+- (void) mouseDown:(NSEvent *)theEvent
+{
+    [super mouseDown:theEvent];
+
+    NSUInteger mask = (NSControlKeyMask | NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask);
+    
+    if (([theEvent modifierFlags] & mask) == NSControlKeyMask) {
+        [self _tryToPresentContextMenuWithEvent:theEvent];
+    }
+}
+
+
 - (Track *) track
 {
     return (Track *)[self objectValue];
@@ -41,7 +78,7 @@
 {
     TrackStatus trackStatus = [[self track] trackStatus];
 
-    if (trackStatus == TrackStatusPlaying || trackStatus == TrackStatusPadding) {
+    if (trackStatus == TrackStatusPlaying) {
         return GetRGBColor(0x1866e9, 1.0);
     } else if (trackStatus == TrackStatusPlayed) {
         return GetRGBColor(0x000000, 0.5);
@@ -55,7 +92,7 @@
 {
     TrackStatus trackStatus = [[self track] trackStatus];
 
-    if (trackStatus == TrackStatusPlaying || trackStatus == TrackStatusPadding) {
+    if (trackStatus == TrackStatusPlaying) {
         return GetRGBColor(0x1866e9, 0.5);
     } else if (trackStatus == TrackStatusPlayed) {
         return GetRGBColor(0x000000, 0.5);
@@ -71,13 +108,15 @@
     Track *track = [self track];
     if (!track) return;
 
-    [[self titleField]    setTextColor:[self topTextColor]];
-    [[self durationField] setTextColor:[self topTextColor]];
-
-
-    NSString *durationString = [track playDurationString];
+    NSString *titleString = [track title];
+    if (!titleString) titleString = @"";
+    [[self titleField] setStringValue:titleString];
+    [[self titleField] setTextColor:[self topTextColor]];
+    
+    NSString *durationString = GetStringForTime(round([track playDuration]));
     if (!durationString) durationString = @"";
     [[self durationField] setStringValue:durationString];
+    [[self durationField] setTextColor:[self topTextColor]];
 
     NSColor *bottomBorderColor = [NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0];
     CGFloat bottomBorderHeight = -1;
@@ -116,7 +155,6 @@
     [self _removeObservers];
 
     [super setObjectValue:objectValue];
-    [self update];
     
     _observedKeyPaths = [self keyPathsToObserve];
     _observedObject   = objectValue;
@@ -124,18 +162,23 @@
     for (NSString *keyPath in _observedKeyPaths) {
         [_observedObject addObserver:self forKeyPath:keyPath options:0 context:NULL];
     }
+
+    [self update];
 }
+
 
 - (NSArray *) keyPathsToObserve
 {
-    return @[ @"trackStatus", @"playDurationString", @"pausesAfterPlaying" ];
+    return @[ @"title", @"artist", @"trackStatus", @"playDuration", @"pausesAfterPlaying" ];
 }
+
 
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
     [self update];
 }
+
 
 - (void) setSelected:(BOOL)selected
 {
