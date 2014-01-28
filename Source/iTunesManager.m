@@ -1,6 +1,6 @@
 //
 //  MetadataManager.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-05.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -17,12 +17,30 @@ static NSString * const sStopTimeKey  = @"Stop Time";
 static NSString * const sLocationKey  = @"Location";
 
 
+@implementation iTunesMetadata
+
+- (void) mergeIn:(iTunesMetadata *)other
+{
+    if (other->_startTime && !_startTime) _startTime = other->_startTime;
+    if (other->_stopTime  && !_stopTime)  _stopTime  = other->_stopTime;
+    if (other->_artist    && !_artist)    _artist    = other->_artist;
+    if (other->_title     && !_title)     _title     = other->_title;
+    if (other->_location  && !_location)  _location  = other->_location;
+    if (other->_duration  && !_duration)  _duration  = other->_duration;
+}
+
+@end
+
+
 @implementation iTunesManager {
-    NSDictionary *_pathToTrackIDMap;
-    NSDictionary *_trackIDToStartTimeMap;
-    NSDictionary *_trackIDToStopTimeMap;
+    NSMutableDictionary *_pathToTrackIDMap;
+    NSMutableDictionary *_trackIDToMetadataMap;
+
     BOOL _parsing;
-    NSMutableArray *_readyCallbacks;
+    NSMutableArray *_metadataReadyCallbacks;
+
+    dispatch_queue_t _tunesQueue;
+    
 }
 
 + (id) sharedInstance
@@ -48,20 +66,42 @@ static NSString * const sLocationKey  = @"Location";
 }
 
 
-- (void) _parseFinished:(NSDictionary *)results
+- (void) _addMetadata:(iTunesMetadata *)metadata
 {
-    _trackIDToStartTimeMap = [results objectForKey:sStartTimeKey];
-    _trackIDToStopTimeMap  = [results objectForKey:sStopTimeKey];
-    _pathToTrackIDMap      = [results objectForKey:sLocationKey];
+    NSInteger trackID = [metadata trackID];
 
-    _parsing = NO;
-    _ready = YES;
-    
-    for (iTunesManagerReadyCallback callback in _readyCallbacks) {
-        callback();
+    iTunesMetadata *existing = [_trackIDToMetadataMap objectForKey:@(trackID)];
+    NSString *location = [existing location];
+
+    if (existing) {
+        [existing mergeIn:metadata];
+    } else {
+        if (!_trackIDToMetadataMap) _trackIDToMetadataMap = [NSMutableDictionary dictionary];
+        [_trackIDToMetadataMap setObject:metadata forKey:@(trackID)];
+        location = [metadata location];
     }
     
-    _readyCallbacks = nil;
+    if (location) {
+        if (!_pathToTrackIDMap) _pathToTrackIDMap = [NSMutableDictionary dictionary];
+        [_pathToTrackIDMap setObject:@(trackID) forKey:location];
+    }
+}
+
+
+- (void) _parseFinished:(NSArray *)results
+{
+    for (iTunesMetadata *metadata in results) {
+        [self _addMetadata:metadata];
+    }
+
+    _parsing = NO;
+    _metadataReady = YES;
+    
+    for (iTunesManagerMetadataReadyCallback callback in _metadataReadyCallbacks) {
+        callback(self);
+    }
+    
+    _metadataReadyCallbacks = nil;
 }
 
 
@@ -74,12 +114,8 @@ static NSString * const sLocationKey  = @"Location";
     _parsing = YES;
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSMutableDictionary *trackIDToStartTimeMap = [NSMutableDictionary dictionary];
-        NSMutableDictionary *trackIDToStopTimeMap  = [NSMutableDictionary dictionary];
-        NSMutableDictionary *urlToTrackIDMap = nil;
+        NSMutableArray *results = [NSMutableArray array];
 
-        NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-        
         @try {
             NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
             NSString *path  = [paths firstObject];
@@ -93,87 +129,196 @@ static NSString * const sLocationKey  = @"Location";
 
             NSDictionary *tracks = [dictionary objectForKey:@"Tracks"];
 
-            urlToTrackIDMap = [NSMutableDictionary dictionaryWithCapacity:[tracks count]];
-
             for (id key in tracks) {
-                NSInteger trackID = [key integerValue];
                 NSDictionary *track = [tracks objectForKey:key];
-                
+
                 id startTimeNumber = [track objectForKey:sStartTimeKey];
                 id stopTimeNumber  = [track objectForKey:sStopTimeKey];
-                id location        = [track objectForKey:sLocationKey];
 
-                if (startTimeNumber) {
-                    NSTimeInterval startTime = [startTimeNumber doubleValue] / 1000.0;
-                    [trackIDToStartTimeMap setObject:@(startTime) forKey:@(trackID)];
-                }
-
-                if (stopTimeNumber) {
-                    NSTimeInterval stopTime = [stopTimeNumber doubleValue] / 1000.0;
-                    [trackIDToStopTimeMap setObject:@(stopTime) forKey:@(trackID)];
-                }
+                if (startTimeNumber || stopTimeNumber) {
+                    id location = [track objectForKey:sLocationKey];
                 
-                if (location) {
-                    NSURL *URL = [NSURL URLWithString:location];
-                    [urlToTrackIDMap setObject:@(trackID) forKey:[URL path]];
+                    if ([location hasPrefix:@"file:"]) {
+                        location = [[NSURL URLWithString:location] path];
+                    }
+
+                    iTunesMetadata *metadata = [[iTunesMetadata alloc] init];
+                    
+                    [metadata setTrackID:[key integerValue]];
+                    [metadata setLocation:location];
+
+                    NSTimeInterval startTime = [startTimeNumber doubleValue] / 1000.0;
+                    NSTimeInterval stopTime  = [stopTimeNumber doubleValue]  / 1000.0;
+
+                    [metadata setStartTime:startTime];
+                    [metadata setStopTime:stopTime];
+
+                    [results addObject:metadata];
                 }
             }
 
-        } @catch (NSException *e) {
+        } @catch (NSException *e) { }
 
-        }
-
-        NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
-        
-        NSLog(@"%f", end - start);
-        
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf _parseFinished:@{
-                sStartTimeKey: trackIDToStartTimeMap,
-                sStopTimeKey:  trackIDToStopTimeMap,
-                sLocationKey:  urlToTrackIDMap
-            }];
+            [weakSelf _parseFinished:results];
         });
     });
 }
 
 
-- (BOOL) getStartTime:(NSTimeInterval *)outStartTime forTrack:(NSInteger)trackID
+- (iTunesMetadata *) metadataForTrackID:(NSInteger)trackID
 {
-    NSNumber *number = [_trackIDToStartTimeMap objectForKey:@(trackID)];
-    if (!number) return NO;
-
-    *outStartTime = [number doubleValue];
-    
-    return YES;
+    return [_trackIDToMetadataMap objectForKey:@(trackID)];
 }
 
 
-- (BOOL) getStopTime:(NSTimeInterval *)outEndTime forTrack:(NSInteger)trackID
+- (iTunesMetadata *) metadataForFileURL:(NSURL *)url
 {
-    NSNumber *number = [_trackIDToStopTimeMap objectForKey:@(trackID)];
-    if (!number) return NO;
-
-    *outEndTime = [number doubleValue];
-    
-    return YES;
+    NSInteger trackID = [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
+    return [self metadataForTrackID:trackID];
 }
 
 
-- (NSInteger) trackIDForURL:(NSURL *)url
+- (void) addMetadataReadyCallback:(iTunesManagerMetadataReadyCallback)callback
 {
-    return [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
-}
+    iTunesManagerMetadataReadyCallback cb = [callback copy];
 
+    if (_metadataReady) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cb(self);
+        });
 
-- (void) addReadyCallback:(iTunesManagerReadyCallback)callback
-{
-    if (_ready) {
-        callback();
     } else {
-        if (!_readyCallbacks) _readyCallbacks = [NSMutableArray array];
-        [_readyCallbacks addObject:callback];
+        if (!_metadataReadyCallbacks) _metadataReadyCallbacks = [NSMutableArray array];
+        [_metadataReadyCallbacks addObject:cb];
     }
+}
+
+
+- (void) _performOnTunesQueue:(void (^)())block completion:(void (^)())completion
+{
+    if (!_tunesQueue) {
+        _tunesQueue = dispatch_queue_create("iTunesManager", 0);
+    }
+    
+    void (^blockCopy)() = [block copy];
+    void (^completionCopy)() = [completion copy];
+
+    dispatch_async(_tunesQueue, ^{
+        blockCopy();
+        if (completionCopy) completionCopy();
+    });
+}
+
+
+- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard
+{
+    void (^parseTrack)(NSString *, NSDictionary *) = ^(NSString *key, NSDictionary *track) {
+        if (![key isKindOfClass:[NSString class]]) {
+            return;
+        }
+
+        if (![track isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+
+        NSString *artist = [track objectForKey:@"Artist"];
+        if (![artist isKindOfClass:[NSString class]]) artist = nil;
+
+        NSString *name = [track objectForKey:@"Name"];
+        if (![name isKindOfClass:[NSString class]]) name = nil;
+
+        NSString *location = [track objectForKey:@"Location"];
+        if (![location isKindOfClass:[NSString class]]) location = nil;
+        
+        if ([location hasPrefix:@"file:"]) {
+            location = [[NSURL URLWithString:location] path];
+        }
+
+        id totalTimeObject = [track objectForKey:@"Total Time"];
+        if (![totalTimeObject respondsToSelector:@selector(doubleValue)]) {
+            totalTimeObject = nil;
+        }
+
+        id trackIDObject = [track objectForKey:@"Track ID"];
+        if (![trackIDObject respondsToSelector:@selector(integerValue)]) {
+            trackIDObject = nil;
+        }
+        
+        NSTimeInterval totalTime = [totalTimeObject doubleValue] / 1000.0;
+        NSTimeInterval trackID   = [trackIDObject integerValue];
+        
+        if (!trackID) return;
+
+        iTunesMetadata *metadata = [[iTunesMetadata alloc] init];
+        [metadata setDuration:totalTime];
+        [metadata setTitle:name];
+        [metadata setArtist:artist];
+        [metadata setLocation:location];
+        [metadata setTrackID:[key integerValue]];
+        
+        [self _addMetadata:metadata];
+    };
+
+    void (^parseRoot)(NSDictionary *) = ^(NSDictionary *dictionary) {
+        if (![dictionary isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        
+        NSDictionary *trackMap = [dictionary objectForKey:@"Tracks"];
+        if (![trackMap isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        
+        for (NSString *key in trackMap) {
+            parseTrack(key, [trackMap objectForKey:key]);
+        }
+    };
+
+    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+        for (NSString *type in [item types]) {
+            if ([type isEqualToString:@"com.apple.itunes.metadata"]) {
+                parseRoot([item propertyListForType:type]);
+            }
+        }
+    }
+}
+
+
+- (void) exportPlaylistWithName:(NSString *)playlistName fileURLs:(NSArray *)fileURLs
+{
+    [self _performOnTunesQueue:^{
+        iTunesApplication *iTunes = (iTunesApplication *)[[SBApplication alloc] initWithBundleIdentifier:@"com.apple.iTunes"];
+
+        SBElementArray *sources = [iTunes sources];
+        iTunesSource *library = nil;
+
+        for (iTunesSource *source in sources) {
+            if ([source kind] == iTunesESrcLibrary) {
+                library = source;
+                break;
+            }
+        }
+
+        iTunesUserPlaylist *playlist = nil;
+
+        if (!playlist) {
+            playlist = [[[iTunes classForScriptingClass:@"playlist"] alloc] init];
+            [[library userPlaylists] insertObject:playlist atIndex:0];
+            [playlist setName:playlistName];
+        }
+        
+        if (playlist) {
+            for (NSURL *fileURL in fileURLs) {
+                [iTunes add:@[ fileURL ] to:playlist];
+            }
+        }
+
+        [iTunes activate];
+        
+        [[[playlist tracks] firstObject] reveal];
+
+    } completion:nil];
 }
 
 

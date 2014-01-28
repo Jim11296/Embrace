@@ -1,6 +1,6 @@
 //
 //  player.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-03.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -12,12 +12,14 @@
 #import "AppDelegate.h"
 #import "EffectType.h"
 #import "AudioDevice.h"
+#import "Limiter.h"
 
 #import <pthread.h>
 #import <signal.h>
 
 
 static NSString * const sEffectsKey = @"effects";
+
 
 typedef struct AudioPlayerGraphContext {
     Float64 sampleTime;
@@ -30,6 +32,7 @@ typedef struct AudioPlayerGraphContext {
 
 
 static mach_port_t sAudioThread = 0;
+
 
 static OSStatus sRenderNotify(
     void *inRefCon,
@@ -49,6 +52,9 @@ static OSStatus sRenderNotify(
 
 @interface Player ()
 @property (nonatomic, strong) Track *currentTrack;
+@property (nonatomic) NSString *timeElapsedString;
+@property (nonatomic) NSString *timeRemainingString;
+@property (nonatomic) float percentage;
 @end
 
 
@@ -59,12 +65,14 @@ static OSStatus sRenderNotify(
     UInt64    _currentStartHostTime;
 
     AUGraph   _graph;
-    AudioUnit _outputAudioUnit;
     AudioUnit _filePlayerAudioUnit;
     AudioUnit _mixerAudioUnit;
+    AudioUnit _limiterAudioUnit;
+    AudioUnit _outputAudioUnit;
 
 	AUNode    _filePlayerNode;
 	AUNode    _outputNode;
+    AUNode    _limiterNode;
     AUNode    _mixerNode;
     
     AudioDevice *_outputDevice;
@@ -75,8 +83,12 @@ static OSStatus sRenderNotify(
     AudioPlayerGraphContext *_graphContext;
     
     NSMutableDictionary *_effectToNodeMap;
+    NSHashTable *_listeners;
     
     NSTimer *_tickTimer;
+
+    NSTimeInterval _roundedTimeElapsed;
+    NSTimeInterval _roundedTimeRemaining;
 }
 
 
@@ -93,6 +105,23 @@ static OSStatus sRenderNotify(
 }
 
 
++ (NSSet *) keyPathsForValuesAffectingValueForKey:(NSString *)key
+{
+    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
+    NSArray *affectingKeys = nil;
+ 
+    if ([key isEqualToString:@"playing"]) {
+        affectingKeys = @[ @"currentTrack" ];
+    }
+
+    if (affectingKeys) {
+        keyPaths = [keyPaths setByAddingObjectsFromArray:affectingKeys];
+    }
+ 
+    return keyPaths;
+}
+
+
 - (id) init
 {
     if ((self = [super init])) {
@@ -101,6 +130,7 @@ static OSStatus sRenderNotify(
 
         [self _buildGraph];
         [self _loadState];
+        [self _reconnectGraph];
     }
     
     return self;
@@ -129,23 +159,26 @@ static OSStatus sRenderNotify(
     mixerCD.componentSubType = kAudioUnitSubType_StereoMixer;
     mixerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
 
+    AudioComponentDescription limiterCD;
+    LimiterGetComponentDescription(&limiterCD);
+
     AudioComponentDescription outputCD = {0};
     outputCD.componentType = kAudioUnitType_Output;
     outputCD.componentSubType = kAudioUnitSubType_HALOutput;
     outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
     
-    CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ AudioFilePlayer ]");
-    CheckError(AUGraphAddNode(_graph, &mixerCD, &_mixerNode), "AUGraphAddNode[ Mixer ]");
-    CheckError(AUGraphAddNode(_graph, &outputCD, &_outputNode), "AUGraphAddNode[ Output ]");
+    CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ Player ]");
+    CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
+    CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
+    CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
 
 	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
 
-	CheckError(AUGraphNodeInfo(_graph, _filePlayerNode, NULL, &_filePlayerAudioUnit), "AUGraphNodeInfo[_filePlayerNode]");
-	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[_outputNode]");
-	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[_mixerNode]");
+	CheckError(AUGraphNodeInfo(_graph, _filePlayerNode, NULL, &_filePlayerAudioUnit), "AUGraphNodeInfo[ Player ]");
+	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[ Mixer ]");
+	CheckError(AUGraphNodeInfo(_graph, _limiterNode,    NULL, &_limiterAudioUnit),    "AUGraphNodeInfo[ Limiter ]");
+	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[ Output ]");
 
-	CheckError(AUGraphConnectNodeInput(_graph, _filePlayerNode, 0, _mixerNode, 0),  "AUGraphConnectNodeInput");
-	CheckError(AUGraphConnectNodeInput(_graph, _mixerNode,      0, _outputNode, 0), "AUGraphConnectNodeInput");
 	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
 
     UInt32 on = 1;
@@ -172,6 +205,7 @@ static OSStatus sRenderNotify(
     }
 
     callback(_mixerNode);
+    callback(_limiterNode);
     callback(_outputNode);
 }
 
@@ -196,14 +230,16 @@ static OSStatus sRenderNotify(
     __block AUNode lastNode = 0;
     [self _iterateGraphNodes:^(AUNode node) {
         if (lastNode) {
-            CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput 1");
+            CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput");
         }
 
         lastNode = node;
     }];
     
     Boolean updated;
-    AUGraphUpdate(_graph, &updated);
+    if (!CheckError(AUGraphUpdate(_graph, &updated), "AUGraphUpdate")) {
+    
+    }
 }
 
 
@@ -270,7 +306,7 @@ static OSStatus sRenderNotify(
 }
 
 
-- (BOOL) _openFileForTrack:(Track *)track
+- (BOOL) _setupPlaybackForTrack:(Track *)track padding:(NSTimeInterval)padding
 {
     NSURL *fileURL = [track fileURL];
     if (!fileURL) return NO;
@@ -329,23 +365,37 @@ static OSStatus sRenderNotify(
         &region, sizeof(region)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileRegion]");
 	
-	UInt32 prime = 0;
-	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
-        kAudioUnitProperty_ScheduledFilePrime, kAudioUnitScope_Global, 0,
-        &prime, sizeof(prime)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFilePrime]");
-	
 	AudioTimeStamp startTime = {0};
-    FillAudioTimeStampWithFutureSeconds(&startTime, [track padDuration]);
+    NSTimeInterval additional = _frames / _sampleRate;
+
+    if (padding == 0) {
+        startTime.mFlags = kAudioTimeStampHostTimeValid;
+        startTime.mHostTime = 0;
+    
+    } else {
+        FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
+    }
 
 	CheckError(AudioUnitSetProperty(
         _filePlayerAudioUnit,
         kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
         &startTime, sizeof(startTime)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
+    
+	UInt32 prime = 0;
+	CheckError(AudioUnitSetProperty(
+        _filePlayerAudioUnit,
+        kAudioUnitProperty_ScheduledFilePrime, kAudioUnitScope_Global, _frames,
+        &prime, sizeof(prime)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFilePrime]");
+	
+    if (startTime.mHostTime) {
+        _currentStartHostTime = startTime.mHostTime;
+    } else {
+        FillAudioTimeStampWithFutureSeconds(&startTime, 0);
+        _currentStartHostTime = startTime.mHostTime;
+    }
 
-    _currentStartHostTime = GetCurrentHostTime();
     _currentFramesToPlay  = framesToPlay;
     _currentSampleRate    = inputFormat.mSampleRate;
     
@@ -392,8 +442,6 @@ static OSStatus sRenderNotify(
 
 - (void) _updateEffects:(NSArray *)effects
 {
-    AUNode fromNode = _filePlayerNode;
-
     NSMutableDictionary *effectToNodeMap = [NSMutableDictionary dictionary];
 
     for (Effect *effect in effects) {
@@ -405,20 +453,31 @@ static OSStatus sRenderNotify(
         NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
         if (nodeNumber) {
             node = [nodeNumber intValue];
-                NSLog(@"existing effect %ld", (long)node);
-            
         } else {
             AUGraphAddNode(_graph, &acd, &node);
-                NSLog(@"new effect %ld", (long)node);
 
+            UInt32 maxFrames;
+            UInt32 maxFramesSize = sizeof(maxFrames);
+            CheckError(AudioUnitGetProperty(
+                _outputAudioUnit,
+                kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
+                &maxFrames, &maxFramesSize
+            ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
+
+            AudioComponentDescription acd;
+            AudioUnit unit = NULL;
+            AUGraphNodeInfo(_graph, node, &acd, &unit);
+
+            CheckError(AudioUnitSetProperty(
+                unit,
+                kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
+                &maxFrames, maxFramesSize
+            ), "AudioUnitSetProperty[MaximumFramesPerSlice]");
         }
         
         AudioUnit audioUnit;
         CheckError(AUGraphNodeInfo(_graph, node, &acd, &audioUnit), "AUGraphNodeInfo");
         
-        CheckError(AUGraphConnectNodeInput(_graph, fromNode, 0, node, 0), "AUGraphConnectNodeInput 1");
-        fromNode = node;
-
         AudioUnitParameter changedUnit;
         changedUnit.mAudioUnit = audioUnit;
         changedUnit.mParameterID = kAUParameterListener_AnyParameter;
@@ -437,9 +496,9 @@ static OSStatus sRenderNotify(
         }
     }
 
-    [self _reconnectGraph];
-
     _effectToNodeMap = effectToNodeMap;
+
+    [self _reconnectGraph];
 }
 
 
@@ -452,53 +511,72 @@ static OSStatus sRenderNotify(
 
     AudioUnitGetProperty(_filePlayerAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize);
     Float64 currentPlayTime = timeStamp.mSampleTime;
-    Float64 padOffset  = 0;
-    Float64 playOffset = 0;
     BOOL done = NO;
     
-    Float32 postAverageLeft;
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower, kAudioUnitScope_Output, 0, &postAverageLeft);
-
-    Float32 postAverageRight;
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower + 1, kAudioUnitScope_Output, 0, &postAverageRight);
-
-    Float32 postPeakHoldLevelLeft;
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel, kAudioUnitScope_Output, 0, &postPeakHoldLevelLeft);
-
-    Float32 postPeakHoldLevelRight;
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel + 1, kAudioUnitScope_Output, 0, &postPeakHoldLevelRight);
+    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower,      kAudioUnitScope_Output, 0, &_leftAveragePower);
+    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower + 1,  kAudioUnitScope_Output, 0, &_rightAveragePower);
+    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel,     kAudioUnitScope_Output, 0, &_leftPeakPower);
+    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel + 1, kAudioUnitScope_Output, 0, &_rightPeakPower);
     
+    _timeElapsed = 0;
+
+    NSTimeInterval roundedTimeElapsed;
+    NSTimeInterval roundedTimeRemaining;
+
     if (timeStamp.mSampleTime < 0) {
-        UInt64 currentHostTime = GetCurrentHostTime();
-        padOffset  = GetDeltaInSecondsForHostTimes(currentHostTime, _currentStartHostTime);
-        playOffset = 0;
-        status = TrackStatusPadding;
+        _timeElapsed   = GetDeltaInSecondsForHostTimes(GetCurrentHostTime(), _currentStartHostTime);
+        _timeRemaining = [_currentTrack playDuration];
+        
+        roundedTimeElapsed = floor(_timeElapsed);
+        roundedTimeRemaining = round([_currentTrack playDuration]);
 
     } else {
-        padOffset  = [_currentTrack padDuration];
-        playOffset = currentPlayTime / _currentSampleRate;
-        status = TrackStatusPlaying;
+        _timeElapsed = currentPlayTime / _currentSampleRate;
+        _timeRemaining = [_currentTrack playDuration] - _timeElapsed;
+        
+        roundedTimeElapsed = floor(_timeElapsed);
+        roundedTimeRemaining = round([_currentTrack playDuration]) - roundedTimeElapsed;
     }
 
     if (currentPlayTime > _currentFramesToPlay) {
         done = YES;
-        playOffset = [_currentTrack playDuration];
+
         status = TrackStatusPlayed;
+        _timeElapsed = [_currentTrack playDuration];
+        _timeRemaining = 0;
+        
+        roundedTimeElapsed = round([_currentTrack playDuration]);
+        roundedTimeRemaining = 0;
     }
 
-    [_currentTrack updateTrackStatus: status
-                           padOffset: padOffset
-                          playOffset: playOffset
-                    leftAveragePower: postAverageLeft
-                   rightAveragePower: postAverageRight
-                       leftPeakPower: postPeakHoldLevelLeft
-                      rightPeakPower: postPeakHoldLevelRight];
+    if (!_timeElapsedString || (roundedTimeElapsed != _roundedTimeElapsed)) {
+        _roundedTimeElapsed = roundedTimeElapsed;
+        [self setTimeElapsedString:GetStringForTime(_roundedTimeElapsed)];
+    }
 
-    [_delegate playerDidUpdate:self];
+    if (!_timeRemainingString || (roundedTimeRemaining != _roundedTimeRemaining)) {
+        _roundedTimeRemaining = roundedTimeRemaining;
+        [self setTimeRemainingString:GetStringForTime(_roundedTimeRemaining)];
+    }
+
+    NSTimeInterval duration = _timeElapsed + _timeRemaining;
+    if (!duration) duration = 1;
+    
+    double percentage = 0;
+    if (_timeElapsed > 0) {
+        percentage = _timeElapsed / duration;
+    }
+
+    [self setPercentage:percentage];
+
+    [_currentTrack setTrackStatus: status];
+
+    for (id<PlayerListener> listener in _listeners) {
+        [listener playerDidTick:self];
+    }
 
     if (done) {
-        [self hardPause];
-        [self play];
+        [self playNextTrack];
     }
 }
 
@@ -517,24 +595,58 @@ static OSStatus sRenderNotify(
 }
 
 
+- (void) playNextTrack
+{
+    Track *nextTrack = nil;
+    NSTimeInterval padding = 0;
+
+    if (![_currentTrack pausesAfterPlaying]) {
+        [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
+    }
+    
+    if (nextTrack) {
+        Boolean isRunning = 0;
+        AUGraphIsRunning(_graph, &isRunning);
+
+        if ([self _setupPlaybackForTrack:nextTrack padding:padding]) {
+            [self setCurrentTrack:nextTrack];
+
+            if (!isRunning) {
+                CheckError(AUGraphStart(_graph), "AUGraphStart");
+            }
+        }
+    
+    } else {
+        [self hardPause];
+    }
+}
+
+
+- (void) playOrSoftPause
+{
+    if (_currentTrack) {
+        [self softPause];
+    } else {
+        [self play];
+    }
+}
+
+
 - (void) play
 {
     if (_currentTrack) return;
+    [self playNextTrack];
     
-    Track *track = [_delegate playerNextTrack:self];
-
-    [self setCurrentTrack:nil];
-
-    if ([self _openFileForTrack:track]) {
-        [self setCurrentTrack:track];
-
-        CheckError(AUGraphStart(_graph), "AUGraphStart");
+    if (_currentTrack) {
         _tickTimer = [NSTimer timerWithTimeInterval:(1/60.0) target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
 
         [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSRunLoopCommonModes];
         [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSEventTrackingRunLoopMode];
 
-        [_delegate playerDidUpdate:self];
+
+        for (id<PlayerListener> listener in _listeners) {
+            [listener player:self didUpdatePlaying:YES];
+        }
     }
 }
 
@@ -543,19 +655,56 @@ static OSStatus sRenderNotify(
 {
     if (_currentTrack) {
         TrackStatus trackStatus = [_currentTrack trackStatus];
-        
-        if (trackStatus == TrackStatusQueued || trackStatus == TrackStatusPadding) {
+        BOOL isEndSilence   = _timeRemaining <= [_currentTrack silenceAtEnd];
+        BOOL isStartSilence = _timeElapsed   <  [_currentTrack silenceAtStart];
+
+        if (isEndSilence) {
+            [_currentTrack setTrackStatus:TrackStatusPlayed];
+            [self hardPause];
+            
+        } else if (isStartSilence) {
+            [self hardPause];
+
+        } else if (trackStatus == TrackStatusQueued) {
             [self hardPause];
 
         } else if (trackStatus == TrackStatusPlaying) {
-            [_currentTrack updatePausesAfterPlaying:![_currentTrack pausesAfterPlaying]];
+            [_currentTrack setPausesAfterPlaying:![_currentTrack pausesAfterPlaying]];
         
         // This shouldn't happen, if it does advance to next song
         } else if (trackStatus == TrackStatusPlayed) {
-            [self hardPause];
-            [self play];
+            [self playNextTrack];
         }
         
+    } else {
+        [self hardPause];
+    }
+}
+
+
+- (void) hardSkip
+{
+    if (!_currentTrack) return;
+
+    Track *nextTrack = nil;
+    NSTimeInterval padding = 0;
+
+    [_currentTrack setTrackStatus:TrackStatusPlayed];
+    [_currentTrack setPausesAfterPlaying:NO];
+    [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
+    
+    if (nextTrack) {
+        Boolean isRunning = 0;
+        AUGraphIsRunning(_graph, &isRunning);
+
+        if ([self _setupPlaybackForTrack:nextTrack padding:0]) {
+            [self setCurrentTrack:nextTrack];
+
+            if (!isRunning) {
+                CheckError(AUGraphStart(_graph), "AUGraphStart");
+            }
+        }
+    
     } else {
         [self hardPause];
     }
@@ -580,45 +729,9 @@ static OSStatus sRenderNotify(
         AUGraphStop(_graph);
     }
     
-    [_delegate playerDidUpdate:self];
-}
-
-
-- (BOOL) isPlaying
-{
-    return _currentTrack != nil;
-}
-
-
-- (BOOL) canPlay
-{
-    if ([self isPlaying]) {
-        return NO;
+    for (id<PlayerListener> listener in _listeners) {
+        [listener player:self didUpdatePlaying:NO];
     }
-    
-    BOOL trackOK = [_delegate playerNextTrack:self] != nil;
-    BOOL hardwareOK = YES;
-
-    return trackOK && hardwareOK;
-}
-
-
-- (BOOL) canPause
-{
-    if (![self isPlaying]) {
-        return NO;
-    }
-    
-    //
-    if ([self volume] == 0) {
-        return YES;
-    }
-    
-    if (0 /* in silence in track */) {
-        return YES;
-    }
-    
-    return NO;
 }
 
 
@@ -645,6 +758,19 @@ static OSStatus sRenderNotify(
 }
 
 
+- (void) addListener:(id<PlayerListener>)listener
+{
+    if (!_listeners) _listeners = [NSHashTable weakObjectsHashTable];
+    [_listeners addObject:listener];
+}
+
+
+- (void) removeListener:(id<PlayerListener>)listener
+{
+    [_listeners removeObject:listener];
+}
+
+
 - (void) setVolume:(double)volume
 {
     if (volume < 0) volume = 0;
@@ -659,6 +785,13 @@ static OSStatus sRenderNotify(
         ), "AudioUnitSetParameter[Volume]");
     }
 }
+
+
+- (BOOL) isPlaying
+{
+    return _currentTrack != nil;
+}
+
 
 @end
 

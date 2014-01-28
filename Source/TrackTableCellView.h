@@ -1,6 +1,6 @@
 //
 //  SongTableViewCell.h
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-05.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -23,7 +23,6 @@
 
 @property (nonatomic, weak) IBOutlet BorderedView *borderedView;
 
-@property (nonatomic, weak) IBOutlet ActionButton *actionButton;
 @property (nonatomic, weak) IBOutlet NSTextField  *titleField;
 @property (nonatomic, weak) IBOutlet NSTextField  *durationField;
 

@@ -1,6 +1,6 @@
 //
 //  Preferences.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-13.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -24,21 +24,12 @@ static NSDictionary *sGetDefaultValues()
         @"preventsAccidents":   @(YES),
         @"warnsAboutIssues":    @(YES),
 
-        @"exportsHistory":        @(YES),
-        @"groupsHistoryByFolder": @(NO),
-        @"historyFolderName":     @"",
-
-        @"preferredLibraryData": [NSData data],
-        @"preferredLibraryName": @"",
-        
         @"keySignatureMode":      @(KeySignatureModeTraditional),
 
         @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
         @"mainOutputSampleRate":  @(0),
         @"mainOutputFrames":      @(0),
-        @"mainOutputUsesHogMode": @(NO),
-
-        @"editingAudioDevice":    [AudioDevice defaultOutputDevice]
+        @"mainOutputUsesHogMode": @(NO)
     };
     
     });

@@ -1,6 +1,6 @@
 //
 //  PlayBar.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-11.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -10,7 +10,7 @@
 
 @implementation PlayBar
 
-- (void)drawRect:(NSRect)dirtyRect
+- (void) drawRect:(NSRect)dirtyRect
 {
 	[super drawRect:dirtyRect];
 	
@@ -46,8 +46,6 @@
     [roundedPath fill];
     
     [NSGraphicsContext restoreGraphicsState];
-    
-
 }
 
 

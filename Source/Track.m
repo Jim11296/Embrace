@@ -1,6 +1,6 @@
 //
 //  Track.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-03.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -8,22 +8,22 @@
 
 #import "Track.h"
 #import "iTunesManager.h"
+#import "TrackData.h"
 
 #import <AVFoundation/AVFoundation.h>
 
-static NSString * const sStatusKey      = @"status";
-static NSString * const sBookmarkKey    = @"bookmark";
-static NSString * const sArtistKey      = @"artist";
-static NSString * const sTitleKey       = @"title";
-static NSString * const sStartTimeKey   = @"start-time";
-static NSString * const sStopTimeKey    = @"stop-time";
-static NSString * const sDurationKey    = @"duration";
-static NSString * const sPlayOffsetKey  = @"play-offset";
-static NSString * const sPadOffsetKey   = @"pad-offset";
-static NSString * const sPadDurationKey = @"pad-duration";
-static NSString * const sPausesKey      = @"pauses";
-static NSString * const sTypeKey        = @"type";
-
+static NSString * const sTypeKey         = @"type";
+static NSString * const sStatusKey       = @"status";
+static NSString * const sBookmarkKey     = @"bookmark";
+static NSString * const sPausesKey       = @"pauses";
+static NSString * const sTitleKey        = @"title";
+static NSString * const sArtistKey       = @"artist";
+static NSString * const sStartTimeKey    = @"start-time";
+static NSString * const sStopTimeKey     = @"stop-time";
+static NSString * const sDurationKey     = @"duration";
+static NSString * const sStartSilenceKey = @"silence-start";
+static NSString * const sEndSilenceKey   = @"silence-end";
+static NSString * const sTonalityKey     = @"tonality";
 
 @interface Track ()
 @property (nonatomic) NSString *title;
@@ -31,48 +31,33 @@ static NSString * const sTypeKey        = @"type";
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic) NSTimeInterval stopTime;
 @property (nonatomic) NSTimeInterval duration;
-@property (nonatomic) NSTimeInterval playOffset;
-@property (nonatomic) NSTimeInterval padOffset;
-@property (nonatomic) NSTimeInterval padDuration;
-@property (nonatomic) Float32 leftAveragePower;
-@property (nonatomic) Float32 rightAveragePower;
-@property (nonatomic) Float32 leftPeakPower;
-@property (nonatomic) Float32 rightPeakPower;
-@property (nonatomic) TrackStatus trackStatus;
-@property (nonatomic) TrackType trackType;
-@property (nonatomic) BOOL pausesAfterPlaying;
+@property (nonatomic) NSTimeInterval silenceAtStart;
+@property (nonatomic) NSTimeInterval silenceAtEnd;
+@property (nonatomic) Tonality tonality;
+@end
+
+
+@interface TrackData (Private)
+- (id) initWithFileURL:(NSURL *)url mixdown:(BOOL)mixdown;
 @end
 
 
 @implementation Track {
     NSData *_bookmark;
-    AVAsset *_asset;
+    NSData *_contents;
+    TrackData *_trackDataForAnalysis;
 }
 
-@dynamic padRemaining, playRemaining, playDuration;
-@dynamic padOffsetString, padDurationString, padRemainingString;
-@dynamic playOffsetString, playDurationString, playRemainingString;
-@dynamic silenceDuration;
+@dynamic playDuration;
+
 
 + (NSSet *) keyPathsForValuesAffectingValueForKey:(NSString *)key
 {
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     NSArray *affectingKeys = nil;
  
-    if ([key isEqualToString:@"playDurationString"]) {
-        affectingKeys = @[ @"playDuration", @"playOffset", @"trackStatus" ];
-
-    } else if ([key isEqualToString:@"playDuration"]) {
+    if ([key isEqualToString:@"playDuration"]) {
         affectingKeys = @[ @"duration", @"stopTime", @"startTime" ];
-
-    } else if ([key isEqualToString:@"silenceDurationEditable"]) {
-        affectingKeys = @[ @"trackStatus", @"trackType" ];
-
-    } else if ([key isEqualToString:@"silenceDurationString"]) {
-        affectingKeys = @[ @"silenceDuration" ];
-
-    } else if ([key isEqualToString:@"silenceDuration"]) {
-        affectingKeys = @[ @"duration" ];
     }
 
     if (affectingKeys) {
@@ -85,7 +70,24 @@ static NSString * const sTypeKey        = @"type";
 
 + (instancetype) trackWithStateDictionary:(NSDictionary *)state
 {
-    return [[self alloc] initWithStateDictionary:state];
+    TrackType type = [[state objectForKey:sTypeKey] integerValue];
+    Track *track = nil;
+
+    if (type == TrackTypeAudioFile) {
+        NSData *bookmark = [state objectForKey:sBookmarkKey];
+        
+        track = [[Track alloc] _initWithFileURL:nil bookmark:bookmark];
+
+    } else if (type == TrackTypeSilence) {
+        track = [[SilentTrack alloc] init];
+
+    } else {
+        return nil;
+    }
+    
+    [track _loadState:state];
+
+    return track;
 }
 
 
@@ -95,60 +97,23 @@ static NSString * const sTypeKey        = @"type";
 }
 
 
-+ (instancetype) silenceTrack
-{
-    return [[self alloc] _initAsSilence];
-}
-
-
 - (id) _initWithFileURL:(NSURL *)url bookmark:(NSData *)bookmark
 {
     if ((self = [super init])) {
-        [self setTrackType:TrackTypeAudioFile];
-
         if (!bookmark) {
             NSError *error = nil;
             bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
         }
 
-        _fileURL = url;
-        _bookmark = bookmark;
-
-        [self _startLoadingMetadata];
-    }
-
-    return self;
-}
-
-
-- (id) _initAsSilence
-{
-    if ((self = [super init])) {
-        [self setTrackType:TrackTypeSilence];
-        [self setTitle:NSLocalizedString(@"Silence", nil)];
-        [self setDuration:5];
-    }
-    
-    return self;
-}
-
-
-- (id) initWithStateDictionary:(NSDictionary *)state
-{
-    TrackType type = [[state objectForKey:sTypeKey] integerValue];
-    
-    if (type == TrackTypeAudioFile) {
-        NSData *bookmark = [state objectForKey:sBookmarkKey];
-        
         NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
         
         BOOL isStale = NO;
         NSError *error = nil;
-        NSURL *url = [NSURL URLByResolvingBookmarkData: bookmark
-                                               options: options
-                                         relativeToURL: nil
-                                   bookmarkDataIsStale: &isStale
-                                                 error: &error];
+        url = [NSURL URLByResolvingBookmarkData: bookmark
+                                        options: options
+                                  relativeToURL: nil
+                            bookmarkDataIsStale: &isStale
+                                          error: &error];
 
         if (!url) {
             self = nil;
@@ -161,20 +126,21 @@ static NSString * const sTypeKey        = @"type";
             [url stopAccessingSecurityScopedResource];
         }
 
-        self = [self _initWithFileURL:url bookmark:bookmark];
+        _fileURL = url;
+        [_fileURL startAccessingSecurityScopedResource];
 
-    } else if (type == TrackTypeSilence) {
-        self = [self _initAsSilence];
+        _bookmark = bookmark;
+        _contents = [NSData dataWithContentsOfURL:_fileURL options:NSDataReadingMappedAlways error:&error];
+        
+        [self _loadMetadataViaManager];
+        [self _loadMetadataViaAsset];
+        
+        __weak id weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf _loadMetadataViaAnalysisIfNeeded];
+        });
+    }
 
-    } else {
-        self = nil;
-        return nil;
-    }
-    
-    if (self) {
-        [self _loadState:state];
-    }
-    
     return self;
 }
 
@@ -185,62 +151,155 @@ static NSString * const sTypeKey        = @"type";
 }
 
 
+- (void) dealloc
+{
+    [_fileURL stopAccessingSecurityScopedResource];
+    _fileURL = nil;
+}
+
+
 - (void) _loadState:(NSDictionary *)state
 {
-    NSString *artist      = [state objectForKey:sArtistKey];
-    NSString *title       = [state objectForKey:sTitleKey];
-    NSNumber *startTime   = [state objectForKey:sStartTimeKey];
-    NSNumber *stopTime    = [state objectForKey:sStopTimeKey];
-    NSNumber *duration    = [state objectForKey:sDurationKey];
-    NSNumber *trackStatus = [state objectForKey:sStatusKey];
-    NSNumber *playOffset  = [state objectForKey:sPlayOffsetKey];
-    NSNumber *padOffset   = [state objectForKey:sPadOffsetKey];
-    NSNumber *padDuration = [state objectForKey:sPadDurationKey];
-    NSNumber *pauses      = [state objectForKey:sPausesKey];
+    NSString *artist       = [state objectForKey:sArtistKey];
+    NSString *title        = [state objectForKey:sTitleKey];
+    NSNumber *startTime    = [state objectForKey:sStartTimeKey];
+    NSNumber *stopTime     = [state objectForKey:sStopTimeKey];
+    NSNumber *duration     = [state objectForKey:sDurationKey];
+    NSNumber *trackStatus  = [state objectForKey:sStatusKey];
+    NSNumber *startSilence = [state objectForKey:sStartSilenceKey];
+    NSNumber *endSilence   = [state objectForKey:sEndSilenceKey];
+    NSNumber *tonality     = [state objectForKey:sTonalityKey];
+    NSNumber *pauses       = [state objectForKey:sPausesKey];
 
-    if (artist)      [self setArtist:artist];
-    if (title)       [self setTitle:title];
-    if (startTime)   [self setStartTime:  [startTime   doubleValue]];
-    if (stopTime)    [self setStopTime:   [stopTime    doubleValue]];
-    if (duration)    [self setDuration:   [duration    doubleValue]];
-    if (trackStatus) [self setTrackStatus:[trackStatus integerValue]];
-    if (playOffset)  [self setPlayOffset: [playOffset  doubleValue]];
-    if (padOffset)   [self setPadOffset:  [padOffset   doubleValue]];
-    if (padDuration) [self setPadDuration:[padDuration doubleValue]];
-    if (pauses)      [self setPausesAfterPlaying:[pauses boolValue]];
+    if (artist)       [self setArtist:artist];
+    if (title)        [self setTitle:title];
+    if (startTime)    [self setStartTime:  [startTime   doubleValue]];
+    if (stopTime)     [self setStopTime:   [stopTime    doubleValue]];
+    if (duration)     [self setDuration:   [duration    doubleValue]];
+    if (trackStatus)  [self setTrackStatus:[trackStatus integerValue]];
+
+    if (startSilence) [self setSilenceAtStart:[startSilence doubleValue]];
+    if (endSilence)   [self setSilenceAtEnd:  [endSilence   doubleValue]];
+    if (tonality)     [self setTonality:[tonality integerValue]];
+
+    if (pauses)       [self setPausesAfterPlaying:[pauses boolValue]];
 }
 
 
-- (void) _stopLoadingMetadata
+#pragma mark - Metadata
+
+- (void) _clearTrackDataForAnalysis
 {
-    if (_asset) {
-        _asset = nil;
-        [_fileURL stopAccessingSecurityScopedResource];
+    _trackDataForAnalysis = nil;
+}
+
+
+- (void) _loadMetadataViaAnalysisIfNeeded
+{
+    if (_silenceAtEnd || _silenceAtStart) {
+        return;
     }
+
+    double threshold  = 0.03125; // -30dB
+    
+    _trackDataForAnalysis = [[TrackData alloc] initWithFileURL:_fileURL mixdown:YES];
+    
+    __weak id weakSelf = self;
+    [_trackDataForAnalysis addReadyCallback:^(TrackData *trackData) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSData *data = [trackData data];
+
+            float     *buffer = (float *)[data bytes];
+            NSUInteger length = [data length] / sizeof(float);
+            
+            NSInteger samplesAtStart = 0;
+            NSInteger samplesAtEnd   = 0;
+            
+            for (NSInteger i = 0; i < length; i++) {
+                if (fabs(buffer[i]) > threshold) {
+                    break;
+                }
+                
+                samplesAtStart++;
+            }
+
+            for (NSInteger i = (length - 1); i >= 0; i--) {
+                if (fabs(buffer[i]) > threshold) {
+                    break;
+                }
+
+                samplesAtEnd++;
+            }
+
+            
+            double sampleRate = [trackData streamDescription].mSampleRate;
+            
+            
+            NSTimeInterval silenceAtStart = samplesAtStart / sampleRate;
+            NSTimeInterval silenceAtEnd   = samplesAtEnd   / sampleRate;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf _loadState:@{
+                    sStartSilenceKey: @(silenceAtStart),
+                    sEndSilenceKey:   @(silenceAtEnd)
+                }];
+                
+                [weakSelf _clearTrackDataForAnalysis];
+            });
+        });
+    }];
 }
 
 
-- (void) _startLoadingMetadata
+- (void) _loadMetadataViaManager
 {
+    if (!_fileURL) {
+        return;
+    }
+
+    iTunesMetadata *metadata = [[iTunesManager sharedInstance] metadataForFileURL:_fileURL];
+    
+    if (metadata) {
+        if (!_title)    [self setTitle:[metadata title]];
+        if (!_artist)   [self setArtist:[metadata artist]];
+        if (!_duration) [self setDuration:[metadata duration]];
+    }
+    
     __weak id weakSelf = self;
+
+    [[iTunesManager sharedInstance] addMetadataReadyCallback:^(iTunesManager *manager) {
+        iTunesMetadata *loadedMetadata = [manager metadataForFileURL:_fileURL];
+        
+        [weakSelf setStartTime:[loadedMetadata startTime]];
+        [weakSelf setStopTime:[loadedMetadata stopTime]];
+    }];
+}
+
+
+- (void) _loadMetadataViaAsset
+{
+    if (!_fileURL) {
+        return;
+    }
+
+    AVAsset *asset = [[AVURLAsset alloc] initWithURL:_fileURL options:@{
+        AVURLAssetPreferPreciseDurationAndTimingKey: @YES
+    }];
+
+    __weak id weakSelf = self;
+    __weak AVAsset *weakAsset = asset;
 
     NSString *fallbackTitle = [[_fileURL lastPathComponent] stringByDeletingPathExtension];
 
-    _asset = _fileURL ? [[AVURLAsset alloc] initWithURL:_fileURL options:@{
-        AVURLAssetPreferPreciseDurationAndTimingKey: @YES
-    }] : nil;
+    [asset loadValuesAsynchronouslyForKeys:@[ @"commonMetadata", @"duration", @"availableMetadataFormats" ] completionHandler:^{
+        AVAsset *asset = weakAsset;
 
-    if (_asset) {
-        [_fileURL startAccessingSecurityScopedResource];
-    }
-
-    __weak AVAsset *weakAsset = _asset;
-    [_asset loadValuesAsynchronouslyForKeys:@[ @"commonMetadata" ] completionHandler:^{
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 
         NSError *error;
-        AVKeyValueStatus metadataStatus = [weakAsset statusOfValueForKey:@"commonMetadata" error:&error];
-        AVKeyValueStatus durationStatus = [weakAsset statusOfValueForKey:@"duration"       error:&error];
+        AVKeyValueStatus metadataStatus = [asset statusOfValueForKey:@"commonMetadata" error:&error];
+        AVKeyValueStatus durationStatus = [asset statusOfValueForKey:@"duration"       error:&error];
+        AVKeyValueStatus formatsStatus  = [asset statusOfValueForKey:@"availableMetadataFormats" error:&error];
 
         if (metadataStatus == AVKeyValueStatusLoaded) {
             NSArray *metadata = [weakAsset commonMetadata];
@@ -260,88 +319,57 @@ static NSString * const sTypeKey        = @"type";
             }
         }
 
+        if (formatsStatus == AVKeyValueStatusLoaded) {
+            Tonality tonality = Tonality_Unknown;
+
+            for (NSString *format in [asset availableMetadataFormats]) {
+                NSArray *metadata = [asset metadataForFormat:format];
+            
+                for (AVMetadataItem *item in metadata) {
+                    id key = [item key];
+
+                    if ([key isEqual:@"com.apple.iTunes.initialkey"] && [[item value] isKindOfClass:[NSString class]]) {
+                        NSString *string = (NSString *)[item value];
+                        tonality = GetTonalityForString(string);
+                    }
+                }
+            }
+            
+            if (tonality != Tonality_Unknown) {
+                [dictionary setObject:@(tonality) forKey:sTonalityKey];
+            }
+        }
+
         if (durationStatus == AVKeyValueStatusLoaded) {
-            NSTimeInterval duration = CMTimeGetSeconds([weakAsset duration]);
+            NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
             [dictionary setObject:@(duration) forKey:sDurationKey];
         }
         
-        [weakSelf _loadState:dictionary];
-        
-        if (metadataStatus == AVKeyValueStatusLoaded && durationStatus == AVKeyValueStatusLoaded) {
-            [self _stopLoadingMetadata];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf _loadState:dictionary];
+        });
     }];
-    
-    iTunesManager *manager = [iTunesManager sharedInstance];
-
-    void (^callback)() = ^{
-        NSInteger trackID = [manager trackIDForURL:_fileURL];
-    
-        NSTimeInterval startTime = 0;
-        [manager getStartTime:&startTime forTrack:trackID];
-        [self setStartTime:startTime];
-
-        NSTimeInterval stopTime = 0;
-        [manager getStopTime:&stopTime forTrack:trackID];
-        [self setStopTime:stopTime];
-    };
-
-    if ([manager isReady]) {
-        callback();
-    } else {
-        [manager addReadyCallback:callback];
-    }
 }
 
 
-- (NSString *) _stringForTime:(NSTimeInterval)time minus:(BOOL)minus
-{
-    double seconds = round(fmod(time, 60.0));
-    double minutes = floor(time / 60.0);
-
-    return [NSString stringWithFormat:@"%s%g:%02g", minus ? "-" : "", minutes, seconds];
-}
-
-
-- (void) updateTrackStatus: (TrackStatus) status
-                 padOffset: (NSTimeInterval) padOffset
-                playOffset: (NSTimeInterval) playOffset
-          leftAveragePower: (Float32) leftAveragePower
-         rightAveragePower: (Float32) rightAveragePower
-             leftPeakPower: (Float32) leftPeakPower
-            rightPeakPower: (Float32) rightPeakPower
-{
-    NSTimeInterval playDuration = [self playDuration];
-
-    if (padOffset  > _padDuration) padOffset  = _padDuration;
-    if (playOffset > playDuration) playOffset = playDuration;
-
-    [self setPadOffset:padOffset];
-    [self setPlayOffset:playOffset];   
-    [self setTrackStatus:status];
-    
-    [self setLeftAveragePower:leftAveragePower];
-    [self setRightAveragePower:rightAveragePower];
-    [self setLeftPeakPower:leftPeakPower];
-    [self setRightPeakPower:rightPeakPower];
-}
-
+#pragma mark - Public Methods
 
 - (NSDictionary *) stateDictionary
 {
     NSMutableDictionary *state = [NSMutableDictionary dictionary];
 
-    if (_bookmark)    [state setObject:_bookmark       forKey:sBookmarkKey];
-    if (_artist)      [state setObject:_artist         forKey:sArtistKey];
-    if (_title)       [state setObject:_title          forKey:sTitleKey];
-    if (_trackStatus) [state setObject:@(_trackStatus) forKey:sStatusKey];
-    if (_startTime)   [state setObject:@(_startTime)   forKey:sStartTimeKey];
-    if (_stopTime)    [state setObject:@(_stopTime)    forKey:sStopTimeKey];
-    if (_duration)    [state setObject:@(_duration)    forKey:sDurationKey];
-    if (_playOffset)  [state setObject:@(_playOffset)  forKey:sPlayOffsetKey];
-    if (_padOffset)   [state setObject:@(_padOffset)   forKey:sPadOffsetKey];
-    if (_padDuration) [state setObject:@(_padDuration) forKey:sPadDurationKey];
-    if (_trackType)   [state setObject:@(_trackType)   forKey:sTypeKey];
+    [state setObject:@([self trackType]) forKey:sTypeKey];
+
+    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
+    if (_artist)         [state setObject:_artist               forKey:sArtistKey];
+    if (_title)          [state setObject:_title                forKey:sTitleKey];
+    if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
+    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
+    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
+    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
+    if (_silenceAtStart) [state setObject:@(_silenceAtStart)    forKey:sStartSilenceKey];
+    if (_silenceAtEnd)   [state setObject:@(_silenceAtEnd)      forKey:sEndSilenceKey];
+    if (_tonality)       [state setObject:@(_tonality)          forKey:sTonalityKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -350,31 +378,32 @@ static NSString * const sTypeKey        = @"type";
     return state;
 }
 
+
+- (TrackData *) trackData
+{
+    return [[TrackData alloc] initWithFileURL:_fileURL mixdown:NO];
+}
+
+
+- (BOOL) isSilentAtOffset:(NSTimeInterval)offset
+{
+    if (offset <= [self silenceAtStart]) {
+        return YES;
+    }
+    
+    if (([self playDuration] - offset) < [self silenceAtEnd]) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
 #pragma mark - Accessors
 
-- (void) updateDuration:(NSTimeInterval)duration
+- (TrackType) trackType
 {
-    if (_trackType == TrackTypeSilence) {
-        [self setDuration:duration];
-    }
-}
-
-
-- (void) updatePausesAfterPlaying:(BOOL)pausesAfterPlaying
-{
-    [self setPausesAfterPlaying:pausesAfterPlaying];
-}
-
-
-- (NSTimeInterval) padRemaining
-{
-    return [self padDuration] - _padOffset;
-}
-
-
-- (NSTimeInterval) playRemaining
-{
-    return [self playDuration] - _playOffset;
+    return TrackTypeAudioFile;
 }
 
 
@@ -385,34 +414,32 @@ static NSString * const sTypeKey        = @"type";
 }
 
 
-- (void) setSilenceDuration:(NSTimeInterval)silenceDuration
+@end
+
+
+@implementation SilentTrack
+
++ (instancetype) silenceTrack
 {
-    [self setDuration:silenceDuration];
+    return [[self alloc] init];
 }
 
 
-- (NSTimeInterval) silenceDuration
+- (id) init
 {
-    return [self duration];
+    if ((self = [super init])) {
+        [self setTitle:NSLocalizedString(@"Silence", nil)];
+        [self setDuration:5];
+    }
+    
+    return self;
 }
 
 
-- (BOOL) isSilenceDurationEditable
+- (TrackType) trackType
 {
-    return [self trackStatus] == TrackStatusQueued &&
-           [self trackType] == TrackTypeSilence;
+    return TrackTypeSilence;
 }
-
-
-- (NSString *) playOffsetString    { return [self _stringForTime:[self playOffset]    minus:NO ]; }
-- (NSString *) playDurationString  { return [self _stringForTime:[self playDuration]  minus:NO ]; }
-- (NSString *) playRemainingString { return [self _stringForTime:[self playRemaining] minus:YES]; }
-
-- (NSString *) padOffsetString     { return [self _stringForTime:[self padOffset]     minus:NO ]; }
-- (NSString *) padDurationString   { return [self _stringForTime:[self padDuration]   minus:NO ]; }
-- (NSString *) padRemainingString  { return [self _stringForTime:[self padRemaining]  minus:YES]; }
-
-- (NSString *) silenceDurationString { return [self _stringForTime:[self silenceDuration]  minus:NO]; }
 
 
 @end

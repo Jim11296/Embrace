@@ -1,6 +1,6 @@
 //
 //  Effect.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-03.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -91,6 +91,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     [[NSNotificationCenter defaultCenter] postNotificationName:EffectDidDeallocNotification object:nil];
 }
 
+
 - (BOOL) loadClassInfoDictionary:(NSDictionary *)dictionary
 {
     if (noErr != AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_ClassInfo, kAudioUnitScope_Global, 0, &dictionary, sizeof(dictionary))) {
@@ -104,6 +105,12 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     AUParameterListenerNotify(NULL, NULL, &changedUnit);
 
     return YES;
+}
+
+
+- (void) loadDefaultValues
+{
+    
 }
 
 

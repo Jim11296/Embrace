@@ -1,6 +1,6 @@
 //
 //  MainWindowController.h
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-03.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -14,9 +14,10 @@
 
 @interface PlaylistController : NSWindowController
 
-- (IBAction) playOrPause:(id)sender;
-- (IBAction) closeWindow:(id)sender;
+- (IBAction) playOrSoftPause:(id)sender;
+
 - (IBAction) showEffects:(id)sender;
+- (IBAction) showCurrentTrack:(id)sender;
 
 - (IBAction) changeVolume:(id)sender;
 - (IBAction) editSelectedTrack:(id)sender;
@@ -24,6 +25,16 @@
 - (IBAction) togglePauseAfterPlaying:(id)sender;
 - (IBAction) addSilence:(id)sender;
 - (IBAction) showGearMenu:(id)sender;
+
+- (void) clearHistory;
+- (void) openFileAtURL:(NSURL *)url;
+- (void) copyHistoryToPasteboard:(NSPasteboard *)pasteboard;
+- (void) saveHistoryToFileAtURL:(NSURL *)url;
+- (void) exportHistory;
+
+- (void) debugPopulatePlaylist;
+
+@property (nonatomic) NSTimeInterval minimumSilenceBetweenTracks;
 
 @property (nonatomic, strong) NSArray *tracks;
 @property (nonatomic, weak) Player *player;
@@ -34,7 +45,6 @@
 @property (nonatomic, strong) IBOutlet NSMenu *tableMenu;
 
 @property (nonatomic, strong) IBOutlet BorderedView *headerView;
-@property (nonatomic, weak)   IBOutlet CloseButton  *closeButton;
 @property (nonatomic, weak)   IBOutlet NSTextField  *playOffsetField;
 @property (nonatomic, weak)   IBOutlet PlayBar      *playBar;
 @property (nonatomic, weak)   IBOutlet NSTextField  *playRemainingField;

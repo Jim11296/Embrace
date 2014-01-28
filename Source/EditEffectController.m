@@ -1,6 +1,6 @@
 //
 //  EffectSettingsController.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-06.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -184,15 +184,48 @@
 
 - (IBAction) loadPreset:(id)sender
 {
-    //!i: Implement
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+
+    NSString *allPresets = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
+    allPresets = [allPresets stringByAppendingPathComponent:@"Audio"];
+    allPresets = [allPresets stringByAppendingPathComponent:@"Presets"];
+
+    NSString *manufacturer = [[_effect type] manufacturer];
+    NSString *name = [[_effect type] name];
+    
+    NSString *unitPresets = nil;
+    
+    if (name && manufacturer) {
+        unitPresets = [allPresets stringByAppendingPathComponent:manufacturer];
+        unitPresets = [unitPresets stringByAppendingPathComponent:name];
+    }
+    
+    BOOL allExists = NO,      unitExists = NO;
+    BOOL allIsDirectory = NO, unitIsDirectory = NO;
+    
+    allExists  = [[NSFileManager defaultManager] fileExistsAtPath:allPresets  isDirectory:&allIsDirectory];
+    unitExists = [[NSFileManager defaultManager] fileExistsAtPath:unitPresets isDirectory:&unitIsDirectory];
+
+    if (unitExists && unitIsDirectory) {
+        [openPanel setDirectoryURL:[NSURL fileURLWithPath:unitPresets]];
+    } else if (allExists && allIsDirectory) {
+        [openPanel setDirectoryURL:[NSURL fileURLWithPath:allPresets]];
+    }
+
+    __weak id weakEffect = _effect;
+
+    [openPanel beginWithCompletionHandler:^(NSInteger result) {
+        if (result == NSOKButton) {
+            [weakEffect loadAudioPresetAtFileURL:[openPanel URL]];
+        }
+    }];
 }
 
 
 - (IBAction) restoreDefaultValues:(id)sender
 {
-    //!i: Implement
+    [_effect loadDefaultValues];
 }
-
 
 
 @end

@@ -1,6 +1,6 @@
 //
 //  AudioDevice.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-12.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -263,7 +263,7 @@ static AudioDevice  *sDefaultOutputDevice = nil;
                 [result addObject:@48000.0];
             }
             if (minimum <= 88200  && 88200 <= maximum) {
-                [result addObject:@48000.0];
+                [result addObject:@88200.0];
             }
             if (minimum <= 96000  && 96000 <= maximum) {
                 [result addObject:@96000.0];

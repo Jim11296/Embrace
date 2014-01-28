@@ -1,6 +1,6 @@
 //
 //  PreferencesController.m
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-12.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -9,7 +9,7 @@
 #import "PreferencesController.h"
 #import "Preferences.h"
 #import "AudioDevice.h"
-
+#import "Player.h"
 
 @implementation PreferencesController
 
@@ -24,12 +24,13 @@
     return @"PreferencesWindow";
 }
 
+
 - (void) windowDidLoad
 {
     [self _handlePreferencesDidChange:nil];
-    [self selectPane:0 animated:NO];
     
     [self setPreferences:[Preferences sharedInstance]];
+    [self setPlayer:[Player sharedInstance]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 }
@@ -52,9 +53,7 @@
     }
  
     [self _rebuildDevicesMenu];
-    [self _rebuildPreferredLocationMenu];
 }
-
 
 
 - (IBAction) changeMainDevice:(id)sender
@@ -84,74 +83,6 @@
     }
 }
 
-- (IBAction) changeEditingDevice:(id)sender
-{
-    AudioDevice *device = [[sender selectedItem] representedObject];
-    [[Preferences sharedInstance] setEditingAudioDevice:device];
-}
-
-
-- (IBAction) changePreferredLibrary:(id)sender
-{
-    NSInteger selectedTag = [[sender selectedItem] tag];
-    
-    // "Choose..." item
-    if (selectedTag == 2) {
-        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-        
-        [openPanel setAllowsMultipleSelection:NO];
-        [openPanel setCanChooseFiles:NO];
-        [openPanel setCanChooseDirectories:YES];
-        
-        [openPanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
-            if (result == NSFileHandlingPanelCancelButton) {
-                return;
-            }
-
-            NSURL *url = [openPanel URL];
-            
-            NSError *error = nil;
-            NSData  *bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
-
-            NSString *name = [url lastPathComponent];
-            if (!bookmark) name = @"";
-        
-            [[Preferences sharedInstance] setPreferredLibraryName:name];
-            [[Preferences sharedInstance] setPreferredLibraryData:bookmark];
-        }];
-    
-    // "None" item
-    } else if (selectedTag == 0) {
-        [[Preferences sharedInstance] setPreferredLibraryName:@""];
-        [[Preferences sharedInstance] setPreferredLibraryData:[NSData data]];
-    }
-}
-
-
-- (void) _rebuildPreferredLocationMenu
-{
-    Preferences *preferences = [Preferences sharedInstance];
-
-    NSData   *data = [preferences preferredLibraryData];
-    NSString *name = [preferences preferredLibraryName];
-
-    if ([name length] && [data length]) {
-        [[self preferredLibraryLocationItem] setTitle:[preferences preferredLibraryName]];
-        [[self preferredLibraryLocationItem] setImage:[NSImage imageNamed:NSImageNameFolder]];
-
-        [[self preferredLibraryLocationItem]  setHidden:NO];
-        [[self preferredLibrarySeparatorItem] setHidden:NO];
-        
-        [[self preferredLibraryPopUp] selectItem:[self preferredLibraryLocationItem]];
-        
-    } else {
-        [[self preferredLibraryLocationItem]  setHidden:YES];
-        [[self preferredLibrarySeparatorItem] setHidden:YES];
-
-        [[self preferredLibraryPopUp] selectItemWithTag:0];
-    }
-}
-
 
 - (void) _rebuildDevicesMenu
 {
@@ -177,13 +108,9 @@
 
         [popUpButton selectItem:itemToSelect];
     };
-
     
     AudioDevice *mainOutputAudioDevice = [[Preferences sharedInstance] mainOutputAudioDevice];
-    AudioDevice *editingAudioDevice    = [[Preferences sharedInstance] editingAudioDevice];
-
     rebuild([self mainDevicePopUp], mainOutputAudioDevice);
-    rebuild([self editingDevicePopUp], editingAudioDevice);
 }
 
 
@@ -241,53 +168,6 @@
     
     [[self framesPopUp] selectItem:itemToSelect];
 }
-
-
-- (void) selectPane:(NSInteger)tag animated:(BOOL)animated
-{
-    NSToolbarItem *item;
-    NSView *pane;
-    NSString *title;
-
-    if (tag == 1) {
-        item = _devicesItem;
-        pane = _devicesPane;
-        title = NSLocalizedString(@"Devices", nil);
-
-    } else {
-        item = _generalItem;
-        pane = _generalPane;
-        title = NSLocalizedString(@"General", nil);
-    }
-    
-    [_toolbar setSelectedItemIdentifier:[item itemIdentifier]];
-    
-    NSWindow *window = [self window];
-    NSView *contentView = [window contentView];
-    for (NSView *view in [contentView subviews]) {
-        [view removeFromSuperview];
-    }
-
-    NSRect paneFrame = [pane frame];
-    NSRect windowFrame = [window frame];
-    NSRect newFrame = [window frameRectForContentRect:paneFrame];
-    
-    newFrame.origin = windowFrame.origin;
-    newFrame.origin.y += (windowFrame.size.height - newFrame.size.height);
-
-    [window setFrame:newFrame display:YES animate:animated];
-    [window setTitle:title];
-
-    [contentView addSubview:pane];
-}
-
-
-- (IBAction) selectPane:(id)sender
-{
-    [self selectPane:[sender tag] animated:YES];
-}
-
-
 
 
 @end

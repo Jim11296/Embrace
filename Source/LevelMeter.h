@@ -1,6 +1,6 @@
 //
 //  LevelMeter.h
-//  Terpsichore
+//  Embrace
 //
 //  Created by Ricci Adams on 2014-01-11.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
@@ -8,10 +8,20 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class Track;
+@class Player;
 
 @interface LevelMeter : NSView
 
-- (void) updateWithTrack:(Track *)track;
+@property (nonatomic, getter=isMetering) BOOL metering;
+
+- (void) setLeftAveragePower: (Float32) leftAveragePower
+           rightAveragePower: (Float32) rightAveragePower
+               leftPeakPower: (Float32) leftPeakPower
+              rightPeakPower: (Float32) rightPeakPower;
+
+@property (nonatomic, readonly) Float32 leftAveragePower;
+@property (nonatomic, readonly) Float32 rightAveragePower;
+@property (nonatomic, readonly) Float32 leftPeakPower;
+@property (nonatomic, readonly) Float32 rightPeakPower;
 
 @end
