@@ -30,8 +30,6 @@ typedef NS_ENUM(NSInteger, TrackType) {
 + (instancetype) trackWithFileURL:(NSURL *)url;
 - (id) initWithFileURL:(NSURL *)url;
 
-- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
-
 - (NSDictionary *) stateDictionary;
 - (TrackData *) trackData;
 

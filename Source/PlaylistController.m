@@ -545,9 +545,92 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    NSArray *tracks = [[self tracksController] arrangedObjects];
+    Track   *track  = [tracks objectAtIndex:row];
+    TrackType trackType = [track trackType];
+    
+    TrackTableCellView *cellView;
+
+    if (trackType == TrackTypeAudioFile) {
+        cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
+    } else if (trackType == TrackTypeSilence) {
+        cellView = [tableView makeViewWithIdentifier:@"SilenceCell" owner:self];
+    }
+
+    NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
+    [cellView setSelected:[selectionIndexes containsIndex:row]];
+    
+    return cellView;
+}
+
+
+- (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
+{
+    NSArray *tracks = [[self tracksController] arrangedObjects];
+    Track   *track  = [tracks objectAtIndex:row];
+    TrackType trackType = [track trackType];
+    
+    if (trackType == TrackTypeAudioFile) {
+        return 40;
+    } else if (trackType == TrackTypeSilence) {
+        return 24;
+    }
+
+    return 40;
+}
+
+
+- (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
+{
+    NSPasteboard *pasteboard = [info draggingPasteboard];
+    BOOL isMove = ([pasteboard dataForType:sTrackPasteboardType] != nil);
+
+    if (dropOperation == NSTableViewDropAbove) {
+        Track *track = [self _trackAtRow:row];
+
+        if (!track || [track trackStatus] == TrackStatusQueued) {
+            if (isMove) {
+                if ((row == _rowOfDraggedTrack) || (row == (_rowOfDraggedTrack + 1))) {
+                    return NSDragOperationNone;
+                } else {
+                    return NSDragOperationMove;
+                }
+            
+            } else {
+                return NSDragOperationCopy;
+            }
+        }
+    }
+
+    if (!isMove && (dropOperation == NSTableViewDropOn)) {
+        Track *track = [self _trackAtRow:row];
+
+        if (!track || [track trackStatus] == TrackStatusQueued) {
+            [tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
+            return NSDragOperationCopy;
+        }
+    }
+    
+    // Always accept a drag from iTunes, target end of table in this case
+    if (!isMove) {
+        [tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
+        return NSDragOperationCopy;
+    }
+
+    return NSDragOperationNone;
+}
+
+
 - (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
     NSPasteboard *pboard = [info draggingPasteboard];
+
+    if ((row == -1) && (dropOperation == NSTableViewDropOn)) {
+        row = [[[self tracksController] arrangedObjects] count];
+        dropOperation = NSTableViewDropAbove;
+    }
 
     NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];
     NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
@@ -588,63 +671,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     }
     
     return NO;
-}
-
-
-- (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{
-    NSArray *tracks = [[self tracksController] arrangedObjects];
-    Track   *track  = [tracks objectAtIndex:row];
-    TrackType trackType = [track trackType];
-    
-    TrackTableCellView *cellView;
-
-    if (trackType == TrackTypeAudioFile) {
-        cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
-    } else if (trackType == TrackTypeSilence) {
-        cellView = [tableView makeViewWithIdentifier:@"SilenceCell" owner:self];
-    }
-
-    NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
-    [cellView setSelected:[selectionIndexes containsIndex:row]];
-    
-    return cellView;
-}
-
-
-- (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
-{
-    NSArray *tracks = [[self tracksController] arrangedObjects];
-    Track   *track  = [tracks objectAtIndex:row];
-    TrackType trackType = [track trackType];
-    
-    if (trackType == TrackTypeAudioFile) {
-        return 40;
-    } else if (trackType == TrackTypeSilence) {
-        return 24;
-    }
-
-    return 40;
-}
-
-
-- (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
-{
-    if (dropOperation == NSTableViewDropAbove) {
-        Track *track = [self _trackAtRow:row];
-
-        if (!track || [track trackStatus] == TrackStatusQueued) {
-            NSPasteboard *pasteboard = [info draggingPasteboard];
-            
-            if ([pasteboard dataForType:sTrackPasteboardType]) {
-                return NSDragOperationMove;
-            } else {
-                return NSDragOperationCopy;
-            }
-        }
-    }
-
-    return NSDragOperationNone;
 }
 
 

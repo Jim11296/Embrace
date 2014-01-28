@@ -123,7 +123,6 @@ static AudioDevice  *sDefaultOutputDevice = nil;
 + (instancetype) defaultOutputDevice
 {
     [self _refreshAudioDevices];
-    NSLog(@"%@", sDefaultOutputDevice);
     return sDefaultOutputDevice;
 }
 

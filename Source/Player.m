@@ -12,7 +12,6 @@
 #import "AppDelegate.h"
 #import "EffectType.h"
 #import "AudioDevice.h"
-#import "Limiter.h"
 
 #import <pthread.h>
 #import <signal.h>
@@ -67,12 +66,10 @@ static OSStatus sRenderNotify(
     AUGraph   _graph;
     AudioUnit _filePlayerAudioUnit;
     AudioUnit _mixerAudioUnit;
-    AudioUnit _limiterAudioUnit;
     AudioUnit _outputAudioUnit;
 
 	AUNode    _filePlayerNode;
 	AUNode    _outputNode;
-    AUNode    _limiterNode;
     AUNode    _mixerNode;
     
     AudioDevice *_outputDevice;
@@ -126,11 +123,12 @@ static OSStatus sRenderNotify(
 {
     if ((self = [super init])) {
         _graphContext = (AudioPlayerGraphContext *)calloc(1, sizeof(AudioPlayerGraphContext));
-        _volume = 1.0;
 
         [self _buildGraph];
         [self _loadState];
         [self _reconnectGraph];
+
+        [self setVolume:0.9];
     }
     
     return self;
@@ -159,9 +157,6 @@ static OSStatus sRenderNotify(
     mixerCD.componentSubType = kAudioUnitSubType_StereoMixer;
     mixerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
 
-    AudioComponentDescription limiterCD;
-    LimiterGetComponentDescription(&limiterCD);
-
     AudioComponentDescription outputCD = {0};
     outputCD.componentType = kAudioUnitType_Output;
     outputCD.componentSubType = kAudioUnitSubType_HALOutput;
@@ -169,14 +164,12 @@ static OSStatus sRenderNotify(
     
     CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ Player ]");
     CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
-    CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
     CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
 
 	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
 
 	CheckError(AUGraphNodeInfo(_graph, _filePlayerNode, NULL, &_filePlayerAudioUnit), "AUGraphNodeInfo[ Player ]");
 	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[ Mixer ]");
-	CheckError(AUGraphNodeInfo(_graph, _limiterNode,    NULL, &_limiterAudioUnit),    "AUGraphNodeInfo[ Limiter ]");
 	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[ Output ]");
 
 	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
@@ -205,7 +198,6 @@ static OSStatus sRenderNotify(
     }
 
     callback(_mixerNode);
-    callback(_limiterNode);
     callback(_outputNode);
 }
 
@@ -773,8 +765,10 @@ static OSStatus sRenderNotify(
 
 - (void) setVolume:(double)volume
 {
+    static double sMaxVolume = 1.0 - (2.0 / 32767.0);
+
     if (volume < 0) volume = 0;
-    if (volume > 1) volume = 1;
+    if (volume > sMaxVolume) volume = sMaxVolume;
 
     if (_volume != volume) {
         _volume = volume;
