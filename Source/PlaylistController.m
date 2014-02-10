@@ -221,16 +221,10 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     NSArray  *states  = [defaults objectForKey:sTracksKey];
     NSTimeInterval silence = [defaults doubleForKey:sMinimumSilenceKey];
 
-    Track *trackToPlay = nil;
-
     if ([states isKindOfClass:[NSArray class]]) {
         for (NSDictionary *state in states) {
             Track *track = [Track trackWithStateDictionary:state];
             if (track) [tracks addObject:track];
-            
-            if ([track trackStatus] == TrackStatusPlaying) {
-                trackToPlay = track;
-            }
         }
     }
     
@@ -622,9 +616,11 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     } else if (action == @selector(addSilence:)) {
         return [self _canInsertAfterSelectedRow];
+
     }
     
-    return NO;
+    
+    return YES;
 }
 
 
@@ -811,7 +807,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     if ((row == -1) && (dropOperation == NSTableViewDropOn)) {
         row = [[[self tracksController] arrangedObjects] count];
-        dropOperation = NSTableViewDropAbove;
     }
 
     NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];

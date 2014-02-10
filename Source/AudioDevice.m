@@ -189,6 +189,9 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
     sUIDToDeviceMap = map;
     sDefaultOutputDevice = defaultOutputDevice;
     
+    free(audioDevices);
+    audioDevices = NULL;
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:AudioDevicesDidRefreshNotification object:self];
 
     isRefreshing = NO;

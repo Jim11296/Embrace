@@ -46,6 +46,16 @@
 }
 
 
+- (void) orderOut:(id)sender
+{
+    [super orderOut:sender];
+    
+    for (NSWindow *childWindow in [self childWindows]) {
+        [childWindow orderOut:sender];
+    }
+}
+
+
 - (void) setupWithHeaderView:(NSView *)headerView mainView:(NSView *)mainView
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateActiveness:) name:NSWindowDidBecomeMainNotification object:nil];

@@ -10,6 +10,8 @@
 
 @interface CurrentTrackController : NSWindowController
 
+@property (nonatomic, strong) IBOutlet NSWindow *childWindow;
+
 @property (nonatomic, weak) IBOutlet WaveformView *waveformView;
 
 @property (nonatomic, strong) IBOutlet NSView *mainView;

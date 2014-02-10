@@ -44,17 +44,7 @@ BOOL CheckError(OSStatus error, const char *operation)
 {
 	if (error == noErr) return YES;
 	
-	char str[20];
-	// see if it appears to be a 4-char-code
-	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(error);
-	if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
-		str[0] = str[5] = '\'';
-		str[6] = '\0';
-	} else
-		// no, format it as an integer
-		sprintf(str, "%d", (int)error);
-	
-	fprintf(stderr, "Error: %s (%s)\n", operation, str);
+	NSLog(@"Error: %s (%@)\n", operation, GetStringForFourCharCode(*((UInt32 *)&error)));
     
     return NO;
 }
@@ -70,8 +60,12 @@ NSArray *GetAvailableAudioFileUTIs()
     if (err == noErr) {
         err = AudioFileGetGlobalInfo(kAudioFileGlobalInfo_AllUTIs, 0, NULL, &size, &cfArray);
     }
+    
+    NSArray *result = nil;
 
-    NSArray *result = cfArray ? CFBridgingRelease(cfArray) : nil;
+    if (err == noErr) {
+        result = cfArray ? CFBridgingRelease(cfArray) : nil;
+    }
 
     return result;
 }
@@ -122,7 +116,7 @@ void SavePanelState(NSSavePanel *panel, NSString *name)
 
 extern NSString *GetStringForFourCharCode(UInt32 fcc)
 {
-	char str[20];
+	char str[20] = {0};
 
 	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(fcc);
 

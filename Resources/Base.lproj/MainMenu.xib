@@ -194,6 +194,7 @@ CA
                                     <action selector="debugPopulatePlaylist:" target="494" id="BnA-Lh-TKh"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="yPT-OK-o84"/>
                             <menuItem title="Show internal effects" id="USn-aK-z9v">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
