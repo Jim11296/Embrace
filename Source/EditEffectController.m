@@ -13,6 +13,7 @@
 #import <AudioUnit/AUCocoaUIView.h>
 
 @implementation EditEffectController {
+    NSInteger _index;
     NSView   *_settingsView;
     Effect   *_settingsViewEffect;
     BOOL      _useGenericView;
@@ -20,10 +21,11 @@
 
 
 
-- (id) initWithEffect:(Effect *)effect
+- (id) initWithEffect:(Effect *)effect index:(NSInteger)index
 {
     if ((self = [super init])) {
         _effect = effect;
+        _index = index;
     }
     
     return self;
@@ -38,7 +40,14 @@
 
 - (void) windowDidLoad
 {
-    [[self window] setTitle:[[_effect type] name]];
+    NSString *name = [[_effect type] name];
+    if (!name) name = NSLocalizedString(@"Effect", nil);
+
+    [[self window] setTitle:name];
+
+    NSString *autosaveName = [NSString stringWithFormat:@"%@-%ld", [[_effect type] fullName], (long)_index];
+    [[self window] setFrameAutosaveName:autosaveName];
+    [[self window] setFrameUsingName:autosaveName];
     
     if (![_effect hasCustomView]) {
        [[self modeToolbarItem] setEnabled:NO];
@@ -186,6 +195,8 @@
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
+    [openPanel setTitle:NSLocalizedString(@"Load Preset", nil)];
+
     NSString *allPresets = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
     allPresets = [allPresets stringByAppendingPathComponent:@"Audio"];
     allPresets = [allPresets stringByAppendingPathComponent:@"Presets"];
@@ -219,12 +230,6 @@
             [weakEffect loadAudioPresetAtFileURL:[openPanel URL]];
         }
     }];
-}
-
-
-- (IBAction) restoreDefaultValues:(id)sender
-{
-    [_effect loadDefaultValues];
 }
 
 

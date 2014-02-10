@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const iTunesManagerDidUpdateStartAndStopTimesNotification;
+
 @class iTunesManager, iTunesMetadata;
-typedef void (^iTunesManagerMetadataReadyCallback)(iTunesManager *manager);
+
 
 @interface iTunesManager : NSObject
 
@@ -20,8 +22,7 @@ typedef void (^iTunesManagerMetadataReadyCallback)(iTunesManager *manager);
 - (iTunesMetadata *) metadataForFileURL:(NSURL *)url;
 - (iTunesMetadata *) metadataForTrackID:(NSInteger)trackID;
 
-@property (nonatomic, readonly, getter=isMetadataReady) BOOL metadataReady;
-- (void) addMetadataReadyCallback:(iTunesManagerMetadataReadyCallback)callback;
+@property (nonatomic, readonly) BOOL didParseLibrary;
 
 - (void) exportPlaylistWithName:(NSString *)name fileURLs:(NSArray *)fileURLs;
 

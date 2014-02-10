@@ -44,7 +44,23 @@
 - (void) _updateTrack
 {
     Track *track = [[Player sharedInstance] currentTrack];
-    [[self waveformView] setTrack:track];
+
+    if (track) {
+        [[self waveformView] setTrack:track];
+
+        [[self waveformView] setHidden:NO];
+        [[self leftLabel]    setHidden:NO];
+        [[self rightLabel]   setHidden:NO];
+
+        [[self noTrackLabel] setHidden:YES];
+
+    } else {
+        [[self waveformView] setHidden:YES];
+        [[self leftLabel]    setHidden:YES];
+        [[self rightLabel]   setHidden:YES];
+
+        [[self noTrackLabel] setHidden:NO];
+    }
 }
 
 
@@ -62,7 +78,7 @@
 
     [_parentWindow setFrameAutosaveName:@"CurrentTrackWindow"];
 
-    if (1 || ![_parentWindow setFrameUsingName:@"CurrentTrackWindow"]) {
+    if (![_parentWindow setFrameUsingName:@"CurrentTrackWindow"]) {
         NSScreen *screen = [[NSScreen screens] firstObject];
         
         NSRect screenFrame = [screen visibleFrame];
@@ -92,15 +108,15 @@
     
     [[Player sharedInstance] addListener:self];
 
+    [self _updateTrack];
+
     [_parentWindow makeKeyAndOrderFront:self];
+    [_parentWindow setMinSize:[[self window] minSize]];
 }
 
 
-- (void) player:(Player *)player didUpdatePlaying:(BOOL)playing
-{
-
-}
-
+- (void) player:(Player *)player didUpdatePlaying:(BOOL)playing { }
+- (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue { }
 
 - (void) playerDidTick:(Player *)player
 {

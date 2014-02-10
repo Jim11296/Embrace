@@ -40,6 +40,117 @@ static NSArray *sGetTraditionalStringArray()
 }
 
 
+BOOL CheckError(OSStatus error, const char *operation)
+{
+	if (error == noErr) return YES;
+	
+	char str[20];
+	// see if it appears to be a 4-char-code
+	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(error);
+	if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
+		str[0] = str[5] = '\'';
+		str[6] = '\0';
+	} else
+		// no, format it as an integer
+		sprintf(str, "%d", (int)error);
+	
+	fprintf(stderr, "Error: %s (%s)\n", operation, str);
+    
+    return NO;
+}
+
+
+NSArray *GetAvailableAudioFileUTIs()
+{
+    CFArrayRef *cfArray = NULL;
+    UInt32 size;
+
+    OSStatus err = AudioFileGetGlobalInfoSize(kAudioFileGlobalInfo_AllUTIs, 0, NULL, &size);
+
+    if (err == noErr) {
+        err = AudioFileGetGlobalInfo(kAudioFileGlobalInfo_AllUTIs, 0, NULL, &size, &cfArray);
+    }
+
+    NSArray *result = cfArray ? CFBridgingRelease(cfArray) : nil;
+
+    return result;
+}
+
+
+BOOL IsAudioFileAtURL(NSURL *fileURL)
+{
+    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+
+    NSString *type;
+    NSError *error;
+
+    if ([fileURL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
+        for (NSString *availableType in GetAvailableAudioFileUTIs()) {
+            if ([workspace type:type conformsToType:availableType]) {
+                return YES;
+            }
+        }
+    }
+
+    return NO;
+}
+
+
+BOOL LoadPanelState(NSSavePanel *panel, NSString *name)
+{
+    NSString *path = [[NSUserDefaults standardUserDefaults] objectForKey:name];
+    
+    if (path) {
+        NSURL *url = [NSURL fileURLWithPath:path];
+        
+        if (url) {
+            [panel setDirectoryURL:url];
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+
+void SavePanelState(NSSavePanel *panel, NSString *name)
+{
+    NSString *path = [[panel directoryURL] path];
+    [[NSUserDefaults standardUserDefaults] setObject:path forKey:name];
+}
+
+
+extern NSString *GetStringForFourCharCode(UInt32 fcc)
+{
+	char str[20];
+
+	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(fcc);
+
+	if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
+		str[0] = str[5] = '\'';
+		str[6] = '\0';
+    } else {
+        return @"????";
+    }
+    
+    return [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
+}
+
+
+extern NSString *GetStringForFourCharCodeObject(id object)
+{
+    if ([object isKindOfClass:[NSString class]]) {
+        return GetStringForFourCharCode((UInt32)[object longLongValue]);
+        
+    } else if ([object isKindOfClass:[NSNumber class]]) {
+        return GetStringForFourCharCode([object unsignedIntValue]);
+
+    } else {
+        return @"????";
+    }
+}
+
+
 extern Tonality GetTonalityForString(NSString *string)
 {
     string = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];

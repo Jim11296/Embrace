@@ -25,7 +25,7 @@
     if (heightDelta > 0)
     {
         newRect.size.height -= heightDelta;
-        newRect.origin.y += (heightDelta / 2);
+        newRect.origin.y += (heightDelta / 2) - 2;
     }
 	
 	return newRect;

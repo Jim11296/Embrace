@@ -35,6 +35,7 @@
 
 - (void) _setupColors
 {
+    _alertColor    = GetRGBColor(0xc00000, 1.0);
     _normalColor   = GetRGBColor(0x1866E9, 1.0);
     _activeColor   = GetRGBColor(0x0a48b1, 1.0);
     _inactiveColor = GetRGBColor(0x000000, 0.5);
@@ -59,7 +60,10 @@
     NSColor *color = _normalColor;
     NSRect bounds = [self bounds];
 
-    if (![self isEnabled]) {
+    if ([self isAlert]) {
+        color = _alertColor;
+
+    } else if (![self isEnabled]) {
         color = _disabledColor;
 
     } else if (![[self window] isMainWindow] || ![NSApp isActive]) {
@@ -78,6 +82,15 @@
     
     [color set];
     NSRectFillUsingOperation([self bounds], NSCompositeSourceIn);
+}
+
+
+- (void) setAlert:(BOOL)alert
+{
+    if (_alert != alert) {
+        _alert = alert;
+        [self setNeedsDisplay];
+    }
 }
 
 

@@ -21,7 +21,6 @@ extern NSString * const EffectDidDeallocNotification;
 + (instancetype) effectWithEffectType:(EffectType *)effectType;
 - (id) initWithEffectType:(EffectType *)effectType;
 
-- (void) loadDefaultValues;
 - (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL;
 
 - (NSDictionary *) stateDictionary;

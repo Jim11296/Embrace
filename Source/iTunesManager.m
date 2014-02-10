@@ -11,18 +11,26 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import "iTunes.h"
 
+NSString * const iTunesManagerDidUpdateStartAndStopTimesNotification = @"iTunesManagerDidUpdateStartAndStopTimes";
 
 static NSString * const sStartTimeKey = @"Start Time";
 static NSString * const sStopTimeKey  = @"Stop Time";
 static NSString * const sLocationKey  = @"Location";
 
+@interface iTunesMetadata ()
+@property (nonatomic) BOOL hasStartAndStopTimes;
+@end
 
 @implementation iTunesMetadata
 
 - (void) mergeIn:(iTunesMetadata *)other
 {
-    if (other->_startTime && !_startTime) _startTime = other->_startTime;
-    if (other->_stopTime  && !_stopTime)  _stopTime  = other->_stopTime;
+    if (other->_hasStartAndStopTimes) {
+        _startTime = other->_startTime;
+        _stopTime  = other->_stopTime;
+        _hasStartAndStopTimes = YES;
+    }
+
     if (other->_artist    && !_artist)    _artist    = other->_artist;
     if (other->_title     && !_title)     _title     = other->_title;
     if (other->_location  && !_location)  _location  = other->_location;
@@ -33,11 +41,14 @@ static NSString * const sLocationKey  = @"Location";
 
 
 @implementation iTunesManager {
+    NSURL         *_libraryURL;
+    NSTimeInterval _lastCheckTime;
+    
     NSMutableDictionary *_pathToTrackIDMap;
     NSMutableDictionary *_trackIDToMetadataMap;
 
     BOOL _parsing;
-    NSMutableArray *_metadataReadyCallbacks;
+    BOOL _didUpdateStartStopTimes;
 
     dispatch_queue_t _tunesQueue;
     
@@ -59,10 +70,38 @@ static NSString * const sLocationKey  = @"Location";
 - (id) init
 {
     if ((self = [super init])) {
-        [self _parseLibraryXML];
+        NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
+        NSString *path  = [paths firstObject];
+        
+        path = [path stringByAppendingPathComponent:@"iTunes"];
+        path = [path stringByAppendingPathComponent:@"iTunes Library.xml"];
+            
+        _libraryURL = [NSURL fileURLWithPath:path];
+
+        [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
+        [self _checkLibrary:nil];
     }
 
     return self;
+}
+
+
+- (void) _checkLibrary:(NSTimer *)timer
+{
+    id       value = nil;
+    NSError *error = nil;
+    
+    [_libraryURL getResourceValue:&value forKey:NSURLContentModificationDateKey error:&error];
+
+    if (!error && [value isKindOfClass:[NSDate class]]) {
+        NSTimeInterval timeInterval = [value timeIntervalSinceReferenceDate];
+        
+        if (timeInterval > _lastCheckTime) {
+            if ([self _parseLibraryXML]) {
+                _lastCheckTime = timeInterval;
+            }
+        }
+    }
 }
 
 
@@ -73,8 +112,17 @@ static NSString * const sLocationKey  = @"Location";
     iTunesMetadata *existing = [_trackIDToMetadataMap objectForKey:@(trackID)];
     NSString *location = [existing location];
 
+    if ([metadata hasStartAndStopTimes]) {
+        if ([existing startTime] != [metadata startTime] ||
+            [existing stopTime]  != [metadata stopTime])
+        {
+            _didUpdateStartStopTimes = YES;
+        }
+    }
+
     if (existing) {
         [existing mergeIn:metadata];
+
     } else {
         if (!_trackIDToMetadataMap) _trackIDToMetadataMap = [NSMutableDictionary dictionary];
         [_trackIDToMetadataMap setObject:metadata forKey:@(trackID)];
@@ -90,42 +138,37 @@ static NSString * const sLocationKey  = @"Location";
 
 - (void) _parseFinished:(NSArray *)results
 {
+    _didUpdateStartStopTimes = NO;
+
     for (iTunesMetadata *metadata in results) {
         [self _addMetadata:metadata];
     }
 
     _parsing = NO;
-    _metadataReady = YES;
+    _didParseLibrary = YES;
     
-    for (iTunesManagerMetadataReadyCallback callback in _metadataReadyCallbacks) {
-        callback(self);
+    if (_didUpdateStartStopTimes) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:iTunesManagerDidUpdateStartAndStopTimesNotification object:nil];
+        _didUpdateStartStopTimes = NO;
     }
-    
-    _metadataReadyCallbacks = nil;
 }
 
 
-- (void) _parseLibraryXML
+- (BOOL) _parseLibraryXML
 {
-    if (_parsing) return;
+    if (_parsing) return NO;
 
     __weak id weakSelf = self;
     
     _parsing = YES;
 
+    NSURL *libraryURL = _libraryURL;
+
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSMutableArray *results = [NSMutableArray array];
 
         @try {
-            NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
-            NSString *path  = [paths firstObject];
-            
-            path = [path stringByAppendingPathComponent:@"iTunes"];
-            path = [path stringByAppendingPathComponent:@"iTunes Library.xml"];
-            
-            NSURL *URL = [NSURL fileURLWithPath:path];
-
-            NSDictionary *dictionary = [[NSDictionary alloc] initWithContentsOfURL:URL];
+            NSDictionary *dictionary = [[NSDictionary alloc] initWithContentsOfURL:libraryURL];
 
             NSDictionary *tracks = [dictionary objectForKey:@"Tracks"];
 
@@ -152,6 +195,7 @@ static NSString * const sLocationKey  = @"Location";
 
                     [metadata setStartTime:startTime];
                     [metadata setStopTime:stopTime];
+                    [metadata setHasStartAndStopTimes:YES];
 
                     [results addObject:metadata];
                 }
@@ -163,6 +207,8 @@ static NSString * const sLocationKey  = @"Location";
             [weakSelf _parseFinished:results];
         });
     });
+    
+    return YES;
 }
 
 
@@ -176,22 +222,6 @@ static NSString * const sLocationKey  = @"Location";
 {
     NSInteger trackID = [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
     return [self metadataForTrackID:trackID];
-}
-
-
-- (void) addMetadataReadyCallback:(iTunesManagerMetadataReadyCallback)callback
-{
-    iTunesManagerMetadataReadyCallback cb = [callback copy];
-
-    if (_metadataReady) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            cb(self);
-        });
-
-    } else {
-        if (!_metadataReadyCallbacks) _metadataReadyCallbacks = [NSMutableArray array];
-        [_metadataReadyCallbacks addObject:cb];
-    }
 }
 
 

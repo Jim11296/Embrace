@@ -7,16 +7,13 @@
 //
 
 #import "WaveformView.h"
-#import "TrackData.h"
+#import "TrackAnalyzer.h"
 #import "Track.h"
 
 #import <Accelerate/Accelerate.h>
 
 
 @implementation WaveformView {
-    TrackData *_trackData;
-    NSData    *_shrunkedData;
-
     CALayer   *_inactiveLayer;
     CALayer   *_activeLayer;
 }
@@ -40,8 +37,8 @@
         [[self layer] addSublayer:_inactiveLayer];
         [[self layer] addSublayer:_activeLayer];
 
-        _activeWaveformColor = [NSColor blackColor];
-        _inactiveWaveformColor = [NSColor grayColor];
+        _activeWaveformColor = GetRGBColor(0x202020, 1.0);
+        _inactiveWaveformColor = GetRGBColor(0xababab, 1.0);
     }
     
     return self;
@@ -62,6 +59,7 @@
     [_inactiveLayer setNeedsDisplay];
 }
 
+
 - (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
     [_inactiveLayer setContentsScale:newScale];
@@ -71,14 +69,39 @@
 }
 
 
-- (NSData *) _reduceData:(NSData *)data toCount:(NSUInteger)outCount
+- (NSData *) _croppedDataForTrack:(Track *)track
 {
-    if (!_shrunkedData) return nil;
+    NSData *overviewData = [track overviewData];
+    if (!overviewData) return nil;
 
-    NSInteger inCount = [_shrunkedData length] / sizeof(float);
-    float *inFloats = (float *)[_shrunkedData bytes];
+    NSInteger inCount = [overviewData length] / sizeof(UInt8);
+    UInt8    *inBytes = (UInt8 *)[overviewData bytes];
+    
+    NSTimeInterval startTime = [track startTime];
+    NSTimeInterval stopTime  = [track stopTime];
+    NSTimeInterval duration  = [track duration];
+    
+    NSInteger startOffset = 0;
+    NSInteger stopOffset  = inCount;
+    
+    if (startTime) startOffset = round((startTime / duration) * inCount);
+    if (stopTime)  stopOffset  = round((stopTime  / duration) * inCount);
+    
+    return [NSData dataWithBytes:(inBytes + startOffset) length:(stopOffset - startOffset)];
+}
 
-    float *outFloats = malloc(outCount * sizeof(float));
+
+- (NSData *) _reduceOverviewDataForTrack:(Track *)track toCount:(NSUInteger)outCount
+{
+    NSData *data = [self _croppedDataForTrack:track];
+    if (!data) return nil;
+
+    NSInteger inCount = [data length] / sizeof(UInt8);
+    UInt8 *inBytes = (UInt8 *)[data bytes];
+
+    if (inCount < outCount) return data;
+
+    UInt8 *outBytes = malloc(outCount * sizeof(UInt8));
     
     double stride = inCount / (double)outCount;
 
@@ -92,55 +115,33 @@
             length = (inCount - i);
         }
 
-        float max;
-        vDSP_maxv(&inFloats[i], 1, &max, length);
+        UInt8 max = 0;
+        for (NSInteger j = 0; j < length; j++) {
+            UInt8 m = inBytes[i + j];
+            if (m > max) max = m;
+        }
         
-        outFloats[o] = max;
+        outBytes[o] = max;
     });
 
-    return [NSData dataWithBytesNoCopy:outFloats length:outCount * sizeof(float) freeWhenDone:YES];
+    return [NSData dataWithBytesNoCopy:outBytes length:outCount * sizeof(UInt8) freeWhenDone:YES];
 }
 
 
 - (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)context
 {
-    if (!_shrunkedData) return;
+    if (![_track overviewData]) return;
 
     CGSize size = [self bounds].size;
     CGFloat scale = [[self window] backingScaleFactor];
 
-    NSData *data = [self _reduceData:_shrunkedData toCount:size.width * scale];
+    NSData *data = [self _reduceOverviewDataForTrack:_track toCount:size.width * scale];
 
     CGContextSetInterpolationQuality(context, kCGInterpolationLow);
 
-    NSInteger sampleCount = [data length] / sizeof(float);
+    NSInteger sampleCount = [data length];
     NSInteger start = 0;
     NSInteger end = sampleCount;
-
-    CGAffineTransform transform = CGAffineTransformMakeScale(size.width / sampleCount, 1);
-
-    transform = CGAffineTransformTranslate(transform, -start, 0);
-
-    transform = CGAffineTransformTranslate(transform, 0, size.height / 2);
-    transform = CGAffineTransformScale(transform, 1, size.height / 2);
-
-    CGContextConcatCTM(context, transform);
-
-    float *floats = (float *)[data bytes];
-
-    if (start < end) {
-        CGContextMoveToPoint(context, start, floats[start]);
-    }
-
-    for (NSInteger i = start + 1; i < end; i++) {
-        CGContextAddLineToPoint(context, i, floats[i]);
-    }
-
-    for (NSInteger i = end - 1; i >= start; i--) {
-        CGContextAddLineToPoint(context, i, -floats[i]);
-    }
-    
-    CGContextClosePath(context);
 
     NSColor *color = NULL;
     if (layer == _activeLayer) {
@@ -149,75 +150,49 @@
         color = _inactiveWaveformColor;
     }
 
+    NSRect middleLineRect = CGRectMake(0, (size.height - 1) / 2, size.width, 1);
     CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, middleLineRect);
 
+    CGAffineTransform transform = CGAffineTransformMakeScale(size.width / sampleCount, 1);
+
+    transform = CGAffineTransformTranslate(transform, -start, 0);
+
+    transform = CGAffineTransformTranslate(transform, 0, size.height / 2);
+    transform = CGAffineTransformScale(transform, 1, size.height / (2 * 256));
+
+    CGContextConcatCTM(context, transform);
+
+    UInt8 *samples = (UInt8 *)[data bytes];
+
+    if (start < end) {
+        CGContextMoveToPoint(context, start, samples[start]);
+    }
+
+    for (NSInteger i = start + 1; i < end; i++) {
+        CGContextAddLineToPoint(context, i, samples[i]);
+    }
+
+    for (NSInteger i = end - 1; i >= start; i--) {
+        CGContextAddLineToPoint(context, i, -samples[i]);
+    }
+    
+    CGContextClosePath(context);
+
+    CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillPath(context);
-}
-
-
-- (void) _worker_shrinkData:(TrackData *)trackData
-{
-    NSData   *inData = [trackData data];
-    float    *input   = (float *)[inData bytes];
-    NSInteger inCount = [inData length] / sizeof(float);
-
-    NSInteger outCount = 32768;
-
-    double stride = inCount / (double)outCount;
-    
-    float *output = malloc(outCount * sizeof(float));
-
-    dispatch_apply(outCount, dispatch_get_global_queue(0, 0), ^(size_t o) {
-        NSInteger i = llrintf(o * stride);
-
-        // Just floor stride, this results in a skipped sample on occasion
-        NSInteger length = (NSInteger)stride;
-        
-        // Be paranoid, I saw a crash in vDSP_maxv() during development
-        if (i + length > inCount) {
-            length = (inCount - i);
-        }
-
-        float max;
-        vDSP_maxv(&input[i], 1, &max, length);
-        
-        output[o] = max;
-    });
-    
-    
-    NSData *data = [NSData dataWithBytesNoCopy:output length:(outCount * sizeof(float)) freeWhenDone:YES];
-
-    __weak id weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf _didShrinkData:data];
-    });
-}
-
-
-- (void) _didShrinkData:(NSData *)data
-{
-    _shrunkedData = data;
-    
-    [_activeLayer setNeedsDisplay];
-    [_inactiveLayer setNeedsDisplay];
 }
 
 
 - (void) setTrack:(Track *)track
 {
     if (_track != track) {
+        [_track removeObserver:self forKeyPath:@"overviewData"];
         _track = track;
-        
-        _trackData = [track trackData];
+        [_track addObserver:self forKeyPath:@"overviewData" options:0 context:NULL];
 
-        __weak TrackData *weakTrackData = _trackData;
-        __weak id weakSelf = self;
-
-        [_trackData addReadyCallback:^(TrackData *track) {
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                [weakSelf _worker_shrinkData:weakTrackData];
-            });
-        }];
+        [_activeLayer   setNeedsDisplay];
+        [_inactiveLayer setNeedsDisplay];
     }
 }
 
@@ -231,5 +206,15 @@
         [_activeLayer   setContentsRect:CGRectMake(0, 0, _percentage, 1)];
     }
 }
+
+
+- (void) setShowsDebugInformation:(BOOL)showsDebugInformation
+{
+    if (_showsDebugInformation != showsDebugInformation) {
+        _showsDebugInformation = showsDebugInformation;
+        [self setNeedsLayout:YES];
+    }
+}
+
 
 @end

@@ -92,6 +92,9 @@
                             <menuItem isSeparatorItem="YES" id="FO8-6S-eZx"/>
                             <menuItem title="Copy History" id="FdC-Kk-mtx">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="copyHistory:" target="494" id="EFN-OE-EVR"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Save History…" keyEquivalent="s" id="75">
                                 <connections>
@@ -172,7 +175,7 @@ CA
                                     <action selector="hardSkip:" target="494" id="rQh-13-0ef"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Hard Pause" id="NDh-4K-3xp">
+                            <menuItem title="Hard Stop" id="NDh-4K-3xp">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="hardPause:" target="494" id="pvX-1j-Z11"/>
@@ -189,6 +192,12 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="debugPopulatePlaylist:" target="494" id="BnA-Lh-TKh"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show internal effects" id="USn-aK-z9v">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="debugShowInternalEffects:" target="494" id="q0H-oO-s4d"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -247,10 +256,16 @@ CA
                                     <action selector="sendFeedback:" target="494" id="RUA-mJ-gdv"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="View on App Store" id="P5t-fr-so8">
+                            <menuItem title="View Website" id="P5t-fr-so8">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="viewOnAppStore:" target="494" id="RML-jy-c7p"/>
+                                    <action selector="viewWebsite:" target="494" id="XFv-d6-R0O"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View on App Store" id="LCB-EU-dvJ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewOnAppStore:" target="494" id="3Cl-Ra-ISE"/>
                                 </connections>
                             </menuItem>
                         </items>

@@ -4,12 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="EffectsWindowController">
+        <customObject id="-2" userLabel="File's Owner" customClass="EffectsController">
             <connections>
-                <outlet property="addButton" destination="aL9-bq-4hl" id="BYZ-Er-b2P"/>
-                <outlet property="addEffectPopUpButton" destination="aL9-bq-4hl" id="FkC-tr-Ly8"/>
+                <outlet property="addButton" destination="Jsd-hh-vah" id="GrS-Ke-9hb"/>
                 <outlet property="effectsArrayController" destination="ljB-2h-dI3" id="24T-YP-eeb"/>
-                <outlet property="removeButton" destination="5he-qv-O8m" id="DMK-gy-G3t"/>
                 <outlet property="tableView" destination="vHS-gl-QKQ" id="6Jz-MR-SNP"/>
                 <outlet property="window" destination="5mm-8W-u52" id="7VU-tR-7Wo"/>
             </connections>
@@ -17,29 +15,29 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application"/>
         <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="EffectsWindow" animationBehavior="default" id="5mm-8W-u52">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="159" width="240" height="160"/>
+            <rect key="contentRect" x="131" y="159" width="400" height="316"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="wIn-2X-2Cg">
-                <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
+                <rect key="frame" x="0.0" y="0.0" width="400" height="316"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="qZU-uX-xE4">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
+                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="qZU-uX-xE4">
+                        <rect key="frame" x="138" y="52" width="240" height="64"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="rE4-MP-b1O">
-                            <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
+                            <rect key="frame" x="1" y="1" width="238" height="62"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="vHS-gl-QKQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="238" height="62"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="16" height="2"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn editable="NO" width="220" minWidth="40" maxWidth="1000" id="129-Cv-tCS">
+                                        <tableColumn editable="NO" width="222" minWidth="40" maxWidth="1000" id="129-Cv-tCS">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -78,56 +76,167 @@
                             <outlet property="menu" destination="BRn-xR-5vF" id="tjA-S9-AhF"/>
                         </connections>
                     </scrollView>
+                    <slider verticalHuggingPriority="750" id="xES-Qz-MHM">
+                        <rect key="frame" x="136" y="269" width="244" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="below" numberOfTickMarks="11" sliderType="linear" id="fiN-kq-92O"/>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="self.player.matchLoudnessLevel" id="8dP-bt-s5X"/>
+                        </connections>
+                    </slider>
+                    <slider verticalHuggingPriority="750" id="6FA-d0-AmJ">
+                        <rect key="frame" x="136" y="181" width="244" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="below" numberOfTickMarks="9" sliderType="linear" id="1dj-S3-1gC"/>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="self.player.preAmpLevel" id="4P3-5W-8St"/>
+                        </connections>
+                    </slider>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nyF-6l-NiT">
+                        <rect key="frame" x="22" y="279" width="106" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Match Loudness:" id="Odu-MX-Zha">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="E6M-wz-jVg">
+                        <rect key="frame" x="7" y="99" width="121" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Additional Effects:" id="GT6-81-KhH">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="a2Y-fP-cbh">
+                        <rect key="frame" x="22" y="191" width="106" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Preamp:" id="87z-wQ-nAg">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="YFS-7H-afh">
+                        <rect key="frame" x="120" y="164" width="52" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="-12 dB" id="qlm-s1-Nfw">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="5BV-yU-UBq">
+                        <rect key="frame" x="345" y="164" width="52" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="+12 dB" id="bv4-fm-1Qy">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="SmN-56-uXH">
+                        <rect key="frame" x="233" y="164" width="52" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0 dB" id="j0t-lk-bV4">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="YGm-mO-CEg">
+                        <rect key="frame" x="120" y="252" width="52" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Off" id="wdZ-20-8WT">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="oTn-Pm-yn7">
+                        <rect key="frame" x="345" y="252" width="52" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="100%" id="B0h-Ff-ecl">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="BIO-xJ-OHH">
+                        <rect key="frame" x="233" y="252" width="52" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="50%" id="EPR-hF-9qD">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="5Gj-uc-L2S">
+                        <rect key="frame" x="136" y="218" width="244" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Match Loudness reconciles the perceived loudness of each track, but lowers volume." id="jts-2O-v46">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="p3D-Yi-Kli">
+                        <rect key="frame" x="136" y="130" width="244" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Pre-amplification reduces automatically  when clipping would occur." id="uN9-dM-e44">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton verticalHuggingPriority="750" id="Jsd-hh-vah">
+                        <rect key="frame" x="138" y="18" width="80" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="roundTextured" title="Add" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="KD0-kQ-xFV">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <menu key="menu" title="OtherViews" id="XIJ-l0-Ax9">
+                                <items>
+                                    <menuItem title="Add" state="on" hidden="YES" id="SsZ-jE-b0F"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="addEffect:" target="-2" id="kem-Q9-VHx"/>
+                        </connections>
+                    </popUpButton>
+                    <button verticalHuggingPriority="750" id="Q2k-U6-ACJ">
+                        <rect key="frame" x="226" y="18" width="72" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="roundTextured" title="Edit" bezelStyle="texturedRounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mne-v6-XEP">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="editEffect:" target="-2" id="1wn-vw-fYl"/>
+                            <binding destination="ljB-2h-dI3" name="enabled" keyPath="selectedObjects.@count" id="SD6-9Z-vXE">
+                                <dictionary key="options">
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" id="vKT-yH-Jq0">
+                        <rect key="frame" x="306" y="18" width="72" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="roundTextured" title="Remove" bezelStyle="texturedRounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="PvL-kG-DUE">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="delete:" target="-2" id="icj-cC-aEz"/>
+                            <binding destination="ljB-2h-dI3" name="enabled" keyPath="selectedObjects.@count" id="woT-dP-TSh"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="5EA7A9ED-9BC9-445F-BB78-6FA70E749604" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="meN-VO-IvV">
-                <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="F2a-ag-Lat"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Djo-0R-cRX"/>
-                    <toolbarItem implicitItemIdentifier="72B7AAC1-7CE0-4571-BC8B-7017CAAE9638" label="Custom View" paletteLabel="Custom View" image="NSAddTemplate" id="gDa-E5-h6l">
-                        <nil key="toolTip"/>
-                        <size key="minSize" width="48" height="25"/>
-                        <size key="maxSize" width="54" height="25"/>
-                        <popUpButton key="view" verticalHuggingPriority="750" id="aL9-bq-4hl">
-                            <rect key="frame" x="12" y="14" width="54" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <popUpButtonCell key="cell" type="roundTextured" title="Add Effect" bezelStyle="texturedRounded" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="z3q-BQ-mTG">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                                <menu key="menu" title="OtherViews" id="uy5-fW-wH9">
-                                    <items>
-                                        <menuItem title="Add Effect" state="on" image="NSAddTemplate" hidden="YES" id="8xd-If-wQ6"/>
-                                    </items>
-                                </menu>
-                            </popUpButtonCell>
-                        </popUpButton>
-                        <connections>
-                            <action selector="addEffect:" target="-2" id="jQU-U7-kp8"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="ADC85E01-47D7-4CA5-BD62-DA7D7D6DB585" label="Custom View" paletteLabel="Custom View" image="NSRemoveTemplate" id="5ca-4X-gJJ">
-                        <nil key="toolTip"/>
-                        <size key="minSize" width="48" height="25"/>
-                        <size key="maxSize" width="48" height="32"/>
-                        <button key="view" verticalHuggingPriority="750" id="5he-qv-O8m">
-                            <rect key="frame" x="15" y="14" width="48" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7dl-be-1cI">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                        </button>
-                        <connections>
-                            <action selector="delete:" target="-2" id="8aa-FS-zc2"/>
-                        </connections>
-                    </toolbarItem>
-                </allowedToolbarItems>
-                <defaultToolbarItems>
-                    <toolbarItem reference="gDa-E5-h6l"/>
-                    <toolbarItem reference="Djo-0R-cRX"/>
-                    <toolbarItem reference="5ca-4X-gJJ"/>
-                </defaultToolbarItems>
-            </toolbar>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="Rzj-OB-R5q"/>
         <arrayController id="ljB-2h-dI3">
@@ -152,8 +261,4 @@
             </items>
         </menu>
     </objects>
-    <resources>
-        <image name="NSAddTemplate" width="8" height="8"/>
-        <image name="NSRemoveTemplate" width="8" height="8"/>
-    </resources>
 </document>

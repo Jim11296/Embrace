@@ -101,15 +101,15 @@
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    [super mouseDown:theEvent];
     [self _setHighlighted:YES];
+    [super mouseDown:theEvent];
 }
 
 
 - (void) mouseUp:(NSEvent *)theEvent
 {
-    [super mouseUp:theEvent];
     [self _setHighlighted:NO];
+    [super mouseUp:theEvent];
 }
 
 

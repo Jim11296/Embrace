@@ -21,10 +21,10 @@ static NSDictionary *sGetDefaultValues()
     dispatch_once(&onceToken, ^{
 
     sDefaultValues = @{
-        @"preventsAccidents":   @(YES),
-        @"warnsAboutIssues":    @(YES),
+        @"tonalityDisplayMode": @(TonalityDisplayModeTraditional),
 
-        @"keySignatureMode":      @(KeySignatureModeTraditional),
+        @"showsBPM": @(YES),
+        @"matchesLoudness": @(YES),
 
         @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
         @"mainOutputSampleRate":  @(0),
@@ -127,10 +127,11 @@ static void sRegisterDefaults()
             [self setValue:[defaults objectForKey:key] forKey:key];
 
         } else if ([defaultValue isKindOfClass:[AudioDevice class]]) {
-            NSString *deviceUID = [defaults objectForKey:key];
+            NSDictionary *dictionary = [defaults objectForKey:key];
 
-            if ([deviceUID isKindOfClass:[NSString class]]) {
-                AudioDevice *device = [AudioDevice audioDeviceWithDeviceUID:deviceUID];
+            if ([dictionary isKindOfClass:[NSDictionary class]]) {
+                AudioDevice *device = [AudioDevice audioDeviceWithDictionary:dictionary];
+                [AudioDevice selectChosenAudioDevice:device];
                 if (device) [self setValue:device forKey:key];
             }
         }
@@ -141,6 +142,17 @@ static void sRegisterDefaults()
 - (void) _save
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+    // Do audio device checking
+    AudioDevice *device = [self mainOutputAudioDevice];
+    
+    if (![[device sampleRates] containsObject:@([self mainOutputSampleRate])]) {
+        [self setMainOutputSampleRate:[[[device sampleRates] firstObject] doubleValue]];
+    }
+
+    if (![[device frameSizes] containsObject:@([self mainOutputFrames])]) {
+        [self setMainOutputFrames:[[[device frameSizes] firstObject] unsignedIntValue]];
+    }
 
     NSDictionary *defaultValuesDictionary = sGetDefaultValues();
     for (NSString *key in defaultValuesDictionary) {

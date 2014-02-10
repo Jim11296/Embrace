@@ -10,8 +10,11 @@
 
 @interface Button : NSButton
 
+@property (nonatomic, getter=isAlert) BOOL alert;
+
 @property (nonatomic, strong) NSColor *normalColor;
 @property (nonatomic, strong) NSColor *activeColor;
+@property (nonatomic, strong) NSColor *alertColor;
 @property (nonatomic, strong) NSColor *inactiveColor;
 @property (nonatomic, strong) NSColor *disabledColor;
 

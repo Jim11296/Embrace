@@ -4,10 +4,34 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.apple.coreaudio-format</string>
+				<string>com.apple.m4a-audio</string>
+				<string>com.digidesign.sd2-audio</string>
+				<string>com.microsoft.waveform-audio</string>
+				<string>org.3gpp.adaptive-multi-rate-audio</string>
+				<string>public.3gpp2</string>
+				<string>public.3gpp</string>
+				<string>public.ac3-audio</string>
+				<string>public.aifc-audio</string>
+				<string>public.aiff-audio</string>
+				<string>public.au-audio</string>
+				<string>public.mp3</string>
+				<string>public.mpeg-4-audio</string>
+				<string>public.mpeg-4-audiobooks</string>
+				<string>public.mpeg-4</string>
+				<string>public.ulaw-audio</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>com.iccir.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -17,11 +41,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0b1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>99</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSHumanReadableCopyright</key>

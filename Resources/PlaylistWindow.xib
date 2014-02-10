@@ -7,10 +7,12 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PlaylistController">
             <connections>
                 <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
+                <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
                 <outlet property="headerView" destination="K7L-NV-xHB" id="KSF-t0-JoR"/>
                 <outlet property="levelMeter" destination="9x2-yQ-Jbg" id="V38-xr-dDB"/>
+                <outlet property="mainView" destination="kmP-AQ-nuK" id="LUd-qc-cK2"/>
                 <outlet property="playBar" destination="pkk-ZT-czS" id="NoQ-ry-IUU"/>
                 <outlet property="playButton" destination="Twn-WM-C4J" id="qgN-nd-ksW"/>
                 <outlet property="playOffsetField" destination="Ceq-EF-rHK" id="Bhd-Pk-UD7"/>
@@ -31,13 +33,6 @@
         <userDefaultsController representsSharedInstance="YES" id="Bui-lf-GNg"/>
         <menu id="trO-cQ-b0j">
             <items>
-                <menuItem title="Edit Track" hidden="YES" id="dbH-p1-C9P">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="editSelectedTrack:" target="-2" id="NOv-CW-syZ"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" hidden="YES" id="uIY-Ch-bIC"/>
                 <menuItem title="Delete" id="93g-7I-3Pm">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -51,6 +46,12 @@
                         <action selector="togglePauseAfterPlaying:" target="-2" id="8TP-WX-byn"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Mark as played" id="1TI-tf-jbO">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleMarkAsPlayed:" target="-2" id="K6W-ss-716"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Add silence" hidden="YES" id="KDN-VF-nFK">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -62,7 +63,7 @@
                 <outlet property="delegate" destination="-2" id="SRi-5i-aw6"/>
             </connections>
         </menu>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" customClass="WhiteWindow">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="WhiteWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="533" y="338" width="320" height="354"/>
@@ -72,189 +73,206 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
-                        <rect key="frame" x="0.0" y="32" width="320" height="320"/>
+                    <customView id="kmP-AQ-nuK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="2Bw-N9-fI8">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                    <tableColumns>
-                                        <tableColumn identifier="SongCell" width="320" minWidth="40" maxWidth="1000" id="1q8-uL-zIt">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
-                                            </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ARN-lA-rlq">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                            <prototypeCellViews>
-                                                <tableCellView identifier="TrackCell" id="7VA-Gs-oX4" customClass="AudioFileTableCellView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <customView id="G0T-eR-fVJ" customClass="BorderedView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                            <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0mJ-te-wAf">
-                                                                    <rect key="frame" x="18" y="20" width="252" height="17"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Song Name" id="7sP-hf-Z5h">
-                                                                        <font key="font" metaFont="system"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                </textField>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="KYa-Yb-9f5">
-                                                                    <rect key="frame" x="18" y="1" width="252" height="17"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Artist Name" id="bc4-y0-9mN">
-                                                                        <font key="font" size="11" name="LucidaGrande"/>
-                                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                </textField>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="oJ2-ys-Q1u">
-                                                                    <rect key="frame" x="262" y="20" width="44" height="17"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" id="KKa-4i-CRW">
-                                                                        <font key="font" metaFont="system"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                </textField>
-                                                            </subviews>
-                                                        </customView>
-                                                    </subviews>
-                                                    <connections>
-                                                        <outlet property="artistField" destination="KYa-Yb-9f5" id="itI-37-BHD"/>
-                                                        <outlet property="borderedView" destination="G0T-eR-fVJ" id="E1h-VY-rZr"/>
-                                                        <outlet property="durationField" destination="oJ2-ys-Q1u" id="XEM-Dt-grU"/>
-                                                        <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
-                                                        <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>
-                                                    </connections>
-                                                </tableCellView>
-                                                <tableCellView identifier="SilenceCell" id="COs-7C-Z4h" customClass="SilenceTableCellView">
-                                                    <rect key="frame" x="0.0" y="40" width="320" height="24"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <customView id="QDQ-EK-zGI" customClass="BorderedView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="24"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                            <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0Zc-K7-UtN">
-                                                                    <rect key="frame" x="18" y="4" width="52" height="17"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Silence" id="6g8-oX-Rqh">
-                                                                        <font key="font" metaFont="system"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                    <connections>
-                                                                        <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.title" id="WLZ-FU-UD9"/>
-                                                                    </connections>
-                                                                </textField>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="9fY-nd-LwM">
-                                                                    <rect key="frame" x="262" y="4" width="44" height="17"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" id="VOS-Wo-9gw">
-                                                                        <font key="font" metaFont="system"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                    <connections>
-                                                                        <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.silenceDurationString" id="P1Z-KY-x5i"/>
-                                                                    </connections>
-                                                                </textField>
-                                                                <slider appearanceType="lightContent" verticalHuggingPriority="750" id="yC7-xV-R0c" customClass="WhiteSlider">
-                                                                    <rect key="frame" x="74" y="2" width="184" height="20"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="20" doubleValue="20" tickMarkPosition="above" sliderType="linear" id="8ua-fN-dRW" customClass="WhiteSliderCell"/>
-                                                                    <connections>
-                                                                        <binding destination="COs-7C-Z4h" name="hidden" keyPath="objectValue.isSilenceDurationEditable" id="R5V-Wa-2uu">
-                                                                            <dictionary key="options">
-                                                                                <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                            </dictionary>
-                                                                        </binding>
-                                                                        <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.silenceDuration" id="7AA-4l-f9B"/>
-                                                                    </connections>
-                                                                </slider>
-                                                            </subviews>
-                                                        </customView>
-                                                    </subviews>
-                                                    <connections>
-                                                        <outlet property="borderedView" destination="QDQ-EK-zGI" id="XlZ-kz-itR"/>
-                                                        <outlet property="durationField" destination="9fY-nd-LwM" id="mgz-IP-SVv"/>
-                                                        <outlet property="slider" destination="yC7-xV-R0c" id="zSq-Xd-Nhn"/>
-                                                        <outlet property="titleField" destination="0Zc-K7-UtN" id="ZqN-Gd-lFR"/>
-                                                    </connections>
-                                                </tableCellView>
-                                            </prototypeCellViews>
-                                        </tableColumn>
-                                    </tableColumns>
-                                    <connections>
-                                        <binding destination="EU2-Wu-WIW" name="content" keyPath="arrangedObjects" id="pvy-QV-oEB"/>
-                                        <binding destination="EU2-Wu-WIW" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="pvy-QV-oEB" id="huc-ha-5JM"/>
-                                        <outlet property="dataSource" destination="-2" id="aan-4l-8rs"/>
-                                        <outlet property="delegate" destination="-2" id="6JN-29-Uqt"/>
-                                        <outlet property="menu" destination="trO-cQ-b0j" id="IIM-Vi-h9y"/>
-                                    </connections>
-                                </tableView>
-                            </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="csK-JI-TFk">
-                            <rect key="frame" x="1" y="381" width="320" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="gLr-mq-zGm">
-                            <rect key="frame" x="-15" y="17" width="16" height="11"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
-                    <customView appearanceType="lightContent" id="MK7-2f-n0z" customClass="BorderedView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="32"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <slider appearanceType="lightContent" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
-                                <rect key="frame" x="41" y="4" width="228" height="25"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="15" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
-                                <connections>
-                                    <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
-                                </connections>
-                            </slider>
-                            <textField appearanceType="lightContent" verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="27g-A4-whb">
-                                <rect key="frame" x="270" y="5" width="36" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="right" title="0:00" id="kXQ-cJ-H9c">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="3C2-33-gaV">
-                                        <dictionary key="options">
-                                            <string key="NSValueTransformerName">TimeStringValueTransformer</string>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
-                            </textField>
-                            <imageView appearanceType="lightContent" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="rx0-fs-t7a">
-                                <rect key="frame" x="20" y="10" width="15" height="12"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="padding_template" id="k41-UM-ODJ"/>
-                            </imageView>
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
+                                <rect key="frame" x="0.0" y="32" width="320" height="323"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <clipView key="contentView" id="2Bw-N9-fI8">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                            <tableColumns>
+                                                <tableColumn identifier="SongCell" width="320" minWidth="40" maxWidth="1000" id="1q8-uL-zIt">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ARN-lA-rlq">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                    <prototypeCellViews>
+                                                        <tableCellView identifier="TrackCell" id="7VA-Gs-oX4" customClass="AudioFileTableCellView">
+                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <customView id="G0T-eR-fVJ" customClass="BorderedView">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                    <subviews>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0mJ-te-wAf">
+                                                                            <rect key="frame" x="18" y="20" width="252" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Song Name" id="7sP-hf-Z5h">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="KYa-Yb-9f5">
+                                                                            <rect key="frame" x="18" y="1" width="252" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Artist Name" id="bc4-y0-9mN">
+                                                                                <font key="font" size="11" name="LucidaGrande"/>
+                                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="vHN-Td-1li">
+                                                                            <rect key="frame" x="222" y="1" width="84" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" id="rJn-DL-0hx">
+                                                                                <font key="font" size="11" name="LucidaGrande"/>
+                                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="oJ2-ys-Q1u">
+                                                                            <rect key="frame" x="262" y="20" width="44" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" id="KKa-4i-CRW">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                    </subviews>
+                                                                </customView>
+                                                            </subviews>
+                                                            <connections>
+                                                                <outlet property="artistField" destination="KYa-Yb-9f5" id="itI-37-BHD"/>
+                                                                <outlet property="borderedView" destination="G0T-eR-fVJ" id="E1h-VY-rZr"/>
+                                                                <outlet property="durationField" destination="oJ2-ys-Q1u" id="XEM-Dt-grU"/>
+                                                                <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
+                                                                <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>
+                                                                <outlet property="tonalityAndBPMField" destination="vHN-Td-1li" id="A5j-Nr-MJt"/>
+                                                                <outlet property="tonalityField" destination="vHN-Td-1li" id="bmS-mG-wDh"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                        <tableCellView identifier="SilenceCell" id="COs-7C-Z4h" customClass="SilenceTableCellView">
+                                                            <rect key="frame" x="0.0" y="40" width="320" height="24"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <customView id="QDQ-EK-zGI" customClass="BorderedView">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="24"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                    <subviews>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0Zc-K7-UtN">
+                                                                            <rect key="frame" x="18" y="4" width="52" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Silence" id="6g8-oX-Rqh">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                            <connections>
+                                                                                <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.title" id="WLZ-FU-UD9"/>
+                                                                            </connections>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="9fY-nd-LwM">
+                                                                            <rect key="frame" x="262" y="4" width="44" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" id="VOS-Wo-9gw">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                            <connections>
+                                                                                <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.silenceDurationString" id="P1Z-KY-x5i"/>
+                                                                            </connections>
+                                                                        </textField>
+                                                                        <slider appearanceType="lightContent" verticalHuggingPriority="750" id="yC7-xV-R0c" customClass="WhiteSlider">
+                                                                            <rect key="frame" x="74" y="2" width="184" height="20"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="20" doubleValue="20" tickMarkPosition="above" sliderType="linear" id="8ua-fN-dRW" customClass="WhiteSliderCell"/>
+                                                                            <connections>
+                                                                                <binding destination="COs-7C-Z4h" name="hidden" keyPath="objectValue.isSilenceDurationEditable" id="R5V-Wa-2uu">
+                                                                                    <dictionary key="options">
+                                                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                                                    </dictionary>
+                                                                                </binding>
+                                                                                <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.silenceDuration" id="7AA-4l-f9B"/>
+                                                                            </connections>
+                                                                        </slider>
+                                                                    </subviews>
+                                                                </customView>
+                                                            </subviews>
+                                                            <connections>
+                                                                <outlet property="borderedView" destination="QDQ-EK-zGI" id="XlZ-kz-itR"/>
+                                                                <outlet property="durationField" destination="9fY-nd-LwM" id="mgz-IP-SVv"/>
+                                                                <outlet property="slider" destination="yC7-xV-R0c" id="zSq-Xd-Nhn"/>
+                                                                <outlet property="titleField" destination="0Zc-K7-UtN" id="ZqN-Gd-lFR"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                    </prototypeCellViews>
+                                                </tableColumn>
+                                            </tableColumns>
+                                            <connections>
+                                                <binding destination="EU2-Wu-WIW" name="content" keyPath="arrangedObjects" id="pvy-QV-oEB"/>
+                                                <binding destination="EU2-Wu-WIW" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="pvy-QV-oEB" id="huc-ha-5JM"/>
+                                                <outlet property="dataSource" destination="-2" id="aan-4l-8rs"/>
+                                                <outlet property="delegate" destination="-2" id="6JN-29-Uqt"/>
+                                                <outlet property="menu" destination="trO-cQ-b0j" id="IIM-Vi-h9y"/>
+                                            </connections>
+                                        </tableView>
+                                    </subviews>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="csK-JI-TFk">
+                                    <rect key="frame" x="1" y="381" width="320" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="gLr-mq-zGm">
+                                    <rect key="frame" x="-15" y="17" width="16" height="11"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                            <customView appearanceType="lightContent" id="MK7-2f-n0z" customClass="BorderedView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="32"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <slider toolTip="Adjust the silence between tracks." appearanceType="lightContent" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
+                                        <rect key="frame" x="41" y="4" width="228" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="15" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
+                                        <connections>
+                                            <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
+                                        </connections>
+                                    </slider>
+                                    <textField appearanceType="lightContent" verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="27g-A4-whb">
+                                        <rect key="frame" x="270" y="5" width="36" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="right" title="0:00" id="kXQ-cJ-H9c">
+                                            <font key="font" metaFont="smallSystem"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                                        </textFieldCell>
+                                        <connections>
+                                            <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="3C2-33-gaV">
+                                                <dictionary key="options">
+                                                    <string key="NSValueTransformerName">TimeStringValueTransformer</string>
+                                                </dictionary>
+                                            </binding>
+                                        </connections>
+                                    </textField>
+                                    <imageView appearanceType="lightContent" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="rx0-fs-t7a">
+                                        <rect key="frame" x="20" y="10" width="15" height="12"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="padding_template" id="k41-UM-ODJ"/>
+                                    </imageView>
+                                </subviews>
+                            </customView>
                         </subviews>
                     </customView>
                 </subviews>
@@ -263,7 +281,7 @@
                 <outlet property="delegate" destination="-2" id="1eB-Ie-Ydm"/>
             </connections>
         </window>
-        <customView appearanceType="lightContent" id="K7L-NV-xHB" customClass="BorderedView">
+        <customView appearanceType="lightContent" id="K7L-NV-xHB" userLabel="Header" customClass="BorderedView">
             <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <subviews>
@@ -346,17 +364,10 @@
                 <menuItem title="Show Current Track" id="QWT-xx-UZK">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="showCurrentTrack:" target="-2" id="xak-Ew-Nam"/>
+                        <action selector="showCurrentTrack:" target="-2" id="r7T-9o-XBw"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="tK8-qX-bNU"/>
-                <menuItem title="Edit Track" hidden="YES" id="EcI-Wf-wpt">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="editSelectedTrack:" target="-2" id="iSg-ep-ZGx"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" hidden="YES" id="bkz-T0-Uo7"/>
                 <menuItem title="Delete Track" id="Oa2-3e-ptz">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -370,6 +381,12 @@
                         <action selector="togglePauseAfterPlaying:" target="-2" id="hZh-eq-yDY"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Mark as played" id="tCd-XV-fUq">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleMarkAsPlayed:" target="-2" id="wsR-4J-9Ik"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Add silence" hidden="YES" id="avl-p9-Vks">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -378,10 +395,29 @@
                 </menuItem>
             </items>
         </menu>
+        <customView id="Fvc-DQ-N2K" userLabel="Drag Songs Here View">
+            <rect key="frame" x="0.0" y="0.0" width="128" height="193"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="iYl-EI-wzq">
+                    <rect key="frame" x="-2" y="20" width="132" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Drag Songs Here" id="Ilb-M9-emE">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.83529418706893921" green="0.83529418706893921" blue="0.83529418706893921" alpha="1" colorSpace="deviceRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView id="e4W-3r-ROx" customClass="DragSongsHereView">
+                    <rect key="frame" x="0.0" y="45" width="128" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                </customView>
+            </subviews>
+        </customView>
     </objects>
     <resources>
-        <image name="full_volume_template" width="20.139860153198242" height="16.111888885498047"/>
-        <image name="no_volume_template" width="12.083915710449219" height="16.111888885498047"/>
+        <image name="full_volume_template" width="10.069930076599121" height="8.0559444427490234"/>
+        <image name="no_volume_template" width="6" height="8.0559444427490234"/>
         <image name="padding_template" width="7.5524473190307617" height="6"/>
     </resources>
 </document>

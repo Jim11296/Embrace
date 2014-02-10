@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 #ifdef __cplusplus
 #define EXTERN extern "C"
 #else
@@ -20,8 +19,6 @@ EXTERN void FillAudioTimeStampWithFutureSeconds(AudioTimeStamp *timeStamp, NSTim
 EXTERN UInt64 GetCurrentHostTime(void);
 
 EXTERN NSTimeInterval GetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2);
-
-EXTERN BOOL CheckError(OSStatus error, const char *operation);
 
 EXTERN void PrintStreamBasicDescription(AudioStreamBasicDescription asbd);
 

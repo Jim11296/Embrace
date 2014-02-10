@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong) Track *track;
 
+@property (nonatomic) BOOL showsDebugInformation;
+
 @property (nonatomic) float percentage;
 @property (nonatomic) NSColor *inactiveWaveformColor;
 @property (nonatomic) NSColor *activeWaveformColor;

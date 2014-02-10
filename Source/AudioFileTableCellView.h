@@ -14,5 +14,6 @@
 @interface AudioFileTableCellView : TrackTableCellView
 
 @property (nonatomic, weak) IBOutlet NSTextField *artistField;
+@property (nonatomic, weak) IBOutlet NSTextField *tonalityAndBPMField;
 
 @end

@@ -12,17 +12,18 @@
 #import "AppDelegate.h"
 #import "EffectType.h"
 #import "AudioDevice.h"
+#import "Preferences.h"
+#import "WrappedAudioDevice.h"
 
 #import <pthread.h>
 #import <signal.h>
 
 
 static NSString * const sEffectsKey = @"effects";
+static NSString * const sPreAmpKey  = @"pre-amp";
+static NSString * const sMatchLoudnessKey = @"match-loudness";
 
-
-typedef struct AudioPlayerGraphContext {
-    Float64 sampleTime;
-} AudioPlayerGraphContext;
+static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 
 @interface Effect ()
@@ -30,54 +31,40 @@ typedef struct AudioPlayerGraphContext {
 @end
 
 
-static mach_port_t sAudioThread = 0;
-
-
-static OSStatus sRenderNotify(
-    void *inRefCon,
-    AudioUnitRenderActionFlags *ioActionFlags,
-    const AudioTimeStamp *inTimeStamp,
-    UInt32 inBusNumber,
-    UInt32 inNumberFrames,
-    AudioBufferList *ioData
-) {
-    if (!sAudioThread) {
-        sAudioThread = pthread_mach_thread_np(pthread_self());
-    }
-    
-    return noErr;
-}
-
-
 @interface Player ()
 @property (nonatomic, strong) Track *currentTrack;
 @property (nonatomic) NSString *timeElapsedString;
 @property (nonatomic) NSString *timeRemainingString;
 @property (nonatomic) float percentage;
+@property (nonatomic) PlayerIssue issue;
 @end
 
 
 @implementation Player {
-    Track    *_currentTrack;
-    Float64   _currentFramesToPlay;
-    Float64   _currentSampleRate;
+    Track         *_currentTrack;
+    NSTimeInterval _currentPadding;
+
     UInt64    _currentStartHostTime;
 
     AUGraph   _graph;
     AudioUnit _filePlayerAudioUnit;
+    AudioUnit _limiterAudioUnit;
     AudioUnit _mixerAudioUnit;
+    AudioUnit _postLimiterAudioUnit;
     AudioUnit _outputAudioUnit;
 
 	AUNode    _filePlayerNode;
-	AUNode    _outputNode;
+	AUNode    _limiterNode;
     AUNode    _mixerNode;
+	AUNode    _outputNode;
     
     AudioDevice *_outputDevice;
-    double _sampleRate;
-    UInt32 _frames;
-    BOOL _hogMode;
-    
-    AudioPlayerGraphContext *_graphContext;
+    double       _outputSampleRate;
+    UInt32       _outputFrames;
+    BOOL         _outputHogMode;
+
+    BOOL         _tookHogMode;
+    BOOL         _hadErrorDuringReconfigure;
     
     NSMutableDictionary *_effectToNodeMap;
     NSHashTable *_listeners;
@@ -86,6 +73,8 @@ static OSStatus sRenderNotify(
 
     NSTimeInterval _roundedTimeElapsed;
     NSTimeInterval _roundedTimeRemaining;
+    
+    AUParameterListenerRef _parameterListener;
 }
 
 
@@ -122,281 +111,28 @@ static OSStatus sRenderNotify(
 - (id) init
 {
     if ((self = [super init])) {
-        _graphContext = (AudioPlayerGraphContext *)calloc(1, sizeof(AudioPlayerGraphContext));
-
         [self _buildGraph];
         [self _loadState];
         [self _reconnectGraph];
 
-        [self setVolume:0.9];
+        [self setVolume:0.95];
     }
     
     return self;
 }
 
 
-- (void) dealloc
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    free(_graphContext);
-}
-
-
-#pragma mark - Graph
-
-- (void) _buildGraph
-{
-    CheckError(NewAUGraph(&_graph), "NewAUGraph failed");
-	
-    AudioComponentDescription filePlayerCD = {0};
-    filePlayerCD.componentType = kAudioUnitType_Generator;
-    filePlayerCD.componentSubType = kAudioUnitSubType_AudioFilePlayer;
-    filePlayerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-
-    AudioComponentDescription mixerCD = {0};
-    mixerCD.componentType = kAudioUnitType_Mixer;
-    mixerCD.componentSubType = kAudioUnitSubType_StereoMixer;
-    mixerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-
-    AudioComponentDescription outputCD = {0};
-    outputCD.componentType = kAudioUnitType_Output;
-    outputCD.componentSubType = kAudioUnitSubType_HALOutput;
-    outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    
-    CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ Player ]");
-    CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
-    CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
-
-	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
-
-	CheckError(AUGraphNodeInfo(_graph, _filePlayerNode, NULL, &_filePlayerAudioUnit), "AUGraphNodeInfo[ Player ]");
-	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[ Mixer ]");
-	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[ Output ]");
-
-	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
-
-    UInt32 on = 1;
-    CheckError(AudioUnitSetProperty(_mixerAudioUnit,
-        kAudioUnitProperty_MeteringMode, kAudioUnitScope_Global, 0,
-        &on,
-        sizeof(on)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_MeteringMode]");
-
-    AUGraphAddRenderNotify(_graph, sRenderNotify, NULL);
-}
-
-
-- (void) _iterateGraphNodes:(void (^)(AUNode))callback
-{
-    callback(_filePlayerNode);
-    
-    for (Effect *effect in _effects) {
-        NSValue  *key        = [NSValue valueWithNonretainedObject:effect];
-        NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
-
-        if (!nodeNumber) continue;
-        callback([nodeNumber intValue]);
-    }
-
-    callback(_mixerNode);
-    callback(_outputNode);
-}
-
-
-- (void) _iterateGraphAudioUnits:(void (^)(AudioUnit))callback
-{
-    [self _iterateGraphNodes:^(AUNode node) {
-        AudioComponentDescription acd;
-        AudioUnit audioUnit;
-
-        AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
-
-        callback(audioUnit);
-    }];
-}
-
-
-- (void) _reconnectGraph
-{
-    AUGraphClearConnections(_graph);
-    
-    __block AUNode lastNode = 0;
-    [self _iterateGraphNodes:^(AUNode node) {
-        if (lastNode) {
-            CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput");
-        }
-
-        lastNode = node;
-    }];
-    
-    Boolean updated;
-    if (!CheckError(AUGraphUpdate(_graph, &updated), "AUGraphUpdate")) {
-    
-    }
-}
-
-
-- (void) _reconfigureOutput
-{
-    Boolean isRunning = 0;
-    AUGraphIsRunning(_graph, &isRunning);
-    
-    if (isRunning) AUGraphStop(_graph);
-    
-    CheckError(AUGraphUninitialize(_graph), "AUGraphUninitialize");
-
-    for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-        if ([device isHoggedByMe]) {
-            [device releaseHogMode];
+    if (object == _outputDevice) {
+        if ([keyPath isEqualToString:@"connected"]) {
+            [self _checkIssues];
         }
     }
-    
-    if (_outputDevice) {
-        AudioDeviceID deviceID = [_outputDevice objectID];
-        
-        [_outputDevice setNominalSampleRate:_sampleRate];
-        [_outputDevice setIOBufferSize:_frames];
-
-        if (_hogMode) {
-            [_outputDevice takeHogMode];
-
-        CheckError(AudioUnitSetProperty(_outputAudioUnit,
-            kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0,
-            &_frames,
-            sizeof(_frames)
-        ), "AudioUnitSetProperty[kAudioDevicePropertyBufferFrameSize]");
-        }
-
-        CheckError(AudioUnitSetProperty(_outputAudioUnit,
-            kAudioOutputUnitProperty_CurrentDevice,
-            kAudioUnitScope_Global,
-            0,
-            &deviceID, sizeof(deviceID)
-        ), "AudioUnitSetProperty[CurrentDevice]");
-    }
-
-    [self _reconnectGraph];
-
-    UInt32 maxFrames;
-    UInt32 maxFramesSize = sizeof(maxFrames);
-    CheckError(AudioUnitGetProperty(
-        _outputAudioUnit,
-        kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-        &maxFrames, &maxFramesSize
-    ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
-
-    [self _iterateGraphAudioUnits:^(AudioUnit unit) {
-        CheckError(AudioUnitSetProperty(
-            unit,
-            kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-            &maxFrames, maxFramesSize
-        ), "AudioUnitSetProperty[MaximumFramesPerSlice]");
-    }];
-
-    CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
-
-    if (isRunning) AUGraphStart(_graph);
-}
-
-
-- (BOOL) _setupPlaybackForTrack:(Track *)track padding:(NSTimeInterval)padding
-{
-    NSURL *fileURL = [track fileURL];
-    if (!fileURL) return NO;
-    
-    AudioFileID audioFile;
-	AudioStreamBasicDescription inputFormat;
-
-	if (!CheckError(AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &audioFile), "AudioFileOpenURL")) {
-        return NO;
-    }
-	
-	UInt32 propSize = sizeof(inputFormat);
-	if (!CheckError(AudioFileGetProperty(audioFile, kAudioFilePropertyDataFormat, &propSize, &inputFormat), "AudioFileGetProperty")) {
-        return NO;
-    }
-    
-	// tell the file player unit to load the file we want to play
-	if (!CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
-        kAudioUnitProperty_ScheduledFileIDs, kAudioUnitScope_Global, 0,
-        &audioFile, sizeof(audioFile)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileIDs]")) {
-        return NO;
-    }
-	
-	UInt64 nPackets;
-	UInt32 propsize = sizeof(nPackets);
-	if (!CheckError(AudioFileGetProperty(audioFile, kAudioFilePropertyAudioDataPacketCount, &propsize, &nPackets), "AudioFileGetProperty")) {
-        return NO;
-    }
-	
-	ScheduledAudioFileRegion region = {0};
-
-	region.mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
-	region.mTimeStamp.mSampleTime = 0;
-	region.mCompletionProc = NULL;
-	region.mCompletionProcUserData = 0;
-    region.mAudioFile = audioFile;
-    region.mLoopCount = 0;
-    
-    Float64 totalFrames  = ((UInt32)nPackets * inputFormat.mFramesPerPacket);
-    Float64 startFrame   = [track startTime] * inputFormat.mSampleRate;
-
-    if ([track stopTime]) {
-        totalFrames = [track stopTime] * inputFormat.mSampleRate;
-    }
-
-    UInt32 framesToPlay = totalFrames - startFrame;
-
-    region.mStartFrame   = startFrame;
-	region.mFramesToPlay = framesToPlay;
-    
-	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
-        kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0,
-        &region, sizeof(region)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileRegion]");
-	
-	AudioTimeStamp startTime = {0};
-    NSTimeInterval additional = _frames / _sampleRate;
-
-    if (padding == 0) {
-        startTime.mFlags = kAudioTimeStampHostTimeValid;
-        startTime.mHostTime = 0;
-    
-    } else {
-        FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
-    }
-
-	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
-        kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
-        &startTime, sizeof(startTime)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
-    
-	UInt32 prime = 0;
-	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
-        kAudioUnitProperty_ScheduledFilePrime, kAudioUnitScope_Global, _frames,
-        &prime, sizeof(prime)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFilePrime]");
-	
-    if (startTime.mHostTime) {
-        _currentStartHostTime = startTime.mHostTime;
-    } else {
-        FillAudioTimeStampWithFutureSeconds(&startTime, 0);
-        _currentStartHostTime = startTime.mHostTime;
-    }
-
-    _currentFramesToPlay  = framesToPlay;
-    _currentSampleRate    = inputFormat.mSampleRate;
-    
-    return YES;
 }
 
 
 #pragma mark - Private Methods
-
 
 - (void) _loadState
 {
@@ -409,26 +145,22 @@ static OSStatus sRenderNotify(
             if (effect) [effects addObject:effect];
         }
     }
+
+    NSNumber *matchLoudnessNumber = [[NSUserDefaults standardUserDefaults] objectForKey:sMatchLoudnessKey];
+    if ([matchLoudnessNumber isKindOfClass:[NSNumber class]]) {
+        [self setMatchLoudnessLevel:[matchLoudnessNumber doubleValue]];
+    } else {
+        [self setMatchLoudnessLevel:0];
+    }
+
+    NSNumber *preAmpNumber = [[NSUserDefaults standardUserDefaults] objectForKey:sPreAmpKey];
+    if ([preAmpNumber isKindOfClass:[NSNumber class]]) {
+        [self setPreAmpLevel:[preAmpNumber doubleValue]];
+    } else {
+        [self setPreAmpLevel:0];
+    }
     
     [self setEffects:effects];
-}
-
-
-- (void) setEffects:(NSArray *)effects
-{
-    if (_effects != effects) {
-        _effects = effects;
-
-        [self _updateEffects:effects];
-
-        NSMutableArray *effectsStateArray = [NSMutableArray array];
-
-        for (Effect *effect in _effects) {
-            [effectsStateArray addObject:[effect stateDictionary]];
-        }
-
-        [[NSUserDefaults standardUserDefaults] setObject:effectsStateArray forKey:sEffectsKey];
-    }
 }
 
 
@@ -523,14 +255,14 @@ static OSStatus sRenderNotify(
         roundedTimeRemaining = round([_currentTrack playDuration]);
 
     } else {
-        _timeElapsed = currentPlayTime / _currentSampleRate;
+        _timeElapsed = currentPlayTime / _outputSampleRate;
         _timeRemaining = [_currentTrack playDuration] - _timeElapsed;
         
         roundedTimeElapsed = floor(_timeElapsed);
         roundedTimeRemaining = round([_currentTrack playDuration]) - roundedTimeElapsed;
     }
 
-    if (currentPlayTime > _currentFramesToPlay) {
+    if (_timeRemaining < 0) {
         done = YES;
 
         status = TrackStatusPlayed;
@@ -540,7 +272,7 @@ static OSStatus sRenderNotify(
         roundedTimeElapsed = round([_currentTrack playDuration]);
         roundedTimeRemaining = 0;
     }
-
+    
     if (!_timeElapsedString || (roundedTimeElapsed != _roundedTimeElapsed)) {
         _roundedTimeElapsed = roundedTimeElapsed;
         [self setTimeElapsedString:GetStringForTime(_roundedTimeElapsed)];
@@ -550,6 +282,12 @@ static OSStatus sRenderNotify(
         _roundedTimeRemaining = roundedTimeRemaining;
         [self setTimeRemainingString:GetStringForTime(_roundedTimeRemaining)];
     }
+
+    // Waiting for analysis
+    if (![_currentTrack didAnalyzeLoudness]) {
+        [self setTimeElapsedString:@""];
+    }
+
 
     NSTimeInterval duration = _timeElapsed + _timeRemaining;
     if (!duration) duration = 1;
@@ -573,6 +311,375 @@ static OSStatus sRenderNotify(
 }
 
 
+- (void) _updateLoudnessAndPreAmp
+{
+    if (![_currentTrack didAnalyzeLoudness]) {
+        return;
+    }
+
+    double trackLoudness = [_currentTrack trackLoudness];
+    double trackPeak     = [_currentTrack trackPeak];
+
+    double preamp     = _preAmpLevel;
+    double replayGain = (-18.0 - trackLoudness);
+
+    if (replayGain < -51.0) {
+        replayGain = -51.0;
+    } else if (replayGain > 51.0) {
+        replayGain = 51.0;
+    }
+    
+    replayGain *= _matchLoudnessLevel;
+
+    double	multiplier	= pow(10, (replayGain + preamp) / 20);
+    double	sample		= trackPeak * multiplier;
+    double	magnitude	= fabs(sample);
+
+    if (magnitude >= sMaxVolume) {
+        preamp = (20 * log10f(1.0 / trackPeak)) - replayGain;
+    }
+
+    double preGain = preamp + replayGain;
+
+    AudioUnitParameter parameter = {
+        _limiterAudioUnit,
+        kLimiterParam_PreGain,
+        kAudioUnitScope_Global,
+        0
+    };
+    
+    CheckError(AUParameterSet(NULL, NULL, &parameter, preGain, 0), "AUParameterSet");
+}
+
+
+#pragma mark - Graph
+
+- (void) _buildGraph
+{
+    CheckError(NewAUGraph(&_graph), "NewAUGraph failed");
+	
+    AudioComponentDescription filePlayerCD = {0};
+    filePlayerCD.componentType = kAudioUnitType_Generator;
+    filePlayerCD.componentSubType = kAudioUnitSubType_AudioFilePlayer;
+    filePlayerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+
+    AudioComponentDescription limiterCD = {0};
+    limiterCD.componentType = kAudioUnitType_Effect;
+    limiterCD.componentSubType = kAudioUnitSubType_PeakLimiter;
+    limiterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+
+    AudioComponentDescription mixerCD = {0};
+    mixerCD.componentType = kAudioUnitType_Mixer;
+    mixerCD.componentSubType = kAudioUnitSubType_StereoMixer;
+    mixerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+
+    AudioComponentDescription outputCD = {0};
+    outputCD.componentType = kAudioUnitType_Output;
+    outputCD.componentSubType = kAudioUnitSubType_HALOutput;
+    outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+    
+    CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ Player ]");
+    CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
+    CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
+    CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
+
+	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
+
+	CheckError(AUGraphNodeInfo(_graph, _filePlayerNode, NULL, &_filePlayerAudioUnit), "AUGraphNodeInfo[ Player ]");
+    CheckError(AUGraphNodeInfo(_graph, _limiterNode,    NULL, &_limiterAudioUnit),    "AUGraphNodeInfo[ Limiter ]");
+	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[ Mixer ]");
+	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[ Output ]");
+
+	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
+
+    UInt32 on = 1;
+    CheckError(AudioUnitSetProperty(_mixerAudioUnit,
+        kAudioUnitProperty_MeteringMode, kAudioUnitScope_Global, 0,
+        &on,
+        sizeof(on)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_MeteringMode]");
+}
+
+
+- (void) _iterateGraphNodes:(void (^)(AUNode))callback
+{
+    callback(_filePlayerNode);
+    callback(_limiterNode);
+    
+    for (Effect *effect in _effects) {
+        NSValue  *key        = [NSValue valueWithNonretainedObject:effect];
+        NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
+
+        if (!nodeNumber) continue;
+        callback([nodeNumber intValue]);
+    }
+
+    callback(_mixerNode);
+    callback(_outputNode);
+}
+
+
+- (void) _iterateGraphAudioUnits:(void (^)(AudioUnit))callback
+{
+    [self _iterateGraphNodes:^(AUNode node) {
+        AudioComponentDescription acd;
+        AudioUnit audioUnit;
+
+        AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
+
+        callback(audioUnit);
+    }];
+}
+
+
+- (void) _reconnectGraph
+{
+    AUGraphClearConnections(_graph);
+    
+    __block AUNode lastNode = 0;
+    [self _iterateGraphNodes:^(AUNode node) {
+        if (lastNode) {
+            CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput");
+        }
+
+        lastNode = node;
+    }];
+    
+    Boolean updated;
+    if (!CheckError(AUGraphUpdate(_graph, &updated), "AUGraphUpdate")) {
+    
+    }
+}
+
+
+- (void) _checkIssues
+{
+    PlayerIssue issue = PlayerIssueNone;
+    
+    if (![_outputDevice isConnected]) {
+        issue = PlayerIssueDeviceMissing;
+    } else if (_outputHogMode && !_tookHogMode) {
+        issue = PlayerIssueDeviceHoggedByOtherProcess;
+    } else if (_hadErrorDuringReconfigure) {
+        issue = PlayerIssueErrorConfiguringOutputDevice;
+    }
+
+    if (issue != _issue) {
+        [self setIssue:issue];
+
+        for (id<PlayerListener> listener in _listeners) {
+            [listener player:self didUpdateIssue:issue];
+        }
+    }
+}
+
+
+- (void) _reconfigureOutput
+{
+    Boolean isRunning = 0;
+    AUGraphIsRunning(_graph, &isRunning);
+    
+    _hadErrorDuringReconfigure = NO;
+    
+    if (isRunning) AUGraphStop(_graph);
+    
+    CheckError(AUGraphUninitialize(_graph), "AUGraphUninitialize");
+
+    for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
+        WrappedAudioDevice *controller = [device controller];
+        
+        if ([controller isHoggedByMe]) {
+            [controller releaseHogMode];
+        }
+    }
+    
+    if ([_outputDevice isConnected]) {
+        WrappedAudioDevice *controller = [_outputDevice controller];
+
+        AudioDeviceID deviceID = [controller objectID];
+        
+        [controller setNominalSampleRate:_outputSampleRate];
+        [controller setFrameSize:_outputFrames];
+
+        if (_outputHogMode) {
+            _tookHogMode = [controller takeHogMode];
+        }
+
+        if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
+            kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0,
+            &_outputFrames,
+            sizeof(_outputFrames)
+        ), "AudioUnitSetProperty[kAudioDevicePropertyBufferFrameSize]")) {
+            _hadErrorDuringReconfigure = YES;
+        }
+
+        if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
+            kAudioOutputUnitProperty_CurrentDevice,
+            kAudioUnitScope_Global,
+            0,
+            &deviceID, sizeof(deviceID)
+        ), "AudioUnitSetProperty[CurrentDevice]")) {
+            _hadErrorDuringReconfigure = YES;
+        }
+    }
+
+    [self _reconnectGraph];
+
+    UInt32 maxFrames;
+    UInt32 maxFramesSize = sizeof(maxFrames);
+    
+    if (!CheckError(AudioUnitGetProperty(
+        _outputAudioUnit,
+        kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
+        &maxFrames, &maxFramesSize
+    ), "AudioUnitGetProperty[MaximumFramesPerSlice]")) {
+        _hadErrorDuringReconfigure = YES;
+    }
+
+    [self _iterateGraphAudioUnits:^(AudioUnit unit) {
+        if (!CheckError(AudioUnitSetProperty(
+            unit,
+            kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
+            &maxFrames, maxFramesSize
+        ), "AudioUnitSetProperty[MaximumFramesPerSlice]")) {
+            _hadErrorDuringReconfigure = YES;
+        }
+    }];
+
+    if (!CheckError(AUGraphInitialize(_graph), "AUGraphInitialize")) {
+        _hadErrorDuringReconfigure = YES;
+    }
+
+    if (isRunning) AUGraphStart(_graph);
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reconfigureOutput) object:nil];
+    
+    [self _checkIssues];
+    
+    if (_issue != PlayerIssueNone) {
+        [self performSelector:@selector(_reconfigureOutput) withObject:nil afterDelay:1];
+    }
+}
+
+
+- (void) _setupAndStartPlayback
+{
+    Track *track = _currentTrack;
+    NSTimeInterval padding = _currentPadding;
+
+    if (![track didAnalyzeLoudness]) {
+        [track startPriorityAnalysis];
+        [self performSelector:@selector(_setupAndStartPlayback) withObject:nil afterDelay:0.1];
+        return;
+    }
+
+    NSURL *fileURL = [track fileURL];
+    if (!fileURL) {
+        [self hardStop];
+        return;
+    }
+
+    AudioFileID audioFile;
+	AudioStreamBasicDescription inputFormat;
+
+	if (!CheckError(AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &audioFile), "AudioFileOpenURL")) {
+        return;
+    }
+	
+	UInt32 propSize = sizeof(inputFormat);
+	if (!CheckError(AudioFileGetProperty(audioFile, kAudioFilePropertyDataFormat, &propSize, &inputFormat), "AudioFileGetProperty")) {
+        [self hardStop];
+        return;
+    }
+    
+	// tell the file player unit to load the file we want to play
+	if (!CheckError(AudioUnitSetProperty(
+        _filePlayerAudioUnit,
+        kAudioUnitProperty_ScheduledFileIDs, kAudioUnitScope_Global, 0,
+        &audioFile, sizeof(audioFile)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileIDs]")) {
+        [self hardStop];
+        return;
+    }
+
+    [self _updateLoudnessAndPreAmp];
+	
+	UInt64 nPackets;
+	UInt32 propsize = sizeof(nPackets);
+	if (!CheckError(AudioFileGetProperty(audioFile, kAudioFilePropertyAudioDataPacketCount, &propsize, &nPackets), "AudioFileGetProperty")) {
+        [self hardStop];
+        return;
+    }
+	
+	ScheduledAudioFileRegion region = {0};
+
+	region.mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
+	region.mTimeStamp.mSampleTime = 0;
+	region.mCompletionProc = NULL;
+	region.mCompletionProcUserData = 0;
+    region.mAudioFile = audioFile;
+    region.mLoopCount = 0;
+    
+    Float64 totalFrames  = ((UInt32)nPackets * inputFormat.mFramesPerPacket);
+    Float64 startFrame   = [track startTime] * inputFormat.mSampleRate;
+
+    if ([track stopTime]) {
+        totalFrames = [track stopTime] * inputFormat.mSampleRate;
+    }
+
+    UInt32 framesToPlay = totalFrames - startFrame;
+
+    region.mStartFrame   = startFrame;
+	region.mFramesToPlay = framesToPlay;
+    
+	CheckError(AudioUnitSetProperty(
+        _filePlayerAudioUnit,
+        kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0,
+        &region, sizeof(region)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileRegion]");
+	
+	AudioTimeStamp startTime = {0};
+    NSTimeInterval additional = _outputFrames / _outputSampleRate;
+
+    if (padding == 0) {
+        startTime.mFlags = kAudioTimeStampHostTimeValid;
+        startTime.mHostTime = 0;
+    
+    } else {
+        FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
+    }
+
+	CheckError(AudioUnitSetProperty(
+        _filePlayerAudioUnit,
+        kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
+        &startTime, sizeof(startTime)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
+    
+	UInt32 prime = 0;
+	CheckError(AudioUnitSetProperty(
+        _filePlayerAudioUnit,
+        kAudioUnitProperty_ScheduledFilePrime, kAudioUnitScope_Global, _outputFrames,
+        &prime, sizeof(prime)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFilePrime]");
+	
+    if (startTime.mHostTime) {
+        _currentStartHostTime = startTime.mHostTime;
+    } else {
+        FillAudioTimeStampWithFutureSeconds(&startTime, 0);
+        _currentStartHostTime = startTime.mHostTime;
+    }
+
+    Boolean isRunning = 0;
+    AUGraphIsRunning(_graph, &isRunning);
+
+    if (!isRunning) {
+        CheckError(AUGraphStart(_graph), "AUGraphStart");
+    }
+}
+
+
+#pragma mark - Public Methods
+
 - (AudioUnit) audioUnitForEffect:(Effect *)effect
 {
     NSValue *key = [NSValue valueWithNonretainedObject:effect];
@@ -587,6 +694,18 @@ static OSStatus sRenderNotify(
 }
 
 
+- (void) saveEffectState
+{
+    NSMutableArray *effectsStateArray = [NSMutableArray arrayWithCapacity:[_effects count]];
+    
+    for (Effect *effect in _effects) {
+        [effectsStateArray addObject:[effect stateDictionary]];
+    }
+
+    [[NSUserDefaults standardUserDefaults] setObject:effectsStateArray forKey:sEffectsKey];
+}
+
+
 - (void) playNextTrack
 {
     Track *nextTrack = nil;
@@ -597,19 +716,13 @@ static OSStatus sRenderNotify(
     }
     
     if (nextTrack) {
-        Boolean isRunning = 0;
-        AUGraphIsRunning(_graph, &isRunning);
+        [self setCurrentTrack:nextTrack];
+        _currentPadding = padding;
 
-        if ([self _setupPlaybackForTrack:nextTrack padding:padding]) {
-            [self setCurrentTrack:nextTrack];
+        [self _setupAndStartPlayback];
 
-            if (!isRunning) {
-                CheckError(AUGraphStart(_graph), "AUGraphStart");
-            }
-        }
-    
     } else {
-        [self hardPause];
+        [self hardStop];
     }
 }
 
@@ -635,7 +748,6 @@ static OSStatus sRenderNotify(
         [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSRunLoopCommonModes];
         [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSEventTrackingRunLoopMode];
 
-
         for (id<PlayerListener> listener in _listeners) {
             [listener player:self didUpdatePlaying:YES];
         }
@@ -652,13 +764,13 @@ static OSStatus sRenderNotify(
 
         if (isEndSilence) {
             [_currentTrack setTrackStatus:TrackStatusPlayed];
-            [self hardPause];
+            [self hardStop];
             
         } else if (isStartSilence) {
-            [self hardPause];
+            [self hardStop];
 
         } else if (trackStatus == TrackStatusQueued) {
-            [self hardPause];
+            [self hardStop];
 
         } else if (trackStatus == TrackStatusPlaying) {
             [_currentTrack setPausesAfterPlaying:![_currentTrack pausesAfterPlaying]];
@@ -669,7 +781,7 @@ static OSStatus sRenderNotify(
         }
         
     } else {
-        [self hardPause];
+        [self hardStop];
     }
 }
 
@@ -686,26 +798,25 @@ static OSStatus sRenderNotify(
     [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
     
     if (nextTrack) {
-        Boolean isRunning = 0;
-        AUGraphIsRunning(_graph, &isRunning);
+        [self setCurrentTrack:nextTrack];
+        _currentPadding = 0;
 
-        if ([self _setupPlaybackForTrack:nextTrack padding:0]) {
-            [self setCurrentTrack:nextTrack];
+        [self _setupAndStartPlayback];
 
-            if (!isRunning) {
-                CheckError(AUGraphStart(_graph), "AUGraphStart");
-            }
-        }
-    
     } else {
-        [self hardPause];
+        [self hardStop];
     }
 }
 
 
-- (void) hardPause
+- (void) hardStop
 {
     if (!_currentTrack) return;
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setupAndStartPlayback) object:nil];
+
+    [_currentTrack setTrackStatus:TrackStatusPlayed];
+    [_currentTrack setPausesAfterPlaying:NO];
     
     [self setCurrentTrack:nil];
 
@@ -735,17 +846,23 @@ static OSStatus sRenderNotify(
     if (!sampleRate) sampleRate = 44100;
     if (!frames)     frames = 512;
 
-    if (_outputDevice != outputDevice ||
-        _sampleRate   != sampleRate   ||
-        _frames       != frames       ||
-        _hogMode      != hogMode)
+    if (_outputDevice     != outputDevice ||
+        _outputSampleRate != sampleRate   ||
+        _outputFrames     != frames       ||
+        _outputHogMode    != hogMode)
     {
-        _outputDevice = outputDevice;
-        _sampleRate = sampleRate;
-        _frames = frames;
-        _hogMode = hogMode;
+        if (_outputDevice != outputDevice) {
+            [_outputDevice removeObserver:self forKeyPath:@"connected"];
+            _outputDevice = outputDevice;
+            [_outputDevice addObserver:self forKeyPath:@"connected" options:0 context:NULL];
+        }
+
+        _outputSampleRate = sampleRate;
+        _outputFrames = frames;
+        _outputHogMode = hogMode;
 
         [self _reconfigureOutput];
+        [self _checkIssues];
     }
 }
 
@@ -763,10 +880,41 @@ static OSStatus sRenderNotify(
 }
 
 
+#pragma mark - Accessors
+
+- (void) setPreAmpLevel:(double)preAmpLevel
+{
+    if (_preAmpLevel != preAmpLevel) {
+        _preAmpLevel = preAmpLevel;
+        [[NSUserDefaults standardUserDefaults] setObject:@(preAmpLevel) forKey:sPreAmpKey];
+        [self _updateLoudnessAndPreAmp];
+    }
+}
+
+
+- (void) setMatchLoudnessLevel:(double)matchLoudnessLevel
+{
+    if (_matchLoudnessLevel != matchLoudnessLevel) {
+        _matchLoudnessLevel = matchLoudnessLevel;
+        [[NSUserDefaults standardUserDefaults] setObject:@(matchLoudnessLevel) forKey:sMatchLoudnessKey];
+        [self _updateLoudnessAndPreAmp];
+    }
+}
+
+
+- (void) setEffects:(NSArray *)effects
+{
+    if (_effects != effects) {
+        _effects = effects;
+
+        [self _updateEffects:effects];
+        [self saveEffectState];
+    }
+}
+
+
 - (void) setVolume:(double)volume
 {
-    static double sMaxVolume = 1.0 - (2.0 / 32767.0);
-
     if (volume < 0) volume = 0;
     if (volume > sMaxVolume) volume = sMaxVolume;
 
@@ -785,6 +933,17 @@ static OSStatus sRenderNotify(
 {
     return _currentTrack != nil;
 }
+
+
+- (NSArray *) debugInternalEffects
+{
+    Effect *effect = [[Effect alloc] initWithEffectType:nil];
+    
+    [effect _setAudioUnit:_limiterAudioUnit];
+    
+    return @[ effect ];
+}
+
 
 
 @end
