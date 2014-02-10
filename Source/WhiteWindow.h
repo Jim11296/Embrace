@@ -13,4 +13,6 @@
 - (void) setupWithHeaderView:(NSView *)contentView mainView:(NSView *)mainView;
 - (void) setupAsParentWindow;
 
+@property (nonatomic, strong) NSArray *hiddenViewsWhenInactive;
+
 @end

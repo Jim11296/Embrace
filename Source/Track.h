@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class TrackData;
+extern NSString * const TrackDidUpdateNotification;
+
+@class TrackAnalyzer;
 
 typedef NS_ENUM(NSInteger, TrackStatus) {
     TrackStatusQueued,  // Track is queued
@@ -26,14 +28,15 @@ typedef NS_ENUM(NSInteger, TrackType) {
 @interface Track : NSObject
 
 + (instancetype) trackWithStateDictionary:(NSDictionary *)state;
-
 + (instancetype) trackWithFileURL:(NSURL *)url;
-- (id) initWithFileURL:(NSURL *)url;
+
+- (void) cancelLoad;
 
 - (NSDictionary *) stateDictionary;
-- (TrackData *) trackData;
 
 - (BOOL) isSilentAtOffset:(NSTimeInterval)offset;
+
+- (void) startPriorityAnalysis;
 
 @property (nonatomic, readonly) TrackType trackType;
 @property (nonatomic, readonly) NSURL *fileURL;
@@ -45,13 +48,22 @@ typedef NS_ENUM(NSInteger, TrackType) {
 // Metadata
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *artist;
+@property (nonatomic, readonly) NSInteger beatsPerMinute;
 @property (nonatomic, readonly) NSTimeInterval startTime;
 @property (nonatomic, readonly) NSTimeInterval stopTime;
 @property (nonatomic, readonly) NSTimeInterval duration;
+@property (nonatomic, readonly) Tonality tonality;
+
+@property (nonatomic, readonly) double  trackLoudness;
+@property (nonatomic, readonly) double  trackPeak;
+@property (nonatomic, readonly) NSData *overviewData;
+@property (nonatomic, readonly) double  overviewRate;
+
+// Dynamic
 @property (nonatomic, readonly) NSTimeInterval playDuration;
 @property (nonatomic, readonly) NSTimeInterval silenceAtStart;
 @property (nonatomic, readonly) NSTimeInterval silenceAtEnd;
-@property (nonatomic, readonly) Tonality tonality;
+@property (nonatomic, readonly) BOOL didAnalyzeLoudness;
 
 @end
 

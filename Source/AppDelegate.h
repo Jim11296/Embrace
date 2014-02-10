@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class EditEffectController, Effect;
+@class EditEffectController, ViewTrackController, Effect;
 @class Track;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
@@ -35,8 +35,12 @@
 // Debug
 @property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
 - (IBAction) debugPopulatePlaylist:(id)sender;
+- (IBAction) debugShowInternalEffects:(id)sender;
 
 - (EditEffectController *) editControllerForEffect:(Effect *)effect;
 - (void) closeEditControllerForEffect:(Effect *)effect;
+
+- (ViewTrackController *) viewTrackControllerForTrack:(Track *)track;
+- (void) closeViewTrackControllerForEffect:(Track *)track;
 
 @end

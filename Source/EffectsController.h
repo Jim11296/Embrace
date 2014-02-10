@@ -22,7 +22,6 @@
 @property (nonatomic, strong) IBOutlet NSMenu *tableMenu;
 
 @property (nonatomic, weak) IBOutlet NSPopUpButton *addButton;
-@property (nonatomic, weak) IBOutlet NSButton *removeButton;
 
 @property (nonatomic, weak) IBOutlet NSTableView *tableView;
 

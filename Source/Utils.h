@@ -40,6 +40,17 @@ typedef NS_ENUM(NSInteger, Tonality) {
     Tonality_12B_EMajor
 };
 
+extern BOOL CheckError(OSStatus error, const char *operation);
+
+extern NSArray *GetAvailableAudioFileUTIs(void);
+extern BOOL IsAudioFileAtURL(NSURL *fileURL);
+
+extern BOOL LoadPanelState(NSSavePanel *panel, NSString *name);
+extern void SavePanelState(NSSavePanel *panel, NSString *name);
+
+extern NSString *GetStringForFourCharCode(UInt32 fcc);
+extern NSString *GetStringForFourCharCodeObject(id object);
+
 extern Tonality GetTonalityForString(NSString *string);
 extern NSString *GetTraditionalStringForTonality(Tonality tonality);
 extern NSString *GetCamelotStringForTonality(Tonality tonality);

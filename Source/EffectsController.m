@@ -20,8 +20,8 @@
 @end
 
 
-@implementation EffectsController {
-}
+@implementation EffectsController
+
 @dynamic player;
 
 - (NSString *) windowNibName
@@ -49,10 +49,6 @@
     }
     
     [[self tableView] setDoubleAction:@selector(editEffect:)];
-    
-    [[self effectsArrayController] addObserver:self forKeyPath:@"selectionIndexes" options:0 context:NULL];
-
-    [self _updateRemoveButton];
 }
 
 
@@ -62,13 +58,6 @@
     
     Effect *effect = [Effect effectWithEffectType:type];
     [[self effectsArrayController] addObject:effect];
-    
-}
-
-- (void) _updateRemoveButton
-{
-    Effect *selectedEffect = [[[self effectsArrayController] selectedObjects] lastObject];
-    [[self removeButton] setEnabled:(selectedEffect != nil)];
 }
 
 
@@ -93,16 +82,6 @@
     }
     
     [arrayController removeObjects:selectedObjects];
-}
-
-
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (object == [self effectsArrayController]) {
-        if ([keyPath isEqualToString:@"selectionIndexes"]) {
-            [self _updateRemoveButton];
-        }
-    }
 }
 
 

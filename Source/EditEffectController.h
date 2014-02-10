@@ -12,11 +12,10 @@
 
 @interface EditEffectController : NSWindowController
 
-- (id) initWithEffect:(Effect *)effect;
+- (id) initWithEffect:(Effect *)effect index:(NSInteger)index;
 
 - (IBAction) switchView:(id)sender;
 - (IBAction) loadPreset:(id)sender;
-- (IBAction) restoreDefaultValues:(id)sender;
 
 @property (nonatomic, weak) IBOutlet NSView *containerView;
 @property (nonatomic, weak) IBOutlet NSToolbarItem *modeToolbarItem;

@@ -32,7 +32,8 @@
     [self setPreferences:[Preferences sharedInstance]];
     [self setPlayer:[Player sharedInstance]];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)   name:PreferencesDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:) name:AudioDevicesDidRefreshNotification object:nil];
 }
 
 
@@ -44,14 +45,20 @@
     [self _rebuildFrameMenu];
     [self _rebuildSampleRateMenu];
     
-    if ([device isHogModeSettable]) {
-        [[self hogModeButton] setEnabled:YES];
+    if ([device isHoggable]) {
+        [self setDeviceHoggable:YES];
         [[self hogModeButton] setState:[preferences mainOutputUsesHogMode]];
     } else {
-        [[self hogModeButton] setEnabled:NO];
+        [self setDeviceHoggable:NO];
         [[self hogModeButton] setState:NSOffState];
     }
  
+    [self _rebuildDevicesMenu];
+}
+
+
+- (void) _handleAudioDevicesDidRefresh:(NSNotification *)note
+{
     [self _rebuildDevicesMenu];
 }
 
@@ -60,6 +67,8 @@
 {
     AudioDevice *device = [[sender selectedItem] representedObject];
     [[Preferences sharedInstance] setMainOutputAudioDevice:device];
+
+    [AudioDevice selectChosenAudioDevice:device];
 }
 
 
@@ -99,6 +108,20 @@
             [item setTitle:[device name]];
             [item setRepresentedObject:device];
             
+            if (![device isConnected]) {
+                NSAttributedString *as = [[NSAttributedString alloc] initWithString:[device name] attributes:@{
+                    NSForegroundColorAttributeName: GetRGBColor(0x0, 0.5),
+                    NSFontAttributeName: [NSFont systemFontOfSize:13]
+                }];
+
+                [item setAttributedTitle:as];
+                [item setImage:[NSImage imageNamed:@"issue_small"]];
+
+
+            } else {
+                [item setImage:nil];
+            }
+            
             if ([device isEqual:deviceToSelect]) {
                 itemToSelect = item;
             }
@@ -125,7 +148,7 @@
 
     NSMenuItem *itemToSelect = nil;
 
-    for (NSNumber *number in [device availableNominalSampleRates]) {
+    for (NSNumber *number in [device sampleRates]) {
         NSMenuItem *item = [[NSMenuItem alloc] init];
 
         [item setTitle:[NSString stringWithFormat:@"%@ Hz", number]];
@@ -153,7 +176,7 @@
     
     NSMenuItem *itemToSelect = nil;
 
-    for (NSNumber *number in [device availableIOBufferSizes]) {
+    for (NSNumber *number in [device frameSizes]) {
         NSMenuItem *item = [[NSMenuItem alloc] init];
 
         [item setTitle:[number stringValue]];

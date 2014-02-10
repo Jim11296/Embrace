@@ -102,8 +102,6 @@ public:
 	void				GetStreams(bool inIsInput, UInt32& ioNumberStreams, AudioObjectID* outStreamList) const;
 	AudioObjectID		GetStreamByIndex(bool inIsInput, UInt32 inIndex) const;
 	UInt32				GetTotalNumberChannels(bool inIsInput) const;
-	void				GetCurrentVirtualFormats(bool inIsInput, UInt32& ioNumberStreams, AudioStreamBasicDescription* outFormats) const;
-	void				GetCurrentPhysicalFormats(bool inIsInput, UInt32& ioNumberStreams, AudioStreamBasicDescription* outFormats) const;
 	
 //	IO Stuff
 public:
@@ -127,103 +125,6 @@ public:
 	UInt32				GetMaximumVariableIOBufferSize() const;
 	bool				HasIOBufferSizeRange() const;
 	void				GetIOBufferSizeRange(UInt32& outMinimum, UInt32& outMaximum) const;
-	AudioDeviceIOProcID	CreateIOProcID(AudioDeviceIOProc inIOProc, void* inClientData);
-#if 0
-//#if defined(__BLOCKS__) && (__MAC_OS_X_VERSION_MAX_ALLOWED > __MAC_10_6)
-	AudioDeviceIOProcID	CreateIOProcIDWithBlock(dispatch_queue_t inDispatchQueue, AudioDeviceIOBlock inIOBlock);
-#endif
-	void				DestroyIOProcID(AudioDeviceIOProcID inIOProcID);
-	void				StartIOProc(AudioDeviceIOProcID inIOProcID);
-	void				StartIOProcAtTime(AudioDeviceIOProcID inIOProcID, AudioTimeStamp& ioStartTime, bool inIsInput, bool inIgnoreHardware);
-	void				StopIOProc(AudioDeviceIOProcID inIOProcID);
-	void				GetIOProcStreamUsage(AudioDeviceIOProcID inIOProcID, bool inIsInput, bool* outStreamUsage) const;
-	void				SetIOProcStreamUsage(AudioDeviceIOProcID inIOProcID, bool inIsInput, const bool* inStreamUsage);
-	Float32				GetIOCycleUsage() const;
-	void				SetIOCycleUsage(Float32 inValue);
-	
-//	Time Operations
-public:
-	void				GetCurrentTime(AudioTimeStamp& outTime);
-	void				TranslateTime(const AudioTimeStamp& inTime, AudioTimeStamp& outTime);
-	void				GetNearestStartTime(AudioTimeStamp& ioTime, bool inIsInput, bool inIgnoreHardware);
-
-//	Controls
-public:
-	bool				HasVolumeControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				VolumeControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	Float32				GetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	Float32				GetVolumeControlDecibelValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
-	void				SetVolumeControlDecibelValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
-	Float32				GetVolumeControlScalarForDecibelValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue) const;
-	Float32				GetVolumeControlDecibelForScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue) const;
-	
-	bool				HasSubVolumeControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				SubVolumeControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	Float32				GetSubVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	Float32				GetSubVolumeControlDecibelValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetSubVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
-	void				SetSubVolumeControlDecibelValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
-	Float32				GetSubVolumeControlScalarForDecibelValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue) const;
-	Float32				GetSubVolumeControlDecibelForScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue) const;
-	
-	bool				HasMuteControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				MuteControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				GetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
-	
-	bool				HasSoloControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				SoloControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				GetSoloControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetSoloControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
-	
-	bool				HasStereoPanControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				StereoPanControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	Float32				GetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
-	void				GetStereoPanControlChannels(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32& outLeftChannel, UInt32& outRightChannel) const;
-	
-	bool				HasJackControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				GetJackControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	
-	bool				HasSubMuteControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				SubMuteControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				GetSubMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetSubMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
-	
-	bool				HasiSubOwnerControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				iSubOwnerControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				GetiSubOwnerControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetiSubOwnerControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
-
-	bool				HasDataSourceControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				DataSourceControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	UInt32				GetCurrentDataSourceID(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetCurrentDataSourceByID(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32 inID);
-	UInt32				GetNumberAvailableDataSources(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				GetAvailableDataSources(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32& ioNumberSources, UInt32* outSources) const;
-	UInt32				GetAvailableDataSourceByIndex(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32 inIndex) const;
-	CFStringRef			CopyDataSourceNameForID(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32 inID) const;
-
-	bool				HasDataDestinationControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				DataDestinationControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	UInt32				GetCurrentDataDestinationID(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetCurrentDataDestinationByID(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32 inID);
-	UInt32				GetNumberAvailableDataDestinations(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				GetAvailableDataDestinations(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32& ioNumberDestinations, UInt32* outDestinations) const;
-	UInt32				GetAvailableDataDestinationByIndex(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32 inIndex) const;
-	CFStringRef			CopyDataDestinationNameForID(AudioObjectPropertyScope inScope, UInt32 inChannel, UInt32 inID) const;
-
-	bool				HasClockSourceControl() const;
-	bool				ClockSourceControlIsSettable() const;
-	UInt32				GetCurrentClockSourceID() const;
-	void				SetCurrentClockSourceByID(UInt32 inID);
-	UInt32				GetNumberAvailableClockSources() const;
-	void				GetAvailableClockSources(UInt32& ioNumberSources, UInt32* outSources) const;
-	UInt32				GetAvailableClockSourceByIndex(UInt32 inIndex) const;
-	CFStringRef			CopyClockSourceNameForID(UInt32 inID) const;
-	UInt32				GetClockSourceKindForID(UInt32 inID) const;
-	
 };
 
 #endif

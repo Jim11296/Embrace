@@ -14,5 +14,5 @@
     #import <CoreAudioKit/CoreAudioKit.h>
 
     #import "Utils.h"
-    #import "AudioUtils.h"
+    #import "WrappedUtils.h"
 #endif

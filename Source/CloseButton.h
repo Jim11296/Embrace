@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CloseButton : NSControl
+@interface CloseButton : NSButton
 
 @end

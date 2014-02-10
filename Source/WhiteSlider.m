@@ -24,6 +24,7 @@
     return result;
 }
 
+
 - (void) drawKnob:(NSRect)knobRect
 {
     [[NSColor whiteColor] set];
@@ -43,7 +44,6 @@
     [shadow2 set];
 
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
-
 }
 
 

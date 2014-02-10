@@ -12,6 +12,14 @@
 @class Player, Track, Effect, AudioDevice;
 
 
+typedef NS_ENUM(NSInteger, PlayerIssue) {
+    PlayerIssueNone = 0,
+    PlayerIssueDeviceMissing,
+    PlayerIssueDeviceHoggedByOtherProcess,
+    PlayerIssueErrorConfiguringOutputDevice
+};
+
+
 typedef NS_ENUM(NSInteger, PlayerStatus) {
     PlayerStatusPaused = 0,
     PlayerStatusPlaying
@@ -27,12 +35,18 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
 - (void) play;
 - (void) softPause;
 - (void) hardSkip;
-- (void) hardPause;
+- (void) hardStop;
 
 @property (nonatomic) double volume;
 
 @property (nonatomic, strong) NSArray *effects;
 - (AudioUnit) audioUnitForEffect:(Effect *)effect;
+- (void) saveEffectState;
+
+@property (nonatomic, strong) NSArray *debugInternalEffects;
+
+@property (nonatomic) double matchLoudnessLevel;
+@property (nonatomic) double preAmpLevel;
 
 - (void) updateOutputDevice: (AudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
@@ -40,10 +54,9 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
                     hogMode: (BOOL) hogMode;
 
 @property (nonatomic, readonly) AudioDevice *outputDevice;
-@property (nonatomic, readonly) double sampleRate;
-@property (nonatomic, readonly) UInt32 frames;
-@property (nonatomic, readonly) BOOL hogMode;
-
+@property (nonatomic, readonly) double outputSampleRate;
+@property (nonatomic, readonly) UInt32 outputFrames;
+@property (nonatomic, readonly) BOOL outputHogMode;
 
 // KVO-Observable
 @property (nonatomic, readonly) Track *currentTrack;
@@ -51,6 +64,7 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
 @property (nonatomic, readonly) NSString *timeRemainingString;
 @property (nonatomic, readonly, getter=isPlaying) BOOL playing;
 @property (nonatomic, readonly) float percentage;
+@property (nonatomic, readonly) PlayerIssue issue;
 
 // Playback properties
 @property (nonatomic, readonly) NSTimeInterval timeElapsed;
@@ -69,10 +83,12 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
 
 @protocol PlayerListener <NSObject>
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing;
+- (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue;
 - (void) playerDidTick:(Player *)player;
 @end
 
 @protocol PlayerTrackProvider <NSObject>
+
 - (void) player:(Player *)player getNextTrack:(Track **)outNextTrack getPadding:(NSTimeInterval *)outPadding;
 @end
 

@@ -13,7 +13,6 @@
 #import "AppDelegate.h"
 #import "iTunesManager.h"
 #import "TrackTableCellView.h"
-#import "TrackData.h"
 #import "WaveformView.h"
 #import "BorderedView.h"
 #import "Button.h"
@@ -21,6 +20,8 @@
 #import "LevelMeter.h"
 #import "PlayBar.h"
 #import "Preferences.h"
+#import "ShadowView.h"
+#import "ViewTrackController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -50,6 +51,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) dealloc
 {
+    [[self tracksController] removeObserver:self forKeyPath:@"arrangedObjects"];
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -64,11 +67,13 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 {
     [super windowDidLoad];
 
-    [(WhiteWindow *)[self window] setupWithHeaderView:[self headerView] mainView:[[self tableView] enclosingScrollView]];
-
-    [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, sTrackPasteboardType ]];
-    [[self tableView] setDoubleAction:@selector(editSelectedTrack:)];
+    [(WhiteWindow *)[self window] setupWithHeaderView:[self headerView] mainView:[self mainView]];
     
+    [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, sTrackPasteboardType ]];
+#if DEBUG
+    [[self tableView] setDoubleAction:@selector(viewSelectedTrack:)];
+#endif
+
     [[self headerView] setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
     [[self bottomContainer] setTopBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
 
@@ -77,17 +82,121 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     [[self playButton] setImage:[NSImage imageNamed:@"play_template"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"gear_template"]];
     
-    [[self tracksController] addObserver:self forKeyPath:@"selectedIndex" options:0 context:NULL];
+    [[self tracksController] addObserver:self forKeyPath:@"arrangedObjects" options:0 context:NULL];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     [self _handlePreferencesDidChange:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidUpdate:) name:TrackDidUpdateNotification object:nil];
+    
+    // Add top and bottom shadows
+    {
+        NSRect mainBounds = [[self mainView] bounds];
+
+        NSRect topShadowFrame    = NSMakeRect(0, 0, mainBounds.size.width, 4);
+        NSRect bottomShadowFrame = NSMakeRect(0, 0, mainBounds.size.width, 4);
+        
+        bottomShadowFrame.origin.y = NSMinY([[[self tableView] enclosingScrollView] frame]);
+
+        topShadowFrame.origin.y = mainBounds.size.height - 4;
+        
+        ShadowView *topShadow    = [[ShadowView alloc] initWithFrame:topShadowFrame];
+        ShadowView *bottomShadow = [[ShadowView alloc] initWithFrame:bottomShadowFrame];
+        
+        [topShadow setAutoresizingMask:NSViewWidthSizable|NSViewMinYMargin];
+        [bottomShadow setAutoresizingMask:NSViewWidthSizable|NSViewMaxYMargin];
+        
+        [bottomShadow setFlipped:YES];
+        
+        [[self mainView] addSubview:topShadow];
+        [[self mainView] addSubview:bottomShadow];
+        
+        [(WhiteWindow *)[self window] setHiddenViewsWhenInactive:@[ topShadow, bottomShadow ]];
+    }
     
     [self setPlayer:[Player sharedInstance]];
     [self _setupPlayer];
+
+    [self _updateDragSongsView];
 }
 
 
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (object == [self tracksController]) {
+        if ([keyPath isEqualToString:@"arrangedObjects"]) {
+            [self _updatePlayButton];
+            [self _updateDragSongsView];
+        }
+    }
+}
+
 #pragma mark - Private Methods
+
+- (Track *) _nextUnplayedTrack
+{
+    for (Track *track in _tracks) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            return track;
+        }
+    }
+
+    return nil;
+}
+
+
+- (void) _updatePlayButton
+{
+    Player        *player      = [Player sharedInstance];
+    Track         *track       = [player currentTrack];
+    NSTimeInterval timeElapsed = [player timeElapsed];
+    BOOL playing = [player isPlaying];
+
+    PlayerIssue issue = [player issue];
+
+    NSImage  *image   = nil;
+    NSString *tooltip = nil;
+    BOOL      enabled = YES;
+    BOOL      alert   = NO;
+
+    if (issue != PlayerIssueNone) {
+        image = [NSImage imageNamed:@"issue_template"];
+        alert = YES;
+        enabled = NO;
+
+        if (issue == PlayerIssueDeviceMissing) {
+            tooltip = NSLocalizedString(@"The selected output device is not connected", nil);
+        } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
+            tooltip = NSLocalizedString(@"Another application is using the selected output device", nil);
+        } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
+            tooltip = NSLocalizedString(@"The selected output device could not be configured", nil);
+        }
+    
+    } else if (playing) {
+        image = [NSImage imageNamed:@"pause_template"];
+        enabled = [track isSilentAtOffset:timeElapsed];
+
+    } else {
+        image = [NSImage imageNamed:@"play_template"];
+
+        Track *next = [self _nextUnplayedTrack];
+        enabled = (next != nil);
+    }
+
+    Button *playButton = [self playButton];
+
+    [playButton setAlert:alert];
+    [playButton setImage:image];
+    [playButton setToolTip:tooltip];
+    [playButton setEnabled:enabled];
+}
+
+
+- (void) _handleTrackDidUpdate:(NSNotification *)note
+{
+    [self _saveState];
+}
+
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
@@ -99,6 +208,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     BOOL         hogMode    = [preferences mainOutputUsesHogMode];
 
     [[Player sharedInstance] updateOutputDevice:device sampleRate:sampleRate frames:frames hogMode:hogMode];
+    
+    [[self tableView] reloadData];
 }
 
 
@@ -150,6 +261,30 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (BOOL) _canChangeTrackStatusOfTrack:(Track *)track
+{
+    NSArray  *arrangedTracks = [[self tracksController] arrangedObjects];
+    NSInteger count          = [arrangedTracks count];
+    
+    NSInteger index = [arrangedTracks indexOfObject:track];
+    if (index == NSNotFound) {
+        return NO;
+    }
+    
+    if ([[Player sharedInstance] currentTrack]) {
+        return NO;
+    }
+    
+    Track *previousTrack = index > 0           ? [arrangedTracks objectAtIndex:(index - 1)] : nil;
+    Track *nextTrack     = (index + 1) < count ? [arrangedTracks objectAtIndex:(index + 1)] : nil;
+    
+    BOOL isPreviousPlayed = !previousTrack || ([previousTrack trackStatus] == TrackStatusPlayed);
+    BOOL isNextPlayed     =                    [nextTrack     trackStatus] == TrackStatusPlayed;
+
+    return (isPreviousPlayed != isNextPlayed);
+}
+
+
 - (BOOL) _canDeleteSelectedObjects
 {
     Track *selectedTrack = [self _selectedTrack];
@@ -159,13 +294,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     }
     
     return NO;
-}
-
-
-- (BOOL) _canEditSelectedObjects
-{
-    TrackType type = [[self _selectedTrack] trackType];
-    return type == TrackTypeAudioFile;
 }
 
 
@@ -221,6 +349,37 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (void) _updateDragSongsView
+{
+    BOOL hidden = [[[self tracksController] arrangedObjects] count] > 0;
+    
+    if (hidden) {
+        [_dragSongsView setAlphaValue:1];
+
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            [[_dragSongsView animator] setAlphaValue:0];
+        } completionHandler:^{
+            [_dragSongsView removeFromSuperview];
+        }];
+
+    } else {
+        NSView *scrollView  = [[self tableView] enclosingScrollView];
+        NSRect  scrollFrame = [scrollView frame];
+        
+        NSRect dragFrame = [_dragSongsView frame];
+        
+        dragFrame.origin.x = NSMinX(scrollFrame) + round((NSWidth( scrollFrame) - NSWidth( dragFrame)) / 2);
+        dragFrame.origin.y = NSMinY(scrollFrame) + round((NSHeight(scrollFrame) - NSHeight(dragFrame)) / 2);
+
+        [_dragSongsView setAutoresizingMask:NSViewMinXMargin|NSViewMaxXMargin|NSViewMaxYMargin|NSViewMinYMargin];
+        [_dragSongsView setFrame:dragFrame];
+
+        [_dragSongsView setAlphaValue:1];
+        [[scrollView superview] addSubview:_dragSongsView];
+    }
+}
+
+
 #pragma mark - Debug
 
 - (void) debugPopulatePlaylist
@@ -252,8 +411,15 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     NSArrayController *tracksController = [self tracksController];
 
     NSArray *tracks = [tracksController arrangedObjects];
+
+    for (Track *track in tracks) {
+        [track cancelLoad];
+    }
+
     [tracksController removeObjects:tracks];
     [tracksController setSelectionIndexes:[NSIndexSet indexSet]];
+    
+    [[self tableView] reloadData];
 }
 
 
@@ -325,9 +491,17 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
-- (IBAction) editSelectedTrack:(id)sender
+- (IBAction) viewSelectedTrack:(id)sender
 {
+    NSInteger clickedRow = [[self tableView] clickedRow];
+    NSArray *tracks = [[self tracksController] arrangedObjects];
 
+    if (clickedRow >= 0 && clickedRow <= [tracks count]) {
+        Track *track = [tracks objectAtIndex:clickedRow];
+        ViewTrackController *controller = [GetAppDelegate() viewTrackControllerForTrack:track];
+
+        [controller showWindow:self];
+    }
 }
 
 
@@ -340,6 +514,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     for (Track *track in selectedTracks){
         if ([track trackStatus] == TrackStatusQueued) {
+            [track cancelLoad];
             [tracksToRemove addObject:track];
         }
     }
@@ -360,6 +535,23 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     
     if ([track trackStatus] != TrackStatusPlayed) {
         [track setPausesAfterPlaying:![track pausesAfterPlaying]];
+        [self _updatePlayButton];
+    }
+}
+
+
+- (IBAction) toggleMarkAsPlayed:(id)sender
+{
+    Track *track = [self _selectedTrack];
+
+    if ([self _canChangeTrackStatusOfTrack:track]) {
+        if ([track trackStatus] == TrackStatusQueued) {
+            [track setTrackStatus:TrackStatusPlayed];
+        } else if ([track trackStatus] == TrackStatusPlayed) {
+            [track setTrackStatus:TrackStatusQueued];
+        }
+
+        [self _updatePlayButton];
     }
 }
 
@@ -417,13 +609,16 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     if (action == @selector(delete:)) {
         return [self _canDeleteSelectedObjects];
 
-    } else if (action == @selector(editSelectedTrack:)) {
-        return [self _canEditSelectedObjects];
-
+    } else if (action == @selector(toggleMarkAsPlayed:)) {
+        Track *track = [self _selectedTrack];
+        [menuItem setState:([track trackStatus] == TrackStatusPlayed)];
+        return [self _canChangeTrackStatusOfTrack:track];
+    
     } else if (action == @selector(togglePauseAfterPlaying:)) {
         Track *track = [self _selectedTrack];
-        [menuItem setState:[track pausesAfterPlaying]];
-        return (track != nil);
+        BOOL canPause = [track trackStatus] != TrackStatusPlayed;
+        [menuItem setState:canPause && [track pausesAfterPlaying]];
+        return canPause;
 
     } else if (action == @selector(addSilence:)) {
         return [self _canInsertAfterSelectedRow];
@@ -439,7 +634,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 {
     Player *player = [Player sharedInstance];
 
-
     [player addListener:self];
     [player setTrackProvider:self];
 
@@ -449,32 +643,28 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing
 {
-    Button *playButton = [self playButton];
-
     if (playing) {
-        [playButton setImage:[NSImage imageNamed:@"pause_template"]];
-
-        [[self playBar] setHidden:NO];
-        [[self playOffsetField] setHidden:NO];
-        [[self playRemainingField] setHidden:NO];
-
         [[self levelMeter] setMetering:YES];
         
     } else {
-        [playButton setImage:[NSImage imageNamed:@"play_template"]];
-
-        [[self playBar] setHidden:YES];
-        [[self playOffsetField] setHidden:YES];
-        [[self playRemainingField] setHidden:YES];
-
+        [[self playOffsetField] setStringValue:GetStringForTime(0)];
+        [[self playRemainingField] setStringValue:GetStringForTime(0)];
+        
         [[self levelMeter] setMetering:NO];
     }
+
+    [self _updatePlayButton];
 }
+
+
+- (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue
+{
+    [self _updatePlayButton];
+}
+
 
 - (void) playerDidTick:(Player *)player
 {
-    Track *track = [player currentTrack];
-    
     NSTimeInterval timeElapsed   = [player timeElapsed];
     NSTimeInterval timeRemaining = [player timeRemaining];
 
@@ -494,8 +684,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     [[self playBar] setPercentage:percentage];
     [[self levelMeter] setLeftAveragePower:leftAveragePower rightAveragePower:rightAveragePower leftPeakPower:leftPeakPower rightPeakPower:rightPeakPower];
 
-    BOOL silent = [track isSilentAtOffset:timeElapsed];
-    [[self playButton] setEnabled:silent];
+    [self _updatePlayButton];
 }
 
 
@@ -505,15 +694,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     [self _saveState];
 
-    Track *trackToPlay = nil;
+    Track *trackToPlay = [self _nextUnplayedTrack];
     NSTimeInterval padding = 0;
-    
-    for (Track *track in _tracks) {
-        if ([track trackStatus] != TrackStatusPlayed) {
-            trackToPlay = track;
-            break;
-        }
-    }
     
     if (currentTrack && trackToPlay) {
         NSTimeInterval totalSilence = [currentTrack silenceAtEnd] + [trackToPlay silenceAtStart];

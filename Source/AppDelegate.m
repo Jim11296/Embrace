@@ -13,6 +13,7 @@
 #import "PreferencesController.h"
 #import "EditEffectController.h"
 #import "CurrentTrackController.h"
+#import "ViewTrackController.h"
 
 #import "Player.h"
 #import "Effect.h"
@@ -27,7 +28,7 @@
     PreferencesController  *_preferencesController;
 
     NSMutableArray         *_editEffectControllers;
-    NSMutableArray         *_editTrackControllers;
+    NSMutableArray         *_viewTrackControllers;
 }
 
 
@@ -43,6 +44,54 @@
 #ifdef DEBUG
     [[self debugMenuItem] setHidden:NO];
 #endif
+}
+
+
+- (BOOL) application:(NSApplication *)sender openFile:(NSString *)filename
+{
+    NSURL *fileURL = [NSURL fileURLWithPath:filename];
+
+    if (IsAudioFileAtURL(fileURL)) {
+        [_playlistController openFileAtURL:fileURL];
+        return YES;
+    }
+
+    return NO;
+}
+
+
+- (void) application:(NSApplication *)sender openFiles:(NSArray *)filenames
+{
+    for (NSString *filename in [filenames reverseObjectEnumerator]) {
+        NSURL *fileURL = [NSURL fileURLWithPath:filename];
+
+        if (IsAudioFileAtURL(fileURL)) {
+            [_playlistController openFileAtURL:fileURL];
+        }
+    }
+}
+
+
+- (void) applicationWillTerminate:(NSNotification *)notification
+{
+    [[Player sharedInstance] saveEffectState];
+}
+
+
+- (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
+{
+    if ([[Player sharedInstance] isPlaying]) {
+        NSString *messageText     = NSLocalizedString(@"Are you sure you want to quit Embrace?", nil);
+        NSString *informativeText = NSLocalizedString(@"If you quit, the currently playing music will stop.", nil);
+        NSString *defaultButton   = NSLocalizedString(@"Quit", nil);
+        
+        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        
+        return [alert runModal] == NSOKButton ? NSTerminateNow : NSTerminateCancel;
+    }
+    
+    return NSTerminateNow;
 }
 
 
@@ -80,7 +129,7 @@
         }
     }
     
-    EditEffectController *controller = [[EditEffectController alloc] initWithEffect:effect];
+    EditEffectController *controller = [[EditEffectController alloc] initWithEffect:effect index:[_editEffectControllers count]];
     [_editEffectControllers addObject:controller];
     return controller;
 }
@@ -101,6 +150,39 @@
 }
 
 
+- (ViewTrackController *) viewTrackControllerForTrack:(Track *)track
+{
+    if (!_viewTrackControllers) {
+        _viewTrackControllers = [NSMutableArray array];
+    }
+
+    for (ViewTrackController *controller in _viewTrackControllers) {
+        if ([[controller track] isEqual:track]) {
+            return controller;
+        }
+    }
+    
+    ViewTrackController *controller = [[ViewTrackController alloc] initWithTrack:track];
+    [_viewTrackControllers addObject:controller];
+    return controller;
+}
+
+
+- (void) closeViewTrackControllerForEffect:(Track *)track
+{
+    NSMutableArray *toRemove = [NSMutableArray array];
+
+    for (ViewTrackController *controller in _viewTrackControllers) {
+        if ([controller track] == track) {
+            [controller close];
+            [toRemove addObject:controller];
+        }
+    }
+    
+    [_viewTrackControllers removeObjectsInArray:toRemove];
+}
+
+
 - (IBAction) clearHistory:(id)sender
 {
     [_playlistController clearHistory];
@@ -111,10 +193,23 @@
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
+    if (!LoadPanelState(openPanel, @"open-file-panel")) {
+        NSString *musicPath = [NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES) firstObject];
+        
+        if (musicPath) {
+            [openPanel setDirectoryURL:[NSURL fileURLWithPath:musicPath]];
+        }
+    }
+    
+    [openPanel setTitle:NSLocalizedString(@"Add to Playlist", nil)];
+    [openPanel setAllowedFileTypes:GetAvailableAudioFileUTIs()];
+
     __weak id weakPlaylistController = _playlistController;
+
 
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
         if (result == NSOKButton) {
+            SavePanelState(openPanel, @"open-file-panel");
             [weakPlaylistController openFileAtURL:[openPanel URL]];
         }
     }];
@@ -130,11 +225,33 @@
 - (IBAction) saveHistory:(id)sender
 {
     NSSavePanel *savePanel = [NSSavePanel savePanel];
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    
+    NSString *dateString = [formatter stringFromDate:[NSDate date]];
+
+    NSString *suggestedNameFormat = NSLocalizedString(@"Embrace (%@)", nil);
+    NSString *suggestedName = [NSString stringWithFormat:suggestedNameFormat, dateString];
+    [savePanel setNameFieldStringValue:suggestedName];
+
+    [savePanel setTitle:NSLocalizedString(@"Save History", nil)];
+    [savePanel setAllowedFileTypes:@[ @"txt" ]];
+    
+    if (!LoadPanelState(savePanel, @"save-history-panel")) {
+        NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject];
+        
+        if (desktopPath) {
+            [savePanel setDirectoryURL:[NSURL fileURLWithPath:desktopPath]];
+        }
+    }
     
     __weak id weakPlaylistController = _playlistController;
     
     [savePanel beginWithCompletionHandler:^(NSInteger result) {
         if (result == NSOKButton) {
+            SavePanelState(savePanel, @"save-history-panel");
             [weakPlaylistController saveHistoryToFileAtURL:[savePanel URL]];
         }
     }];
@@ -161,7 +278,7 @@
 
 - (IBAction) hardPause:(id)sender
 {
-    [[Player sharedInstance] hardPause];
+    [[Player sharedInstance] hardStop];
 }
 
 
@@ -193,6 +310,16 @@
 }
 
 
+- (IBAction) debugShowInternalEffects:(id)sender
+{
+    NSArray *internalEffects = [[Player sharedInstance] debugInternalEffects];
+
+    for (Effect *effect in internalEffects) {
+        [[self editControllerForEffect:effect] showWindow:self];
+    }
+}
+
+
 - (IBAction) showCurrentTrack:(id)sender
 {
     if (!_currentTrackController) {
@@ -205,13 +332,22 @@
 
 - (IBAction) sendFeedback:(id)sender
 {
-    //!i: Open contact page
+    NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/contact/"];
+    [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
+
+- (IBAction) viewWebsite:(id)sender
+{
+    NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/projects/embrace"];
+    [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 
 - (IBAction) viewOnAppStore:(id)sender
 {
-    //!i: Open App Store URL
+    NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/buy/embrace"];
+    [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 

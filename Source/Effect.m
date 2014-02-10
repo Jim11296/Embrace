@@ -108,12 +108,6 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
-- (void) loadDefaultValues
-{
-    
-}
-
-
 - (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL
 {
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfURL:fileURL];
