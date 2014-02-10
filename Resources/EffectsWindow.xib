@@ -196,7 +196,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="roundTextured" title="Add" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="KD0-kQ-xFV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="XIJ-l0-Ax9">
                                 <items>
                                     <menuItem title="Add" state="on" hidden="YES" id="SsZ-jE-b0F"/>
@@ -237,6 +237,9 @@
                     </button>
                 </subviews>
             </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="VNH-OM-LWS"/>
+            </connections>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="Rzj-OB-R5q"/>
         <arrayController id="ljB-2h-dI3">

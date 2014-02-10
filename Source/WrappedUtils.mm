@@ -10,6 +10,7 @@
 #import "CAHostTimeBase.h"
 #import "CAStreamBasicDescription.h"
 
+#include <exception>
 
 extern "C" void FillAudioTimeStampWithFutureSeconds(AudioTimeStamp *timeStamp, NSTimeInterval seconds)
 {
@@ -26,6 +27,17 @@ extern "C" UInt64 GetCurrentHostTime(void)
     return CAHostTimeBase::GetTheCurrentTime();
 }
 
+
+static void sHandleTerminate()
+{
+    [[NSRunLoop mainRunLoop] run];
+}
+
+
+extern "C" void InstallCppTerminationHandler()
+{
+    std::set_terminate(sHandleTerminate);
+}
 
 extern "C" NSTimeInterval GetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2)
 {

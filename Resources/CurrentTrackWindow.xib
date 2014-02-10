@@ -6,12 +6,12 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CurrentTrackController">
             <connections>
+                <outlet property="childWindow" destination="1" id="xUk-gi-OPe"/>
                 <outlet property="leftLabel" destination="AO9-lc-SHt" id="RuP-4s-pj0"/>
                 <outlet property="mainView" destination="Mjy-qK-rWI" id="bqu-4D-abK"/>
                 <outlet property="noTrackLabel" destination="vU8-Lz-QA3" id="ZPi-9m-9qe"/>
                 <outlet property="rightLabel" destination="MXh-dj-c92" id="vWA-aZ-uzz"/>
                 <outlet property="waveformView" destination="3Er-jp-xjF" id="axC-sL-JC1"/>
-                <outlet property="window" destination="1" id="hmE-NQ-qaX"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -70,6 +70,9 @@
                     </customView>
                 </subviews>
             </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="Kcg-ZB-cRF"/>
+            </connections>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="9oV-Bp-vhx"/>
     </objects>

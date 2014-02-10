@@ -32,18 +32,71 @@
 }
 
 
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
     
-    _playlistController = [[PlaylistController alloc] init];
-    _effectsController  = [[EffectsController  alloc] init];
-    [_playlistController showWindow:self];
+    _playlistController     = [[PlaylistController     alloc] init];
+    _effectsController      = [[EffectsController      alloc] init];
+    _currentTrackController = [[CurrentTrackController alloc] init];
+    
+    [self _showPreviouslyVisibleWindows];
+
+    InstallCppTerminationHandler();
+
+#ifdef DEBUG
+    [[self debugMenuItem] setHidden:NO];
+#endif
+}
+
+
+- (void) _showPreviouslyVisibleWindows
+{
+    NSArray *visibleWindows = [[NSUserDefaults standardUserDefaults] objectForKey:@"visible-windows"];
+    
+    if ([visibleWindows containsObject:@"current-track"]) {
+        [self showCurrentTrack:self];
+    }
+
+    // Always show main window
+    [self showMainWindow:self];
     
 #ifdef DEBUG
     [[self debugMenuItem] setHidden:NO];
 #endif
+}
+
+
+- (void) _saveVisibleWindows
+{
+    NSMutableArray *visibleWindows = [NSMutableArray array];
+    
+    if ([[_playlistController window] isVisible]) {
+        [visibleWindows addObject:@"playlist"];
+    }
+
+    if ([[_currentTrackController window] isVisible]) {
+        [visibleWindows addObject:@"current-track"];
+    }
+
+    [[NSUserDefaults standardUserDefaults] setObject:visibleWindows forKey:@"visible-windows"];
+}
+
+
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)hasVisibleWindows
+{
+    if (!hasVisibleWindows) {
+        [self showMainWindow:self];
+    }
+
+    return YES;
 }
 
 
@@ -74,6 +127,9 @@
 
 - (void) applicationWillTerminate:(NSNotification *)notification
 {
+    [self _saveVisibleWindows];
+
+
     [[Player sharedInstance] saveEffectState];
 }
 
@@ -294,6 +350,12 @@
 }
 
 
+- (IBAction) showCurrentTrack:(id)sender
+{
+    [_currentTrackController showWindow:self];
+}
+
+
 - (IBAction) showPreferences:(id)sender
 {
     if (!_preferencesController) {
@@ -317,16 +379,6 @@
     for (Effect *effect in internalEffects) {
         [[self editControllerForEffect:effect] showWindow:self];
     }
-}
-
-
-- (IBAction) showCurrentTrack:(id)sender
-{
-    if (!_currentTrackController) {
-        _currentTrackController = [[CurrentTrackController alloc] init];
-    }
-
-    [_currentTrackController showWindow:self];
 }
 
 

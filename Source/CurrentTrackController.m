@@ -11,13 +11,11 @@
 #import "WhiteWindow.h"
 #import "WaveformView.h"
 
-@interface CurrentTrackController () <PlayerListener>
+@interface CurrentTrackController () <PlayerListener, NSWindowDelegate>
 @end
 
 
-@implementation CurrentTrackController {
-    WhiteWindow *_parentWindow;
-}
+@implementation CurrentTrackController
 
 - (NSString *) windowNibName
 {
@@ -64,21 +62,31 @@
 }
 
 
+- (void) loadWindow
+{
+    [super loadWindow];
+
+    NSRect contentRect = [[self childWindow] frame];
+    NSUInteger styleMask = NSTitledWindowMask|NSClosableWindowMask|NSResizableWindowMask|NSTexturedBackgroundWindowMask;
+
+    WhiteWindow *window = [[WhiteWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
+    [window setupAsParentWindow];
+
+    [self setWindow:window];
+}
+
+
 - (void) windowDidLoad
 {
     [super windowDidLoad];
 
-    NSRect contentRect = [[self window] frame];
-    NSUInteger styleMask = NSTitledWindowMask|NSClosableWindowMask|NSResizableWindowMask|NSTexturedBackgroundWindowMask;
+    NSWindow *parentWindow = [self window];
+    NSWindow *childWindow  = [self childWindow];
 
-    _parentWindow = [[WhiteWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
-    [_parentWindow setupAsParentWindow];
+    [parentWindow setDelegate:self];
+    [parentWindow setFrameAutosaveName:@"CurrentTrackWindow"];
 
-    [_parentWindow addChildWindow:[self window] ordered:NSWindowAbove];
-
-    [_parentWindow setFrameAutosaveName:@"CurrentTrackWindow"];
-
-    if (![_parentWindow setFrameUsingName:@"CurrentTrackWindow"]) {
+    if (![parentWindow setFrameUsingName:@"CurrentTrackWindow"]) {
         NSScreen *screen = [[NSScreen screens] firstObject];
         
         NSRect screenFrame = [screen visibleFrame];
@@ -89,12 +97,12 @@
         windowFrame.origin.x = round((screenFrame.size.width - windowFrame.size.width) / 2);
         windowFrame.origin.x += screenFrame.origin.x;
     
-        [_parentWindow setFrame:windowFrame display:NO];
+        [[self window] setFrame:windowFrame display:NO];
     }
     
-    [[self window] setIgnoresMouseEvents:YES];
-    [[self window] setBackgroundColor:[NSColor clearColor]];
-    [[self window] setOpaque:NO];
+    [childWindow setIgnoresMouseEvents:YES];
+    [childWindow setBackgroundColor:[NSColor clearColor]];
+    [childWindow setOpaque:NO];
 
     Player *player = [Player sharedInstance];
     [self setPlayer:[Player sharedInstance]];
@@ -104,16 +112,34 @@
     [self _updateTrack];
     
     [[self mainView] setPostsBoundsChangedNotifications:YES];
-    [[self mainView] setFrame:[[[self window] contentView] bounds]];
     
     [[Player sharedInstance] addListener:self];
 
     [self _updateTrack];
 
-    [_parentWindow makeKeyAndOrderFront:self];
-    [_parentWindow setMinSize:[[self window] minSize]];
+    [parentWindow setMinSize:[childWindow minSize]];
 }
 
+
+- (void) windowWillClose:(NSNotification *)notification;
+{
+    if ([notification object] == [self childWindow]) {
+        [[self window] orderOut:self];
+    } else {
+        [[self childWindow] orderOut:self];
+    }
+}
+
+
+- (IBAction) showWindow:(id)sender
+{
+    [[self window] addChildWindow:[self childWindow] ordered:NSWindowAbove];
+
+    [[self mainView] setFrame:[[[self childWindow] contentView] bounds]];
+
+    [super showWindow:sender];
+    [[self childWindow] orderFront:self];
+}
 
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing { }
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue { }
