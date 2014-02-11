@@ -362,22 +362,26 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     filePlayerCD.componentType = kAudioUnitType_Generator;
     filePlayerCD.componentSubType = kAudioUnitSubType_AudioFilePlayer;
     filePlayerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+    filePlayerCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
     AudioComponentDescription limiterCD = {0};
     limiterCD.componentType = kAudioUnitType_Effect;
     limiterCD.componentSubType = kAudioUnitSubType_PeakLimiter;
     limiterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+    limiterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
     AudioComponentDescription mixerCD = {0};
     mixerCD.componentType = kAudioUnitType_Mixer;
     mixerCD.componentSubType = kAudioUnitSubType_StereoMixer;
     mixerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+    mixerCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
     AudioComponentDescription outputCD = {0};
     outputCD.componentType = kAudioUnitType_Output;
     outputCD.componentSubType = kAudioUnitSubType_HALOutput;
     outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    
+    outputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
+
     CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ Player ]");
     CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
     CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
