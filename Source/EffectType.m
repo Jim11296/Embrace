@@ -28,7 +28,7 @@
         description.componentType = kAudioUnitType_Effect;
         description.componentSubType = 0;
         description.componentManufacturer = 0;
-        description.componentFlags = 0;
+        description.componentFlags = kAudioComponentFlag_SandboxSafe;
         description.componentFlagsMask = 0;
 
         UInt32 componentCount = AudioComponentCount(&description);
