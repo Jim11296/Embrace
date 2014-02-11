@@ -62,7 +62,7 @@
     rect.origin.x = round((bounds.size.width - rect.size.width) / 2);
     rect.origin.y = round((bounds.size.height - rect.size.height) / 2);
     
-    [image drawInRect:rect];
+    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
 }
 
 
