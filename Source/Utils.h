@@ -48,7 +48,7 @@ extern BOOL IsAudioFileAtURL(NSURL *fileURL);
 extern BOOL LoadPanelState(NSSavePanel *panel, NSString *name);
 extern void SavePanelState(NSSavePanel *panel, NSString *name);
 
-extern NSString *GetStringForFourCharCode(UInt32 fcc);
+extern NSString *GetStringForFourCharCode(OSStatus fcc);
 extern NSString *GetStringForFourCharCodeObject(id object);
 
 extern Tonality GetTonalityForString(NSString *string);
