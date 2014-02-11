@@ -14,10 +14,12 @@
 #import "AudioDevice.h"
 #import "Preferences.h"
 #import "WrappedAudioDevice.h"
+#import "TrackScheduler.h"
 
 #import <pthread.h>
 #import <signal.h>
 
+#define USE_SCHEDULER 1
 
 static NSString * const sEffectsKey = @"effects";
 static NSString * const sPreAmpKey  = @"pre-amp";
@@ -44,16 +46,18 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     Track         *_currentTrack;
     NSTimeInterval _currentPadding;
 
+    TrackScheduler *_currentScheduler;
+
     UInt64    _currentStartHostTime;
 
     AUGraph   _graph;
-    AudioUnit _filePlayerAudioUnit;
+    AudioUnit _generatorAudioUnit;
     AudioUnit _limiterAudioUnit;
     AudioUnit _mixerAudioUnit;
     AudioUnit _postLimiterAudioUnit;
     AudioUnit _outputAudioUnit;
 
-	AUNode    _filePlayerNode;
+	AUNode    _generatorNode;
 	AUNode    _limiterNode;
     AUNode    _mixerNode;
 	AUNode    _outputNode;
@@ -233,7 +237,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
     TrackStatus status = TrackStatusPlaying;
 
-    AudioUnitGetProperty(_filePlayerAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize);
+    AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize);
     Float64 currentPlayTime = timeStamp.mSampleTime;
     BOOL done = NO;
     
@@ -358,11 +362,16 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 {
     CheckError(NewAUGraph(&_graph), "NewAUGraph failed");
 	
-    AudioComponentDescription filePlayerCD = {0};
-    filePlayerCD.componentType = kAudioUnitType_Generator;
-    filePlayerCD.componentSubType = kAudioUnitSubType_AudioFilePlayer;
-    filePlayerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    filePlayerCD.componentFlags = kAudioComponentFlag_SandboxSafe;
+    AudioComponentDescription generatorCD = {0};
+    generatorCD.componentType = kAudioUnitType_Generator;
+    generatorCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+    generatorCD.componentFlags = kAudioComponentFlag_SandboxSafe;
+
+#if USE_SCHEDULER
+    generatorCD.componentSubType = kAudioUnitSubType_ScheduledSoundPlayer;
+#else
+    generatorCD.componentSubType = kAudioUnitSubType_AudioFilePlayer;
+#endif
 
     AudioComponentDescription limiterCD = {0};
     limiterCD.componentType = kAudioUnitType_Effect;
@@ -382,14 +391,14 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
     outputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-    CheckError(AUGraphAddNode(_graph, &filePlayerCD, &_filePlayerNode), "AUGraphAddNode[ Player ]");
+    CheckError(AUGraphAddNode(_graph, &generatorCD,  &_generatorNode),  "AUGraphAddNode[ Generator ]");
     CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
     CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
     CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
 
 	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
 
-	CheckError(AUGraphNodeInfo(_graph, _filePlayerNode, NULL, &_filePlayerAudioUnit), "AUGraphNodeInfo[ Player ]");
+	CheckError(AUGraphNodeInfo(_graph, _generatorNode,  NULL, &_generatorAudioUnit),  "AUGraphNodeInfo[ Player ]");
     CheckError(AUGraphNodeInfo(_graph, _limiterNode,    NULL, &_limiterAudioUnit),    "AUGraphNodeInfo[ Limiter ]");
 	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[ Mixer ]");
 	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[ Output ]");
@@ -407,7 +416,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 - (void) _iterateGraphNodes:(void (^)(AUNode))callback
 {
-    callback(_filePlayerNode);
+    callback(_generatorNode);
     callback(_limiterNode);
     
     for (Effect *effect in _effects) {
@@ -583,6 +592,44 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         return;
     }
 
+#if USE_SCHEDULER
+    [_currentScheduler stopScheduling:_generatorAudioUnit];
+    
+    AudioStreamBasicDescription streamDescription;
+    UInt32 streamDescriptionSize = sizeof(streamDescription);
+
+    CheckError(AudioUnitGetProperty(
+        _outputAudioUnit,
+        kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0,
+        &streamDescription, &streamDescriptionSize
+    ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
+
+	AudioTimeStamp timestamp = {0};
+    timestamp.mFlags = kAudioTimeStampSampleHostTimeValid;
+    timestamp.mHostTime = 0;
+    
+    _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack streamDescription:streamDescription];
+    [_currentScheduler startSchedulingWithAudioUnit:_generatorAudioUnit timeStamp:timestamp];
+    
+	AudioTimeStamp startTime = {0};
+    NSTimeInterval additional = _outputFrames / _outputSampleRate;
+
+    if (padding == 0) {
+        startTime.mFlags = kAudioTimeStampHostTimeValid;
+        startTime.mHostTime = 0;
+    
+    } else {
+        FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
+    }
+
+	CheckError(AudioUnitSetProperty(
+        _generatorAudioUnit,
+        kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
+        &startTime, sizeof(startTime)
+    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
+    
+    
+#else
     AudioFileID audioFile;
 	AudioStreamBasicDescription inputFormat;
 
@@ -598,7 +645,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     
 	// tell the file player unit to load the file we want to play
 	if (!CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
+        _generatorAudioUnit,
         kAudioUnitProperty_ScheduledFileIDs, kAudioUnitScope_Global, 0,
         &audioFile, sizeof(audioFile)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileIDs]")) {
@@ -618,7 +665,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 	ScheduledAudioFileRegion region = {0};
 
 	region.mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
-	region.mTimeStamp.mSampleTime = 0;
+	region.mTimeStamp.mSampleTime = -1;
 	region.mCompletionProc = NULL;
 	region.mCompletionProcUserData = 0;
     region.mAudioFile = audioFile;
@@ -637,7 +684,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 	region.mFramesToPlay = framesToPlay;
     
 	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
+        _generatorAudioUnit,
         kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0,
         &region, sizeof(region)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileRegion]");
@@ -654,14 +701,14 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     }
 
 	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
+        _generatorAudioUnit,
         kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
         &startTime, sizeof(startTime)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
     
 	UInt32 prime = 0;
 	CheckError(AudioUnitSetProperty(
-        _filePlayerAudioUnit,
+        _generatorAudioUnit,
         kAudioUnitProperty_ScheduledFilePrime, kAudioUnitScope_Global, _outputFrames,
         &prime, sizeof(prime)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFilePrime]");
@@ -672,6 +719,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         FillAudioTimeStampWithFutureSeconds(&startTime, 0);
         _currentStartHostTime = startTime.mHostTime;
     }
+#endif
 
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);

@@ -61,6 +61,7 @@
 		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
 		5582F7EE18A385570046A24B /* LoudnessMeasurer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5582F7EC18A385570046A24B /* LoudnessMeasurer.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
+		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		558DC0BA187785F200C85770 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B7187785F200C85770 /* AppDelegate.m */; };
 		558DC0BB187785F200C85770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B8187785F200C85770 /* main.m */; };
@@ -204,6 +205,8 @@
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
+		55873FDC18AA1E720081772A /* TrackScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackScheduler.h; path = Source/TrackScheduler.h; sourceTree = "<group>"; };
+		55873FDD18AA1E720081772A /* TrackScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackScheduler.m; path = Source/TrackScheduler.m; sourceTree = "<group>"; };
 		558DC07F187785BC00C85770 /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		558DC082187785BC00C85770 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		558DC085187785BC00C85770 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -575,6 +578,8 @@
 			children = (
 				55F3B7D018779B3000E8FEC8 /* Player.h */,
 				55F3B7D118779B3000E8FEC8 /* Player.m */,
+				55873FDC18AA1E720081772A /* TrackScheduler.h */,
+				55873FDD18AA1E720081772A /* TrackScheduler.m */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -713,6 +718,7 @@
 				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
 				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,
+				55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
 				5595A7BC18793B9000A7B996 /* WhiteWindow.m in Sources */,
 				5582F7EE18A385570046A24B /* LoudnessMeasurer.m in Sources */,
