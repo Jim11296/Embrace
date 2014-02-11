@@ -44,7 +44,7 @@ BOOL CheckError(OSStatus error, const char *operation)
 {
 	if (error == noErr) return YES;
 	
-	NSLog(@"Error: %s (%@)\n", operation, GetStringForFourCharCode(*((UInt32 *)&error)));
+	NSLog(@"Error: %s (%@)\n", operation, GetStringForFourCharCode(error));
     
     return NO;
 }
@@ -114,17 +114,17 @@ void SavePanelState(NSSavePanel *panel, NSString *name)
 }
 
 
-extern NSString *GetStringForFourCharCode(UInt32 fcc)
+extern NSString *GetStringForFourCharCode(OSStatus fcc)
 {
 	char str[20] = {0};
 
-	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(fcc);
+	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(*(UInt32 *)&fcc);
 
 	if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
 		str[0] = str[5] = '\'';
 		str[6] = '\0';
     } else {
-        return @"????";
+        return [NSString stringWithFormat:@"%ld", (long)fcc];
     }
     
     return [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
