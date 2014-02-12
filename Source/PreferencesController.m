@@ -10,6 +10,7 @@
 #import "Preferences.h"
 #import "AudioDevice.h"
 #import "Player.h"
+#import "WrappedAudioDevice.h"
 
 @implementation PreferencesController
 
@@ -144,6 +145,10 @@
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     double sampleRate = [[Preferences sharedInstance] mainOutputSampleRate];
 
+    if (!sampleRate) {
+        sampleRate = [[[[device controller] availableSampleRates] firstObject] doubleValue];
+    }
+
     [menu removeAllItems];
 
     NSMenuItem *itemToSelect = nil;
@@ -171,6 +176,10 @@
     
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     UInt32 selectedFrames = [[Preferences sharedInstance] mainOutputFrames];
+    
+    if (!selectedFrames) {
+        selectedFrames = [[[[device controller] availableFrameSizes] firstObject] unsignedIntValue];
+    }
     
     [menu removeAllItems];
     

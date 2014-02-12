@@ -10,6 +10,8 @@
 #import "Track.h"
 #import "BorderedView.h"
 
+#define USE_TOP_PLAYING_LINE 0
+
 @implementation TrackTableCellView {
     NSArray *_observedKeyPaths;
     id       _observedObject;
@@ -81,7 +83,7 @@
     if (trackStatus == TrackStatusPlaying) {
         return GetRGBColor(0x1866e9, 1.0);
     } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.5);
+        return GetRGBColor(0x000000, 0.4);
     }
     
     return [NSColor blackColor];
@@ -93,9 +95,9 @@
     TrackStatus trackStatus = [[self track] trackStatus];
 
     if (trackStatus == TrackStatusPlaying) {
-        return GetRGBColor(0x1866e9, 0.5);
+        return GetRGBColor(0x1866e9, 0.8);
     } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.5);
+        return GetRGBColor(0x000000, 0.33);
     }
     
     return GetRGBColor(0x000000, 0.66);
@@ -121,12 +123,25 @@
     NSColor *bottomBorderColor = [NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0];
     CGFloat bottomBorderHeight = -1;
     BOOL usesDashes = NO;
-    
+
     if ([track pausesAfterPlaying] && ([track trackStatus] != TrackStatusPlayed)) {
         bottomBorderColor = [NSColor redColor];
         bottomBorderHeight = 2;
         usesDashes = YES;
     }
+
+#if USE_TOP_PLAYING_LINE
+    NSColor *topBorderColor = [NSColor clearColor];
+    CGFloat topBorderHeight = 0;
+
+    if ([track trackStatus] == TrackStatusPlaying) {
+        topBorderColor = [self topTextColor];
+        topBorderHeight = 2;
+    }
+
+    [[self borderedView] setTopBorderColor:topBorderColor];
+    [[self borderedView] setTopBorderHeight:topBorderHeight];
+#endif
     
     [[self borderedView] setBottomBorderColor:bottomBorderColor];
     [[self borderedView] setBottomBorderHeight:bottomBorderHeight];

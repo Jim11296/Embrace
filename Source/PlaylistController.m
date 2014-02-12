@@ -241,10 +241,9 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     for (Track *track in [self tracks]) {
         [tracksStateArray addObject:[track stateDictionary]];
     }
+
     [defaults setObject:tracksStateArray forKey:sTracksKey];
     [defaults setDouble:_minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
-    
-    [defaults synchronize];
 }
 
 
@@ -557,10 +556,12 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     Track *selectedTrack = [self _selectedTrack];
     NSInteger index = selectedTrack ? [[[self tracksController] arrangedObjects] indexOfObject:selectedTrack] : NSNotFound;
 
-    if (selectedTrack && (index != NSNotFound)) {
-        [[self tracksController] insertObject:track atArrangedObjectIndex:(index + 1)];
-    } else {
-        [[self tracksController] addObject:track];
+    if (track) {
+        if (selectedTrack && (index != NSNotFound)) {
+            [[self tracksController] insertObject:track atArrangedObjectIndex:(index + 1)];
+        } else {
+            [[self tracksController] addObject:track];
+        }
     }
 }
 
@@ -823,9 +824,11 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         Track *draggedTrack = [[[self tracksController] arrangedObjects] objectAtIndex:_rowOfDraggedTrack];
         [[self tableView] moveRowAtIndex:_rowOfDraggedTrack toIndex:row];
         
-        [[self tracksController] removeObject:draggedTrack];
-        [[self tracksController] insertObject:draggedTrack atArrangedObjectIndex:row];
-        
+        if (draggedTrack) {
+            [[self tracksController] removeObject:draggedTrack];
+            [[self tracksController] insertObject:draggedTrack atArrangedObjectIndex:row];
+        }
+
         return YES;
 
     } else if ([filenames count] >= 2) {
@@ -833,7 +836,9 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
             NSURL *URL = [NSURL fileURLWithPath:filename];
 
             Track *track = [Track trackWithFileURL:URL];
-            [[self tracksController] insertObject:track atArrangedObjectIndex:row];
+            if (track) {
+                [[self tracksController] insertObject:track atArrangedObjectIndex:row];
+            }
         }
 
         return YES;
@@ -842,7 +847,9 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         NSURL *URL = [NSURL URLWithString:URLString];
 
         Track *track = [Track trackWithFileURL:URL];
-        [[self tracksController] insertObject:track atArrangedObjectIndex:row];
+        if (track) {
+            [[self tracksController] insertObject:track atArrangedObjectIndex:row];
+        }
 
         return YES;
     }

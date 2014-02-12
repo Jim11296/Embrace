@@ -161,8 +161,6 @@ static void sRegisterDefaults()
         
         sSetDefaultObject(defaults, key, selfValue, defaultValue);
     }
-
-    [defaults synchronize];
 }
 
 

@@ -14,6 +14,7 @@
 #import "EditEffectController.h"
 #import "CurrentTrackController.h"
 #import "ViewTrackController.h"
+#import "Preferences.h"
 
 #import "Player.h"
 #import "Effect.h"
@@ -40,6 +41,9 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    // Load preferences
+    [Preferences sharedInstance];
+
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
     
@@ -129,8 +133,8 @@
 {
     [self _saveVisibleWindows];
 
-
     [[Player sharedInstance] saveEffectState];
+    [[Player sharedInstance] hardStop];
 }
 
 

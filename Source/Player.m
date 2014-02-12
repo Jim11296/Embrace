@@ -810,8 +810,13 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
 {
-    if (!sampleRate) sampleRate = 44100;
-    if (!frames)     frames = 512;
+    if (!sampleRate) {
+        sampleRate = [[[[outputDevice controller] availableSampleRates] firstObject] doubleValue];
+    }
+
+    if (!frames) {
+        frames = [[[[outputDevice controller] availableFrameSizes] firstObject] doubleValue];
+    }
 
     if (_outputDevice     != outputDevice ||
         _outputSampleRate != sampleRate   ||

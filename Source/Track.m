@@ -329,12 +329,12 @@ static NSString * const sBPMKey           = @"bpm";
 }
 
 
-- (void) _handleDidUpdateStartAndStopTimesNotification:(NSNotification *)note
+- (void) _handleDidUpdateLibraryMetadata:(NSNotification *)note
 {
-    iTunesMetadata *loadedMetadata = [[iTunesManager sharedInstance] metadataForFileURL:_fileURL];
+    iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
     
-    [self setStartTime:[loadedMetadata startTime]];
-    [self setStopTime: [loadedMetadata stopTime]];
+    [self setStartTime:[metadata startTime]];
+    [self setStopTime: [metadata stopTime]];
 }
 
 
@@ -344,20 +344,22 @@ static NSString * const sBPMKey           = @"bpm";
         return;
     }
 
-    iTunesMetadata *metadata = [[iTunesManager sharedInstance] metadataForFileURL:_fileURL];
+    iTunesPasteboardMetadata *metadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:_fileURL];
     
     if (metadata) {
         if (!_title)    [self setTitle:[metadata title]];
         if (!_artist)   [self setArtist:[metadata artist]];
         if (!_duration) [self setDuration:[metadata duration]];
+    }
 
-        if ([[iTunesManager sharedInstance] didParseLibrary]) {
-            [self setStartTime:[metadata startTime]];
-            [self setStopTime: [metadata stopTime]];
-        }
+    if ([[iTunesManager sharedInstance] didParseLibrary]) {
+        iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
+
+        [self setStartTime:[metadata startTime]];
+        [self setStopTime: [metadata stopTime]];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidUpdateStartAndStopTimesNotification:) name:iTunesManagerDidUpdateStartAndStopTimesNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidUpdateLibraryMetadata:) name:iTunesManagerDidUpdateLibraryMetadataNotification object:nil];
 }
 
 
