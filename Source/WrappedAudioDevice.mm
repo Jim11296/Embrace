@@ -8,10 +8,58 @@
 
 #import "WrappedAudioDevice.h"
 #import "CAHALAudioDevice.h"
+#import "CAHALAudioSystemObject.h"
+
+
+static NSMutableSet *sHoggedObjectIDs = nil;
+
+static struct {
+    bool needsNonSystem;
+    AudioObjectID previousNonSystem;
+
+    bool needsSystem;
+    AudioObjectID previousSystem;
+} sWorkaroundDefaultOutputBug;
+
+
+static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
+{
+    try {
+        if (sWorkaroundDefaultOutputBug.needsNonSystem) {
+            if (global || (myID == sWorkaroundDefaultOutputBug.previousNonSystem)) {
+                CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
+                systemObject.SetDefaultAudioDevice(false, false, sWorkaroundDefaultOutputBug.previousNonSystem);
+                sWorkaroundDefaultOutputBug.needsNonSystem = false;
+            }
+        }
+    } catch (...) { }
+
+    try {
+        if (sWorkaroundDefaultOutputBug.needsSystem) {
+            if (global || (myID == sWorkaroundDefaultOutputBug.previousSystem)) {
+                CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
+                systemObject.SetDefaultAudioDevice(false, true, sWorkaroundDefaultOutputBug.previousSystem);
+                sWorkaroundDefaultOutputBug.needsSystem = false;
+            }
+        }
+    } catch (...) { }
+}
 
 
 @implementation WrappedAudioDevice {
     CAHALAudioDevice *_device;
+}
+
++ (void) releaseHoggedDevices
+{
+    for (NSNumber *number in sHoggedObjectIDs) {
+        UInt32 objectID = [number unsignedIntValue];
+        CAHALAudioDevice device = CAHALAudioDevice(objectID);
+        device.ReleaseHogMode();
+    }
+
+    sDoWorkaroundIfNeeded(0, true);
+    sHoggedObjectIDs = [NSMutableSet set];
 }
 
 
@@ -140,7 +188,29 @@
             if (owner == getpid()) {
                 result = YES;
             } else if (owner == -1) {
+                CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
+
+                AudioObjectID myID = _device->GetObjectID();
+
+                BOOL needsNonSystem = (myID == systemObject.GetDefaultAudioDevice(false, false));
+                BOOL needsSystem    = (myID == systemObject.GetDefaultAudioDevice(false, true ));
+
                 result = (BOOL)_device->TakeHogMode();
+                
+                if (result) {
+                    if (needsNonSystem) {
+                        sWorkaroundDefaultOutputBug.needsNonSystem = needsNonSystem;
+                        sWorkaroundDefaultOutputBug.previousNonSystem = myID;
+                    }
+                    
+                    if (needsSystem) {
+                        sWorkaroundDefaultOutputBug.needsSystem = needsSystem;
+                        sWorkaroundDefaultOutputBug.previousSystem = myID;
+                    }
+
+                    if (!sHoggedObjectIDs) sHoggedObjectIDs = [NSMutableSet set];
+                    [sHoggedObjectIDs addObject:@( [self objectID] )];
+                }
             }
         }
     } catch (...) { }
@@ -153,6 +223,11 @@
 {
     try {
         _device->ReleaseHogMode();
+        
+        AudioObjectID myID = _device->GetObjectID();
+        [sHoggedObjectIDs removeObject:@( [self objectID] )];
+
+        sDoWorkaroundIfNeeded(myID, false);
     } catch (...) { }
 }
 

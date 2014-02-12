@@ -10,6 +10,8 @@
 
 @interface WrappedAudioDevice : NSObject
 
++ (void) releaseHoggedDevices;
+
 - (id) initWithDeviceUID:(NSString *)deviceUID;
 
 @property (nonatomic, readonly) AudioObjectID objectID;

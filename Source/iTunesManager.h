@@ -8,36 +8,43 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * const iTunesManagerDidUpdateStartAndStopTimesNotification;
+extern NSString * const iTunesManagerDidUpdateLibraryMetadataNotification;
 
-@class iTunesManager, iTunesMetadata;
+@class iTunesLibraryMetadata, iTunesPasteboardMetadata;
 
 
 @interface iTunesManager : NSObject
 
 + (id) sharedInstance;
 
-- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
-
-- (iTunesMetadata *) metadataForFileURL:(NSURL *)url;
-- (iTunesMetadata *) metadataForTrackID:(NSInteger)trackID;
-
 @property (nonatomic, readonly) BOOL didParseLibrary;
 
+- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
 - (void) exportPlaylistWithName:(NSString *)name fileURLs:(NSArray *)fileURLs;
+
+- (iTunesLibraryMetadata *) libraryMetadataForTrackID:(NSInteger)trackID;
+- (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
+
+- (iTunesPasteboardMetadata *) pasteboardMetadataForTrackID:(NSInteger)trackID;
+- (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;
 
 @end
 
 
 @interface iTunesMetadata : NSObject
-
-- (void) mergeIn:(iTunesMetadata *)other;
-
 @property (nonatomic) NSInteger trackID;
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *artist;
 @property (nonatomic, copy) NSString *location;
-@property (nonatomic) NSTimeInterval duration;
+@end
+
+
+@interface iTunesLibraryMetadata : iTunesMetadata
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic) NSTimeInterval stopTime;
+@end
+
+
+@interface iTunesPasteboardMetadata : iTunesMetadata
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *artist;
+@property (nonatomic) NSTimeInterval duration;
 @end

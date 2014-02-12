@@ -136,7 +136,7 @@
     UInt32 totalFrames = (UInt32)[self totalFrames];
     UInt32 totalBytes  = totalFrames * _streamDescription.mBytesPerFrame;
 
-    _buffers = malloc(sizeof(float *) * _bufferCount);
+    _buffers = malloc(sizeof(UInt8 *) * _bufferCount);
 
     _slice = calloc(1, sizeof(ScheduledAudioSlice));
     _slice->mBufferList = malloc(sizeof(AudioBufferList) * _bufferCount);

@@ -595,6 +595,7 @@
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07C187785BC00C85770 /* Frameworks */,
 				558DC07D187785BC00C85770 /* Resources */,
+				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
 			);
 			buildRules = (
 			);
@@ -699,6 +700,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "which rchook\nif [ $? -eq 0 ]; then\n    rchook xcode-build-phase\n    exit $?\nfi";
+		};
+		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Remove Debug Files";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" test*.m4a";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 

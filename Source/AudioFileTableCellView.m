@@ -94,6 +94,9 @@
 
     [artistField setFrame:artistFrame];
     [tonalityField setFrame:tonalityFrame];
+
+    [artistField setTextColor:[self bottomTextColor]];
+    [tonalityField setTextColor:[self bottomTextColor]];
 }
 
 

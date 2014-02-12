@@ -133,16 +133,23 @@
 
 - (IBAction) showWindow:(id)sender
 {
+    NSDisableScreenUpdates();
+
     [[self window] addChildWindow:[self childWindow] ordered:NSWindowAbove];
+    [[self childWindow] setFrame:[[self window] frame] display:YES];
 
     [[self mainView] setFrame:[[[self childWindow] contentView] bounds]];
 
     [super showWindow:sender];
     [[self childWindow] orderFront:self];
+    
+    NSEnableScreenUpdates();
 }
+
 
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing { }
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue { }
+
 
 - (void) playerDidTick:(Player *)player
 {

@@ -11,32 +11,47 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import "iTunes.h"
 
-NSString * const iTunesManagerDidUpdateStartAndStopTimesNotification = @"iTunesManagerDidUpdateStartAndStopTimes";
+NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesManagerDidUpdateLibraryMetadata";
 
 static NSString * const sStartTimeKey = @"Start Time";
 static NSString * const sStopTimeKey  = @"Stop Time";
 static NSString * const sLocationKey  = @"Location";
 
-@interface iTunesMetadata ()
-@property (nonatomic) BOOL hasStartAndStopTimes;
-@end
 
 @implementation iTunesMetadata
+@end
 
-- (void) mergeIn:(iTunesMetadata *)other
+
+@implementation iTunesLibraryMetadata
+
+- (BOOL) isEqual:(id)otherObject
 {
-    if (other->_hasStartAndStopTimes) {
-        _startTime = other->_startTime;
-        _stopTime  = other->_stopTime;
-        _hasStartAndStopTimes = YES;
+    if (![otherObject isKindOfClass:[iTunesLibraryMetadata class]]) {
+        return NO;
     }
 
-    if (other->_artist    && !_artist)    _artist    = other->_artist;
-    if (other->_title     && !_title)     _title     = other->_title;
-    if (other->_location  && !_location)  _location  = other->_location;
-    if (other->_duration  && !_duration)  _duration  = other->_duration;
+    iTunesLibraryMetadata *otherMetadata = (iTunesLibraryMetadata *)otherObject;
+
+    return [[self location] isEqualToString:[otherMetadata location]] &&
+           _startTime == otherMetadata->_startTime &&
+           _stopTime  == otherMetadata->_stopTime;
 }
 
+
+- (NSUInteger) hash
+{
+    NSUInteger startTime = *(NSUInteger *)&_startTime;
+    NSUInteger stopTime  = *(NSUInteger *)&_stopTime;
+
+    return startTime ^ stopTime;
+
+}
+
+
+@end
+
+
+@implementation iTunesPasteboardMetadata
 @end
 
 
@@ -45,10 +60,10 @@ static NSString * const sLocationKey  = @"Location";
     NSTimeInterval _lastCheckTime;
     
     NSMutableDictionary *_pathToTrackIDMap;
-    NSMutableDictionary *_trackIDToMetadataMap;
+    NSMutableDictionary *_trackIDToLibraryMetadataMap;
+    NSMutableDictionary *_trackIDToPasteboardMetadataMap;
 
     BOOL _parsing;
-    BOOL _didUpdateStartStopTimes;
 
     dispatch_queue_t _tunesQueue;
     
@@ -80,6 +95,9 @@ static NSString * const sLocationKey  = @"Location";
 
         [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
         [self _checkLibrary:nil];
+        
+        _trackIDToLibraryMetadataMap    = [NSMutableDictionary dictionary];
+        _trackIDToPasteboardMetadataMap = [NSMutableDictionary dictionary];
     }
 
     return self;
@@ -105,29 +123,12 @@ static NSString * const sLocationKey  = @"Location";
 }
 
 
-- (void) _addMetadata:(iTunesMetadata *)metadata
+- (void) _addMetadata:(iTunesMetadata *)metadata to:(NSMutableDictionary *)trackIDToMetadataMap
 {
     NSInteger trackID = [metadata trackID];
 
-    iTunesMetadata *existing = [_trackIDToMetadataMap objectForKey:@(trackID)];
-    NSString *location = [existing location];
-
-    if ([metadata hasStartAndStopTimes]) {
-        if ([existing startTime] != [metadata startTime] ||
-            [existing stopTime]  != [metadata stopTime])
-        {
-            _didUpdateStartStopTimes = YES;
-        }
-    }
-
-    if (existing) {
-        [existing mergeIn:metadata];
-
-    } else {
-        if (!_trackIDToMetadataMap) _trackIDToMetadataMap = [NSMutableDictionary dictionary];
-        [_trackIDToMetadataMap setObject:metadata forKey:@(trackID)];
-        location = [metadata location];
-    }
+    [trackIDToMetadataMap setObject:metadata forKey:@(trackID)];
+    NSString *location = [metadata location];
     
     if (location) {
         if (!_pathToTrackIDMap) _pathToTrackIDMap = [NSMutableDictionary dictionary];
@@ -136,20 +137,22 @@ static NSString * const sLocationKey  = @"Location";
 }
 
 
-- (void) _parseFinished:(NSArray *)results
+- (void) _parseLibraryXMLFinished:(NSArray *)results
 {
-    _didUpdateStartStopTimes = NO;
+    NSMutableDictionary *oldMetadataMap = _trackIDToLibraryMetadataMap;
+    NSMutableDictionary *newMetadataMap = [NSMutableDictionary dictionary];
 
     for (iTunesMetadata *metadata in results) {
-        [self _addMetadata:metadata];
+        [self _addMetadata:metadata to:newMetadataMap];
     }
+
+    _trackIDToLibraryMetadataMap = newMetadataMap;
 
     _parsing = NO;
     _didParseLibrary = YES;
-    
-    if (_didUpdateStartStopTimes) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:iTunesManagerDidUpdateStartAndStopTimesNotification object:nil];
-        _didUpdateStartStopTimes = NO;
+
+    if (![oldMetadataMap isEqualToDictionary:newMetadataMap]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:iTunesManagerDidUpdateLibraryMetadataNotification object:nil];
     }
 }
 
@@ -185,8 +188,8 @@ static NSString * const sLocationKey  = @"Location";
                         location = [[NSURL URLWithString:location] path];
                     }
 
-                    iTunesMetadata *metadata = [[iTunesMetadata alloc] init];
-                    
+                    iTunesLibraryMetadata *metadata = [[iTunesLibraryMetadata alloc] init];
+
                     [metadata setTrackID:[key integerValue]];
                     [metadata setLocation:location];
 
@@ -195,7 +198,6 @@ static NSString * const sLocationKey  = @"Location";
 
                     [metadata setStartTime:startTime];
                     [metadata setStopTime:stopTime];
-                    [metadata setHasStartAndStopTimes:YES];
 
                     [results addObject:metadata];
                 }
@@ -204,25 +206,13 @@ static NSString * const sLocationKey  = @"Location";
         } @catch (NSException *e) { }
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf _parseFinished:results];
+            [weakSelf _parseLibraryXMLFinished:results];
         });
     });
     
     return YES;
 }
 
-
-- (iTunesMetadata *) metadataForTrackID:(NSInteger)trackID
-{
-    return [_trackIDToMetadataMap objectForKey:@(trackID)];
-}
-
-
-- (iTunesMetadata *) metadataForFileURL:(NSURL *)url
-{
-    NSInteger trackID = [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
-    return [self metadataForTrackID:trackID];
-}
 
 
 - (void) _performOnTunesQueue:(void (^)())block completion:(void (^)())completion
@@ -280,14 +270,14 @@ static NSString * const sLocationKey  = @"Location";
         
         if (!trackID) return;
 
-        iTunesMetadata *metadata = [[iTunesMetadata alloc] init];
+        iTunesPasteboardMetadata *metadata = [[iTunesPasteboardMetadata alloc] init];
         [metadata setDuration:totalTime];
         [metadata setTitle:name];
         [metadata setArtist:artist];
         [metadata setLocation:location];
         [metadata setTrackID:[key integerValue]];
         
-        [self _addMetadata:metadata];
+        [self _addMetadata:metadata to:_trackIDToPasteboardMetadataMap];
     };
 
     void (^parseRoot)(NSDictionary *) = ^(NSDictionary *dictionary) {
@@ -349,6 +339,34 @@ static NSString * const sLocationKey  = @"Location";
         [[[playlist tracks] firstObject] reveal];
 
     } completion:nil];
+}
+
+
+
+
+- (iTunesLibraryMetadata *) libraryMetadataForTrackID:(NSInteger)trackID
+{
+    return [_trackIDToLibraryMetadataMap objectForKey:@(trackID)];
+}
+
+
+- (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url
+{
+    NSInteger trackID = [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
+    return [self libraryMetadataForTrackID:trackID];
+}
+
+
+- (iTunesPasteboardMetadata *) pasteboardMetadataForTrackID:(NSInteger)trackID
+{
+    return [_trackIDToPasteboardMetadataMap objectForKey:@(trackID)];
+}
+
+
+- (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url
+{
+    NSInteger trackID = [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
+    return [self pasteboardMetadataForTrackID:trackID];
 }
 
 
