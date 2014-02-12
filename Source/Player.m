@@ -19,7 +19,6 @@
 #import <pthread.h>
 #import <signal.h>
 
-#define USE_SCHEDULER 1
 
 static NSString * const sEffectsKey = @"effects";
 static NSString * const sPreAmpKey  = @"pre-amp";
@@ -360,18 +359,13 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 - (void) _buildGraph
 {
-    CheckError(NewAUGraph(&_graph), "NewAUGraph failed");
+    CheckError(NewAUGraph(&_graph), "NewAUGraph");
 	
     AudioComponentDescription generatorCD = {0};
     generatorCD.componentType = kAudioUnitType_Generator;
+    generatorCD.componentSubType = kAudioUnitSubType_ScheduledSoundPlayer;
     generatorCD.componentManufacturer = kAudioUnitManufacturer_Apple;
     generatorCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-#if USE_SCHEDULER
-    generatorCD.componentSubType = kAudioUnitSubType_ScheduledSoundPlayer;
-#else
-    generatorCD.componentSubType = kAudioUnitSubType_AudioFilePlayer;
-#endif
 
     AudioComponentDescription limiterCD = {0};
     limiterCD.componentType = kAudioUnitType_Effect;
@@ -592,9 +586,9 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         return;
     }
 
-#if USE_SCHEDULER
     [_currentScheduler stopScheduling:_generatorAudioUnit];
-    
+    _currentScheduler = nil;
+
     AudioStreamBasicDescription streamDescription;
     UInt32 streamDescriptionSize = sizeof(streamDescription);
 
@@ -605,90 +599,14 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
 
 	AudioTimeStamp timestamp = {0};
-    timestamp.mFlags = kAudioTimeStampSampleHostTimeValid;
-    timestamp.mHostTime = 0;
+    timestamp.mFlags = kAudioTimeStampSampleTimeValid;
+    timestamp.mSampleTime = -1;
     
     _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack streamDescription:streamDescription];
     [_currentScheduler startSchedulingWithAudioUnit:_generatorAudioUnit timeStamp:timestamp];
-    
-	AudioTimeStamp startTime = {0};
-    NSTimeInterval additional = _outputFrames / _outputSampleRate;
-
-    if (padding == 0) {
-        startTime.mFlags = kAudioTimeStampHostTimeValid;
-        startTime.mHostTime = 0;
-    
-    } else {
-        FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
-    }
-
-	CheckError(AudioUnitSetProperty(
-        _generatorAudioUnit,
-        kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
-        &startTime, sizeof(startTime)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
-    
-    
-#else
-    AudioFileID audioFile;
-	AudioStreamBasicDescription inputFormat;
-
-	if (!CheckError(AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, 0, &audioFile), "AudioFileOpenURL")) {
-        return;
-    }
-	
-	UInt32 propSize = sizeof(inputFormat);
-	if (!CheckError(AudioFileGetProperty(audioFile, kAudioFilePropertyDataFormat, &propSize, &inputFormat), "AudioFileGetProperty")) {
-        [self hardStop];
-        return;
-    }
-    
-	// tell the file player unit to load the file we want to play
-	if (!CheckError(AudioUnitSetProperty(
-        _generatorAudioUnit,
-        kAudioUnitProperty_ScheduledFileIDs, kAudioUnitScope_Global, 0,
-        &audioFile, sizeof(audioFile)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileIDs]")) {
-        [self hardStop];
-        return;
-    }
 
     [self _updateLoudnessAndPreAmp];
-	
-	UInt64 nPackets;
-	UInt32 propsize = sizeof(nPackets);
-	if (!CheckError(AudioFileGetProperty(audioFile, kAudioFilePropertyAudioDataPacketCount, &propsize, &nPackets), "AudioFileGetProperty")) {
-        [self hardStop];
-        return;
-    }
-	
-	ScheduledAudioFileRegion region = {0};
 
-	region.mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
-	region.mTimeStamp.mSampleTime = -1;
-	region.mCompletionProc = NULL;
-	region.mCompletionProcUserData = 0;
-    region.mAudioFile = audioFile;
-    region.mLoopCount = 0;
-    
-    Float64 totalFrames  = ((UInt32)nPackets * inputFormat.mFramesPerPacket);
-    Float64 startFrame   = [track startTime] * inputFormat.mSampleRate;
-
-    if ([track stopTime]) {
-        totalFrames = [track stopTime] * inputFormat.mSampleRate;
-    }
-
-    UInt32 framesToPlay = totalFrames - startFrame;
-
-    region.mStartFrame   = startFrame;
-	region.mFramesToPlay = framesToPlay;
-    
-	CheckError(AudioUnitSetProperty(
-        _generatorAudioUnit,
-        kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0,
-        &region, sizeof(region)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFileRegion]");
-	
 	AudioTimeStamp startTime = {0};
     NSTimeInterval additional = _outputFrames / _outputSampleRate;
 
@@ -706,12 +624,6 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         &startTime, sizeof(startTime)
     ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
     
-	UInt32 prime = 0;
-	CheckError(AudioUnitSetProperty(
-        _generatorAudioUnit,
-        kAudioUnitProperty_ScheduledFilePrime, kAudioUnitScope_Global, _outputFrames,
-        &prime, sizeof(prime)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduledFilePrime]");
 	
     if (startTime.mHostTime) {
         _currentStartHostTime = startTime.mHostTime;
@@ -719,7 +631,6 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         FillAudioTimeStampWithFutureSeconds(&startTime, 0);
         _currentStartHostTime = startTime.mHostTime;
     }
-#endif
 
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);
@@ -847,6 +758,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
     [_currentTrack setTrackStatus:TrackStatusPlayed];
     [_currentTrack setPausesAfterPlaying:NO];
+
     [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
     
     if (nextTrack) {
@@ -883,6 +795,9 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     if (isRunning) {
         AUGraphStop(_graph);
     }
+
+    [_currentScheduler stopScheduling:_generatorAudioUnit];
+    _currentScheduler = nil;
     
     for (id<PlayerListener> listener in _listeners) {
         [listener player:self didUpdatePlaying:NO];

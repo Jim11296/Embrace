@@ -16,7 +16,9 @@
 
 @implementation TrackScheduler {
     UInt8    **_buffers;
-    NSUInteger _channelCount;
+    NSUInteger _bufferCount;
+    
+    ExtAudioFileRef _audioFile;
 
     ScheduledAudioSlice *_slice;
 }
@@ -27,140 +29,218 @@
     if ((self = [super init])) {
         _track = track;
         _streamDescription = streamDescription;
+        
+        if (![self _setupAudioFile]) {
+            self = nil;
+            return nil;
+        }
+        
+        [self _setupBuffers];
     }
     
     return self;
 }
 
 
-- (void) _readDataForTrack:(Track *)track streamDescription:(AudioStreamBasicDescription)streamDescription
+- (void) dealloc
 {
-    NSURL *url = [track fileURL];
+    [self _cleanupAudioFile];
+    [self _cleanupBuffers];
+}
 
-    [url startAccessingSecurityScopedResource];
 
-    ExtAudioFileRef audioFile = NULL;
-    OSStatus err = noErr;
-
-    // Open file
-    if (err == noErr) {
-        err = ExtAudioFileOpenURL((__bridge CFURLRef)url, &audioFile);
-        if (err) NSLog(@"ExtAudioFileOpenURL: %ld", (long)err);
+- (void) _cleanupAudioFile
+{
+    if (_audioFile) {
+        ExtAudioFileDispose(_audioFile);
     }
+
+    [[_track fileURL] stopAccessingSecurityScopedResource];
+}
+
+
+- (BOOL) _setupAudioFile
+{
+    NSURL *url = [_track fileURL];
 
     AudioStreamBasicDescription fileFormat = {0};
     UInt32 fileFormatSize = sizeof(fileFormat);
 
-    if (err == noErr) {
-        err = ExtAudioFileGetProperty(audioFile, kExtAudioFileProperty_FileDataFormat, &fileFormatSize, &fileFormat);
-    }
-
-    UInt32 channels = streamDescription.mChannelsPerFrame;
-
-    if (err == noErr) {
-        err = ExtAudioFileSetProperty(audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof(streamDescription), &streamDescription);
-    }
-    
     SInt64 fileLengthFrames = 0;
     UInt32 fileLengthFramesSize = sizeof(fileLengthFrames);
-   
-    if (err == noErr) {
-        err = ExtAudioFileGetProperty(audioFile, kExtAudioFileProperty_FileLengthFrames, &fileLengthFramesSize, &fileLengthFrames);
+
+    [url startAccessingSecurityScopedResource];
+
+    if (!CheckError(
+        ExtAudioFileOpenURL((__bridge CFURLRef)url, &_audioFile),
+        "ExtAudioFileOpenURL"
+    )) {
+        return NO;
     }
 
-    NSInteger framesRemaining = fileLengthFrames;
-    NSInteger bytesRemaining = framesRemaining * streamDescription.mBytesPerFrame;
+    if (!CheckError(
+        ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileDataFormat, &fileFormatSize, &fileFormat),
+        "ExtAudioFileGetProperty[ FileDataFormat ]"
+    )) {
+        return NO;
+    }
+
+
+    if (!CheckError(
+        ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof(_streamDescription), &_streamDescription),
+        "ExtAudioFileSetProperty[ ClientDataFormat ]"
+    )) {
+        return NO;
+    }
     
-    // Allocate buffers
+    if (!CheckError(
+        ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileLengthFrames, &fileLengthFramesSize, &fileLengthFrames),
+        "ExtAudioFileGetProperty[ FileLengthFrames ]"
+    )) {
+        return NO;
+    }
+
+    // Determine start and stop time in frames
     {
-        _channelCount = channels;
-        _buffers = malloc(sizeof(float *) * channels);
-
-        _slice = calloc(1, sizeof(ScheduledAudioSlice));
-        _slice->mBufferList = malloc(sizeof(AudioBufferList) * channels);
-        _slice->mNumberFrames = (UInt32)framesRemaining;
+        NSInteger totalFrames = fileLengthFrames;
         
-        for (NSInteger i = 0; i < channels; i++) {
-            _buffers[i] = malloc(bytesRemaining);
+        NSInteger startFrame  = [_track startTime] * _streamDescription.mSampleRate;
+        if (startFrame < 0) startFrame = 0;
+        if (startFrame > totalFrames) startFrame = totalFrames;
 
-            AudioBuffer *b = &_slice->mBufferList->mBuffers[i];
-            b->mNumberChannels = 1;
-            b->mDataByteSize = (UInt32)bytesRemaining;
-            b->mData = _buffers[i];
+        if ([_track stopTime]) {
+            NSInteger stopFrame  = [_track stopTime] * _streamDescription.mSampleRate;
+            if (stopFrame < 0) stopFrame = 0;
+            if (stopFrame > totalFrames) stopFrame = totalFrames;
+
+            totalFrames = stopFrame;
+        }
+
+        if (startFrame) {
+            ExtAudioFileSeek(_audioFile, startFrame);
         }
         
-        [self setTotalFrames:fileLengthFrames];
+        fileLengthFrames = totalFrames;
     }
     
-    if (err == noErr) {
-        NSInteger bytesRead = 0;
-        NSInteger framesAvailable = 0;
-
-        AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * channels);
-        fillBufferList->mNumberBuffers = channels;
-        
-        while (1 && (err == noErr)) {
-            UInt32 maxFrames  = 32768;
-            UInt32 frameCount = (UInt32)framesRemaining;
-            if (frameCount > maxFrames) frameCount = maxFrames;
-
-            for (NSInteger i = 0; i < channels; i++) {
-                fillBufferList->mBuffers[i].mNumberChannels = 1;
-                fillBufferList->mBuffers[i].mDataByteSize = (UInt32)bytesRemaining;
-                fillBufferList->mBuffers[i].mData = _buffers[i] + bytesRead;
-            }
-
-            err = ExtAudioFileRead(audioFile, &frameCount, fillBufferList);
-
-            framesAvailable += frameCount;
-            [self setAvailableFrames:framesAvailable];
-            
-            framesRemaining -= frameCount;
-        
-            bytesRead       += frameCount * streamDescription.mBytesPerFrame;
-            bytesRemaining  -= frameCount * streamDescription.mBytesPerFrame;
-            
-            if (framesRemaining == 0) {
-                break;
-            }
-        }
-    }
+    [self setTotalFrames:fileLengthFrames];
     
-    if (audioFile) {
-        ExtAudioFileDispose(audioFile);
-    }
-
-    [url stopAccessingSecurityScopedResource];
+    return YES;
 }
 
 
+- (void) _setupBuffers
+{
+    _bufferCount = _streamDescription.mChannelsPerFrame;
+
+    UInt32 totalFrames = (UInt32)[self totalFrames];
+    UInt32 totalBytes  = totalFrames * _streamDescription.mBytesPerFrame;
+
+    _buffers = malloc(sizeof(float *) * _bufferCount);
+
+    _slice = calloc(1, sizeof(ScheduledAudioSlice));
+    _slice->mBufferList = malloc(sizeof(AudioBufferList) * _bufferCount);
+    _slice->mNumberFrames = (UInt32)totalFrames;
+    
+    for (NSInteger i = 0; i < _bufferCount; i++) {
+        _buffers[i] = malloc(totalBytes);
+
+        AudioBuffer *b = &_slice->mBufferList->mBuffers[i];
+        b->mNumberChannels = 1;
+        b->mDataByteSize = (UInt32)totalBytes;
+        b->mData = _buffers[i];
+    }
+}
+
+
+- (void) _cleanupBuffers
+{
+    for (NSInteger i = 0; i < _bufferCount; i++) {
+        free(_buffers[i]);
+        _buffers[i] = NULL;
+    }
+    
+    free(_slice);
+    _slice = NULL;
+
+    free(_buffers);
+    _buffers = NULL;
+}
+
+
+- (void) _readDataInBackground
+{
+    NSInteger framesRemaining = [self totalFrames];
+    NSInteger bytesRemaining = framesRemaining * _streamDescription.mBytesPerFrame;
+
+    NSInteger bytesRead = 0;
+    NSInteger framesAvailable = 0;
+
+    AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * _bufferCount);
+    fillBufferList->mNumberBuffers = (UInt32)_bufferCount;
+    
+    OSStatus err = noErr;
+    
+    while (1 && (err == noErr)) {
+        UInt32 maxFrames  = 32768;
+        UInt32 frameCount = (UInt32)framesRemaining;
+        if (frameCount > maxFrames) frameCount = maxFrames;
+
+        for (NSInteger i = 0; i < _bufferCount; i++) {
+            fillBufferList->mBuffers[i].mNumberChannels = 1;
+            fillBufferList->mBuffers[i].mDataByteSize = (UInt32)bytesRemaining;
+            fillBufferList->mBuffers[i].mData = _buffers[i] + bytesRead;
+        }
+
+        err = ExtAudioFileRead(_audioFile, &frameCount, fillBufferList);
+
+        framesAvailable += frameCount;
+        [self setAvailableFrames:framesAvailable];
+        
+        framesRemaining -= frameCount;
+    
+        bytesRead       += frameCount * _streamDescription.mBytesPerFrame;
+        bytesRemaining  -= frameCount * _streamDescription.mBytesPerFrame;
+        
+        if (framesRemaining == 0) {
+            break;
+        }
+    }
+}
+
+
+#pragma mark - Public Methods
+
 - (void) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp
 {
-    Track *track = _track;
-    AudioStreamBasicDescription streamDescription = _streamDescription;
-
-    NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self _readDataForTrack:track streamDescription:streamDescription];
+        [self _readDataInBackground];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self _cleanupAudioFile];
+        });
     });
 
     while (![self totalFrames]) {
         usleep(1);
     }
-
-//    while ([self totalFrames] != [self availableFrames]) {
-//        usleep(1);
-//    }
-
-    NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
     
+    NSInteger primeAmount = (_streamDescription.mSampleRate * 10);
+    NSInteger totalFrames = [self totalFrames];
     
+    if (totalFrames < primeAmount) primeAmount = totalFrames;
+
+    while ([self availableFrames] < primeAmount) {
+        usleep(1);
+    }
+
     _slice->mTimeStamp = timeStamp;
-    
-    OSStatus err = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ScheduleAudioSlice, kAudioUnitScope_Global, 0, _slice, sizeof(ScheduledAudioSlice));
 
-    NSLog(@"Elapsed: %gms %ld", (end - start) * 1000, (long)err);
+    AudioUnitReset(audioUnit, kAudioUnitScope_Global, 0);
+    CheckError(
+        AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ScheduleAudioSlice, kAudioUnitScope_Global, 0, _slice, sizeof(ScheduledAudioSlice)),
+        "AudioUnitSetProperty[ ScheduleAudioSlice ]"
+    );
 };
 
 
