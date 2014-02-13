@@ -12,12 +12,12 @@
 
 @interface TrackScheduler : NSObject
 
-- (id) initWithTrack:(Track *)track;
+- (id) initWithTrack:(Track *)track outputFormat:(AudioStreamBasicDescription)outputFormat;
 
 - (void) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp;
 - (void) stopScheduling:(AudioUnit)audioUnit;
 
 @property (nonatomic, readonly) Track *track;
-@property (nonatomic, readonly) CGFloat sampleRate;
+@property (nonatomic, readonly) AudioStreamBasicDescription clientFormat;
 
 @end
