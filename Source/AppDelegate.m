@@ -372,7 +372,14 @@
 
 - (IBAction) debugPopulatePlaylist:(id)sender
 {
-    [_playlistController debugPopulatePlaylist];
+    NSInteger index = [[NSUserDefaults standardUserDefaults] integerForKey:@"debug-population-set"];
+    [_playlistController debugPopulatePlaylistWithSet:index];
+}
+
+
+- (IBAction) debugChangePopulation:(id)sender
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"debug-population-set"];
 }
 
 

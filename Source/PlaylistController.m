@@ -375,7 +375,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 #pragma mark - Debug
 
-- (void) debugPopulatePlaylist
+- (void) debugPopulatePlaylistWithSet:(NSInteger)set
 {
     Track *(^getTrack)(NSString *) = ^(NSString *name) {
         NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:@"m4a"];
@@ -385,11 +385,25 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     };
     
     NSMutableArray *tracks = [NSMutableArray array];
-    [tracks addObject:getTrack(@"test_c")];
-    [tracks addObject:getTrack(@"test_d")];
-    [tracks addObject:getTrack(@"test_e")];
-    [tracks addObject:getTrack(@"test_f")];
-    [tracks addObject:getTrack(@"test_g")];
+    
+    if (set == 1) {
+        [tracks addObject:getTrack(@"rate_44")];
+        [tracks addObject:getTrack(@"rate_44")];
+        [tracks addObject:getTrack(@"rate_48")];
+        [tracks addObject:getTrack(@"rate_88")];
+        [tracks addObject:getTrack(@"rate_96")];
+        [tracks addObject:getTrack(@"rate_88")];
+        [tracks addObject:getTrack(@"rate_48")];
+        [tracks addObject:getTrack(@"rate_44")];
+
+    } else {
+        [tracks addObject:getTrack(@"test_c")];
+        [tracks addObject:getTrack(@"test_d")];
+        [tracks addObject:getTrack(@"test_e")];
+        [tracks addObject:getTrack(@"test_f")];
+        [tracks addObject:getTrack(@"test_g")];
+    }
+
     
     [self clearHistory];
     [[self tracksController] addObjects:tracks];
@@ -873,6 +887,15 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 {
     if (_tracks != tracks) {
         _tracks = tracks;
+        [self _saveState];
+    }
+}
+
+
+- (void) setMinimumSilenceBetweenTracks:(NSTimeInterval)minimumSilenceBetweenTracks
+{
+    if (_minimumSilenceBetweenTracks != minimumSilenceBetweenTracks) {
+        _minimumSilenceBetweenTracks = minimumSilenceBetweenTracks;
         [self _saveState];
     }
 }

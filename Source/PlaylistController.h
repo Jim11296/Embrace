@@ -32,7 +32,7 @@
 - (void) saveHistoryToFileAtURL:(NSURL *)url;
 - (void) exportHistory;
 
-- (void) debugPopulatePlaylist;
+- (void) debugPopulatePlaylistWithSet:(NSInteger)set;
 
 @property (nonatomic) NSTimeInterval minimumSilenceBetweenTracks;
 
