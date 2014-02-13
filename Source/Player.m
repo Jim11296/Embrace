@@ -18,6 +18,7 @@
 
 #import <pthread.h>
 #import <signal.h>
+#import <Accelerate/Accelerate.h>
 
 #define CHECK_RENDER_ERRORS_ON_TICK 0
 
@@ -43,27 +44,35 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 @end
 
 
+typedef struct {
+    volatile AudioUnit inputUnit;
+    volatile NSInteger stopRequested;
+    volatile NSInteger stopped;
+} RenderUserInfo;
+
 @implementation Player {
     Track         *_currentTrack;
     NSTimeInterval _currentPadding;
 
     TrackScheduler *_currentScheduler;
 
+    RenderUserInfo _renderUserInfo;
+
     UInt64    _currentStartHostTime;
 
     AUGraph   _graph;
-    AudioUnit _generatorAudioUnit;
-    AudioUnit _converterAudioUnit;
-    AudioUnit _limiterAudioUnit;
-    AudioUnit _mixerAudioUnit;
-    AudioUnit _postLimiterAudioUnit;
-    AudioUnit _outputAudioUnit;
 
 	AUNode    _generatorNode;
     AUNode    _converterNode;
 	AUNode    _limiterNode;
     AUNode    _mixerNode;
 	AUNode    _outputNode;
+
+    AudioUnit _generatorAudioUnit;
+    AudioUnit _converterAudioUnit;
+    AudioUnit _limiterAudioUnit;
+    AudioUnit _mixerAudioUnit;
+    AudioUnit _outputAudioUnit;
     
     AudioDevice *_outputDevice;
     double       _outputSampleRate;
@@ -118,7 +127,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 - (id) init
 {
     if ((self = [super init])) {
-        [self _buildGraphTail];
+        [self _buildTailGraph];
         [self _loadState];
         [self _reconnectGraph];
     }
@@ -380,6 +389,38 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 #pragma mark - Graph
 
+static OSStatus sInputRenderCallback(
+    void *inRefCon,
+    AudioUnitRenderActionFlags *ioActionFlags,
+    const AudioTimeStamp *inTimeStamp,
+    UInt32 inBusNumber,
+    UInt32 inNumberFrames,
+    AudioBufferList *ioData)
+{
+    RenderUserInfo *userInfo = (RenderUserInfo *)inRefCon;
+    
+    AudioUnit unit = userInfo->inputUnit;
+    
+    OSStatus result = AudioUnitRender(unit, ioActionFlags, inTimeStamp, 0, inNumberFrames, ioData);
+
+    if (userInfo->stopRequested) {
+        for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
+            AudioBuffer buffer = ioData->mBuffers[i];
+            
+            float *frames = (float *)buffer.mData;
+            
+            float start = 1.0;
+            float step  = -(1.0 / (float)inNumberFrames);
+            vDSP_vrampmul(frames, 1, &start, &step, frames, 1, inNumberFrames);
+        }
+
+        userInfo->stopped = 1;
+    }
+
+    return result;
+}
+
+
 - (void) _buildGraphHeadAndTrackScheduler
 {
     [self _teardownGraphHead];
@@ -390,8 +431,11 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     generatorCD.componentManufacturer = kAudioUnitManufacturer_Apple;
     generatorCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-    CheckError(AUGraphAddNode(_graph, &generatorCD,  &_generatorNode), "AUGraphAddNode[ Generator ]");
-	CheckError(AUGraphNodeInfo(_graph, _generatorNode,  NULL, &_generatorAudioUnit), "AUGraphNodeInfo[ Player ]");
+    AUNode    generatorNode = 0;
+    AudioUnit generatorUnit = 0;
+
+    CheckError(AUGraphAddNode(_graph, &generatorCD,  &generatorNode), "AUGraphAddNode[ Generator ]");
+	CheckError(AUGraphNodeInfo(_graph, generatorNode,  NULL, &generatorUnit), "AUGraphNodeInfo[ Player ]");
 
     UInt32 (^getPropertyUInt32)(AudioUnit, AudioUnitPropertyID, AudioUnitScope) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope) {
         UInt32 result = 0;
@@ -453,31 +497,45 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         converterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
         converterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-        CheckError(AUGraphAddNode( _graph, &converterCD,  &_converterNode),  "AUGraphAddNode[ Converter ]");
-        CheckError(AUGraphNodeInfo(_graph, _converterNode,  NULL, &_converterAudioUnit),  "AUGraphNodeInfo[ Converter ]");
+        AUNode converterNode = 0;
+        CheckError(AUGraphAddNode( _graph, &converterCD,  &converterNode),  "AUGraphAddNode[ Converter ]");
+
+        AudioUnit converterUnit = 0;
+        CheckError(AUGraphNodeInfo(_graph, converterNode,  NULL, &converterUnit),  "AUGraphNodeInfo[ Converter ]");
+
 
         UInt32 complexity = kAudioUnitSampleRateConverterComplexity_Mastering;
 
-        setPropertyUInt32(_converterAudioUnit, kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity);
-        setPropertyUInt32(_converterAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
+        setPropertyUInt32(converterUnit, kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity);
+        setPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
 
-        setPropertyFloat64(_converterAudioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  generatorFormat.mSampleRate);
-        setPropertyFloat64(_converterAudioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, _outputSampleRate);
+        setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  generatorFormat.mSampleRate);
+        setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, _outputSampleRate);
 
-        setPropertyStream(_converterAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &generatorFormat);
-        setPropertyStream(_converterAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputStream);
+        setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &generatorFormat);
+        setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputStream);
 
-        CheckError(AudioUnitInitialize(_converterAudioUnit), "AudioUnitInitialize[ Converter ]");
+        CheckError(AudioUnitInitialize(converterUnit), "AudioUnitInitialize[ Converter ]");
 
         // maxFrames will be different when going through a SRC
-        maxFrames = getPropertyUInt32(_converterAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
+        maxFrames = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
+
+        _converterNode = converterNode;
+        _converterAudioUnit = converterUnit;
     }
 
-    setPropertyUInt32( _generatorAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
-    setPropertyFloat64(_generatorAudioUnit, kAudioUnitProperty_SampleRate,            kAudioUnitScope_Output, generatorFormat.mSampleRate);
-    setPropertyStream( _generatorAudioUnit, kAudioUnitProperty_StreamFormat,          kAudioUnitScope_Output, &generatorFormat);
+    setPropertyUInt32( generatorUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
+    setPropertyFloat64(generatorUnit, kAudioUnitProperty_SampleRate,            kAudioUnitScope_Output, generatorFormat.mSampleRate);
+    setPropertyStream( generatorUnit, kAudioUnitProperty_StreamFormat,          kAudioUnitScope_Output, &generatorFormat);
 
-    AudioUnitInitialize(_generatorAudioUnit);
+    AudioUnitInitialize(generatorUnit);
+
+    _generatorNode = generatorNode;
+    _generatorAudioUnit = generatorUnit;
+
+    _renderUserInfo.stopped = 0;
+    _renderUserInfo.stopRequested = 0;
+    _renderUserInfo.inputUnit = _converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit;
 
     [self _reconnectGraph];
 }
@@ -493,7 +551,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         _generatorNode = 0;
     }
 
-    if (_converterNode) {
+    if (_converterAudioUnit) {
         CheckError(AudioUnitUninitialize(_converterAudioUnit), "AudioUnitUninitialize[ Converter ]");
         CheckError(AUGraphRemoveNode(_graph, _converterNode), "AUGraphRemoveNode[ Converter ]" );
         
@@ -503,7 +561,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 }
 
 
-- (void) _buildGraphTail
+- (void) _buildTailGraph
 {
     CheckError(NewAUGraph(&_graph), "NewAUGraph");
 	
@@ -585,10 +643,19 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     __block AUNode lastNode = 0;
     __block NSInteger index = 0;
 
+    AURenderCallbackStruct inputCallbackStruct;
+    inputCallbackStruct.inputProc        = &sInputRenderCallback;
+    inputCallbackStruct.inputProcRefCon  = &_renderUserInfo;
+
+    CheckError(
+        AUGraphSetNodeInputCallback(_graph, _limiterNode, 0, &inputCallbackStruct),
+        "AUGraphSetNodeInputCallback"
+    );
+
     [self _iterateGraphNodes:^(AUNode node) {
-        if (lastNode) {
+        if (lastNode && (node != _limiterNode)) {
             if (!CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput")) {
-                NSLog(@"Error connecting %ld %ld %ld", (long)index, (long)_generatorNode, (long)_converterNode);
+
             }
         }
 
@@ -692,14 +759,14 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         Float64 inputSampleRate  = _outputSampleRate;
         Float64 outputSampleRate = _outputSampleRate;
 
-        if (unit == _generatorAudioUnit) {
-            inputSampleRate = 0;
-            outputSampleRate = 0;
-            
-        } else if (unit == _converterAudioUnit) {
-            inputSampleRate = 0;
-            
-        } else if (unit == _outputAudioUnit) {
+//        if (unit == _generatorAudioUnit) {
+//            inputSampleRate = 0;
+//            outputSampleRate = 0;
+//            
+//        } else if (unit == _converterAudioUnit) {
+//            inputSampleRate = 0;
+//            
+        if (unit == _outputAudioUnit) {
             outputSampleRate = 0;
         }
         
@@ -897,7 +964,10 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         BOOL isEndSilence   = _timeRemaining <= [_currentTrack silenceAtEnd];
         BOOL isStartSilence = _timeElapsed   <  [_currentTrack silenceAtStart];
 
-        if (isEndSilence) {
+        if (_volume == 0) {
+            [self hardStop];
+        
+        } else if (isEndSilence) {
             [_currentTrack setTrackStatus:TrackStatusPlayed];
             [self hardStop];
             
@@ -965,6 +1035,15 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     AUGraphIsRunning(_graph, &isRunning);
     
     if (isRunning) {
+        _renderUserInfo.stopRequested = 1;
+        
+        while (_renderUserInfo.stopped == 0) {
+            usleep(1000);
+        }
+
+        _renderUserInfo.stopRequested = 0;
+        _renderUserInfo.stopped = 0;
+
         AUGraphStop(_graph);
     }
 
@@ -1087,7 +1166,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 {
     Effect *effect = [[Effect alloc] initWithEffectType:nil];
     
-    [effect _setAudioUnit:_limiterAudioUnit];
+//    [effect _setAudioUnit:_limiterAudioUnit];
     
     return @[ effect ];
 }

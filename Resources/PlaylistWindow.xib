@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B3116" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
+        <deployment defaultVersion="1080" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
@@ -84,7 +85,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -282,21 +283,21 @@
             </connections>
         </window>
         <customView appearanceType="lightContent" id="K7L-NV-xHB" userLabel="Header" customClass="BorderedView">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="68"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <subviews>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="G6E-ZJ-gAt">
-                    <rect key="frame" x="241" y="38" width="32" height="20"/>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.20000000000000001" id="G6E-ZJ-gAt">
+                    <rect key="frame" x="241" y="24" width="32" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="full_volume_template" id="ba0-vH-lls"/>
                 </imageView>
-                <imageView alphaValue="0.33000000000000002" id="EkW-m3-Ouh">
-                    <rect key="frame" x="53" y="38" width="20" height="20"/>
-                    <autoresizingMask key="autoresizingMask"/>
+                <imageView alphaValue="0.20000000000000001" id="EkW-m3-Ouh">
+                    <rect key="frame" x="53" y="24" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="no_volume_template" id="tws-Vj-Z0D"/>
                 </imageView>
                 <slider verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
-                    <rect key="frame" x="78" y="38" width="164" height="20"/>
+                    <rect key="frame" x="78" y="24" width="164" height="20"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
                     <connections>
@@ -329,14 +330,14 @@
                     </connections>
                 </textField>
                 <customView id="Twn-WM-C4J" customClass="Button">
-                    <rect key="frame" x="20" y="24" width="16" height="16"/>
+                    <rect key="frame" x="20" y="26" width="16" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="playOrSoftPause:" target="-2" id="4JI-Pb-lAn"/>
                     </connections>
                 </customView>
                 <customView id="4bi-5W-Bp7" customClass="Button">
-                    <rect key="frame" x="286" y="24" width="28" height="16"/>
+                    <rect key="frame" x="286" y="26" width="28" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
@@ -348,7 +349,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                 </customView>
                 <customView appearanceType="lightContent" id="9x2-yQ-Jbg" customClass="LevelMeter">
-                    <rect key="frame" x="80" y="24" width="160" height="16"/>
+                    <rect key="frame" x="80" y="48" width="160" height="16"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                 </customView>
             </subviews>

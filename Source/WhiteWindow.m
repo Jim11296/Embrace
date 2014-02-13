@@ -10,9 +10,7 @@
 #import "CloseButton.h"
 
 
-@implementation WhiteWindow {
-    CloseButton *_closeButton;
-}
+@implementation WhiteWindow
 
 - (void) dealloc
 {

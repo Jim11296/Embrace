@@ -10,12 +10,15 @@
 #import "Player.h"
 #import "WhiteWindow.h"
 #import "WaveformView.h"
+#import "CloseButton.h"
 
 @interface CurrentTrackController () <PlayerListener, NSWindowDelegate>
 @end
 
 
-@implementation CurrentTrackController
+@implementation CurrentTrackController {
+    NSTrackingArea *_closeButtonTrackingArea;
+}
 
 - (NSString *) windowNibName
 {
@@ -26,6 +29,20 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[Player sharedInstance] removeObserver:self forKeyPath:@"currentTrack"];
+    
+    [[self mainView] removeTrackingArea:_closeButtonTrackingArea];
+}
+
+
+- (void) mouseEntered:(NSEvent *)theEvent
+{
+    [[(WhiteWindow *)[self window] closeButton] setForceVisible:YES];
+}
+
+
+- (void) mouseExited:(NSEvent *)theEvent
+{
+    [[(WhiteWindow *)[self window] closeButton] setForceVisible:NO];
 }
 
 
@@ -118,6 +135,11 @@
     [self _updateTrack];
 
     [parentWindow setMinSize:[childWindow minSize]];
+
+    NSTrackingAreaOptions options = NSTrackingActiveAlways | NSTrackingMouseEnteredAndExited | NSTrackingInVisibleRect;
+    _closeButtonTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:options owner:self userInfo:nil];
+
+    [[self mainView] addTrackingArea:_closeButtonTrackingArea];
 }
 
 

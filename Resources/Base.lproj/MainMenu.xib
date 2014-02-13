@@ -208,6 +208,13 @@ CA
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="yPT-OK-o84"/>
+                            <menuItem title="Play/Pause Loop" id="LuW-vJ-gVG">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="debugPlayPauseLoop:" target="494" id="wj0-61-qxu"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="E15-Sn-b7P"/>
                             <menuItem title="Show internal effects" id="USn-aK-z9v">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

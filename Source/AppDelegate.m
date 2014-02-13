@@ -171,6 +171,18 @@
 
     } else if (action == @selector(hardSkip:)) {
         return [[Player sharedInstance] isPlaying];
+
+    } else if (action == @selector(showMainWindow:)) {
+        BOOL yn = [_playlistController isWindowLoaded] && [[_playlistController window] isMainWindow];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
+    
+    } else if (action == @selector(showEffectsWindow:)) {
+        BOOL yn = [_effectsController isWindowLoaded] && [[_effectsController window] isMainWindow];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
+    
+    } else if (action == @selector(showCurrentTrack:)) {
+        BOOL yn = [_currentTrackController isWindowLoaded] && [[_currentTrackController window] isMainWindow];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
     }
 
     return YES;
@@ -342,21 +354,39 @@
 }
 
 
+- (void) _toggleWindowForController:(NSWindowController *)controller sender:(id)sender
+{
+    BOOL orderIn = YES;
+
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+        if ([sender state] == NSOnState) {
+            orderIn = NO;
+        }
+    }
+    
+    if (orderIn) {
+        [controller showWindow:self];
+    } else {
+        [[controller window] orderOut:self];
+    }
+}
+
+
 - (IBAction) showMainWindow:(id)sender
 {
-    [_playlistController showWindow:self];
+    [self _toggleWindowForController:_playlistController sender:sender];
 }
 
 
 - (IBAction) showEffectsWindow:(id)sender
 {
-    [_effectsController showWindow:self];
+    [self _toggleWindowForController:_effectsController sender:sender];
 }
 
 
 - (IBAction) showCurrentTrack:(id)sender
 {
-    [_currentTrackController showWindow:self];
+    [self _toggleWindowForController:_currentTrackController sender:sender];
 }
 
 
@@ -380,6 +410,31 @@
 - (IBAction) debugChangePopulation:(id)sender
 {
     [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"debug-population-set"];
+    [self debugPopulatePlaylist:sender];
+}
+
+
+- (IBAction) debugPlayPauseLoop:(id)sender
+{
+    static NSTimer *playPauseTimer = nil;
+    if (!playPauseTimer) {
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(debugPlayPauseTick:) userInfo:nil repeats:YES];
+    }
+}
+
+
+- (void) debugPlayPauseTick:(NSTimer *)timer
+{
+    Player *player = [Player sharedInstance];
+
+    if ([player isPlaying]) {
+        Track *track = [player currentTrack];
+        [player hardStop];
+        [track setTrackStatus:TrackStatusQueued];
+
+    } else {
+        [player play];
+    }
 }
 
 

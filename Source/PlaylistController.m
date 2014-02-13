@@ -22,6 +22,7 @@
 #import "Preferences.h"
 #import "ShadowView.h"
 #import "ViewTrackController.h"
+#import "TrackTableView.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -174,7 +175,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     
     } else if (playing) {
         image = [NSImage imageNamed:@"pause_template"];
-        enabled = [track isSilentAtOffset:timeElapsed];
+        enabled = [track isSilentAtOffset:timeElapsed] || ([player volume] == 0);
 
     } else {
         image = [NSImage imageNamed:@"play_template"];
@@ -772,6 +773,49 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     }
 
     return 40;
+}
+
+
+- (void) trackTableView:(TrackTableView *)tableView draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
+{
+    NSRect frame = [[self window] frame];
+
+    if (NSPointInRect(screenPoint, frame)) {
+        [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
+        [[NSCursor arrowCursor] set];
+
+    } else {
+        [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
+        
+        [[NSCursor disappearingItemCursor] set];
+    }
+}
+
+
+- (void) tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
+{
+    if (operation == NSDragOperationNone) {
+        NSRect frame = [[self window] frame];
+
+        if (!NSPointInRect(screenPoint, frame)) {
+            if (_rowOfDraggedTrack != NSNotFound) {
+                Track *draggedTrack = [[[self tracksController] arrangedObjects] objectAtIndex:_rowOfDraggedTrack];
+
+                [[self tableView] beginUpdates];
+
+                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:_rowOfDraggedTrack];
+                [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectNone];
+
+                if (draggedTrack) {
+                    [[self tracksController] removeObject:draggedTrack];
+                }
+
+                [[self tableView] endUpdates];
+                
+                NSShowAnimationEffect(NSAnimationEffectPoof, [NSEvent mouseLocation], NSZeroSize, nil, nil, nil);
+            }
+        }
+    }
 }
 
 
