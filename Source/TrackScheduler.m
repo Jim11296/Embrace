@@ -14,16 +14,11 @@
 @property (atomic) NSInteger availableFrames;
 @end
 
-static void sCleanupSlice(void *userData, ScheduledAudioSlice *slice)
+
+static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferList)
 {
-    AudioBufferList *list = slice->mBufferList;
-
-    for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
-        free(list->mBuffers[i].mData);
-    }
-
-    free(slice->mBufferList);
-    free(slice);
+    TrackScheduler *scheduler = CFBridgingRelease(userData);
+    (void)scheduler;
 }
 
 
@@ -58,10 +53,14 @@ static void sCleanupSlice(void *userData, ScheduledAudioSlice *slice)
 {
     [self _cleanupAudioFile];
 
-    if (_slice) {
-        sCleanupSlice(_slice, _slice);
-        _slice = NULL;
+    AudioBufferList *list = _slice->mBufferList;
+
+    for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
+        free(list->mBuffers[i].mData);
     }
+
+    free(_slice->mBufferList);
+    free(_slice);
 }
 
 
@@ -247,16 +246,14 @@ static void sCleanupSlice(void *userData, ScheduledAudioSlice *slice)
     }
 
     _slice->mTimeStamp = timeStamp;
-    _slice->mCompletionProc = sCleanupSlice;
-    _slice->mCompletionProcUserData = _slice;
+    _slice->mCompletionProc = sReleaseTrackScheduler;
+    _slice->mCompletionProcUserData = (void *)CFBridgingRetain(self);
 
     AudioUnitReset(audioUnit, kAudioUnitScope_Global, 0);
     CheckError(
         AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ScheduleAudioSlice, kAudioUnitScope_Global, 0, _slice, sizeof(ScheduledAudioSlice)),
         "AudioUnitSetProperty[ ScheduleAudioSlice ]"
     );
-    
-    _slice = NULL;
 };
 
 
