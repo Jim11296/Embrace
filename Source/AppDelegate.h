@@ -35,6 +35,8 @@
 // Debug
 @property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
 - (IBAction) debugPopulatePlaylist:(id)sender;
+- (IBAction) debugChangePopulation:(id)sender;
+
 - (IBAction) debugShowInternalEffects:(id)sender;
 
 - (EditEffectController *) editControllerForEffect:(Effect *)effect;

@@ -19,16 +19,16 @@
     NSUInteger _bufferCount;
     
     ExtAudioFileRef _audioFile;
+    AudioStreamBasicDescription _clientFormat;
 
     ScheduledAudioSlice *_slice;
 }
 
 
-- (id) initWithTrack:(Track *)track streamDescription:(AudioStreamBasicDescription)streamDescription
+- (id) initWithTrack:(Track *)track
 {
     if ((self = [super init])) {
         _track = track;
-        _streamDescription = streamDescription;
         
         if (![self _setupAudioFile]) {
             self = nil;
@@ -85,9 +85,11 @@
         return NO;
     }
 
+    _clientFormat = GetPCMStreamBasicDescription(fileFormat.mSampleRate, fileFormat.mChannelsPerFrame, NO);
+    _sampleRate   = fileFormat.mSampleRate;
 
     if (!CheckError(
-        ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof(_streamDescription), &_streamDescription),
+        ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof(_clientFormat), &_clientFormat),
         "ExtAudioFileSetProperty[ ClientDataFormat ]"
     )) {
         return NO;
@@ -104,12 +106,12 @@
     {
         NSInteger totalFrames = fileLengthFrames;
         
-        NSInteger startFrame  = [_track startTime] * _streamDescription.mSampleRate;
+        NSInteger startFrame  = [_track startTime] * _clientFormat.mSampleRate;
         if (startFrame < 0) startFrame = 0;
         if (startFrame > totalFrames) startFrame = totalFrames;
 
         if ([_track stopTime]) {
-            NSInteger stopFrame  = [_track stopTime] * _streamDescription.mSampleRate;
+            NSInteger stopFrame  = [_track stopTime] * _clientFormat.mSampleRate;
             if (stopFrame < 0) stopFrame = 0;
             if (stopFrame > totalFrames) stopFrame = totalFrames;
 
@@ -131,10 +133,10 @@
 
 - (void) _setupBuffers
 {
-    _bufferCount = _streamDescription.mChannelsPerFrame;
+    _bufferCount = _clientFormat.mChannelsPerFrame;
 
     UInt32 totalFrames = (UInt32)[self totalFrames];
-    UInt32 totalBytes  = totalFrames * _streamDescription.mBytesPerFrame;
+    UInt32 totalBytes  = totalFrames * _clientFormat.mBytesPerFrame;
 
     _buffers = malloc(sizeof(UInt8 *) * _bufferCount);
 
@@ -171,7 +173,7 @@
 - (void) _readDataInBackground
 {
     NSInteger framesRemaining = [self totalFrames];
-    NSInteger bytesRemaining = framesRemaining * _streamDescription.mBytesPerFrame;
+    NSInteger bytesRemaining = framesRemaining * _clientFormat.mBytesPerFrame;
 
     NSInteger bytesRead = 0;
     NSInteger framesAvailable = 0;
@@ -199,8 +201,8 @@
         
         framesRemaining -= frameCount;
     
-        bytesRead       += frameCount * _streamDescription.mBytesPerFrame;
-        bytesRemaining  -= frameCount * _streamDescription.mBytesPerFrame;
+        bytesRead       += frameCount * _clientFormat.mBytesPerFrame;
+        bytesRemaining  -= frameCount * _clientFormat.mBytesPerFrame;
         
         if (framesRemaining == 0) {
             break;
@@ -225,7 +227,7 @@
         usleep(1);
     }
     
-    NSInteger primeAmount = (_streamDescription.mSampleRate * 10);
+    NSInteger primeAmount = (_clientFormat.mSampleRate * 10);
     NSInteger totalFrames = [self totalFrames];
     
     if (totalFrames < primeAmount) primeAmount = totalFrames;

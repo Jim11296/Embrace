@@ -23,5 +23,8 @@ EXTERN void InstallCppTerminationHandler(void);
 EXTERN NSTimeInterval GetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2);
 
 EXTERN void PrintStreamBasicDescription(AudioStreamBasicDescription asbd);
+EXTERN NSString *GetStreamBasicDescriptionString(AudioStreamBasicDescription asbd);
+
+EXTERN AudioStreamBasicDescription GetPCMStreamBasicDescription(double inSampleRate, UInt32 inNumChannels, BOOL interleaved);
 
 #undef EXTERN
