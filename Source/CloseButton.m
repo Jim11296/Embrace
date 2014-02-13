@@ -9,6 +9,7 @@
 #import "CloseButton.h"
 
 @implementation CloseButton {
+    BOOL _mouseInside;
     BOOL _highlighted;
 }
 
@@ -72,21 +73,28 @@
 }
 
 
-- (void) mouseEntered:(NSEvent *)theEvent
+- (void) _updateVisibility
 {
-    [self _setHighlighted:NO];
+    BOOL visible = _mouseInside || _forceVisible;
 
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [[self animator] setAlphaValue:1];
+        [[self animator] setAlphaValue:(visible ? 1.0 : 0.0)];
     } completionHandler:nil];
+}
+
+
+- (void) mouseEntered:(NSEvent *)theEvent
+{
+    _mouseInside = YES;
+    [self _setHighlighted:NO];
+    [self _updateVisibility];
 }
 
 
 - (void) mouseExited:(NSEvent *)theEvent
 {
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [[self animator] setAlphaValue:0];
-    } completionHandler:nil];
+    _mouseInside = NO;
+    [self _updateVisibility];
 }
 
 
@@ -112,5 +120,13 @@
     [super mouseUp:theEvent];
 }
 
+
+- (void) setForceVisible:(BOOL)forceVisible
+{
+    if (_forceVisible != forceVisible) {
+        _forceVisible = forceVisible;
+        [self _updateVisibility];
+    }
+}
 
 @end

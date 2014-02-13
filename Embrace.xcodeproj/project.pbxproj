@@ -14,6 +14,7 @@
 		550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882918AC3C5B00CC7E3A /* rate_88.m4a */; };
 		550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882818AC3C5B00CC7E3A /* rate_48.m4a */; };
 		550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882A18AC3C5B00CC7E3A /* rate_96.m4a */; };
+		550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 550D883718ACD5F800CC7E3A /* TrackTableView.m */; };
 		5515B468189B4DC300FBC886 /* full_volume_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 5515B462189B4DC300FBC886 /* full_volume_template.png */; };
 		5515B469189B4DC300FBC886 /* no_volume_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 5515B463189B4DC300FBC886 /* no_volume_template.png */; };
 		5515B46A189B4DC300FBC886 /* issue_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 5515B464189B4DC300FBC886 /* issue_template.png */; };
@@ -120,6 +121,8 @@
 		550D882818AC3C5B00CC7E3A /* rate_48.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_48.m4a; path = "Resources/Test Sounds/rate_48.m4a"; sourceTree = SOURCE_ROOT; };
 		550D882918AC3C5B00CC7E3A /* rate_88.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_88.m4a; path = "Resources/Test Sounds/rate_88.m4a"; sourceTree = SOURCE_ROOT; };
 		550D882A18AC3C5B00CC7E3A /* rate_96.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_96.m4a; path = "Resources/Test Sounds/rate_96.m4a"; sourceTree = SOURCE_ROOT; };
+		550D883618ACD5F800CC7E3A /* TrackTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackTableView.h; path = Source/TrackTableView.h; sourceTree = SOURCE_ROOT; };
+		550D883718ACD5F800CC7E3A /* TrackTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackTableView.m; path = Source/TrackTableView.m; sourceTree = SOURCE_ROOT; };
 		5515B462189B4DC300FBC886 /* full_volume_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = full_volume_template.png; path = Resources/full_volume_template.png; sourceTree = SOURCE_ROOT; };
 		5515B463189B4DC300FBC886 /* no_volume_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = no_volume_template.png; path = Resources/no_volume_template.png; sourceTree = SOURCE_ROOT; };
 		5515B464189B4DC300FBC886 /* issue_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = issue_template.png; path = Resources/issue_template.png; sourceTree = SOURCE_ROOT; };
@@ -464,9 +467,9 @@
 				55717BCA187EA45500213213 /* close_normal@2x.png */,
 				5515B464189B4DC300FBC886 /* issue_template.png */,
 				5515B465189B4DC300FBC886 /* issue_template@2x.png */,
-				5515B462189B4DC300FBC886 /* full_volume_template.png */,
 				55224BE718A79BAA00407B46 /* issue_small.png */,
 				55224BE818A79BAA00407B46 /* issue_small@2x.png */,
+				5515B462189B4DC300FBC886 /* full_volume_template.png */,
 				55717BFA187EB53500213213 /* full_volume_template@2x.png */,
 				5515B463189B4DC300FBC886 /* no_volume_template.png */,
 				55717BFB187EB53500213213 /* no_volume_template@2x.png */,
@@ -556,6 +559,8 @@
 				55717BC0187CE6B200213213 /* SilenceTableCellView.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
 				5506802F1887711000441AAE /* TimeStringValueTransformer.m */,
+				550D883618ACD5F800CC7E3A /* TrackTableView.h */,
+				550D883718ACD5F800CC7E3A /* TrackTableView.m */,
 				55CF2798187A464B0042C92A /* TrackTableCellView.h */,
 				55CF2799187A464B0042C92A /* TrackTableCellView.m */,
 				55ADE93318815EA8008DC245 /* PlayBar.h */,
@@ -564,9 +569,9 @@
 				556ACE2E187B901400AED4BC /* WaveformView.m */,
 				55717BF6187EAB8C00213213 /* WhiteSlider.h */,
 				55717BF7187EAB8C00213213 /* WhiteSlider.m */,
-				5595A7BA18793B9000A7B996 /* WhiteWindow.h */,
 				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
 				55A708B018A715C1007BD7C0 /* DragSongsHereView.m */,
+				5595A7BA18793B9000A7B996 /* WhiteWindow.h */,
 				5595A7BB18793B9000A7B996 /* WhiteWindow.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
@@ -769,6 +774,7 @@
 				55ADE93518815EA8008DC245 /* PlayBar.m in Sources */,
 				557C2CBB1897403E002FAFEA /* CACFDictionary.cpp in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,
+				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
 				55A0B16B188F59F000866F04 /* CurrentTrackController.m in Sources */,

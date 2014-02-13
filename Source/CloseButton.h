@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface CloseButton : NSButton
-
+@property (nonatomic, assign) BOOL forceVisible;
 @end

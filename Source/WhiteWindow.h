@@ -8,11 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class CloseButton;
+
 @interface WhiteWindow : NSWindow
 
 - (void) setupWithHeaderView:(NSView *)contentView mainView:(NSView *)mainView;
 - (void) setupAsParentWindow;
 
 @property (nonatomic, strong) NSArray *hiddenViewsWhenInactive;
+@property (nonatomic, strong, readonly) CloseButton *closeButton;
 
 @end
