@@ -22,10 +22,13 @@ extern NSString * const EffectDidDeallocNotification;
 - (id) initWithEffectType:(EffectType *)effectType;
 
 - (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL;
+- (BOOL) saveAudioPresetAtFileURL:(NSURL *)fileURL;
+- (void) restoreDefaultValues;
 
 - (NSDictionary *) stateDictionary;
 
-- (AudioUnit) audioUnit;
+@property (nonatomic, readonly) AudioUnit audioUnit;
+@property (nonatomic, readonly) OSStatus audioUnitError;
 
 @property (nonatomic, readonly) EffectType *type;
 @property (nonatomic, readonly) BOOL hasCustomView;

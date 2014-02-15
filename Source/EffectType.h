@@ -10,13 +10,27 @@
 
 @class Effect;
 
+typedef NS_ENUM(NSInteger, EffectFriendlyCategory) {
+    EffectFriendlyCategoryEqualizers = 1,
+    EffectFriendlyCategoryFilters,
+    EffectFriendlyCategoryDynamics,
+    EffectFriendlyCategorySpecial
+};
+
+
 @interface EffectType : NSObject
+
++ (EffectFriendlyCategory) friendlyCategoryForName:(NSString *)name;
++ (NSString *) friendlyNameForName:(NSString *)name;
 
 + (NSArray *) allEffectTypes;
 
 @property (nonatomic, readonly) NSString *manufacturer;
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *fullName;
+
+@property (nonatomic, readonly) NSString *friendlyName;
+@property (nonatomic, readonly) EffectFriendlyCategory friendlyCategory;
 
 @property (nonatomic, readonly) AudioComponent AudioComponent;
 @property (nonatomic, readonly) AudioComponentDescription AudioComponentDescription;

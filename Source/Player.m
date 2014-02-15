@@ -31,7 +31,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 
 @interface Effect ()
-- (void) _setAudioUnit:(AudioUnit)unit;
+- (void) _setAudioUnit:(AudioUnit)unit error:(OSStatus)error;
 @end
 
 
@@ -177,7 +177,7 @@ typedef struct {
     [self setEffects:effects];
 
     NSNumber *volume = [[NSUserDefaults standardUserDefaults] objectForKey:sVolumeKey];
-    if (!volume) volume = @0.95;
+    if (!volume) volume = @0.96;
     [self setVolume:[volume doubleValue]];
 }
 
@@ -188,44 +188,74 @@ typedef struct {
 
     for (Effect *effect in effects) {
         NSValue *key = [NSValue valueWithNonretainedObject:effect];
-        AUNode node;
+        AUNode node = 0;
+
+        OSStatus err = noErr;
 
         AudioComponentDescription acd = [[effect type] AudioComponentDescription];
 
         NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
         if (nodeNumber) {
             node = [nodeNumber intValue];
+
         } else {
-            AUGraphAddNode(_graph, &acd, &node);
+            err = AUGraphAddNode(_graph, &acd, &node);
+            
+            if (err != noErr) {
+                [effect _setAudioUnit:NULL error:err];
+                continue;
+            }
 
             UInt32 maxFrames;
             UInt32 maxFramesSize = sizeof(maxFrames);
-            CheckError(AudioUnitGetProperty(
+            
+            err = AudioUnitGetProperty(
                 _outputAudioUnit,
                 kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
                 &maxFrames, &maxFramesSize
-            ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
+            );
+            
+            if (err != noErr) {
+                [effect _setAudioUnit:NULL error:err];
+                continue;
+            }
 
             AudioComponentDescription acd;
             AudioUnit unit = NULL;
-            AUGraphNodeInfo(_graph, node, &acd, &unit);
 
-            CheckError(AudioUnitSetProperty(
+            err = AUGraphNodeInfo(_graph, node, &acd, &unit);
+            
+            if (err != noErr) {
+                [effect _setAudioUnit:NULL error:err];
+                continue;
+            }
+
+            err = AudioUnitSetProperty(
                 unit,
                 kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
                 &maxFrames, maxFramesSize
-            ), "AudioUnitSetProperty[MaximumFramesPerSlice]");
+            );
+            
+            if (err != noErr) {
+                [effect _setAudioUnit:NULL error:err];
+                continue;
+            }
         }
         
         AudioUnit audioUnit;
-        CheckError(AUGraphNodeInfo(_graph, node, &acd, &audioUnit), "AUGraphNodeInfo");
+        err = AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
+
+        if (err != noErr) {
+            [effect _setAudioUnit:NULL error:err];
+            continue;
+        }
         
         AudioUnitParameter changedUnit;
         changedUnit.mAudioUnit = audioUnit;
         changedUnit.mParameterID = kAUParameterListener_AnyParameter;
         AUParameterListenerNotify(NULL, NULL, &changedUnit);
 
-        [effect _setAudioUnit:audioUnit];
+        [effect _setAudioUnit:audioUnit error:noErr];
 
         [effectToNodeMap setObject:@(node) forKey:key];
     }
@@ -901,7 +931,8 @@ static OSStatus sInputRenderCallback(
     NSMutableArray *effectsStateArray = [NSMutableArray arrayWithCapacity:[_effects count]];
     
     for (Effect *effect in _effects) {
-        [effectsStateArray addObject:[effect stateDictionary]];
+        NSDictionary *dictionary = [effect stateDictionary];
+        if (dictionary) [effectsStateArray addObject:dictionary];
     }
 
     [[NSUserDefaults standardUserDefaults] setObject:effectsStateArray forKey:sEffectsKey];
@@ -942,6 +973,7 @@ static OSStatus sInputRenderCallback(
 - (void) play
 {
     if (_currentTrack) return;
+    if (_volume == 0)  return;
     [self playNextTrack];
     
     if (_currentTrack) {
@@ -1095,7 +1127,7 @@ static OSStatus sInputRenderCallback(
 - (void) addListener:(id<PlayerListener>)listener
 {
     if (!_listeners) _listeners = [NSHashTable weakObjectsHashTable];
-    [_listeners addObject:listener];
+    if (listener) [_listeners addObject:listener];
 }
 
 
@@ -1152,6 +1184,10 @@ static OSStatus sInputRenderCallback(
             kStereoMixerParam_Volume, kAudioUnitScope_Output, 0,
             volume, 0
         ), "AudioUnitSetParameter[Volume]");
+        
+        for (id<PlayerListener> listener in _listeners) {
+            [listener player:self didUpdateVolume:_volume];
+        }
     }
 }
 

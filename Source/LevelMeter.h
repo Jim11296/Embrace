@@ -13,6 +13,8 @@
 @interface LevelMeter : NSView
 
 @property (nonatomic, getter=isMetering) BOOL metering;
+@property (nonatomic, getter=isVertical) BOOL vertical;
+
 
 - (void) setLeftAveragePower: (Float32) leftAveragePower
            rightAveragePower: (Float32) rightAveragePower

@@ -41,23 +41,86 @@
     [super windowDidLoad];
 
     NSMenu *menu = [[self addButton] menu];
+    NSMenu *specialMenu = [[NSMenu alloc] init];
+    
+    NSArray *allEffectTypes = [EffectType allEffectTypes];
+    
+    allEffectTypes = [allEffectTypes sortedArrayUsingComparator:^(id objectA, id objectB) {
+        EffectType *typeA = (EffectType *)objectA;
+        EffectType *typeB = (EffectType *)objectB;
+        
+        EffectFriendlyCategory categoryA = [typeA friendlyCategory];
+        EffectFriendlyCategory categoryB = [typeB friendlyCategory];
+        
+        if (categoryA > categoryB) {
+            return NSOrderedDescending;
+        } else if (categoryB > categoryA) {
+            return NSOrderedAscending;
+        } else {
+            NSString *nameA = [typeA friendlyName];
+            NSString *nameB = [typeB friendlyName];
+            
+            return [nameA compare:nameB];
+        }
+    }];
+    
+    EffectFriendlyCategory lastFriendlyCategory = 0;
+    
+    BOOL didAddItem = NO;
 
-    for (EffectType *type in [EffectType allEffectTypes]) {
-        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[type name] action:NULL keyEquivalent:@""];
+    for (EffectType *type in allEffectTypes) {
+        EffectFriendlyCategory friendlyCategory = [type friendlyCategory];
+
+        if (friendlyCategory != lastFriendlyCategory) {
+            if (didAddItem) {
+                [menu addItem:[NSMenuItem separatorItem]];
+            }
+
+            lastFriendlyCategory = friendlyCategory;
+        }
+    
+        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[type friendlyName] action:NULL keyEquivalent:@""];
         [menuItem setRepresentedObject:type];
-        [menu addItem:menuItem];
+
+        if (friendlyCategory != EffectFriendlyCategorySpecial) {
+            [menu addItem:menuItem];
+        } else {
+            [specialMenu addItem:menuItem];
+            
+            [menuItem setTarget:[[self addButton] target]];
+            [menuItem setAction:[[self addButton] action]];
+        }
+
+        didAddItem = YES;
     }
     
+    NSMenuItem *specialMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Special", nil) action:nil keyEquivalent:@""];
+    [specialMenuItem setSubmenu:specialMenu];
+    
+    [specialMenu setAutoenablesItems:NO];
+    
+    [menu addItem:specialMenuItem];
+    
     [[self tableView] setDoubleAction:@selector(editEffect:)];
+
+    [[self window] setExcludedFromWindowsMenu:YES];
 }
 
 
 - (IBAction) addEffect:(id)sender
 {
-    EffectType *type = [[sender selectedItem] representedObject];
+    id representedObject = nil;
+
+    if ([sender isKindOfClass:[NSPopUpButton class]]) {
+        representedObject = [[sender selectedItem] representedObject];
+    } else {
+        representedObject = [sender representedObject];
+    }
+
+    EffectType *type = representedObject;
     
     Effect *effect = [Effect effectWithEffectType:type];
-    [[self effectsArrayController] addObject:effect];
+    if (effect) [[self effectsArrayController] addObject:effect];
 }
 
 
@@ -65,7 +128,15 @@
 {
     Effect *selectedEffect = [[[self effectsArrayController] selectedObjects] lastObject];
 
-    if (selectedEffect) {
+    if ([selectedEffect audioUnitError]) {
+        NSString *messageText     = NSLocalizedString(@"Could not load Effect", nil);
+        NSString *informativeText = NSLocalizedString(@"Contact the effect's manufacturer for a sandbox-compliant version.", nil);
+        
+        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        
+        [alert runModal];
+        
+    } else if (selectedEffect) {
         [[GetAppDelegate() editControllerForEffect:selectedEffect] showWindow:self];
     }
 }

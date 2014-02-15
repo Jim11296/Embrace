@@ -20,7 +20,9 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 @implementation Effect {
     EffectType   *_type;
     NSDictionary *_classInfoToLoad;
+    NSDictionary *_defaultClassInfo;
     AudioUnit     _audioUnit;
+    OSStatus      _audioUnitError;
     EffectSettingsController *_settingsController;
 }
 
@@ -92,7 +94,48 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
-- (BOOL) loadClassInfoDictionary:(NSDictionary *)dictionary
+#pragma mark - Friend Methods
+
+- (void) _setAudioUnit:(AudioUnit)audioUnit error:(OSStatus)err
+{
+    _audioUnit = audioUnit;
+    _audioUnitError = err;
+
+    if (_audioUnit) {
+        NSString *defaultPresetPath = [[NSBundle mainBundle] pathForResource:[[self type] name] ofType:@"aupreset"];
+        if (defaultPresetPath) {
+            NSDictionary *defaultPreset = [NSDictionary dictionaryWithContentsOfFile:defaultPresetPath];
+            [self _loadClassInfoDictionary:defaultPreset];
+        }
+
+        _defaultClassInfo = [self _classInfoDictionary];
+    
+        if (_classInfoToLoad) {
+            [self _loadClassInfoDictionary:_classInfoToLoad];
+            _classInfoToLoad = nil;
+        }
+    }
+}
+
+
+#pragma mark - Private Methods
+
+- (NSDictionary *) _classInfoDictionary
+{
+    NSDictionary *classInfo = nil;
+    UInt32 classInfoSize = sizeof(classInfo);
+    
+    OSStatus err = AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_ClassInfo, kAudioUnitScope_Global, 0, &classInfo, &classInfoSize);
+    
+    if (err != noErr) {
+        classInfo = nil;
+    }
+    
+    return classInfo;
+}
+
+
+- (BOOL) _loadClassInfoDictionary:(NSDictionary *)dictionary
 {
     if (noErr != AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_ClassInfo, kAudioUnitScope_Global, 0, &dictionary, sizeof(dictionary))) {
         return NO;
@@ -108,41 +151,34 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
+#pragma mark - Public Methods
+
 - (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL
 {
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfURL:fileURL];
     if (!dictionary) return NO;
 
-    return [self loadClassInfoDictionary:dictionary];
+    return [self _loadClassInfoDictionary:dictionary];
 }
 
 
-- (AudioUnit) audioUnit
+- (BOOL) saveAudioPresetAtFileURL:(NSURL *)fileURL
 {
-    return _audioUnit;
+    return [[self _classInfoDictionary] writeToURL:fileURL atomically:YES];
 }
 
 
-- (void) _setAudioUnit:(AudioUnit)audioUnit
+- (void) restoreDefaultValues
 {
-    _audioUnit = audioUnit;
-    
-    if (_audioUnit && _classInfoToLoad) {
-        [self loadClassInfoDictionary:_classInfoToLoad];
-        _classInfoToLoad = nil;
-    }
+    [self _loadClassInfoDictionary:_defaultClassInfo];
 }
 
 
 - (NSDictionary *) stateDictionary
 {
-    NSDictionary *classInfo = nil;
-    UInt32 classInfoSize = sizeof(classInfo);
+    NSDictionary *classInfo = [self _classInfoDictionary];
+    if (!classInfo) classInfo = [NSDictionary dictionary];
     
-    if (noErr != AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_ClassInfo, kAudioUnitScope_Global, 0, &classInfo, &classInfoSize)) {
-        return NO;
-    }
-
     NSError  *error = nil;
     NSString *name  = [_type name];
     NSData   *info  = [NSPropertyListSerialization dataWithPropertyList:classInfo format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
@@ -155,6 +191,8 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     };
 }
 
+
+#pragma mark Accessors
 
 - (BOOL) hasCustomView
 {

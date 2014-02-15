@@ -10,9 +10,7 @@
 #import "Player.h"
 
 
-@implementation LevelMeter {
-    NSGradient *_meterGradient;
-}
+@implementation LevelMeter
 
 - (void) drawRect:(NSRect)dirtyRect
 {

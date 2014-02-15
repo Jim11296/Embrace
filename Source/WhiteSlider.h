@@ -10,6 +10,8 @@
 
 @interface WhiteSlider : NSSlider
 
+@property (nonatomic) double doubleValueBeforeDrag;
+
 @end
 
 @interface WhiteSliderCell : NSSliderCell

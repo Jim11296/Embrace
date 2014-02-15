@@ -159,14 +159,36 @@
 {
     SEL action = [menuItem action];
 
-    if (action == @selector(playOrSoftPause:)) {
-        if ([[Player sharedInstance] isPlaying]) {
-            [menuItem setTitle:NSLocalizedString(@"Pause", nil)];
-        } else {
-            [menuItem setTitle:NSLocalizedString(@"Play", nil)];
+    if (action == @selector(performPreferredPlaybackAction:)) {
+        PlaybackAction action = [_playlistController preferredPlaybackAction];
+        
+        NSString *title = NSLocalizedString(@"Play", nil);
+        BOOL enabled = [_playlistController isPreferredPlaybackActionEnabled];
+        NSInteger state = NSOffState;
+        
+        if (action == PlaybackActionShowIssue) {
+            title = NSLocalizedString(@"Show Issue", nil);
+
+        } else if (action == PlaybackActionSkip) {
+            title = NSLocalizedString(@"Skip", nil);
+
+        } else if (action == PlaybackActionTogglePause) {
+            title = NSLocalizedString(@"Pause after playing", nil);
+            
+            BOOL yn = [[[Player sharedInstance] currentTrack] pausesAfterPlaying];
+            state = yn ? NSOnState : NSOffState;
+            
+        } else if (action == PlaybackActionPause) {
+            title = NSLocalizedString(@"Pause", nil);
         }
 
+        [menuItem setState:state];
+        [menuItem setTitle:title];
+        [menuItem setEnabled:enabled];
+        [menuItem setKeyEquivalent:@" "];
+
     } else if (action == @selector(hardPause:)) {
+        [menuItem setKeyEquivalent:@" "];
         return [[Player sharedInstance] isPlaying];
 
     } else if (action == @selector(hardSkip:)) {
@@ -202,7 +224,11 @@
     }
     
     EditEffectController *controller = [[EditEffectController alloc] initWithEffect:effect index:[_editEffectControllers count]];
-    [_editEffectControllers addObject:controller];
+
+    if (controller) {
+        [_editEffectControllers addObject:controller];
+    }
+
     return controller;
 }
 
@@ -214,7 +240,7 @@
     for (EditEffectController *controller in _editEffectControllers) {
         if ([controller effect] == effect) {
             [controller close];
-            [toRemove addObject:controller];
+            if (controller) [toRemove addObject:controller];
         }
     }
     
@@ -235,7 +261,7 @@
     }
     
     ViewTrackController *controller = [[ViewTrackController alloc] initWithTrack:track];
-    [_viewTrackControllers addObject:controller];
+    if (controller) [_viewTrackControllers addObject:controller];
     return controller;
 }
 
@@ -247,7 +273,7 @@
     for (ViewTrackController *controller in _viewTrackControllers) {
         if ([controller track] == track) {
             [controller close];
-            [toRemove addObject:controller];
+            if (controller) [toRemove addObject:controller];
         }
     }
     
@@ -330,16 +356,12 @@
 }
 
 
-- (IBAction) exportHistory:(id)sender
-{
-    [_playlistController exportHistory];
-}
-
-
-- (IBAction) playOrSoftPause:(id)sender
-{
-    [_playlistController playOrSoftPause:self];
-}
+- (IBAction) exportHistory:(id)sender                  {  [_playlistController exportHistory]; }
+- (IBAction) performPreferredPlaybackAction:(id)sender {  [_playlistController performPreferredPlaybackAction:self]; }
+- (IBAction) increaseVolume:(id)sender                 {  [_playlistController increaseVolume:self];  }
+- (IBAction) decreaseVolume:(id)sender                 {  [_playlistController decreaseVolume:self];  }
+- (IBAction) increaseAutoGap:(id)sender                {  [_playlistController increaseAutoGap:self]; }
+- (IBAction) decreaseAutoGap:(id)sender                {  [_playlistController decreaseAutoGap:self]; }
 
 
 - (IBAction) hardSkip:(id)sender

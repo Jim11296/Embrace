@@ -44,6 +44,13 @@
     return self;
 }
 
+
+- (void) dealloc
+{
+    [_track removeObserver:self forKeyPath:@"overviewData"];
+}
+
+
 - (BOOL) wantsUpdateLayer { return YES; }
 - (void) updateLayer { }
 

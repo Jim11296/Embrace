@@ -8,7 +8,17 @@
 
 #import "WhiteSlider.h"
 
-@implementation WhiteSlider
+@implementation WhiteSlider {
+
+}
+
+- (void) mouseDown:(NSEvent *)theEvent
+{
+    _doubleValueBeforeDrag = [self doubleValue];
+    [super mouseDown:theEvent];
+}
+
+
 
 @end
 

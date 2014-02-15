@@ -11,7 +11,6 @@
 @protocol PlayerListener, PlayerTrackProvider;
 @class Player, Track, Effect, AudioDevice;
 
-
 typedef NS_ENUM(NSInteger, PlayerIssue) {
     PlayerIssueNone = 0,
     PlayerIssueDeviceMissing,
@@ -84,6 +83,7 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
 @protocol PlayerListener <NSObject>
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing;
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue;
+- (void) player:(Player *)player didUpdateVolume:(double)volume;
 - (void) playerDidTick:(Player *)player;
 @end
 

@@ -23,12 +23,16 @@
 #import "ShadowView.h"
 #import "ViewTrackController.h"
 #import "TrackTableView.h"
+#import "WhiteSlider.h"
 
 #import <AVFoundation/AVFoundation.h>
 
 static NSString * const sTracksKey = @"tracks";
 static NSString * const sMinimumSilenceKey = @"minimum-silence";
 static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
+
+static NSTimeInterval sAutoGapMinimum = 0;
+static NSTimeInterval sAutoGapMaximum = 15.0;
 
 
 @interface PlaylistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider>
@@ -37,6 +41,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 @implementation PlaylistController {
     NSUInteger _rowOfDraggedTrack;
+    BOOL       _didPushPoofCursor;
 }
 
 
@@ -119,6 +124,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     [self _setupPlayer];
 
     [self _updateDragSongsView];
+
+    [[self window] setExcludedFromWindowsMenu:YES];
 }
 
 
@@ -134,10 +141,10 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 #pragma mark - Private Methods
 
-- (Track *) _nextUnplayedTrack
+- (Track *) _nextQueuedTrack
 {
     for (Track *track in _tracks) {
-        if ([track trackStatus] != TrackStatusPlayed) {
+        if ([track trackStatus] == TrackStatusQueued) {
             return track;
         }
     }
@@ -148,6 +155,60 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) _updatePlayButton
 {
+    PlaybackAction action  = [self preferredPlaybackAction];
+    BOOL           enabled = [self isPreferredPlaybackActionEnabled];
+    
+    Player   *player = [Player sharedInstance];
+    
+    NSImage  *image   = nil;
+    NSString *tooltip = nil;
+    BOOL      alert   = NO;
+    
+    if (action == PlaybackActionShowIssue) {
+        image = [NSImage imageNamed:@"issue_template"];
+        alert = YES;
+
+        PlayerIssue issue = [player issue];
+
+        if (issue == PlayerIssueDeviceMissing) {
+            tooltip = NSLocalizedString(@"The selected output device is not connected", nil);
+        } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
+            tooltip = NSLocalizedString(@"Another application is using the selected output device", nil);
+        } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
+            tooltip = NSLocalizedString(@"The selected output device could not be configured", nil);
+        }
+
+    } else if (action == PlaybackActionPause) {
+        image = [NSImage imageNamed:@"pause_template"];
+
+    } else if (action == PlaybackActionTogglePause) {
+        image = [NSImage imageNamed:@"pause_template"];
+        enabled = NO;
+
+    } else if (action == PlaybackActionSkip) {
+        image = [NSImage imageNamed:@"skip_template"];
+
+    } else {
+        image = [NSImage imageNamed:@"play_template"];
+
+        Track *next = [self _nextQueuedTrack];
+
+        if (!next) {
+            tooltip = NSLocalizedString(@"Add a track to enable playback", nil);
+        } else if ([player volume] == 0) {
+            tooltip = NSLocalizedString(@"Turn up the volume to enable playback", nil);
+        }
+    }
+
+    Button *playButton = [self playButton];
+
+    [playButton setAlert:alert];
+    [playButton setImage:image];
+    [playButton setToolTip:tooltip];
+    [playButton setEnabled:enabled];
+
+
+#if 0
     Player        *player      = [Player sharedInstance];
     Track         *track       = [player currentTrack];
     NSTimeInterval timeElapsed = [player timeElapsed];
@@ -174,14 +235,31 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         }
     
     } else if (playing) {
-        image = [NSImage imageNamed:@"pause_template"];
-        enabled = [track isSilentAtOffset:timeElapsed] || ([player volume] == 0);
+        Track *next = [self _nextQueuedTrack];
+        double volume = [player volume];
+
+        if (volume == 0 && next) {
+            image = [NSImage imageNamed:@"skip_template"];
+            enabled = YES;
+        
+        } else {
+            image = [NSImage imageNamed:@"pause_template"];
+            enabled = [track isSilentAtOffset:timeElapsed] || (volume == 0);
+        }
 
     } else {
         image = [NSImage imageNamed:@"play_template"];
 
-        Track *next = [self _nextUnplayedTrack];
-        enabled = (next != nil);
+        Track *next = [self _nextQueuedTrack];
+
+        if (!next) {
+            tooltip = NSLocalizedString(@"Add a track to enable playback", nil);
+            enabled = NO;
+
+        } else if ([player volume] == 0) {
+            tooltip = NSLocalizedString(@"Turn up the volume to enable playback", nil);
+            enabled = NO;
+        }
     }
 
     Button *playButton = [self playButton];
@@ -190,6 +268,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     [playButton setImage:image];
     [playButton setToolTip:tooltip];
     [playButton setEnabled:enabled];
+#endif
 }
 
 
@@ -226,6 +305,10 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         for (NSDictionary *state in states) {
             Track *track = [Track trackWithStateDictionary:state];
             if (track) [tracks addObject:track];
+            
+            if ([track trackStatus] == TrackStatusPlaying) {
+                [track setTrackStatus:TrackStatusPlayed];
+            }
         }
     }
     
@@ -240,7 +323,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     NSMutableArray *tracksStateArray = [NSMutableArray array];
     for (Track *track in [self tracks]) {
-        [tracksStateArray addObject:[track stateDictionary]];
+        NSDictionary *dictionary = [track stateDictionary];
+        if (dictionary) [tracksStateArray addObject:dictionary];
     }
 
     [defaults setObject:tracksStateArray forKey:sTracksKey];
@@ -418,7 +502,12 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 {
     NSArrayController *tracksController = [self tracksController];
 
-    NSArray *tracks = [tracksController arrangedObjects];
+    NSMutableArray *tracks = [[tracksController arrangedObjects] mutableCopy];
+    Track *trackToKeep = [[Player sharedInstance] currentTrack];
+
+    if (trackToKeep) {
+        [tracks removeObject:trackToKeep];
+    }
 
     for (Track *track in tracks) {
         [track cancelLoad];
@@ -434,7 +523,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 - (void) openFileAtURL:(NSURL *)URL
 {
     Track *track = [Track trackWithFileURL:URL];
-    [[self tracksController] addObject:track];
+    if (track) [[self tracksController] addObject:track];
 }
 
 
@@ -485,11 +574,115 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (PlaybackAction) preferredPlaybackAction
+{
+    Player        *player      = [Player sharedInstance];
+
+    PlayerIssue issue = [player issue];
+
+    if (issue != PlayerIssueNone) {
+        return PlaybackActionShowIssue;
+    
+    } else if ([player isPlaying]) {
+        Track *next = [self _nextQueuedTrack];
+        double volume = [player volume];
+
+        if (volume == 0) {
+            return next ? PlaybackActionSkip : PlaybackActionPause;
+        } else {
+            return PlaybackActionTogglePause;
+        }
+
+    } else {
+        return PlaybackActionPlay;
+    }
+}
+
+
+- (BOOL) isPreferredPlaybackActionEnabled
+{
+    PlaybackAction action = [self preferredPlaybackAction];
+
+    if (action == PlaybackActionPlay) {
+        Track *next = [self _nextQueuedTrack];
+
+        if (!next) {
+            return NO;
+        } else if ([[Player sharedInstance] volume] == 0) {
+            return NO;
+        }
+
+       return YES;
+
+    } else if (action == PlaybackActionSkip) {
+        return YES;
+
+    } else if (action == PlaybackActionTogglePause) {
+        return YES;
+
+    } else if (action == PlaybackActionPause) {
+        return [[Player sharedInstance] volume] == 0;
+
+    } else {
+        return NO;
+    }
+}
+
+
 #pragma mark - IBActions
 
-- (IBAction) playOrSoftPause:(id)sender
+- (IBAction) performPreferredPlaybackAction:(id)sender
 {
-    [[Player sharedInstance] playOrSoftPause];
+    PlaybackAction action = [self preferredPlaybackAction];
+
+    if (action == PlaybackActionShowIssue) {
+        NSLog(@"Show issue");
+
+    } else if (action == PlaybackActionSkip) {
+        double volume = [[self volumeSlider] doubleValueBeforeDrag];
+        
+        if (volume < 0.01) {
+            volume = 0.96;
+        }
+    
+        [[Player sharedInstance] setVolume:volume];
+        [[Player sharedInstance] hardSkip];
+
+    } else {
+        [[Player sharedInstance] playOrSoftPause];
+    }
+}
+
+
+- (IBAction) increaseVolume:(id)sender
+{
+    double volume = [[Player sharedInstance] volume] + 0.04;
+    if (volume > 1.0) volume = 1.0;
+    [[Player sharedInstance] setVolume:volume];
+}
+
+
+- (IBAction) decreaseVolume:(id)sender
+{
+    double volume = [[Player sharedInstance] volume] - 0.04;
+    if (volume < 0) volume = 0;
+    [[Player sharedInstance] setVolume:volume];
+}
+
+
+- (IBAction) increaseAutoGap:(id)sender
+{
+    NSTimeInterval value = [self minimumSilenceBetweenTracks] + 1;
+    if (value > sAutoGapMaximum) value = sAutoGapMaximum;
+    [self setMinimumSilenceBetweenTracks:value];
+}
+
+
+- (IBAction) decreaseAutoGap:(id)sender
+{
+    NSTimeInterval value = [self minimumSilenceBetweenTracks] - 1;
+    if (value < sAutoGapMinimum) value = sAutoGapMinimum;
+    [self setMinimumSilenceBetweenTracks:value];
 }
 
 
@@ -523,7 +716,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     for (Track *track in selectedTracks){
         if ([track trackStatus] == TrackStatusQueued) {
             [track cancelLoad];
-            [tracksToRemove addObject:track];
+            if (track) [tracksToRemove addObject:track];
         }
     }
     
@@ -575,7 +768,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         if (selectedTrack && (index != NSNotFound)) {
             [[self tracksController] insertObject:track atArrangedObjectIndex:(index + 1)];
         } else {
-            [[self tracksController] addObject:track];
+            if (track) [[self tracksController] addObject:track];
         }
     }
 }
@@ -632,7 +825,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     } else if (action == @selector(addSilence:)) {
         return [self _canInsertAfterSelectedRow];
-
     }
     
     
@@ -675,6 +867,12 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (void) player:(Player *)player didUpdateVolume:(double)volume
+{
+    [self _updatePlayButton];
+}
+
+
 - (void) playerDidTick:(Player *)player
 {
     NSTimeInterval timeElapsed   = [player timeElapsed];
@@ -706,7 +904,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     [self _saveState];
 
-    Track *trackToPlay = [self _nextUnplayedTrack];
+    Track *trackToPlay = [self _nextQueuedTrack];
     NSTimeInterval padding = 0;
     
     if (currentTrack && trackToPlay) {
@@ -773,22 +971,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     }
 
     return 40;
-}
-
-
-- (void) trackTableView:(TrackTableView *)tableView draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
-{
-    NSRect frame = [[self window] frame];
-
-    if (NSPointInRect(screenPoint, frame)) {
-        [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
-        [[NSCursor arrowCursor] set];
-
-    } else {
-        [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
-        
-        [[NSCursor disappearingItemCursor] set];
-    }
 }
 
 
