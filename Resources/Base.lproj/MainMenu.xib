@@ -163,13 +163,35 @@ CA
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Controls" id="ycZ-Ou-CIX">
                         <items>
-                            <menuItem title="Play" id="GeQ-h3-krU">
+                            <menuItem title="Play" keyEquivalent=" " id="GeQ-h3-krU">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="playOrSoftPause:" target="494" id="dyg-4E-UV7"/>
+                                    <action selector="performPreferredPlaybackAction:" target="494" id="9fQ-ny-ZxI"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="GYB-fb-3iY"/>
+                            <menuItem title="Increase Volume" keyEquivalent="" id="vYI-ju-tK7">
+                                <connections>
+                                    <action selector="increaseVolume:" target="494" id="7gw-B0-lHM"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Decrease Volume" keyEquivalent="" id="TBE-8O-HDr">
+                                <connections>
+                                    <action selector="decreaseVolume:" target="494" id="LJ7-hU-ae4"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="pF6-2l-LGh"/>
+                            <menuItem title="Increase Auto Gap" keyEquivalent="" id="WCe-7u-SOG">
+                                <connections>
+                                    <action selector="increaseAutoGap:" target="494" id="DWi-Vt-fmp"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Decrease Auto Gap" keyEquivalent="" id="PaR-kA-Bfz">
+                                <connections>
+                                    <action selector="decreaseAutoGap:" target="494" id="M6W-bC-2n7"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="XeM-RX-cVY"/>
                             <menuItem title="Hard Skip" id="DUu-P3-D2K">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

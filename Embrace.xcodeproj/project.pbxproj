@@ -108,6 +108,15 @@
 		55F3B7B61877908900E8FEC8 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B51877908900E8FEC8 /* Track.m */; };
 		55F3B7BA1877955C00E8FEC8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F3B7B91877955C00E8FEC8 /* AVFoundation.framework */; };
 		55F3B7D218779B3000E8FEC8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7D118779B3000E8FEC8 /* Player.m */; };
+		55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD318AF1B41006B6FBB /* AUMultibandCompressor.aupreset */; };
+		55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD418AF1B41006B6FBB /* AUDynamicsProcessor.aupreset */; };
+		55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD518AF1B41006B6FBB /* AULowpass.aupreset */; };
+		55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD618AF1B41006B6FBB /* AUHipass.aupreset */; };
+		55F7ABE018AF3D52006B6FBB /* gear_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABDD18AF3D52006B6FBB /* gear_template.png */; };
+		55F7ABE118AF3D52006B6FBB /* drag_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABDE18AF3D52006B6FBB /* drag_icon.png */; };
+		55F7ABE218AF3D52006B6FBB /* drag_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABDF18AF3D52006B6FBB /* drag_icon@2x.png */; };
+		55F7ABE518AF4AEC006B6FBB /* skip_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABE318AF4AEC006B6FBB /* skip_template.png */; };
+		55F7ABE618AF4AEC006B6FBB /* skip_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABE418AF4AEC006B6FBB /* skip_template@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -283,6 +292,15 @@
 		55F3B7D018779B3000E8FEC8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = Source/Player.h; sourceTree = "<group>"; };
 		55F3B7D118779B3000E8FEC8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Player.m; path = Source/Player.m; sourceTree = "<group>"; };
 		55F3B7D61877A20B00E8FEC8 /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
+		55F7ABD318AF1B41006B6FBB /* AUMultibandCompressor.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUMultibandCompressor.aupreset; path = Resources/AUMultibandCompressor.aupreset; sourceTree = SOURCE_ROOT; };
+		55F7ABD418AF1B41006B6FBB /* AUDynamicsProcessor.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUDynamicsProcessor.aupreset; path = Resources/AUDynamicsProcessor.aupreset; sourceTree = SOURCE_ROOT; };
+		55F7ABD518AF1B41006B6FBB /* AULowpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AULowpass.aupreset; path = Resources/AULowpass.aupreset; sourceTree = SOURCE_ROOT; };
+		55F7ABD618AF1B41006B6FBB /* AUHipass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUHipass.aupreset; path = Resources/AUHipass.aupreset; sourceTree = SOURCE_ROOT; };
+		55F7ABDD18AF3D52006B6FBB /* gear_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gear_template.png; path = Resources/gear_template.png; sourceTree = SOURCE_ROOT; };
+		55F7ABDE18AF3D52006B6FBB /* drag_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = drag_icon.png; path = Resources/drag_icon.png; sourceTree = SOURCE_ROOT; };
+		55F7ABDF18AF3D52006B6FBB /* drag_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drag_icon@2x.png"; path = "Resources/drag_icon@2x.png"; sourceTree = SOURCE_ROOT; };
+		55F7ABE318AF4AEC006B6FBB /* skip_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = skip_template.png; path = Resources/skip_template.png; sourceTree = SOURCE_ROOT; };
+		55F7ABE418AF4AEC006B6FBB /* skip_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "skip_template@2x.png"; path = "Resources/skip_template@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,28 +474,9 @@
 		558DC089187785BC00C85770 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				55A708AB18A70E96007BD7C0 /* drag_songs@2x.png */,
-				55A708AC18A70E96007BD7C0 /* drag_songs.png */,
 				55A0B16E1890A80400866F04 /* Test Sounds */,
-				552C9DBD1882A5D90041C160 /* padding_template.png */,
-				552C9DBE1882A5D90041C160 /* padding_template@2x.png */,
-				55717BC7187EA45500213213 /* close_pressed.png */,
-				55717BC8187EA45500213213 /* close_pressed@2x.png */,
-				55717BC9187EA45500213213 /* close_normal.png */,
-				55717BCA187EA45500213213 /* close_normal@2x.png */,
-				5515B464189B4DC300FBC886 /* issue_template.png */,
-				5515B465189B4DC300FBC886 /* issue_template@2x.png */,
-				55224BE718A79BAA00407B46 /* issue_small.png */,
-				55224BE818A79BAA00407B46 /* issue_small@2x.png */,
-				5515B462189B4DC300FBC886 /* full_volume_template.png */,
-				55717BFA187EB53500213213 /* full_volume_template@2x.png */,
-				5515B463189B4DC300FBC886 /* no_volume_template.png */,
-				55717BFB187EB53500213213 /* no_volume_template@2x.png */,
-				55717BEF187EA63700213213 /* gear_template@2x.png */,
-				5515B466189B4DC300FBC886 /* pause_template.png */,
-				55959EC118854F5C007D653A /* pause_template@2x.png */,
-				5515B467189B4DC300FBC886 /* play_template.png */,
-				55717BF0187EA63700213213 /* play_template@2x.png */,
+				55F7ABDB18AF1BE8006B6FBB /* Safe Presets */,
+				55F7ABDC18AF1BF5006B6FBB /* Images */,
 				558DC0CA1877868400C85770 /* Info.plist */,
 				558DC0C01877861E00C85770 /* InfoPlist.strings */,
 				558DC0C21877861E00C85770 /* Images.xcassets */,
@@ -601,6 +600,50 @@
 			name = Player;
 			sourceTree = "<group>";
 		};
+		55F7ABDB18AF1BE8006B6FBB /* Safe Presets */ = {
+			isa = PBXGroup;
+			children = (
+				55F7ABD318AF1B41006B6FBB /* AUMultibandCompressor.aupreset */,
+				55F7ABD418AF1B41006B6FBB /* AUDynamicsProcessor.aupreset */,
+				55F7ABD518AF1B41006B6FBB /* AULowpass.aupreset */,
+				55F7ABD618AF1B41006B6FBB /* AUHipass.aupreset */,
+			);
+			name = "Safe Presets";
+			sourceTree = "<group>";
+		};
+		55F7ABDC18AF1BF5006B6FBB /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				55F7ABE318AF4AEC006B6FBB /* skip_template.png */,
+				55F7ABE418AF4AEC006B6FBB /* skip_template@2x.png */,
+				55F7ABDE18AF3D52006B6FBB /* drag_icon.png */,
+				55F7ABDF18AF3D52006B6FBB /* drag_icon@2x.png */,
+				55717BC7187EA45500213213 /* close_pressed.png */,
+				55717BC8187EA45500213213 /* close_pressed@2x.png */,
+				55717BC9187EA45500213213 /* close_normal.png */,
+				55717BCA187EA45500213213 /* close_normal@2x.png */,
+				55A708AC18A70E96007BD7C0 /* drag_songs.png */,
+				55A708AB18A70E96007BD7C0 /* drag_songs@2x.png */,
+				55F7ABDD18AF3D52006B6FBB /* gear_template.png */,
+				55717BEF187EA63700213213 /* gear_template@2x.png */,
+				5515B464189B4DC300FBC886 /* issue_template.png */,
+				5515B465189B4DC300FBC886 /* issue_template@2x.png */,
+				55224BE718A79BAA00407B46 /* issue_small.png */,
+				55224BE818A79BAA00407B46 /* issue_small@2x.png */,
+				5515B462189B4DC300FBC886 /* full_volume_template.png */,
+				55717BFA187EB53500213213 /* full_volume_template@2x.png */,
+				5515B463189B4DC300FBC886 /* no_volume_template.png */,
+				55717BFB187EB53500213213 /* no_volume_template@2x.png */,
+				552C9DBD1882A5D90041C160 /* padding_template.png */,
+				552C9DBE1882A5D90041C160 /* padding_template@2x.png */,
+				5515B466189B4DC300FBC886 /* pause_template.png */,
+				55959EC118854F5C007D653A /* pause_template@2x.png */,
+				5515B467189B4DC300FBC886 /* play_template.png */,
+				55717BF0187EA63700213213 /* play_template@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -668,10 +711,15 @@
 				55A708AE18A70E96007BD7C0 /* drag_songs.png in Resources */,
 				55F3B7AE187786E300E8FEC8 /* MainMenu.xib in Resources */,
 				55717BD5187EA45500213213 /* close_normal.png in Resources */,
+				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
 				550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */,
+				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
 				5515B46B189B4DC300FBC886 /* issue_template@2x.png in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
+				55F7ABE018AF3D52006B6FBB /* gear_template.png in Resources */,
+				55F7ABE518AF4AEC006B6FBB /* skip_template.png in Resources */,
+				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
 				55F3B7B3187788B500E8FEC8 /* PlaylistWindow.xib in Resources */,
 				552C9DBF1882A5D90041C160 /* padding_template.png in Resources */,
 				558DC0C71877861E00C85770 /* Images.xcassets in Resources */,
@@ -681,6 +729,8 @@
 				55224BEA18A79BAA00407B46 /* issue_small@2x.png in Resources */,
 				5515B46A189B4DC300FBC886 /* issue_template.png in Resources */,
 				55717BD6187EA45500213213 /* close_normal@2x.png in Resources */,
+				55F7ABE218AF3D52006B6FBB /* drag_icon@2x.png in Resources */,
+				55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */,
 				553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */,
 				556ACE24187ABB8100AED4BC /* EditEffectWindow.xib in Resources */,
 				558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */,
@@ -692,12 +742,14 @@
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				552C9DC01882A5D90041C160 /* padding_template@2x.png in Resources */,
 				55A708AD18A70E96007BD7C0 /* drag_songs@2x.png in Resources */,
+				55F7ABE618AF4AEC006B6FBB /* skip_template@2x.png in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
 				550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */,
 				5515B46C189B4DC300FBC886 /* pause_template.png in Resources */,
 				55717BFC187EB53500213213 /* full_volume_template@2x.png in Resources */,
 				55717BF1187EA63700213213 /* gear_template@2x.png in Resources */,
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
+				55F7ABE118AF3D52006B6FBB /* drag_icon.png in Resources */,
 				55717BF2187EA63700213213 /* play_template@2x.png in Resources */,
 				55717BD4187EA45500213213 /* close_pressed@2x.png in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,

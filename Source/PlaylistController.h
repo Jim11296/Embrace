@@ -10,11 +10,28 @@
 
 @class WaveformView;
 @class TracksManager;
-@class Player, PlayBar, BorderedView, CloseButton, Button, LevelMeter;
+@class Player, PlayBar, BorderedView, CloseButton, Button, LevelMeter, WhiteSlider;
+
+
+typedef NS_ENUM(NSInteger, PlaybackAction) {
+    PlaybackActionPlay = 0,
+    PlaybackActionPause,
+    PlaybackActionTogglePause,
+    PlaybackActionShowIssue,
+    PlaybackActionSkip
+};
+
 
 @interface PlaylistController : NSWindowController
 
-- (IBAction) playOrSoftPause:(id)sender;
+- (IBAction) performPreferredPlaybackAction:(id)sender;
+- (PlaybackAction) preferredPlaybackAction;
+- (BOOL) isPreferredPlaybackActionEnabled;
+
+- (IBAction) increaseVolume:(id)sender;
+- (IBAction) decreaseVolume:(id)sender;
+- (IBAction) increaseAutoGap:(id)sender;
+- (IBAction) decreaseAutoGap:(id)sender;
 
 - (IBAction) showEffects:(id)sender;
 - (IBAction) showCurrentTrack:(id)sender;
@@ -53,10 +70,12 @@
 @property (nonatomic, weak)   IBOutlet Button       *playButton;
 @property (nonatomic, weak)   IBOutlet Button       *gearButton;
 @property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
+@property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
 
 @property (nonatomic, weak)   IBOutlet NSView *mainView;
 @property (nonatomic, weak)   IBOutlet NSTableView  *tableView;
 @property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
+@property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
 
 
 @end

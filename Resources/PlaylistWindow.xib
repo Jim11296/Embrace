@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PlaylistController">
             <connections>
+                <outlet property="autoGapSlider" destination="Cip-py-M5e" id="xyq-QJ-X6M"/>
                 <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
@@ -21,6 +22,7 @@
                 <outlet property="tableMenu" destination="trO-cQ-b0j" id="5ek-RH-DVO"/>
                 <outlet property="tableView" destination="QHa-mz-rIH" id="f4r-21-xho"/>
                 <outlet property="tracksController" destination="EU2-Wu-WIW" id="nnb-D7-eOt"/>
+                <outlet property="volumeSlider" destination="1QF-Cc-1Ru" id="aZX-Qs-S9B"/>
                 <outlet property="window" destination="gir-FZ-88a" id="eb8-8W-6sk"/>
             </connections>
         </customObject>
@@ -78,14 +80,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="40" horizontalPageScroll="10" verticalLineScroll="40" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
                                 <rect key="frame" x="0.0" y="32" width="320" height="323"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowHeight="40" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -330,10 +332,10 @@
                     </connections>
                 </textField>
                 <customView id="Twn-WM-C4J" customClass="Button">
-                    <rect key="frame" x="20" y="26" width="16" height="16"/>
+                    <rect key="frame" x="20" y="26" width="21" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
-                        <action selector="playOrSoftPause:" target="-2" id="4JI-Pb-lAn"/>
+                        <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
                     </connections>
                 </customView>
                 <customView id="4bi-5W-Bp7" customClass="Button">

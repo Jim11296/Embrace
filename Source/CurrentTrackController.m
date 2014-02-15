@@ -140,6 +140,8 @@
     _closeButtonTrackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:options owner:self userInfo:nil];
 
     [[self mainView] addTrackingArea:_closeButtonTrackingArea];
+
+    [[self window] setExcludedFromWindowsMenu:YES];
 }
 
 
@@ -171,6 +173,7 @@
 
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing { }
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue { }
+- (void) player:(Player *)player didUpdateVolume:(double)volume { }
 
 
 - (void) playerDidTick:(Player *)player

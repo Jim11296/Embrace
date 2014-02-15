@@ -17,6 +17,73 @@
 @synthesize AudioComponent = _component;
 @synthesize AudioComponentDescription = _componentDescription;
 
++ (EffectFriendlyCategory) friendlyCategoryForName:(NSString *)name
+{
+    EffectFriendlyCategory result = EffectFriendlyCategorySpecial;
+
+    NSDictionary *map = @{
+        @"AUGraphicEQ":           @( EffectFriendlyCategoryEqualizers ),
+        @"AUNBandEQ":             @( EffectFriendlyCategoryEqualizers ),
+        @"AUParametricEQ":        @( EffectFriendlyCategoryEqualizers ),
+
+        @"AULowpass":             @( EffectFriendlyCategoryFilters ),
+        @"AULowShelfFilter":      @( EffectFriendlyCategoryFilters ),
+        @"AUHipass":              @( EffectFriendlyCategoryFilters ),
+        @"AUHighShelfFilter":     @( EffectFriendlyCategoryFilters ),
+
+        @"AUDynamicsProcessor":   @( EffectFriendlyCategoryDynamics ),
+        @"AUMultibandCompressor": @( EffectFriendlyCategoryDynamics ),
+        @"AUPeakLimiter":         @( EffectFriendlyCategoryDynamics )
+    };
+
+    NSNumber *categoryNumber = [map objectForKey:name];
+    if (categoryNumber) {
+        result = [categoryNumber integerValue];
+    }
+
+    return result;
+}
+
+
++ (NSString *) friendlyNameForName:(NSString *)name
+{
+    NSDictionary *map = @{
+        @"AUDynamicsProcessor":   NSLocalizedString(@"Dynamics Processor", nil),
+        @"AUGraphicEQ":           NSLocalizedString(@"Graphic Equalizer", nil),
+        @"AUHipass":              NSLocalizedString(@"Highpass Filter", nil),
+        @"AUHighShelfFilter":     NSLocalizedString(@"Highshelf Filter", nil),
+        @"AUPeakLimiter":         NSLocalizedString(@"Peak Limiter", nil),
+        @"AULowpass":             NSLocalizedString(@"Lowpass Filter", nil),
+        @"AULowShelfFilter":      NSLocalizedString(@"Lowshelf Filter", nil),
+        @"AUMultibandCompressor": NSLocalizedString(@"Multiband Compressor", nil),
+        @"AUNBandEQ":             NSLocalizedString(@"N-Band Equalizer", nil),
+        @"AUParametricEQ":        NSLocalizedString(@"Parametric Equalizer", nil),
+    };
+    
+    NSString *friendlyName = [map objectForKey:name];
+    
+    if (!friendlyName) {
+        friendlyName = name;
+    }
+    
+    return friendlyName;
+}
+
+
+static BOOL sIsBlacklistedComponent(AudioComponent component)
+{
+    CFStringRef cfName = nil;
+    AudioComponentCopyName(component, &cfName);
+
+    NSString *name = CFBridgingRelease(cfName);
+    if ([name isEqualToString:@"Apple: AUNetSend"] || [name isEqualToString:@"Apple: AUNetReceive"]) {
+        return YES;
+    }
+
+    return NO;
+}
+
+
 
 + (NSArray *) allEffectTypes
 {
@@ -40,10 +107,14 @@
         do {
             @autoreleasepool {
                 current = AudioComponentFindNext(current, &description);
+
+                if (sIsBlacklistedComponent(current)) {
+                    continue;
+                }
                 
                 if (current) {
                     EffectType *type = [[EffectType alloc] _initWithComponent:current];
-                    [types addObject:type];
+                    if (type) [types addObject:type];
                 }
             }
         } while (current != 0);
@@ -92,5 +163,16 @@
     return self;
 }
 
+
+- (NSString *) friendlyName
+{
+    return [EffectType friendlyNameForName:[self name]];
+}
+
+
+- (EffectFriendlyCategory) friendlyCategory
+{
+    return [EffectType friendlyCategoryForName:[self name]];
+}
 
 @end

@@ -19,9 +19,14 @@
 - (IBAction) saveHistory:(id)sender;
 - (IBAction) exportHistory:(id)sender;
 
-- (IBAction) playOrSoftPause:(id)sender;
+- (IBAction) performPreferredPlaybackAction:(id)sender;
 - (IBAction) hardSkip:(id)sender;
 - (IBAction) hardPause:(id)sender;
+
+- (IBAction) increaseVolume:(id)sender;
+- (IBAction) decreaseVolume:(id)sender;
+- (IBAction) increaseAutoGap:(id)sender;
+- (IBAction) decreaseAutoGap:(id)sender;
 
 - (IBAction) showMainWindow:(id)sender;
 - (IBAction) showEffectsWindow:(id)sender;

@@ -24,7 +24,7 @@
             NSCommandKeyMask;
 
         if (([event modifierFlags] & commonModifiers) == 0 && [keysPressed isEqualToString:@" "]) {
-            [(AppDelegate *)[self delegate] playOrSoftPause:self];
+            [(AppDelegate *)[self delegate] performPreferredPlaybackAction:self];
             return;
         }
     }

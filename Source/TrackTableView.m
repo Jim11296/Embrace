@@ -10,14 +10,35 @@
 
 @implementation TrackTableView
 
+- (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
+{
+    if (context == NSDraggingContextOutsideApplication) {
+        return NSDragOperationDelete;
+    }
+    
+    return NSDragOperationMove;
+}
+
+
+- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
+{
+    return [NSImage imageNamed:@"drag_icon"];
+}
+
 
 - (void) draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
 {
-    id delegate = [self delegate];
-    
-    if ([delegate respondsToSelector:@selector(trackTableView:draggingSession:movedToPoint:)]) {
-        [delegate trackTableView:self draggingSession:session movedToPoint:screenPoint];
+    NSRect frame = [[self window] frame];
+
+    if (NSPointInRect(screenPoint, frame)) {
+        [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
+        [[NSCursor arrowCursor] set];
+
+    } else {
+        [[NSCursor disappearingItemCursor] set];
+        [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
     }
+
 }
 
 

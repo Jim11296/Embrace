@@ -174,13 +174,15 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 
         [device setConnected:YES];
         
-        [devices addObject:device];
-        [map setObject:device forKey:deviceUID];
+        if (device) {
+            [devices addObject:device];
+            [map setObject:device forKey:deviceUID];
+        }
     }
     
     NSString *chosenDeviceUID = [sChosenAudioDevice deviceUID];
     if (chosenDeviceUID && ![map objectForKey:chosenDeviceUID]) {
-        [devices addObject:sChosenAudioDevice];
+        if (sChosenAudioDevice) [devices addObject:sChosenAudioDevice];
         [map setObject:sChosenAudioDevice forKey:chosenDeviceUID];
         [sChosenAudioDevice setConnected:NO];
     }
