@@ -34,8 +34,6 @@ typedef NS_ENUM(NSInteger, TrackType) {
 
 - (NSDictionary *) stateDictionary;
 
-- (BOOL) isSilentAtOffset:(NSTimeInterval)offset;
-
 - (void) startPriorityAnalysis;
 
 @property (nonatomic, readonly) TrackType trackType;

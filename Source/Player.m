@@ -127,6 +127,8 @@ typedef struct {
 - (id) init
 {
     if ((self = [super init])) {
+        _volume = -1;
+
         [self _buildTailGraph];
         [self _loadState];
         [self _reconnectGraph];
@@ -289,7 +291,6 @@ typedef struct {
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower + 1,  kAudioUnitScope_Output, 0, &_rightAveragePower);
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel,     kAudioUnitScope_Output, 0, &_leftPeakPower);
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel + 1, kAudioUnitScope_Output, 0, &_rightPeakPower);
-    
     
 #if CHECK_RENDER_ERRORS_ON_TICK
     if (_converterAudioUnit) {
@@ -704,9 +705,11 @@ static OSStatus sInputRenderCallback(
 {
     PlayerIssue issue = PlayerIssueNone;
     
+    BOOL isHogged = [[_outputDevice controller] isHoggedByAnotherProcess];
+    
     if (![_outputDevice isConnected]) {
         issue = PlayerIssueDeviceMissing;
-    } else if (_outputHogMode && !_tookHogMode) {
+    } else if (isHogged || (_outputHogMode && !_tookHogMode)) {
         issue = PlayerIssueDeviceHoggedByOtherProcess;
     } else if (_hadErrorDuringReconfigure) {
         issue = PlayerIssueErrorConfiguringOutputDevice;
@@ -744,9 +747,10 @@ static OSStatus sInputRenderCallback(
         }
     }
     
-    if ([_outputDevice isConnected]) {
-        WrappedAudioDevice *controller = [_outputDevice controller];
 
+    WrappedAudioDevice *controller = [_outputDevice controller];
+    
+    if ([_outputDevice isConnected] && ![controller isHoggedByAnotherProcess]) {
         AudioDeviceID deviceID = [controller objectID];
         
         [controller setNominalSampleRate:_outputSampleRate];
@@ -973,7 +977,6 @@ static OSStatus sInputRenderCallback(
 - (void) play
 {
     if (_currentTrack) return;
-    if (_volume == 0)  return;
     [self playNextTrack];
     
     if (_currentTrack) {
@@ -1076,11 +1079,21 @@ static OSStatus sInputRenderCallback(
         _renderUserInfo.stopRequested = 0;
         _renderUserInfo.stopped = 0;
 
-        AUGraphStop(_graph);
+//      This is the only way to clear the meter
+//      AUGraphStop(_graph);
     }
+
+    [self _iterateGraphAudioUnits:^(AudioUnit unit) {
+        CheckError(
+            AudioUnitReset(unit, kAudioUnitScope_Global, 0),
+            "AudioUnitReset"
+        );
+    }];
 
     [_currentScheduler stopScheduling:_generatorAudioUnit];
     _currentScheduler = nil;
+    
+    _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
 
     [self _teardownGraphHead];
     

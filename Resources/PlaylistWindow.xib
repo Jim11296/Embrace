@@ -332,7 +332,7 @@
                     </connections>
                 </textField>
                 <customView id="Twn-WM-C4J" customClass="Button">
-                    <rect key="frame" x="20" y="26" width="21" height="16"/>
+                    <rect key="frame" x="20" y="26" width="16" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>

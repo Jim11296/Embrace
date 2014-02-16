@@ -7,18 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Player.h"
+
 
 @class WaveformView;
 @class TracksManager;
-@class Player, PlayBar, BorderedView, CloseButton, Button, LevelMeter, WhiteSlider;
+@class PlayBar, BorderedView, CloseButton, Button, LevelMeter, WhiteSlider;
 
 
 typedef NS_ENUM(NSInteger, PlaybackAction) {
     PlaybackActionPlay = 0,
     PlaybackActionPause,
     PlaybackActionTogglePause,
-    PlaybackActionShowIssue,
-    PlaybackActionSkip
+    PlaybackActionShowIssue
 };
 
 
@@ -49,7 +50,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (void) saveHistoryToFileAtURL:(NSURL *)url;
 - (void) exportHistory;
 
-- (void) debugPopulatePlaylistWithSet:(NSInteger)set;
+- (void) showAlertForIssue:(PlayerIssue)issue;
 
 @property (nonatomic) NSTimeInterval minimumSilenceBetweenTracks;
 

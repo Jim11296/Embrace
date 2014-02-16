@@ -24,6 +24,7 @@
 
 @property (nonatomic, readonly) pid_t hogModeOwner;
 @property (nonatomic, readonly) BOOL isHoggedByMe;
+@property (nonatomic, readonly) BOOL isHoggedByAnotherProcess;
 @property (nonatomic, readonly) BOOL isHogModeSettable;
 
 - (BOOL) takeHogMode;

@@ -10,6 +10,8 @@
 
 @interface Button : NSButton
 
+- (void) flipToImage:(NSImage *)image enabled:(BOOL)enabled;
+
 @property (nonatomic, getter=isAlert) BOOL alert;
 
 @property (nonatomic, strong) NSColor *normalColor;
@@ -17,5 +19,7 @@
 @property (nonatomic, strong) NSColor *alertColor;
 @property (nonatomic, strong) NSColor *inactiveColor;
 @property (nonatomic, strong) NSColor *disabledColor;
+
+@property (nonatomic, assign, getter=isWiggling) BOOL wiggling;
 
 @end

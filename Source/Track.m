@@ -523,20 +523,6 @@ static NSString * const sBPMKey           = @"bpm";
 }
 
 
-- (BOOL) isSilentAtOffset:(NSTimeInterval)offset
-{
-    if (offset <= [self silenceAtStart]) {
-        return YES;
-    }
-    
-    if (([self playDuration] - offset) < [self silenceAtEnd]) {
-        return YES;
-    }
-    
-    return NO;
-}
-
-
 #pragma mark - Accessors
 
 - (TrackType) trackType

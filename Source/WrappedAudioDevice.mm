@@ -159,6 +159,18 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
 }
 
 
+- (BOOL) isHoggedByAnotherProcess
+{
+    pid_t hogModeOwner = [self hogModeOwner];
+    
+    if (hogModeOwner < 0) {
+        return NO;
+    }
+
+    return hogModeOwner != getpid();
+}
+
+
 - (BOOL) isHoggedByMe
 {
     return _device->GetHogModeOwner() == getpid();

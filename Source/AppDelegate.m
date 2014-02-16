@@ -15,6 +15,7 @@
 #import "CurrentTrackController.h"
 #import "ViewTrackController.h"
 #import "Preferences.h"
+#import "DebugController.h"
 
 #import "Player.h"
 #import "Effect.h"
@@ -27,6 +28,8 @@
     EffectsController      *_effectsController;
     CurrentTrackController *_currentTrackController;
     PreferencesController  *_preferencesController;
+
+    DebugController        *_debugController;
 
     NSMutableArray         *_editEffectControllers;
     NSMutableArray         *_viewTrackControllers;
@@ -141,8 +144,8 @@
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
     if ([[Player sharedInstance] isPlaying]) {
-        NSString *messageText     = NSLocalizedString(@"Are you sure you want to quit Embrace?", nil);
-        NSString *informativeText = NSLocalizedString(@"If you quit, the currently playing music will stop.", nil);
+        NSString *messageText     = NSLocalizedString(@"Quit Embrace", nil);
+        NSString *informativeText = NSLocalizedString(@"Music is currently playing. Are you sure you want to quit?", nil);
         NSString *defaultButton   = NSLocalizedString(@"Quit", nil);
         
         NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
@@ -168,9 +171,6 @@
         
         if (action == PlaybackActionShowIssue) {
             title = NSLocalizedString(@"Show Issue", nil);
-
-        } else if (action == PlaybackActionSkip) {
-            title = NSLocalizedString(@"Skip", nil);
 
         } else if (action == PlaybackActionTogglePause) {
             title = NSLocalizedString(@"Pause after playing", nil);
@@ -412,6 +412,18 @@
 }
 
 
+- (IBAction) showDebugWindow:(id)sender
+{
+#if DEBUG
+    if (!_debugController) {
+        _debugController = [[DebugController alloc] init];
+    }
+
+    [_debugController showWindow:self];
+#endif
+}
+
+
 - (IBAction) showPreferences:(id)sender
 {
     if (!_preferencesController) {
@@ -419,54 +431,6 @@
     }
 
     [_preferencesController showWindow:self];
-}
-
-
-- (IBAction) debugPopulatePlaylist:(id)sender
-{
-    NSInteger index = [[NSUserDefaults standardUserDefaults] integerForKey:@"debug-population-set"];
-    [_playlistController debugPopulatePlaylistWithSet:index];
-}
-
-
-- (IBAction) debugChangePopulation:(id)sender
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:@"debug-population-set"];
-    [self debugPopulatePlaylist:sender];
-}
-
-
-- (IBAction) debugPlayPauseLoop:(id)sender
-{
-    static NSTimer *playPauseTimer = nil;
-    if (!playPauseTimer) {
-        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(debugPlayPauseTick:) userInfo:nil repeats:YES];
-    }
-}
-
-
-- (void) debugPlayPauseTick:(NSTimer *)timer
-{
-    Player *player = [Player sharedInstance];
-
-    if ([player isPlaying]) {
-        Track *track = [player currentTrack];
-        [player hardStop];
-        [track setTrackStatus:TrackStatusQueued];
-
-    } else {
-        [player play];
-    }
-}
-
-
-- (IBAction) debugShowInternalEffects:(id)sender
-{
-    NSArray *internalEffects = [[Player sharedInstance] debugInternalEffects];
-
-    for (Effect *effect in internalEffects) {
-        [[self editControllerForEffect:effect] showWindow:self];
-    }
 }
 
 
