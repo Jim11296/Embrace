@@ -29,7 +29,9 @@
     CurrentTrackController *_currentTrackController;
     PreferencesController  *_preferencesController;
 
+#if DEBUG
     DebugController        *_debugController;
+#endif
 
     NSMutableArray         *_editEffectControllers;
     NSMutableArray         *_viewTrackControllers;
