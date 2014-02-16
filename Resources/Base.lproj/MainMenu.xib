@@ -181,12 +181,12 @@ CA
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="pF6-2l-LGh"/>
-                            <menuItem title="Increase Auto Gap" keyEquivalent="" id="WCe-7u-SOG">
+                            <menuItem title="Increase Auto Gap" keyEquivalent="+" id="WCe-7u-SOG">
                                 <connections>
                                     <action selector="increaseAutoGap:" target="494" id="DWi-Vt-fmp"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Decrease Auto Gap" keyEquivalent="" id="PaR-kA-Bfz">
+                            <menuItem title="Decrease Auto Gap" keyEquivalent="-" id="PaR-kA-Bfz">
                                 <connections>
                                     <action selector="decreaseAutoGap:" target="494" id="M6W-bC-2n7"/>
                                 </connections>
@@ -202,45 +202,6 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="hardPause:" target="494" id="pvX-1j-Z11"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Debug" hidden="YES" id="rv7-RR-YUj">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Debug" id="ZPZ-WI-Wyz">
-                        <items>
-                            <menuItem title="Populate playlist" id="Q6s-Nt-liB">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="debugPopulatePlaylist:" target="494" id="BnA-Lh-TKh"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Ascending Scale" indentationLevel="1" id="nVv-lR-WR9">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="debugChangePopulation:" target="494" id="09S-4n-Ash"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Sample Rates" tag="1" indentationLevel="1" id="sNr-Yt-KEF">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="debugChangePopulation:" target="494" id="XwD-t1-tL2"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="yPT-OK-o84"/>
-                            <menuItem title="Play/Pause Loop" id="LuW-vJ-gVG">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="debugPlayPauseLoop:" target="494" id="wj0-61-qxu"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="E15-Sn-b7P"/>
-                            <menuItem title="Show internal effects" id="USn-aK-z9v">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="debugShowInternalEffects:" target="494" id="q0H-oO-s4d"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -278,6 +239,12 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="showCurrentTrack:" target="494" id="Wp8-ec-Fio"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Debug" hidden="YES" keyEquivalent="0" id="SIh-TN-z42">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showDebugWindow:" target="494" id="ikT-S7-Noz"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="tIU-OI-dQX"/>
@@ -321,7 +288,7 @@ CA
         </menu>
         <customObject id="494" customClass="AppDelegate">
             <connections>
-                <outlet property="debugMenuItem" destination="rv7-RR-YUj" id="B2e-hu-63b"/>
+                <outlet property="debugMenuItem" destination="SIh-TN-z42" id="zFu-2M-2jM"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>

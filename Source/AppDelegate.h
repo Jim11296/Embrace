@@ -36,19 +36,15 @@
 - (IBAction) sendFeedback:(id)sender;
 - (IBAction) viewOnAppStore:(id)sender;
 
-
-// Debug
-@property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
-- (IBAction) debugPopulatePlaylist:(id)sender;
-- (IBAction) debugChangePopulation:(id)sender;
-- (IBAction) debugPlayPauseLoop:(id)sender;
-
-- (IBAction) debugShowInternalEffects:(id)sender;
-
 - (EditEffectController *) editControllerForEffect:(Effect *)effect;
 - (void) closeEditControllerForEffect:(Effect *)effect;
 
 - (ViewTrackController *) viewTrackControllerForTrack:(Track *)track;
 - (void) closeViewTrackControllerForEffect:(Track *)track;
+
+// Debug
+- (IBAction) showDebugWindow:(id)sender;
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
 
 @end

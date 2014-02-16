@@ -6,6 +6,10 @@
 //
 
 #import "PlaylistController.h"
+
+#import "AudioDevice.h"
+#import "WrappedAudioDevice.h"
+
 #import "Track.h"
 #import "EffectType.h"
 #import "Effect.h"
@@ -35,13 +39,16 @@ static NSTimeInterval sAutoGapMinimum = 0;
 static NSTimeInterval sAutoGapMaximum = 15.0;
 
 
-@interface PlaylistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider>
+@interface PlaylistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate>
 
 @end
 
 @implementation PlaylistController {
     NSUInteger _rowOfDraggedTrack;
-    BOOL       _didPushPoofCursor;
+    BOOL       _inVolumeDrag;
+    
+    double     _volumeBeforeAutoPause;
+    BOOL       _didAutoPause;
 }
 
 
@@ -123,6 +130,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [self setPlayer:[Player sharedInstance]];
     [self _setupPlayer];
 
+
+    [[self volumeSlider] setDragDelegate:self];
     [self _updateDragSongsView];
 
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -159,7 +168,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     BOOL           enabled = [self isPreferredPlaybackActionEnabled];
     
     Player   *player = [Player sharedInstance];
-    
+    BOOL isVolumeZero = ([player volume] == 0);
+
     NSImage  *image   = nil;
     NSString *tooltip = nil;
     BOOL      alert   = NO;
@@ -185,9 +195,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         image = [NSImage imageNamed:@"pause_template"];
         enabled = NO;
 
-    } else if (action == PlaybackActionSkip) {
-        image = [NSImage imageNamed:@"skip_template"];
-
     } else {
         image = [NSImage imageNamed:@"play_template"];
 
@@ -195,80 +202,24 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
         if (!next) {
             tooltip = NSLocalizedString(@"Add a track to enable playback", nil);
-        } else if ([player volume] == 0) {
+        } else if (isVolumeZero == 0) {
             tooltip = NSLocalizedString(@"Turn up the volume to enable playback", nil);
         }
     }
 
     Button *playButton = [self playButton];
 
+    [playButton setWiggling:((action == PlaybackActionPause) && _inVolumeDrag && isVolumeZero) || _didAutoPause];
     [playButton setAlert:alert];
     [playButton setImage:image];
     [playButton setToolTip:tooltip];
     [playButton setEnabled:enabled];
 
-
-#if 0
-    Player        *player      = [Player sharedInstance];
-    Track         *track       = [player currentTrack];
-    NSTimeInterval timeElapsed = [player timeElapsed];
-    BOOL playing = [player isPlaying];
-
-    PlayerIssue issue = [player issue];
-
-    NSImage  *image   = nil;
-    NSString *tooltip = nil;
-    BOOL      enabled = YES;
-    BOOL      alert   = NO;
-
-    if (issue != PlayerIssueNone) {
-        image = [NSImage imageNamed:@"issue_template"];
-        alert = YES;
-        enabled = NO;
-
-        if (issue == PlayerIssueDeviceMissing) {
-            tooltip = NSLocalizedString(@"The selected output device is not connected", nil);
-        } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
-            tooltip = NSLocalizedString(@"Another application is using the selected output device", nil);
-        } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
-            tooltip = NSLocalizedString(@"The selected output device could not be configured", nil);
-        }
-    
-    } else if (playing) {
-        Track *next = [self _nextQueuedTrack];
-        double volume = [player volume];
-
-        if (volume == 0 && next) {
-            image = [NSImage imageNamed:@"skip_template"];
-            enabled = YES;
-        
-        } else {
-            image = [NSImage imageNamed:@"pause_template"];
-            enabled = [track isSilentAtOffset:timeElapsed] || (volume == 0);
-        }
-
+    if (enabled) {
+        [playButton setWiggling:((action == PlaybackActionPause) && _inVolumeDrag && isVolumeZero) || _didAutoPause];
     } else {
-        image = [NSImage imageNamed:@"play_template"];
-
-        Track *next = [self _nextQueuedTrack];
-
-        if (!next) {
-            tooltip = NSLocalizedString(@"Add a track to enable playback", nil);
-            enabled = NO;
-
-        } else if ([player volume] == 0) {
-            tooltip = NSLocalizedString(@"Turn up the volume to enable playback", nil);
-            enabled = NO;
-        }
+        [playButton setWiggling:NO];
     }
-
-    Button *playButton = [self playButton];
-
-    [playButton setAlert:alert];
-    [playButton setImage:image];
-    [playButton setToolTip:tooltip];
-    [playButton setEnabled:enabled];
-#endif
 }
 
 
@@ -458,44 +409,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-#pragma mark - Debug
-
-- (void) debugPopulatePlaylistWithSet:(NSInteger)set
-{
-    Track *(^getTrack)(NSString *) = ^(NSString *name) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:@"m4a"];
-        NSURL *url = [NSURL fileURLWithPath:path];
-        
-        return [Track trackWithFileURL:url];
-    };
-    
-    NSMutableArray *tracks = [NSMutableArray array];
-    
-    if (set == 1) {
-        [tracks addObject:getTrack(@"rate_44")];
-        [tracks addObject:getTrack(@"rate_44")];
-        [tracks addObject:getTrack(@"rate_48")];
-        [tracks addObject:getTrack(@"rate_88")];
-        [tracks addObject:getTrack(@"rate_96")];
-        [tracks addObject:getTrack(@"rate_88")];
-        [tracks addObject:getTrack(@"rate_48")];
-        [tracks addObject:getTrack(@"rate_44")];
-
-    } else {
-        [tracks addObject:getTrack(@"test_c")];
-        [tracks addObject:getTrack(@"test_d")];
-        [tracks addObject:getTrack(@"test_e")];
-        [tracks addObject:getTrack(@"test_f")];
-        [tracks addObject:getTrack(@"test_g")];
-    }
-
-    
-    [self clearHistory];
-    [[self tracksController] addObjects:tracks];
-}
-
-
-
 #pragma mark - Public Methods
 
 - (void) clearHistory
@@ -584,11 +497,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         return PlaybackActionShowIssue;
     
     } else if ([player isPlaying]) {
-        Track *next = [self _nextQueuedTrack];
         double volume = [player volume];
 
         if (volume == 0) {
-            return next ? PlaybackActionSkip : PlaybackActionPause;
+            return PlaybackActionPause;
         } else {
             return PlaybackActionTogglePause;
         }
@@ -606,18 +518,12 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     if (action == PlaybackActionPlay) {
         Track *next = [self _nextQueuedTrack];
 
-        if (!next) {
-            return NO;
-        } else if ([[Player sharedInstance] volume] == 0) {
-            return NO;
-        }
-
-       return YES;
-
-    } else if (action == PlaybackActionSkip) {
-        return YES;
+        return next != nil;
 
     } else if (action == PlaybackActionTogglePause) {
+        return YES;
+
+    } else if (action == PlaybackActionShowIssue) {
         return YES;
 
     } else if (action == PlaybackActionPause) {
@@ -629,6 +535,46 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (void) showAlertForIssue:(PlayerIssue)issue
+{
+    NSString *messageText     = nil;
+    NSString *informativeText = nil;
+
+    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    NSString *deviceName = [device name];
+
+    if (issue == PlayerIssueDeviceMissing) {
+        messageText = NSLocalizedString(@"The selected output device is not connected", nil);
+        
+        NSString *format = NSLocalizedString(@"\\U201c%@\\U201d could not be located.  Verify that it is connected and powered on.", nil);
+
+        informativeText = [NSString stringWithFormat:format, deviceName];
+
+    } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
+        messageText = NSLocalizedString(@"Another application is using the selected output device", nil);
+
+        pid_t hogModeOwner = [[device controller] hogModeOwner];
+        NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
+        
+        if (owner) {
+            NSString *format = NSLocalizedString(@"The application \\U201c%@\\U201d has exclusive access to \\U201c%@\\U201d.", nil);
+            NSString *applicationName = [owner localizedName];
+            
+            informativeText = [NSString stringWithFormat:format, applicationName, deviceName];
+        }
+
+    } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
+        messageText = NSLocalizedString(@"The selected output device could not be configured", nil);
+    }
+
+    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+    [alert setAlertStyle:NSCriticalAlertStyle];
+    if (informativeText) [alert setInformativeText:informativeText];
+    
+    [alert runModal];
+}
+
+
 #pragma mark - IBActions
 
 - (IBAction) performPreferredPlaybackAction:(id)sender
@@ -636,18 +582,19 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     PlaybackAction action = [self preferredPlaybackAction];
 
     if (action == PlaybackActionShowIssue) {
-        NSLog(@"Show issue");
-
-    } else if (action == PlaybackActionSkip) {
-        double volume = [[self volumeSlider] doubleValueBeforeDrag];
+        [self showAlertForIssue:[[Player sharedInstance] issue]];
         
-        if (volume < 0.01) {
-            volume = 0.96;
+    } else if (action == PlaybackActionPlay) {
+        if (_didAutoPause) {
+            _didAutoPause = NO;
+
+            [[Player sharedInstance] playOrSoftPause];
+            [[Player sharedInstance] setVolume:_volumeBeforeAutoPause];
+
+        } else {
+            [[Player sharedInstance] playOrSoftPause];
         }
     
-        [[Player sharedInstance] setVolume:volume];
-        [[Player sharedInstance] hardSkip];
-
     } else {
         [[Player sharedInstance] playOrSoftPause];
     }
@@ -832,6 +779,50 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+#pragma mark - White Slider
+
+- (void) whiteSliderDidStartDrag:(WhiteSlider *)slider
+{
+    if (slider == _volumeSlider) {
+        _inVolumeDrag = YES;
+        [self _updatePlayButton];
+    }
+}
+
+
+- (void) whiteSliderDidEndDrag:(WhiteSlider *)slider
+{
+    if (slider == _volumeSlider) {
+        _inVolumeDrag = NO;
+        [self _updatePlayButton];
+    }
+
+    PlaybackAction action = [self preferredPlaybackAction];
+    Button *playButton = [self playButton];
+    
+    if ([playButton isEnabled]) {
+        Player *player = [Player sharedInstance];
+        BOOL isVolumeZero = [player volume] == 0;
+
+        if (action == PlaybackActionPause && !_inVolumeDrag && isVolumeZero) {
+            [playButton flipToImage:[NSImage imageNamed:@"play_template"] enabled:YES];
+            _volumeBeforeAutoPause = [[self volumeSlider] doubleValueBeforeDrag];
+            _didAutoPause = YES;
+
+            [[Player sharedInstance] hardStop];
+
+        } else if (action == PlaybackActionPlay && _didAutoPause && !isVolumeZero) {
+            [playButton flipToImage:[NSImage imageNamed:@"pause_template"] enabled:NO];
+            _didAutoPause = NO;
+
+            [[Player sharedInstance] play];
+        }
+    } else {
+        _didAutoPause = NO;
+    }
+}
+
+
 #pragma mark - Player
 
 - (void) _setupPlayer
@@ -853,7 +844,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     } else {
         [[self playOffsetField] setStringValue:GetStringForTime(0)];
         [[self playRemainingField] setStringValue:GetStringForTime(0)];
-        
+        [[self playBar] setPercentage:0];
+
         [[self levelMeter] setMetering:NO];
     }
 
@@ -889,6 +881,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     double percentage = 0;
     if (timeElapsed > 0) {
         percentage = timeElapsed / duration;
+    }
+
+    if (![player isPlaying]) {
+        percentage = 0;
     }
 
     [[self playBar] setPercentage:percentage];

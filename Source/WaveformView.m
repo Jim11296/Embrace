@@ -55,6 +55,17 @@
 - (void) updateLayer { }
 
 
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (object == _track) {
+        if ([keyPath isEqualToString:@"overviewData"]) {
+            [_activeLayer   setNeedsDisplay];
+            [_inactiveLayer setNeedsDisplay];
+        }
+    }
+}
+
+
 - (void) layout
 {
     [super layout];

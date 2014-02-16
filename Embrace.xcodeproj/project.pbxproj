@@ -115,8 +115,9 @@
 		55F7ABE018AF3D52006B6FBB /* gear_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABDD18AF3D52006B6FBB /* gear_template.png */; };
 		55F7ABE118AF3D52006B6FBB /* drag_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABDE18AF3D52006B6FBB /* drag_icon.png */; };
 		55F7ABE218AF3D52006B6FBB /* drag_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABDF18AF3D52006B6FBB /* drag_icon@2x.png */; };
-		55F7ABE518AF4AEC006B6FBB /* skip_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABE318AF4AEC006B6FBB /* skip_template.png */; };
-		55F7ABE618AF4AEC006B6FBB /* skip_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABE418AF4AEC006B6FBB /* skip_template@2x.png */; };
+		55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABE818B04D91006B6FBB /* DebugController.m */; };
+		55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */; };
+		55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABED18B08569006B6FBB /* MainIconView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -299,8 +300,11 @@
 		55F7ABDD18AF3D52006B6FBB /* gear_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gear_template.png; path = Resources/gear_template.png; sourceTree = SOURCE_ROOT; };
 		55F7ABDE18AF3D52006B6FBB /* drag_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = drag_icon.png; path = Resources/drag_icon.png; sourceTree = SOURCE_ROOT; };
 		55F7ABDF18AF3D52006B6FBB /* drag_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drag_icon@2x.png"; path = "Resources/drag_icon@2x.png"; sourceTree = SOURCE_ROOT; };
-		55F7ABE318AF4AEC006B6FBB /* skip_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = skip_template.png; path = Resources/skip_template.png; sourceTree = SOURCE_ROOT; };
-		55F7ABE418AF4AEC006B6FBB /* skip_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "skip_template@2x.png"; path = "Resources/skip_template@2x.png"; sourceTree = SOURCE_ROOT; };
+		55F7ABE718B04D91006B6FBB /* DebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugController.h; path = Source/DebugController.h; sourceTree = SOURCE_ROOT; };
+		55F7ABE818B04D91006B6FBB /* DebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DebugController.m; path = Source/DebugController.m; sourceTree = SOURCE_ROOT; };
+		55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DebugWindow.xib; path = Resources/DebugWindow.xib; sourceTree = SOURCE_ROOT; };
+		55F7ABED18B08569006B6FBB /* MainIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainIconView.m; path = Source/MainIconView.m; sourceTree = SOURCE_ROOT; };
+		55F7ABEE18B08569006B6FBB /* MainIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainIconView.h; path = Source/MainIconView.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -454,6 +458,8 @@
 				558DC0B7187785F200C85770 /* AppDelegate.m */,
 				555A70191890BCBF00305EC6 /* Application.h */,
 				555A701A1890BCBF00305EC6 /* Application.m */,
+				55F7ABE718B04D91006B6FBB /* DebugController.h */,
+				55F7ABE818B04D91006B6FBB /* DebugController.m */,
 				55F3B7AF1877885800E8FEC8 /* PlaylistController.h */,
 				55F3B7B01877885800E8FEC8 /* PlaylistController.m */,
 				55A0B169188F59F000866F04 /* CurrentTrackController.h */,
@@ -485,6 +491,7 @@
 				55A0B167188F447100866F04 /* CurrentTrackWindow.xib */,
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
+				55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */,
 				556ACE23187ABB8100AED4BC /* EditEffectWindow.xib */,
 				553DE144189F10D600A355D1 /* ViewTrackWindow.xib */,
 			);
@@ -552,6 +559,8 @@
 				555B3C7F1880EE740088C15C /* CloseButton.m */,
 				55ADE93618824338008DC245 /* LevelMeter.h */,
 				55ADE93718824338008DC245 /* LevelMeter.m */,
+				55F7ABEE18B08569006B6FBB /* MainIconView.h */,
+				55F7ABED18B08569006B6FBB /* MainIconView.m */,
 				55006A48189E144C00BA8173 /* ShadowView.h */,
 				55006A49189E144C00BA8173 /* ShadowView.m */,
 				55717BC1187CE6B200213213 /* SilenceTableCellView.h */,
@@ -614,8 +623,6 @@
 		55F7ABDC18AF1BF5006B6FBB /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				55F7ABE318AF4AEC006B6FBB /* skip_template.png */,
-				55F7ABE418AF4AEC006B6FBB /* skip_template@2x.png */,
 				55F7ABDE18AF3D52006B6FBB /* drag_icon.png */,
 				55F7ABDF18AF3D52006B6FBB /* drag_icon@2x.png */,
 				55717BC7187EA45500213213 /* close_pressed.png */,
@@ -709,6 +716,7 @@
 			files = (
 				5515B468189B4DC300FBC886 /* full_volume_template.png in Resources */,
 				55A708AE18A70E96007BD7C0 /* drag_songs.png in Resources */,
+				55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */,
 				55F3B7AE187786E300E8FEC8 /* MainMenu.xib in Resources */,
 				55717BD5187EA45500213213 /* close_normal.png in Resources */,
 				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
@@ -718,7 +726,6 @@
 				5515B46B189B4DC300FBC886 /* issue_template@2x.png in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
 				55F7ABE018AF3D52006B6FBB /* gear_template.png in Resources */,
-				55F7ABE518AF4AEC006B6FBB /* skip_template.png in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
 				55F3B7B3187788B500E8FEC8 /* PlaylistWindow.xib in Resources */,
 				552C9DBF1882A5D90041C160 /* padding_template.png in Resources */,
@@ -742,7 +749,6 @@
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				552C9DC01882A5D90041C160 /* padding_template@2x.png in Resources */,
 				55A708AD18A70E96007BD7C0 /* drag_songs@2x.png in Resources */,
-				55F7ABE618AF4AEC006B6FBB /* skip_template@2x.png in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
 				550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */,
 				5515B46C189B4DC300FBC886 /* pause_template.png in Resources */,
@@ -803,6 +809,8 @@
 				55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */,
 				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				557C2CBF1897403E002FAFEA /* CACFNumber.cpp in Sources */,
+				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
+				55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
 				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,

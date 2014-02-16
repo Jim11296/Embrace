@@ -8,12 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol WhiteSliderDragDelegate;
+
 @interface WhiteSlider : NSSlider
 
+@property (nonatomic, weak) id<WhiteSliderDragDelegate> dragDelegate;
 @property (nonatomic) double doubleValueBeforeDrag;
 
 @end
 
 @interface WhiteSliderCell : NSSliderCell
 
+@end
+
+
+@protocol WhiteSliderDragDelegate <NSObject>
+- (void) whiteSliderDidStartDrag:(WhiteSlider *)slider;
+- (void) whiteSliderDidEndDrag:(WhiteSlider *)slider;
 @end

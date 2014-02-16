@@ -77,7 +77,11 @@
             if (didClip) {
                 [[NSColor redColor] set];
             } else {
-                [[NSColor blackColor] set];
+                if (peakX < 10) {
+                    [GetRGBColor(0x0, (peakX / 10.0)) set];
+                } else {
+                    [[NSColor blackColor] set];
+                }
             }
 
             [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
@@ -126,6 +130,7 @@
 {
     if (_metering != metering) {
         _metering = metering;
+        _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
         [self setNeedsDisplay:YES];
     }
 }
