@@ -189,8 +189,16 @@
         [menuItem setEnabled:enabled];
         [menuItem setKeyEquivalent:@" "];
 
+    } else if (action == @selector(clearHistory:)) {
+        if ([_playlistController doesClearHistoryNeedPrompt]) {
+            [menuItem setTitle:NSLocalizedString(@"Clear History\\U2026", nil)];
+        } else {
+            [menuItem setTitle:NSLocalizedString(@"Clear History", nil)];
+        }
+
+        return YES;
+    
     } else if (action == @selector(hardPause:)) {
-        [menuItem setKeyEquivalent:@" "];
         return [[Player sharedInstance] isPlaying];
 
     } else if (action == @selector(hardSkip:)) {
@@ -285,7 +293,20 @@
 
 - (IBAction) clearHistory:(id)sender
 {
-    [_playlistController clearHistory];
+    if ([_playlistController doesClearHistoryNeedPrompt]) {
+        NSString *messageText     = NSLocalizedString(@"Clear History", nil);
+        NSString *informativeText = NSLocalizedString(@"You haven't saved or exported the current history. Are you sure you want to clear it?", nil);
+        NSString *defaultButton   = NSLocalizedString(@"Clear History", nil);
+        
+        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        
+        if ([alert runModal] == NSOKButton) {
+            [_playlistController clearHistory];
+        }
+    
+    } else {
+        [_playlistController clearHistory];
+    }
 }
 
 

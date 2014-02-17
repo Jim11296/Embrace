@@ -166,6 +166,7 @@
 {
     if (_image != image) {
         _image = image;
+        [self setNeedsLayout:YES];
         [_mainLayer setNeedsDisplay];
     }
 }
@@ -175,6 +176,7 @@
 {
     if (_tintColor != tintColor) {
         _tintColor = tintColor;
+        [self setNeedsLayout:YES];
         [_mainLayer setNeedsDisplay];
     }
 }

@@ -53,6 +53,8 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
     BOOL      hoggable      = [device isHogModeSettable];
     UInt32    transportType = [device transportType];
     
+    name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     if (deviceUID)    [result setObject:deviceUID    forKey:sDeviceUIDKey];
     if (name)         [result setObject:name         forKey:sNameKey];

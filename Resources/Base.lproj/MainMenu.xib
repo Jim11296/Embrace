@@ -84,15 +84,14 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="znP-el-FvS"/>
-                            <menuItem title="Clear History" id="OpO-hz-U6C">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Clear History" keyEquivalent="k" id="OpO-hz-U6C">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="clearHistory:" target="494" id="eqr-mg-Zs4"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="FO8-6S-eZx"/>
-                            <menuItem title="Copy History" id="FdC-Kk-mtx">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Copy History" keyEquivalent="C" id="FdC-Kk-mtx">
                                 <connections>
                                     <action selector="copyHistory:" target="494" id="EFN-OE-EVR"/>
                                 </connections>

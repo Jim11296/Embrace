@@ -119,6 +119,7 @@
 		55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */; };
 		55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABED18B08569006B6FBB /* MainIconView.m */; };
 		55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */; };
+		55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABF718B21C31006B6FBB /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -308,6 +309,7 @@
 		55F7ABEE18B08569006B6FBB /* MainIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainIconView.h; path = Source/MainIconView.h; sourceTree = SOURCE_ROOT; };
 		55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmergencyLimiter.h; path = Source/EmergencyLimiter.h; sourceTree = "<group>"; };
 		55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmergencyLimiter.m; path = Source/EmergencyLimiter.m; sourceTree = "<group>"; };
+		55F7ABF818B21C31006B6FBB /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -487,6 +489,7 @@
 				55F7ABDB18AF1BE8006B6FBB /* Safe Presets */,
 				55F7ABDC18AF1BF5006B6FBB /* Images */,
 				558DC0CA1877868400C85770 /* Info.plist */,
+				55F7ABF718B21C31006B6FBB /* Localizable.strings */,
 				558DC0C01877861E00C85770 /* InfoPlist.strings */,
 				558DC0C21877861E00C85770 /* Images.xcassets */,
 				558DC0BC1877861E00C85770 /* MainMenu.xib */,
@@ -729,6 +732,7 @@
 				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
 				5515B46B189B4DC300FBC886 /* issue_template@2x.png in Resources */,
+				55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
 				55F7ABE018AF3D52006B6FBB /* gear_template.png in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
@@ -881,6 +885,14 @@
 				558DC0C11877861E00C85770 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		55F7ABF718B21C31006B6FBB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55F7ABF818B21C31006B6FBB /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
