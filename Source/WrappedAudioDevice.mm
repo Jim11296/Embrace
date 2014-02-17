@@ -13,6 +13,10 @@
 
 static NSMutableSet *sHoggedObjectIDs = nil;
 
+#define ENABLE_MBA_WORKAROUND 0
+
+#if ENABLE_MBA_WORKAROUND
+
 static struct {
     bool needsNonSystem;
     AudioObjectID previousNonSystem;
@@ -45,6 +49,8 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
     } catch (...) { }
 }
 
+#endif
+
 
 @implementation WrappedAudioDevice {
     CAHALAudioDevice *_device;
@@ -58,8 +64,10 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
         device.ReleaseHogMode();
     }
 
+#if ENABLE_MBA_WORKAROUND
     sDoWorkaroundIfNeeded(0, true);
     sHoggedObjectIDs = [NSMutableSet set];
+#endif
 }
 
 
@@ -202,14 +210,15 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
             } else if (owner == -1) {
                 CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
 
-                AudioObjectID myID = _device->GetObjectID();
-
-                BOOL needsNonSystem = (myID == systemObject.GetDefaultAudioDevice(false, false));
-                BOOL needsSystem    = (myID == systemObject.GetDefaultAudioDevice(false, true ));
-
                 result = (BOOL)_device->TakeHogMode();
                 
                 if (result) {
+#if ENABLE_MBA_WORKAROUND
+                    AudioObjectID myID = _device->GetObjectID();
+
+                    BOOL needsNonSystem = (myID == systemObject.GetDefaultAudioDevice(false, false));
+                    BOOL needsSystem    = (myID == systemObject.GetDefaultAudioDevice(false, true ));
+
                     if (needsNonSystem) {
                         sWorkaroundDefaultOutputBug.needsNonSystem = needsNonSystem;
                         sWorkaroundDefaultOutputBug.previousNonSystem = myID;
@@ -219,7 +228,7 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
                         sWorkaroundDefaultOutputBug.needsSystem = needsSystem;
                         sWorkaroundDefaultOutputBug.previousSystem = myID;
                     }
-
+#endif
                     if (!sHoggedObjectIDs) sHoggedObjectIDs = [NSMutableSet set];
                     [sHoggedObjectIDs addObject:@( [self objectID] )];
                 }
@@ -237,10 +246,50 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
         _device->ReleaseHogMode();
         
         AudioObjectID myID = _device->GetObjectID();
-        [sHoggedObjectIDs removeObject:@( [self objectID] )];
+        [sHoggedObjectIDs removeObject:@( myID )];
 
+#if ENABLE_MBA_WORKAROUND
         sDoWorkaroundIfNeeded(myID, false);
+#endif
     } catch (...) { }
+}
+
+
+- (void) resetVolumeAndPan
+{
+    UInt32 channels = 0;
+    
+    try {
+        channels = _device->GetTotalNumberChannels(false);
+    } catch (...) { }
+
+    if (!channels) return;
+
+    for (UInt32 i = 0; i < (channels + 1); i++) {
+        try {
+            if (_device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
+                _device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                _device->SetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i, 1.0);
+            }
+        } catch (...) { }
+
+        try {
+            if (_device->HasMuteControl(kAudioDevicePropertyScopeOutput, i) &&
+                _device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                _device->SetMuteControlValue(kAudioDevicePropertyScopeOutput, i, false);
+            }
+        } catch (...) { }
+
+        try {
+            if (_device->HasStereoPanControl(kAudioDevicePropertyScopeOutput, i) &&
+                _device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                _device->SetStereoPanControlValue(kAudioDevicePropertyScopeOutput, i, 0.5);
+            }
+        } catch (...) { }
+    }
 }
 
 

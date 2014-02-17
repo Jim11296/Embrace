@@ -160,9 +160,7 @@
     NSDisableScreenUpdates();
 
     [[self window] addChildWindow:[self childWindow] ordered:NSWindowAbove];
-    [[self childWindow] setFrame:[[self window] frame] display:YES];
-
-    [[self mainView] setFrame:[[[self childWindow] contentView] bounds]];
+    [[self window] setFrame:[[self window] frame] display:YES];
 
     [super showWindow:sender];
     [[self childWindow] orderFront:self];

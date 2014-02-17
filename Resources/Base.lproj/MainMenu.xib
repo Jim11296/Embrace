@@ -192,14 +192,14 @@ CA
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="XeM-RX-cVY"/>
-                            <menuItem title="Hard Skip" id="DUu-P3-D2K">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Hard Skip" keyEquivalent="," id="DUu-P3-D2K">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="hardSkip:" target="494" id="rQh-13-0ef"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Hard Stop" id="NDh-4K-3xp">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Hard Stop" keyEquivalent="." id="NDh-4K-3xp">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="hardPause:" target="494" id="pvX-1j-Z11"/>
                                 </connections>

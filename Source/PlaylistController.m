@@ -202,8 +202,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
         if (!next) {
             tooltip = NSLocalizedString(@"Add a track to enable playback", nil);
-        } else if (isVolumeZero == 0) {
-            tooltip = NSLocalizedString(@"Turn up the volume to enable playback", nil);
         }
     }
 
@@ -874,6 +872,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     Float32 rightAveragePower = [player rightAveragePower];
     Float32 leftPeakPower     = [player leftPeakPower];
     Float32 rightPeakPower    = [player rightPeakPower];
+    BOOL    limiterActive     = [player isLimiterActive];
     
     NSTimeInterval duration = timeElapsed + timeRemaining;
     if (!duration) duration = 1;
@@ -888,7 +887,11 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     }
 
     [[self playBar] setPercentage:percentage];
-    [[self levelMeter] setLeftAveragePower:leftAveragePower rightAveragePower:rightAveragePower leftPeakPower:leftPeakPower rightPeakPower:rightPeakPower];
+    [[self levelMeter] setLeftAveragePower: leftAveragePower
+                         rightAveragePower: rightAveragePower
+                             leftPeakPower: leftPeakPower
+                            rightPeakPower: rightPeakPower
+                             limiterActive: limiterActive];
 
     [self _updatePlayButton];
 }

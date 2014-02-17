@@ -143,6 +143,11 @@
     }
 }
 
+- (void) addChildWindow:(NSWindow *)childWin ordered:(NSWindowOrderingMode)place
+{
+    [super addChildWindow:childWin ordered:place];
+}
+
 
 - (void) setHiddenViewsWhenInactive:(NSArray *)hiddenViewsWhenInactive
 {

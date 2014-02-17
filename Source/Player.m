@@ -15,6 +15,7 @@
 #import "Preferences.h"
 #import "WrappedAudioDevice.h"
 #import "TrackScheduler.h"
+#import "EmergencyLimiter.h"
 
 #import <pthread.h>
 #import <signal.h>
@@ -28,6 +29,24 @@ static NSString * const sMatchLoudnessKey = @"match-loudness";
 static NSString * const sVolumeKey        = @"volume";
 
 static double sMaxVolume = 1.0 - (2.0 / 32767.0);
+
+
+static OSStatus sApplyEmergencyLimiter(
+    void *inRefCon,
+    AudioUnitRenderActionFlags *ioActionFlags,
+    const AudioTimeStamp *inTimeStamp,
+    UInt32 inBusNumber,
+    UInt32 inNumberFrames,
+    AudioBufferList *ioData
+) {
+    EmergencyLimiter *limiter = (EmergencyLimiter *)inRefCon;
+    
+    if (*ioActionFlags & kAudioUnitRenderAction_PostRender) {
+        EmergencyLimiterProcess(limiter, inNumberFrames, ioData);
+    }
+    
+    return noErr;
+}
 
 
 @interface Effect ()
@@ -73,6 +92,8 @@ typedef struct {
     AudioUnit _limiterAudioUnit;
     AudioUnit _mixerAudioUnit;
     AudioUnit _outputAudioUnit;
+    
+    EmergencyLimiter *_emergencyLimiter;
     
     AudioDevice *_outputDevice;
     double       _outputSampleRate;
@@ -291,6 +312,8 @@ typedef struct {
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower + 1,  kAudioUnitScope_Output, 0, &_rightAveragePower);
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel,     kAudioUnitScope_Output, 0, &_leftPeakPower);
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel + 1, kAudioUnitScope_Output, 0, &_rightPeakPower);
+
+    _limiterActive = EmergencyLimiterIsActive(_emergencyLimiter);
     
 #if CHECK_RENDER_ERRORS_ON_TICK
     if (_converterAudioUnit) {
@@ -632,6 +655,10 @@ static OSStatus sInputRenderCallback(
         &on,
         sizeof(on)
     ), "AudioUnitSetProperty[kAudioUnitProperty_MeteringMode]");
+
+    _emergencyLimiter = EmergencyLimiterCreate();
+
+    AUGraphAddRenderNotify(_graph, sApplyEmergencyLimiter, _emergencyLimiter);
 }
 
 
@@ -758,6 +785,10 @@ static OSStatus sInputRenderCallback(
 
         if (_outputHogMode) {
             _tookHogMode = [controller takeHogMode];
+
+            if (_tookHogMode) {
+                [controller resetVolumeAndPan];
+            }
         }
 
         if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
@@ -882,6 +913,8 @@ static OSStatus sInputRenderCallback(
 
 	AudioTimeStamp startTime = {0};
     NSTimeInterval additional = _outputFrames / _outputSampleRate;
+
+    EmergencyLimiterSetSampleRate(_emergencyLimiter, _outputSampleRate);
 
     if (padding == 0) {
         startTime.mFlags = kAudioTimeStampHostTimeValid;
@@ -1094,6 +1127,7 @@ static OSStatus sInputRenderCallback(
     _currentScheduler = nil;
     
     _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
+    _limiterActive = NO;
 
     [self _teardownGraphHead];
     
@@ -1219,7 +1253,6 @@ static OSStatus sInputRenderCallback(
     
     return @[ effect ];
 }
-
 
 
 @end
