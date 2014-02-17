@@ -33,6 +33,8 @@
 
 static NSString * const sTracksKey = @"tracks";
 static NSString * const sMinimumSilenceKey = @"minimum-silence";
+static NSString * const sHistoryModifiedKey = @"history-modified-at";
+static NSString * const sHistoryExportedKey = @"history-exported-at";
 static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 static NSTimeInterval sAutoGapMinimum = 0;
@@ -407,6 +409,20 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (void) _markHistorySaved
+{
+    NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
+    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sHistoryExportedKey];
+}
+
+
+- (void) _markHistoryModified
+{
+    NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
+    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sHistoryModifiedKey];
+}
+
+
 #pragma mark - Public Methods
 
 - (void) clearHistory
@@ -427,14 +443,42 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [tracksController removeObjects:tracks];
     [tracksController setSelectionIndexes:[NSIndexSet indexSet]];
     
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sHistoryModifiedKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sHistoryExportedKey];
+    
     [[self tableView] reloadData];
+}
+
+
+- (BOOL) doesClearHistoryNeedPrompt
+{
+    NSTimeInterval modified = [[NSUserDefaults standardUserDefaults] doubleForKey:sHistoryModifiedKey];
+    NSTimeInterval exported = [[NSUserDefaults standardUserDefaults] doubleForKey:sHistoryExportedKey];
+    
+    NSInteger playedCount = 0;
+    for (Track *track in [[self tracksController] arrangedObjects]) {
+        if ([track trackStatus] == TrackStatusPlayed) {
+            playedCount++;
+            break;
+        }
+    }
+    
+    if ((modified > exported) && (playedCount > 0)) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 
 - (void) openFileAtURL:(NSURL *)URL
 {
     Track *track = [Track trackWithFileURL:URL];
-    if (track) [[self tracksController] addObject:track];
+
+    if (track) {
+        [[self tracksController] addObject:track];
+        [self _markHistoryModified];
+    }
 }
 
 
@@ -460,6 +504,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         NSLog(@"Error saving history: %@", error);
         NSBeep();
     }
+    
+    [self _markHistorySaved];
 }
 
 
@@ -482,6 +528,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [name appendFormat:@"%@ (%@)", NSLocalizedString(@"Embrace", nil), dateString];
     
     [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
+
+    [self _markHistorySaved];
 }
 
 
@@ -1080,6 +1128,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             }
         }
 
+        [self _markHistoryModified];
+
         return YES;
 
     } else if (URLString) {
@@ -1089,6 +1139,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         if (track) {
             [[self tracksController] insertObject:track atArrangedObjectIndex:row];
         }
+
+        [self _markHistoryModified];
 
         return YES;
     }

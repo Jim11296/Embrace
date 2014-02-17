@@ -45,10 +45,13 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (IBAction) showGearMenu:(id)sender;
 
 - (void) clearHistory;
+- (BOOL) doesClearHistoryNeedPrompt;
+
 - (void) openFileAtURL:(NSURL *)url;
 - (void) copyHistoryToPasteboard:(NSPasteboard *)pasteboard;
 - (void) saveHistoryToFileAtURL:(NSURL *)url;
 - (void) exportHistory;
+
 
 - (void) showAlertForIssue:(PlayerIssue)issue;
 
