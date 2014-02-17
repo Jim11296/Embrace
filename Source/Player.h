@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
 @property (nonatomic, readonly) Float32 rightAveragePower;
 @property (nonatomic, readonly) Float32 leftPeakPower;
 @property (nonatomic, readonly) Float32 rightPeakPower;
+@property (nonatomic, readonly, getter=isLimiterActive) BOOL limiterActive;
 
 - (void) addListener:(id<PlayerListener>)listener;
 - (void) removeListener:(id<PlayerListener>)listener;

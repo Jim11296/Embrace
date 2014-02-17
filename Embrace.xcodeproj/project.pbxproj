@@ -118,6 +118,7 @@
 		55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABE818B04D91006B6FBB /* DebugController.m */; };
 		55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */; };
 		55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABED18B08569006B6FBB /* MainIconView.m */; };
+		55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -305,6 +306,8 @@
 		55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DebugWindow.xib; path = Resources/DebugWindow.xib; sourceTree = SOURCE_ROOT; };
 		55F7ABED18B08569006B6FBB /* MainIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainIconView.m; path = Source/MainIconView.m; sourceTree = SOURCE_ROOT; };
 		55F7ABEE18B08569006B6FBB /* MainIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainIconView.h; path = Source/MainIconView.h; sourceTree = SOURCE_ROOT; };
+		55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmergencyLimiter.h; path = Source/EmergencyLimiter.h; sourceTree = "<group>"; };
+		55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmergencyLimiter.m; path = Source/EmergencyLimiter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -340,8 +343,8 @@
 		556ACE30187BB3F800AED4BC /* Wrapped C++ */ = {
 			isa = PBXGroup;
 			children = (
-				55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */,
 				55224BE518A788DA00407B46 /* WrappedAudioDevice.h */,
+				55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */,
 				556ACE34187BB43A00AED4BC /* WrappedUtils.h */,
 				556ACE35187BB43A00AED4BC /* WrappedUtils.mm */,
 			);
@@ -605,6 +608,8 @@
 				55F3B7D118779B3000E8FEC8 /* Player.m */,
 				55873FDC18AA1E720081772A /* TrackScheduler.h */,
 				55873FDD18AA1E720081772A /* TrackScheduler.m */,
+				55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */,
+				55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -828,6 +833,7 @@
 				5506802D1887509300441AAE /* TrackAnalyzer.m in Sources */,
 				557C2CC11897403E002FAFEA /* CACFString.cpp in Sources */,
 				55F3B7B11877885800E8FEC8 /* PlaylistController.m in Sources */,
+				55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */,
 				55717BC2187CE6B200213213 /* SilenceTableCellView.m in Sources */,
 				557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */,
 				550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */,

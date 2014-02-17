@@ -74,7 +74,7 @@
             rect.origin.x = peakX - 1;
             rect.size.width = 3;
         
-            if (didClip) {
+            if (didClip || _limiterActive) {
                 [[NSColor redColor] set];
             } else {
                 if (peakX < 10) {
@@ -110,16 +110,19 @@
            rightAveragePower: (Float32) rightAveragePower
                leftPeakPower: (Float32) leftPeakPower
               rightPeakPower: (Float32) rightPeakPower
+               limiterActive: (BOOL) limiterActive
 {
     if (_leftAveragePower  != leftAveragePower  ||
         _rightAveragePower != rightAveragePower ||
         _leftPeakPower     != leftPeakPower     ||
-        _rightPeakPower    != rightPeakPower)
+        _rightPeakPower    != rightPeakPower    ||
+        _limiterActive     != limiterActive)
     {
         _leftAveragePower  = leftAveragePower;
         _rightAveragePower = rightAveragePower;
         _leftPeakPower     = leftPeakPower;
         _rightPeakPower    = rightPeakPower;
+        _limiterActive     = limiterActive;
         
         [self setNeedsDisplay:YES];
     }
@@ -131,6 +134,7 @@
     if (_metering != metering) {
         _metering = metering;
         _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
+        _limiterActive = NO;
         [self setNeedsDisplay:YES];
     }
 }

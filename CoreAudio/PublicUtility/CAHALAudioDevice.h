@@ -125,6 +125,20 @@ public:
 	UInt32				GetMaximumVariableIOBufferSize() const;
 	bool				HasIOBufferSizeRange() const;
 	void				GetIOBufferSizeRange(UInt32& outMinimum, UInt32& outMaximum) const;
+
+//	Controls
+public:
+	bool				HasVolumeControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+	bool				VolumeControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+	void				SetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
+
+	bool				HasMuteControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+	bool				MuteControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+	void				SetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
+
+	bool				HasStereoPanControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+	bool				StereoPanControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+	void				SetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
 };
 
 #endif

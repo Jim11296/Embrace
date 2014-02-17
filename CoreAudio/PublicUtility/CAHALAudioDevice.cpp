@@ -494,3 +494,64 @@ void	CAHALAudioDevice::GetIOBufferSizeRange(UInt32& outMinimum, UInt32& outMaxim
 	outMaximum = static_cast<UInt32>(theAnswer.mMaximum);
 }
 
+bool	CAHALAudioDevice::HasVolumeControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyVolumeScalar, inScope, inChannel);
+	return HasProperty(theAddress);
+}
+
+bool	CAHALAudioDevice::VolumeControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyVolumeScalar, inScope, inChannel);
+	return IsPropertySettable(theAddress);
+}
+
+void	CAHALAudioDevice::SetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue)
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyVolumeScalar, inScope, inChannel);
+	SetPropertyData(theAddress, 0, NULL, sizeof(Float32), &inValue);
+}
+
+
+
+bool	CAHALAudioDevice::HasMuteControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyMute, inScope, inChannel);
+	return HasProperty(theAddress);
+}
+
+bool	CAHALAudioDevice::MuteControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyMute, inScope, inChannel);
+	return IsPropertySettable(theAddress);
+}
+
+
+void	CAHALAudioDevice::SetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue)
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyMute, inScope, inChannel);
+	UInt32 theValue = (inValue ? 1 : 0);
+	UInt32 theSize = sizeof(UInt32);
+	SetPropertyData(theAddress, 0, NULL, theSize, &theValue);
+}
+
+
+bool	CAHALAudioDevice::HasStereoPanControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyStereoPan, inScope, inChannel);
+	return HasProperty(theAddress);
+}
+
+bool	CAHALAudioDevice::StereoPanControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyStereoPan, inScope, inChannel);
+	return IsPropertySettable(theAddress);
+}
+
+
+void	CAHALAudioDevice::SetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue)
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyStereoPan, inScope, inChannel);
+	UInt32 theSize = sizeof(Float32);
+	SetPropertyData(theAddress, 0, NULL, theSize, &inValue);
+}
