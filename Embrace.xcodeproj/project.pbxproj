@@ -103,8 +103,8 @@
 		55CF27A7187A5B780042C92A /* MediaToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F3B7D61877A20B00E8FEC8 /* MediaToolbox.framework */; };
 		55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF27A9187AB2650042C92A /* EditEffectController.m */; };
 		55F3B7AE187786E300E8FEC8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0BC1877861E00C85770 /* MainMenu.xib */; };
-		55F3B7B11877885800E8FEC8 /* PlaylistController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B01877885800E8FEC8 /* PlaylistController.m */; };
-		55F3B7B3187788B500E8FEC8 /* PlaylistWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F3B7B2187788B500E8FEC8 /* PlaylistWindow.xib */; };
+		55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B01877885800E8FEC8 /* SetlistController.m */; };
+		55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */; };
 		55F3B7B61877908900E8FEC8 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B51877908900E8FEC8 /* Track.m */; };
 		55F3B7BA1877955C00E8FEC8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F3B7B91877955C00E8FEC8 /* AVFoundation.framework */; };
 		55F3B7D218779B3000E8FEC8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7D118779B3000E8FEC8 /* Player.m */; };
@@ -284,9 +284,9 @@
 		55CF2799187A464B0042C92A /* TrackTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackTableCellView.m; path = Source/TrackTableCellView.m; sourceTree = SOURCE_ROOT; };
 		55CF27A8187AB2650042C92A /* EditEffectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditEffectController.h; path = Source/EditEffectController.h; sourceTree = SOURCE_ROOT; };
 		55CF27A9187AB2650042C92A /* EditEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditEffectController.m; path = Source/EditEffectController.m; sourceTree = SOURCE_ROOT; };
-		55F3B7AF1877885800E8FEC8 /* PlaylistController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistController.h; path = Source/PlaylistController.h; sourceTree = SOURCE_ROOT; };
-		55F3B7B01877885800E8FEC8 /* PlaylistController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlaylistController.m; path = Source/PlaylistController.m; sourceTree = SOURCE_ROOT; };
-		55F3B7B2187788B500E8FEC8 /* PlaylistWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlaylistWindow.xib; path = Resources/PlaylistWindow.xib; sourceTree = SOURCE_ROOT; };
+		55F3B7AF1877885800E8FEC8 /* SetlistController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistController.h; path = Source/SetlistController.h; sourceTree = SOURCE_ROOT; };
+		55F3B7B01877885800E8FEC8 /* SetlistController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistController.m; path = Source/SetlistController.m; sourceTree = SOURCE_ROOT; };
+		55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SetlistWindow.xib; path = Resources/SetlistWindow.xib; sourceTree = SOURCE_ROOT; };
 		55F3B7B41877908900E8FEC8 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Track.h; path = Source/Track.h; sourceTree = SOURCE_ROOT; };
 		55F3B7B51877908900E8FEC8 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Track.m; path = Source/Track.m; sourceTree = SOURCE_ROOT; };
 		55F3B7B71877953D00E8FEC8 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
@@ -465,8 +465,8 @@
 				555A701A1890BCBF00305EC6 /* Application.m */,
 				55F7ABE718B04D91006B6FBB /* DebugController.h */,
 				55F7ABE818B04D91006B6FBB /* DebugController.m */,
-				55F3B7AF1877885800E8FEC8 /* PlaylistController.h */,
-				55F3B7B01877885800E8FEC8 /* PlaylistController.m */,
+				55F3B7AF1877885800E8FEC8 /* SetlistController.h */,
+				55F3B7B01877885800E8FEC8 /* SetlistController.m */,
 				55A0B169188F59F000866F04 /* CurrentTrackController.h */,
 				55A0B16A188F59F000866F04 /* CurrentTrackController.m */,
 				558513C518794A2600C268E3 /* EffectsController.h */,
@@ -493,7 +493,7 @@
 				558DC0C01877861E00C85770 /* InfoPlist.strings */,
 				558DC0C21877861E00C85770 /* Images.xcassets */,
 				558DC0BC1877861E00C85770 /* MainMenu.xib */,
-				55F3B7B2187788B500E8FEC8 /* PlaylistWindow.xib */,
+				55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */,
 				55A0B167188F447100866F04 /* CurrentTrackWindow.xib */,
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
@@ -736,7 +736,7 @@
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
 				55F7ABE018AF3D52006B6FBB /* gear_template.png in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
-				55F3B7B3187788B500E8FEC8 /* PlaylistWindow.xib in Resources */,
+				55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */,
 				552C9DBF1882A5D90041C160 /* padding_template.png in Resources */,
 				558DC0C71877861E00C85770 /* Images.xcassets in Resources */,
 				550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */,
@@ -836,7 +836,7 @@
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
 				5506802D1887509300441AAE /* TrackAnalyzer.m in Sources */,
 				557C2CC11897403E002FAFEA /* CACFString.cpp in Sources */,
-				55F3B7B11877885800E8FEC8 /* PlaylistController.m in Sources */,
+				55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */,
 				55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */,
 				55717BC2187CE6B200213213 /* SilenceTableCellView.m in Sources */,
 				557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */,

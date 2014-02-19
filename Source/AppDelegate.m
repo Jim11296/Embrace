@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "PlaylistController.h"
+#import "SetlistController.h"
 #import "EffectsController.h"
 #import "PreferencesController.h"
 #import "EditEffectController.h"
@@ -24,7 +24,7 @@
 #import "iTunesManager.h"
 
 @implementation AppDelegate {
-    PlaylistController     *_playlistController;
+    SetlistController      *_setlistController;
     EffectsController      *_effectsController;
     CurrentTrackController *_currentTrackController;
     PreferencesController  *_preferencesController;
@@ -52,7 +52,7 @@
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
     
-    _playlistController     = [[PlaylistController     alloc] init];
+    _setlistController      = [[SetlistController     alloc] init];
     _effectsController      = [[EffectsController      alloc] init];
     _currentTrackController = [[CurrentTrackController alloc] init];
     
@@ -74,8 +74,8 @@
         [self showCurrentTrack:self];
     }
 
-    // Always show main window
-    [self showMainWindow:self];
+    // Always show Set List
+    [self showSetlistWindow:self];
     
 #ifdef DEBUG
     [[self debugMenuItem] setHidden:NO];
@@ -87,8 +87,8 @@
 {
     NSMutableArray *visibleWindows = [NSMutableArray array];
     
-    if ([[_playlistController window] isVisible]) {
-        [visibleWindows addObject:@"playlist"];
+    if ([[_setlistController window] isVisible]) {
+        [visibleWindows addObject:@"setlist"];
     }
 
     if ([[_currentTrackController window] isVisible]) {
@@ -102,7 +102,7 @@
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)hasVisibleWindows
 {
     if (!hasVisibleWindows) {
-        [self showMainWindow:self];
+        [self showSetlistWindow:self];
     }
 
     return YES;
@@ -114,7 +114,7 @@
     NSURL *fileURL = [NSURL fileURLWithPath:filename];
 
     if (IsAudioFileAtURL(fileURL)) {
-        [_playlistController openFileAtURL:fileURL];
+        [_setlistController openFileAtURL:fileURL];
         return YES;
     }
 
@@ -128,7 +128,7 @@
         NSURL *fileURL = [NSURL fileURLWithPath:filename];
 
         if (IsAudioFileAtURL(fileURL)) {
-            [_playlistController openFileAtURL:fileURL];
+            [_setlistController openFileAtURL:fileURL];
         }
     }
 }
@@ -165,10 +165,10 @@
     SEL action = [menuItem action];
 
     if (action == @selector(performPreferredPlaybackAction:)) {
-        PlaybackAction action = [_playlistController preferredPlaybackAction];
+        PlaybackAction action = [_setlistController preferredPlaybackAction];
         
         NSString *title = NSLocalizedString(@"Play", nil);
-        BOOL enabled = [_playlistController isPreferredPlaybackActionEnabled];
+        BOOL enabled = [_setlistController isPreferredPlaybackActionEnabled];
         NSInteger state = NSOffState;
         
         if (action == PlaybackActionShowIssue) {
@@ -189,11 +189,11 @@
         [menuItem setEnabled:enabled];
         [menuItem setKeyEquivalent:@" "];
 
-    } else if (action == @selector(clearHistory:)) {
-        if ([_playlistController doesClearHistoryNeedPrompt]) {
-            [menuItem setTitle:NSLocalizedString(@"Clear History\\U2026", nil)];
+    } else if (action == @selector(clearSetlist:)) {
+        if ([_setlistController shouldPromptForClear]) {
+            [menuItem setTitle:NSLocalizedString(@"Clear Set List\\U2026", nil)];
         } else {
-            [menuItem setTitle:NSLocalizedString(@"Clear History", nil)];
+            [menuItem setTitle:NSLocalizedString(@"Clear Set List", nil)];
         }
 
         return YES;
@@ -204,8 +204,8 @@
     } else if (action == @selector(hardSkip:)) {
         return [[Player sharedInstance] isPlaying];
 
-    } else if (action == @selector(showMainWindow:)) {
-        BOOL yn = [_playlistController isWindowLoaded] && [[_playlistController window] isMainWindow];
+    } else if (action == @selector(showSetlistWindow:)) {
+        BOOL yn = [_setlistController isWindowLoaded] && [[_setlistController window] isMainWindow];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
     
     } else if (action == @selector(showEffectsWindow:)) {
@@ -215,6 +215,9 @@
     } else if (action == @selector(showCurrentTrack:)) {
         BOOL yn = [_currentTrackController isWindowLoaded] && [[_currentTrackController window] isMainWindow];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
+
+    } else if (action == @selector(showEndTime:)) {
+        return [_setlistController canShowEndTime];
     }
 
     return YES;
@@ -291,21 +294,21 @@
 }
 
 
-- (IBAction) clearHistory:(id)sender
+- (IBAction) clearSetlist:(id)sender
 {
-    if ([_playlistController doesClearHistoryNeedPrompt]) {
-        NSString *messageText     = NSLocalizedString(@"Clear History", nil);
-        NSString *informativeText = NSLocalizedString(@"You haven't saved or exported the current history. Are you sure you want to clear it?", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Clear History", nil);
+    if ([_setlistController shouldPromptForClear]) {
+        NSString *messageText     = NSLocalizedString(@"Clear Set List", nil);
+        NSString *informativeText = NSLocalizedString(@"You haven't saved or exported the current set list. Are you sure you want to clear it?", nil);
+        NSString *defaultButton   = NSLocalizedString(@"Clear Set List", nil);
         
         NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
         
         if ([alert runModal] == NSOKButton) {
-            [_playlistController clearHistory];
+            [_setlistController clear];
         }
     
     } else {
-        [_playlistController clearHistory];
+        [_setlistController clear];
     }
 }
 
@@ -322,28 +325,28 @@
         }
     }
     
-    [openPanel setTitle:NSLocalizedString(@"Add to Playlist", nil)];
+    [openPanel setTitle:NSLocalizedString(@"Add to Set List", nil)];
     [openPanel setAllowedFileTypes:GetAvailableAudioFileUTIs()];
 
-    __weak id weakPlaylistController = _playlistController;
+    __weak id weakSetlistController = _setlistController;
 
 
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
         if (result == NSOKButton) {
             SavePanelState(openPanel, @"open-file-panel");
-            [weakPlaylistController openFileAtURL:[openPanel URL]];
+            [weakSetlistController openFileAtURL:[openPanel URL]];
         }
     }];
 }
 
 
-- (IBAction) copyHistory:(id)sender
+- (IBAction) copySetlist:(id)sender
 {
-    [_playlistController copyHistoryToPasteboard:[NSPasteboard generalPasteboard]];
+    [_setlistController copyToPasteboard:[NSPasteboard generalPasteboard]];
 }
 
 
-- (IBAction) saveHistory:(id)sender
+- (IBAction) saveSetlist:(id)sender
 {
     NSSavePanel *savePanel = [NSSavePanel savePanel];
 
@@ -357,10 +360,10 @@
     NSString *suggestedName = [NSString stringWithFormat:suggestedNameFormat, dateString];
     [savePanel setNameFieldStringValue:suggestedName];
 
-    [savePanel setTitle:NSLocalizedString(@"Save History", nil)];
+    [savePanel setTitle:NSLocalizedString(@"Save Set List", nil)];
     [savePanel setAllowedFileTypes:@[ @"txt" ]];
     
-    if (!LoadPanelState(savePanel, @"save-history-panel")) {
+    if (!LoadPanelState(savePanel, @"save-set-list-panel")) {
         NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject];
         
         if (desktopPath) {
@@ -368,23 +371,24 @@
         }
     }
     
-    __weak id weakPlaylistController = _playlistController;
+    __weak id weakSetlistController = _setlistController;
     
     [savePanel beginWithCompletionHandler:^(NSInteger result) {
         if (result == NSOKButton) {
-            SavePanelState(savePanel, @"save-history-panel");
-            [weakPlaylistController saveHistoryToFileAtURL:[savePanel URL]];
+            SavePanelState(savePanel, @"save-set-list-panel");
+            [weakSetlistController saveToFileAtURL:[savePanel URL]];
         }
     }];
 }
 
 
-- (IBAction) exportHistory:(id)sender                  {  [_playlistController exportHistory]; }
-- (IBAction) performPreferredPlaybackAction:(id)sender {  [_playlistController performPreferredPlaybackAction:self]; }
-- (IBAction) increaseVolume:(id)sender                 {  [_playlistController increaseVolume:self];  }
-- (IBAction) decreaseVolume:(id)sender                 {  [_playlistController decreaseVolume:self];  }
-- (IBAction) increaseAutoGap:(id)sender                {  [_playlistController increaseAutoGap:self]; }
-- (IBAction) decreaseAutoGap:(id)sender                {  [_playlistController decreaseAutoGap:self]; }
+- (IBAction) exportSetlist:(id)sender                  {  [_setlistController exportToPlaylist]; }
+- (IBAction) performPreferredPlaybackAction:(id)sender {  [_setlistController performPreferredPlaybackAction:self]; }
+- (IBAction) increaseVolume:(id)sender                 {  [_setlistController increaseVolume:self];  }
+- (IBAction) decreaseVolume:(id)sender                 {  [_setlistController decreaseVolume:self];  }
+- (IBAction) increaseAutoGap:(id)sender                {  [_setlistController increaseAutoGap:self]; }
+- (IBAction) decreaseAutoGap:(id)sender                {  [_setlistController decreaseAutoGap:self]; }
+- (IBAction) showEndTime:(id)sender                    {  [_setlistController showEndTime:self]; }
 
 
 - (IBAction) hardSkip:(id)sender
@@ -417,9 +421,9 @@
 }
 
 
-- (IBAction) showMainWindow:(id)sender
+- (IBAction) showSetlistWindow:(id)sender
 {
-    [self _toggleWindowForController:_playlistController sender:sender];
+    [self _toggleWindowForController:_setlistController sender:sender];
 }
 
 

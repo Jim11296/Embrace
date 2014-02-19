@@ -20,9 +20,13 @@
 }
 
 
-- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
+- (NSImage *) dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
 {
-    return [NSImage imageNamed:@"drag_icon"];
+    if (GetMajorSystemVersion() >= 9) {
+        return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
+    } else {
+        return [NSImage imageNamed:@"drag_icon"];
+    }
 }
 
 

@@ -35,8 +35,10 @@
 {
     [super windowDidLoad];
     
-    [[self window] setTitle:[_track title]];
-    
+    if ([_track title]) {
+        [[self window] setTitle:[_track title]];
+    }
+
     [[self waveformView] setShowsDebugInformation:YES];
     [[self waveformView] setTrack:_track];
 }

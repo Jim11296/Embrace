@@ -10,7 +10,7 @@
 
 #import "DebugController.h"
 #import "Player.h"
-#import "PlaylistController.h"
+#import "SetlistController.h"
 #import "AppDelegate.h"
 #import "Track.h"
 #import "Button.h"
@@ -29,9 +29,9 @@
 }
 
 
-- (PlaylistController *) _playlistController
+- (SetlistController *) _setlistController
 {
-    return [GetAppDelegate() valueForKey:@"playlistController"];
+    return [GetAppDelegate() valueForKey:@"setlistController"];
 }
 
 
@@ -65,10 +65,10 @@
         add(@"test_g");
     }
 
-    [[self _playlistController] clearHistory];
+    [[self _setlistController] clear];
     
     for (NSURL *url in fileURLs) {
-        [[self _playlistController] openFileAtURL:url];
+        [[self _setlistController] openFileAtURL:url];
     }
 }
 
@@ -85,13 +85,13 @@
 - (IBAction) showIssueDialog:(id)sender
 {
     NSInteger tag = [sender selectedTag];
-    [[self _playlistController] showAlertForIssue:tag];
+    [[self _setlistController] showAlertForIssue:tag];
 }
 
 
 - (IBAction) doFlipAnimation:(id)sender
 {
-    Button *button = [[self _playlistController] playButton];
+    Button *button = [[self _setlistController] playButton];
 
     [button setImage:[NSImage imageNamed:@"pause_template"]];
     [button setEnabled:YES];

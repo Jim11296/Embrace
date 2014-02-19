@@ -11,7 +11,11 @@
 #import "BorderedView.h"
 #import "Preferences.h"
 
-@implementation AudioFileTableCellView
+@implementation AudioFileTableCellView {
+    NSTextField *_endTimeField;
+    BOOL _endTimeVisible;
+}
+
 
 - (NSArray *) keyPathsToObserve
 {
@@ -21,10 +25,73 @@
 }
 
 
+- (void) showEndTime
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterNoStyle];
+    [formatter setTimeStyle:NSDateFormatterMediumStyle];
+    
+    NSDate *endTime   = [[self track] estimatedEndTime];
+    
+    if (!endTime) return;
+    
+    NSString *endString = [formatter stringFromDate:endTime];
+
+    if (!_endTimeField) {
+        NSTextField *(^makeField)() = ^{
+            NSTextField *field = [[NSTextField alloc] initWithFrame:NSZeroRect];
+
+            [field setFont:[_artistField font]];
+            [field setBezeled:NO];
+            [field setDrawsBackground:NO];
+            [field setSelectable:NO];
+            [field setEditable:NO];
+            
+            [field setAlphaValue:0];
+
+            [[_artistField superview] addSubview:field];
+
+            
+            return field;
+        };
+    
+        _endTimeField   = makeField();
+        [_endTimeField setAlignment:NSRightTextAlignment];
+    }
+
+    [_endTimeField setStringValue:endString];
+    [_endTimeField setTextColor:[self bottomTextColor]];
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(_hideEndTime) withObject:nil afterDelay:2];
+
+    _endTimeVisible = YES;
+
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [self _updateBottomFieldsAnimated:YES];
+    } completionHandler:NULL];
+}
+
+
+- (void) _hideEndTime
+{
+    _endTimeVisible = NO;
+
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [self _updateBottomFieldsAnimated:YES];
+    } completionHandler:NULL];
+}
+
+
 - (void) update
 {
     [super update];
-    
+    [self _updateBottomFieldsAnimated:NO];
+}
+
+
+- (void) _updateBottomFieldsAnimated:(BOOL)animated
+{
     Track *track = [self track];
     if (!track) return;
 
@@ -75,27 +142,54 @@
     NSRect tonalityFrame = [tonalityField frame];
     NSRect artistFrame   = [artistField frame];
     
-    tonalityFrame.origin.x   = artistFrame.origin.x   = 18;
-    tonalityFrame.size.width = artistFrame.size.width = superBounds.size.width - (18 + 14);
+    tonalityFrame.origin.x   = artistFrame.origin.x   = 14;
+    tonalityFrame.size.width = artistFrame.size.width = superBounds.size.width - (14 + 14);
     
-    [artistField setFrame:artistFrame];
     [tonalityField setFrame:tonalityFrame];
+    
+    NSRect endTimeFrame = tonalityFrame;
+    [_endTimeField setFrame:endTimeFrame];
 
     CGFloat tonalityWidth = 0;
+    CGFloat endTimeWidth = 0;
+
     if ([stringValue length]) {
         [tonalityField sizeToFit];
         tonalityWidth = [tonalityField frame].size.width;
         [tonalityField setFrame:tonalityFrame];
     }
     
-    artistFrame.size.width -= tonalityWidth;
-    tonalityFrame.size.width = tonalityWidth;
+    if (_endTimeField && _endTimeVisible) {
+        [_endTimeField sizeToFit];
+        endTimeWidth = [_endTimeField frame].size.width;
+        [_endTimeField setFrame:endTimeFrame];
+    }
+    
+    CGFloat rightWidth = MAX(tonalityWidth, endTimeWidth);
+    
+    artistFrame.size.width -= rightWidth;
+    tonalityFrame.size.width = rightWidth;
     tonalityFrame.origin.x = NSMaxX(artistFrame);
 
-    [artistField setFrame:artistFrame];
-    [tonalityField setFrame:tonalityFrame];
+    endTimeFrame.size.width = rightWidth;
+    endTimeFrame.origin.x = NSMaxX(artistFrame);
 
-    [artistField setTextColor:[self bottomTextColor]];
+    [tonalityField setFrame:tonalityFrame];
+    if (_endTimeVisible) {
+        [_endTimeField setFrame:endTimeFrame];
+    }
+
+    if (animated) {
+        [[artistField animator] setFrame:artistFrame];
+        [[tonalityField animator] setAlphaValue:(_endTimeVisible ? 0.0 : 1.0)];
+        [[_endTimeField animator] setAlphaValue:(_endTimeVisible ? 1.0 : 0)];
+    } else {
+        [artistField setFrame:artistFrame];
+        [tonalityField setAlphaValue:(_endTimeVisible ? 0.0 : 1.0)];
+        [_endTimeField setAlphaValue:(_endTimeVisible ? 1.0 : 0)];
+    }
+
+    [artistField   setTextColor:[self bottomTextColor]];
     [tonalityField setTextColor:[self bottomTextColor]];
 }
 

@@ -23,12 +23,8 @@ extern NSString * const PreferencesDidChangeNotification;
 
 + (id) sharedInstance;
 
-@property (nonatomic) BOOL preventsAccidents;
-@property (nonatomic) BOOL warnsAboutIssues;
-
 @property (nonatomic) TonalityDisplayMode tonalityDisplayMode;
 @property (nonatomic) BOOL showsBPM;
-@property (nonatomic) BOOL matchesLoudness;
 
 @property (nonatomic) AudioDevice *mainOutputAudioDevice;
 @property (nonatomic) double       mainOutputSampleRate;

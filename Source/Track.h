@@ -43,6 +43,9 @@ typedef NS_ENUM(NSInteger, TrackType) {
 @property (nonatomic) TrackStatus trackStatus;
 @property (nonatomic) BOOL pausesAfterPlaying;
 
+@property (nonatomic) NSDate *estimatedEndTime;
+
+
 // Metadata
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *artist;
