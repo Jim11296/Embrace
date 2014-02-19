@@ -22,9 +22,7 @@ static NSDictionary *sGetDefaultValues()
 
     sDefaultValues = @{
         @"tonalityDisplayMode": @(TonalityDisplayModeTraditional),
-
         @"showsBPM": @(YES),
-        @"matchesLoudness": @(YES),
 
         @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
         @"mainOutputSampleRate":  @(0),

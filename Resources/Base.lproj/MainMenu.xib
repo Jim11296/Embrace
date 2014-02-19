@@ -70,7 +70,7 @@
                 <menuItem title="File" id="83">
                     <menu key="submenu" title="File" id="81">
                         <items>
-                            <menuItem title="Add to Playlist…" keyEquivalent="o" id="72">
+                            <menuItem title="Add to Set List…" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openFile:" target="494" id="4JA-P4-kgz"/>
                                 </connections>
@@ -84,27 +84,33 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="znP-el-FvS"/>
-                            <menuItem title="Clear History" keyEquivalent="k" id="OpO-hz-U6C">
+                            <menuItem title="Show End Time" keyEquivalent="t" id="Uws-ha-zzy">
+                                <connections>
+                                    <action selector="showEndTime:" target="494" id="O0s-6z-Zk0"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="abV-6Y-nkv"/>
+                            <menuItem title="Clear Set List" keyEquivalent="k" id="OpO-hz-U6C">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="clearHistory:" target="494" id="eqr-mg-Zs4"/>
+                                    <action selector="clearSetlist:" target="494" id="eUk-KI-mlG"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="FO8-6S-eZx"/>
-                            <menuItem title="Copy History" keyEquivalent="C" id="FdC-Kk-mtx">
+                            <menuItem title="Copy Set List" keyEquivalent="C" id="FdC-Kk-mtx">
                                 <connections>
-                                    <action selector="copyHistory:" target="494" id="EFN-OE-EVR"/>
+                                    <action selector="copySetlist:" target="494" id="RzQ-ig-oM4"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save History…" keyEquivalent="s" id="75">
+                            <menuItem title="Save Set List…" keyEquivalent="s" id="75">
                                 <connections>
-                                    <action selector="saveHistory:" target="494" id="xGR-mf-U0h"/>
+                                    <action selector="saveSetlist:" target="494" id="KHx-V9-rYa"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Export History to iTunes…" keyEquivalent="e" id="112">
+                            <menuItem title="Export to iTunes…" keyEquivalent="e" id="112">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="exportHistory:" target="494" id="qiU-jO-N9r"/>
+                                    <action selector="exportSetlist:" target="494" id="SGv-aQ-4hz"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -222,10 +228,10 @@ CA
                             <menuItem isSeparatorItem="YES" id="92">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Playlist" keyEquivalent="1" id="fJ3-aK-m6W">
+                            <menuItem title="Set List" keyEquivalent="1" id="fJ3-aK-m6W">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="showMainWindow:" target="494" id="EZ9-U5-Gke"/>
+                                    <action selector="showSetlistWindow:" target="494" id="DP7-p9-eoj"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Effects" keyEquivalent="2" id="Mom-RU-rZZ">

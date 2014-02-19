@@ -229,3 +229,13 @@ NSString *GetStringForTime(NSTimeInterval time)
     return [NSString stringWithFormat:@"%s%g:%02g", minus ? "-" : "", minutes, seconds];
 }
 
+
+NSInteger GetMajorSystemVersion(void)
+{
+    if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8) {
+        return 8;
+    } else {
+        return 9;
+    }
+}
+

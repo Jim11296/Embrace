@@ -1,5 +1,5 @@
 //
-//  MainWindowController.h
+//  SetlistController.h
 //  Embrace
 //
 //  Created by Ricci Adams on 2014-01-03.
@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 };
 
 
-@interface PlaylistController : NSWindowController
+@interface SetlistController : NSWindowController
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;
 - (PlaybackAction) preferredPlaybackAction;
@@ -44,14 +44,17 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (IBAction) addSilence:(id)sender;
 - (IBAction) showGearMenu:(id)sender;
 
-- (void) clearHistory;
-- (BOOL) doesClearHistoryNeedPrompt;
+- (void) clear;
+- (BOOL) shouldPromptForClear;
 
 - (void) openFileAtURL:(NSURL *)url;
-- (void) copyHistoryToPasteboard:(NSPasteboard *)pasteboard;
-- (void) saveHistoryToFileAtURL:(NSURL *)url;
-- (void) exportHistory;
 
+- (void) copyToPasteboard:(NSPasteboard *)pasteboard;
+- (void) saveToFileAtURL:(NSURL *)url;
+- (void) exportToPlaylist;
+
+- (IBAction) showEndTime:(id)sender;
+- (BOOL) canShowEndTime;
 
 - (void) showAlertForIssue:(PlayerIssue)issue;
 

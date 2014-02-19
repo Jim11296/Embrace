@@ -1,15 +1,16 @@
 //
-//  PlaylistController
+//  SetlistController
 //
 //  Created by Ricci Adams on 2014-01-03.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
-#import "PlaylistController.h"
+#import "SetlistController.h"
 
 #import "AudioDevice.h"
 #import "WrappedAudioDevice.h"
 
+#import "AudioFileTableCellView.h"
 #import "Track.h"
 #import "EffectType.h"
 #import "Effect.h"
@@ -33,19 +34,19 @@
 
 static NSString * const sTracksKey = @"tracks";
 static NSString * const sMinimumSilenceKey = @"minimum-silence";
-static NSString * const sHistoryModifiedKey = @"history-modified-at";
-static NSString * const sHistoryExportedKey = @"history-exported-at";
+static NSString * const sModifiedAtKey = @"modified-at";
+static NSString * const sSavedAtKey = @"saved-at";
 static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 static NSTimeInterval sAutoGapMinimum = 0;
 static NSTimeInterval sAutoGapMaximum = 15.0;
 
 
-@interface PlaylistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate>
 
 @end
 
-@implementation PlaylistController {
+@implementation SetlistController {
     NSUInteger _rowOfDraggedTrack;
     BOOL       _inVolumeDrag;
     
@@ -74,7 +75,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (NSString *) windowNibName
 {
-    return @"PlaylistWindow";
+    return @"SetlistWindow";
 }
 
 
@@ -98,6 +99,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[self gearButton] setImage:[NSImage imageNamed:@"gear_template"]];
     
     [[self tracksController] addObserver:self forKeyPath:@"arrangedObjects" options:0 context:NULL];
+
+    if (GetMajorSystemVersion() >= 9) {
+        [[self tableView] setDraggingDestinationFeedbackStyle:NSTableViewDraggingDestinationFeedbackStyleGap];
+    }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     [self _handlePreferencesDidChange:nil];
@@ -358,7 +363,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (NSString *) _historyAsString
+- (NSString *) _contentsAsString
 {
     NSMutableString *result = [NSMutableString string];
 
@@ -409,23 +414,23 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (void) _markHistorySaved
+- (void) _markAsSaved
 {
     NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
-    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sHistoryExportedKey];
+    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sSavedAtKey];
 }
 
 
-- (void) _markHistoryModified
+- (void) _markAsModified
 {
     NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
-    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sHistoryModifiedKey];
+    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
 }
 
 
 #pragma mark - Public Methods
 
-- (void) clearHistory
+- (void) clear
 {
     NSArrayController *tracksController = [self tracksController];
 
@@ -443,17 +448,17 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [tracksController removeObjects:tracks];
     [tracksController setSelectionIndexes:[NSIndexSet indexSet]];
     
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sHistoryModifiedKey];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sHistoryExportedKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sModifiedAtKey];
     
     [[self tableView] reloadData];
 }
 
 
-- (BOOL) doesClearHistoryNeedPrompt
+- (BOOL) shouldPromptForClear
 {
-    NSTimeInterval modified = [[NSUserDefaults standardUserDefaults] doubleForKey:sHistoryModifiedKey];
-    NSTimeInterval exported = [[NSUserDefaults standardUserDefaults] doubleForKey:sHistoryExportedKey];
+    NSTimeInterval modifiedAt = [[NSUserDefaults standardUserDefaults] doubleForKey:sModifiedAtKey];
+    NSTimeInterval savedAt    = [[NSUserDefaults standardUserDefaults] doubleForKey:sSavedAtKey];
     
     NSInteger playedCount = 0;
     for (Track *track in [[self tracksController] arrangedObjects]) {
@@ -463,7 +468,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         }
     }
     
-    if ((modified > exported) && (playedCount > 0)) {
+    if ((modifiedAt > savedAt) && (playedCount > 0)) {
         return YES;
     }
     
@@ -477,39 +482,39 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     if (track) {
         [[self tracksController] addObject:track];
-        [self _markHistoryModified];
+        [self _markAsModified];
     }
 }
 
 
-- (void) copyHistoryToPasteboard:(NSPasteboard *)pasteboard
+- (void) copyToPasteboard:(NSPasteboard *)pasteboard
 {
-    NSString *history = [self _historyAsString];
+    NSString *contents = [self _contentsAsString];
 
-    NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:history ofType:NSPasteboardTypeString];
+    NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:contents ofType:NSPasteboardTypeString];
 
     [pasteboard clearContents];
     [pasteboard writeObjects:[NSArray arrayWithObject:item]];
 }
 
 
-- (void) saveHistoryToFileAtURL:(NSURL *)url
+- (void) saveToFileAtURL:(NSURL *)url
 {
-    NSString *historyContents = [self _historyAsString];
+    NSString *contents = [self _contentsAsString];
 
     NSError *error = nil;
-    [historyContents writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    [contents writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
 
     if (error) {
-        NSLog(@"Error saving history: %@", error);
+        NSLog(@"Error saving set list: %@", error);
         NSBeep();
     }
     
-    [self _markHistorySaved];
+    [self _markAsSaved];
 }
 
 
-- (void) exportHistory
+- (void) exportToPlaylist
 {
     NSMutableArray *fileURLs = [NSMutableArray array];
     
@@ -529,7 +534,82 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     
     [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
 
-    [self _markHistorySaved];
+    [self _markAsSaved];
+}
+
+
+- (void) _calculateStartAndEndTimes
+{
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval time = 0;
+
+    Player *player = [Player sharedInstance];
+    Track  *lastTrack = nil;
+
+    for (Track *track in [[self tracksController] arrangedObjects]) {
+        NSTimeInterval startTime = 0;
+        NSTimeInterval endTime   = 0;
+
+        TrackStatus status = [track trackStatus];
+        
+        if (status == TrackStatusPlayed) {
+            continue;
+
+        } else if (status == TrackStatusPlaying) {
+            if ([track isEqual:[player currentTrack]]) {
+                startTime = now - [player timeElapsed];
+                time += [player timeRemaining];
+                endTime = now + time;
+            }
+
+        } else if (status == TrackStatusQueued) {
+            startTime = now + time;
+            time += [track playDuration];
+            endTime = now + time;
+            
+            if (lastTrack) {
+                NSTimeInterval padding = 0;
+
+                NSTimeInterval totalSilence = [lastTrack silenceAtEnd] + [track silenceAtStart];
+                padding = [self minimumSilenceBetweenTracks] - totalSilence;
+                if (padding < 0) padding = 0;
+
+                time += padding;
+            }
+        }
+        
+        if (endTime) {
+            [track setEstimatedEndTime:[NSDate dateWithTimeIntervalSinceReferenceDate:endTime]];
+        }
+
+        lastTrack = track;
+    }
+}
+
+
+- (void) showEndTime:(id)sender
+{
+    Track *track = [self _selectedTrack];
+    if (!track) return;
+
+    [self _calculateStartAndEndTimes];
+
+    NSInteger index = [[[self tracksController] arrangedObjects] indexOfObject:track];
+    
+    if (index != NSNotFound) {
+        id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
+        
+        if ([view respondsToSelector:@selector(showEndTime)]) {
+            [view showEndTime];
+        }
+    }
+}
+
+
+- (BOOL) canShowEndTime
+{
+    Track *track = [self _selectedTrack];
+    return track && ([track trackStatus] != TrackStatusPlayed);
 }
 
 
@@ -818,6 +898,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     } else if (action == @selector(addSilence:)) {
         return [self _canInsertAfterSelectedRow];
+
+    } else if (action == @selector(showEndTime:)) {
+        return [self canShowEndTime];
     }
     
     
@@ -1128,7 +1211,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             }
         }
 
-        [self _markHistoryModified];
+        [self _markAsModified];
 
         return YES;
 
@@ -1140,7 +1223,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             [[self tracksController] insertObject:track atArrangedObjectIndex:row];
         }
 
-        [self _markHistoryModified];
+        [self _markAsModified];
 
         return YES;
     }

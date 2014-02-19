@@ -13,11 +13,14 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-- (IBAction) clearHistory:(id)sender;
 - (IBAction) openFile:(id)sender;
-- (IBAction) copyHistory:(id)sender;
-- (IBAction) saveHistory:(id)sender;
-- (IBAction) exportHistory:(id)sender;
+
+- (IBAction) clearSetlist:(id)sender;
+- (IBAction) copySetlist:(id)sender;
+- (IBAction) saveSetlist:(id)sender;
+- (IBAction) exportSetlist:(id)sender;
+
+- (IBAction) showEndTime:(id)sender;
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;
 - (IBAction) hardSkip:(id)sender;
@@ -28,7 +31,7 @@
 - (IBAction) increaseAutoGap:(id)sender;
 - (IBAction) decreaseAutoGap:(id)sender;
 
-- (IBAction) showMainWindow:(id)sender;
+- (IBAction) showSetlistWindow:(id)sender;
 - (IBAction) showEffectsWindow:(id)sender;
 - (IBAction) showPreferences:(id)sender;
 - (IBAction) showCurrentTrack:(id)sender;
