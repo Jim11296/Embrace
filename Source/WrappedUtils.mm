@@ -39,6 +39,7 @@ extern "C" void InstallCppTerminationHandler()
 //    std::set_terminate(sHandleTerminate);
 }
 
+
 extern "C" NSTimeInterval GetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2)
 {
     Float64 hostTimeFreq = CAHostTimeBase::GetFrequency();

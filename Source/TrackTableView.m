@@ -8,7 +8,27 @@
 
 #import "TrackTableView.h"
 
+#import "AudioFileTableCellView.h"
+
 @implementation TrackTableView
+
+- (void) updateInsertionPointWorkaround:(BOOL)yn
+{
+    [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
+        NSInteger numberOfColumns = [rowView numberOfColumns];
+
+        BOOL workaround = yn && (row == 0);
+
+        for (NSInteger i = 0; i < numberOfColumns; i++) {
+            id view = [rowView viewAtColumn:i];
+
+            if ([view respondsToSelector:@selector(setDrawsInsertionPointWorkaround:)]) {
+                [view setDrawsInsertionPointWorkaround:workaround];
+            }
+        }
+    }];
+}
+
 
 - (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
 {
@@ -22,12 +42,17 @@
 
 - (NSImage *) dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
 {
-    if (GetMajorSystemVersion() >= 9) {
-        return [super dragImageForRowsWithIndexes:dragRows tableColumns:tableColumns event:dragEvent offset:dragImageOffset];
-    } else {
-        return [NSImage imageNamed:@"drag_icon"];
-    }
+    return [NSImage imageNamed:@"drag_icon"];
 }
+
+
+
+- (void) draggingExited:(id <NSDraggingInfo>)sender
+{
+    [super draggingExited:sender];
+    [self updateInsertionPointWorkaround:NO];
+}
+
 
 
 - (void) draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint

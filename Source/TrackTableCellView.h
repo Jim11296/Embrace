@@ -28,4 +28,6 @@
 
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 
+@property (nonatomic, assign) BOOL drawsInsertionPointWorkaround;
+
 @end
