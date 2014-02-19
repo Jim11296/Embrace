@@ -100,10 +100,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     
     [[self tracksController] addObserver:self forKeyPath:@"arrangedObjects" options:0 context:NULL];
 
-    if (GetMajorSystemVersion() >= 9) {
-        [[self tableView] setDraggingDestinationFeedbackStyle:NSTableViewDraggingDestinationFeedbackStyleGap];
-    }
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     [self _handlePreferencesDidChange:nil];
 
@@ -425,6 +421,12 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
     [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
+}
+
+
+- (void) _updateInsertionPointWorkaround:(BOOL)yn
+{
+    [(TrackTableView *)_tableView updateInsertionPointWorkaround:yn];
 }
 
 
@@ -1106,6 +1108,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
+    [self _updateInsertionPointWorkaround:NO];
+
     if (operation == NSDragOperationNone) {
         NSRect frame = [[self window] frame];
 
@@ -1136,10 +1140,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     NSPasteboard *pasteboard = [info draggingPasteboard];
     BOOL isMove = ([pasteboard dataForType:sTrackPasteboardType] != nil);
 
+    [self _updateInsertionPointWorkaround:NO];
+    
     if (dropOperation == NSTableViewDropAbove) {
         Track *track = [self _trackAtRow:row];
 
         if (!track || [track trackStatus] == TrackStatusQueued) {
+            if (row == 0) {
+                [self _updateInsertionPointWorkaround:YES];
+            }
+
             if (isMove) {
                 if ((row == _rowOfDraggedTrack) || (row == (_rowOfDraggedTrack + 1))) {
                     return NSDragOperationNone;
@@ -1174,6 +1184,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
+    [self _updateInsertionPointWorkaround:NO];
+
     NSPasteboard *pboard = [info draggingPasteboard];
 
     if ((row == -1) && (dropOperation == NSTableViewDropOn)) {

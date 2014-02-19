@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface TrackTableView : NSTableView
-
+- (void) updateInsertionPointWorkaround:(BOOL)yn;
 @end
 
 

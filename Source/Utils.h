@@ -61,4 +61,3 @@ extern AppDelegate *GetAppDelegate(void);
 
 extern NSString *GetStringForTime(NSTimeInterval time);
 
-extern NSInteger GetMajorSystemVersion(void);

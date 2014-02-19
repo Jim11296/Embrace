@@ -152,6 +152,14 @@
     } else {
         [[self borderedView] setBackgroundColor:nil];
     }
+
+    if (_drawsInsertionPointWorkaround) {
+        [[self borderedView] setTopBorderColor:GetRGBColor(0x3874d7, 1.0)];
+        [[self borderedView] setTopBorderHeight:3];
+    } else {
+        [[self borderedView] setTopBorderColor:nil];
+        [[self borderedView] setTopBorderHeight:0];
+    }
 }
 
 
@@ -199,6 +207,15 @@
 {
     if (_selected != selected) {
         _selected = selected;
+        [self update];
+    }
+}
+
+
+- (void) setDrawsInsertionPointWorkaround:(BOOL)drawsInsertionPointWorkaround
+{
+    if (_drawsInsertionPointWorkaround != drawsInsertionPointWorkaround) {
+        _drawsInsertionPointWorkaround = drawsInsertionPointWorkaround;
         [self update];
     }
 }
