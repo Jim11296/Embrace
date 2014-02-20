@@ -7,8 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AudioFile.h"
+
 
 extern NSString * const TrackDidUpdateNotification;
+
+
 
 @class TrackAnalyzer;
 
@@ -25,6 +29,13 @@ typedef NS_ENUM(NSInteger, TrackType) {
 };
 
 
+typedef NS_ENUM(NSInteger, TrackError) {
+    TrackErrorNone             = 0,
+    TrackErrorProtectedContent = AudioFileErrorProtectedContent,
+    TrackErrorConversionFailed = AudioFileErrorConversionFailed,
+    TrackErrorOpenFailed       = AudioFileErrorOpenFailed
+};
+
 @interface Track : NSObject
 
 + (instancetype) trackWithStateDictionary:(NSDictionary *)state;
@@ -39,11 +50,13 @@ typedef NS_ENUM(NSInteger, TrackType) {
 @property (nonatomic, readonly) TrackType trackType;
 @property (nonatomic, readonly) NSURL *fileURL;
 
+
 // Read/Write
 @property (nonatomic) TrackStatus trackStatus;
 @property (nonatomic) BOOL pausesAfterPlaying;
 
-@property (nonatomic) NSDate *estimatedEndTime;
+@property (nonatomic) NSDate  *estimatedEndTime;
+@property (nonatomic) TrackError trackError;
 
 
 // Metadata

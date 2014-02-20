@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AudioFile.h"
 
 @class Track;
 
@@ -14,8 +15,12 @@
 
 - (id) initWithTrack:(Track *)track outputFormat:(AudioStreamBasicDescription)outputFormat;
 
-- (void) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp;
+- (BOOL) setup;
+
+- (BOOL) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp;
 - (void) stopScheduling:(AudioUnit)audioUnit;
+
+- (AudioFileError) audioFileError;
 
 @property (nonatomic, readonly) Track *track;
 @property (nonatomic, readonly) AudioStreamBasicDescription clientFormat;

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AudioFile.h"
+
 
 @class TrackAnalyzerResult;
 typedef void (^TrackAnalyzerCompletionCallback)(TrackAnalyzerResult *result);
@@ -27,5 +29,6 @@ typedef void (^TrackAnalyzerCompletionCallback)(TrackAnalyzerResult *result);
 @property (nonatomic, readonly) double  peak;
 @property (nonatomic, readonly) NSData *overviewData;
 @property (nonatomic, readonly) double  overviewRate;
+@property (nonatomic, readonly) AudioFileError error;
 @end
 

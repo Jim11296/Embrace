@@ -8,7 +8,7 @@
 
 #import "TrackAnalyzer.h"
 #import "LoudnessMeasurer.h"
-
+#import "AudioFile.h"
 
 @interface TrackAnalyzer ()
 @property (atomic) BOOL shouldCancelAnalysis;
@@ -20,6 +20,7 @@
 @property (nonatomic) double  peak;
 @property (nonatomic) NSData *overviewData;
 @property (nonatomic) double  overviewRate;
+@property (nonatomic) AudioFileError error;
 @end
 
 
@@ -59,17 +60,16 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
 {
     if ([self shouldCancelAnalysis]) return nil;
 
-    TrackAnalyzerResult *result = nil;
+    TrackAnalyzerResult *result = [[TrackAnalyzerResult alloc] init];
 
-    [url startAccessingSecurityScopedResource];
+    AudioFile *audioFile = [[AudioFile alloc] initWithFileURL:url];
 
-    ExtAudioFileRef audioFile = NULL;
     OSStatus err = noErr;
 
     // Open file
     if (err == noErr) {
-        err = ExtAudioFileOpenURL((__bridge CFURLRef)url, &audioFile);
-        if (err) NSLog(@"ExtAudioFileOpenURL: %ld", (long)err);
+        err = [audioFile open];
+        if (err) NSLog(@"AudioFile -open: %ld", (long)err);
     }
 
     double loudness = 0;
@@ -79,10 +79,8 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
     double  overviewRate = 0;
     
     AudioStreamBasicDescription fileFormat = {0};
-    UInt32 fileFormatSize = sizeof(fileFormat);
-
     if (err == noErr) {
-        err = ExtAudioFileGetProperty(audioFile, kExtAudioFileProperty_FileDataFormat, &fileFormatSize, &fileFormat);
+        err = [audioFile getFileDataFormat:&fileFormat];
     }
 
 
@@ -100,14 +98,20 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
         clientFormat.mChannelsPerFrame = channels;
         clientFormat.mBitsPerChannel   = sizeof(float) * 8;
 
-        err = ExtAudioFileSetProperty(audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof(clientFormat), &clientFormat);
+        err = [audioFile setClientDataFormat:&clientFormat];
     }
     
+    if (![audioFile canRead] &&
+        ![audioFile convert] &&
+        ![audioFile canRead])
+    {
+        err = 1;
+    }
+    
+    
     SInt64 fileLengthFrames = 0;
-    UInt32 fileLengthFramesSize = sizeof(fileLengthFrames);
-   
     if (err == noErr) {
-        err = ExtAudioFileGetProperty(audioFile, kExtAudioFileProperty_FileLengthFrames, &fileLengthFramesSize, &fileLengthFrames);
+        err = [audioFile getFileLengthFrames:&fileLengthFrames];
     }
     
     if (err == noErr) {
@@ -128,7 +132,7 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
 
         while (1 && (err == noErr)) {
             UInt32 frameCount = (UInt32)framesRemaining;
-            err = ExtAudioFileRead(audioFile, &frameCount, fillBufferList);
+            err = [audioFile readFrames:&frameCount intoBufferList:fillBufferList];
 
             if (frameCount) {
                 LoudnessMeasurerScanAudioBuffer(measurer, fillBufferList, frameCount);
@@ -155,8 +159,6 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
         loudness     = LoudnessMeasurerGetLoudness(measurer);
         peak         = LoudnessMeasurerGetPeak(measurer);
 
-        result = [[TrackAnalyzerResult alloc] init];
-
         [result setOverviewData:overviewData];
         [result setOverviewRate:overviewRate];
         [result setLoudness:loudness];
@@ -164,13 +166,9 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
 
         LoudnessMeasurerFree(measurer);
     }
-    
-    if (audioFile) {
-        ExtAudioFileDispose(audioFile);
-    }
 
-    [url stopAccessingSecurityScopedResource];
-    
+    [result setError:[audioFile audioFileError]];
+
     return result;
 }
 

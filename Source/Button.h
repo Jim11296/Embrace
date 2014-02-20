@@ -16,9 +16,12 @@
 
 @property (nonatomic, strong) NSColor *normalColor;
 @property (nonatomic, strong) NSColor *activeColor;
-@property (nonatomic, strong) NSColor *alertColor;
 @property (nonatomic, strong) NSColor *inactiveColor;
 @property (nonatomic, strong) NSColor *disabledColor;
+
+
+@property (nonatomic, strong) NSColor *alertColor;
+@property (nonatomic, strong) NSColor *alertActiveColor;
 
 @property (nonatomic, assign, getter=isWiggling) BOOL wiggling;
 

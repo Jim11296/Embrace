@@ -8,12 +8,23 @@
 
 #import "AudioFileTableCellView.h"
 #import "Track.h"
+#import "Button.h"
 #import "BorderedView.h"
 #import "Preferences.h"
+#import "AppDelegate.h"
+
 
 @implementation AudioFileTableCellView {
     NSTextField *_endTimeField;
+    Button *_errorButton;
     BOOL _endTimeVisible;
+}
+
+
+- (void) dealloc
+{
+    [_errorButton setTarget:nil];
+    [_errorButton setAction:NULL];
 }
 
 
@@ -21,7 +32,7 @@
 {
     NSArray *result = [super keyPathsToObserve];
     
-    return [result arrayByAddingObjectsFromArray:@[  @"artist", @"tonality", @"beatsPerMinute" ]];
+    return [result arrayByAddingObjectsFromArray:@[  @"artist", @"tonality", @"beatsPerMinute", @"trackError" ]];
 }
 
 
@@ -87,6 +98,12 @@
 {
     [super update];
     [self _updateBottomFieldsAnimated:NO];
+}
+
+
+- (void) _errorButtonClicked:(id)sender
+{
+    [GetAppDelegate() displayErrorForTrackError:[[self track] trackError]];
 }
 
 
@@ -191,6 +208,40 @@
 
     [artistField   setTextColor:[self bottomTextColor]];
     [tonalityField setTextColor:[self bottomTextColor]];
+    
+    TrackError trackError = [[self track] trackError];
+    
+    if (trackError && !_errorButton) {
+        [[self durationField]       setHidden:YES];
+        [[self tonalityAndBPMField] setHidden:YES];
+
+        NSSize boundsSize = [self bounds].size;
+        
+        NSRect errorFrame = NSMakeRect(boundsSize.width - 34, round((boundsSize.height - 16) / 2), 16, 16);
+
+        _errorButton = [[Button alloc] initWithFrame:errorFrame];
+        [_errorButton setImage:[NSImage imageNamed:@"track_error_template"]];
+        [_errorButton setAlert:YES];
+        [_errorButton setAutoresizingMask:NSViewMinXMargin];
+
+        [_errorButton setTarget:self];
+        [_errorButton setAction:@selector(_errorButtonClicked:)];
+        
+        [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
+        [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
+        
+        [self addSubview:_errorButton];
+
+
+    } else if (_errorButton && !trackError) {
+        [[self durationField]       setHidden:NO];
+        [[self tonalityAndBPMField] setHidden:NO];
+
+        [_errorButton setTarget:nil];
+        [_errorButton setAction:NULL];
+
+        [_errorButton removeFromSuperview];
+    }
 }
 
 

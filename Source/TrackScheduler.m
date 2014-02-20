@@ -8,10 +8,15 @@
 
 #import "TrackScheduler.h"
 #import "Track.h"
+#import "AudioFile.h"
+
 
 @interface TrackScheduler ()
 @property (atomic) NSInteger totalFrames;
 @property (atomic) NSInteger availableFrames;
+
+@property (atomic) OSStatus       rawError;
+@property (atomic) AudioFileError audioFileError;
 @end
 
 
@@ -23,7 +28,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
 
 @implementation TrackScheduler {
-    ExtAudioFileRef _audioFile;
+    AudioFile *_audioFile;
     AudioStreamBasicDescription _clientFormat;
     AudioStreamBasicDescription _outputFormat;
 
@@ -36,13 +41,6 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     if ((self = [super init])) {
         _track = track;
         _outputFormat = outputFormat;
-        
-        if (![self _setupAudioFile]) {
-            self = nil;
-            return nil;
-        }
-        
-        [self _setupBuffers];
     }
     
     return self;
@@ -53,24 +51,22 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 {
     [self _cleanupAudioFile];
 
-    AudioBufferList *list = _slice->mBufferList;
+    if (_slice) {
+        AudioBufferList *list = _slice->mBufferList;
 
-    for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
-        free(list->mBuffers[i].mData);
+        for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
+            free(list->mBuffers[i].mData);
+        }
+
+        free(_slice->mBufferList);
+        free(_slice);
     }
-
-    free(_slice->mBufferList);
-    free(_slice);
 }
 
 
 - (void) _cleanupAudioFile
 {
-    if (_audioFile) {
-        ExtAudioFileDispose(_audioFile);
-    }
-
-    [[_track fileURL] stopAccessingSecurityScopedResource];
+    _audioFile = nil;
 }
 
 
@@ -79,40 +75,50 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     NSURL *url = [_track fileURL];
 
     AudioStreamBasicDescription fileFormat = {0};
-    UInt32 fileFormatSize = sizeof(fileFormat);
-
     SInt64 fileLengthFrames = 0;
-    UInt32 fileLengthFramesSize = sizeof(fileLengthFrames);
 
-    [url startAccessingSecurityScopedResource];
+    _audioFile = [[AudioFile alloc] initWithFileURL:url];
 
     if (!CheckError(
-        ExtAudioFileOpenURL((__bridge CFURLRef)url, &_audioFile),
-        "ExtAudioFileOpenURL"
+        [_audioFile open],
+        "[_audioFile open]"
     )) {
+        [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
 
     if (!CheckError(
-        ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileDataFormat, &fileFormatSize, &fileFormat),
-        "ExtAudioFileGetProperty[ FileDataFormat ]"
+        [_audioFile getFileDataFormat:&fileFormat],
+        "[_audioFile getFileDataFormat:]"
     )) {
+        [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
 
     _clientFormat = GetPCMStreamBasicDescription(fileFormat.mSampleRate, _outputFormat.mChannelsPerFrame, NO);
 
     if (!CheckError(
-        ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, sizeof(_clientFormat), &_clientFormat),
-        "ExtAudioFileSetProperty[ ClientDataFormat ]"
+        [_audioFile setClientDataFormat:&_clientFormat],
+        "[_audioFile getClientDataFormat:]"
     )) {
+        [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
     
+    if (![_audioFile canRead] &&
+        ![_audioFile convert] &&
+        ![_audioFile canRead])
+    {
+        [self setAudioFileError:[_audioFile audioFileError]];
+        return NO;
+    }
+    
+    
     if (!CheckError(
-        ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileLengthFrames, &fileLengthFramesSize, &fileLengthFrames),
-        "ExtAudioFileGetProperty[ FileLengthFrames ]"
+        [_audioFile getFileLengthFrames:&fileLengthFrames],
+        "[_audioFile getFileLengthFrames:]"
     )) {
+        [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
 
@@ -133,7 +139,12 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         }
 
         if (startFrame) {
-            ExtAudioFileSeek(_audioFile, startFrame);
+            if (!CheckError(
+                [_audioFile seekToFrame:startFrame],
+                "[_audioFile seekToFrame:]"
+            )) {
+                [self setAudioFileError:[_audioFile audioFileError]];
+            }
         }
         
         fileLengthFrames = totalFrames;
@@ -197,10 +208,11 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             fillBufferList->mBuffers[i].mData = data;
         }
 
-        err = ExtAudioFileRead(_audioFile, &frameCount, fillBufferList);
+        err = [_audioFile readFrames:&frameCount intoBufferList:fillBufferList];
         
         if (err) {
-            NSLog(@"Error during ExtAudioFileRead(): %ld", (long)err);
+            [self setAudioFileError:[_audioFile audioFileError]];
+            [self setRawError:err];
         }
 
         framesAvailable += frameCount;
@@ -220,8 +232,24 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
 #pragma mark - Public Methods
 
-- (void) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp
+- (BOOL) setup
 {
+    if (![self _setupAudioFile]) {
+        return NO;
+    }
+    
+    [self _setupBuffers];
+    
+    return YES;
+}
+
+
+- (BOOL) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp
+{
+    if ([self rawError] || [self audioFileError]) {
+        return NO;
+    }
+
     ScheduledAudioSlice *slice = _slice;
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -232,8 +260,12 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         });
     });
 
-    while (![self totalFrames]) {
+    while (![self totalFrames] && ![self rawError]) {
         usleep(1);
+    }
+    
+    if ([self rawError] || [self audioFileError]) {
+        return NO;
     }
     
     NSInteger primeAmount = (_clientFormat.mSampleRate * 10);
@@ -241,8 +273,12 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     
     if (totalFrames < primeAmount) primeAmount = totalFrames;
 
-    while ([self availableFrames] < primeAmount) {
+    while ([self availableFrames] < primeAmount && ![self rawError] && ![self audioFileError]) {
         usleep(1);
+    }
+    
+    if ([self rawError] || [self audioFileError]) {
+        return NO;
     }
 
     _slice->mTimeStamp = timeStamp;
@@ -250,7 +286,8 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     _slice->mCompletionProcUserData = (void *)CFBridgingRetain(self);
 
     AudioUnitReset(audioUnit, kAudioUnitScope_Global, 0);
-    CheckError(
+
+    return CheckError(
         AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ScheduleAudioSlice, kAudioUnitScope_Global, 0, _slice, sizeof(ScheduledAudioSlice)),
         "AudioUnitSetProperty[ ScheduleAudioSlice ]"
     );

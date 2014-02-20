@@ -13,6 +13,8 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
+- (void) displayErrorForTrackError:(NSInteger)trackError;
+
 - (IBAction) openFile:(id)sender;
 
 - (IBAction) clearSetlist:(id)sender;

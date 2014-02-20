@@ -38,11 +38,12 @@
 
 - (void) _setupButton
 {
-    _alertColor    = GetRGBColor(0xc00000, 1.0);
-    _normalColor   = GetRGBColor(0x1866E9, 1.0);
-    _activeColor   = GetRGBColor(0x0a48b1, 1.0);
-    _inactiveColor = GetRGBColor(0x000000, 0.5);
-    _disabledColor = GetRGBColor(0x000000, 0.25);
+    _alertColor       = GetRGBColor(0xc00000, 1.0);
+    _alertActiveColor = GetRGBColor(0xa00000, 1.0);
+    _normalColor      = GetRGBColor(0x1866E9, 1.0);
+    _activeColor      = GetRGBColor(0x0a48b1, 1.0);
+    _inactiveColor    = GetRGBColor(0x000000, 0.5);
+    _disabledColor    = GetRGBColor(0x000000, 0.25);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSWindowDidBecomeMainNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidBecomeActiveNotification object:nil];
@@ -82,15 +83,15 @@
 {
     NSColor *color = _normalColor;
 
-    if ([self isAlert]) {
-        color = _alertColor;
-
-    } else if (![self isEnabled]) {
+    if (![self isEnabled]) {
         color = _disabledColor;
 
     } else if (![[self window] isMainWindow] || ![NSApp isActive]) {
         color = _inactiveColor;
-    
+
+    } else if ([self isAlert]) {
+        color = _highlighted ? _alertActiveColor : _alertColor;
+
     } else if (_highlighted) {
         color = _activeColor;
     }
