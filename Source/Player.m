@@ -351,7 +351,7 @@ typedef struct {
         roundedTimeRemaining = round([_currentTrack playDuration]) - roundedTimeElapsed;
     }
 
-    if (_timeRemaining < 0) {
+    if (_timeRemaining < 0 || [_currentTrack trackError]) {
         done = YES;
 
         status = TrackStatusPlayed;
@@ -541,6 +541,11 @@ static OSStatus sInputRenderCallback(
     getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputStream);
     
     _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack outputFormat:outputStream];
+    
+    if (![_currentScheduler setup]) {
+        [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
+        return;
+    }
     
     AudioStreamBasicDescription generatorFormat = [_currentScheduler clientFormat];
     
@@ -887,7 +892,7 @@ static OSStatus sInputRenderCallback(
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
-    if (![track didAnalyzeLoudness]) {
+    if (![track didAnalyzeLoudness] && ![track trackError]) {
         [track startPriorityAnalysis];
         [self performSelector:@selector(_setupAndStartPlayback) withObject:nil afterDelay:0.1];
         return;
@@ -909,7 +914,11 @@ static OSStatus sInputRenderCallback(
     timestamp.mFlags = kAudioTimeStampSampleTimeValid;
     timestamp.mSampleTime = -1;
 
-    [_currentScheduler startSchedulingWithAudioUnit:_generatorAudioUnit timeStamp:timestamp];
+    BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_generatorAudioUnit timeStamp:timestamp];
+    if (!didScheldule) {
+        [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
+        return;
+    }
 
 	AudioTimeStamp startTime = {0};
     NSTimeInterval additional = _outputFrames / _outputSampleRate;

@@ -223,6 +223,37 @@
     return YES;
 }
 
+- (void) displayErrorForTrackError:(NSInteger)trackError
+{
+    if (!trackError) return;
+
+    NSString *messageText     = @"";
+    NSString *informativeText = @"";
+    
+    if (trackError == TrackErrorConversionFailed) {
+        messageText = NSLocalizedString(@"The file cannot be read because it is in an unknown format.", nil);
+    
+    } else if (trackError == TrackErrorProtectedContent) {
+        messageText     = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
+        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes or Quicktime Player.", nil);
+
+    } else if (trackError == TrackErrorOpenFailed) {
+        messageText = NSLocalizedString(@"The file cannot be opened.", nil);
+    
+    } else {
+        messageText = NSLocalizedString(@"The file cannot be read.", nil);
+    }
+    
+    if (![messageText length]) {
+        return;
+    }
+    
+    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+
+    [alert runModal];
+}
+
+
 
 - (EditEffectController *) editControllerForEffect:(Effect *)effect
 {

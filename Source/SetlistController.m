@@ -1043,6 +1043,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         NSTimeInterval totalSilence = [currentTrack silenceAtEnd] + [trackToPlay silenceAtStart];
         padding = [self minimumSilenceBetweenTracks] - totalSilence;
         if (padding < 0) padding = 0;
+        
+        if ([currentTrack trackError]) {
+            padding = 0;
+        }
     }
     
     *outNextTrack = trackToPlay;

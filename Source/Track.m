@@ -31,7 +31,7 @@ static NSString * const sTrackPeakKey     = @"track-peak";
 static NSString * const sOverviewDataKey  = @"overview-data";
 static NSString * const sOverviewRateKey  = @"overview-rate";
 static NSString * const sBPMKey           = @"bpm";
-
+static NSString * const sTrackErrorKey    = @"error";
 
 @interface Track ()
 @property (nonatomic) NSString *title;
@@ -113,12 +113,16 @@ static NSString * const sBPMKey           = @"bpm";
 {
     if ((self = [super init])) {
         if (!bookmark) {
+            [url startAccessingSecurityScopedResource];
+
             NSError *error = nil;
             bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
 
             if (error) {
                 NSLog(@"Error creating bookmark for %@: %@", url, error);
             }
+
+            [url stopAccessingSecurityScopedResource];
         }
 
         NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
@@ -195,6 +199,7 @@ static NSString * const sBPMKey           = @"bpm";
     NSNumber *peak         = [state objectForKey:sTrackPeakKey];
     NSData   *overviewData = [state objectForKey:sOverviewDataKey];
     NSNumber *overviewRate = [state objectForKey:sOverviewRateKey];
+    NSNumber *error        = [state objectForKey:sTrackErrorKey];
 
     if (artist)       [self setArtist:artist];
     if (title)        [self setTitle:title];
@@ -212,6 +217,7 @@ static NSString * const sBPMKey           = @"bpm";
     if (overviewRate) [self setOverviewRate:[overviewRate doubleValue]];
 
     if (pauses)       [self setPausesAfterPlaying:[pauses boolValue]];
+    if (error)        [self setTrackError:[error integerValue]];
     
     if (overviewData || startTime || stopTime) {
         [self _calculateSilence];
@@ -291,12 +297,19 @@ static NSString * const sBPMKey           = @"bpm";
 - (void) _handleTrackAnalyzerDidAnalyze:(TrackAnalyzerResult *)result
 {
     if (_trackAnalyzer && result) {
-        [self _loadState:@{
-            sOverviewDataKey:  [result overviewData],
+        NSMutableDictionary *state = [NSMutableDictionary dictionary];
+        
+        NSData *overviewData = [result overviewData];
+        if (overviewData) [state setObject:overviewData forKey:sOverviewDataKey];
+        
+        [state addEntriesFromDictionary:@{
             sOverviewRateKey:  @([result overviewRate]),
             sTrackLoudnessKey: @([result loudness]),
-            sTrackPeakKey:     @([result peak])
-        } notify:YES];
+            sTrackPeakKey:     @([result peak]),
+            sTrackErrorKey:    @([result error])
+        }];
+
+        [self _loadState:state notify:YES];
     }
     
     [self _clearTrackDataForAnalysis];
@@ -311,7 +324,7 @@ static NSString * const sBPMKey           = @"bpm";
     TrackAnalyzer *trackAnalyzer = [[TrackAnalyzer alloc] init];
     
     id __weak weakSelf = self;
-    [trackAnalyzer analyzeFileAtURL:_fileURL immediately:NO completion:^(TrackAnalyzerResult *result) {
+    [trackAnalyzer analyzeFileAtURL:_fileURL immediately:immediately completion:^(TrackAnalyzerResult *result) {
         [weakSelf _handleTrackAnalyzerDidAnalyze:result];
     }];
 
@@ -504,6 +517,7 @@ static NSString * const sBPMKey           = @"bpm";
     if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
     if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
     if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
+    if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -544,7 +558,7 @@ static NSString * const sBPMKey           = @"bpm";
         [self _calculateSilence];
     }
     
-    return _silenceAtStart;
+    return isnan(_silenceAtStart) ? 0 : _silenceAtStart;
 }
 
 
@@ -554,7 +568,7 @@ static NSString * const sBPMKey           = @"bpm";
         [self _calculateSilence];
     }
     
-    return _silenceAtEnd;
+    return isnan(_silenceAtEnd) ? 0 : _silenceAtEnd;
 }
 
 
