@@ -14,26 +14,26 @@
 
 #define DUMP_UNKNOWN_TAGS 0
 
-NSString * const TrackDidUpdateNotification = @"TrackDidUpdate";
+static NSString * const sTypeKey          = @"trackType";
+static NSString * const sStatusKey        = @"trackStatus";
+static NSString * const sTrackErrorKey    = @"trackError";
 
-static NSString * const sTypeKey          = @"type";
-static NSString * const sStatusKey        = @"status";
 static NSString * const sBookmarkKey      = @"bookmark";
-static NSString * const sPausesKey        = @"pauses";
+static NSString * const sPausesKey        = @"pausesAfterPlaying";
 static NSString * const sTitleKey         = @"title";
 static NSString * const sArtistKey        = @"artist";
-static NSString * const sStartTimeKey     = @"start-time";
-static NSString * const sStopTimeKey      = @"stop-time";
+static NSString * const sStartTimeKey     = @"startTime";
+static NSString * const sStopTimeKey      = @"stopTime";
 static NSString * const sDurationKey      = @"duration";
 static NSString * const sTonalityKey      = @"tonality";
-static NSString * const sTrackLoudnessKey = @"track-loudness";
-static NSString * const sTrackPeakKey     = @"track-peak";
-static NSString * const sOverviewDataKey  = @"overview-data";
-static NSString * const sOverviewRateKey  = @"overview-rate";
-static NSString * const sBPMKey           = @"bpm";
-static NSString * const sTrackErrorKey    = @"error";
+static NSString * const sTrackLoudnessKey = @"trackLoudness";
+static NSString * const sTrackPeakKey     = @"trackPeak";
+static NSString * const sOverviewDataKey  = @"overviewData";
+static NSString * const sOverviewRateKey  = @"overviewRate";
+static NSString * const sBPMKey           = @"beatsPerMinute";
 
 @interface Track ()
+@property (nonatomic) NSUUID *UUID;
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSString *artist;
 @property (nonatomic) NSInteger beatsPerMinute;
@@ -48,17 +48,45 @@ static NSString * const sTrackErrorKey    = @"error";
 @end
 
 
-
 @implementation Track {
-    NSData        *_bookmark;
-    TrackAnalyzer *_trackAnalyzer;
-    AVAsset       *_asset;
-    NSTimeInterval _silenceAtStart;
-    NSTimeInterval _silenceAtEnd;
+    NSData         *_bookmark;
+    TrackAnalyzer  *_trackAnalyzer;
+    NSTimeInterval  _silenceAtStart;
+    NSTimeInterval  _silenceAtEnd;
+
+    NSMutableArray *_dirtyKeys;
+    BOOL            _dirty;
 }
 
 @dynamic playDuration, silenceAtStart, silenceAtEnd;
 
+
+static NSURL *sGetStateDirectoryURL()
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *appSupport = GetApplicationSupportDirectory();
+    
+    NSString *tracks = [appSupport stringByAppendingPathComponent:@"Tracks"];
+    NSURL *result = [NSURL fileURLWithPath:tracks];
+
+    if (![manager fileExistsAtPath:tracks]) {
+        NSError *error = nil;
+        [manager createDirectoryAtURL:result withIntermediateDirectories:YES attributes:nil error:&error];
+    }
+    
+    return result;
+}
+
+
+static NSURL *sGetStateURLForUUID(NSUUID *UUID)
+{
+    if (!UUID) return nil;
+    
+    NSURL *result = [sGetStateDirectoryURL() URLByAppendingPathComponent:[UUID UUIDString]];
+    result = [result URLByAppendingPathExtension:@"plist"];
+
+    return result;
+}
 
 
 + (NSSet *) keyPathsForValuesAffectingValueForKey:(NSString *)key
@@ -82,22 +110,24 @@ static NSString * const sTrackErrorKey    = @"error";
 }
 
 
-+ (instancetype) trackWithStateDictionary:(NSDictionary *)state
++ (void) clearPersistedState
 {
-    TrackType type = [[state objectForKey:sTypeKey] integerValue];
-    Track *track = nil;
+    NSError *error;
+    [[NSFileManager defaultManager] removeItemAtURL:sGetStateDirectoryURL() error:&error];
+}
 
-    if (type == TrackTypeAudioFile) {
-        NSData *bookmark = [state objectForKey:sBookmarkKey];
-        
-        track = [[Track alloc] _initWithFileURL:nil bookmark:bookmark state:state];
 
-    } else if (type == TrackTypeSilence) {
-        track = [[SilentTrack alloc] init];
-
-    } else {
++ (instancetype) trackWithUUID:(NSUUID *)UUID
+{
+    NSURL *url = sGetStateURLForUUID(UUID);
+    NSDictionary *state = url ? [NSDictionary dictionaryWithContentsOfURL:url] : nil;
+    
+    if (!state) {
         return nil;
     }
+
+    NSData *bookmark = [state objectForKey:sBookmarkKey];
+    Track  *track    = [[Track alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
 
     return track;
 }
@@ -105,62 +135,24 @@ static NSString * const sTrackErrorKey    = @"error";
 
 + (instancetype) trackWithFileURL:(NSURL *)url
 {
-    return [[self alloc] _initWithFileURL:url bookmark:nil state:nil];
+    NSUUID *UUID = [NSUUID UUID];
+    return [[self alloc] _initWithUUID:UUID fileURL:url bookmark:nil state:nil];
 }
 
 
-- (id) _initWithFileURL:(NSURL *)url bookmark:(NSData *)bookmark state:(NSDictionary *)state
+- (id) _initWithUUID:(NSUUID *)UUID fileURL:(NSURL *)url bookmark:(NSData *)bookmark state:(NSDictionary *)state
 {
     if ((self = [super init])) {
-        if (!bookmark) {
-            [url startAccessingSecurityScopedResource];
+        _UUID = UUID;
 
-            NSError *error = nil;
-            bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
-
-            if (error) {
-                NSLog(@"Error creating bookmark for %@: %@", url, error);
-            }
-
-            [url stopAccessingSecurityScopedResource];
-        }
-
-        NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
-        
-        BOOL isStale = NO;
-        NSError *error = nil;
-        url = [NSURL URLByResolvingBookmarkData: bookmark
-                                        options: options
-                                  relativeToURL: nil
-                            bookmarkDataIsStale: &isStale
-                                          error: &error];
-
-        if (!url) {
-            self = nil;
-            return nil;
-        }
-
-        if (isStale) {
-            [url startAccessingSecurityScopedResource];
-            bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
-            [url stopAccessingSecurityScopedResource];
-        }
-
-        _fileURL = url;
-        if (![_fileURL startAccessingSecurityScopedResource]) {
-            NSLog(@"startAccessingSecurityScopedResource failed");
-        }
-
-        _bookmark = bookmark;
+        [self _resolveURL:url bookmark:bookmark];
         
         [self _invalidateSilence];
         
-        [self _loadState:state notify:NO];
-
+        [self _updateState:state initialLoad:YES];
         [self _loadMetadataViaManager];
-        [self _loadMetadataViaAsset];
         
-        [self _loadMetadataViaAnalysisIfNeeded];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleApplicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
     }
 
     return self;
@@ -184,48 +176,180 @@ static NSString * const sTrackErrorKey    = @"error";
 }
 
 
-- (void) _loadState:(NSDictionary *)state notify:(BOOL)notify
+- (id) valueForUndefinedKey:(NSString *)key
 {
-    NSString *artist       = [state objectForKey:sArtistKey];
-    NSString *title        = [state objectForKey:sTitleKey];
+    NSLog(@"-[Track valueForUndefinedKey:], key: %@", key);
+    return nil;
+}
+
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key
+{
+    NSLog(@"-[Track setValue:forUndefinedKey:], key: %@", key);
+}
+
+
+#pragma mark - State
+
+- (void) _updateState:(NSDictionary *)state initialLoad:(BOOL)initialLoad
+{
+    for (NSString *key in state) {
+        id oldValue = [self valueForKey:key];
+        id newValue = [state objectForKey:key];
+        
+        if (![oldValue isEqual:newValue]) {
+            [self setValue:newValue forKey:key];
+            
+            if (!_dirtyKeys) _dirtyKeys = [NSMutableArray array];
+            [_dirtyKeys addObject:key];
+            _dirty = YES;
+        }
+    }
+
+    NSData   *overviewData = [state objectForKey:sOverviewDataKey];
     NSNumber *startTime    = [state objectForKey:sStartTimeKey];
     NSNumber *stopTime     = [state objectForKey:sStopTimeKey];
-    NSNumber *duration     = [state objectForKey:sDurationKey];
-    NSNumber *trackStatus  = [state objectForKey:sStatusKey];
-    NSNumber *tonality     = [state objectForKey:sTonalityKey];
-    NSNumber *bpm          = [state objectForKey:sBPMKey];
-    NSNumber *pauses       = [state objectForKey:sPausesKey];
-    NSNumber *loudness     = [state objectForKey:sTrackLoudnessKey];
-    NSNumber *peak         = [state objectForKey:sTrackPeakKey];
-    NSData   *overviewData = [state objectForKey:sOverviewDataKey];
-    NSNumber *overviewRate = [state objectForKey:sOverviewRateKey];
-    NSNumber *error        = [state objectForKey:sTrackErrorKey];
-
-    if (artist)       [self setArtist:artist];
-    if (title)        [self setTitle:title];
-    if (startTime)    [self setStartTime:  [startTime   doubleValue]];
-    if (stopTime)     [self setStopTime:   [stopTime    doubleValue]];
-    if (duration)     [self setDuration:   [duration    doubleValue]];
-    if (trackStatus)  [self setTrackStatus:[trackStatus integerValue]];
-
-    if (tonality)     [self setTonality:[tonality integerValue]];
-    if (bpm)          [self setBeatsPerMinute:[bpm integerValue]];
-    
-    if (loudness)     [self setTrackLoudness:[loudness doubleValue]];
-    if (peak)         [self setTrackPeak:[peak doubleValue]];
-    if (overviewData) [self setOverviewData:overviewData];
-    if (overviewRate) [self setOverviewRate:[overviewRate doubleValue]];
-
-    if (pauses)       [self setPausesAfterPlaying:[pauses boolValue]];
-    if (error)        [self setTrackError:[error integerValue]];
     
     if (overviewData || startTime || stopTime) {
         [self _calculateSilence];
     }
     
-    if (notify) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidUpdateNotification object:self];
+    if (initialLoad) {
+        [_dirtyKeys removeAllObjects];
+        _dirty = NO;
     }
+
+    if (_dirty && !initialLoad) {
+        [self _saveStateImmediately:NO];
+    }
+}
+
+
+- (void) _reallySaveState
+{
+    NSMutableDictionary *state = [NSMutableDictionary dictionary];
+
+    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
+    if (_artist)         [state setObject:_artist               forKey:sArtistKey];
+    if (_title)          [state setObject:_title                forKey:sTitleKey];
+    if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
+    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
+    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
+    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
+    if (_tonality)       [state setObject:@(_tonality)          forKey:sTonalityKey];
+    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:sBPMKey];
+    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
+    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
+    if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
+    if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
+    if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
+
+    if (_pausesAfterPlaying) {
+        [state setObject:@YES forKey:sPausesKey];
+    }
+
+    NSURL *url = _UUID ? sGetStateURLForUUID(_UUID) : nil;
+    if (url) [state writeToURL:url atomically:YES];
+    
+    _dirty = NO;
+    [_dirtyKeys removeAllObjects];
+}
+
+
+- (void) _saveStateImmediately:(BOOL)immediately
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallySaveState) object:nil];
+
+    if (immediately) {
+        [self _reallySaveState];
+    } else {
+        [self performSelector:@selector(_reallySaveState) withObject:nil afterDelay:10];
+    }
+}
+
+
+- (void) _handleApplicationWillTerminate:(NSNotification *)note
+{
+    if (_dirty) {
+        [self _reallySaveState];
+    }
+}
+
+
+#pragma mark - Bookmarks
+
+- (void) _handleResolvedURL:(NSURL *)fileURL bookmark:(NSData *)bookmark
+{
+    if (![_bookmark isEqual:bookmark]) {
+        _bookmark = bookmark;
+        _dirty = YES;
+    }
+
+    _fileURL = fileURL;
+
+    if (![_fileURL startAccessingSecurityScopedResource]) {
+        NSLog(@"startAccessingSecurityScopedResource failed");
+    }
+
+
+    [self _loadMetadataViaManager];
+    [self _loadMetadataViaAsset];
+    
+    [self _loadMetadataViaAnalysisIfNeeded];
+    
+    if (_dirty) {
+        [self _saveStateImmediately:YES];
+    }
+}
+
+
+- (void) _resolveURL:(NSURL *)inURL bookmark:(NSData *)inBookmark
+{
+    static dispatch_queue_t sResolverQueue = NULL;
+    
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        sResolverQueue = dispatch_queue_create("Track.resolve-bookmark", NULL);
+    });
+    
+    __block NSURL  *fileURL  = inURL;
+    __block NSData *bookmark = inBookmark;
+
+    dispatch_async(sResolverQueue, ^{
+        if (!bookmark) {
+            [fileURL startAccessingSecurityScopedResource];
+
+            NSError *error = nil;
+            bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+
+            if (error) {
+                NSLog(@"Error creating bookmark for %@: %@", fileURL, error);
+            }
+
+            [fileURL stopAccessingSecurityScopedResource];
+        }
+
+        NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
+        
+        BOOL isStale = NO;
+        NSError *error = nil;
+        fileURL = [NSURL URLByResolvingBookmarkData: bookmark
+                                            options: options
+                                      relativeToURL: nil
+                                bookmarkDataIsStale: &isStale
+                                              error: &error];
+
+        if (isStale) {
+            [fileURL startAccessingSecurityScopedResource];
+            bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+            [fileURL stopAccessingSecurityScopedResource];
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self _handleResolvedURL:fileURL bookmark:bookmark];
+        });
+    });
 }
 
 
@@ -309,7 +433,7 @@ static NSString * const sTrackErrorKey    = @"error";
             sTrackErrorKey:    @([result error])
         }];
 
-        [self _loadState:state notify:YES];
+        [self _updateState:state initialLoad:NO];
     }
     
     [self _clearTrackDataForAnalysis];
@@ -376,12 +500,6 @@ static NSString * const sTrackErrorKey    = @"error";
 }
 
 
-- (void) _clearAsset
-{
-    _asset = nil;
-}
-
-
 - (void) _loadMetadataViaAsset
 {
     if (!_fileURL) {
@@ -435,97 +553,119 @@ static NSString * const sTrackErrorKey    = @"error";
         }
     };
 
+    static dispatch_queue_t sLoaderQueue = NULL;
+    
+    static dispatch_once_t onceToken;
 
-    _asset = [[AVURLAsset alloc] initWithURL:_fileURL options:@{
-        AVURLAssetPreferPreciseDurationAndTimingKey: @YES
-    }];
+    dispatch_once(&onceToken, ^{
+        sLoaderQueue = dispatch_queue_create("Track.load-avasset-metadata", NULL);
+    });
 
     __weak id weakSelf = self;
-    __weak AVAsset *weakAsset = _asset;
 
     NSString *fallbackTitle = [[_fileURL lastPathComponent] stringByDeletingPathExtension];
 
-    [_asset loadValuesAsynchronouslyForKeys:@[ @"commonMetadata", @"duration", @"availableMetadataFormats" ] completionHandler:^{
-        AVAsset *asset = weakAsset;
+    dispatch_async(sLoaderQueue, ^{
+    @autoreleasepool {
+        NSURL *fileURL = [weakSelf fileURL];
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
 
+        NSArray *commonMetadata = [asset commonMetadata];
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 
-        NSError *error;
-        AVKeyValueStatus metadataStatus = [asset statusOfValueForKey:@"commonMetadata" error:&error];
-        AVKeyValueStatus durationStatus = [asset statusOfValueForKey:@"duration"       error:&error];
-        AVKeyValueStatus formatsStatus  = [asset statusOfValueForKey:@"availableMetadataFormats" error:&error];
+        for (AVMetadataItem *item in commonMetadata) {
+            parseMetadataItem(item, dictionary);
+        }
 
-        if (metadataStatus == AVKeyValueStatusLoaded) {
-            NSArray *metadata = [weakAsset commonMetadata];
+        if (![dictionary objectForKey:sTitleKey]) {
+            [dictionary setObject:fallbackTitle forKey:sTitleKey];
+        }
 
+
+        for (NSString *format in [asset availableMetadataFormats]) {
+            NSArray *metadata = [asset metadataForFormat:format];
+        
             for (AVMetadataItem *item in metadata) {
                 parseMetadataItem(item, dictionary);
             }
-
-            if (![dictionary objectForKey:sTitleKey]) {
-                [dictionary setObject:fallbackTitle forKey:sTitleKey];
-            }
         }
 
-        if (formatsStatus == AVKeyValueStatusLoaded) {
-            for (NSString *format in [asset availableMetadataFormats]) {
-                NSArray *metadata = [asset metadataForFormat:format];
-            
+        NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
+        [dictionary setObject:@(duration) forKey:sDurationKey];
+    
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf _updateState:dictionary initialLoad:NO];
+        });
+
+        [asset cancelLoading];
+        asset = nil;
+    }
+        
+#if 0
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        
+
+        [asset loadValuesAsynchronouslyForKeys:@[ @"commonMetadata", @"duration", @"availableMetadataFormats" ] completionHandler:^{
+            AVAsset *innerAsset = weakAsset;
+
+            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+
+            NSError *error;
+            AVKeyValueStatus metadataStatus = [innerAsset statusOfValueForKey:@"commonMetadata" error:&error];
+            AVKeyValueStatus durationStatus = [innerAsset statusOfValueForKey:@"duration"       error:&error];
+            AVKeyValueStatus formatsStatus  = [innerAsset statusOfValueForKey:@"availableMetadataFormats" error:&error];
+
+            if (metadataStatus == AVKeyValueStatusLoaded) {
+                NSArray *metadata = [innerAsset commonMetadata];
+
                 for (AVMetadataItem *item in metadata) {
                     parseMetadataItem(item, dictionary);
                 }
+
+                if (![dictionary objectForKey:sTitleKey]) {
+                    [dictionary setObject:fallbackTitle forKey:sTitleKey];
+                }
             }
-        }
 
-        if (durationStatus == AVKeyValueStatusLoaded) {
-            NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
-            [dictionary setObject:@(duration) forKey:sDurationKey];
-        }
+            if (formatsStatus == AVKeyValueStatusLoaded) {
+                for (NSString *format in [asset availableMetadataFormats]) {
+                    NSArray *metadata = [asset metadataForFormat:format];
+                
+                    for (AVMetadataItem *item in metadata) {
+                        parseMetadataItem(item, dictionary);
+                    }
+                }
+            }
+
+            if (durationStatus == AVKeyValueStatusLoaded) {
+                NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
+                [dictionary setObject:@(duration) forKey:sDurationKey];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf _updateState:dictionary initialLoad:NO];
+            });
+
+            if (durationStatus != AVKeyValueStatusLoading &&
+                formatsStatus  != AVKeyValueStatusLoading &&
+                metadataStatus != AVKeyValueStatusLoading)
+            {
+                dispatch_semaphore_signal(semaphore);
+            }
+        }];
+
+        int64_t fiveSecondsInNs = 5 * 1000 * 1000 * 1000;
+        dispatch_semaphore_wait(semaphore, dispatch_time(0, fiveSecondsInNs));
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf _loadState:dictionary notify:YES];
-        });
+        [asset cancelLoading];
+        asset = nil;
 
-        if (durationStatus != AVKeyValueStatusLoading &&
-            formatsStatus  != AVKeyValueStatusLoading &&
-            metadataStatus != AVKeyValueStatusLoading)
-        {
-            [weakSelf _clearAsset];
-        }
-    }];
+#endif
+    });
 }
 
 
 #pragma mark - Public Methods
-
-- (NSDictionary *) stateDictionary
-{
-    NSMutableDictionary *state = [NSMutableDictionary dictionary];
-
-    [state setObject:@([self trackType]) forKey:sTypeKey];
-
-    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
-    if (_artist)         [state setObject:_artist               forKey:sArtistKey];
-    if (_title)          [state setObject:_title                forKey:sTitleKey];
-    if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
-    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
-    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
-    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
-    if (_tonality)       [state setObject:@(_tonality)          forKey:sTonalityKey];
-    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:sBPMKey];
-    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
-    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
-    if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
-    if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
-    if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
-
-    if (_pausesAfterPlaying) {
-        [state setObject:@YES forKey:sPausesKey];
-    }
-
-    return state;
-}
-
 
 - (void) startPriorityAnalysis
 {
@@ -538,12 +678,6 @@ static NSString * const sTrackErrorKey    = @"error";
 
 
 #pragma mark - Accessors
-
-- (TrackType) trackType
-{
-    return TrackTypeAudioFile;
-}
-
 
 - (NSTimeInterval) playDuration
 {
@@ -575,34 +709,6 @@ static NSString * const sTrackErrorKey    = @"error";
 - (BOOL) didAnalyzeLoudness
 {
     return (_overviewData != nil);
-}
-
-
-@end
-
-
-@implementation SilentTrack
-
-+ (instancetype) silenceTrack
-{
-    return [[self alloc] init];
-}
-
-
-- (id) init
-{
-    if ((self = [super init])) {
-        [self setTitle:NSLocalizedString(@"Silence", nil)];
-        [self setDuration:5];
-    }
-    
-    return self;
-}
-
-
-- (TrackType) trackType
-{
-    return TrackTypeSilence;
 }
 
 

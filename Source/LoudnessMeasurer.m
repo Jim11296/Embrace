@@ -175,6 +175,8 @@ static inline void sBiquad(double *inBuffer, double *outBuffer, const double *co
 
 static inline void sFilter(const LoudnessMeasurer *self, LoudnessMeasurerChannel *channel, const float* src, size_t stride, size_t frames)
 {
+    if (frames == 0) return;
+
     float max = 0;
     vDSP_maxv(src, stride, &max, frames);
 
@@ -224,17 +226,23 @@ static inline void sCalculateOverview(const LoudnessMeasurer *self, LoudnessMeas
 
         float max = 0;
         float m;
-
+        
+        if (channel->_overviewCount == 0 && bufferIndex == 0) {
+            continue;
+        }
+        
         if (bufferIndex < framesPerBlock) {
             size_t i = 0;
             size_t frames = bufferIndex;
 
-            vDSP_maxv(&channel->_bufferPre[i], 1, &m, frames);
-            if ( m > max) max =  m;
+            if (frames > 0) {
+                vDSP_maxv(&channel->_bufferPre[i], 1, &m, frames);
+                if ( m > max) max =  m;
 
-            vDSP_minv(&channel->_bufferPre[i], 1, &m, frames);
-            if (-m > max) max = -m;
-        
+                vDSP_minv(&channel->_bufferPre[i], 1, &m, frames);
+                if (-m > max) max = -m;
+            }
+            
             i = channel->_bufferFrames - (framesPerBlock - bufferIndex);
             frames = channel->_bufferFrames - i;
 
@@ -247,6 +255,11 @@ static inline void sCalculateOverview(const LoudnessMeasurer *self, LoudnessMeas
         } else {
             size_t i      = bufferIndex - framesPerBlock;
             size_t frames = bufferIndex - i;
+
+            if (bufferIndex == 0) {
+                i = bufferIndex;
+                frames = framesPerBlock;
+            }
 
             vDSP_maxv(&channel->_bufferPre[i], 1, &m, frames);
             if ( m > max) max =  m;
@@ -274,23 +287,30 @@ static inline void sCalculateGatingBlock(const LoudnessMeasurer *self, LoudnessM
         size_t frames =  channel->_bufferIndex;
         double acc = 0;
     
-        vDSP_vsqD(&channel->_bufferPost[i], 1, channel->_scratch, 1, frames);
-        vDSP_sveD(channel->_scratch, 1, &acc, frames);
+        if (frames) {
+            vDSP_vsqD(&channel->_bufferPost[i], 1, channel->_scratch, 1, frames);
+            vDSP_sveD(channel->_scratch, 1, &acc, frames);
+        }
         channelSum += acc;
 
         i = channel->_bufferFrames - (framesPerBlock - channel->_bufferIndex);
         frames = channel->_bufferFrames - i;
-
-        vDSP_vsqD(&channel->_bufferPost[i], 1, channel->_scratch, 1, frames);
-        vDSP_sveD(channel->_scratch, 1, &acc, frames);
-        channelSum += acc;
+        acc = 0;
+        
+        if (frames) {
+            vDSP_vsqD(&channel->_bufferPost[i], 1, channel->_scratch, 1, frames);
+            vDSP_sveD(channel->_scratch, 1, &acc, frames);
+            channelSum += acc;
+        }
 
     } else {
         size_t i      = channel->_bufferIndex - framesPerBlock;
         size_t frames = channel->_bufferIndex - i;
 
-        vDSP_vsqD(&channel->_bufferPost[i], 1, channel->_scratch, 1, frames);
-        vDSP_sveD(channel->_scratch, 1, &channelSum, frames);
+        if (frames) {
+            vDSP_vsqD(&channel->_bufferPost[i], 1, channel->_scratch, 1, frames);
+            vDSP_sveD(channel->_scratch, 1, &channelSum, frames);
+        }
     }
 
     size_t count = channel->_blocksCount;

@@ -62,12 +62,6 @@
                         <action selector="toggleMarkAsPlayed:" target="-2" id="K6W-ss-716"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Add Silence" hidden="YES" id="KDN-VF-nFK">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="addSilence:" target="-2" id="k9R-S5-JFN"/>
-                    </connections>
-                </menuItem>
             </items>
             <connections>
                 <outlet property="delegate" destination="-2" id="SRi-5i-aw6"/>
@@ -168,61 +162,6 @@
                                                                 <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>
                                                                 <outlet property="tonalityAndBPMField" destination="vHN-Td-1li" id="A5j-Nr-MJt"/>
                                                                 <outlet property="tonalityField" destination="vHN-Td-1li" id="bmS-mG-wDh"/>
-                                                            </connections>
-                                                        </tableCellView>
-                                                        <tableCellView identifier="SilenceCell" id="COs-7C-Z4h" customClass="SilenceTableCellView">
-                                                            <rect key="frame" x="0.0" y="40" width="320" height="24"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <subviews>
-                                                                <customView id="QDQ-EK-zGI" customClass="BorderedView">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="24"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                                    <subviews>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0Zc-K7-UtN">
-                                                                            <rect key="frame" x="14" y="4" width="52" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Silence" id="6g8-oX-Rqh">
-                                                                                <font key="font" metaFont="system"/>
-                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.title" id="WLZ-FU-UD9"/>
-                                                                            </connections>
-                                                                        </textField>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="9fY-nd-LwM">
-                                                                            <rect key="frame" x="262" y="4" width="44" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" id="VOS-Wo-9gw">
-                                                                                <font key="font" metaFont="system"/>
-                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                            <connections>
-                                                                                <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.silenceDurationString" id="P1Z-KY-x5i"/>
-                                                                            </connections>
-                                                                        </textField>
-                                                                        <slider appearanceType="lightContent" verticalHuggingPriority="750" id="yC7-xV-R0c" customClass="WhiteSlider">
-                                                                            <rect key="frame" x="70" y="2" width="184" height="20"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="20" doubleValue="8.5338861196319016" tickMarkPosition="above" sliderType="linear" id="8ua-fN-dRW" customClass="WhiteSliderCell"/>
-                                                                            <connections>
-                                                                                <binding destination="COs-7C-Z4h" name="hidden" keyPath="objectValue.isSilenceDurationEditable" id="R5V-Wa-2uu">
-                                                                                    <dictionary key="options">
-                                                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                                                                    </dictionary>
-                                                                                </binding>
-                                                                                <binding destination="COs-7C-Z4h" name="value" keyPath="objectValue.silenceDuration" id="7AA-4l-f9B"/>
-                                                                            </connections>
-                                                                        </slider>
-                                                                    </subviews>
-                                                                </customView>
-                                                            </subviews>
-                                                            <connections>
-                                                                <outlet property="borderedView" destination="QDQ-EK-zGI" id="XlZ-kz-itR"/>
-                                                                <outlet property="durationField" destination="9fY-nd-LwM" id="mgz-IP-SVv"/>
-                                                                <outlet property="slider" destination="yC7-xV-R0c" id="zSq-Xd-Nhn"/>
-                                                                <outlet property="titleField" destination="0Zc-K7-UtN" id="ZqN-Gd-lFR"/>
                                                             </connections>
                                                         </tableCellView>
                                                     </prototypeCellViews>
@@ -402,12 +341,6 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleMarkAsPlayed:" target="-2" id="wsR-4J-9Ik"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Add Silence" hidden="YES" id="avl-p9-Vks">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="addSilence:" target="-2" id="Z1E-1M-09A"/>
                     </connections>
                 </menuItem>
             </items>
