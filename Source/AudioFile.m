@@ -13,9 +13,6 @@
 @implementation AudioFile {
     NSURL *_fileURL;
     NSURL *_exportedURL;
-
-    AVAsset *_asset;
-    
     ExtAudioFileRef _audioFile;
 }
 
@@ -24,9 +21,6 @@
 {
     if ((self = [super init])) {
         _fileURL = fileURL;
-        
-        _asset = [AVAsset assetWithURL:fileURL];
-
         [_fileURL startAccessingSecurityScopedResource];
     }
 
@@ -148,7 +142,15 @@
 
 - (BOOL) convert
 {
-    AVAssetExportSession *session = [AVAssetExportSession exportSessionWithAsset:_asset presetName:AVAssetExportPresetPassthrough];
+    AVAssetExportSession *session;
+    BOOL hasProtectedContent = NO;
+
+@autoreleasepool {
+    AVAsset *asset = [AVAsset assetWithURL:_fileURL];
+    hasProtectedContent = [asset hasProtectedContent];
+    
+    session = [AVAssetExportSession exportSessionWithAsset:asset presetName:AVAssetExportPresetPassthrough];
+}
 
     NSString *typeToUse;
     NSString *extension;
@@ -193,7 +195,7 @@
     }
 
     if ([session error]) {
-        if ([_asset hasProtectedContent]) {
+        if (hasProtectedContent) {
             _audioFileError = AudioFileErrorProtectedContent;
         } else {
             _audioFileError = AudioFileErrorConversionFailed;

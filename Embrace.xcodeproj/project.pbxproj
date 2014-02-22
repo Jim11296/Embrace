@@ -39,7 +39,6 @@
 		556ACE24187ABB8100AED4BC /* EditEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556ACE23187ABB8100AED4BC /* EditEffectWindow.xib */; };
 		556ACE2F187B901400AED4BC /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE2E187B901400AED4BC /* WaveformView.m */; };
 		556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE35187BB43A00AED4BC /* WrappedUtils.mm */; };
-		55717BC2187CE6B200213213 /* SilenceTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BC0187CE6B200213213 /* SilenceTableCellView.m */; };
 		55717BC5187CEC1900213213 /* AudioFileTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BC4187CEC1900213213 /* AudioFileTableCellView.m */; };
 		55717BD3187EA45500213213 /* close_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 55717BC7187EA45500213213 /* close_pressed.png */; };
 		55717BD4187EA45500213213 /* close_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55717BC8187EA45500213213 /* close_pressed@2x.png */; };
@@ -174,8 +173,6 @@
 		556ACE2E187B901400AED4BC /* WaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaveformView.m; path = Source/WaveformView.m; sourceTree = SOURCE_ROOT; };
 		556ACE34187BB43A00AED4BC /* WrappedUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedUtils.h; path = Source/WrappedUtils.h; sourceTree = "<group>"; };
 		556ACE35187BB43A00AED4BC /* WrappedUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedUtils.mm; path = Source/WrappedUtils.mm; sourceTree = "<group>"; };
-		55717BC0187CE6B200213213 /* SilenceTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SilenceTableCellView.m; path = Source/SilenceTableCellView.m; sourceTree = SOURCE_ROOT; };
-		55717BC1187CE6B200213213 /* SilenceTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SilenceTableCellView.h; path = Source/SilenceTableCellView.h; sourceTree = SOURCE_ROOT; };
 		55717BC3187CEC1900213213 /* AudioFileTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioFileTableCellView.h; path = Source/AudioFileTableCellView.h; sourceTree = SOURCE_ROOT; };
 		55717BC4187CEC1900213213 /* AudioFileTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFileTableCellView.m; path = Source/AudioFileTableCellView.m; sourceTree = SOURCE_ROOT; };
 		55717BC7187EA45500213213 /* close_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = close_pressed.png; path = Resources/close_pressed.png; sourceTree = SOURCE_ROOT; };
@@ -578,8 +575,6 @@
 				55F7ABED18B08569006B6FBB /* MainIconView.m */,
 				55006A48189E144C00BA8173 /* ShadowView.h */,
 				55006A49189E144C00BA8173 /* ShadowView.m */,
-				55717BC1187CE6B200213213 /* SilenceTableCellView.h */,
-				55717BC0187CE6B200213213 /* SilenceTableCellView.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
 				5506802F1887711000441AAE /* TimeStringValueTransformer.m */,
 				550D883618ACD5F800CC7E3A /* TrackTableView.h */,
@@ -852,7 +847,6 @@
 				557C2CC11897403E002FAFEA /* CACFString.cpp in Sources */,
 				55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */,
 				55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */,
-				55717BC2187CE6B200213213 /* SilenceTableCellView.m in Sources */,
 				557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */,
 				550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */,
 				55ADE93518815EA8008DC245 /* PlayBar.m in Sources */,

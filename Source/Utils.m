@@ -40,6 +40,34 @@ static NSArray *sGetTraditionalStringArray()
 }
 
 
+static NSString *sFindOrCreateDirectory(
+    NSSearchPathDirectory searchPathDirectory,
+    NSSearchPathDomainMask domainMask,
+    NSString *appendComponent,
+    NSError **outError
+) {
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(searchPathDirectory, domainMask, YES);
+    if (![paths count]) return nil;
+
+    NSString *resolvedPath = [paths firstObject];
+    if (appendComponent) {
+        resolvedPath = [resolvedPath stringByAppendingPathComponent:appendComponent];
+    }
+
+    NSError *error;
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:resolvedPath withIntermediateDirectories:YES attributes:nil error:&error];
+
+    if (!success) {
+        if (outError) *outError = error;
+        return nil;
+    }
+
+    if (outError) *outError = nil;
+
+    return resolvedPath;
+}
+
+
 BOOL CheckError(OSStatus error, const char *operation)
 {
 	if (error == noErr) return YES;
@@ -229,3 +257,9 @@ NSString *GetStringForTime(NSTimeInterval time)
     return [NSString stringWithFormat:@"%s%g:%02g", minus ? "-" : "", minutes, seconds];
 }
 
+
+NSString *GetApplicationSupportDirectory()
+{
+    NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleExecutable"];
+    return sFindOrCreateDirectory(NSApplicationSupportDirectory, NSUserDomainMask, name, NULL);
+}

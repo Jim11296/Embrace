@@ -28,6 +28,8 @@ extern NSString * const iTunesManagerDidUpdateLibraryMetadataNotification;
 - (iTunesPasteboardMetadata *) pasteboardMetadataForTrackID:(NSInteger)trackID;
 - (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;
 
+- (void) clearPasteboardMetadata;
+
 @end
 
 

@@ -370,4 +370,10 @@ static NSString * const sLocationKey  = @"Location";
 }
 
 
+- (void) clearPasteboardMetadata
+{
+    [_trackIDToPasteboardMetadataMap removeAllObjects];
+}
+
+
 @end

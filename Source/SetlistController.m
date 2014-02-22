@@ -32,7 +32,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-static NSString * const sTracksKey = @"tracks";
+static NSString * const sTrackUUIDsKey = @"track-uuids";
 static NSString * const sMinimumSilenceKey = @"minimum-silence";
 static NSString * const sModifiedAtKey = @"modified-at";
 static NSString * const sSavedAtKey = @"saved-at";
@@ -103,8 +103,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     [self _handlePreferencesDidChange:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidUpdate:) name:TrackDidUpdateNotification object:nil];
-    
     // Add top and bottom shadows
     {
         NSRect mainBounds = [[self mainView] bounds];
@@ -195,8 +193,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         image = [NSImage imageNamed:@"pause_template"];
 
     } else if (action == PlaybackActionTogglePause) {
-        image = [NSImage imageNamed:@"pause_template"];
-        enabled = NO;
+        image   = [NSImage imageNamed:@"pause_template"];
+        enabled = [self isPlaybackActionEnabled:PlaybackActionPause];
 
     } else {
         image = [NSImage imageNamed:@"play_template"];
@@ -224,12 +222,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (void) _handleTrackDidUpdate:(NSNotification *)note
-{
-    [self _saveState];
-}
-
-
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
     Preferences *preferences = [Preferences sharedInstance];
@@ -250,12 +242,14 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableArray *tracks = [NSMutableArray array];
 
-    NSArray  *states  = [defaults objectForKey:sTracksKey];
+    NSArray  *trackUUIDs  = [defaults objectForKey:sTrackUUIDsKey];
     NSTimeInterval silence = [defaults doubleForKey:sMinimumSilenceKey];
 
-    if ([states isKindOfClass:[NSArray class]]) {
-        for (NSDictionary *state in states) {
-            Track *track = [Track trackWithStateDictionary:state];
+    if ([trackUUIDs isKindOfClass:[NSArray class]]) {
+        for (NSString *uuidString in trackUUIDs) {
+            NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:uuidString];
+            Track *track = [Track trackWithUUID:uuid];
+
             if (track) [tracks addObject:track];
             
             if ([track trackStatus] == TrackStatusPlaying) {
@@ -273,13 +267,13 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    NSMutableArray *tracksStateArray = [NSMutableArray array];
+    NSMutableArray *trackUUIDsArray = [NSMutableArray array];
     for (Track *track in [self tracks]) {
-        NSDictionary *dictionary = [track stateDictionary];
-        if (dictionary) [tracksStateArray addObject:dictionary];
+        NSUUID *uuid = [track UUID];
+        if (uuid) [trackUUIDsArray addObject:[uuid UUIDString]];
     }
 
-    [defaults setObject:tracksStateArray forKey:sTracksKey];
+    [defaults setObject:trackUUIDsArray forKey:sTrackUUIDsKey];
     [defaults setDouble:_minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
 }
 
@@ -327,22 +321,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (BOOL) _canInsertAfterSelectedRow
-{
-    Track *selectedTrack = [self _selectedTrack];
-    if (!selectedTrack) return YES;
-    
-    if ([selectedTrack trackStatus] == TrackStatusPlayed) {
-        NSArray *tracks = [[self tracksController] arrangedObjects];
-
-        // Only allow inserting after a played track if said track is the last
-        return [selectedTrack isEqual:[tracks lastObject]];
-    }
-    
-    return YES;
-}
-
-
 - (Track *) _trackAtRow:(NSInteger)row
 {
     NSArray *tracks = [[self tracksController] arrangedObjects];
@@ -365,7 +343,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     for (Track *track in [[self tracksController] arrangedObjects]) {
         if ([track trackStatus] == TrackStatusQueued) continue;
-        if ([track trackType] != TrackTypeAudioFile) continue;
 
         NSString *artist = [track artist];
         if (artist) [result appendFormat:@"%@ %C ", artist, (unichar)0x2014];
@@ -452,6 +429,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sModifiedAtKey];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"tracks"];
+
+    [Track clearPersistedState];
     
     [[self tableView] reloadData];
 }
@@ -639,10 +619,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (BOOL) isPreferredPlaybackActionEnabled
+- (BOOL) isPlaybackActionEnabled:(PlaybackAction)action
 {
-    PlaybackAction action = [self preferredPlaybackAction];
-
     if (action == PlaybackActionPlay) {
         Track *next = [self _nextQueuedTrack];
 
@@ -655,11 +633,22 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         return YES;
 
     } else if (action == PlaybackActionPause) {
-        return [[Player sharedInstance] volume] == 0;
+        Player *player = [Player sharedInstance];
+
+        BOOL isVolumeZero  = [player volume] == 0;
+        BOOL isAutoGapping = [player timeElapsed] < 0;
+        
+        return isVolumeZero || isAutoGapping;
 
     } else {
         return NO;
     }
+}
+
+
+- (BOOL) isPreferredPlaybackActionEnabled
+{
+    return [self isPlaybackActionEnabled:[self preferredPlaybackAction]];
 }
 
 
@@ -832,23 +821,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (IBAction) addSilence:(id)sender
-{
-    Track *track = [SilentTrack silenceTrack];
-
-    Track *selectedTrack = [self _selectedTrack];
-    NSInteger index = selectedTrack ? [[[self tracksController] arrangedObjects] indexOfObject:selectedTrack] : NSNotFound;
-
-    if (track) {
-        if (selectedTrack && (index != NSNotFound)) {
-            [[self tracksController] insertObject:track atArrangedObjectIndex:(index + 1)];
-        } else {
-            if (track) [[self tracksController] addObject:track];
-        }
-    }
-}
-
-
 - (IBAction) showGearMenu:(id)sender
 {
     NSButton *gearButton = [self gearButton];
@@ -897,9 +869,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         BOOL canPause = [track trackStatus] != TrackStatusPlayed;
         [menuItem setState:canPause && [track pausesAfterPlaying]];
         return canPause;
-
-    } else if (action == @selector(addSilence:)) {
-        return [self _canInsertAfterSelectedRow];
 
     } else if (action == @selector(showEndTime:)) {
         return [self canShowEndTime];
@@ -1075,17 +1044,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    NSArray *tracks = [[self tracksController] arrangedObjects];
-    Track   *track  = [tracks objectAtIndex:row];
-    TrackType trackType = [track trackType];
-    
-    TrackTableCellView *cellView;
-
-    if (trackType == TrackTypeAudioFile) {
-        cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
-    } else if (trackType == TrackTypeSilence) {
-        cellView = [tableView makeViewWithIdentifier:@"SilenceCell" owner:self];
-    }
+    TrackTableCellView *cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
 
     NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
     [cellView setSelected:[selectionIndexes containsIndex:row]];
@@ -1096,16 +1055,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-    NSArray *tracks = [[self tracksController] arrangedObjects];
-    Track   *track  = [tracks objectAtIndex:row];
-    TrackType trackType = [track trackType];
-    
-    if (trackType == TrackTypeAudioFile) {
-        return 40;
-    } else if (trackType == TrackTypeSilence) {
-        return 24;
-    }
-
     return 40;
 }
 
@@ -1218,14 +1167,22 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         return YES;
 
     } else if ([filenames count] >= 2) {
-        for (NSString *filename in [filenames reverseObjectEnumerator]) {
+        NSMutableArray    *tracks   = [NSMutableArray array];
+        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+
+        for (NSString *filename in filenames) {
             NSURL *URL = [NSURL fileURLWithPath:filename];
 
             Track *track = [Track trackWithFileURL:URL];
             if (track) {
-                [[self tracksController] insertObject:track atArrangedObjectIndex:row];
+                [tracks addObject:track];
+                [indexSet addIndex:row];
+                
+                row++;
             }
         }
+
+        [[self tracksController] insertObjects:tracks atArrangedObjectIndexes:indexSet];
 
         [self _markAsModified];
 

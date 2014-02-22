@@ -10,22 +10,12 @@
 #import "AudioFile.h"
 
 
-extern NSString * const TrackDidUpdateNotification;
-
-
-
 @class TrackAnalyzer;
 
 typedef NS_ENUM(NSInteger, TrackStatus) {
     TrackStatusQueued,  // Track is queued
     TrackStatusPlaying, // Track is active
     TrackStatusPlayed   // Track was played
-};
-
-
-typedef NS_ENUM(NSInteger, TrackType) {
-    TrackTypeAudioFile,
-    TrackTypeSilence
 };
 
 
@@ -38,17 +28,18 @@ typedef NS_ENUM(NSInteger, TrackError) {
 
 @interface Track : NSObject
 
-+ (instancetype) trackWithStateDictionary:(NSDictionary *)state;
++ (void) clearPersistedState;
+
++ (instancetype) trackWithUUID:(NSUUID *)uuid;
+
 + (instancetype) trackWithFileURL:(NSURL *)url;
 
 - (void) cancelLoad;
 
-- (NSDictionary *) stateDictionary;
-
 - (void) startPriorityAnalysis;
 
-@property (nonatomic, readonly) TrackType trackType;
 @property (nonatomic, readonly) NSURL *fileURL;
+@property (nonatomic, readonly) NSUUID *UUID;
 
 
 // Read/Write
@@ -80,10 +71,3 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) BOOL didAnalyzeLoudness;
 
 @end
-
-
-@interface SilentTrack : Track
-+ (instancetype) silenceTrack;
-@property (nonatomic) NSTimeInterval duration;
-@end
-
