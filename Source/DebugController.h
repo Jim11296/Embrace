@@ -19,6 +19,8 @@
 
 - (IBAction) doFlipAnimation:(id)sender;
 
+- (IBAction) explode:(id)sender;
+
 
 @end
 

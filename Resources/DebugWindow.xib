@@ -17,34 +17,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="259" height="198"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lG4-gc-aSS">
-                        <rect key="frame" x="14" y="68" width="231" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Play / Pause Loop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="82r-VC-3Sg">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="playPauseLoop:" target="-2" id="f6G-cS-3za"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="plt-0B-aOH">
-                        <rect key="frame" x="14" y="35" width="231" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Do Flip Animation" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="rlw-6M-rzW">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="doFlipAnimation:" target="-2" id="mNA-JV-qeq"/>
-                        </connections>
-                    </button>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U4Z-je-cXm">
                         <rect key="frame" x="17" y="123" width="225" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Show Issue Dialog" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="x4P-3r-YFd" id="SUT-wY-r8w">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="O0M-dt-kqB">
                                 <items>
                                     <menuItem title="Show Issue Dialog" state="on" hidden="YES" id="iqN-QL-y4e"/>
@@ -60,12 +38,45 @@
                             <action selector="showIssueDialog:" target="-2" id="sOa-f6-3D7"/>
                         </connections>
                     </popUpButton>
+                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kc6-cf-wNT">
+                        <rect key="frame" x="17" y="17" width="225" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="push" title="Blow Things Up" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="WUw-wg-3TN">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" title="OtherViews" id="F5A-Pd-yPM">
+                                <items>
+                                    <menuItem title="Blow Things Up" state="on" hidden="YES" id="Ten-6H-bsL"/>
+                                    <menuItem title="Main Thread: Throw C++ Exception" id="GZx-AI-BTa"/>
+                                    <menuItem title="Main Thread: Throw Obj-C Exception" tag="1" id="24J-6r-8yc"/>
+                                    <menuItem title="Main Thread: Smash some memory!" tag="2" id="aHY-G4-tJn">
+                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                    </menuItem>
+                                    <menuItem isSeparatorItem="YES" id="e1s-zJ-sB1"/>
+                                    <menuItem title="Worker Thread: Throw C++ Exception" tag="3" id="Ygb-kN-ohd"/>
+                                    <menuItem title="Worker Thread: Throw Obj-C Exception" tag="4" id="ecw-MR-GtT"/>
+                                    <menuItem title="Worker Thread: Smash some memory!" tag="5" id="Kx3-bN-xJv">
+                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                    </menuItem>
+                                    <menuItem isSeparatorItem="YES" id="jBH-dc-l95"/>
+                                    <menuItem title="Player Thread: Throw C++ Exception" tag="6" id="D3S-hG-mNR"/>
+                                    <menuItem title="Player Thread: Throw Obj-C Exception" tag="7" id="XKv-uP-JO1"/>
+                                    <menuItem title="Player Thread: Smash some memory!" tag="8" id="vtR-TH-6Pu">
+                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                    </menuItem>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="explode:" target="-2" id="cJP-hB-9Pc"/>
+                        </connections>
+                    </popUpButton>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Soj-zJ-wHF">
                         <rect key="frame" x="17" y="154" width="225" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Populate Playlist" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="pzm-yc-6gp">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="t3d-mJ-C9Y">
                                 <items>
                                     <menuItem title="Populate Playlist" state="on" hidden="YES" id="dMD-cU-ixA"/>

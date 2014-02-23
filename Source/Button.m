@@ -9,6 +9,7 @@
 #import "Button.h"
 #import "MainIconView.h"
 
+
 @implementation Button {
     BOOL _highlighted;
     MainIconView *_iconView;
@@ -60,6 +61,7 @@
     [self _update:nil];
 }
 
+
 - (void) layout
 {
     [super layout];
@@ -75,6 +77,13 @@
     [super mouseDown:theEvent];
 
     _highlighted = NO;
+    [self _update:nil];
+}
+
+
+- (void) viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
     [self _update:nil];
 }
 

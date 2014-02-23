@@ -20,8 +20,13 @@
 #import "Player.h"
 #import "Effect.h"
 #import "Track.h"
+#import "CrashPadClient.h"
 
 #import "iTunesManager.h"
+
+#import <CrashReporter/CrashReporter.h>
+#import "CrashReportSender.h"
+
 
 @implementation AppDelegate {
     SetlistController      *_setlistController;
@@ -32,6 +37,9 @@
 #if DEBUG
     DebugController        *_debugController;
 #endif
+
+    PLCrashReporter   *_crashReporter;
+    CrashReportSender *_crashSender;
 
     NSMutableArray         *_editEffectControllers;
     NSMutableArray         *_viewTrackControllers;
@@ -52,17 +60,35 @@
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
     
+    PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeMach symbolicationStrategy:PLCrashReporterSymbolicationStrategyNone];
+    _crashReporter = [[PLCrashReporter alloc] initWithConfiguration:config];
+    
+    _crashSender = [[CrashReportSender alloc] initWithAppIdentifier:@"<redacted>"];
+
+    [_crashSender extractPendingReportFromReporter:_crashReporter];
+    SetupCrashPad(_crashReporter);
+    
+    if (![CrashReportSender isDebuggerAttached]) {
+        [_crashReporter enableCrashReporter];
+    }
+
+    BOOL hasCrashReports = [_crashSender hasCrashReports];
+
+    if (!hasCrashReports) {
+        [[self crashReportMenuItem] setHidden:YES];
+        [[self crashReportSeparator] setHidden:YES];
+    }
+
     _setlistController      = [[SetlistController     alloc] init];
     _effectsController      = [[EffectsController      alloc] init];
     _currentTrackController = [[CurrentTrackController alloc] init];
     
     [self _showPreviouslyVisibleWindows];
 
-    InstallCppTerminationHandler();
-
 #ifdef DEBUG
     [[self debugMenuItem] setHidden:NO];
 #endif
+
 }
 
 
@@ -482,6 +508,25 @@
 }
 
 
+- (IBAction) testCrash:(id)sender
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        sleep(1);
+
+        for (NSInteger i = 0; i < 4096; i++) {
+            int *p = (int *)i;
+            *p = 42;
+        }
+    });
+}
+
+
+- (IBAction) sendCrashReports:(id)sender
+{
+    [_crashSender sendCrashReports];
+}
+
+
 - (IBAction) showPreferences:(id)sender
 {
     if (!_preferencesController) {
@@ -510,6 +555,25 @@
 {
     NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/buy/embrace"];
     [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
+
+- (IBAction) openAcknowledgements:(id)sender
+{
+    NSString *fromPath = [[NSBundle mainBundle] pathForResource:@"Acknowledgements" ofType:@"rtf"];
+    NSString *toPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[fromPath lastPathComponent]];
+
+    NSError *error;
+
+    if (![[NSFileManager defaultManager] fileExistsAtPath:toPath]) {
+        [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:toPath error:&error];
+
+        [[NSFileManager defaultManager] setAttributes:@{
+            NSFilePosixPermissions: @0444
+        } ofItemAtPath:toPath error:&error];
+    }
+    
+    [[NSWorkspace sharedWorkspace] openFile:toPath];
 }
 
 

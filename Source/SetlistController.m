@@ -10,7 +10,6 @@
 #import "AudioDevice.h"
 #import "WrappedAudioDevice.h"
 
-#import "AudioFileTableCellView.h"
 #import "Track.h"
 #import "EffectType.h"
 #import "Effect.h"

@@ -117,6 +117,44 @@
 }
 
 
+- (IBAction) explode:(id)sender
+{
+    NSInteger tag = [sender selectedTag];
+    NSLog(@"%ld", tag);
+    
+    NSInteger action = tag % 3;
+    NSInteger thread = tag / 3;
+    
+    dispatch_queue_t q = thread == 0 ? dispatch_get_main_queue() : dispatch_get_global_queue(0, 0);
+    
+    
+    dispatch_async(q, ^{
+        if (action == 0) {
+            RaiseException();
+            
+        } else if (action == 1) {
+            [[NSException exceptionWithName:@"Debug Exception" reason:@"Debug Exception" userInfo:nil] raise];
+
+        } else if (action == 2) {
+            for (NSInteger i = 0; i < 4096; i++) {
+                int *moo = (int *)i;
+                *moo = 0xdeadbeef;
+            }
+        }
+    });
+    
+    if (thread == 0) {
+    
+     
+      
+    }// C++ Exception
+    
+    
+    NSLog(@"%ld, %ld", thread, action);
+
+}
+
+
 @end
 
 #endif
