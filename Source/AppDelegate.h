@@ -41,6 +41,8 @@
 - (IBAction) sendFeedback:(id)sender;
 - (IBAction) viewOnAppStore:(id)sender;
 
+- (IBAction) openAcknowledgements:(id)sender;
+
 - (EditEffectController *) editControllerForEffect:(Effect *)effect;
 - (void) closeEditControllerForEffect:(Effect *)effect;
 
@@ -50,6 +52,11 @@
 // Debug
 - (IBAction) showDebugWindow:(id)sender;
 
+- (IBAction) sendCrashReports:(id)sender;
+
 @property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *crashReportSeparator;
+@property (nonatomic, weak) IBOutlet NSMenuItem *crashReportMenuItem;
 
 @end

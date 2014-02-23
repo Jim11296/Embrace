@@ -107,7 +107,7 @@
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="TrackCell" id="7VA-Gs-oX4" customClass="AudioFileTableCellView">
+                                                        <tableCellView identifier="TrackCell" id="7VA-Gs-oX4" customClass="TrackTableCellView">
                                                             <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>

@@ -18,7 +18,7 @@ EXTERN void FillAudioTimeStampWithFutureSeconds(AudioTimeStamp *timeStamp, NSTim
 
 EXTERN UInt64 GetCurrentHostTime(void);
 
-EXTERN void InstallCppTerminationHandler(void);
+EXTERN void RaiseException(void);
 
 EXTERN NSTimeInterval GetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2);
 

@@ -45,6 +45,8 @@ static NSString * const sBPMKey           = @"beatsPerMinute";
 @property (nonatomic) double trackPeak;
 @property (nonatomic) NSData *overviewData;
 @property (nonatomic) double  overviewRate;
+
+@property (atomic, getter=isCancelled) BOOL cancelled;
 @end
 
 
@@ -172,6 +174,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void) cancelLoad
 {
+    [self setCancelled:YES];
     [self _clearTrackDataForAnalysis];
 }
 
@@ -565,8 +568,12 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     NSString *fallbackTitle = [[_fileURL lastPathComponent] stringByDeletingPathExtension];
 
-    dispatch_async(sLoaderQueue, ^{
-    @autoreleasepool {
+    dispatch_async(sLoaderQueue, ^{ @autoreleasepool {
+        BOOL isCancelled = [weakSelf isCancelled];
+        if (isCancelled) {
+            return;
+        }
+
         NSURL *fileURL = [weakSelf fileURL];
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
 
@@ -599,69 +606,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
         [asset cancelLoading];
         asset = nil;
-    }
-        
-#if 0
-        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        
-
-        [asset loadValuesAsynchronouslyForKeys:@[ @"commonMetadata", @"duration", @"availableMetadataFormats" ] completionHandler:^{
-            AVAsset *innerAsset = weakAsset;
-
-            NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-            NSError *error;
-            AVKeyValueStatus metadataStatus = [innerAsset statusOfValueForKey:@"commonMetadata" error:&error];
-            AVKeyValueStatus durationStatus = [innerAsset statusOfValueForKey:@"duration"       error:&error];
-            AVKeyValueStatus formatsStatus  = [innerAsset statusOfValueForKey:@"availableMetadataFormats" error:&error];
-
-            if (metadataStatus == AVKeyValueStatusLoaded) {
-                NSArray *metadata = [innerAsset commonMetadata];
-
-                for (AVMetadataItem *item in metadata) {
-                    parseMetadataItem(item, dictionary);
-                }
-
-                if (![dictionary objectForKey:sTitleKey]) {
-                    [dictionary setObject:fallbackTitle forKey:sTitleKey];
-                }
-            }
-
-            if (formatsStatus == AVKeyValueStatusLoaded) {
-                for (NSString *format in [asset availableMetadataFormats]) {
-                    NSArray *metadata = [asset metadataForFormat:format];
-                
-                    for (AVMetadataItem *item in metadata) {
-                        parseMetadataItem(item, dictionary);
-                    }
-                }
-            }
-
-            if (durationStatus == AVKeyValueStatusLoaded) {
-                NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
-                [dictionary setObject:@(duration) forKey:sDurationKey];
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf _updateState:dictionary initialLoad:NO];
-            });
-
-            if (durationStatus != AVKeyValueStatusLoading &&
-                formatsStatus  != AVKeyValueStatusLoading &&
-                metadataStatus != AVKeyValueStatusLoading)
-            {
-                dispatch_semaphore_signal(semaphore);
-            }
-        }];
-
-        int64_t fiveSecondsInNs = 5 * 1000 * 1000 * 1000;
-        dispatch_semaphore_wait(semaphore, dispatch_time(0, fiveSecondsInNs));
-        
-        [asset cancelLoading];
-        asset = nil;
-
-#endif
-    });
+    }});
 }
 
 

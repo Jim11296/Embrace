@@ -12,19 +12,16 @@
 
 @interface TrackTableCellView : NSTableCellView
 
-- (NSColor *) topTextColor;
-- (NSColor *) bottomTextColor;
-
-// Subclasses to override, must call super
-- (NSArray *) keyPathsToObserve;
-- (void) update;
+- (void) showEndTime;
 
 @property (nonatomic, readonly) Track *track;
 
 @property (nonatomic, weak) IBOutlet BorderedView *borderedView;
 
-@property (nonatomic, weak) IBOutlet NSTextField  *titleField;
-@property (nonatomic, weak) IBOutlet NSTextField  *durationField;
+@property (nonatomic, weak) IBOutlet NSTextField *titleField;
+@property (nonatomic, weak) IBOutlet NSTextField *durationField;
+@property (nonatomic, weak) IBOutlet NSTextField *artistField;
+@property (nonatomic, weak) IBOutlet NSTextField *tonalityAndBPMField;
 
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 

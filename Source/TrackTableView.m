@@ -7,8 +7,8 @@
 //
 
 #import "TrackTableView.h"
+#import "TrackTableCellView.h"
 
-#import "AudioFileTableCellView.h"
 
 @implementation TrackTableView
 

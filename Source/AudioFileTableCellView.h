@@ -13,9 +13,6 @@
 
 @interface AudioFileTableCellView : TrackTableCellView
 
-- (void) showEndTime;
 
-@property (nonatomic, weak) IBOutlet NSTextField *artistField;
-@property (nonatomic, weak) IBOutlet NSTextField *tonalityAndBPMField;
 
 @end
