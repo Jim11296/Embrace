@@ -7,7 +7,9 @@
 //
 
 #import "CrashPadClient.h"
-#import <CrashReporter/CrashReporter.h>
+#import <CrashReporter.h>
+#import "Player.h"
+
 
 #include <spawn.h>
 
@@ -17,6 +19,10 @@ static char sPath[256];
 
 static void sHandleSignal(siginfo_t *info, ucontext_t *uap, void *context)
 {
+    if (PlayerShouldUseCrashPad == 0) {
+        return;
+    }
+
     static BOOL sDidLaunchPod = NO;
     
     if (!sDidLaunchPod) {
@@ -57,4 +63,5 @@ void SetupCrashPad(PLCrashReporter *reporter)
     
     [reporter setCrashCallbacks:&sCrashReporterCallbacks];
 }
+
 

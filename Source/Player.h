@@ -25,6 +25,8 @@ typedef NS_ENUM(NSInteger, PlayerStatus) {
 };
 
 
+extern volatile NSInteger PlayerShouldUseCrashPad;
+
 @interface Player : NSObject
 
 + (instancetype) sharedInstance;
