@@ -72,18 +72,16 @@
         [_crashReporter enableCrashReporter];
     }
 
-    BOOL hasCrashReports = [_crashSender hasCrashReports];
-
-    if (!hasCrashReports) {
-        [[self crashReportMenuItem] setHidden:YES];
-        [[self crashReportSeparator] setHidden:YES];
-    }
-
     _setlistController      = [[SetlistController     alloc] init];
     _effectsController      = [[EffectsController      alloc] init];
     _currentTrackController = [[CurrentTrackController alloc] init];
     
     [self _showPreviouslyVisibleWindows];
+
+    BOOL hasCrashReports = [_crashSender hasCrashReports];
+
+    [[self crashReportMenuItem] setHidden:!hasCrashReports];
+    [[self crashReportSeparator] setHidden:!hasCrashReports];
 
 #ifdef DEBUG
     [[self debugMenuItem] setHidden:NO];
@@ -244,6 +242,13 @@
 
     } else if (action == @selector(showEndTime:)) {
         return [_setlistController canShowEndTime];
+    } else if (action == @selector(sendCrashReports:)){
+        BOOL hasCrashReports = [_crashSender hasCrashReports];
+
+        [[self crashReportMenuItem] setHidden:!hasCrashReports];
+        [[self crashReportSeparator] setHidden:!hasCrashReports];
+
+        return YES;
     }
 
     return YES;
@@ -565,13 +570,15 @@
 
     NSError *error;
 
-    if (![[NSFileManager defaultManager] fileExistsAtPath:toPath]) {
-        [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:toPath error:&error];
-
-        [[NSFileManager defaultManager] setAttributes:@{
-            NSFilePosixPermissions: @0444
-        } ofItemAtPath:toPath error:&error];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:toPath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:toPath error:&error];
     }
+
+    [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:toPath error:&error];
+
+    [[NSFileManager defaultManager] setAttributes:@{
+        NSFilePosixPermissions: @0444
+    } ofItemAtPath:toPath error:&error];
     
     [[NSWorkspace sharedWorkspace] openFile:toPath];
 }
