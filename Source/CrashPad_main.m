@@ -15,31 +15,61 @@
 @end
 
 
-@implementation CrashPadAppDelegate
+@implementation CrashPadAppDelegate {
+    NSArray *_embracesAtLaunch;
+    NSTimer *_timer;
+}
 
-- (void) applicationDidFinishLaunching:(NSNotification *)notification
+
+- (void) _tick:(NSTimer *)timer
+{
+    for (NSRunningApplication *app in _embracesAtLaunch) {
+        if (![app isTerminated]) {
+            return;
+        }
+    }
+
+    exit(0);
+}
+
+
+- (BOOL) _runAlert
 {
     NSString *messageText     = NSLocalizedString(@"Embrace encountered a critical error.", nil);
     NSString *informativeText = NSLocalizedString(@"Your current song will continue to play, but you must restart the app to play other songs or access other features.", nil);
     NSString *defaultButton   = NSLocalizedString(@"Restart", nil);
     NSString *alternateButton = NSLocalizedString(@"Quit", nil);
+
+    [NSApp activateIgnoringOtherApps:YES];
+
+    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:alternateButton otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+    [alert setAlertStyle:NSCriticalAlertStyle];
+
+    return [alert runModal] == NSOKButton;
+}
+
+
+
+- (void) applicationDidFinishLaunching:(NSNotification *)notification
+{
+    _embracesAtLaunch = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.iccir.Embrace"];
+
+    _timer = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+    
+    [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+    [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+    
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [NSApp activateIgnoringOtherApps:YES];
-
-        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:alternateButton otherButton:nil informativeTextWithFormat:@"%@", informativeText];
-        [alert setAlertStyle:NSCriticalAlertStyle];
-
-        BOOL restart = ([alert runModal] == NSOKButton);
-
-        NSArray *apps = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.iccir.Embrace"];
+        BOOL restart = [self _runAlert];
         NSURL *bundleURL = nil;
-        for (NSRunningApplication *app in apps) {
+        
+        for (NSRunningApplication *app in _embracesAtLaunch) {
             bundleURL = [app bundleURL];
             kill([app processIdentifier], 9);
         }
 
-        if (restart) {
+        if (restart && bundleURL) {
             NSError *error = nil;
             [[NSWorkspace sharedWorkspace] launchApplicationAtURL:bundleURL options:NSWorkspaceLaunchNewInstance configuration:nil error:&error];
         }

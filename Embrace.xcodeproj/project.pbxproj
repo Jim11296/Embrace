@@ -337,10 +337,6 @@
 		55CF27A9187AB2650042C92A /* EditEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditEffectController.m; path = Source/EditEffectController.m; sourceTree = SOURCE_ROOT; };
 		55DD538C18B99A530084628D /* CrashPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = CrashPad.entitlements; path = Resources/CrashPad.entitlements; sourceTree = "<group>"; };
 		55DD539118B99F4C0084628D /* CrashPad */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CrashPad; sourceTree = BUILT_PRODUCTS_DIR; };
-		55DD539418B99F4C0084628D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		55DD539718B99F4C0084628D /* CrashPad-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CrashPad-Prefix.pch"; sourceTree = "<group>"; };
-		55DD539818B99F4C0084628D /* CrashPad.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = CrashPad.1; sourceTree = "<group>"; };
-		55DD53A318B9E0480084628D /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = lib/CrashReporter.framework; sourceTree = "<group>"; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
 		55E5B6D118B5A0AF00F9DF65 /* track_error_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = track_error_template.png; path = Resources/track_error_template.png; sourceTree = SOURCE_ROOT; };
@@ -504,7 +500,6 @@
 				55BC0B1D1878D85000D84481 /* Other Sources */,
 				55708C7C18B8A9690059110C /* Crash Pad */,
 				558DC089187785BC00C85770 /* Resources */,
-				55DD539318B99F4C0084628D /* CrashPad */,
 				558DC081187785BC00C85770 /* Frameworks */,
 				558DC080187785BC00C85770 /* Products */,
 			);
@@ -522,7 +517,6 @@
 		558DC081187785BC00C85770 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				55DD53A318B9E0480084628D /* CrashReporter.framework */,
 				55A0B16C188F6FD700866F04 /* Accelerate.framework */,
 				555B3C821880EFD20088C15C /* QuartzCore.framework */,
 				55CF2787187A241A0042C92A /* ScriptingBridge.framework */,
@@ -697,24 +691,6 @@
 				55CF2785187A23BD0042C92A /* iTunesManager.m */,
 			);
 			name = iTunes;
-			sourceTree = "<group>";
-		};
-		55DD539318B99F4C0084628D /* CrashPad */ = {
-			isa = PBXGroup;
-			children = (
-				55DD539418B99F4C0084628D /* main.m */,
-				55DD539818B99F4C0084628D /* CrashPad.1 */,
-				55DD539618B99F4C0084628D /* Supporting Files */,
-			);
-			path = CrashPad;
-			sourceTree = "<group>";
-		};
-		55DD539618B99F4C0084628D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				55DD539718B99F4C0084628D /* CrashPad-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		55DD53A518B9FC3E0084628D /* Utils */ = {
