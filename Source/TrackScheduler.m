@@ -9,6 +9,7 @@
 #import "TrackScheduler.h"
 #import "Track.h"
 #import "AudioFile.h"
+#import "Player.h"
 
 
 @interface TrackScheduler ()
@@ -181,6 +182,8 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
 - (void) _readDataInBackgroundIntoSlice:(ScheduledAudioSlice *)slice
 {
+    PlayerShouldUseCrashPad = 0;
+
     NSInteger framesRemaining = [self totalFrames];
     NSInteger bytesRemaining = framesRemaining * _clientFormat.mBytesPerFrame;
 
@@ -227,6 +230,8 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             break;
         }
     }
+    
+    PlayerShouldUseCrashPad = 1;
 }
 
 

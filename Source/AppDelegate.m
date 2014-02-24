@@ -24,7 +24,7 @@
 
 #import "iTunesManager.h"
 
-#import <CrashReporter/CrashReporter.h>
+#import <CrashReporter.h>
 #import "CrashReportSender.h"
 
 
@@ -60,7 +60,7 @@
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
     
-    PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeMach symbolicationStrategy:PLCrashReporterSymbolicationStrategyNone];
+    PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeBSD symbolicationStrategy:PLCrashReporterSymbolicationStrategyAll];
     _crashReporter = [[PLCrashReporter alloc] initWithConfiguration:config];
     
     _crashSender = [[CrashReportSender alloc] initWithAppIdentifier:@"<redacted>"];

@@ -86,6 +86,7 @@
 		55A708AD18A70E96007BD7C0 /* drag_songs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A708AB18A70E96007BD7C0 /* drag_songs@2x.png */; };
 		55A708AE18A70E96007BD7C0 /* drag_songs.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A708AC18A70E96007BD7C0 /* drag_songs.png */; };
 		55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A708B018A715C1007BD7C0 /* DragSongsHereView.m */; };
+		55AB41E118BAE16F00DBCD7B /* libCrashReporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 554D318B18BADDBF007DEB16 /* libCrashReporter.a */; };
 		55ADE93518815EA8008DC245 /* PlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* PlayBar.m */; };
 		55ADE93818824338008DC245 /* LevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* LevelMeter.m */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
@@ -106,10 +107,7 @@
 		55DD539D18B99F840084628D /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
 		55DD539E18B99F890084628D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC085187785BC00C85770 /* AppKit.framework */; };
 		55DD53A218B9A22B0084628D /* CrashPad in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 55DD539118B99F4C0084628D /* CrashPad */; };
-		55DD53A418B9E0480084628D /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55DD53A318B9E0480084628D /* CrashReporter.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
-		55DD53AB18B9FC4A0084628D /* BITCrashReportTextFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A918B9FC4A0084628D /* BITCrashReportTextFormatter.m */; };
-		55DD53AC18B9FD300084628D /* CrashReporter.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 55DD53A318B9E0480084628D /* CrashReporter.framework */; };
 		55E5B6D318B5A0AF00F9DF65 /* track_error_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5B6D118B5A0AF00F9DF65 /* track_error_template.png */; };
 		55E5B6D418B5A0AF00F9DF65 /* track_error_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5B6D218B5A0AF00F9DF65 /* track_error_template@2x.png */; };
 		55F3B7AE187786E300E8FEC8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0BC1877861E00C85770 /* MainMenu.xib */; };
@@ -133,6 +131,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		554D318A18BADDBF007DEB16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 05E731F30EFA1AAB005EDFB7;
+			remoteInfo = "CrashReporter-MacOSX-Static";
+		};
+		55AB41DD18BADFE700DBCD7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 05E731F20EFA1AAB005EDFB7;
+			remoteInfo = "CrashReporter-MacOSX-Static";
+		};
 		55DD539F18B99F960084628D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 558DC077187785BC00C85770 /* Project object */;
@@ -143,17 +155,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		55708CBC18B979E80059110C /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				55DD53AC18B9FD300084628D /* CrashReporter.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		55DD53A118B9A2160084628D /* Copy Crash Pad */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -206,6 +207,7 @@
 		553DE141189F107100A355D1 /* ViewTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewTrackController.h; path = Source/ViewTrackController.h; sourceTree = SOURCE_ROOT; };
 		553DE142189F107100A355D1 /* ViewTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewTrackController.m; path = Source/ViewTrackController.m; sourceTree = SOURCE_ROOT; };
 		553DE144189F10D600A355D1 /* ViewTrackWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ViewTrackWindow.xib; path = Resources/ViewTrackWindow.xib; sourceTree = SOURCE_ROOT; };
+		554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CrashReporter.xcodeproj; path = PLCrashReporter/CrashReporter.xcodeproj; sourceTree = "<group>"; };
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
 		555A70191890BCBF00305EC6 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = Source/Application.h; sourceTree = SOURCE_ROOT; };
 		555A701A1890BCBF00305EC6 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Application.m; path = Source/Application.m; sourceTree = SOURCE_ROOT; };
@@ -341,8 +343,6 @@
 		55DD53A318B9E0480084628D /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = lib/CrashReporter.framework; sourceTree = "<group>"; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
-		55DD53A818B9FC4A0084628D /* BITCrashReportTextFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BITCrashReportTextFormatter.h; path = Source/BITCrashReportTextFormatter.h; sourceTree = "<group>"; };
-		55DD53A918B9FC4A0084628D /* BITCrashReportTextFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BITCrashReportTextFormatter.m; path = Source/BITCrashReportTextFormatter.m; sourceTree = "<group>"; };
 		55E5B6D118B5A0AF00F9DF65 /* track_error_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = track_error_template.png; path = Resources/track_error_template.png; sourceTree = SOURCE_ROOT; };
 		55E5B6D218B5A0AF00F9DF65 /* track_error_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "track_error_template@2x.png"; path = "Resources/track_error_template@2x.png"; sourceTree = SOURCE_ROOT; };
 		55F3B7AF1877885800E8FEC8 /* SetlistController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistController.h; path = Source/SetlistController.h; sourceTree = SOURCE_ROOT; };
@@ -378,12 +378,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55AB41E118BAE16F00DBCD7B /* libCrashReporter.a in Frameworks */,
 				55A0B16D188F6FD700866F04 /* Accelerate.framework in Frameworks */,
 				555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */,
 				55CF27A7187A5B780042C92A /* MediaToolbox.framework in Frameworks */,
 				55BC0B0F1877FC4D00D84481 /* CoreAudioKit.framework in Frameworks */,
 				55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */,
-				55DD53A418B9E0480084628D /* CrashReporter.framework in Frameworks */,
 				55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */,
 				55BC0B1918780A0200D84481 /* CoreAudio.framework in Frameworks */,
 				55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */,
@@ -410,6 +410,14 @@
 				557C2C3B18974031002FAFEA /* Public Utility */,
 			);
 			name = "CoreAudio Public Utility";
+			sourceTree = "<group>";
+		};
+		554D317818BADDBE007DEB16 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				554D318B18BADDBF007DEB16 /* libCrashReporter.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		556ACE30187BB3F800AED4BC /* Wrapped C++ */ = {
@@ -482,6 +490,7 @@
 		558DC076187785BC00C85770 = {
 			isa = PBXGroup;
 			children = (
+				554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */,
 				55394ED01884C94F00474E20 /* Sandbox.entitlements */,
 				55DD538C18B99A530084628D /* CrashPad.entitlements */,
 				55DD53A518B9FC3E0084628D /* Utils */,
@@ -713,8 +722,6 @@
 			children = (
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
-				55DD53A818B9FC4A0084628D /* BITCrashReportTextFormatter.h */,
-				55DD53A918B9FC4A0084628D /* BITCrashReportTextFormatter.m */,
 				55BC0B291878E4EF00D84481 /* Utils.h */,
 				55BC0B2A1878E4EF00D84481 /* Utils.m */,
 			);
@@ -786,11 +793,10 @@
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
 				55224BEC18A855E900407B46 /* rchook */,
-				55708CBC18B979E80059110C /* Copy Frameworks */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
-				558DC07D187785BC00C85770 /* Resources */,
-				55708CBB18B979920059110C /* Sign Frameworks and Crash Pad */,
+				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
+				558DC07D187785BC00C85770 /* Resources */,
 				558DC07C187785BC00C85770 /* Frameworks */,
 				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
 			);
@@ -798,6 +804,7 @@
 			);
 			dependencies = (
 				55DD53A018B99F960084628D /* PBXTargetDependency */,
+				55AB41DE18BADFE700DBCD7B /* PBXTargetDependency */,
 			);
 			name = Embrace;
 			productName = Embrace;
@@ -849,6 +856,12 @@
 			mainGroup = 558DC076187785BC00C85770;
 			productRefGroup = 558DC080187785BC00C85770 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 554D317818BADDBE007DEB16 /* Products */;
+					ProjectRef = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				558DC07E187785BC00C85770 /* Embrace */,
@@ -856,6 +869,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		554D318B18BADDBF007DEB16 /* libCrashReporter.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCrashReporter.a;
+			remoteRef = 554D318A18BADDBF007DEB16 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		558DC07D187785BC00C85770 /* Resources */ = {
@@ -933,19 +956,19 @@
 			shellPath = /bin/sh;
 			shellScript = "which rchook\nif [ $? -eq 0 ]; then\n    rchook xcode-build-phase\n    exit $?\nfi";
 		};
-		55708CBB18B979920059110C /* Sign Frameworks and Crash Pad */ = {
+		55708CBB18B979920059110C /* Sign Crash Pad */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Sign Frameworks and Crash Pad";
+			name = "Sign Crash Pad";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "MACOS=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}\"/\"${FRAMEWORKS_FOLDER_PATH}\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$MACOS/CrashPad\"\n\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$FRAMEWORKS/CrashReporter.framework/Versions/A/CrashReporter\"\nfi";
+			shellScript = "MACOS=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$MACOS/CrashPad\"\nfi";
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1006,7 +1029,6 @@
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
-				55DD53AB18B9FC4A0084628D /* BITCrashReportTextFormatter.m in Sources */,
 				55A0B16B188F59F000866F04 /* CurrentTrackController.m in Sources */,
 				55F3B7B61877908900E8FEC8 /* Track.m in Sources */,
 				558513C718794A2600C268E3 /* EffectsController.m in Sources */,
@@ -1039,6 +1061,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		55AB41DE18BADFE700DBCD7B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CrashReporter-MacOSX-Static";
+			targetProxy = 55AB41DD18BADFE700DBCD7B /* PBXContainerItemProxy */;
+		};
 		55DD53A018B99F960084628D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 55DD539018B99F4C0084628D /* CrashPad */;
@@ -1144,19 +1171,17 @@
 		558DC0B1187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/Sandbox.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/iccir/Projects/Embrace/lib,
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PLCrashReporter/Source/";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1164,19 +1189,17 @@
 		558DC0B2187785BC00C85770 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/Sandbox.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/iccir/Projects/Embrace/lib,
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PLCrashReporter/Source/";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

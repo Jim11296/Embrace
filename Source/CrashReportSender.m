@@ -29,9 +29,7 @@
 
 #import "CrashReportSender.h"
 
-#import "BITCrashReportTextFormatter.h"
-
-#import <CrashReporter/CrashReporter.h>
+#import <CrashReporter.h>
 #import <sys/sysctl.h>
 #import <objc/runtime.h>
 
@@ -189,18 +187,85 @@
 - (NSString *) _extractAppUUIDs:(PLCrashReport *)report
 {
     NSMutableString *uuidString = [NSMutableString string];
-    NSArray *uuidArray = [BITCrashReportTextFormatter arrayOfAppUUIDsForCrashReport:report];
-  
-    for (NSDictionary *element in uuidArray) {
-        if ([element objectForKey:kBITBinaryImageKeyUUID] && [element objectForKey:kBITBinaryImageKeyArch] && [element objectForKey:kBITBinaryImageKeyUUID]) {
-            [uuidString appendFormat:@"<uuid type=\"%@\" arch=\"%@\">%@</uuid>",
-                [element objectForKey:kBITBinaryImageKeyType],
-                [element objectForKey:kBITBinaryImageKeyArch],
-                [element objectForKey:kBITBinaryImageKeyUUID]
-            ];
+
+    NSArray *imageInfos = [[report images] sortedArrayUsingComparator:^(id obj1, id obj2) {
+        uint64_t addr1 = [obj1 imageBaseAddress];
+        uint64_t addr2 = [obj2 imageBaseAddress];
+    
+        if (addr1 < addr2) {
+            return NSOrderedAscending;
+        } else if (addr1 > addr2) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedSame;
+        }
+    }];
+    
+    NSString *(^getArchName)(PLCrashReportBinaryImageInfo *) = ^(PLCrashReportBinaryImageInfo *imageInfo) {
+        PLCrashReportProcessorInfo *codeType = [imageInfo codeType];
+
+        if ([codeType typeEncoding] == PLCrashReportProcessorTypeEncodingMach) {
+            uint64_t type    = [codeType type];
+            uint64_t subtype = [codeType subtype];
+        
+            if (type == CPU_TYPE_ARM) {
+                if (subtype == CPU_SUBTYPE_ARM_V6) {
+                    return @"armv6";
+                
+                } else if (subtype == CPU_SUBTYPE_ARM_V7) {
+                    return @"armv7";
+
+                } else if (subtype == CPU_SUBTYPE_ARM_V7S) {
+                    return @"armv7s";
+
+                } else {
+                    return @"arm-unknown";
+                }
+                
+            } else if (type == (CPU_TYPE_ARM | CPU_ARCH_ABI64)) {
+                return @"arm64";
+           
+            } else if (type == CPU_TYPE_X86) {
+                return @"i386";
+
+            } else if (type == CPU_TYPE_X86_64) {
+                return @"x86_64";
+
+            } else if (type == CPU_TYPE_POWERPC) {
+                return @"powerpc";
+            }
+        }
+        
+        return @"???";
+    };
+    
+    for (PLCrashReportBinaryImageInfo *imageInfo in imageInfos) {
+        NSString *uuid = [imageInfo hasImageUUID] ? [imageInfo imageUUID] : @"???";
+        
+        NSString *archName = getArchName(imageInfo);
+        
+        /* Determine if this is the app executable or app specific framework */
+        NSString *imagePath = [[imageInfo imageName] stringByStandardizingPath];
+        
+        NSString *appBundleContentsPath = [[report processInfo] processPath];
+        appBundleContentsPath = [appBundleContentsPath stringByDeletingLastPathComponent];
+        appBundleContentsPath = [appBundleContentsPath stringByDeletingLastPathComponent];
+
+        NSString *imageType = @"";
+        
+        if ([[imageInfo imageName] isEqual:[[report processInfo] processPath]]) {
+            imageType = @"app";
+        } else {
+            imageType = @"framework";
+        }
+        
+        if ([imagePath isEqual: report.processInfo.processPath] || [imagePath hasPrefix:appBundleContentsPath]) {
+            if (uuid && archName && imageType) {
+                [uuidString appendFormat:@"<uuid type=\"%@\" arch=\"%@\">%@</uuid>", imageType, archName, uuid];
+            }
         }
     }
-  
+    
     return uuidString;
 }
 
@@ -333,8 +398,11 @@
                 crashUUID = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, report.uuidRef));
             }
 
-            NSString *crashLogString = [BITCrashReportTextFormatter stringValueForCrashReport:report crashReporterKey:installString];
-      
+            NSString *crashLogString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
+
+            NSString *crashReporterKey = [NSString stringWithFormat:@"CrashReporter Key:   %@", installString];
+            crashLogString = [crashLogString stringByReplacingOccurrencesOfString:@"CrashReporter Key:   TODO" withString:crashReporterKey];
+
             crashLogString = [crashLogString stringByReplacingOccurrencesOfString:@"]]>" withString:@"]]" @"]]><![CDATA[" @">" options:NSLiteralSearch range:NSMakeRange(0,crashLogString.length)];
       
             [crashes appendFormat:@"<crash><applicationname>%s</applicationname><uuids>%@</uuids><bundleidentifier>%@</bundleidentifier><systemversion>%@</systemversion><senderversion>%@</senderversion><version>%@</version><uuid>%@</uuid><platform>%@</platform><log><![CDATA[%@]]></log><userid></userid><username></username><contact></contact><description></description></crash>",

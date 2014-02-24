@@ -20,6 +20,7 @@
 #import <pthread.h>
 #import <signal.h>
 #import <Accelerate/Accelerate.h>
+#import <PLCrashLogWriter.h>
 
 #define CHECK_RENDER_ERRORS_ON_TICK 0
 
@@ -30,6 +31,8 @@ static NSString * const sVolumeKey        = @"volume";
 
 static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
+volatile NSInteger PlayerShouldUseCrashPad = 0;
+
 
 static OSStatus sApplyEmergencyLimiter(
     void *inRefCon,
@@ -39,6 +42,8 @@ static OSStatus sApplyEmergencyLimiter(
     UInt32 inNumberFrames,
     AudioBufferList *ioData
 ) {
+    CrashLogWriterSetIgnoredThread(mach_thread_self());
+
     EmergencyLimiter *limiter = (EmergencyLimiter *)inRefCon;
     
     if (*ioActionFlags & kAudioUnitRenderAction_PostRender) {
@@ -889,6 +894,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) _setupAndStartPlayback
 {
+    PlayerShouldUseCrashPad = 0;
+
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
@@ -906,6 +913,8 @@ static OSStatus sInputRenderCallback(
 
     [_currentScheduler stopScheduling:_generatorAudioUnit];
     _currentScheduler = nil;
+
+    PlayerShouldUseCrashPad = 0;
 
     [self _buildGraphHeadAndTrackScheduler];
     [self _updateLoudnessAndPreAmp];
