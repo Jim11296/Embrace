@@ -23,7 +23,7 @@ static void sHandleSignal(siginfo_t *info, ucontext_t *uap, void *context)
         return;
     }
 
-    static BOOL sDidLaunchPod = NO;
+    static volatile BOOL sDidLaunchPod = NO;
     
     if (!sDidLaunchPod) {
         sDidLaunchPod = YES;

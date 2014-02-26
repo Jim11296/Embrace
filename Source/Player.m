@@ -248,10 +248,10 @@ typedef struct {
                 continue;
             }
 
-            AudioComponentDescription acd;
+            AudioComponentDescription unused;
             AudioUnit unit = NULL;
 
-            err = AUGraphNodeInfo(_graph, node, &acd, &unit);
+            err = AUGraphNodeInfo(_graph, node, &unused, &unit);
             
             if (err != noErr) {
                 [effect _setAudioUnit:NULL error:err];

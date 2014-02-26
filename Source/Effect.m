@@ -206,7 +206,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
 - (void) setBypass:(BOOL)bypass
 {
-    UInt32 data = bypass;
+    UInt32 data = bypass ? 1 : 0;
     UInt32 dataSize = sizeof(data);
     
     AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_BypassEffect, kAudioUnitScope_Global, 0, &data, dataSize);

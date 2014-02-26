@@ -36,8 +36,8 @@
 - (BOOL) _runAlert
 {
     NSString *messageText     = NSLocalizedString(@"Embrace encountered a critical error.", nil);
-    NSString *informativeText = NSLocalizedString(@"Your current song will continue to play, but you must restart the app to play other songs or access other features.", nil);
-    NSString *defaultButton   = NSLocalizedString(@"Restart", nil);
+    NSString *informativeText = NSLocalizedString(@"Your current song will continue to play, but you must reopen the app to play other songs or access other features.", nil);
+    NSString *defaultButton   = NSLocalizedString(@"Reopen", nil);
     NSString *alternateButton = NSLocalizedString(@"Quit", nil);
 
     [NSApp activateIgnoringOtherApps:YES];

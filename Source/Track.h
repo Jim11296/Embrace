@@ -21,9 +21,11 @@ typedef NS_ENUM(NSInteger, TrackStatus) {
 
 typedef NS_ENUM(NSInteger, TrackError) {
     TrackErrorNone             = 0,
+
     TrackErrorProtectedContent = AudioFileErrorProtectedContent,
     TrackErrorConversionFailed = AudioFileErrorConversionFailed,
-    TrackErrorOpenFailed       = AudioFileErrorOpenFailed
+    TrackErrorOpenFailed       = AudioFileErrorOpenFailed,
+    TrackErrorReadTooSlow      = AudioFileErrorReadTooSlow
 };
 
 @interface Track : NSObject

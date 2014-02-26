@@ -17,6 +17,7 @@
 @implementation CrashReportSender {
     NSString *_crashesDir;
     BOOL _canHaveCrashReports;
+    void (^_completionHandler)(BOOL);
 }
 
 
@@ -238,6 +239,18 @@
 }
 
 
+- (void) _handleDidPost:(BOOL)completed
+{
+    if (completed) {
+        [self _cleanCrashReports];
+    }
+    
+    if (_completionHandler) {
+        _completionHandler(completed);
+        _completionHandler = nil;
+    }
+}
+
 - (void) _postXMLString:(NSString *)xml
 {
     NSMutableURLRequest *request = nil;
@@ -290,11 +303,9 @@
             shouldClean = YES;
         }
 
-        if (shouldClean) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf _cleanCrashReports];
-            });
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf _handleDidPost:shouldClean];
+        });
     });
 }
 
@@ -323,6 +334,12 @@
 
 
 - (void) sendCrashReports
+{
+    [self sendCrashReportsWithCompletionHandler:nil];
+}
+
+
+- (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
     NSError *error = NULL;
 		
@@ -397,6 +414,7 @@
 	
   
     if ([crashes length]) {
+        _completionHandler = completionHandler;
         [self _postXMLString:[NSString stringWithFormat:@"<crashes>%@</crashes>", crashes]];
     }
 }

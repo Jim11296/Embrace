@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger, AudioFileError) {
     AudioFileErrorProtectedContent = 101,
     AudioFileErrorConversionFailed = 102,
     AudioFileErrorOpenFailed       = 103,
-    AudioFileErrorReadFailed       = 104
+    AudioFileErrorReadFailed       = 104,
+    AudioFileErrorReadTooSlow      = 105
 };
 
 @interface AudioFile : NSObject
