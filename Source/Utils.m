@@ -181,19 +181,19 @@ extern Tonality GetTonalityForString(NSString *string)
 
     if (result == Tonality_Unknown) {
         NSArray  *array = sGetTraditionalStringArray();
-        NSInteger index = [array indexOfObject:string];
+        NSUInteger index = [array indexOfObject:string];
 
         if (index != NSNotFound && index != 0) {
-            result = index;
+            result = (Tonality)index;
         }
     }
 
     if (result == Tonality_Unknown) {
         NSArray  *array = sGetCamelotStringArray();
-        NSInteger index = [array indexOfObject:string];
+        NSUInteger index = [array indexOfObject:string];
 
         if (index != NSNotFound && index != 0) {
-            result = index;
+            result = (Tonality)index;
         }
     }
     

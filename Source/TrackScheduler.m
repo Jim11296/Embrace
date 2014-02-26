@@ -13,9 +13,8 @@
 
 
 @interface TrackScheduler ()
-@property (atomic) NSInteger totalFrames;
-@property (atomic) NSInteger availableFrames;
-
+@property (atomic) NSInteger      totalFrames;
+@property (atomic) BOOL           shouldCancelRead;
 @property (atomic) OSStatus       rawError;
 @property (atomic) AudioFileError audioFileError;
 @end
@@ -180,7 +179,9 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 }
 
 
-- (void) _readDataInBackgroundIntoSlice:(ScheduledAudioSlice *)slice
+- (void) _readDataInBackgroundIntoSlice: (ScheduledAudioSlice *) slice
+                            primeAmount: (NSInteger) primeAmount
+                         primeSemaphore: (dispatch_semaphore_t) primeSemaphore
 {
     PlayerShouldUseCrashPad = 0;
 
@@ -196,8 +197,12 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     fillBufferList->mNumberBuffers = (UInt32)bufferCount;
     
     OSStatus err = noErr;
+    BOOL needsSignal = YES;
     
-    while (1 && (err == noErr)) {
+    while (err == noErr) {
+        BOOL shouldCancel = [self shouldCancelRead];
+        if (shouldCancel) break;
+    
         UInt32 maxFrames  = 32768;
         UInt32 frameCount = (UInt32)framesRemaining;
         if (frameCount > maxFrames) frameCount = maxFrames;
@@ -219,19 +224,27 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         }
 
         framesAvailable += frameCount;
-        [self setAvailableFrames:framesAvailable];
         
+        if ((framesAvailable >= primeAmount) && needsSignal) {
+            dispatch_semaphore_signal(primeSemaphore);
+            needsSignal = NO;
+        }
+
         framesRemaining -= frameCount;
     
         bytesRead       += frameCount * _clientFormat.mBytesPerFrame;
         bytesRemaining  -= frameCount * _clientFormat.mBytesPerFrame;
         
         if (framesRemaining == 0) {
+            PlayerShouldUseCrashPad = 1;
             break;
         }
     }
     
-    PlayerShouldUseCrashPad = 1;
+    if (needsSignal) {
+        dispatch_semaphore_signal(primeSemaphore);
+        needsSignal = NO;
+    }
 }
 
 
@@ -257,35 +270,33 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
     ScheduledAudioSlice *slice = _slice;
 
+    NSInteger totalFrames = [self totalFrames];
+    NSInteger primeAmount = (_clientFormat.mSampleRate * 10);
+    if (totalFrames < primeAmount) primeAmount = totalFrames;
+
+    dispatch_semaphore_t primeSemaphore = dispatch_semaphore_create(0);
+
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self _readDataInBackgroundIntoSlice:slice];
+        [self _readDataInBackgroundIntoSlice:slice primeAmount:primeAmount primeSemaphore:primeSemaphore];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self _cleanupAudioFile];
         });
     });
 
-    while (![self totalFrames] && ![self rawError]) {
-        usleep(1);
+    // Wait for the prime semaphore, this should be very fast.  If we can't decode at least 10 seconds
+    // of audio in 5 seconds, something is wrong, and flip the error to "read too slow"
+    //
+    int64_t fiveSecondsInNs = 15 * 1000 * 1000 * 1000;
+    if (dispatch_semaphore_wait(primeSemaphore, dispatch_time(0, fiveSecondsInNs))) {
+        [self setAudioFileError:AudioFileErrorReadTooSlow];
     }
     
     if ([self rawError] || [self audioFileError]) {
+        [self setShouldCancelRead:YES];
         return NO;
     }
     
-    NSInteger primeAmount = (_clientFormat.mSampleRate * 10);
-    NSInteger totalFrames = [self totalFrames];
-    
-    if (totalFrames < primeAmount) primeAmount = totalFrames;
-
-    while ([self availableFrames] < primeAmount && ![self rawError] && ![self audioFileError]) {
-        usleep(1);
-    }
-    
-    if ([self rawError] || [self audioFileError]) {
-        return NO;
-    }
-
     _slice->mTimeStamp = timeStamp;
     _slice->mCompletionProc = sReleaseTrackScheduler;
     _slice->mCompletionProcUserData = (void *)CFBridgingRetain(self);
@@ -296,7 +307,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ScheduleAudioSlice, kAudioUnitScope_Global, 0, _slice, sizeof(ScheduledAudioSlice)),
         "AudioUnitSetProperty[ ScheduleAudioSlice ]"
     );
-};
+}
 
 
 - (void) stopScheduling:(AudioUnit)audioUnit

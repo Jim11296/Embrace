@@ -18,7 +18,9 @@
 - (id) initWithAppIdentifier:(NSString *)appIdentifier;
 
 - (void) extractPendingReportFromReporter:(PLCrashReporter *)reporter;
+
 - (void) sendCrashReports;
+- (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;
 
 @property (nonatomic, readonly) BOOL hasCrashReports;
 @property (nonatomic, readonly) NSString *appIdentifier;

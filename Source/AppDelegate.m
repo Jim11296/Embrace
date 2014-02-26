@@ -189,22 +189,22 @@
     SEL action = [menuItem action];
 
     if (action == @selector(performPreferredPlaybackAction:)) {
-        PlaybackAction action = [_setlistController preferredPlaybackAction];
+        PlaybackAction playbackAction = [_setlistController preferredPlaybackAction];
         
         NSString *title = NSLocalizedString(@"Play", nil);
         BOOL enabled = [_setlistController isPreferredPlaybackActionEnabled];
         NSInteger state = NSOffState;
         
-        if (action == PlaybackActionShowIssue) {
+        if (playbackAction == PlaybackActionShowIssue) {
             title = NSLocalizedString(@"Show Issue", nil);
 
-        } else if (action == PlaybackActionTogglePause) {
+        } else if (playbackAction == PlaybackActionTogglePause) {
             title = NSLocalizedString(@"Pause after playing", nil);
             
             BOOL yn = [[[Player sharedInstance] currentTrack] pausesAfterPlaying];
             state = yn ? NSOnState : NSOffState;
             
-        } else if (action == PlaybackActionPause) {
+        } else if (playbackAction == PlaybackActionPause) {
             title = NSLocalizedString(@"Pause", nil);
         }
 
@@ -528,7 +528,33 @@
 
 - (IBAction) sendCrashReports:(id)sender
 {
-    [_crashSender sendCrashReports];
+    NSAlert *(^makeAlertOne)() = ^{
+        NSString *messageText     = NSLocalizedString(@"Send Crash Report?", nil);
+        NSString *informativeText = NSLocalizedString(@"Information about the crash, your operating system, and device will be sent. No personal information is included.", nil);
+        NSString *defaultButton   = NSLocalizedString(@"Send", nil);
+    
+        return [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+    };
+
+    NSAlert *(^makeAlertTwo)() = ^{
+        NSString *messageText     = NSLocalizedString(@"Crash Report Sent", nil);
+        NSString *informativeText = NSLocalizedString(@"Thank you for your crash report.  If you have any additional information regarding the crash, please contact me.", nil);
+        NSString *otherButton     = NSLocalizedString(@"Contact", nil);
+            
+        return [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@"%@", informativeText];
+    };
+    
+    BOOL okToSend = [makeAlertOne() runModal] == NSOKButton;
+
+    if (okToSend) {
+        [_crashSender sendCrashReportsWithCompletionHandler:^(BOOL didSend) {
+            NSModalResponse response = [makeAlertTwo() runModal];
+            
+            if (response == NSAlertOtherReturn) {
+                [self sendFeedback:nil];
+            }
+        }];
+    }
 }
 
 

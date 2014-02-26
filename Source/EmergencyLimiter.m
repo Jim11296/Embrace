@@ -106,8 +106,6 @@ inline static void sGetMax(UInt32 frameCount, AudioBufferList *bufferList, float
     }
     
     if (max > sPeakValue) {
-        NSInteger maxIndex = 0;
-
         for (NSInteger i = 0; i < bufferCount; i++) {
             AudioBuffer buffer = bufferList->mBuffers[i];
 

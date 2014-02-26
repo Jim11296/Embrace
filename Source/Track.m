@@ -484,19 +484,19 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         return;
     }
 
-    iTunesPasteboardMetadata *metadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:_fileURL];
+    iTunesPasteboardMetadata *pasteboardMetadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:_fileURL];
     
-    if (metadata) {
-        if (!_title)    [self setTitle:[metadata title]];
-        if (!_artist)   [self setArtist:[metadata artist]];
-        if (!_duration) [self setDuration:[metadata duration]];
+    if (pasteboardMetadata) {
+        if (!_title)    [self setTitle:[pasteboardMetadata title]];
+        if (!_artist)   [self setArtist:[pasteboardMetadata artist]];
+        if (!_duration) [self setDuration:[pasteboardMetadata duration]];
     }
 
     if ([[iTunesManager sharedInstance] didParseLibrary]) {
-        iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
+        iTunesLibraryMetadata *libraryMetadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
 
-        [self setStartTime:[metadata startTime]];
-        [self setStopTime: [metadata stopTime]];
+        [self setStartTime:[libraryMetadata startTime]];
+        [self setStopTime: [libraryMetadata stopTime]];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidUpdateLibraryMetadata:) name:iTunesManagerDidUpdateLibraryMetadataNotification object:nil];

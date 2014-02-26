@@ -10,7 +10,7 @@
 
 @implementation BorderedView
 
-- (void) drawRect:(NSRect)rect
+- (void) drawRect:(NSRect)dirtyRect
 {
     CGFloat scale = [[self window] backingScaleFactor];
     NSRect bounds = [self bounds];
