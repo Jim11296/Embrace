@@ -1058,7 +1058,9 @@ static OSStatus sInputRenderCallback(
             [self hardStop];
             
         } else if (isStartSilence) {
+            Track *track = _currentTrack;
             [self hardStop];
+            [track setTrackStatus:TrackStatusQueued];
 
         } else if (trackStatus == TrackStatusQueued) {
             [self hardStop];
