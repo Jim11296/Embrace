@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger,  MainIconAnimation) {
+    MainIconAnimationTypeOpen,
+    MainIconAnimationTypeSubtlePopOut,
+    MainIconAnimationTypeSubtlePopIn
+};
+
 @interface MainIconView : NSView
 
-- (void) flipToImage:(NSImage *)image tintColor:(NSColor *)tintColor;
+- (void) performAnimation:(MainIconAnimation)animation image:(NSImage *)image tintColor:(NSColor *)tintColor;
 
 @property (nonatomic, strong) NSColor *tintColor;
 @property (nonatomic, strong) NSImage *image;

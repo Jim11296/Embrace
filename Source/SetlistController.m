@@ -49,8 +49,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     NSUInteger _rowOfDraggedTrack;
     BOOL       _inVolumeDrag;
     
+    double     _volumeBeforeKeyboard;
     double     _volumeBeforeAutoPause;
     BOOL       _didAutoPause;
+    BOOL       _confirmPauseClick;
 }
 
 
@@ -173,6 +175,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     NSImage  *image   = nil;
     NSString *tooltip = nil;
     BOOL      alert   = NO;
+
+    Button *playButton = [self playButton];
     
     if (action == PlaybackActionShowIssue) {
         image = [NSImage imageNamed:@"issue_template"];
@@ -192,8 +196,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         image = [NSImage imageNamed:@"pause_template"];
 
     } else if (action == PlaybackActionTogglePause) {
-        image   = [NSImage imageNamed:@"pause_template"];
-        enabled = [self isPlaybackActionEnabled:PlaybackActionPause];
+        image = _confirmPauseClick ? [NSImage imageNamed:@"stop_template"] : [NSImage imageNamed:@"pause_template"];
+        alert = _confirmPauseClick;
+        enabled = YES;
 
     } else {
         image = [NSImage imageNamed:@"play_template"];
@@ -205,9 +210,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         }
     }
 
-    Button *playButton = [self playButton];
-
-    [playButton setWiggling:((action == PlaybackActionPause) && _inVolumeDrag && isVolumeZero) || _didAutoPause];
     [playButton setAlert:alert];
     [playButton setImage:image];
     [playButton setToolTip:tooltip];
@@ -403,6 +405,72 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 - (void) _updateInsertionPointWorkaround:(BOOL)yn
 {
     [(TrackTableView *)_tableView updateInsertionPointWorkaround:yn];
+}
+
+
+- (void) _doAutoPauseIfNeededWithBeforeVolume:(double)beforeVolume
+{
+    PlaybackAction action = [self preferredPlaybackAction];
+    Button *playButton = [self playButton];
+    
+    if ([playButton isEnabled]) {
+        Player *player = [Player sharedInstance];
+        BOOL isVolumeZero = [player volume] == 0;
+
+        if (action == PlaybackActionPause && !_inVolumeDrag && isVolumeZero) {
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"play_template"] enabled:YES];
+            _volumeBeforeAutoPause = beforeVolume;
+            _didAutoPause = YES;
+
+            [[Player sharedInstance] hardStop];
+
+        } else if (action == PlaybackActionPlay && _didAutoPause && !isVolumeZero) {
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"pause_template"] enabled:NO];
+            _didAutoPause = NO;
+
+            [[Player sharedInstance] play];
+        }
+    } else {
+        _didAutoPause = NO;
+    }
+}
+
+
+- (void) _clearConfirmPauseClick
+{
+    _confirmPauseClick = NO;
+    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"pause_template"] alert:NO];
+    [self _updatePlayButton];
+}
+
+
+- (void) _clearVolumeBeforeKeyboard
+{
+    _volumeBeforeKeyboard = 0;
+}
+
+
+- (void) _increaseOrDecreaseVolumeByAmount:(CGFloat)amount
+{
+    Player *player = [Player sharedInstance];
+
+    double oldVolume = [player volume];
+    double newVolume = oldVolume + amount;
+
+    if (newVolume > 1.0) newVolume = 1.0;
+    if (newVolume < 0.0) newVolume = 0.0;
+
+    if (_volumeBeforeKeyboard == 0) {
+        _volumeBeforeKeyboard = oldVolume;
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearVolumeBeforeKeyboard) object:nil];
+        [self performSelector:@selector(_clearVolumeBeforeKeyboard) withObject:nil afterDelay:10];
+    }
+
+    [player setVolume:newVolume];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self _doAutoPauseIfNeededWithBeforeVolume:_volumeBeforeKeyboard];
+    });
 }
 
 
@@ -655,6 +723,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     NSString *messageText     = nil;
     NSString *informativeText = nil;
+    NSString *otherButton     = nil;
 
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     NSString *deviceName = [device name];
@@ -665,6 +734,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         NSString *format = NSLocalizedString(@"\\U201c%@\\U201d could not be located.  Verify that it is connected and powered on.", nil);
 
         informativeText = [NSString stringWithFormat:format, deviceName];
+        otherButton = NSLocalizedString(@"Show Preferences", nil);
 
     } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
         messageText = NSLocalizedString(@"Another application is using the selected output device", nil);
@@ -681,13 +751,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
         messageText = NSLocalizedString(@"The selected output device could not be configured", nil);
+        otherButton = NSLocalizedString(@"Show Preferences", nil);
     }
 
-    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@""];
     [alert setAlertStyle:NSCriticalAlertStyle];
     if (informativeText) [alert setInformativeText:informativeText];
     
-    [alert runModal];
+    if ([alert runModal] == NSAlertOtherReturn) {
+        [GetAppDelegate() showPreferences:nil];
+    }
 }
 
 
@@ -699,13 +772,29 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     if (action == PlaybackActionShowIssue) {
         [self showAlertForIssue:[[Player sharedInstance] issue]];
-        
+
+    } else if (action == PlaybackActionTogglePause && (sender == [self playButton])) {
+        if (!_confirmPauseClick) {
+            _confirmPauseClick = YES;
+
+            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"stop_template"] alert:YES];
+            
+            [self _updatePlayButton];
+            [self performSelector:@selector(_clearConfirmPauseClick) withObject:nil afterDelay:5];
+
+        } else {
+            _confirmPauseClick = NO;
+            [[Player sharedInstance] hardStop];
+        }
+
     } else if (action == PlaybackActionPlay) {
         if (_didAutoPause) {
             _didAutoPause = NO;
 
             [[Player sharedInstance] playOrSoftPause];
             [[Player sharedInstance] setVolume:_volumeBeforeAutoPause];
+            
+            _volumeBeforeKeyboard = 0;
 
         } else {
             [[Player sharedInstance] playOrSoftPause];
@@ -719,17 +808,13 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) increaseVolume:(id)sender
 {
-    double volume = [[Player sharedInstance] volume] + 0.04;
-    if (volume > 1.0) volume = 1.0;
-    [[Player sharedInstance] setVolume:volume];
+    [self _increaseOrDecreaseVolumeByAmount:0.04];
 }
 
 
 - (IBAction) decreaseVolume:(id)sender
 {
-    double volume = [[Player sharedInstance] volume] - 0.04;
-    if (volume < 0) volume = 0;
-    [[Player sharedInstance] setVolume:volume];
+    [self _increaseOrDecreaseVolumeByAmount:-0.04];
 }
 
 
@@ -896,29 +981,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         [self _updatePlayButton];
     }
 
-    PlaybackAction action = [self preferredPlaybackAction];
-    Button *playButton = [self playButton];
-    
-    if ([playButton isEnabled]) {
-        Player *player = [Player sharedInstance];
-        BOOL isVolumeZero = [player volume] == 0;
-
-        if (action == PlaybackActionPause && !_inVolumeDrag && isVolumeZero) {
-            [playButton flipToImage:[NSImage imageNamed:@"play_template"] enabled:YES];
-            _volumeBeforeAutoPause = [[self volumeSlider] doubleValueBeforeDrag];
-            _didAutoPause = YES;
-
-            [[Player sharedInstance] hardStop];
-
-        } else if (action == PlaybackActionPlay && _didAutoPause && !isVolumeZero) {
-            [playButton flipToImage:[NSImage imageNamed:@"pause_template"] enabled:NO];
-            _didAutoPause = NO;
-
-            [[Player sharedInstance] play];
-        }
-    } else {
-        _didAutoPause = NO;
-    }
+    double beforeVolume = [[self volumeSlider] doubleValueBeforeDrag];
+    [self _doAutoPauseIfNeededWithBeforeVolume:beforeVolume];
 }
 
 

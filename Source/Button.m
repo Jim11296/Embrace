@@ -39,8 +39,8 @@
 
 - (void) _setupButton
 {
-    _alertColor       = GetRGBColor(0xc00000, 1.0);
-    _alertActiveColor = GetRGBColor(0xa00000, 1.0);
+    _alertColor       = GetRGBColor(0xff0000, 1.0);
+    _alertActiveColor = GetRGBColor(0xe00000, 1.0);
     _normalColor      = GetRGBColor(0x1866E9, 1.0);
     _activeColor      = GetRGBColor(0x0a48b1, 1.0);
     _inactiveColor    = GetRGBColor(0x000000, 0.5);
@@ -130,9 +130,17 @@
 }
 
 
-- (void) flipToImage:(NSImage *)image enabled:(BOOL)enabled
+- (void) performOpenAnimationToImage:(NSImage *)image enabled:(BOOL)enabled
 {
-    [_iconView flipToImage:image tintColor:enabled ? _normalColor : _inactiveColor];
+    [_iconView performAnimation:MainIconAnimationTypeOpen image:image tintColor:enabled ? _normalColor : _inactiveColor];
+}
+
+
+- (void) performPopAnimation:(BOOL)isPopIn toImage:(NSImage *)image alert:(BOOL)alert
+{
+    [_iconView performAnimation:(isPopIn ? MainIconAnimationTypeSubtlePopIn : MainIconAnimationTypeSubtlePopOut)
+                          image: image
+                      tintColor: alert ? _alertColor : _normalColor];
 }
 
 
