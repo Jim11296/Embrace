@@ -10,7 +10,9 @@
 
 @interface Button : NSButton
 
-- (void) flipToImage:(NSImage *)image enabled:(BOOL)enabled;
+- (void) performOpenAnimationToImage:(NSImage *)image enabled:(BOOL)enabled;
+
+- (void) performPopAnimation:(BOOL)isPopIn toImage:(NSImage *)image alert:(BOOL)alert;
 
 @property (nonatomic, getter=isAlert) BOOL alert;
 
@@ -18,7 +20,6 @@
 @property (nonatomic, strong) NSColor *activeColor;
 @property (nonatomic, strong) NSColor *inactiveColor;
 @property (nonatomic, strong) NSColor *disabledColor;
-
 
 @property (nonatomic, strong) NSColor *alertColor;
 @property (nonatomic, strong) NSColor *alertActiveColor;

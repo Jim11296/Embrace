@@ -24,17 +24,14 @@
         _mainLayer = [CALayer layer];
         _auxLayer  = [CALayer layer];
         
-        [_mainLayer setMasksToBounds:NO];
-        [_auxLayer setMasksToBounds:NO];
+        [_mainLayer    setMasksToBounds:NO];
+        [_auxLayer     setMasksToBounds:NO];
 
-        [_mainLayer setDelegate:self];
-        [_auxLayer  setDelegate:self];
+        [_mainLayer    setDelegate:self];
+        [_auxLayer     setDelegate:self];
         
-        [_mainLayer setContentsGravity:kCAGravityLeft];
-        [_auxLayer  setContentsGravity:kCAGravityLeft];
-        
-        [_auxLayer setDoubleSided:NO];
-        [_mainLayer setDoubleSided:NO];
+        [_mainLayer    setContentsGravity:kCAGravityLeft];
+        [_auxLayer     setContentsGravity:kCAGravityLeft];
         
         [_auxLayer setHidden:YES];
 
@@ -88,7 +85,7 @@
     [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
     
     [color set];
-    NSRectFillUsingOperation([self bounds], NSCompositeSourceIn);
+    NSRectFillUsingOperation(bounds, NSCompositeSourceIn);
     
     [NSGraphicsContext setCurrentContext:oldContext];
 }
@@ -114,8 +111,73 @@
 }
 
 
+- (NSImage *) _imageWithImage:(NSImage *)image tintColor:(NSColor *)tintColor
+{
+    NSSize size = [image size];
+    NSImage *result = [[NSImage alloc] initWithSize:size];
+    
+    [result lockFocus];
 
-- (void) flipToImage:(NSImage *)image tintColor:(NSColor *)tintColor
+    NSRect rect = NSZeroRect;
+    rect.size = size;
+
+    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
+    
+    [tintColor set];
+    NSRectFillUsingOperation(rect, NSCompositeSourceIn);
+    
+    [result unlockFocus];
+    
+    return result;
+}
+
+
+- (void) _performSubtlePopAnimationWithImage:(NSImage *)image tintColor:(NSColor *)tintColor isPopIn:(BOOL)isPopIn
+{
+    CABasicAnimation    *contentsAnimation  = [CABasicAnimation    animationWithKeyPath:@"contents"];
+    CAKeyframeAnimation *transformAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+
+    CABasicAnimation    *mainHiddenAnimation = [CABasicAnimation animationWithKeyPath:@"hidden"];
+    CABasicAnimation    *auxHiddenAnimation  = [CABasicAnimation animationWithKeyPath:@"hidden"];
+    
+    [mainHiddenAnimation setFromValue:@YES];
+    [mainHiddenAnimation setToValue:@YES];
+
+    [auxHiddenAnimation setFromValue:@NO];
+    [auxHiddenAnimation setToValue:@NO];
+
+    [contentsAnimation setFromValue:[self _imageWithImage:[self image] tintColor:[self tintColor]]];
+    [contentsAnimation setToValue:  [self _imageWithImage:image        tintColor:tintColor]];
+
+    CGFloat scale  = isPopIn ? 1.2  : 1;
+
+    [transformAnimation setValues:@[
+        [NSValue valueWithCATransform3D:CATransform3DMakeScale(1,   1,    1)],
+        [NSValue valueWithCATransform3D:CATransform3DMakeScale(scale, scale,  1)],
+        [NSValue valueWithCATransform3D:CATransform3DMakeScale(1,   1,    1)],
+    ]];
+    
+    [transformAnimation setTimingFunctions:@[
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]
+    ]];
+
+    [transformAnimation setKeyTimes:@[ @0, @0.5, @1.0 ] ];
+    [contentsAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+
+    _auxImage = [self image];
+    [[self layer] addSublayer:_auxLayer];
+    
+    [_auxLayer addAnimation:transformAnimation forKey:@"transform"];
+    [_auxLayer addAnimation:contentsAnimation  forKey:@"contents"];
+    
+    [_mainLayer addAnimation:mainHiddenAnimation forKey:@"hidden"];
+    [_auxLayer  addAnimation:auxHiddenAnimation  forKey:@"hidden"];
+}
+
+
+- (void) _performOpenAnimationWithImage:(NSImage *)image tintColor:(NSColor *)tintColor
 {
     _auxImage = [self image];
     _auxColor = [self tintColor];
@@ -125,8 +187,7 @@
     [self setTintColor:tintColor];
 
     [[self layer] addSublayer:_auxLayer];
-    
-    
+
     CABasicAnimation *auxTransformAnimation  = [CABasicAnimation animationWithKeyPath:@"transform"];
     CABasicAnimation *mainTransformAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
 
@@ -162,6 +223,28 @@
 }
 
 
+- (void) performAnimation:(MainIconAnimation)animation image:(NSImage *)image tintColor:(NSColor *)tintColor
+{
+    if (animation == MainIconAnimationTypeOpen) {
+        [self _performOpenAnimationWithImage:image tintColor:tintColor];
+    } else {
+        [self _performSubtlePopAnimationWithImage:image tintColor:tintColor isPopIn:(animation == MainIconAnimationTypeSubtlePopIn)];
+    }
+}
+
+
+- (void) doEnableAnimationFromTintColor:(NSColor *)fromColor toColor:(NSColor *)toColor
+{
+    _auxImage = [self image];
+    _auxColor = fromColor;
+    [_auxLayer setNeedsDisplay];
+
+    [self setTintColor:toColor];
+
+    [[self layer] addSublayer:_auxLayer];
+}
+
+
 - (void) setImage:(NSImage *)image
 {
     if (_image != image) {
@@ -180,5 +263,6 @@
         [_mainLayer setNeedsDisplay];
     }
 }
+
 
 @end

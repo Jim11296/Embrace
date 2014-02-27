@@ -536,13 +536,19 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
             parseTonality(stringValue, dictionary);
 
-        } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2 TKEY tag
+        } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2.3 TKEY tag
             parseTonality(stringValue, dictionary);
 
-        } else if ([key isEqual:@(0x746d706f)] && numberValue) { // Tempo key
+        } else if ([key isEqual:@((UInt32) '\00TKE')] && stringValue) { // Initial key as ID3v2.2 TKE tag
+            parseTonality(stringValue, dictionary);
+
+        } else if ([key isEqual:@((UInt32) 'tmpo')] && numberValue) { // Tempo key, 'tmpo'
             [dictionary setObject:numberValue forKey:sBPMKey];
 
-        } else if ([key isEqual:@((UInt32) 'TBPM')] && numberValue) { // Tempo as ID3v2 TBPM tag
+        } else if ([key isEqual:@((UInt32) 'TBPM')] && numberValue) { // Tempo as ID3v2.3 TBPM tag
+            [dictionary setObject:numberValue forKey:sBPMKey];
+
+        } else if ([key isEqual:@((UInt32) '\00TBP')] && numberValue) { // Tempo as ID3v2.2 TBP tag
             [dictionary setObject:numberValue forKey:sBPMKey];
 
         } else {
@@ -623,6 +629,36 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 
 #pragma mark - Accessors
+
+- (void) setTrackStatus:(TrackStatus)trackStatus
+{
+    if (_trackStatus != trackStatus) {
+        _trackStatus = trackStatus;
+        _dirty = YES;
+        [self _saveStateImmediately:YES];
+    }
+}
+
+
+- (void) setPausesAfterPlaying:(BOOL)pausesAfterPlaying
+{
+    if (_pausesAfterPlaying != pausesAfterPlaying) {
+        _pausesAfterPlaying = pausesAfterPlaying;
+        _dirty = YES;
+        [self _saveStateImmediately:NO];
+    }
+}
+
+
+- (void) setTrackError:(TrackError)trackError
+{
+    if (_trackError != trackError) {
+        _trackError = trackError;
+        _dirty = YES;
+        [self _saveStateImmediately:NO];
+    }
+}
+
 
 - (NSTimeInterval) playDuration
 {
