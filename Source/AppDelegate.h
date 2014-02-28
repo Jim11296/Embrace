@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class EditEffectController, ViewTrackController, Effect;
-@class Track;
+@class SetlistController, Track;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
@@ -42,6 +42,8 @@
 - (IBAction) viewOnAppStore:(id)sender;
 
 - (IBAction) openAcknowledgements:(id)sender;
+
+@property (nonatomic, readonly) SetlistController *setlistController;
 
 - (EditEffectController *) editControllerForEffect:(Effect *)effect;
 - (void) closeEditControllerForEffect:(Effect *)effect;

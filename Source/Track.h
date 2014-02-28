@@ -59,6 +59,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSTimeInterval startTime;
 @property (nonatomic, readonly) NSTimeInterval stopTime;
 @property (nonatomic, readonly) NSTimeInterval duration;
+@property (nonatomic, readonly) NSInteger databaseID;
 @property (nonatomic, readonly) Tonality tonality;
 
 @property (nonatomic, readonly) double  trackLoudness;

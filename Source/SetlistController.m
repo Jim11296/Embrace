@@ -729,15 +729,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     NSString *deviceName = [device name];
 
     if (issue == PlayerIssueDeviceMissing) {
-        messageText = NSLocalizedString(@"The selected output device is not connected", nil);
+        messageText = NSLocalizedString(@"The selected output device is not connected.", nil);
         
-        NSString *format = NSLocalizedString(@"\\U201c%@\\U201d could not be located.  Verify that it is connected and powered on.", nil);
+        NSString *format = NSLocalizedString(@"Verify that \\U201c%@\\U201d is connected and powered on.", nil);
 
         informativeText = [NSString stringWithFormat:format, deviceName];
         otherButton = NSLocalizedString(@"Show Preferences", nil);
 
     } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
-        messageText = NSLocalizedString(@"Another application is using the selected output device", nil);
+        messageText = NSLocalizedString(@"Another application is using the selected output device.", nil);
 
         pid_t hogModeOwner = [[device controller] hogModeOwner];
         NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
@@ -750,7 +750,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         }
 
     } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
-        messageText = NSLocalizedString(@"The selected output device could not be configured", nil);
+        messageText = NSLocalizedString(@"The selected output device could not be configured.", nil);
         otherButton = NSLocalizedString(@"Show Preferences", nil);
     }
 
@@ -783,8 +783,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             [self performSelector:@selector(_clearConfirmPauseClick) withObject:nil afterDelay:5];
 
         } else {
-            _confirmPauseClick = NO;
-            [[Player sharedInstance] hardStop];
+            if ([[NSApp currentEvent] clickCount] < 2) {
+                _confirmPauseClick = NO;
+                [[Player sharedInstance] hardStop];
+            }
         }
 
     } else if (action == PlaybackActionPlay) {

@@ -106,6 +106,8 @@
 		55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF27A9187AB2650042C92A /* EditEffectController.m */; };
 		55CF848A18BF052700EF33F7 /* stop_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848918BF052700EF33F7 /* stop_template@2x.png */; };
 		55CF848C18BF179700EF33F7 /* stop_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848B18BF179700EF33F7 /* stop_template.png */; };
+		55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848D18BF27AC00EF33F7 /* Embrace.sdef */; };
+		55CF849118BF459600EF33F7 /* Scripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF849018BF459600EF33F7 /* Scripting.m */; };
 		55DD539D18B99F840084628D /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
 		55DD539E18B99F890084628D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC085187785BC00C85770 /* AppKit.framework */; };
 		55DD53A218B9A22B0084628D /* CrashPad in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 55DD539118B99F4C0084628D /* CrashPad */; };
@@ -339,6 +341,9 @@
 		55CF27A9187AB2650042C92A /* EditEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditEffectController.m; path = Source/EditEffectController.m; sourceTree = SOURCE_ROOT; };
 		55CF848918BF052700EF33F7 /* stop_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stop_template@2x.png"; path = "Resources/stop_template@2x.png"; sourceTree = SOURCE_ROOT; };
 		55CF848B18BF179700EF33F7 /* stop_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop_template.png; path = Resources/stop_template.png; sourceTree = SOURCE_ROOT; };
+		55CF848D18BF27AC00EF33F7 /* Embrace.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Embrace.sdef; path = Resources/Embrace.sdef; sourceTree = SOURCE_ROOT; };
+		55CF848F18BF459600EF33F7 /* Scripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scripting.h; path = Source/Scripting.h; sourceTree = "<group>"; };
+		55CF849018BF459600EF33F7 /* Scripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Scripting.m; path = Source/Scripting.m; sourceTree = "<group>"; };
 		55DD538C18B99A530084628D /* CrashPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = CrashPad.entitlements; path = Resources/CrashPad.entitlements; sourceTree = "<group>"; };
 		55DD539118B99F4C0084628D /* CrashPad */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CrashPad; sourceTree = BUILT_PRODUCTS_DIR; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
@@ -498,6 +503,7 @@
 				556ACE30187BB3F800AED4BC /* Wrapped C++ */,
 				55BC0B1C1878D7FA00D84481 /* Model */,
 				55CF2797187A3DD50042C92A /* iTunes */,
+				55CF849218BF4EF400EF33F7 /* Scripting */,
 				55BC0B1E1878D8B700D84481 /* View */,
 				55F3B7CF18779B2200E8FEC8 /* Player */,
 				558DC088187785BC00C85770 /* Controller */,
@@ -695,6 +701,16 @@
 				55CF2785187A23BD0042C92A /* iTunesManager.m */,
 			);
 			name = iTunes;
+			sourceTree = "<group>";
+		};
+		55CF849218BF4EF400EF33F7 /* Scripting */ = {
+			isa = PBXGroup;
+			children = (
+				55CF848F18BF459600EF33F7 /* Scripting.h */,
+				55CF849018BF459600EF33F7 /* Scripting.m */,
+				55CF848D18BF27AC00EF33F7 /* Embrace.sdef */,
+			);
+			name = Scripting;
 			sourceTree = "<group>";
 		};
 		55DD53A518B9FC3E0084628D /* Utils */ = {
@@ -920,6 +936,7 @@
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
 				5515B469189B4DC300FBC886 /* no_volume_template.png in Resources */,
 				55717BD3187EA45500213213 /* close_pressed.png in Resources */,
+				55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,6 +994,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55717BF5187EA65400213213 /* Button.m in Sources */,
+				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
