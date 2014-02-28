@@ -31,6 +31,7 @@ static NSString * const sTrackPeakKey     = @"trackPeak";
 static NSString * const sOverviewDataKey  = @"overviewData";
 static NSString * const sOverviewRateKey  = @"overviewRate";
 static NSString * const sBPMKey           = @"beatsPerMinute";
+static NSString * const sDatabaseIDKey    = @"databaseID";
 
 @interface Track ()
 @property (nonatomic) NSUUID *UUID;
@@ -45,6 +46,7 @@ static NSString * const sBPMKey           = @"beatsPerMinute";
 @property (nonatomic) double trackPeak;
 @property (nonatomic) NSData *overviewData;
 @property (nonatomic) double  overviewRate;
+@property (nonatomic) NSInteger databaseID;
 
 @property (atomic, getter=isCancelled) BOOL cancelled;
 @end
@@ -246,6 +248,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
     if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
     if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
+    if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -487,9 +490,10 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     iTunesPasteboardMetadata *pasteboardMetadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:_fileURL];
     
     if (pasteboardMetadata) {
-        if (!_title)    [self setTitle:[pasteboardMetadata title]];
-        if (!_artist)   [self setArtist:[pasteboardMetadata artist]];
-        if (!_duration) [self setDuration:[pasteboardMetadata duration]];
+        if (!_title)      [self setTitle:[pasteboardMetadata title]];
+        if (!_artist)     [self setArtist:[pasteboardMetadata artist]];
+        if (!_duration)   [self setDuration:[pasteboardMetadata duration]];
+        if (!_databaseID) [self setDatabaseID:[pasteboardMetadata trackID]];
     }
 
     if ([[iTunesManager sharedInstance] didParseLibrary]) {

@@ -23,12 +23,6 @@
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="*Crash*" id="kFy-7X-Dvs">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="testCrash:" target="494" id="crq-EU-kIV"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="oex-bD-CGM"/>
                             <menuItem title="Send Crash Report…" id="H4P-8S-3EP">
                                 <modifierMask key="keyEquivalentModifierMask"/>

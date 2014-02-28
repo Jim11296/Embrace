@@ -513,19 +513,6 @@
 }
 
 
-- (IBAction) testCrash:(id)sender
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        sleep(1);
-
-        for (NSInteger i = 0; i < 4096; i++) {
-            int *p = (int *)i;
-            *p = 42;
-        }
-    });
-}
-
-
 - (IBAction) sendCrashReports:(id)sender
 {
     NSAlert *(^makeAlertOne)() = ^{
