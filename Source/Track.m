@@ -234,6 +234,9 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 {
     NSMutableDictionary *state = [NSMutableDictionary dictionary];
 
+    // Never save the state until we have a bookmark
+    if (!_bookmark) return;
+
     if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
     if (_artist)         [state setObject:_artist               forKey:sArtistKey];
     if (_title)          [state setObject:_title                forKey:sTitleKey];
