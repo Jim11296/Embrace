@@ -285,6 +285,10 @@
     
     BOOL endTimeVisible = ((isCommandKeyDown && _mouseInside) || _endTimeRequested);
 
+    if ([[self track] trackStatus] == TrackStatusPlayed) {
+        endTimeVisible = NO;
+    }
+
     if (_endTimeVisible != endTimeVisible) {
         _endTimeVisible = endTimeVisible;
 
@@ -574,7 +578,7 @@
 
         CGFloat maxWidth = superBounds.size.width - (14 + 14);
 
-        BOOL lastLine = lineNumber == numberOfLines;
+        BOOL lastLine = (lineNumber == numberOfLines);
 
         leftFrame.origin.x  =
         rightFrame.origin.x =
@@ -602,7 +606,7 @@
         rightFrame.size.width = rightFittedWidth;
         rightFrame.origin.x += maxWidth - rightFittedWidth;
 
-        leftFrame.size.width -= (lastLine && _endTimeVisible) ? _endTimeFittedWidth : rightFittedWidth;
+        leftFrame.size.width -= ((lastLine && _endTimeVisible) ? _endTimeFittedWidth : rightFittedWidth);
         if (leftFrame.size.width < 0) {
             leftFrame.size.width = 0;
         }
@@ -625,12 +629,12 @@
         layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
     
     } else if (numberOfLines == 2) {
-        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 2);
+        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
         layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 2);
     
     } else if (numberOfLines == 3) {
-        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 3);
-        layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 3);
+        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
+        layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 2);
         layoutLine(line3Left, line3Right, _line3LeftFittedWidth, _line3RightFittedWidth, 3);
     }
 }
