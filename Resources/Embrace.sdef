@@ -128,30 +128,53 @@
 		<class name="track" code="trck" description="An track in the set list.">
 			<cocoa class="Track"/>
 
-			<property name="track status" access="r" code="stat" type="trackStatus" description="the title of the track">
-				<cocoa key="scriptingTrackStatus"/>
+			<property name="artist" access="r" code="arti" type="text" description="the artist/source of the track">
+				<cocoa key="scriptingArtist"/>
+            </property>
+
+			<property name="camelot keycode" access="r" code="kcam" type="text" description="the Camelot keycode of the track">
+				<cocoa key="scriptingCamelotKeycode"/>
+            </property>
+
+			<property name="comment" access="r" code="comm" type="text" description="freeform notes about the track">
+				<cocoa key="scriptingComment"/>
+            </property>
+
+			<property name="database ID" access="r" code="dbid" type="integer" description="the iTunes database ID of the track, if available">
+				<cocoa key="scriptingDatabaseID"/>
+            </property>
+
+			<property name="duration" access="r" code="tdur" type="real" description="the length of the track in seconds">
+				<cocoa key="scriptingDuration"/>
+            </property>
+
+			<property name="energy level" access="r" code="ener" type="integer" description="the average energy level of the track (1-10, 0 if unknown)">
+				<cocoa key="scriptingEnergyLevel"/>
+            </property>
+
+			<property name="file" code="file" description="the track&apos;s location on disk." type="file" access="r">
+				<cocoa key="scriptingFile"/>
+			</property>
+
+			<property name="genre" access="r" code="genr" type="text" description="the genre of the track">
+				<cocoa key="scriptingGenre"/>
+            </property>
+
+			<property name="grouping" access="r" code="grop" type="text" description="the grouping of the track">
+				<cocoa key="scriptingGrouping"/>
+            </property>
+
+			<property name="key signature" access="r" code="ksig" type="text" description="the key signature of the track">
+				<cocoa key="scriptingKeySignature"/>
             </property>
 
 			<property name="title" access="r" code="titl" type="text" description="the title of the track">
 				<cocoa key="scriptingTitle"/>
             </property>
 
-			<property name="artist" access="r" code="arti" type="text" description="the artist/source of the track">
-				<cocoa key="scriptingArtist"/>
+			<property name="track status" access="r" code="stat" type="trackStatus" description="the title of the track">
+				<cocoa key="scriptingTrackStatus"/>
             </property>
-            
-			<property name="duration" access="r" code="tdur" type="real" description="the length of the track in seconds">
-				<cocoa key="scriptingDuration"/>
-            </property>
-            
-			<property name="file" code="file" description="the track&apos;s location on disk." type="file" access="r">
-				<cocoa key="scriptingFile"/>
-			</property>
-
-			<property name="database ID" access="r" code="dbid" type="integer" description="the iTunes database ID of this track, if available">
-				<cocoa key="scriptingDatabaseID"/>
-            </property>
-
 		</class>
 	</suite>
 </dictionary>

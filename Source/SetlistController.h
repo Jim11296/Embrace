@@ -11,7 +11,7 @@
 
 
 @class WaveformView;
-@class TracksManager;
+@class TracksController;
 @class PlayBar, BorderedView, CloseButton, Button, LevelMeter, WhiteSlider;
 
 
@@ -52,21 +52,21 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (void) saveToFileAtURL:(NSURL *)url;
 - (void) exportToPlaylist;
 
-- (IBAction) showEndTime:(id)sender;
-- (BOOL) canShowEndTime;
+- (IBAction) revealEndTime:(id)sender;
+- (BOOL) canRevealEndTime;
 
 - (void) showAlertForIssue:(PlayerIssue)issue;
 
 @property (nonatomic) NSTimeInterval minimumSilenceBetweenTracks;
 
-@property (nonatomic, strong) NSArray *tracks;
+@property (nonatomic, strong) IBOutlet TracksController *tracksController;
+
 @property (nonatomic, weak) Player *player;
 
 @property (nonatomic, strong) IBOutlet NSView *dragSongsView;
 
 @property (nonatomic, strong) IBOutlet NSMenu *gearMenu;
 
-@property (nonatomic, strong) IBOutlet NSArrayController *tracksController;
 @property (nonatomic, strong) IBOutlet NSMenu *tableMenu;
 
 @property (nonatomic, strong) IBOutlet BorderedView *headerView;
@@ -79,7 +79,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
 
 @property (nonatomic, weak)   IBOutlet NSView *mainView;
-@property (nonatomic, weak)   IBOutlet NSTableView  *tableView;
+@property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
 @property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
 

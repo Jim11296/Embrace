@@ -32,11 +32,17 @@ static NSString * const sOverviewDataKey  = @"overviewData";
 static NSString * const sOverviewRateKey  = @"overviewRate";
 static NSString * const sBPMKey           = @"beatsPerMinute";
 static NSString * const sDatabaseIDKey    = @"databaseID";
+static NSString * const sGroupingKey      = @"grouping";
+static NSString * const sCommentsKey      = @"comments";
+static NSString * const sEnergyLevelKey   = @"energyLevel";
+static NSString * const sGenreKey         = @"genre";
 
 @interface Track ()
 @property (nonatomic) NSUUID *UUID;
 @property (nonatomic) NSString *title;
 @property (nonatomic) NSString *artist;
+@property (nonatomic) NSString *grouping;
+@property (nonatomic) NSString *comments;
 @property (nonatomic) NSInteger beatsPerMinute;
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic) NSTimeInterval stopTime;
@@ -47,6 +53,8 @@ static NSString * const sDatabaseIDKey    = @"databaseID";
 @property (nonatomic) NSData *overviewData;
 @property (nonatomic) double  overviewRate;
 @property (nonatomic) NSInteger databaseID;
+@property (nonatomic) NSInteger energyLevel;
+@property (nonatomic) NSString *genre;
 
 @property (atomic, getter=isCancelled) BOOL cancelled;
 @end
@@ -240,6 +248,9 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
     if (_artist)         [state setObject:_artist               forKey:sArtistKey];
     if (_title)          [state setObject:_title                forKey:sTitleKey];
+    if (_comments)       [state setObject:_comments             forKey:sCommentsKey];
+    if (_grouping)       [state setObject:_grouping             forKey:sGroupingKey];
+    if (_genre)          [state setObject:_genre                forKey:sGenreKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
     if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
     if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
@@ -252,6 +263,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
     if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
     if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
+    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:sEnergyLevelKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -534,6 +546,16 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         NSNumber *numberValue = [item numberValue];
         NSString *stringValue = [item stringValue];
         
+        id value = [item value];
+        NSDictionary *dictionaryValue = nil;
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            dictionaryValue = (NSDictionary *)value;
+        }
+
+        if (!stringValue) {
+            stringValue = [dictionaryValue objectForKey:@"text"];
+        }
+        
         if ([commonKey isEqual:@"artist"] || [key isEqual:@"artist"]) {
             [dictionary setObject:[item stringValue] forKey:sArtistKey];
 
@@ -543,6 +565,9 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
             parseTonality(stringValue, dictionary);
 
+        } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
+            [dictionary setObject:numberValue forKey:sEnergyLevelKey];
+            
         } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2.3 TKEY tag
             parseTonality(stringValue, dictionary);
 
@@ -558,12 +583,48 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         } else if ([key isEqual:@((UInt32) '\00TBP')] && numberValue) { // Tempo as ID3v2.2 TBP tag
             [dictionary setObject:numberValue forKey:sBPMKey];
 
+        } else if ([key isEqual:@(-1453101708)] && stringValue) { // Comments, '?cmt'
+            [dictionary setObject:stringValue forKey:sCommentsKey];
+
+        } else if ([key isEqual:@((UInt32) 'COMM')] && stringValue) { // Comments as ID3v2.3 COMM tag
+            [dictionary setObject:stringValue forKey:sCommentsKey];
+
+        } else if ([key isEqual:@((UInt32) '\00COM')] && stringValue) { // Comments as ID3v2.2 COM tag
+            [dictionary setObject:stringValue forKey:sCommentsKey];
+
+        } else if ([key isEqual:@(-1452838288)] && stringValue) { // Grouping, '?grp'
+            [dictionary setObject:stringValue forKey:sGroupingKey];
+
+        } else if ([key isEqual:@((UInt32) 'TIT1')] && stringValue) { // Grouping as ID3v2.3 TIT1 tag
+            [dictionary setObject:stringValue forKey:sGroupingKey];
+
+        } else if ([key isEqual:@((UInt32) '\00TT1')] && stringValue) { // Grouping as ID3v2.2 TT1 tag
+            [dictionary setObject:stringValue forKey:sGroupingKey];
+
+        } else if ([key isEqual:@(-1452841618)] && stringValue) { // Genre, '?gen'
+            [dictionary setObject:stringValue forKey:sGenreKey];
+
+        } else if ([key isEqual:@((UInt32) 'TCON')] && stringValue) { // Genre, 'TCON'
+            [dictionary setObject:stringValue forKey:sGenreKey];
+
+        } else if ([key isEqual:@((UInt32) '\00TCO')] && stringValue) { // Genre, 'TCO'
+            [dictionary setObject:stringValue forKey:sGenreKey];
+
+        } else if ([key isEqual:@((UInt32) 'TXXX')] || [key isEqual:@((UInt32) '\00TXX')]) { // Read TXXX / TXX
+            if ([[dictionaryValue objectForKey:@"identifier"] isEqualToString:@"EnergyLevel"]) {
+                [dictionary setObject:@( [stringValue integerValue] ) forKey:sEnergyLevelKey];
+            }
+
         } else {
 #if DUMP_UNKNOWN_TAGS
-            NSLog(@"common: %@, key: %@, value: %@",
-                GetStringForFourCharCodeObject(commonKey),
-                GetStringForFourCharCodeObject(key),
-                [item value]
+            NSString *debugStringValue = [item stringValue];
+            if ([debugStringValue length] > 256) stringValue = @"(data)";
+
+            NSLog(@"common: %@ %@, key: %@ %@, value: %@",
+                commonKey, GetStringForFourCharCodeObject(commonKey),
+                key, GetStringForFourCharCodeObject(key),
+                [item value],
+                debugStringValue
             );
 #endif
         }
@@ -636,6 +697,18 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 
 #pragma mark - Accessors
+
+- (NSDate *) estimatedEndTimeDate
+{
+    NSTimeInterval endTime = _estimatedEndTime;
+    
+    if (endTime < (60 * 60 * 24 * 7)) {
+        return [NSDate dateWithTimeIntervalSinceNow:endTime];
+    } else {
+        return [NSDate dateWithTimeIntervalSinceReferenceDate:endTime];
+    }
+}
+
 
 - (void) setTrackStatus:(TrackStatus)trackStatus
 {

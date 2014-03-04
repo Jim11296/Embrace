@@ -19,3 +19,8 @@
 @property (nonatomic, strong, readonly) CloseButton *closeButton;
 
 @end
+
+@protocol WhiteWindowDelegate <NSObject>
+@optional
+- (BOOL) window:(WhiteWindow *)window cancelOperation:(id)sender;
+@end

@@ -9,6 +9,7 @@
 #import "Scripting.h"
 #import "Track.h"
 #import "SetlistController.h"
+#import "TracksController.h"
 #import "AppDelegate.h"
 #import "iTunesManager.h"
 
@@ -24,7 +25,7 @@
 
 - (NSArray *) scriptingTracks
 {
-    return [[GetAppDelegate() setlistController] tracks];
+    return [[[GetAppDelegate() setlistController] tracksController] tracks];
 }
 
 
@@ -54,8 +55,8 @@
 
 - (NSScriptObjectSpecifier *) objectSpecifier
 {
-    SetlistController *setlistController = [GetAppDelegate() setlistController];
-    NSArray *tracks = [setlistController tracks];
+    TracksController *tracksController = [[GetAppDelegate() setlistController] tracksController];
+    NSArray *tracks = [tracksController tracks];
 
     NSScriptObjectSpecifier *objectSpecifier = nil;
     NSUInteger index = [tracks indexOfObjectIdenticalTo:self];
@@ -87,6 +88,24 @@
 }
 
 
+- (NSString *) scriptingComment
+{
+    return [self comments];
+}
+
+
+- (NSString *) scriptingGrouping
+{
+    return [self grouping];
+}
+
+
+- (NSString *) scriptingGenre
+{
+    return [self genre];
+}
+
+
 - (NSNumber *) scriptingDuration
 {
     return @([self playDuration]);
@@ -102,6 +121,24 @@
 - (NSNumber *) scriptingDatabaseID
 {
     return @([self databaseID]);
+}
+
+
+- (NSNumber *) scriptingEnergyLevel
+{
+    return @([self energyLevel]);
+}
+
+
+- (NSString *) scriptingKeySignature
+{
+    return GetTraditionalStringForTonality([self tonality]);
+}
+
+
+- (NSString *) scriptingCamelotKeycode
+{
+    return GetCamelotStringForTonality([self tonality]);
 }
 
 

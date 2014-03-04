@@ -65,6 +65,7 @@
 		557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CD9189740D7002FAFEA /* CADebugger.cpp */; };
 		557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */; };
 		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
+		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5582F7EE18A385570046A24B /* LoudnessMeasurer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5582F7EC18A385570046A24B /* LoudnessMeasurer.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
 		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
@@ -279,6 +280,8 @@
 		557C2CDC189740D7002FAFEA /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = CoreAudio/PublicUtility/CADebugMacros.h; sourceTree = "<group>"; };
 		557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = CoreAudio/PublicUtility/CADebugPrintf.cpp; sourceTree = "<group>"; };
 		557C2CDE189740D7002FAFEA /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = CoreAudio/PublicUtility/CADebugPrintf.h; sourceTree = "<group>"; };
+		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
+		557CF69018C1E14B0066D040 /* TracksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TracksController.m; path = Source/TracksController.m; sourceTree = SOURCE_ROOT; };
 		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
@@ -567,6 +570,8 @@
 				55F7ABE818B04D91006B6FBB /* DebugController.m */,
 				55F3B7AF1877885800E8FEC8 /* SetlistController.h */,
 				55F3B7B01877885800E8FEC8 /* SetlistController.m */,
+				557CF68F18C1E14B0066D040 /* TracksController.h */,
+				557CF69018C1E14B0066D040 /* TracksController.m */,
 				55A0B169188F59F000866F04 /* CurrentTrackController.h */,
 				55A0B16A188F59F000866F04 /* CurrentTrackController.m */,
 				558513C518794A2600C268E3 /* EffectsController.h */,
@@ -1004,6 +1009,7 @@
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
 				55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
+				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
 				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
 				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,

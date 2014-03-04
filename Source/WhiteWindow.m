@@ -18,6 +18,17 @@
 }
 
 
+- (void) cancelOperation:(id)sender
+{
+    if ([[self delegate] respondsToSelector:@selector(window:cancelOperation:)]) {
+        BOOL result = [(id)[self delegate] window:self cancelOperation:sender];
+        if (result) return;
+    }
+
+    [super cancelOperation:sender];
+}
+
+
 - (void) _updateActiveness:(NSNotification *)note
 {
     BOOL isMainWindow = [self isMainWindow];

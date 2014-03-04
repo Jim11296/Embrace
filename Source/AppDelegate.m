@@ -14,6 +14,7 @@
 #import "EditEffectController.h"
 #import "CurrentTrackController.h"
 #import "ViewTrackController.h"
+#import "TracksController.h"
 #import "Preferences.h"
 #import "DebugController.h"
 
@@ -240,8 +241,17 @@
         BOOL yn = [_currentTrackController isWindowLoaded] && [[_currentTrackController window] isMainWindow];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
-    } else if (action == @selector(showEndTime:)) {
-        return [_setlistController canShowEndTime];
+    } else if (action == @selector(changeViewAttributes:)) {
+        BOOL yn = [[Preferences sharedInstance] isViewAttributeSelected:[menuItem tag]];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
+    
+    } else if (action == @selector(changeViewLayout:)) {
+        NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
+
+    } else if (action == @selector(revealEndTime:)) {
+        return [_setlistController canRevealEndTime];
+
     } else if (action == @selector(sendCrashReports:)){
         BOOL hasCrashReports = [_crashSender hasCrashReports];
 
@@ -444,13 +454,29 @@
 }
 
 
+- (IBAction) changeViewLayout:(id)sender
+{
+    [[Preferences sharedInstance] setNumberOfLayoutLines:[sender tag]];
+}
+
+
+- (IBAction) changeViewAttributes:(id)sender
+{
+    Preferences *preferences = [Preferences sharedInstance];
+    ViewAttribute attribute = [sender tag];
+    
+    BOOL yn = [preferences isViewAttributeSelected:attribute];
+    [preferences setViewAttribute:attribute selected:!yn];
+}
+
+
 - (IBAction) exportSetlist:(id)sender                  {  [_setlistController exportToPlaylist]; }
 - (IBAction) performPreferredPlaybackAction:(id)sender {  [_setlistController performPreferredPlaybackAction:self]; }
 - (IBAction) increaseVolume:(id)sender                 {  [_setlistController increaseVolume:self];  }
 - (IBAction) decreaseVolume:(id)sender                 {  [_setlistController decreaseVolume:self];  }
 - (IBAction) increaseAutoGap:(id)sender                {  [_setlistController increaseAutoGap:self]; }
 - (IBAction) decreaseAutoGap:(id)sender                {  [_setlistController decreaseAutoGap:self]; }
-- (IBAction) showEndTime:(id)sender                    {  [_setlistController showEndTime:self]; }
+- (IBAction) revealEndTime:(id)sender                  {  [_setlistController revealEndTime:self];     }
 
 
 - (IBAction) hardSkip:(id)sender

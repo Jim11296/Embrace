@@ -12,6 +12,33 @@
 
 @implementation TrackTableView
 
+- (NSMenu *) menuForEvent:(NSEvent *)theEvent
+{
+    NSEventType type = [theEvent type];
+    
+    if (type == NSRightMouseDown || type == NSRightMouseUp ||
+        type == NSLeftMouseDown  || type == NSLeftMouseUp  ||
+        type == NSOtherMouseDown || type == NSOtherMouseUp)
+    {
+        NSPoint location = [theEvent locationInWindow];
+        
+        location = [self convertPoint:location fromView:nil];
+        NSInteger row = [self rowAtPoint:location];
+        
+        if (row >= 0) {
+            [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+            return [self menu];
+        } else {
+            [self deselectAll:self];
+            return nil;
+        }
+    }
+
+
+    return [super menuForEvent:theEvent];
+}
+
+
 - (void) updateInsertionPointWorkaround:(BOOL)yn
 {
     [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
@@ -46,13 +73,11 @@
 }
 
 
-
 - (void) draggingExited:(id <NSDraggingInfo>)sender
 {
     [super draggingExited:sender];
     [self updateInsertionPointWorkaround:NO];
 }
-
 
 
 - (void) draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
