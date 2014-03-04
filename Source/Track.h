@@ -40,6 +40,13 @@ typedef NS_ENUM(NSInteger, TrackError) {
 
 - (void) startPriorityAnalysis;
 
+// estimatedEndTime may either be a relative date (when not playing a track)
+// or an absolute date (when playing a track).  estimatedEndTimeDate returns
+// the correct value
+//
+- (NSDate *) estimatedEndTimeDate;
+
+
 @property (nonatomic, readonly) NSURL *fileURL;
 @property (nonatomic, readonly) NSUUID *UUID;
 
@@ -48,19 +55,24 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic) TrackStatus trackStatus;
 @property (nonatomic) BOOL pausesAfterPlaying;
 
-@property (nonatomic) NSDate  *estimatedEndTime;
+@property (nonatomic) NSTimeInterval estimatedEndTime;
 @property (nonatomic) TrackError trackError;
 
 
 // Metadata
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSString *artist;
+@property (nonatomic, readonly) NSString *comments;
+@property (nonatomic, readonly) NSString *grouping;
+@property (nonatomic, readonly) NSString *genre;
+
 @property (nonatomic, readonly) NSInteger beatsPerMinute;
 @property (nonatomic, readonly) NSTimeInterval startTime;
 @property (nonatomic, readonly) NSTimeInterval stopTime;
 @property (nonatomic, readonly) NSTimeInterval duration;
 @property (nonatomic, readonly) NSInteger databaseID;
 @property (nonatomic, readonly) Tonality tonality;
+@property (nonatomic, readonly) NSInteger energyLevel;
 
 @property (nonatomic, readonly) double  trackLoudness;
 @property (nonatomic, readonly) double  trackPeak;

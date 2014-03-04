@@ -13,15 +13,59 @@
 #import "AppDelegate.h"
 #import "Preferences.h"
 
+#define SLOW_ANIMATIONS 0
+
+@interface TrackTableCellView () <ApplicationEventListener>
+@end
+
 
 @implementation TrackTableCellView {
     NSArray *_observedKeyPaths;
     id       _observedObject;
 
-    Button *_errorButton;
+    CGFloat  _line1LeftFittedWidth;
+    CGFloat  _line1RightFittedWidth;
+    CGFloat  _line2LeftFittedWidth;
+    CGFloat  _line2RightFittedWidth;
+    CGFloat  _line3LeftFittedWidth;
+    CGFloat  _line3RightFittedWidth;
+    CGFloat  _endTimeFittedWidth;
+
+    Button      *_errorButton;
     NSTextField *_endTimeField;
-    BOOL _endTimeVisible;
+    BOOL         _endTimeVisible;
+    
+    NSTrackingArea *_trackingArea;
+    BOOL            _mouseInside;
+    BOOL            _endTimeRequested;
 }
+
+
+- (id) initWithFrame:(NSRect)frameRect
+{
+    if ((self = [super initWithFrame:frameRect])) {
+        [self _setupTrackTableCellView];
+    }
+    
+    return self;
+}
+
+
+- (id) initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder])) {
+        [self _setupTrackTableCellView];
+    }
+    
+    return self;
+}
+
+
+- (void) application:(Application *)application flagsChanged:(NSEvent *)event
+{
+    [self _updateEndTimeVisibilityAnimated:NO];
+}
+
 
 - (void) dealloc
 {
@@ -29,6 +73,68 @@
 
     [_errorButton setTarget:nil];
     [_errorButton setAction:NULL];
+}
+
+
+- (void) viewDidMoveToSuperview
+{
+    [super viewDidMoveToSuperview];
+    _mouseInside = NO;
+}
+
+- (void) _setupTrackTableCellView
+{
+    [(Application *)NSApp registerEventListener:self];
+
+    _endTimeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
+
+    [_endTimeField setBezeled:NO];
+    [_endTimeField setDrawsBackground:NO];
+    [_endTimeField setSelectable:NO];
+    [_endTimeField setEditable:NO];
+    [_endTimeField setAlignment:NSRightTextAlignment];
+    [_endTimeField setAlphaValue:0];
+
+    _errorButton = [[Button alloc] initWithFrame:NSMakeRect(0, 0, 16, 16)];
+
+    [_errorButton setImage:[NSImage imageNamed:@"track_error_template"]];
+    [_errorButton setAutoresizingMask:NSViewMinXMargin];
+    [_errorButton setTarget:self];
+    [_errorButton setAction:@selector(_errorButtonClicked:)];
+    [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
+    [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
+
+    [_errorButton setAlert:YES];
+    
+    NSTrackingAreaOptions options = NSTrackingInVisibleRect | NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways;
+    _trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:options owner:self userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
+
+
+- (void) awakeFromNib
+{
+    [[[self lineTwoLeftField] superview] addSubview:_endTimeField];
+
+    [_endTimeField setFont:[[self lineTwoLeftField] font]];
+
+    [self _updateAll];
+}
+
+
+- (void) mouseEntered:(NSEvent *)theEvent
+{
+    [super mouseEntered:theEvent];
+    _mouseInside = YES;
+    [self _updateEndTimeVisibilityAnimated:NO];
+}
+
+
+- (void) mouseExited:(NSEvent *)theEvent
+{
+    [super mouseExited:theEvent];
+    _mouseInside = NO;
+    [self _updateEndTimeVisibilityAnimated:NO];
 }
 
 
@@ -64,9 +170,12 @@
         @"title",
         @"artist",
         @"playDuration",
+        @"estimatedEndTime",
         @"pausesAfterPlaying",
         @"artist",
         @"tonality",
+        @"comments",
+        @"grouping",
         @"beatsPerMinute",
         @"trackStatus",
         @"trackError"
@@ -79,6 +188,13 @@
     }
 
     [self _updateAll];
+}
+
+
+- (void) layout
+{
+    [super layout];
+    [self _updateFieldsAnimated:NO];
 }
 
 
@@ -115,7 +231,6 @@
     }
     
     return NO;
-
 }
 
 
@@ -153,13 +268,34 @@
 }
 
 
-- (void) _hideEndTime
+- (void) _unrequestEndTime
 {
-    _endTimeVisible = NO;
+    _endTimeRequested = NO;
+    [self _updateEndTimeVisibilityAnimated:YES];
+}
 
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [self _updateBottomFieldsAnimated:YES];
-    } completionHandler:NULL];
+
+- (void) _updateEndTimeVisibilityAnimated:(BOOL)animated
+{
+    NSUInteger modifierFlags = [NSEvent modifierFlags];
+    
+    modifierFlags &= (NSAlternateKeyMask | NSCommandKeyMask | NSControlKeyMask | NSShiftKeyMask);
+    
+    BOOL isCommandKeyDown = (modifierFlags == NSAlternateKeyMask);
+    
+    BOOL endTimeVisible = ((isCommandKeyDown && _mouseInside) || _endTimeRequested);
+
+    if (_endTimeVisible != endTimeVisible) {
+        _endTimeVisible = endTimeVisible;
+
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+    #if SLOW_ANIMATIONS
+            [context setDuration:1];
+    #endif
+
+            [self _updateFieldsAnimated:animated];
+        } completionHandler:NULL];
+    }
 }
 
 
@@ -168,9 +304,22 @@
 - (void) _updateAll
 {
     [self _updateBorderedView];
-    [self _updateTopFields];
-    [self _updateBottomFieldsAnimated:NO];
+    [self _updateFieldsAnimated:NO];
     [self _updateErrorButton];
+
+    NSColor *topTextColor    = [self _topTextColor];
+    NSColor *bottomTextColor = [self _bottomTextColor];
+
+    [[self titleField]    setTextColor:topTextColor];
+    [[self durationField] setTextColor:topTextColor];
+
+    [[self lineTwoLeftField]    setTextColor:bottomTextColor];
+    [[self lineTwoRightField]   setTextColor:bottomTextColor];
+    [[self lineThreeLeftField]  setTextColor:bottomTextColor];
+    [[self lineThreeRightField] setTextColor:bottomTextColor];
+
+    [_endTimeField setFont:[[self lineTwoLeftField] font]];
+    [_endTimeField setTextColor:bottomTextColor];
 }
 
 
@@ -211,124 +360,328 @@
 }
 
 
-- (void) _updateTopFields
+- (void) _updateFieldStrings
 {
+    Preferences *preferences = [Preferences sharedInstance];
+
     Track *track = [self track];
     if (!track) return;
+
+    NSInteger numberOfLines = [preferences numberOfLayoutLines];
+
+    BOOL showsArtist         = [preferences showsArtist];
+    BOOL showsBeatsPerMinute = [preferences showsBPM];
+    BOOL showsCamelot        = [preferences showsCamelot];
+    BOOL showsComments       = [preferences showsComments];
+    BOOL showsGrouping       = [preferences showsGrouping];
+    BOOL showsKeySignature   = [preferences showsKeySignature];
+    BOOL showsEnergyLevel    = [preferences showsEnergyLevel];
+    BOOL showsGenre          = [preferences showsGenre];
+
+    NSMutableArray *left2  = [NSMutableArray array];
+    NSMutableArray *right2 = [NSMutableArray array];
+    NSMutableArray *left3  = [NSMutableArray array];
+    NSMutableArray *right3 = [NSMutableArray array];
+
+    NSString *artist = [track artist];
+    if (showsArtist && [artist length]) {
+        [left2 addObject:artist];
+    }
+
+    if (showsComments) {
+        NSString *comments = [track comments];
+
+        if ([comments length]) {
+            if (numberOfLines == 2) {
+                [([left2 count] ? right2 : left2) addObject:comments];
+            } else {
+                [([left3 count] ? right3 : left3) addObject:comments];
+            }
+        }
+    }
+
+    if (showsGrouping) {
+        NSString *grouping = [track grouping];
+
+        if ([grouping length]) {
+            if (numberOfLines == 2) {
+                [([left2 count] ? right2 : left2) addObject:grouping];
+            } else {
+                [([left3 count] ? right3 : left3) addObject:grouping];
+            }
+        }
+    }
+    
+    NSInteger bpm = [track beatsPerMinute];
+    if (showsBeatsPerMinute && bpm) {
+        [right2 addObject:[NSNumberFormatter localizedStringFromNumber:@(bpm) numberStyle:NSNumberFormatterDecimalStyle]];
+    }
+
+    NSInteger energyLevel = [track energyLevel];
+    if (showsEnergyLevel && energyLevel) {
+        [right2 addObject:[NSNumberFormatter localizedStringFromNumber:@(energyLevel) numberStyle:NSNumberFormatterDecimalStyle]];
+    }
+
+    NSMutableArray *arrayForTonality = right2;
+    if (numberOfLines == 3 && (((int)showsComments + (int)showsGrouping) < 2)) {
+        arrayForTonality = right3;
+    }
+    
+    Tonality tonality = [track tonality];
+    if (showsCamelot && (tonality != Tonality_Unknown)) {
+        [arrayForTonality addObject:GetCamelotStringForTonality(tonality)];
+    }
+
+    if (showsKeySignature && (tonality != Tonality_Unknown)) {
+        [arrayForTonality addObject:GetTraditionalStringForTonality(tonality)];
+    }
+
+    NSMutableArray *arrayForGenre = left2;
+    NSString *genre = [track genre];
+    if (showsGenre && [genre length]) {
+        if (numberOfLines == 3) {
+            arrayForGenre = [left3 count] ? right3 : left3;
+        }
+        
+        [arrayForGenre addObject:genre];
+    }
+
+    NSString *joiner = NSLocalizedString(@" \\U2013 ", nil);
+    
+    NSString *left2String = [left2  componentsJoinedByString:joiner];
+    [[self lineTwoLeftField] setStringValue:left2String];
+
+    NSString *right2String = [right2 componentsJoinedByString:joiner];
+    [[self lineTwoRightField] setStringValue:right2String];
+
+    NSString *left3String = [left3 componentsJoinedByString:joiner];
+    [[self lineThreeLeftField]  setStringValue:left3String];
+
+    NSString *right3String = [right3 componentsJoinedByString:joiner];
+    [[self lineThreeRightField] setStringValue:right3String];
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterNoStyle];
+    [formatter setTimeStyle:NSDateFormatterMediumStyle];
+    
+    NSDate   *endTime       = [[self track] estimatedEndTimeDate];
+    NSString *endTimeString = [formatter stringFromDate:endTime];
+
+    [_endTimeField setStringValue:endTimeString];
+
+    CGFloat (^getFittedWidth)(NSTextField *) = ^(NSTextField *field) {
+        NSRect frame = [field frame];
+        [field sizeToFit];
+        CGFloat result = [field frame].size.width;
+        [field setFrame:frame];
+        
+        return result;
+    };
 
     NSString *titleString = [track title];
     if (!titleString) titleString = @"";
     [[self titleField] setStringValue:titleString];
-    [[self titleField] setTextColor:[self _topTextColor]];
     
     NSString *durationString = GetStringForTime(round([track playDuration]));
     if (!durationString) durationString = @"";
     [[self durationField] setStringValue:durationString];
-    [[self durationField] setTextColor:[self _topTextColor]];
+
+    if ([titleString length]) {
+        _line1LeftFittedWidth = getFittedWidth([self titleField]);
+    } else {
+        _line1LeftFittedWidth = 0;
+    }
+
+    if ([durationString length]) {
+        _line1RightFittedWidth = getFittedWidth([self durationField]);
+    } else {
+        _line1RightFittedWidth = 0;
+    }
+    
+    if ([left2String length]) {
+        _line2LeftFittedWidth = getFittedWidth([self lineTwoLeftField]);
+    } else {
+        _line2LeftFittedWidth = 0;
+    }
+
+    if ([right2String length]) {
+        _line2RightFittedWidth = getFittedWidth([self lineTwoRightField]);
+    } else {
+        _line2RightFittedWidth = 0;
+    }
+
+    if ([left3String length]) {
+        _line3LeftFittedWidth = getFittedWidth([self lineThreeLeftField]);
+    } else {
+        _line3LeftFittedWidth = 0;
+    }
+
+    if ([right3String length]) {
+        _line3RightFittedWidth = getFittedWidth([self lineThreeRightField]);
+    } else {
+        _line3RightFittedWidth = 0;
+    }
+    
+    if ([endTimeString length]) {
+        _endTimeFittedWidth = getFittedWidth(_endTimeField);
+    } else {
+        _endTimeFittedWidth = 0;
+    }
 }
 
 
-- (void) _updateBottomFieldsAnimated:(BOOL)animated
+- (void) _updateFieldHidden
+{
+    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
+
+    NSTextField *line1Right = [self durationField];
+    NSTextField *line2Left  = [self lineTwoLeftField];
+    NSTextField *line2Right = [self lineTwoRightField];
+    NSTextField *line3Left  = [self lineThreeLeftField];
+    NSTextField *line3Right = [self lineThreeRightField];
+
+    BOOL showError = [[self track] trackError] != TrackErrorNone;
+
+    [line2Left  setHidden:(numberOfLines < 2)];
+    [line3Left  setHidden:(numberOfLines < 3)];
+
+    [line1Right setHidden:showError];
+    [line2Right setHidden:showError || (numberOfLines < 2)];
+    [line3Right setHidden:showError || (numberOfLines < 3)];
+}
+
+
+- (void) _updateFieldFramesAnimated:(BOOL)animated
 {
     Track *track = [self track];
     if (!track) return;
 
-    NSString *artist = [track artist];
-    if (!artist) artist = @"";
-    [[self artistField] setStringValue:artist];
+    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
 
-    Preferences *preferences = [Preferences sharedInstance];
+    NSTextField *line1Left  = [self titleField];
+    NSTextField *line1Right = [self durationField];
+    NSTextField *line2Left  = [self lineTwoLeftField];
+    NSTextField *line2Right = [self lineTwoRightField];
+    NSTextField *line3Left  = [self lineThreeLeftField];
+    NSTextField *line3Right = [self lineThreeRightField];
 
-    TonalityDisplayMode tonalityDisplayMode = [preferences tonalityDisplayMode];
-    Tonality tonality = [track tonality];
-    NSString *tonalityString = nil;
+    NSRect superBounds = [[line2Left superview] bounds];
 
-    if (tonality) {
-        if (tonalityDisplayMode == TonalityDisplayModeTraditional) {
-            tonalityString = GetTraditionalStringForTonality(tonality);
-        } else if (tonalityDisplayMode == TonalityDisplayModeCamelot) {
-            tonalityString = GetCamelotStringForTonality(tonality);
+    void (^layoutLine)(NSTextField *, NSTextField *, CGFloat, CGFloat, NSInteger) = ^(NSTextField *left, NSTextField *right, CGFloat leftFittedWidth, CGFloat rightFittedWidth, NSInteger lineNumber) {
+        CGRect leftFrame  = [left  frame];
+        CGRect rightFrame = [right frame];
+        CGRect endFrame   = [_endTimeField frame];
+
+        CGFloat maxWidth = superBounds.size.width - (14 + 14);
+
+        BOOL lastLine = lineNumber == numberOfLines;
+
+        leftFrame.origin.x  =
+        rightFrame.origin.x =
+        endFrame.origin.x   =
+            14;
+
+        leftFrame.size.width  =
+        rightFrame.size.width =
+        endFrame.size.width   =
+            maxWidth;
+        
+        endFrame.size.width = _endTimeFittedWidth;
+        endFrame.origin.x += maxWidth - _endTimeFittedWidth;
+        endFrame.origin.y = rightFrame.origin.y;
+        endFrame.size.height = rightFrame.size.height;
+
+        if (lastLine && (numberOfLines == 1)) {
+            endFrame.origin.y -= 3.0;
         }
-    }
-    
-    NSString *bpmString = nil;
-    NSInteger bpm = [track beatsPerMinute];
-    if ([preferences showsBPM] && bpm) {
-        bpmString = [NSString stringWithFormat:@"%ld", (long)[track beatsPerMinute]];
-    }
-    
-    
-    NSString *stringValue = @"";
-    if (tonalityString && bpmString) {
-        stringValue = [NSString stringWithFormat:@"%@, %@", bpmString, tonalityString];
-    } else if (bpmString) {
-        stringValue = bpmString;
-    } else if (tonalityString) {
-        stringValue = tonalityString;
-    }
 
-    NSTextField *artistField   = [self artistField];
-    NSTextField *tonalityField = [self tonalityAndBPMField];
-   
-    if ([stringValue length]) {
-        [tonalityField setStringValue:stringValue];
-    } else {
-        [tonalityField setStringValue:@""];
+        if (rightFittedWidth > maxWidth) {
+            rightFittedWidth = maxWidth;
+        }
+
+        rightFrame.size.width = rightFittedWidth;
+        rightFrame.origin.x += maxWidth - rightFittedWidth;
+
+        leftFrame.size.width -= (lastLine && _endTimeVisible) ? _endTimeFittedWidth : rightFittedWidth;
+        if (leftFrame.size.width < 0) {
+            leftFrame.size.width = 0;
+        }
+
+        if (animated) {
+            [[left  animator] setFrame:leftFrame];
+            [[right animator] setFrame:rightFrame];
+
+            if (lastLine) [[_endTimeField animator] setFrame:endFrame];
+
+        } else {
+            [left  setFrame:leftFrame];
+            [right setFrame:rightFrame];
+
+            if (lastLine) [_endTimeField setFrame:endFrame];
+        }
+    };
+    
+    if (numberOfLines < 2) {
+        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
+    
+    } else if (numberOfLines == 2) {
+        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 2);
+        layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 2);
+    
+    } else if (numberOfLines == 3) {
+        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 3);
+        layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 3);
+        layoutLine(line3Left, line3Right, _line3LeftFittedWidth, _line3RightFittedWidth, 3);
+    }
+}
+
+
+- (void) _updateFieldAlphasAnimated:(BOOL)animated
+{
+    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
+
+    NSTextField *line1Right = [self durationField];
+    NSTextField *line2Right = [self lineTwoRightField];
+    NSTextField *line3Right = [self lineThreeRightField];
+
+    CGFloat line1Alpha = 1.0;
+    CGFloat line2Alpha = 2.0;
+    CGFloat line3Alpha = 3.0;
+
+    if (numberOfLines == 1) {
+        line1Alpha = (_endTimeVisible ? 0.0 : 1.0);
+    } else if (numberOfLines == 2) {
+        line2Alpha = (_endTimeVisible ? 0.0 : 1.0);
+    } else if (numberOfLines == 3) {
+        line3Alpha = (_endTimeVisible ? 0.0 : 1.0);
     }
     
-    NSRect superBounds   = [[artistField superview] bounds];
-    NSRect tonalityFrame = [tonalityField frame];
-    NSRect artistFrame   = [artistField frame];
-    
-    tonalityFrame.origin.x   = artistFrame.origin.x   = 14;
-    tonalityFrame.size.width = artistFrame.size.width = superBounds.size.width - (14 + 14);
-    
-    [tonalityField setFrame:tonalityFrame];
-    
-    NSRect endTimeFrame = tonalityFrame;
-    [_endTimeField setFrame:endTimeFrame];
-
-    CGFloat tonalityWidth = 0;
-    CGFloat endTimeWidth = 0;
-
-    if ([stringValue length]) {
-        [tonalityField sizeToFit];
-        tonalityWidth = [tonalityField frame].size.width;
-        [tonalityField setFrame:tonalityFrame];
-    }
-    
-    if (_endTimeField && _endTimeVisible) {
-        [_endTimeField sizeToFit];
-        endTimeWidth = [_endTimeField frame].size.width;
-        [_endTimeField setFrame:endTimeFrame];
-    }
-    
-    CGFloat rightWidth = MAX(tonalityWidth, endTimeWidth);
-    
-    artistFrame.size.width -= rightWidth;
-    tonalityFrame.size.width = rightWidth;
-    tonalityFrame.origin.x = NSMaxX(artistFrame);
-
-    endTimeFrame.size.width = rightWidth;
-    endTimeFrame.origin.x = NSMaxX(artistFrame);
-
-    [tonalityField setFrame:tonalityFrame];
-    if (_endTimeVisible) {
-        [_endTimeField setFrame:endTimeFrame];
-    }
-
     if (animated) {
-        [[artistField animator] setFrame:artistFrame];
-        [[tonalityField animator] setAlphaValue:(_endTimeVisible ? 0.0 : 1.0)];
+        [[line1Right animator] setAlphaValue:line1Alpha];
+        [[line2Right animator] setAlphaValue:line2Alpha];
+        [[line3Right animator] setAlphaValue:line3Alpha];
+
         [[_endTimeField animator] setAlphaValue:(_endTimeVisible ? 1.0 : 0)];
+
     } else {
-        [artistField setFrame:artistFrame];
-        [tonalityField setAlphaValue:(_endTimeVisible ? 0.0 : 1.0)];
+        [line1Right setAlphaValue:line1Alpha];
+        [line2Right setAlphaValue:line2Alpha];
+        [line3Right setAlphaValue:line3Alpha];
+
         [_endTimeField setAlphaValue:(_endTimeVisible ? 1.0 : 0)];
     }
+}
 
-    [artistField   setTextColor:[self _bottomTextColor]];
-    [tonalityField setTextColor:[self _bottomTextColor]];
+
+- (void) _updateFieldsAnimated:(BOOL)animated
+{
+    Track *track = [self track];
+    if (!track) return;
+    
+    [self _updateFieldStrings];
+    [self _updateFieldHidden];
+    [self _updateFieldFramesAnimated:animated];
+    [self _updateFieldAlphasAnimated:animated];
 }
 
 
@@ -339,31 +692,11 @@
     if (trackError) {
         NSSize boundsSize = [self bounds].size;
         NSRect errorFrame = NSMakeRect(boundsSize.width - 34, round((boundsSize.height - 16) / 2), 16, 16);
-
-        if (!_errorButton) {
-            _errorButton = [[Button alloc] initWithFrame:errorFrame];
-            [self addSubview:_errorButton];
-
-            [_errorButton setImage:[NSImage imageNamed:@"track_error_template"]];
-            [_errorButton setAutoresizingMask:NSViewMinXMargin];
-            [_errorButton setTarget:self];
-            [_errorButton setAction:@selector(_errorButtonClicked:)];
-            [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
-            [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
-
-            [_errorButton setAlert:YES];
-        }
-    
-        [[self durationField]       setHidden:YES];
-        [[self tonalityAndBPMField] setHidden:YES];
-       
+        
         [_errorButton setFrame:errorFrame];
         [self addSubview:_errorButton];
 
     } else if (!trackError) {
-        [[self durationField]       setHidden:NO];
-        [[self tonalityAndBPMField] setHidden:NO];
-
         [_errorButton removeFromSuperview];
     }
 }
@@ -371,50 +704,13 @@
 
 #pragma mark - Public Methods
 
-- (void) showEndTime
+- (void) revealEndTime
 {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterNoStyle];
-    [formatter setTimeStyle:NSDateFormatterMediumStyle];
-    
-    NSDate *endTime   = [[self track] estimatedEndTime];
-    
-    if (!endTime) return;
-    
-    NSString *endString = [formatter stringFromDate:endTime];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_unrequestEndTime) object:nil];
+    [self performSelector:@selector(_unrequestEndTime) withObject:nil afterDelay:2];
 
-    if (!_endTimeField) {
-        NSTextField *(^makeField)() = ^{
-            NSTextField *field = [[NSTextField alloc] initWithFrame:NSZeroRect];
-
-            [field setFont:[_artistField font]];
-            [field setBezeled:NO];
-            [field setDrawsBackground:NO];
-            [field setSelectable:NO];
-            [field setEditable:NO];
-            
-            [field setAlphaValue:0];
-
-            [[_artistField superview] addSubview:field];
-            
-            return field;
-        };
-    
-        _endTimeField   = makeField();
-        [_endTimeField setAlignment:NSRightTextAlignment];
-    }
-
-    [_endTimeField setStringValue:endString];
-    [_endTimeField setTextColor:[self _bottomTextColor]];
-
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    [self performSelector:@selector(_hideEndTime) withObject:nil afterDelay:2];
-
-    _endTimeVisible = YES;
-
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [self _updateBottomFieldsAnimated:YES];
-    } completionHandler:NULL];
+    _endTimeRequested = YES;
+    [self _updateEndTimeVisibilityAnimated:YES];
 }
 
 

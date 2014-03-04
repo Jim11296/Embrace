@@ -12,7 +12,7 @@
 
 @interface TrackTableCellView : NSTableCellView
 
-- (void) showEndTime;
+- (void) revealEndTime;
 
 @property (nonatomic, readonly) Track *track;
 
@@ -20,8 +20,13 @@
 
 @property (nonatomic, weak) IBOutlet NSTextField *titleField;
 @property (nonatomic, weak) IBOutlet NSTextField *durationField;
-@property (nonatomic, weak) IBOutlet NSTextField *artistField;
-@property (nonatomic, weak) IBOutlet NSTextField *tonalityAndBPMField;
+
+@property (nonatomic, weak) IBOutlet NSTextField *lineTwoLeftField;
+@property (nonatomic, weak) IBOutlet NSTextField *lineTwoRightField;
+
+@property (nonatomic, weak) IBOutlet NSTextField *lineThreeLeftField;
+@property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
+
 
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 

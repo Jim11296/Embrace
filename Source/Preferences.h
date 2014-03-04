@@ -16,6 +16,18 @@ typedef NS_ENUM(NSInteger, TonalityDisplayMode) {
     TonalityDisplayModeCamelot
 };
 
+
+typedef NS_ENUM(NSInteger, ViewAttribute) {
+    ViewAttributeArtist,
+    ViewAttributeBeatsPerMinute,
+    ViewAttributeComments,
+    ViewAttributeGrouping,
+    ViewAttributeKeySignature,
+    ViewAttributeCamelotKeycode,
+    ViewAttributeEnergyLevel,
+    ViewAttributeGenre
+};
+
 extern NSString * const PreferencesDidChangeNotification;
 
 
@@ -23,8 +35,19 @@ extern NSString * const PreferencesDidChangeNotification;
 
 + (id) sharedInstance;
 
-@property (nonatomic) TonalityDisplayMode tonalityDisplayMode;
+@property (nonatomic) NSInteger numberOfLayoutLines;
+
+- (void) setViewAttribute:(ViewAttribute)attribute selected:(BOOL)selected;
+- (BOOL) isViewAttributeSelected:(ViewAttribute)attribute;
+
+@property (nonatomic) BOOL showsArtist;
 @property (nonatomic) BOOL showsBPM;
+@property (nonatomic) BOOL showsCamelot;
+@property (nonatomic) BOOL showsComments;
+@property (nonatomic) BOOL showsGrouping;
+@property (nonatomic) BOOL showsKeySignature;
+@property (nonatomic) BOOL showsEnergyLevel;
+@property (nonatomic) BOOL showsGenre;
 
 @property (nonatomic) AudioDevice *mainOutputAudioDevice;
 @property (nonatomic) double       mainOutputSampleRate;

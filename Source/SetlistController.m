@@ -27,15 +27,13 @@
 #import "ShadowView.h"
 #import "ViewTrackController.h"
 #import "TrackTableView.h"
+#import "TracksController.h"
 #import "WhiteSlider.h"
 
 #import <AVFoundation/AVFoundation.h>
 
-static NSString * const sTrackUUIDsKey = @"track-uuids";
 static NSString * const sMinimumSilenceKey = @"minimum-silence";
-static NSString * const sModifiedAtKey = @"modified-at";
 static NSString * const sSavedAtKey = @"saved-at";
-static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 static NSTimeInterval sAutoGapMinimum = 0;
 static NSTimeInterval sAutoGapMaximum = 15.0;
@@ -46,7 +44,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 @end
 
 @implementation SetlistController {
-    NSUInteger _rowOfDraggedTrack;
     BOOL       _inVolumeDrag;
     
     double     _volumeBeforeKeyboard;
@@ -68,8 +65,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) dealloc
 {
-    [[self tracksController] removeObserver:self forKeyPath:@"arrangedObjects"];
-
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -86,22 +81,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     [(WhiteWindow *)[self window] setupWithHeaderView:[self headerView] mainView:[self mainView]];
     
-    [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, sTrackPasteboardType ]];
-#if DEBUG
-    [[self tableView] setDoubleAction:@selector(viewSelectedTrack:)];
-#endif
 
     [[self headerView] setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
     [[self bottomContainer] setTopBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTableViewSelectionDidChange:) name:NSTableViewSelectionDidChangeNotification object:[self tableView]];
 
     [[self playButton] setImage:[NSImage imageNamed:@"play_template"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"gear_template"]];
     
-    [[self tracksController] addObserver:self forKeyPath:@"arrangedObjects" options:0 context:NULL];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
     [self _handlePreferencesDidChange:nil];
 
     // Add top and bottom shadows
@@ -111,7 +100,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         NSRect topShadowFrame    = NSMakeRect(0, 0, mainBounds.size.width, 4);
         NSRect bottomShadowFrame = NSMakeRect(0, 0, mainBounds.size.width, 4);
         
-        bottomShadowFrame.origin.y = NSMinY([[[self tableView] enclosingScrollView] frame]);
+        bottomShadowFrame.origin.y = NSMinY([[self scrollView] frame]);
 
         topShadowFrame.origin.y = mainBounds.size.height - 4;
         
@@ -140,28 +129,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (object == [self tracksController]) {
-        if ([keyPath isEqualToString:@"arrangedObjects"]) {
-            [self _updatePlayButton];
-            [self _updateDragSongsView];
-        }
-    }
-}
-
 #pragma mark - Private Methods
-
-- (Track *) _nextQueuedTrack
-{
-    for (Track *track in _tracks) {
-        if ([track trackStatus] == TrackStatusQueued) {
-            return track;
-        }
-    }
-
-    return nil;
-}
 
 
 - (void) _updatePlayButton
@@ -203,7 +171,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     } else {
         image = [NSImage imageNamed:@"play_template"];
 
-        Track *next = [self _nextQueuedTrack];
+        Track *next = [[self tracksController] firstQueuedTrack];
 
         if (!next) {
             tooltip = NSLocalizedString(@"Add a track to enable playback", nil);
@@ -233,108 +201,21 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     BOOL         hogMode    = [preferences mainOutputUsesHogMode];
 
     [[Player sharedInstance] updateOutputDevice:device sampleRate:sampleRate frames:frames hogMode:hogMode];
-    
-    [[self tableView] reloadData];
+}
+
+
+- (void) _handleTracksControllerDidModifyTracks:(NSNotification *)note
+{
+    [self _updatePlayButton];
+    [self _updateDragSongsView];
 }
 
 
 - (void) _loadState
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *tracks = [NSMutableArray array];
-
-    NSArray  *trackUUIDs  = [defaults objectForKey:sTrackUUIDsKey];
     NSTimeInterval silence = [defaults doubleForKey:sMinimumSilenceKey];
-
-    if ([trackUUIDs isKindOfClass:[NSArray class]]) {
-        for (NSString *uuidString in trackUUIDs) {
-            NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:uuidString];
-            Track *track = [Track trackWithUUID:uuid];
-
-            if (track) [tracks addObject:track];
-            
-            if ([track trackStatus] == TrackStatusPlaying) {
-                [track setTrackStatus:TrackStatusPlayed];
-            }
-        }
-    }
-    
     [self setMinimumSilenceBetweenTracks:silence];
-    [self setTracks:tracks];
-}
-
-
-- (void) _saveState
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-    NSMutableArray *trackUUIDsArray = [NSMutableArray array];
-    for (Track *track in [self tracks]) {
-        NSUUID *uuid = [track UUID];
-        if (uuid) [trackUUIDsArray addObject:[uuid UUIDString]];
-    }
-
-    [defaults setObject:trackUUIDsArray forKey:sTrackUUIDsKey];
-    [defaults setDouble:_minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
-}
-
-
-- (Track *) _selectedTrack
-{
-    NSArray *tracks = [[self tracksController] selectedObjects];
-    return [tracks firstObject];
-}
-
-
-- (BOOL) _canChangeTrackStatusOfTrack:(Track *)track
-{
-    NSArray  *arrangedTracks = [[self tracksController] arrangedObjects];
-    NSInteger count          = [arrangedTracks count];
-    
-    NSInteger index = [arrangedTracks indexOfObject:track];
-    if (index == NSNotFound) {
-        return NO;
-    }
-    
-    if ([[Player sharedInstance] currentTrack]) {
-        return NO;
-    }
-    
-    Track *previousTrack = index > 0           ? [arrangedTracks objectAtIndex:(index - 1)] : nil;
-    Track *nextTrack     = (index + 1) < count ? [arrangedTracks objectAtIndex:(index + 1)] : nil;
-    
-    BOOL isPreviousPlayed = !previousTrack || ([previousTrack trackStatus] == TrackStatusPlayed);
-    BOOL isNextPlayed     =                    [nextTrack     trackStatus] == TrackStatusPlayed;
-
-    return (isPreviousPlayed != isNextPlayed);
-}
-
-
-- (BOOL) _canDeleteSelectedObjects
-{
-    Track *selectedTrack = [self _selectedTrack];
-
-    if ([selectedTrack trackStatus] == TrackStatusQueued) {
-        return YES;
-    }
-    
-    return NO;
-}
-
-
-- (Track *) _trackAtRow:(NSInteger)row
-{
-    NSArray *tracks = [[self tracksController] arrangedObjects];
-    
-    if (row >= [tracks count]) {
-        return nil;
-    }
-    
-    if (row < 0) {
-        return nil;
-    }
-    
-    return [tracks objectAtIndex:row];
 }
 
 
@@ -342,7 +223,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     NSMutableString *result = [NSMutableString string];
 
-    for (Track *track in [[self tracksController] arrangedObjects]) {
+    for (Track *track in [[self tracksController] tracks]) {
         if ([track trackStatus] == TrackStatusQueued) continue;
 
         NSString *artist = [track artist];
@@ -359,7 +240,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) _updateDragSongsView
 {
-    BOOL hidden = [[[self tracksController] arrangedObjects] count] > 0;
+    BOOL hidden = [[[self tracksController] tracks] count] > 0;
     
     if (hidden) {
         [_dragSongsView setAlphaValue:1];
@@ -371,7 +252,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         }];
 
     } else {
-        NSView *scrollView  = [[self tableView] enclosingScrollView];
+        NSView *scrollView  = [self scrollView];
         NSRect  scrollFrame = [scrollView frame];
         
         NSRect dragFrame = [_dragSongsView frame];
@@ -392,19 +273,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
     [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sSavedAtKey];
-}
-
-
-- (void) _markAsModified
-{
-    NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
-    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
-}
-
-
-- (void) _updateInsertionPointWorkaround:(BOOL)yn
-{
-    [(TrackTableView *)_tableView updateInsertionPointWorkaround:yn];
 }
 
 
@@ -474,43 +342,83 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (void) _calculateStartAndEndTimes
+{
+    Player *player = [Player sharedInstance];
+
+    NSTimeInterval now = [player isPlaying] ? [NSDate timeIntervalSinceReferenceDate] : 0.0;
+    NSTimeInterval time = 0;
+
+    Track  *lastTrack = nil;
+
+    for (Track *track in [[self tracksController] tracks]) {
+        NSTimeInterval startTime = 0;
+        NSTimeInterval endTime   = 0;
+
+        TrackStatus status = [track trackStatus];
+        
+        if (status == TrackStatusPlayed) {
+            continue;
+
+        } else if (status == TrackStatusPlaying) {
+            if ([track isEqual:[player currentTrack]]) {
+                startTime = now - [player timeElapsed];
+                time += [player timeRemaining];
+                endTime = now + time;
+            }
+
+        } else if (status == TrackStatusQueued) {
+            startTime = now + time;
+            time += [track playDuration];
+            endTime = now + time;
+            
+            if (lastTrack) {
+                NSTimeInterval padding = 0;
+
+                NSTimeInterval totalSilence = [lastTrack silenceAtEnd] + [track silenceAtStart];
+                padding = [self minimumSilenceBetweenTracks] - totalSilence;
+                if (padding < 0) padding = 0;
+
+                time += padding;
+            }
+        }
+        
+        if (endTime) {
+            [track setEstimatedEndTime:endTime];
+        }
+
+        lastTrack = track;
+    }
+}
+
+
+#pragma mark - Tracks
+
+- (void) _didModifyTracks
+{
+    [self _calculateStartAndEndTimes];
+    [self _updatePlayButton];
+    [self _updateDragSongsView];
+}
+
+
 #pragma mark - Public Methods
 
 - (void) clear
 {
-    NSArrayController *tracksController = [self tracksController];
-
-    NSMutableArray *tracks = [[tracksController arrangedObjects] mutableCopy];
-    Track *trackToKeep = [[Player sharedInstance] currentTrack];
-
-    if (trackToKeep) {
-        [tracks removeObject:trackToKeep];
-    }
-
-    for (Track *track in tracks) {
-        [track cancelLoad];
-    }
-
-    [tracksController removeObjects:tracks];
-    [tracksController setSelectionIndexes:[NSIndexSet indexSet]];
-    
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:sModifiedAtKey];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"tracks"];
 
-    [Track clearPersistedState];
-    
-    [[self tableView] reloadData];
+    [[self tracksController] removeAllTracks];
 }
 
 
 - (BOOL) shouldPromptForClear
 {
-    NSTimeInterval modifiedAt = [[NSUserDefaults standardUserDefaults] doubleForKey:sModifiedAtKey];
+    NSTimeInterval modifiedAt = [[self tracksController] modificationTime];
     NSTimeInterval savedAt    = [[NSUserDefaults standardUserDefaults] doubleForKey:sSavedAtKey];
     
     NSInteger playedCount = 0;
-    for (Track *track in [[self tracksController] arrangedObjects]) {
+    for (Track *track in [[self tracksController] tracks]) {
         if ([track trackStatus] == TrackStatusPlayed) {
             playedCount++;
             break;
@@ -527,12 +435,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) openFileAtURL:(NSURL *)URL
 {
-    Track *track = [Track trackWithFileURL:URL];
-
-    if (track) {
-        [[self tracksController] addObject:track];
-        [self _markAsModified];
-    }
+    [[self tracksController] addTrackAtURL:URL];
 }
 
 
@@ -567,7 +470,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     NSMutableArray *fileURLs = [NSMutableArray array];
     
-    for (Track *track in _tracks) {
+    for (Track *track in [[self tracksController] tracks]) {
         if ([track fileURL]) {
             [fileURLs addObject:[track fileURL]];
         }
@@ -584,81 +487,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
 
     [self _markAsSaved];
-}
-
-
-- (void) _calculateStartAndEndTimes
-{
-    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
-    NSTimeInterval time = 0;
-
-    Player *player = [Player sharedInstance];
-    Track  *lastTrack = nil;
-
-    for (Track *track in [[self tracksController] arrangedObjects]) {
-        NSTimeInterval startTime = 0;
-        NSTimeInterval endTime   = 0;
-
-        TrackStatus status = [track trackStatus];
-        
-        if (status == TrackStatusPlayed) {
-            continue;
-
-        } else if (status == TrackStatusPlaying) {
-            if ([track isEqual:[player currentTrack]]) {
-                startTime = now - [player timeElapsed];
-                time += [player timeRemaining];
-                endTime = now + time;
-            }
-
-        } else if (status == TrackStatusQueued) {
-            startTime = now + time;
-            time += [track playDuration];
-            endTime = now + time;
-            
-            if (lastTrack) {
-                NSTimeInterval padding = 0;
-
-                NSTimeInterval totalSilence = [lastTrack silenceAtEnd] + [track silenceAtStart];
-                padding = [self minimumSilenceBetweenTracks] - totalSilence;
-                if (padding < 0) padding = 0;
-
-                time += padding;
-            }
-        }
-        
-        if (endTime) {
-            [track setEstimatedEndTime:[NSDate dateWithTimeIntervalSinceReferenceDate:endTime]];
-        }
-
-        lastTrack = track;
-    }
-}
-
-
-- (void) showEndTime:(id)sender
-{
-    Track *track = [self _selectedTrack];
-    if (!track) return;
-
-    [self _calculateStartAndEndTimes];
-
-    NSInteger index = [[[self tracksController] arrangedObjects] indexOfObject:track];
-    
-    if (index != NSNotFound) {
-        id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
-        
-        if ([view respondsToSelector:@selector(showEndTime)]) {
-            [view showEndTime];
-        }
-    }
-}
-
-
-- (BOOL) canShowEndTime
-{
-    Track *track = [self _selectedTrack];
-    return track && ([track trackStatus] != TrackStatusPlayed);
 }
 
 
@@ -689,7 +517,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 - (BOOL) isPlaybackActionEnabled:(PlaybackAction)action
 {
     if (action == PlaybackActionPlay) {
-        Track *next = [self _nextQueuedTrack];
+        Track *next = [[self tracksController] firstQueuedTrack];
 
         return next != nil;
 
@@ -842,47 +670,33 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (IBAction) viewSelectedTrack:(id)sender
+- (IBAction) delete:(id)sender
 {
-    NSInteger clickedRow = [[self tableView] clickedRow];
-    NSArray *tracks = [[self tracksController] arrangedObjects];
-
-    if (clickedRow >= 0 && clickedRow <= [tracks count]) {
-        Track *track = [tracks objectAtIndex:clickedRow];
-        ViewTrackController *controller = [GetAppDelegate() viewTrackControllerForTrack:track];
-
-        [controller showWindow:self];
-    }
+    [[self tracksController] delete:sender];
 }
 
 
-- (IBAction) delete:(id)sender
+- (void) revealEndTime:(id)sender
 {
-    NSArray   *selectedTracks = [[self tracksController] selectedObjects];
-    NSUInteger index = [[self tracksController] selectionIndex];
-    
-    NSMutableArray *tracksToRemove = [NSMutableArray array];
+    Track *track = [[self tracksController] selectedTrack];
+    if (!track) return;
 
-    for (Track *track in selectedTracks){
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track cancelLoad];
-            if (track) [tracksToRemove addObject:track];
-        }
-    }
-    
-    [[self tracksController] removeObjects:tracksToRemove];
+    [self _calculateStartAndEndTimes];
 
-    if (index >= [[[self tracksController] arrangedObjects] count]) {
-        [[self tracksController] setSelectionIndex:(index - 1)];
-    } else {
-        [[self tracksController] setSelectionIndex:index];
-    }
+    [[self tracksController] revealEndTimeForTrack:track];
+}
+
+
+- (BOOL) canRevealEndTime
+{
+    Track *track = [[self tracksController] selectedTrack];
+    return track && ([track trackStatus] != TrackStatusPlayed);
 }
 
 
 - (IBAction) togglePauseAfterPlaying:(id)sender
 {
-    Track *track = [self _selectedTrack];
+    Track *track = [[self tracksController] selectedTrack];
     
     if ([track trackStatus] != TrackStatusPlayed) {
         [track setPausesAfterPlaying:![track pausesAfterPlaying]];
@@ -893,9 +707,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) toggleMarkAsPlayed:(id)sender
 {
-    Track *track = [self _selectedTrack];
+    Track *track = [[self tracksController] selectedTrack];
 
-    if ([self _canChangeTrackStatusOfTrack:track]) {
+    if ([[self tracksController] canChangeTrackStatusOfTrack:track]) {
         if ([track trackStatus] == TrackStatusQueued) {
             [track setTrackStatus:TrackStatusPlayed];
         } else if ([track trackStatus] == TrackStatusPlayed) {
@@ -927,45 +741,34 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-#pragma mark - Menu Validation
+#pragma mark - Delegates
 
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
-    NSTableView *tableView = [self tableView];
-
-    if ([menuItem menu] == [tableView menu]) {
-        NSInteger   clickedRow = [tableView clickedRow];
-        NSIndexSet *indexSet   = [NSIndexSet indexSetWithIndex:clickedRow];
-    
-        [tableView selectRowIndexes:indexSet byExtendingSelection:NO];
-    }
-    
     SEL action = [menuItem action];
 
     if (action == @selector(delete:)) {
-        return [self _canDeleteSelectedObjects];
+        return [[self tracksController] canDeleteSelectedObjects];
 
     } else if (action == @selector(toggleMarkAsPlayed:)) {
-        Track *track = [self _selectedTrack];
+        Track *track = [[self tracksController] selectedTrack];
         [menuItem setState:([track trackStatus] == TrackStatusPlayed)];
-        return [self _canChangeTrackStatusOfTrack:track];
+        return [[self tracksController] canChangeTrackStatusOfTrack:track];
     
     } else if (action == @selector(togglePauseAfterPlaying:)) {
-        Track *track = [self _selectedTrack];
+        Track *track = [[self tracksController] selectedTrack];
         BOOL canPause = [track trackStatus] != TrackStatusPlayed;
         [menuItem setState:canPause && [track pausesAfterPlaying]];
         return canPause;
 
-    } else if (action == @selector(showEndTime:)) {
-        return [self canShowEndTime];
+    } else if (action == @selector(revealEndTime:)) {
+        return [self canRevealEndTime];
     }
     
     
     return YES;
 }
 
-
-#pragma mark - White Slider
 
 - (void) whiteSliderDidStartDrag:(WhiteSlider *)slider
 {
@@ -985,6 +788,17 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     double beforeVolume = [[self volumeSlider] doubleValueBeforeDrag];
     [self _doAutoPauseIfNeededWithBeforeVolume:beforeVolume];
+}
+
+
+- (BOOL) window:(WhiteWindow *)window cancelOperation:(id)sender
+{
+    if ([[self tracksController] selectedTrack]) {
+        [[self tracksController] deselectAllTracks];
+        return YES;
+    }
+
+    return NO;
 }
 
 
@@ -1015,6 +829,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     }
 
     [self _updatePlayButton];
+    [self _calculateStartAndEndTimes];
 }
 
 
@@ -1068,9 +883,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     Track *currentTrack = [player currentTrack];
 
-    [self _saveState];
+    [[self tracksController] saveState];
 
-    Track *trackToPlay = [self _nextQueuedTrack];
+    Track *trackToPlay = [[self tracksController] firstQueuedTrack];
     NSTimeInterval padding = 0;
     
     if (currentTrack && trackToPlay) {
@@ -1088,213 +903,12 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-#pragma mark - Table View Delegate
-
-- (BOOL) tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
-{
-    NSArray *arrangedObjects = [[self tracksController] arrangedObjects];
-    NSArray *tracksToDrag = [arrangedObjects objectsAtIndexes:rowIndexes];
-    
-    Track *track = [tracksToDrag firstObject];
-
-    if ([track trackStatus] == TrackStatusQueued) {
-        [pboard setData:[NSData data] forType:sTrackPasteboardType];
-        _rowOfDraggedTrack = [rowIndexes firstIndex];
-        return YES;
-    }
-
-    return NO;
-}
-
-
-- (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{
-    TrackTableCellView *cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
-
-    NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
-    [cellView setSelected:[selectionIndexes containsIndex:row]];
-    
-    return cellView;
-}
-
-
-- (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
-{
-    return 40;
-}
-
-
-- (void) tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
-{
-    [self _updateInsertionPointWorkaround:NO];
-
-    if (operation == NSDragOperationNone) {
-        NSRect frame = [[self window] frame];
-
-        if (!NSPointInRect(screenPoint, frame)) {
-            if (_rowOfDraggedTrack != NSNotFound) {
-                Track *draggedTrack = [[[self tracksController] arrangedObjects] objectAtIndex:_rowOfDraggedTrack];
-
-                [[self tableView] beginUpdates];
-
-                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:_rowOfDraggedTrack];
-                [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectNone];
-
-                if (draggedTrack) {
-                    [[self tracksController] removeObject:draggedTrack];
-                }
-
-                [[self tableView] endUpdates];
-                
-                NSShowAnimationEffect(NSAnimationEffectPoof, [NSEvent mouseLocation], NSZeroSize, nil, nil, nil);
-            }
-        }
-    }
-}
-
-
-- (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
-{
-    NSPasteboard *pasteboard = [info draggingPasteboard];
-    BOOL isMove = ([pasteboard dataForType:sTrackPasteboardType] != nil);
-
-    [self _updateInsertionPointWorkaround:NO];
-    
-    if (dropOperation == NSTableViewDropAbove) {
-        Track *track = [self _trackAtRow:row];
-
-        if (!track || [track trackStatus] == TrackStatusQueued) {
-            if (row == 0) {
-                [self _updateInsertionPointWorkaround:YES];
-            }
-
-            if (isMove) {
-                if ((row == _rowOfDraggedTrack) || (row == (_rowOfDraggedTrack + 1))) {
-                    return NSDragOperationNone;
-                } else {
-                    return NSDragOperationMove;
-                }
-            
-            } else {
-                return NSDragOperationCopy;
-            }
-        }
-    }
-
-    if (!isMove && (dropOperation == NSTableViewDropOn)) {
-        Track *track = [self _trackAtRow:row];
-
-        if (!track || [track trackStatus] == TrackStatusQueued) {
-            [tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
-            return NSDragOperationCopy;
-        }
-    }
-    
-    // Always accept a drag from iTunes, target end of table in this case
-    if (!isMove) {
-        [tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
-        return NSDragOperationCopy;
-    }
-
-    return NSDragOperationNone;
-}
-
-
-- (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
-{
-    [self _updateInsertionPointWorkaround:NO];
-
-    NSPasteboard *pboard = [info draggingPasteboard];
-
-    if ((row == -1) && (dropOperation == NSTableViewDropOn)) {
-        row = [[[self tracksController] arrangedObjects] count];
-    }
-
-    NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];
-    NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
-
-    // Let manager extract any metadata from the pasteboard 
-    [[iTunesManager sharedInstance] extractMetadataFromPasteboard:pboard];
-
-    if ([pboard dataForType:sTrackPasteboardType]) {
-        if (_rowOfDraggedTrack < row) {
-            row--;
-        }
-
-        Track *draggedTrack = [[[self tracksController] arrangedObjects] objectAtIndex:_rowOfDraggedTrack];
-        [[self tableView] moveRowAtIndex:_rowOfDraggedTrack toIndex:row];
-        
-        if (draggedTrack) {
-            [[self tracksController] removeObject:draggedTrack];
-            [[self tracksController] insertObject:draggedTrack atArrangedObjectIndex:row];
-        }
-
-        return YES;
-
-    } else if ([filenames count] >= 2) {
-        NSMutableArray    *tracks   = [NSMutableArray array];
-        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-
-        for (NSString *filename in filenames) {
-            NSURL *URL = [NSURL fileURLWithPath:filename];
-
-            Track *track = [Track trackWithFileURL:URL];
-            if (track) {
-                [tracks addObject:track];
-                [indexSet addIndex:row];
-                
-                row++;
-            }
-        }
-
-        [[self tracksController] insertObjects:tracks atArrangedObjectIndexes:indexSet];
-
-        [self _markAsModified];
-
-        return YES;
-
-    } else if (URLString) {
-        NSURL *URL = [NSURL URLWithString:URLString];
-
-        Track *track = [Track trackWithFileURL:URL];
-        if (track) {
-            [[self tracksController] insertObject:track atArrangedObjectIndex:row];
-        }
-
-        [self _markAsModified];
-
-        return YES;
-    }
-    
-    return NO;
-}
-
-
-- (void) _handleTableViewSelectionDidChange:(NSNotification *)note
-{
-    NSIndexSet *selectionIndexes = [[self tracksController] selectionIndexes];
-    
-    [[self tableView] enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *view, NSInteger row) {
-        TrackTableCellView *trackView = (TrackTableCellView *)[view viewAtColumn:0];
-        [trackView setSelected:[selectionIndexes containsIndex:row]];
-    }];
-}
-
-
-- (void) setTracks:(NSArray *)tracks
-{
-    if (_tracks != tracks) {
-        _tracks = tracks;
-        [self _saveState];
-    }
-}
-
-
 - (void) setMinimumSilenceBetweenTracks:(NSTimeInterval)minimumSilenceBetweenTracks
 {
     if (_minimumSilenceBetweenTracks != minimumSilenceBetweenTracks) {
         _minimumSilenceBetweenTracks = minimumSilenceBetweenTracks;
-        [self _saveState];
+        [[NSUserDefaults standardUserDefaults] setDouble:minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
+        [self _calculateStartAndEndTimes];
     }
 }
 

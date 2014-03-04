@@ -21,8 +21,16 @@ static NSDictionary *sGetDefaultValues()
     dispatch_once(&onceToken, ^{
 
     sDefaultValues = @{
-        @"tonalityDisplayMode": @(TonalityDisplayModeTraditional),
-        @"showsBPM": @(YES),
+        @"numberOfLayoutLines": @2,
+
+        @"showsArtist":       @YES,
+        @"showsBPM":          @YES,
+        @"showsComments":     @NO,
+        @"showsGrouping":     @NO,
+        @"showsKeySignature": @YES,
+        @"showsCamelot":      @NO,
+        @"showsEnergyLevel":  @NO,
+        @"showsGenre":        @NO,
 
         @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
         @"mainOutputSampleRate":  @(0),
@@ -137,6 +145,37 @@ static void sRegisterDefaults()
 }
 
 
+- (NSString *) _keyForViewAttribute:(ViewAttribute)attribute
+{
+    if (attribute == ViewAttributeArtist) {
+        return @"showsArtist";
+
+    } else if (attribute == ViewAttributeBeatsPerMinute) {
+        return @"showsBPM";
+        
+    } else if (attribute == ViewAttributeComments) {
+        return @"showsComments";
+
+    } else if (attribute == ViewAttributeGrouping) {
+        return @"showsGrouping";
+
+    } else if (attribute == ViewAttributeKeySignature) {
+        return @"showsKeySignature";
+    
+    } else if (attribute == ViewAttributeCamelotKeycode) {
+        return @"showsCamelot";
+
+    } else if (attribute == ViewAttributeEnergyLevel) {
+        return @"showsEnergyLevel";
+
+    } else if (attribute == ViewAttributeGenre) {
+        return @"showsGenre";
+    }
+    
+    return nil;
+}
+
+
 - (void) _save
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -182,6 +221,24 @@ static void sRegisterDefaults()
         [[NSNotificationCenter defaultCenter] postNotificationName:PreferencesDidChangeNotification object:self];
         [self _save];
     }
+}
+
+
+- (void) setViewAttribute:(ViewAttribute)attribute selected:(BOOL)selected
+{
+    NSString *key = [self _keyForViewAttribute:attribute];
+    if (!key) return;
+    
+    [self setValue:@(selected) forKey:key];
+}
+
+
+- (BOOL) isViewAttributeSelected:(ViewAttribute)attribute
+{
+    NSString *key = [self _keyForViewAttribute:attribute];
+    if (!key) return NO;
+
+    return [[self valueForKey:key] boolValue];
 }
 
 

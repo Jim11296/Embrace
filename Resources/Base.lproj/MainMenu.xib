@@ -91,12 +91,6 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="znP-el-FvS"/>
-                            <menuItem title="Show End Time" keyEquivalent="t" id="Uws-ha-zzy">
-                                <connections>
-                                    <action selector="showEndTime:" target="494" id="O0s-6z-Zk0"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="abV-6Y-nkv"/>
                             <menuItem title="Clear Set List" keyEquivalent="k" id="OpO-hz-U6C">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
@@ -171,49 +165,139 @@ CA
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Controls" id="eyQ-7Z-xdp">
+                <menuItem title="View" id="eyQ-7Z-xdp">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Controls" id="ycZ-Ou-CIX">
+                    <menu key="submenu" title="View" id="ycZ-Ou-CIX">
                         <items>
-                            <menuItem title="Play" keyEquivalent=" " id="GeQ-h3-krU">
+                            <menuItem title="Layout" id="qAC-21-FFC">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="performPreferredPlaybackAction:" target="494" id="9fQ-ny-ZxI"/>
-                                </connections>
+                                <menu key="submenu" title="Layout" id="0K0-Ke-1oh">
+                                    <items>
+                                        <menuItem title="1 Line" tag="1" keyEquivalent="1" id="ZlJ-oO-qnt">
+                                            <connections>
+                                                <action selector="changeViewLayout:" target="494" id="ekA-hN-xMf"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="2 Lines" tag="2" keyEquivalent="2" id="mJJ-xf-yIR">
+                                            <connections>
+                                                <action selector="changeViewLayout:" target="494" id="55G-iQ-Ofu"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="3 Lines" tag="3" keyEquivalent="3" id="x5O-HT-tFT">
+                                            <connections>
+                                                <action selector="changeViewLayout:" target="494" id="1Rn-QK-Eut"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="GYB-fb-3iY"/>
-                            <menuItem title="Increase Volume" keyEquivalent="" id="vYI-ju-tK7">
-                                <connections>
-                                    <action selector="increaseVolume:" target="494" id="7gw-B0-lHM"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Decrease Volume" keyEquivalent="" id="TBE-8O-HDr">
-                                <connections>
-                                    <action selector="decreaseVolume:" target="494" id="LJ7-hU-ae4"/>
-                                </connections>
+                            <menuItem title="Track Attributes" id="nyA-hj-AJk">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Track Attributes" id="IIo-eS-3Ci">
+                                    <items>
+                                        <menuItem title="Artist" id="PD7-tz-H1U">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="fx0-4A-MAg"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Beats Per Minute" tag="1" id="Q5V-W9-hOn">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="jK9-Bc-dxG"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Camelot Keycode" tag="5" id="SpW-Mt-xgV">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="UPU-3h-zit"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Comments" tag="2" id="eGL-AW-03d">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="1hB-nO-DDk"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Energy Level" tag="6" id="TSJ-mZ-RTl">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="1Jh-gM-xga"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Genre" tag="7" id="Wfz-qx-nBk">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="UKD-ka-U1a"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Grouping" tag="3" id="mtm-5y-OcB">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="mr8-tU-KVj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Key Signature" tag="4" id="daF-32-6cq">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="TeA-OO-XNQ"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="pF6-2l-LGh"/>
-                            <menuItem title="Increase Auto Gap" keyEquivalent="+" id="WCe-7u-SOG">
+                            <menuItem title="Reveal End Time" keyEquivalent="t" id="WCe-7u-SOG">
                                 <connections>
-                                    <action selector="increaseAutoGap:" target="494" id="DWi-Vt-fmp"/>
+                                    <action selector="revealEndTime:" target="494" id="QQY-2P-Qwt"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Decrease Auto Gap" keyEquivalent="-" id="PaR-kA-Bfz">
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Controls" id="qaq-cS-AwC">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Controls" id="pWl-tf-KZt">
+                        <items>
+                            <menuItem title="Play" keyEquivalent=" " id="Ky1-EP-XiQ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="decreaseAutoGap:" target="494" id="M6W-bC-2n7"/>
+                                    <action selector="performPreferredPlaybackAction:" target="494" id="oSe-yf-9n6"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="XeM-RX-cVY"/>
-                            <menuItem title="Hard Skip" keyEquivalent="," id="DUu-P3-D2K">
+                            <menuItem isSeparatorItem="YES" id="1pn-Zu-H9B"/>
+                            <menuItem title="Increase Volume" keyEquivalent="" id="XWR-UE-did">
+                                <connections>
+                                    <action selector="increaseVolume:" target="494" id="7P9-du-GWD"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Decrease Volume" keyEquivalent="" id="ldq-bu-lP3">
+                                <connections>
+                                    <action selector="decreaseVolume:" target="494" id="8UT-7s-A4f"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Fh5-Ko-MGv"/>
+                            <menuItem title="Increase Auto Gap" keyEquivalent="+" id="wYB-lW-SBr">
+                                <connections>
+                                    <action selector="increaseAutoGap:" target="494" id="Y2f-uP-1f1"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Decrease Auto Gap" keyEquivalent="-" id="cVw-XY-jvF">
+                                <connections>
+                                    <action selector="decreaseAutoGap:" target="494" id="uH0-ez-xpL"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="dRV-R7-nTR"/>
+                            <menuItem title="Hard Skip" keyEquivalent="," id="vXd-hf-SdA">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="hardSkip:" target="494" id="rQh-13-0ef"/>
+                                    <action selector="hardSkip:" target="494" id="bUf-dw-4XJ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Hard Stop" keyEquivalent="." id="NDh-4K-3xp">
+                            <menuItem title="Hard Stop" keyEquivalent="." id="blg-iO-m7Q">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="hardPause:" target="494" id="pvX-1j-Z11"/>
+                                    <action selector="hardPause:" target="494" id="1YX-td-uRq"/>
                                 </connections>
                             </menuItem>
                         </items>

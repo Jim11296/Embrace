@@ -15,4 +15,5 @@
 
     #import "Utils.h"
     #import "WrappedUtils.h"
+    #import "Application.h"
 #endif

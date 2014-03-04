@@ -9,7 +9,39 @@
 #import "Application.h"
 #import "AppDelegate.h"
 
-@implementation Application
+@implementation Application {
+    NSHashTable *_eventListeners;
+    id _localMonitor;
+    id _globalMonitor;
+}
+
+- (id) init
+{
+    if ((self = [super init])) {
+        __weak id weakSelf = self;
+    
+        _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskFromType(NSFlagsChanged) handler:^(NSEvent *event) {
+            [weakSelf _handleFlagsChanged:event];
+            return event;
+        }];
+
+        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskFromType(NSFlagsChanged) handler:^(NSEvent *event) {
+            [weakSelf _handleFlagsChanged:event];
+        }];
+    
+    }
+    
+    return self;
+}
+
+
+- (void) _handleFlagsChanged:(NSEvent *)event
+{
+    for (id<ApplicationEventListener> listener in _eventListeners) {
+        [listener application:self flagsChanged:event];
+    }
+}
+
 
 - (void) sendEvent:(NSEvent *)event
 {
@@ -31,5 +63,19 @@
     
     [super sendEvent:event];
 }
+
+
+- (void) registerEventListener:(id<ApplicationEventListener>)listener
+{
+    if (!_eventListeners) _eventListeners = [NSHashTable weakObjectsHashTable];
+    [_eventListeners addObject:listener];
+}
+
+
+- (void) unregisterEventListener:(id<ApplicationEventListener>)listener
+{
+    [_eventListeners removeObject:listener];
+}
+
 
 @end

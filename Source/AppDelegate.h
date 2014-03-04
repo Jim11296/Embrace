@@ -22,7 +22,9 @@
 - (IBAction) saveSetlist:(id)sender;
 - (IBAction) exportSetlist:(id)sender;
 
-- (IBAction) showEndTime:(id)sender;
+- (IBAction) changeViewLayout:(id)sender;
+- (IBAction) changeViewAttributes:(id)sender;
+- (IBAction) revealEndTime:(id)sender;
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;
 - (IBAction) hardSkip:(id)sender;
