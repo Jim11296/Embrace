@@ -243,7 +243,6 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     
     if (needsSignal) {
         dispatch_semaphore_signal(primeSemaphore);
-        needsSignal = NO;
     }
 }
 

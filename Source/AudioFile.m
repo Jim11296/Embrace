@@ -111,6 +111,8 @@
     }
 
     UInt32 channelCount = clientDataFormat.mChannelsPerFrame;
+    if (!channelCount) return NO;
+
     AudioBufferList *bufferList = alloca(sizeof(AudioBufferList) * channelCount);
 
     bufferList->mNumberBuffers = channelCount;
@@ -206,7 +208,7 @@
     
     OSStatus err = [self _reopenAudioFileWithURL:_exportedURL];
 
-    return err = noErr;
+    return err == noErr;
 }
 
 
