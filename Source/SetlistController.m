@@ -367,7 +367,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     Track  *lastTrack = nil;
 
     for (Track *track in [[self tracksController] tracks]) {
-        NSTimeInterval startTime = 0;
         NSTimeInterval endTime   = 0;
 
         TrackStatus status = [track trackStatus];
@@ -377,13 +376,11 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
         } else if (status == TrackStatusPlaying) {
             if ([track isEqual:[player currentTrack]]) {
-                startTime = now - [player timeElapsed];
                 time += [player timeRemaining];
                 endTime = now + time;
             }
 
         } else if (status == TrackStatusQueued) {
-            startTime = now + time;
             time += [track playDuration];
             endTime = now + time;
             

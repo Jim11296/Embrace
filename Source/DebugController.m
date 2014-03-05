@@ -119,8 +119,8 @@
 
 - (IBAction) explode:(id)sender
 {
+#ifndef __clang_analyzer__
     NSInteger tag = [sender selectedTag];
-    NSLog(@"%ld", tag);
     
     NSInteger action = tag % 3;
     NSInteger thread = tag / 3;
@@ -142,16 +142,7 @@
             }
         }
     });
-    
-    if (thread == 0) {
-    
-     
-      
-    }// C++ Exception
-    
-    
-    NSLog(@"%ld, %ld", thread, action);
-
+#endif
 }
 
 

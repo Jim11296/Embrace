@@ -187,7 +187,8 @@ EmergencyLimiter *EmergencyLimiterCreate(NSInteger holdTime, NSInteger decayTime
     
     self->_holdTime  = holdTime;
     self->_decayTime = decayTime;
-    
+    self->_initialDecayTime = decayTime;
+
     EmergencyLimiterReset(self);
     
     return self;

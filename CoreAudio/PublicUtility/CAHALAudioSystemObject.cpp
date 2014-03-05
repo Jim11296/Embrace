@@ -53,7 +53,6 @@
 
 //	PublicUtility Includes
 #include "CAAutoDisposer.h"
-#include "CACFString.h"
 #include "CAHALAudioDevice.h"
 #include "CAPropertyAddress.h"
 
@@ -111,33 +110,6 @@ AudioObjectID	CAHALAudioSystemObject::GetAudioDeviceForUID(CFStringRef inUID) co
 	UInt32 theSize = sizeof(AudioValueTranslation);
 	GetPropertyData(theAddress, 0, NULL, theSize, &theValue);
 	return theAnswer;
-}
-
-void	CAHALAudioSystemObject::LogBasicDeviceInfo()
-{
-	UInt32 theNumberDevices = GetNumberAudioDevices();
-	CAAutoArrayDelete<AudioObjectID> theDeviceList(theNumberDevices);
-	GetAudioDevices(theNumberDevices, theDeviceList);
-	DebugMessageN1("CAHALAudioSystemObject::LogBasicDeviceInfo: %d devices", (int)theNumberDevices);
-	for(UInt32 theDeviceIndex = 0; theDeviceIndex < theNumberDevices; ++theDeviceIndex)
-	{
-		char theCString[256];
-		UInt32 theCStringSize = sizeof(theCString);
-		DebugMessageN1("CAHALAudioSystemObject::LogBasicDeviceInfo: Device %d", (int)theDeviceIndex);
-		
-		CAHALAudioDevice theDevice(theDeviceList[theDeviceIndex]);
-		DebugMessageN1("CAHALAudioSystemObject::LogBasicDeviceInfo:   Object ID: %d", (int)theDeviceList[theDeviceIndex]);
-		
-		CACFString theDeviceName(theDevice.CopyName());
-		theCStringSize = sizeof(theCString);
-		theDeviceName.GetCString(theCString, theCStringSize);
-		DebugMessageN1("CAHALAudioSystemObject::LogBasicDeviceInfo:   Name:      %s", theCString);
-		
-		CACFString theDeviceUID(theDevice.CopyDeviceUID());
-		theCStringSize = sizeof(theCString);
-		theDeviceUID.GetCString(theCString, theCStringSize);
-		DebugMessageN1("CAHALAudioSystemObject::LogBasicDeviceInfo:   UID:       %s", theCString);
-	}
 }
 
 static inline AudioObjectPropertySelector	CAHALAudioSystemObject_CalculateDefaultDeviceProperySelector(bool inIsInput, bool inIsSystem)
