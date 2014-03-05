@@ -21,8 +21,6 @@
 @property (nonatomic) NSData *overviewData;
 @property (nonatomic) double  overviewRate;
 @property (nonatomic) AudioFileError error;
-@property (nonatomic) NSTimeInterval zerosAtStart;
-@property (nonatomic) NSTimeInterval zerosAtEnd;
 @end
 
 
@@ -121,7 +119,7 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
         NSInteger bytesRemaining = framesRemaining * clientFormat.mBytesPerFrame;
         NSInteger bytesRead = 0;
 
-        LoudnessMeasurer *measurer = LoudnessMeasurerCreate(clientFormat.mChannelsPerFrame, clientFormat.mSampleRate, framesRemaining, LoudnessMeasurerAll);
+        LoudnessMeasurer *measurer = LoudnessMeasurerCreate(clientFormat.mChannelsPerFrame, clientFormat.mSampleRate, framesRemaining);
 
         AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * clientFormat.mChannelsPerFrame);
         fillBufferList->mNumberBuffers = clientFormat.mChannelsPerFrame;
@@ -155,26 +153,14 @@ static dispatch_queue_t sAnalysisBackgroundQueue = nil;
         for (NSInteger i = 0; i < clientFormat.mChannelsPerFrame; i++) {
             free(fillBufferList->mBuffers[i].mData);
         }
-
-
-        NSUInteger startingZeros = LoudnessMeasurerGetStartingZeroCount(measurer);
-        NSUInteger endingZeros   = LoudnessMeasurerGetEndingZeroCount(measurer);
         
         overviewData = LoudnessMeasurerGetOverview(measurer);
         overviewRate = 100;
         loudness     = LoudnessMeasurerGetLoudness(measurer);
         peak         = LoudnessMeasurerGetPeak(measurer);
 
-        // If this file appears to be complete silence, don't strip it.
-        if (peak < (10.0 / 32768.0)) {
-            startingZeros = 0;
-            endingZeros   = 0;
-        }
-
         [result setOverviewData:overviewData];
         [result setOverviewRate:overviewRate];
-        [result setZerosAtStart:(startingZeros / clientFormat.mSampleRate)];
-        [result setZerosAtEnd:  (endingZeros   / clientFormat.mSampleRate)];
         [result setLoudness:loudness];
         [result setPeak:peak];
 

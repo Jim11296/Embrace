@@ -95,8 +95,8 @@
     NSInteger inCount = [overviewData length] / sizeof(UInt8);
     UInt8    *inBytes = (UInt8 *)[overviewData bytes];
     
-    NSTimeInterval startTime = [track calculatedStartTime];
-    NSTimeInterval stopTime  = [track calculatedStopTime];
+    NSTimeInterval startTime = [track startTime];
+    NSTimeInterval stopTime  = [track stopTime];
     NSTimeInterval duration  = [track duration];
     
     NSInteger startOffset = 0;

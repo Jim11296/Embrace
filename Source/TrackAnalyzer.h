@@ -29,8 +29,6 @@ typedef void (^TrackAnalyzerCompletionCallback)(TrackAnalyzerResult *result);
 @property (nonatomic, readonly) double  peak;
 @property (nonatomic, readonly) NSData *overviewData;
 @property (nonatomic, readonly) double  overviewRate;
-@property (nonatomic, readonly) NSTimeInterval zerosAtStart;
-@property (nonatomic, readonly) NSTimeInterval zerosAtEnd;
 @property (nonatomic, readonly) AudioFileError error;
 @end
 

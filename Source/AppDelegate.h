@@ -18,8 +18,6 @@
 - (IBAction) openFile:(id)sender;
 
 - (IBAction) clearSetlist:(id)sender;
-- (IBAction) resetPlayedTracks:(id)sender;
-
 - (IBAction) copySetlist:(id)sender;
 - (IBAction) saveSetlist:(id)sender;
 - (IBAction) exportSetlist:(id)sender;
