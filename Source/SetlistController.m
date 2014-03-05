@@ -412,12 +412,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (void) resetPlayedTracks
-{
-    [[self tracksController] resetPlayedTracks];
-}
-
-
 - (BOOL) shouldPromptForClear
 {
     NSTimeInterval modifiedAt = [[self tracksController] modificationTime];
@@ -894,16 +888,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     Track *trackToPlay = [[self tracksController] firstQueuedTrack];
     NSTimeInterval padding = 0;
     
-    NSTimeInterval minimumSilence =  [self minimumSilenceBetweenTracks];
-    
     if (currentTrack && trackToPlay) {
         NSTimeInterval totalSilence = [currentTrack silenceAtEnd] + [trackToPlay silenceAtStart];
-        padding = minimumSilence - totalSilence;
+        padding = [self minimumSilenceBetweenTracks] - totalSilence;
         if (padding < 0) padding = 0;
-        
-        if (minimumSilence > 0 && padding == 0) {
-            padding = 1.0;
-        }
         
         if ([currentTrack trackError]) {
             padding = 0;

@@ -83,11 +83,6 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSTimeInterval playDuration;
 @property (nonatomic, readonly) NSTimeInterval silenceAtStart;
 @property (nonatomic, readonly) NSTimeInterval silenceAtEnd;
-@property (nonatomic, readonly) NSTimeInterval zerosAtStart;
-@property (nonatomic, readonly) NSTimeInterval zerosAtEnd;
 @property (nonatomic, readonly) BOOL didAnalyzeLoudness;
-
-@property (nonatomic, readonly) NSTimeInterval calculatedStartTime;
-@property (nonatomic, readonly) NSTimeInterval calculatedStopTime;
 
 @end

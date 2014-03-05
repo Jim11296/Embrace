@@ -36,8 +36,6 @@ static NSString * const sGroupingKey      = @"grouping";
 static NSString * const sCommentsKey      = @"comments";
 static NSString * const sEnergyLevelKey   = @"energyLevel";
 static NSString * const sGenreKey         = @"genre";
-static NSString * const sZerosAtStartKey  = @"zerosAtStart";
-static NSString * const sZerosAtEndKey    = @"zerosAtEnd";
 
 @interface Track ()
 @property (nonatomic) NSUUID *UUID;
@@ -72,7 +70,7 @@ static NSString * const sZerosAtEndKey    = @"zerosAtEnd";
     BOOL            _dirty;
 }
 
-@dynamic playDuration, silenceAtStart, silenceAtEnd, calculatedStartTime, calculatedStopTime;
+@dynamic playDuration, silenceAtStart, silenceAtEnd;
 
 
 static NSURL *sGetStateDirectoryURL()
@@ -109,11 +107,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     NSArray *affectingKeys = nil;
  
     if ([key isEqualToString:@"playDuration"]) {
-        affectingKeys = @[ @"duration", @"stopTime", @"startTime", @"zerosAtStart", @"zerosAtEnd" ];
-    } else if ([key isEqualToString:@"calculatedStartTime"]) {
-        affectingKeys = @[ @"startTime", @"zerosAtStart" ];
-    } else if ([key isEqualToString:@"calculatedEndTime"]) {
-        affectingKeys = @[ @"stopTime", @"zerosAtEnd", @"duration" ];
+        affectingKeys = @[ @"duration", @"stopTime", @"startTime" ];
     } else if ([key isEqualToString:@"silenceAtStart"]) {
         affectingKeys = @[ @"overviewData", @"startTime" ];
     } else if ([key isEqualToString:@"silenceAtEnd"]) {
@@ -251,27 +245,25 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     // Never save the state until we have a bookmark
     if (!_bookmark) return;
 
-    if (_bookmark)       [state setObject:_bookmark           forKey:sBookmarkKey];
-    if (_artist)         [state setObject:_artist             forKey:sArtistKey];
-    if (_title)          [state setObject:_title              forKey:sTitleKey];
-    if (_comments)       [state setObject:_comments           forKey:sCommentsKey];
-    if (_grouping)       [state setObject:_grouping           forKey:sGroupingKey];
-    if (_genre)          [state setObject:_genre              forKey:sGenreKey];
-    if (_trackStatus)    [state setObject:@(_trackStatus)     forKey:sStatusKey];
-    if (_startTime)      [state setObject:@(_startTime)       forKey:sStartTimeKey];
-    if (_stopTime)       [state setObject:@(_stopTime)        forKey:sStopTimeKey];
-    if (_duration)       [state setObject:@(_duration)        forKey:sDurationKey];
-    if (_tonality)       [state setObject:@(_tonality)        forKey:sTonalityKey];
-    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)  forKey:sBPMKey];
-    if (_trackLoudness)  [state setObject:@(_trackLoudness)   forKey:sTrackLoudnessKey];
-    if (_trackPeak)      [state setObject:@(_trackPeak)       forKey:sTrackPeakKey];
-    if (_overviewData)   [state setObject:  _overviewData     forKey:sOverviewDataKey];
-    if (_overviewRate)   [state setObject:@(_overviewRate)    forKey:sOverviewRateKey];
-    if (_trackError)     [state setObject:@(_trackError)      forKey:sTrackErrorKey];
-    if (_databaseID)     [state setObject:@(_databaseID)      forKey:sDatabaseIDKey];
-    if (_energyLevel)    [state setObject:@(_energyLevel)     forKey:sEnergyLevelKey];
-    if (_zerosAtStart)   [state setObject:@(_zerosAtStart)    forKey:sZerosAtStartKey];
-    if (_zerosAtEnd)     [state setObject:@(_zerosAtEnd)      forKey:sZerosAtEndKey];
+    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
+    if (_artist)         [state setObject:_artist               forKey:sArtistKey];
+    if (_title)          [state setObject:_title                forKey:sTitleKey];
+    if (_comments)       [state setObject:_comments             forKey:sCommentsKey];
+    if (_grouping)       [state setObject:_grouping             forKey:sGroupingKey];
+    if (_genre)          [state setObject:_genre                forKey:sGenreKey];
+    if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
+    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
+    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
+    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
+    if (_tonality)       [state setObject:@(_tonality)          forKey:sTonalityKey];
+    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:sBPMKey];
+    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
+    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
+    if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
+    if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
+    if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
+    if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
+    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:sEnergyLevelKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -396,17 +388,15 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     UInt8     *buffer      = (UInt8 *)[_overviewData bytes];
     NSUInteger length      = [_overviewData length];
-    UInt8      threshold   = 3;
+    UInt8      threshold   = 5;
 
     // Calculate silence at start
     {
         NSInteger startIndex = 0;
         NSInteger sampleCount = 0;
 
-        NSTimeInterval startTime = [self calculatedStartTime];
-
-        if (startTime) {
-            startIndex = (_overviewRate * startTime);
+        if (_startTime) {
+            startIndex = (_overviewRate * _startTime);
         }
 
         for (NSInteger i = startIndex; i < length; i++) {
@@ -424,15 +414,9 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     {
         NSInteger startIndex  = (length - 1);
         NSInteger sampleCount = 0;
-
-        NSTimeInterval stopTime = [self calculatedStopTime];
         
-        if (stopTime) {
-            startIndex = (_overviewRate * stopTime);
-
-            if (startIndex > (length - 1)) {
-                startIndex = length - 1;
-            }
+        if (_stopTime) {
+            startIndex = (_overviewRate * _stopTime);
         }
 
         for (NSInteger i = startIndex; i >= 0; i--) {
@@ -467,9 +451,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
             sOverviewRateKey:  @([result overviewRate]),
             sTrackLoudnessKey: @([result loudness]),
             sTrackPeakKey:     @([result peak]),
-            sTrackErrorKey:    @([result error]),
-            sZerosAtStartKey:  @([result zerosAtStart]),
-            sZerosAtEndKey:    @([result zerosAtEnd])
+            sTrackErrorKey:    @([result error])
         }];
 
         [self _updateState:state initialLoad:NO];
@@ -585,26 +567,6 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
         } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
             [dictionary setObject:numberValue forKey:sEnergyLevelKey];
-
-        } else if ([key isEqual:@((UInt32) 'COMM')  ] ||
-                   [key isEqual:@((UInt32) '\00COM')] ||
-                   [key isEqual:@(-1453101708)])
-        {
-            if (dictionaryValue) {
-                NSString *identifier = [dictionaryValue objectForKey:@"identifier"];
-                NSString *text       = [dictionaryValue objectForKey:@"text"];
-                
-                if ([identifier isEqualToString:@"iTunNORM"]) {
-                    return;
-                }
-
-                if (text) {
-                    [dictionary setObject:text forKey:sCommentsKey];
-                }
-
-            } else if (stringValue) {
-                [dictionary setObject:stringValue forKey:sCommentsKey];
-            }
             
         } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2.3 TKEY tag
             parseTonality(stringValue, dictionary);
@@ -620,6 +582,15 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
         } else if ([key isEqual:@((UInt32) '\00TBP')] && numberValue) { // Tempo as ID3v2.2 TBP tag
             [dictionary setObject:numberValue forKey:sBPMKey];
+
+        } else if ([key isEqual:@(-1453101708)] && stringValue) { // Comments, '?cmt'
+            [dictionary setObject:stringValue forKey:sCommentsKey];
+
+        } else if ([key isEqual:@((UInt32) 'COMM')] && stringValue) { // Comments as ID3v2.3 COMM tag
+            [dictionary setObject:stringValue forKey:sCommentsKey];
+
+        } else if ([key isEqual:@((UInt32) '\00COM')] && stringValue) { // Comments as ID3v2.2 COM tag
+            [dictionary setObject:stringValue forKey:sCommentsKey];
 
         } else if ([key isEqual:@(-1452838288)] && stringValue) { // Grouping, '?grp'
             [dictionary setObject:stringValue forKey:sGroupingKey];
@@ -749,27 +720,6 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 }
 
 
-- (NSTimeInterval) calculatedStartTime
-{
-    NSTimeInterval result = [self startTime];
-    if (!result) result = [self zerosAtStart];
-    return result;
-}
-
-
-- (NSTimeInterval) calculatedStopTime
-{
-    NSTimeInterval result = [self stopTime];
-    NSTimeInterval zeros  = [self zerosAtEnd];
-
-    if (!result && zeros) {
-        result = [self duration] - zeros;
-    }
-
-    return result;
-}
-
-
 - (void) setPausesAfterPlaying:(BOOL)pausesAfterPlaying
 {
     if (_pausesAfterPlaying != pausesAfterPlaying) {
@@ -792,12 +742,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (NSTimeInterval) playDuration
 {
-    NSTimeInterval startTime = [self calculatedStartTime];
-    NSTimeInterval stopTime  = [self calculatedStopTime];
-    
-    if (!stopTime) stopTime = [self duration];
-
-    return stopTime - startTime;
+    NSTimeInterval stopTime = _stopTime ? _stopTime : _duration;
+    return stopTime - _startTime;
 }
 
 

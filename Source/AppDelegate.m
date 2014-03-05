@@ -223,15 +223,6 @@
 
         return YES;
     
-    } else if (action == @selector(resetPlayedTracks:)) {
-        if ([_setlistController shouldPromptForClear]) {
-            [menuItem setTitle:NSLocalizedString(@"Reset Played Tracks\\U2026", nil)];
-        } else {
-            [menuItem setTitle:NSLocalizedString(@"Reset Played Tracks", nil)];
-        }
-
-        return ![[Player sharedInstance] isPlaying];
-    
     } else if (action == @selector(hardPause:)) {
         return [[Player sharedInstance] isPlaying];
 
@@ -251,14 +242,8 @@
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
     } else if (action == @selector(changeViewAttributes:)) {
-        BOOL isEnabled = [[Preferences sharedInstance] numberOfLayoutLines] > 1;
-
         BOOL yn = [[Preferences sharedInstance] isViewAttributeSelected:[menuItem tag]];
-        if (!isEnabled) yn = NO;
-
         [menuItem setState:(yn ? NSOnState : NSOffState)];
-        
-        return isEnabled;
     
     } else if (action == @selector(changeViewLayout:)) {
         NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
@@ -386,7 +371,7 @@
     if ([_setlistController shouldPromptForClear]) {
         NSString *messageText     = NSLocalizedString(@"Clear Set List", nil);
         NSString *informativeText = NSLocalizedString(@"You haven't saved or exported the current set list. Are you sure you want to clear it?", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Clear", nil);
+        NSString *defaultButton   = NSLocalizedString(@"Clear Set List", nil);
         
         NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
         
@@ -396,25 +381,6 @@
     
     } else {
         [_setlistController clear];
-    }
-}
-
-
-- (IBAction) resetPlayedTracks:(id)sender
-{
-    if ([_setlistController shouldPromptForClear]) {
-        NSString *messageText     = NSLocalizedString(@"Reset Played Tracks", nil);
-        NSString *informativeText = NSLocalizedString(@"Are you sure you want to reset all played tracks to the queued state?", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Reset", nil);
-        
-        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
-        
-        if ([alert runModal] == NSOKButton) {
-            [_setlistController resetPlayedTracks];
-        }
-    
-    } else {
-        [_setlistController resetPlayedTracks];
     }
 }
 

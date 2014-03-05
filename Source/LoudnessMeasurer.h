@@ -31,17 +31,9 @@ extern "C" {
 #import  <Foundation/Foundation.h>
 #include <AudioToolbox/AudioToolbox.h>
 
-typedef NS_ENUM(NSUInteger, LoudnessMeasurerOptions) {
-    LoudnessMeasurerCalculateLoudness  = (1 << 1),
-    LoudnessMeasurerCalculateOverview  = (1 << 2),
-    LoudnessMeasurerCountZeros         = (1 << 3),
-
-    LoudnessMeasurerAll = 0xFF
-};
-
 typedef struct LoudnessMeasurer LoudnessMeasurer;
 
-LoudnessMeasurer *LoudnessMeasurerCreate(unsigned int channels, double sampleRate, NSUInteger totalFrames, LoudnessMeasurerOptions options);
+LoudnessMeasurer *LoudnessMeasurerCreate(unsigned int channels, double sampleRate, size_t totalFrames);
 void LoudnessMeasurerFree(LoudnessMeasurer *measurer);
 
 void LoudnessMeasurerScanAudioBuffer(LoudnessMeasurer *st, AudioBufferList *bufferList, size_t frames);
@@ -50,11 +42,6 @@ NSData *LoudnessMeasurerGetOverview(LoudnessMeasurer *st);
 
 double LoudnessMeasurerGetLoudness(LoudnessMeasurer *st);
 double LoudnessMeasurerGetPeak(LoudnessMeasurer *st);
-
-// Returns number of samples equal to 0
-//
-NSUInteger LoudnessMeasurerGetStartingZeroCount(LoudnessMeasurer *st);
-NSUInteger LoudnessMeasurerGetEndingZeroCount(LoudnessMeasurer *st);
 
 
 #ifdef __cplusplus
