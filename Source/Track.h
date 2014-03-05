@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AudioFile.h"
 
+extern NSString * const TrackDidModifyPlayDurationNotificationName;
 
 @class TrackAnalyzer;
 

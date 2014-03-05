@@ -44,6 +44,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (IBAction) showGearMenu:(id)sender;
 
 - (void) clear;
+- (void) resetPlayedTracks;
 - (BOOL) shouldPromptForClear;
 
 - (void) openFileAtURL:(NSURL *)url;

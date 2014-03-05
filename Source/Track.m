@@ -12,6 +12,9 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPlayDurationNotification";
+
+
 #define DUMP_UNKNOWN_TAGS 0
 
 static NSString * const sTypeKey          = @"trackType";
@@ -162,7 +165,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         [self _invalidateSilence];
         
         [self _updateState:state initialLoad:YES];
-        [self _loadMetadataViaManager];
+        [self _loadMetadataViaManagerWithFileURL:url];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleApplicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
     }
@@ -206,6 +209,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void) _updateState:(NSDictionary *)state initialLoad:(BOOL)initialLoad
 {
+    BOOL postPlayDurationChanged = NO;
+
     for (NSString *key in state) {
         id oldValue = [self valueForKey:key];
         id newValue = [state objectForKey:key];
@@ -216,6 +221,10 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
             if (!_dirtyKeys) _dirtyKeys = [NSMutableArray array];
             [_dirtyKeys addObject:key];
             _dirty = YES;
+
+            if ([@[ @"duration", @"startTime", @"endTime" ] containsObject:key]) {
+                postPlayDurationChanged = YES;
+            }
         }
     }
 
@@ -234,6 +243,12 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     if (_dirty && !initialLoad) {
         [self _saveStateImmediately:NO];
+    }
+
+    if (postPlayDurationChanged) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyPlayDurationNotificationName object:self];
+        });
     }
 }
 
@@ -313,7 +328,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     }
 
 
-    [self _loadMetadataViaManager];
+    [self _loadMetadataViaManagerWithFileURL:_fileURL];
     [self _loadMetadataViaAsset];
     
     [self _loadMetadataViaAnalysisIfNeeded];
@@ -388,7 +403,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     UInt8     *buffer      = (UInt8 *)[_overviewData bytes];
     NSUInteger length      = [_overviewData length];
-    UInt8      threshold   = 5;
+    UInt8      threshold   = 4;
 
     // Calculate silence at start
     {
@@ -412,11 +427,16 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     // Calculate silence at end
     {
-        NSInteger startIndex  = (length - 1);
+        NSInteger maxIndex    = (length - 1);
+        NSInteger startIndex  = maxIndex;
         NSInteger sampleCount = 0;
         
         if (_stopTime) {
             startIndex = (_overviewRate * _stopTime);
+        }
+        
+        if (startIndex > maxIndex) {
+            startIndex = maxIndex;
         }
 
         for (NSInteger i = startIndex; i >= 0; i--) {
@@ -496,13 +516,13 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 }
 
 
-- (void) _loadMetadataViaManager
+- (void) _loadMetadataViaManagerWithFileURL:(NSURL *)fileURL
 {
-    if (!_fileURL) {
+    if (!fileURL) {
         return;
     }
 
-    iTunesPasteboardMetadata *pasteboardMetadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:_fileURL];
+    iTunesPasteboardMetadata *pasteboardMetadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:fileURL];
     
     if (pasteboardMetadata) {
         if (!_title)      [self setTitle:[pasteboardMetadata title]];
@@ -512,7 +532,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     }
 
     if ([[iTunesManager sharedInstance] didParseLibrary]) {
-        iTunesLibraryMetadata *libraryMetadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
+        iTunesLibraryMetadata *libraryMetadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:fileURL];
 
         [self setStartTime:[libraryMetadata startTime]];
         [self setStopTime: [libraryMetadata stopTime]];
@@ -567,6 +587,26 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
         } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
             [dictionary setObject:numberValue forKey:sEnergyLevelKey];
+
+        } else if ([key isEqual:@((UInt32) 'COMM')  ] ||
+                   [key isEqual:@((UInt32) '\00COM')] ||
+                   [key isEqual:@(-1453101708)])
+        {
+            if (dictionaryValue) {
+                NSString *identifier = [dictionaryValue objectForKey:@"identifier"];
+                NSString *text       = [dictionaryValue objectForKey:@"text"];
+                
+                if ([identifier isEqualToString:@"iTunNORM"]) {
+                    return;
+                }
+
+                if (text) {
+                    [dictionary setObject:text forKey:sCommentsKey];
+                }
+
+            } else if (stringValue) {
+                [dictionary setObject:stringValue forKey:sCommentsKey];
+            }
             
         } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2.3 TKEY tag
             parseTonality(stringValue, dictionary);
@@ -582,15 +622,6 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
         } else if ([key isEqual:@((UInt32) '\00TBP')] && numberValue) { // Tempo as ID3v2.2 TBP tag
             [dictionary setObject:numberValue forKey:sBPMKey];
-
-        } else if ([key isEqual:@(-1453101708)] && stringValue) { // Comments, '?cmt'
-            [dictionary setObject:stringValue forKey:sCommentsKey];
-
-        } else if ([key isEqual:@((UInt32) 'COMM')] && stringValue) { // Comments as ID3v2.3 COMM tag
-            [dictionary setObject:stringValue forKey:sCommentsKey];
-
-        } else if ([key isEqual:@((UInt32) '\00COM')] && stringValue) { // Comments as ID3v2.2 COM tag
-            [dictionary setObject:stringValue forKey:sCommentsKey];
 
         } else if ([key isEqual:@(-1452838288)] && stringValue) { // Grouping, '?grp'
             [dictionary setObject:stringValue forKey:sGroupingKey];
