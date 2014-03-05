@@ -126,16 +126,20 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     {
         NSInteger totalFrames = fileLengthFrames;
         
-        NSInteger startFrame  = [_track startTime] * _clientFormat.mSampleRate;
+        NSInteger startFrame  = [_track calculatedStartTime] * _clientFormat.mSampleRate;
         if (startFrame < 0) startFrame = 0;
         if (startFrame > totalFrames) startFrame = totalFrames;
 
-        if ([_track stopTime]) {
-            NSInteger stopFrame  = [_track stopTime] * _clientFormat.mSampleRate;
+        totalFrames -= startFrame;
+
+        NSTimeInterval stopTime = [_track calculatedStopTime];
+
+        if (stopTime) {
+            NSInteger stopFrame  = stopTime * _clientFormat.mSampleRate;
             if (stopFrame < 0) stopFrame = 0;
             if (stopFrame > totalFrames) stopFrame = totalFrames;
 
-            totalFrames = stopFrame;
+            totalFrames -= (fileLengthFrames - stopFrame);
         }
 
         if (startFrame) {

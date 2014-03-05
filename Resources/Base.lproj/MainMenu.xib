@@ -97,6 +97,12 @@
                                     <action selector="clearSetlist:" target="494" id="eUk-KI-mlG"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Reset Played Tracks" id="8Z0-cn-exQ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="resetPlayedTracks:" target="494" id="Xv3-Rc-dlo"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="FO8-6S-eZx"/>
                             <menuItem title="Copy Set List" keyEquivalent="C" id="FdC-Kk-mtx">
                                 <connections>
