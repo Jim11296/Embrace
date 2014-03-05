@@ -35,6 +35,8 @@
 #include <Accelerate/Accelerate.h>
 #include <AudioToolbox/AudioToolbox.h>
 
+const float SILENCE_THRESHOLD = (2.0 / 32767.0);
+
 typedef struct LoudnessMeasurerChannel {
     float  *_bufferPre;
     double *_bufferPost;
@@ -55,6 +57,10 @@ typedef struct LoudnessMeasurerChannel {
     float  *_overview;
     size_t  _overviewCapacity;
     size_t  _overviewCount;
+    
+    BOOL   _startingZeroLocked;
+    size_t _startingZeroCount;
+    size_t _endingZeroCount;
 
     // How many frames are needed for a gating block. Will correspond to 400ms
     // of audio at initialization, and 100ms after the first block (75% overlap
@@ -66,6 +72,8 @@ typedef struct LoudnessMeasurerChannel {
 
 
 struct LoudnessMeasurer {
+    LoudnessMeasurerOptions _options;
+
     size_t _channelCount;
     LoudnessMeasurerChannel *_channels;
 
@@ -122,10 +130,12 @@ static inline void LoudnessMeasurerSetupFilter(LoudnessMeasurer *m, double sampl
 }
 
 
-LoudnessMeasurer *LoudnessMeasurerCreate(unsigned int channelCount, double sampleRate, size_t totalFrames)
+LoudnessMeasurer *LoudnessMeasurerCreate(unsigned int channelCount, double sampleRate, size_t totalFrames, LoudnessMeasurerOptions options)
 {
     LoudnessMeasurer *self = (LoudnessMeasurer *)calloc(1, sizeof(LoudnessMeasurer));
     if (!self) return NULL;
+
+    self->_options = options;
 
     self->_channelCount = channelCount;
     self->_channels = calloc(channelCount, sizeof(LoudnessMeasurerChannel));
@@ -196,17 +206,15 @@ static inline void sBiquad(double *inBuffer, double *outBuffer, const double *co
 }
 
 
-static inline void sFilter(const LoudnessMeasurer *self, LoudnessMeasurerChannel *channel, const float* src, size_t inStride, size_t frames)
+static inline void sFilter(const LoudnessMeasurer *self, LoudnessMeasurerChannel *channel, const float *src, size_t frames)
 {
     if (frames == 0) return;
 
-    vDSP_Stride stride = (vDSP_Stride)inStride;
-
     float max = 0;
-    vDSP_maxv(src, stride, &max, frames);
+    vDSP_maxv(src, 1, &max, frames);
 
     float min = 0;
-    vDSP_minv(src, stride, &min, frames);
+    vDSP_minv(src, 1, &min, frames);
 
     if (-min > max) max = -min;
 
@@ -220,7 +228,7 @@ static inline void sFilter(const LoudnessMeasurer *self, LoudnessMeasurerChannel
     double *s1 = channel->_scratch  + 2;
     double *s2 = channel->_scratch2 + 2;
 
-    vDSP_vspdp(src, stride, s1, 1, frames);
+    vDSP_vspdp(src, 1, s1, 1, frames);
 
     float *bufferPre = channel->_bufferPre + channel->_bufferIndex;
 
@@ -347,21 +355,81 @@ static inline void sCalculateGatingBlock(const LoudnessMeasurer *self, LoudnessM
 }
 
 
-static void sProcess(const LoudnessMeasurer *self, LoudnessMeasurerChannel *channel, const float *source, size_t stride, size_t inFrames)
+static inline void sCountZeros(const LoudnessMeasurer *self, LoudnessMeasurerChannel *channel, const float *source, size_t inFrames)
+{
+    if (!inFrames) return;
+
+    NSInteger starting = 0;
+    NSInteger ending   = 0;
+
+    const float *start = source;
+    const float *end   = source + (inFrames - 1);
+
+    const float *s = start;
+    while (s <= end) {
+        if (fabsf(*s) >= SILENCE_THRESHOLD) {
+            break;
+        }
+
+        starting++;
+        s++;
+    }
+
+    if (!channel->_startingZeroLocked) {
+        channel->_startingZeroCount += starting;
+    }
+
+    // This block was complete silence
+    if (starting == inFrames) {
+        channel->_endingZeroCount += inFrames;
+
+    // This block had a non-zero value
+    } else {
+        s = end;
+        while (s >= start) {
+            if (fabsf(*s) >= SILENCE_THRESHOLD) {
+                break;
+            }
+        
+            ending++;
+            s--;
+        }
+
+        channel->_startingZeroLocked = YES;
+        channel->_endingZeroCount = ending;
+    }
+}
+
+
+static void sProcess(const LoudnessMeasurer *self, LoudnessMeasurerChannel *channel, const float *source, size_t inFrames)
 {
     size_t index = 0;
     size_t frames = inFrames;
 
+    LoudnessMeasurerOptions options = self->_options;
+    BOOL calculateOverview = options & LoudnessMeasurerCalculateOverview;
+    BOOL calculateLoudness = options & LoudnessMeasurerCalculateLoudness;
+    BOOL countZeros        = options & LoudnessMeasurerCountZeros;
+
+    if (countZeros) {
+        sCountZeros(self, channel, source, frames);
+    }
+
     while (frames > 0) {
         if (frames >= channel->_neededFrames) {
-            sFilter(self, channel, source + (index * stride), stride, channel->_neededFrames);
+            sFilter(self, channel, source + index, channel->_neededFrames);
             index  += channel->_neededFrames;
             frames -= channel->_neededFrames;
             channel->_bufferIndex += channel->_neededFrames;
             
-            sCalculateGatingBlock(self, channel, self->_samplesIn400ms);
-            sCalculateOverview(self, channel, self->_samplesIn100ms / 10, 40);
+            if (calculateLoudness) {
+                sCalculateGatingBlock(self, channel, self->_samplesIn400ms);
+            }
 
+            if (calculateOverview) {
+                sCalculateOverview(self, channel, self->_samplesIn100ms / 10, 40);
+            }
+            
             // 100ms are needed for all blocks besides the first one
             channel->_neededFrames = self->_samplesIn100ms;
 
@@ -370,7 +438,7 @@ static void sProcess(const LoudnessMeasurer *self, LoudnessMeasurerChannel *chan
             }
 
         } else {
-            sFilter(self, channel, source + (index * stride), stride, frames);
+            sFilter(self, channel, source + index, frames);
 
             channel->_bufferIndex  += frames;
             channel->_neededFrames -= frames;
@@ -385,13 +453,17 @@ void LoudnessMeasurerScanAudioBuffer(LoudnessMeasurer *self, AudioBufferList *bu
 {
     dispatch_apply(self->_channelCount, dispatch_get_global_queue(0, 0), ^(size_t c) {
         LoudnessMeasurerChannel *channel = &self->_channels[c];
-        sProcess(self, channel, bufferList->mBuffers[c].mData, 1, inFrames);
+        sProcess(self, channel, bufferList->mBuffers[c].mData, inFrames);
     });
 }
 
 
 NSData *LoudnessMeasurerGetOverview(LoudnessMeasurer *self)
 {
+    if (!(self->_options & LoudnessMeasurerCalculateOverview)) {
+        return nil;
+    }
+
     size_t  overviewCount = self->_channels[0]._overviewCount;
     UInt8  *overview      = malloc(sizeof(UInt8) * overviewCount);
     
@@ -417,6 +489,10 @@ NSData *LoudnessMeasurerGetOverview(LoudnessMeasurer *self)
 
 double LoudnessMeasurerGetLoudness(LoudnessMeasurer *self)
 {
+    if (!(self->_options & LoudnessMeasurerCalculateLoudness)) {
+        return 0;
+    }
+
     static double sRelativeGateFactor = 0;
     static double sAbsoluteGateFactor = 0;
 
@@ -485,6 +561,10 @@ double LoudnessMeasurerGetLoudness(LoudnessMeasurer *self)
 
 double LoudnessMeasurerGetPeak(LoudnessMeasurer *self)
 {
+    if (!(self->_options & LoudnessMeasurerCalculateLoudness)) {
+        return 0;
+    }
+
     double result = 0;
 
     for (int c = 0; c < self->_channelCount; c++) {
@@ -492,6 +572,40 @@ double LoudnessMeasurerGetPeak(LoudnessMeasurer *self)
         if (peak > result) {
             result = peak;
         }
+    }
+
+    return result;
+}
+
+
+NSUInteger LoudnessMeasurerGetStartingZeroCount(LoudnessMeasurer *self)
+{
+    if (!(self->_options & LoudnessMeasurerCountZeros)) {
+        return 0;
+    }
+
+    NSUInteger result = NSUIntegerMax;
+
+    for (int c = 0; c < self->_channelCount; c++) {
+        NSUInteger count = self->_channels[c]._startingZeroCount;
+        result = MIN(result, count);
+    }
+
+    return result;
+}
+
+
+NSUInteger LoudnessMeasurerGetEndingZeroCount(LoudnessMeasurer *self)
+{
+    if (!(self->_options & LoudnessMeasurerCountZeros)) {
+        return 0;
+    }
+
+    NSUInteger result = NSUIntegerMax;
+
+    for (int c = 0; c < self->_channelCount; c++) {
+        NSUInteger count = self->_channels[c]._endingZeroCount;
+        result = MIN(result, count);
     }
 
     return result;

@@ -21,6 +21,7 @@
 #import <signal.h>
 #import <Accelerate/Accelerate.h>
 #import <PLCrashLogWriter.h>
+#import <IOKit/pwr_mgt/IOPMLib.h>
 
 #define CHECK_RENDER_ERRORS_ON_TICK 0
 
@@ -107,6 +108,8 @@ typedef struct {
 
     BOOL         _tookHogMode;
     BOOL         _hadErrorDuringReconfigure;
+
+    IOPMAssertionID _powerAssertionID;
     
     NSMutableDictionary *_effectToNodeMap;
     NSHashTable *_listeners;
@@ -880,8 +883,10 @@ static OSStatus sInputRenderCallback(
 
     [self _reconnectGraph];
 
-    if (isRunning) AUGraphStart(_graph);
-    
+    if (isRunning) {
+        [self _startGraph];
+    }
+
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reconfigureOutput) object:nil];
     
     [self _checkIssues];
@@ -956,12 +961,26 @@ static OSStatus sInputRenderCallback(
         _currentStartHostTime = startTime.mHostTime;
     }
 
+    [self _startGraph];
+}
+
+
+- (void) _startGraph
+{
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);
 
     if (!isRunning) {
         CheckError(AUGraphStart(_graph), "AUGraphStart");
     }
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_stopGraph) object:nil];
+}
+
+
+- (void) _stopGraph
+{
+    CheckError(AUGraphStop(_graph), "AUGraphStop");
 }
 
 
@@ -1039,6 +1058,23 @@ static OSStatus sInputRenderCallback(
         for (id<PlayerListener> listener in _listeners) {
             [listener player:self didUpdatePlaying:YES];
         }
+        
+        if (_powerAssertionID) {
+            IOPMAssertionRelease(_powerAssertionID);
+            _powerAssertionID = 0;
+        }
+        
+        
+        
+        BOOL preventDisplaySleep = [[NSUserDefaults standardUserDefaults] boolForKey:@"PreventDisplaySleepWhenPlaying"];
+        CFStringRef name = preventDisplaySleep ? kIOPMAssertPreventUserIdleDisplaySleep : kIOPMAssertPreventUserIdleSystemSleep;
+        
+        IOPMAssertionCreateWithName(
+            name,
+            kIOPMAssertionLevelOn,
+            CFSTR("Embrace is playing audio"),
+            &_powerAssertionID
+        );
     }
 }
 
@@ -1132,8 +1168,8 @@ static OSStatus sInputRenderCallback(
         _renderUserInfo.stopRequested = 0;
         _renderUserInfo.stopped = 0;
 
-//      This is the only way to clear the meter
-//      AUGraphStop(_graph);
+//      To ensure the meter is actually cleared, let the graph run for 10 seconds
+        [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:10];
     }
 
     [self _iterateGraphAudioUnits:^(AudioUnit unit) {
@@ -1153,6 +1189,11 @@ static OSStatus sInputRenderCallback(
     
     for (id<PlayerListener> listener in _listeners) {
         [listener player:self didUpdatePlaying:NO];
+    }
+
+    if (_powerAssertionID) {
+        IOPMAssertionRelease(_powerAssertionID);
+        _powerAssertionID = 0;
     }
 }
 
