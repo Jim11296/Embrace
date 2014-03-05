@@ -50,6 +50,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     double     _volumeBeforeAutoPause;
     BOOL       _didAutoPause;
     BOOL       _confirmPauseClick;
+    BOOL       _willCalculateStartAndEndTimes;
 }
 
 
@@ -89,8 +90,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[self playButton] setImage:[NSImage imageNamed:@"play_template"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"gear_template"]];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyPlayDuration:)      name:TrackDidModifyPlayDurationNotificationName object:nil];
+
     [self _handlePreferencesDidChange:nil];
 
     // Add top and bottom shadows
@@ -206,8 +209,18 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) _handleTracksControllerDidModifyTracks:(NSNotification *)note
 {
+    [self _calculateStartAndEndTimes];
     [self _updatePlayButton];
     [self _updateDragSongsView];
+}
+
+
+- (void) _handleTrackDidModifyPlayDuration:(NSNotification *)note
+{
+    if (!_willCalculateStartAndEndTimes) {
+        [self performSelector:@selector(_calculateStartAndEndTimes) withObject:nil afterDelay:10];
+        _willCalculateStartAndEndTimes = YES;
+    }
 }
 
 
@@ -344,6 +357,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) _calculateStartAndEndTimes
 {
+    _willCalculateStartAndEndTimes = NO;
+
     Player *player = [Player sharedInstance];
 
     NSTimeInterval now = [player isPlaying] ? [NSDate timeIntervalSinceReferenceDate] : 0.0;
@@ -375,9 +390,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             if (lastTrack) {
                 NSTimeInterval padding = 0;
 
+                NSTimeInterval minimumSilence =  [self minimumSilenceBetweenTracks];
+
                 NSTimeInterval totalSilence = [lastTrack silenceAtEnd] + [track silenceAtStart];
-                padding = [self minimumSilenceBetweenTracks] - totalSilence;
+                padding = minimumSilence - totalSilence;
                 if (padding < 0) padding = 0;
+                
+                if (minimumSilence > 0 && padding == 0) {
+                    padding = 1.0;
+                }
 
                 time += padding;
             }
@@ -392,16 +413,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-#pragma mark - Tracks
-
-- (void) _didModifyTracks
-{
-    [self _calculateStartAndEndTimes];
-    [self _updatePlayButton];
-    [self _updateDragSongsView];
-}
-
-
 #pragma mark - Public Methods
 
 - (void) clear
@@ -409,6 +420,12 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
 
     [[self tracksController] removeAllTracks];
+}
+
+
+- (void) resetPlayedTracks
+{
+    [[self tracksController] resetPlayedTracks];
 }
 
 
@@ -888,10 +905,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     Track *trackToPlay = [[self tracksController] firstQueuedTrack];
     NSTimeInterval padding = 0;
     
+    NSTimeInterval minimumSilence =  [self minimumSilenceBetweenTracks];
+    
     if (currentTrack && trackToPlay) {
         NSTimeInterval totalSilence = [currentTrack silenceAtEnd] + [trackToPlay silenceAtStart];
-        padding = [self minimumSilenceBetweenTracks] - totalSilence;
+        padding = minimumSilence - totalSilence;
         if (padding < 0) padding = 0;
+        
+        if (minimumSilence > 0 && padding == 0) {
+            padding = 1.0;
+        }
         
         if ([currentTrack trackError]) {
             padding = 0;

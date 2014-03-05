@@ -22,6 +22,7 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (void) addTrackAtURL:(NSURL *)fileURL;
 - (void) removeAllTracks;
 - (void) deselectAllTracks;
+- (void) resetPlayedTracks;
 
 - (BOOL) canDeleteSelectedObjects;
 - (BOOL) canChangeTrackStatusOfTrack:(Track *)track;

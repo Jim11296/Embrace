@@ -443,6 +443,16 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (void) resetPlayedTracks
+{
+    if ([[Player sharedInstance] isPlaying]) return;
+
+    for (Track *track in _tracks) {
+        [track setTrackStatus:TrackStatusQueued];
+    }
+}
+
+
 - (void) revealEndTimeForTrack:(Track *)track
 {
     NSInteger index = [_tracks indexOfObject:track];
