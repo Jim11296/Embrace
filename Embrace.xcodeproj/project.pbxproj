@@ -773,8 +773,8 @@
 				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07D187785BC00C85770 /* Resources */,
-				558DC07C187785BC00C85770 /* Frameworks */,
 				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
+				558DC07C187785BC00C85770 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -961,7 +961,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" test*.m4a";
+			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" test*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" rate*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" DebugWindow.nib";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
