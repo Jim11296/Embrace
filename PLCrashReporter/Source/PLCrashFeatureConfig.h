@@ -88,7 +88,7 @@
 
 #ifndef PLCRASH_FEATURE_UNWIND_DWARF
 /** If true, enable DWARF unwinding support. */
-#    define PLCRASH_FEATURE_UNWIND_DWARF 1
+#    define PLCRASH_FEATURE_UNWIND_DWARF 0
 #endif
 
 

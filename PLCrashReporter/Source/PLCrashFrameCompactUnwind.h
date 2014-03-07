@@ -31,7 +31,7 @@
 #include "PLCrashFrameWalker.h"
 #include "PLCrashAsyncCompactUnwindEncoding.h"
 
-#if PLCRASH_FEATURE_UNWIND_DWARF
+#if PLCRASH_FEATURE_UNWIND_COMPACT
 
 #ifdef __cplusplus
 extern "C" {

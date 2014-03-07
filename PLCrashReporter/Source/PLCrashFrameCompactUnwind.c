@@ -31,7 +31,7 @@
 
 #include <inttypes.h>
 
-#if PLCRASH_FEATURE_UNWIND_DWARF
+#if PLCRASH_FEATURE_UNWIND_COMPACT
 
 /**
  * Attempt to fetch next frame using compact frame unwinding data from @a image_list.
