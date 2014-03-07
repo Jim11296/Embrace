@@ -83,9 +83,11 @@
 		55A708AD18A70E96007BD7C0 /* drag_songs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A708AB18A70E96007BD7C0 /* drag_songs@2x.png */; };
 		55A708AE18A70E96007BD7C0 /* drag_songs.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A708AC18A70E96007BD7C0 /* drag_songs.png */; };
 		55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A708B018A715C1007BD7C0 /* DragSongsHereView.m */; };
+		55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0BC1877861E00C85770 /* MainMenu.xib */; };
 		55AB41E118BAE16F00DBCD7B /* libCrashReporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 554D318B18BADDBF007DEB16 /* libCrashReporter.a */; };
 		55ADE93518815EA8008DC245 /* PlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* PlayBar.m */; };
 		55ADE93818824338008DC245 /* LevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* LevelMeter.m */; };
+		55AF60E918C94FDD00BE2212 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AF60E818C94FDD00BE2212 /* libcrypto.a */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
 		55BC0B081877F25D00D84481 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B071877F25D00D84481 /* CoreMedia.framework */; };
 		55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B091877F26300D84481 /* AudioUnit.framework */; };
@@ -111,7 +113,6 @@
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E5B6D318B5A0AF00F9DF65 /* track_error_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5B6D118B5A0AF00F9DF65 /* track_error_template.png */; };
 		55E5B6D418B5A0AF00F9DF65 /* track_error_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5B6D218B5A0AF00F9DF65 /* track_error_template@2x.png */; };
-		55F3B7AE187786E300E8FEC8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0BC1877861E00C85770 /* MainMenu.xib */; };
 		55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B01877885800E8FEC8 /* SetlistController.m */; };
 		55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */; };
 		55F3B7B61877908900E8FEC8 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B51877908900E8FEC8 /* Track.m */; };
@@ -204,7 +205,7 @@
 		552C9E4E1883EBA40041C160 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preferences.m; path = Source/Preferences.m; sourceTree = "<group>"; };
 		553614CC18B4C3B2007BDAD6 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioFile.h; path = Source/AudioFile.h; sourceTree = "<group>"; };
 		553614CD18B4C3B2007BDAD6 /* AudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFile.m; path = Source/AudioFile.m; sourceTree = "<group>"; };
-		55394ED01884C94F00474E20 /* Sandbox.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Sandbox.entitlements; path = Resources/Sandbox.entitlements; sourceTree = "<group>"; };
+		55394ED01884C94F00474E20 /* Embrace.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Embrace.entitlements; path = Resources/Embrace.entitlements; sourceTree = "<group>"; };
 		553DE141189F107100A355D1 /* ViewTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewTrackController.h; path = Source/ViewTrackController.h; sourceTree = SOURCE_ROOT; };
 		553DE142189F107100A355D1 /* ViewTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewTrackController.m; path = Source/ViewTrackController.m; sourceTree = SOURCE_ROOT; };
 		553DE144189F10D600A355D1 /* ViewTrackWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ViewTrackWindow.xib; path = Resources/ViewTrackWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -304,6 +305,22 @@
 		55ADE93418815EA8008DC245 /* PlayBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayBar.m; path = Source/PlayBar.m; sourceTree = SOURCE_ROOT; };
 		55ADE93618824338008DC245 /* LevelMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LevelMeter.h; path = Source/LevelMeter.h; sourceTree = SOURCE_ROOT; };
 		55ADE93718824338008DC245 /* LevelMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LevelMeter.m; path = Source/LevelMeter.m; sourceTree = SOURCE_ROOT; };
+		55AF60C918C94BD700BE2212 /* Base.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Debug.xcconfig; sourceTree = "<group>"; };
+		55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Profile.xcconfig; sourceTree = "<group>"; };
+		55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Release.xcconfig; sourceTree = "<group>"; };
+		55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Submission.xcconfig; sourceTree = "<group>"; };
+		55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Debug.xcconfig; sourceTree = "<group>"; };
+		55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Profile.xcconfig; sourceTree = "<group>"; };
+		55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Release.xcconfig; sourceTree = "<group>"; };
+		55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Submission.xcconfig; sourceTree = "<group>"; };
+		55AF60D318C94BD700BE2212 /* ConfigDebug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigDebug.xcconfig; sourceTree = "<group>"; };
+		55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigProfile.xcconfig; sourceTree = "<group>"; };
+		55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigRelease.xcconfig; sourceTree = "<group>"; };
+		55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigSubmission.xcconfig; sourceTree = "<group>"; };
+		55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetCrashPad.xcconfig; sourceTree = "<group>"; };
+		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetEmbrace.xcconfig; sourceTree = "<group>"; };
+		55AF60E818C94FDD00BE2212 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
 		55BC0B051877F19400D84481 /* Effect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Effect.m; path = Source/Effect.m; sourceTree = SOURCE_ROOT; };
 		55BC0B071877F25D00D84481 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -318,6 +335,7 @@
 		55BC0B2A1878E4EF00D84481 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Source/Utils.m; sourceTree = SOURCE_ROOT; };
 		55BE7738187CD05600BC0D29 /* BorderedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BorderedView.h; path = Source/BorderedView.h; sourceTree = SOURCE_ROOT; };
 		55BE7739187CD05600BC0D29 /* BorderedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BorderedView.m; path = Source/BorderedView.m; sourceTree = SOURCE_ROOT; };
+		55C5D57A18C94211000C95A4 /* ReceiptValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReceiptValidation.h; path = Source/ReceiptValidation.h; sourceTree = "<group>"; };
 		55CF2784187A23BD0042C92A /* iTunesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = SOURCE_ROOT; };
 		55CF2785187A23BD0042C92A /* iTunesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesManager.m; path = Source/iTunesManager.m; sourceTree = SOURCE_ROOT; };
 		55CF2787187A241A0042C92A /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
@@ -376,6 +394,7 @@
 				555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */,
 				55CF27A7187A5B780042C92A /* MediaToolbox.framework in Frameworks */,
 				55BC0B0F1877FC4D00D84481 /* CoreAudioKit.framework in Frameworks */,
+				55AF60E918C94FDD00BE2212 /* libcrypto.a in Frameworks */,
 				55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */,
 				55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */,
 				55BC0B1918780A0200D84481 /* CoreAudio.framework in Frameworks */,
@@ -470,8 +489,9 @@
 		558DC076187785BC00C85770 = {
 			isa = PBXGroup;
 			children = (
+				55AF60C818C94BD700BE2212 /* Config */,
 				554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */,
-				55394ED01884C94F00474E20 /* Sandbox.entitlements */,
+				55394ED01884C94F00474E20 /* Embrace.entitlements */,
 				55DD538C18B99A530084628D /* CrashPad.entitlements */,
 				55DD53A518B9FC3E0084628D /* Utils */,
 				552C9DC418836E480041C160 /* CoreAudio Public Utility */,
@@ -502,6 +522,7 @@
 		558DC081187785BC00C85770 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55AF60E818C94FDD00BE2212 /* libcrypto.a */,
 				553E44E118C5D23400E8D7B9 /* IOKit.framework */,
 				55A0B16C188F6FD700866F04 /* Accelerate.framework */,
 				555B3C821880EFD20088C15C /* QuartzCore.framework */,
@@ -600,6 +621,36 @@
 			name = "Test Sounds";
 			sourceTree = "<group>";
 		};
+		55AF60C818C94BD700BE2212 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				55AF60C918C94BD700BE2212 /* Base.xcconfig */,
+				55AF60CA18C94BD700BE2212 /* Combined */,
+				55AF60D318C94BD700BE2212 /* ConfigDebug.xcconfig */,
+				55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */,
+				55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */,
+				55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */,
+				55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */,
+				55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		55AF60CA18C94BD700BE2212 /* Combined */ = {
+			isa = PBXGroup;
+			children = (
+				55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */,
+				55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */,
+				55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */,
+				55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */,
+				55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */,
+				55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */,
+				55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */,
+				55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */,
+			);
+			path = Combined;
+			sourceTree = "<group>";
+		};
 		55BC0B1C1878D7FA00D84481 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -694,6 +745,7 @@
 		55DD53A518B9FC3E0084628D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				55C5D57A18C94211000C95A4 /* ReceiptValidation.h */,
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
 				55BC0B291878E4EF00D84481 /* Utils.h */,
@@ -769,6 +821,7 @@
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
 				55224BEC18A855E900407B46 /* rchook */,
+				55C5D57918C941CA000C95A4 /* Generate Receipt Validation */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
 				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
@@ -861,11 +914,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */,
 				5515B468189B4DC300FBC886 /* full_volume_template.png in Resources */,
 				55CF848C18BF179700EF33F7 /* stop_template.png in Resources */,
 				55A708AE18A70E96007BD7C0 /* drag_songs.png in Resources */,
 				55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */,
-				55F3B7AE187786E300E8FEC8 /* MainMenu.xib in Resources */,
 				55717BD5187EA45500213213 /* close_normal.png in Resources */,
 				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
 				550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */,
@@ -949,6 +1002,20 @@
 			shellPath = /bin/sh;
 			shellScript = "MACOS=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$MACOS/CrashPad\"\nfi";
 		};
+		55C5D57918C941CA000C95A4 /* Generate Receipt Validation */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Receipt Validation";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "RECEIGEN=\"/Applications/Receigen.app/Contents/MacOS/Receigen\"\n\nINPUT=\"$INFOPLIST_FILE\"\nBUNDLE_ID=`/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \"$INPUT\"`\nBUNDLE_VERSION=`/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INPUT\"`\n\nEXPANDED_BUNDLE_ID=`eval \"echo $BUNDLE_ID\"`\nEXPANDED_BUNDLE_VERSION=`eval \"echo $BUNDLE_VERSION\"`\n\nHEADER=\"$PROJECT_DIR/Source/ReceiptValidation.h\"\n\n# Check if the generation is needed\nif [ -e \"$HEADER\" ]; then\n    SKIP=`grep -q \"$EXPANDED_BUNDLE_ID\" \"$HEADER\" && grep -q \"$EXPANDED_BUNDLE_VERSION\" \"$HEADER\" && echo \"YES\"`\nfi\n\nif [ \"x$SKIP\" = \"x\" ]; then\n\t\"$RECEIGEN\" --identifier \"$EXPANDED_BUNDLE_ID\" --version \"$EXPANDED_BUNDLE_VERSION\" --os osx  \\\n\t\t--success runapplication --failure exitwith173 > \"$HEADER\"\nfi\n";
+		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -961,7 +1028,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" test*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" rate*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"UNLOCALIZED_RESOURCES_FOLDER_PATH\" DebugWindow.nib";
+			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/test*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/rate*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/DebugWindow.nib";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1080,166 +1147,111 @@
 		558DC0AE187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.9;
 			};
 			name = Debug;
 		};
-		558DC0AF187785BC00C85770 /* Release */ = {
+		558DC0AF187785BC00C85770 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx10.9;
 			};
-			name = Release;
+			name = Profile;
 		};
 		558DC0B1187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
-				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
-				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
-				CODE_SIGN_ENTITLEMENTS = Resources/Sandbox.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/Prefix.pch;
-				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
-				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = YES;
-				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_SHADOW = YES;
-				GCC_WARN_UNUSED_LABEL = YES;
-				INFOPLIST_FILE = Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PLCrashReporter/Source/";
-				WRAPPER_EXTENSION = app;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/iccir/Projects/Embrace/lib,
+				);
 			};
 			name = Debug;
 		};
-		558DC0B2187785BC00C85770 /* Release */ = {
+		558DC0B2187785BC00C85770 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/iccir/Projects/Embrace/lib,
+				);
+			};
+			name = Profile;
+		};
+		55AF60A118C94ACD00BE2212 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
-				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
-				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
-				CODE_SIGN_ENTITLEMENTS = Resources/Sandbox.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/Prefix.pch;
-				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
-				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = YES;
-				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_SHADOW = YES;
-				GCC_WARN_UNUSED_LABEL = YES;
-				INFOPLIST_FILE = Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PLCrashReporter/Source/";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
+		};
+		55AF60A218C94ACD00BE2212 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/iccir/Projects/Embrace/lib,
+				);
+			};
+			name = Release;
+		};
+		55AF60A318C94ACD00BE2212 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
+				MACH_O_TYPE = mh_execute;
+			};
+			name = Release;
+		};
+		55AF60A418C94AD100BE2212 /* Submission */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Submission;
+		};
+		55AF60A518C94AD100BE2212 /* Submission */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Ricci Adams (XXXXXXXXXX)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/iccir/Projects/Embrace/lib,
+				);
+			};
+			name = Submission;
+		};
+		55AF60A618C94AD100BE2212 /* Submission */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
+				MACH_O_TYPE = mh_execute;
+			};
+			name = Submission;
 		};
 		55DD539B18B99F4C0084628D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				MACH_O_TYPE = mh_execute;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"Resources/CrashPad-Info.plist",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
-		55DD539C18B99F4C0084628D /* Release */ = {
+		55DD539C18B99F4C0084628D /* Profile */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				ENABLE_NS_ASSERTIONS = NO;
 				MACH_O_TYPE = mh_execute;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"Resources/CrashPad-Info.plist",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
-			name = Release;
+			name = Profile;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1248,28 +1260,34 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0AE187785BC00C85770 /* Debug */,
-				558DC0AF187785BC00C85770 /* Release */,
+				558DC0AF187785BC00C85770 /* Profile */,
+				55AF60A118C94ACD00BE2212 /* Release */,
+				55AF60A418C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Profile;
 		};
 		558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0B1187785BC00C85770 /* Debug */,
-				558DC0B2187785BC00C85770 /* Release */,
+				558DC0B2187785BC00C85770 /* Profile */,
+				55AF60A218C94ACD00BE2212 /* Release */,
+				55AF60A518C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Profile;
 		};
 		55DD539A18B99F4C0084628D /* Build configuration list for PBXNativeTarget "CrashPad" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				55DD539B18B99F4C0084628D /* Debug */,
-				55DD539C18B99F4C0084628D /* Release */,
+				55DD539C18B99F4C0084628D /* Profile */,
+				55AF60A318C94ACD00BE2212 /* Release */,
+				55AF60A618C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Profile;
 		};
 /* End XCConfigurationList section */
 	};
