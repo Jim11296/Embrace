@@ -9,7 +9,15 @@
 #import <Cocoa/Cocoa.h>
 #import "AudioDevice.h"
 
+#if APP_STORE
+#include "ReceiptValidation.h"
+#endif
+
 int main(int argc, const char * argv[])
 {
-    return NSApplicationMain(argc, argv);
+#if APP_STORE
+    CheckReceiptAndRun(argc, argv);
+#else
+    return NSApplicationMain(argc,  (const char **) argv);
+#endif
 }

@@ -1,0 +1,5 @@
+PRODUCT_NAME = CrashPad
+MACH_O_TYPE = mh_execute
+OTHER_LDFLAGS = -sectcreate __TEXT __info_plist Resources/CrashPad-Info.plist
+
+CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements
