@@ -130,14 +130,17 @@ public:
 public:
 	bool				HasVolumeControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
 	bool				VolumeControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+    Float32             GetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
 	void				SetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
 
 	bool				HasMuteControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
 	bool				MuteControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+    bool                GetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
 	void				SetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
 
 	bool				HasStereoPanControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
 	bool				StereoPanControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
+    Float32             GetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
 	void				SetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
 };
 

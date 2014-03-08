@@ -506,6 +506,15 @@ bool	CAHALAudioDevice::VolumeControlIsSettable(AudioObjectPropertyScope inScope,
 	return IsPropertySettable(theAddress);
 }
 
+Float32	CAHALAudioDevice::GetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyVolumeScalar, inScope, inChannel);
+	Float32 theValue = 0.0f;
+	UInt32 theSize = sizeof(Float32);
+	GetPropertyData(theAddress, 0, NULL, theSize, &theValue);
+	return theValue;
+}
+
 void	CAHALAudioDevice::SetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue)
 {
 	CAPropertyAddress theAddress(kAudioDevicePropertyVolumeScalar, inScope, inChannel);
@@ -526,6 +535,14 @@ bool	CAHALAudioDevice::MuteControlIsSettable(AudioObjectPropertyScope inScope, U
 	return IsPropertySettable(theAddress);
 }
 
+bool	CAHALAudioDevice::GetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyMute, inScope, inChannel);
+	UInt32 theValue = 0;
+	UInt32 theSize = sizeof(UInt32);
+	GetPropertyData(theAddress, 0, NULL, theSize, &theValue);
+	return theValue != 0;
+}
 
 void	CAHALAudioDevice::SetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue)
 {
@@ -534,7 +551,6 @@ void	CAHALAudioDevice::SetMuteControlValue(AudioObjectPropertyScope inScope, UIn
 	UInt32 theSize = sizeof(UInt32);
 	SetPropertyData(theAddress, 0, NULL, theSize, &theValue);
 }
-
 
 bool	CAHALAudioDevice::HasStereoPanControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const
 {
@@ -548,6 +564,14 @@ bool	CAHALAudioDevice::StereoPanControlIsSettable(AudioObjectPropertyScope inSco
 	return IsPropertySettable(theAddress);
 }
 
+Float32	CAHALAudioDevice::GetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const
+{
+	CAPropertyAddress theAddress(kAudioDevicePropertyStereoPan, inScope, inChannel);
+	Float32 theValue = 0.0f;
+	UInt32 theSize = sizeof(Float32);
+	GetPropertyData(theAddress, 0, NULL, theSize, &theValue);
+	return theValue;
+}
 
 void	CAHALAudioDevice::SetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue)
 {

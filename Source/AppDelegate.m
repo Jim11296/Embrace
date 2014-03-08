@@ -24,6 +24,7 @@
 #import "CrashPadClient.h"
 
 #import "iTunesManager.h"
+#import "WrappedAudioDevice.h"
 
 #import <CrashReporter.h>
 #import "CrashReportSender.h"
@@ -165,6 +166,8 @@
 
     [[Player sharedInstance] saveEffectState];
     [[Player sharedInstance] hardStop];
+    
+    [WrappedAudioDevice releaseHoggedDevices];
 }
 
 

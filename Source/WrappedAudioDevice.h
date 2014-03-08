@@ -30,8 +30,6 @@
 - (BOOL) takeHogMode;
 - (void) releaseHogMode;
 
-- (void) resetVolumeAndPan;
-
 @property (nonatomic) double nominalSampleRate;
 @property (nonatomic) UInt32 frameSize;
 
