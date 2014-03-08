@@ -8,6 +8,7 @@
 
 #import "Application.h"
 #import "AppDelegate.h"
+#import "SetlistController.h"
 
 @implementation Application {
     NSHashTable *_eventListeners;
@@ -59,6 +60,8 @@
             [(AppDelegate *)[self delegate] performPreferredPlaybackAction:self];
             return;
         }
+
+        [[(AppDelegate *)[self delegate] setlistController] handleNonSpaceKeyDown];
     }
     
     [super sendEvent:event];

@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (PlaybackAction) preferredPlaybackAction;
 - (BOOL) isPreferredPlaybackActionEnabled;
 
+- (void) handleNonSpaceKeyDown;
+
 - (IBAction) increaseVolume:(id)sender;
 - (IBAction) decreaseVolume:(id)sender;
 - (IBAction) increaseAutoGap:(id)sender;

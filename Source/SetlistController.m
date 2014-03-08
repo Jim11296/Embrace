@@ -49,7 +49,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     double     _volumeBeforeKeyboard;
     double     _volumeBeforeAutoPause;
     BOOL       _didAutoPause;
-    BOOL       _confirmPauseClick;
+    BOOL       _confirmPause;
     BOOL       _willCalculateStartAndEndTimes;
 }
 
@@ -167,8 +167,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         image = [NSImage imageNamed:@"pause_template"];
 
     } else if (action == PlaybackActionTogglePause) {
-        image = _confirmPauseClick ? [NSImage imageNamed:@"stop_template"] : [NSImage imageNamed:@"pause_template"];
-        alert = _confirmPauseClick;
+        image = _confirmPause ? [NSImage imageNamed:@"stop_template"] : [NSImage imageNamed:@"pause_template"];
+        alert = _confirmPause;
         enabled = YES;
 
     } else {
@@ -317,9 +317,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (void) _clearConfirmPauseClick
+- (void) _clearConfirmPause
 {
-    _confirmPauseClick = NO;
+    _confirmPause = NO;
     [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"pause_template"] alert:NO];
     [self _updatePlayButton];
 }
@@ -606,6 +606,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (void) handleNonSpaceKeyDown
+{
+    if (_confirmPause) {
+        [self _clearConfirmPause];
+    }
+}
+
+
+
 #pragma mark - IBActions
 
 - (IBAction) performPreferredPlaybackAction:(id)sender
@@ -615,18 +624,27 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     if (action == PlaybackActionShowIssue) {
         [self showAlertForIssue:[[Player sharedInstance] issue]];
 
-    } else if (action == PlaybackActionTogglePause && (sender == [self playButton])) {
-        if (!_confirmPauseClick) {
-            _confirmPauseClick = YES;
+    } else if (action == PlaybackActionTogglePause) {
+        if (!_confirmPause) {
+            _confirmPause = YES;
 
             [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"stop_template"] alert:YES];
             
             [self _updatePlayButton];
-            [self performSelector:@selector(_clearConfirmPauseClick) withObject:nil afterDelay:5];
+            [self performSelector:@selector(_clearConfirmPause) withObject:nil afterDelay:5];
 
         } else {
-            if ([[NSApp currentEvent] clickCount] < 2) {
-                _confirmPauseClick = NO;
+            NSEvent *currentEvent = [NSApp currentEvent];
+            NSEventType type = [currentEvent type];
+            
+            BOOL isDoubleClick = NO;
+
+            if ((type == NSLeftMouseDown) || (type == NSRightMouseDown) || (type == NSOtherMouseDown)) {
+                isDoubleClick = [currentEvent clickCount] >= 2;
+            }
+        
+            if (!isDoubleClick) {
+                _confirmPause = NO;
                 [[Player sharedInstance] hardStop];
             }
         }

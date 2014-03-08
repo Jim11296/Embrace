@@ -172,6 +172,10 @@ typedef struct {
     if (object == _outputDevice) {
         if ([keyPath isEqualToString:@"connected"]) {
             [self _checkIssues];
+            
+            if (![_outputDevice isConnected]) {
+                [self hardStop];
+            }
         }
     }
 }
@@ -1047,6 +1051,9 @@ static OSStatus sInputRenderCallback(
 - (void) play
 {
     if (_currentTrack) return;
+
+    [self _reconfigureOutput];
+
     [self playNextTrack];
     
     if (_currentTrack) {
@@ -1161,10 +1168,12 @@ static OSStatus sInputRenderCallback(
     if (isRunning) {
         _renderUserInfo.stopRequested = 1;
         
-        while (_renderUserInfo.stopped == 0) {
+        NSInteger loopGuard = 0;
+        while ((_renderUserInfo.stopped == 0) && (loopGuard < 1000)) {
             usleep(1000);
+            loopGuard++;
         }
-
+        
         _renderUserInfo.stopRequested = 0;
         _renderUserInfo.stopped = 0;
 
