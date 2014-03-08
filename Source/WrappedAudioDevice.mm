@@ -11,45 +11,116 @@
 #import "CAHALAudioSystemObject.h"
 
 
-static NSMutableSet *sHoggedObjectIDs = nil;
+static NSMutableDictionary *sObjectIDToPrehoggedState = nil;
 
-#define ENABLE_MBA_WORKAROUND 0
-
-#if ENABLE_MBA_WORKAROUND
-
-static struct {
-    bool needsNonSystem;
-    AudioObjectID previousNonSystem;
-
-    bool needsSystem;
-    AudioObjectID previousSystem;
-} sWorkaroundDefaultOutputBug;
+static NSString *sVolumesKey = @"volumes";
+static NSString *sMutesKey   = @"mutes";
+static NSString *sPansKey    = @"pans";
 
 
-static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
+static NSDictionary *sGetStateDictionaryForDevice(CAHALAudioDevice *device)
 {
+    UInt32 channels = 0;
+    
+    NSDictionary *dictionary = @{
+        sVolumesKey: [NSMutableDictionary dictionary],
+        sMutesKey:   [NSMutableDictionary dictionary],
+        sPansKey:    [NSMutableDictionary dictionary]
+    };
+    
+    NSMutableDictionary *outVolumes = [dictionary objectForKey:sVolumesKey];
+    NSMutableDictionary *outMutes   = [dictionary objectForKey:sMutesKey];
+    NSMutableDictionary *outPans    = [dictionary objectForKey:sPansKey];
+    
     try {
-        if (sWorkaroundDefaultOutputBug.needsNonSystem) {
-            if (global || (myID == sWorkaroundDefaultOutputBug.previousNonSystem)) {
-                CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
-                systemObject.SetDefaultAudioDevice(false, false, sWorkaroundDefaultOutputBug.previousNonSystem);
-                sWorkaroundDefaultOutputBug.needsNonSystem = false;
-            }
-        }
+        channels = device->GetTotalNumberChannels(false);
     } catch (...) { }
 
-    try {
-        if (sWorkaroundDefaultOutputBug.needsSystem) {
-            if (global || (myID == sWorkaroundDefaultOutputBug.previousSystem)) {
-                CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
-                systemObject.SetDefaultAudioDevice(false, true, sWorkaroundDefaultOutputBug.previousSystem);
-                sWorkaroundDefaultOutputBug.needsSystem = false;
+    if (!channels) return nil;
+
+    for (UInt32 i = 0; i < (channels + 1); i++) {
+        try {
+            if (device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
+                device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                Float32 outVolume = device->GetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i);
+                [outVolumes setObject:@(outVolume) forKey:@(i)];
             }
-        }
-    } catch (...) { }
+        } catch (...) { }
+
+        try {
+            if (device->HasMuteControl(kAudioDevicePropertyScopeOutput, i) &&
+                device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                bool outMute = device->GetMuteControlValue(kAudioDevicePropertyScopeOutput, i);
+                [outMutes setObject:@(outMute) forKey:@(i)];
+            }
+        } catch (...) { }
+
+        try {
+            if (device->HasStereoPanControl(kAudioDevicePropertyScopeOutput, i) &&
+                device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                Float32 outPan = device->GetMuteControlValue(kAudioDevicePropertyScopeOutput, i);
+                [outPans setObject:@(outPan) forKey:@(i)];
+            }
+        } catch (...) { }
+    }
+    
+    return dictionary;
 }
 
-#endif
+
+
+static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary *dictionary)
+{
+    UInt32 channels = 0;
+    
+    NSDictionary *inVolumes = [dictionary objectForKey:sVolumesKey];
+    NSDictionary *inMutes   = [dictionary objectForKey:sMutesKey];
+    NSDictionary *inPans    = [dictionary objectForKey:sPansKey];
+
+    try {
+        channels = device->GetTotalNumberChannels(false);
+    } catch (...) { }
+
+    if (!channels) return;
+
+    for (UInt32 i = 0; i < (channels + 1); i++) {
+        try {
+            if (device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
+                device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                NSNumber *number = [inVolumes objectForKey:@(i)];
+                if (!number) number = @(1.0);
+
+                device->SetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i, [number floatValue]);
+            }
+        } catch (...) { }
+
+        try {
+            if (device->HasMuteControl(kAudioDevicePropertyScopeOutput, i) &&
+                device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                NSNumber *number = [inMutes objectForKey:@(i)];
+                if (!number) number = @(NO);
+
+                device->SetMuteControlValue(kAudioDevicePropertyScopeOutput, i, [number boolValue]);
+            }
+        } catch (...) { }
+
+        try {
+            if (device->HasStereoPanControl(kAudioDevicePropertyScopeOutput, i) &&
+                device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
+            {
+                NSNumber *number = [inPans objectForKey:@(i)];
+                if (!number) number = @(0.5);
+
+                device->SetStereoPanControlValue(kAudioDevicePropertyScopeOutput, i, [number floatValue]);
+            }
+        } catch (...) { }
+    }
+}
 
 
 @implementation WrappedAudioDevice {
@@ -58,16 +129,18 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
 
 + (void) releaseHoggedDevices
 {
-    for (NSNumber *number in sHoggedObjectIDs) {
+    for (NSNumber *number in sObjectIDToPrehoggedState) {
         UInt32 objectID = [number unsignedIntValue];
         CAHALAudioDevice device = CAHALAudioDevice(objectID);
         device.ReleaseHogMode();
+
+        NSDictionary *prehoggedState = [sObjectIDToPrehoggedState objectForKey:@(objectID)];
+        if (prehoggedState) {
+            sSetStateDictionaryForDevice(&device, prehoggedState);
+        }
     }
 
-#if ENABLE_MBA_WORKAROUND
-    sDoWorkaroundIfNeeded(0, true);
-    sHoggedObjectIDs = [NSMutableSet set];
-#endif
+    [sObjectIDToPrehoggedState removeAllObjects];
 }
 
 
@@ -199,44 +272,39 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
 
 - (BOOL) takeHogMode
 {
-    BOOL result = NO;
+    BOOL didHog = NO;
+    NSDictionary *state = nil;
 
     try {
         if (_device->IsHogModeSettable()) {
             pid_t owner = _device->GetHogModeOwner();
             
             if (owner == getpid()) {
-                result = YES;
+                didHog = YES;
             } else if (owner == -1) {
                 CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
-
-                result = (BOOL)_device->TakeHogMode();
                 
-                if (result) {
-#if ENABLE_MBA_WORKAROUND
-                    AudioObjectID myID = _device->GetObjectID();
-
-                    BOOL needsNonSystem = (myID == systemObject.GetDefaultAudioDevice(false, false));
-                    BOOL needsSystem    = (myID == systemObject.GetDefaultAudioDevice(false, true ));
-
-                    if (needsNonSystem) {
-                        sWorkaroundDefaultOutputBug.needsNonSystem = needsNonSystem;
-                        sWorkaroundDefaultOutputBug.previousNonSystem = myID;
-                    }
-                    
-                    if (needsSystem) {
-                        sWorkaroundDefaultOutputBug.needsSystem = needsSystem;
-                        sWorkaroundDefaultOutputBug.previousSystem = myID;
-                    }
-#endif
-                    if (!sHoggedObjectIDs) sHoggedObjectIDs = [NSMutableSet set];
-                    [sHoggedObjectIDs addObject:@( [self objectID] )];
-                }
+                state = sGetStateDictionaryForDevice(_device);
+                didHog = (BOOL)_device->TakeHogMode();
+                sSetStateDictionaryForDevice(_device, nil);
             }
         }
     } catch (...) { }
     
-    return result;
+    if (didHog) {
+        if (state) {
+            id key = @( [self objectID] );
+            if (!sObjectIDToPrehoggedState) {
+                sObjectIDToPrehoggedState = [NSMutableDictionary dictionary];
+            }
+
+            if (![sObjectIDToPrehoggedState objectForKey:key]) {
+                [sObjectIDToPrehoggedState setObject:state forKey:key];
+            }
+        }
+    }
+    
+    return didHog;
 }
 
 
@@ -245,51 +313,14 @@ static void sDoWorkaroundIfNeeded(AudioObjectID myID, bool global)
     try {
         _device->ReleaseHogMode();
         
-        AudioObjectID myID = _device->GetObjectID();
-        [sHoggedObjectIDs removeObject:@( myID )];
-
-#if ENABLE_MBA_WORKAROUND
-        sDoWorkaroundIfNeeded(myID, false);
-#endif
+        id key = @( [self objectID] );
+        
+        NSDictionary *prehoggedState = [sObjectIDToPrehoggedState objectForKey:key];
+        if (prehoggedState) {
+            sSetStateDictionaryForDevice(_device, prehoggedState);
+            [sObjectIDToPrehoggedState removeObjectForKey:key];
+        }
     } catch (...) { }
-}
-
-
-- (void) resetVolumeAndPan
-{
-    UInt32 channels = 0;
-    
-    try {
-        channels = _device->GetTotalNumberChannels(false);
-    } catch (...) { }
-
-    if (!channels) return;
-
-    for (UInt32 i = 0; i < (channels + 1); i++) {
-        try {
-            if (_device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
-                _device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-            {
-                _device->SetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i, 1.0);
-            }
-        } catch (...) { }
-
-        try {
-            if (_device->HasMuteControl(kAudioDevicePropertyScopeOutput, i) &&
-                _device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-            {
-                _device->SetMuteControlValue(kAudioDevicePropertyScopeOutput, i, false);
-            }
-        } catch (...) { }
-
-        try {
-            if (_device->HasStereoPanControl(kAudioDevicePropertyScopeOutput, i) &&
-                _device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-            {
-                _device->SetStereoPanControlValue(kAudioDevicePropertyScopeOutput, i, 0.5);
-            }
-        } catch (...) { }
-    }
 }
 
 

@@ -802,10 +802,6 @@ static OSStatus sInputRenderCallback(
 
         if (_outputHogMode) {
             _tookHogMode = [controller takeHogMode];
-
-            if (_tookHogMode) {
-                [controller resetVolumeAndPan];
-            }
         }
 
         if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
