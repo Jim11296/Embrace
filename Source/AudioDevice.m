@@ -53,6 +53,10 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
     BOOL      hoggable      = [device isHogModeSettable];
     UInt32    transportType = [device transportType];
     
+    if ([device transportType] == kAudioDeviceTransportTypeBuiltIn) {
+        hoggable = NO;
+    }
+    
     name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
