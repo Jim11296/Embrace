@@ -149,16 +149,35 @@
     [contentsAnimation setFromValue:[self _imageWithImage:[self image] tintColor:[self tintColor]]];
     [contentsAnimation setToValue:  [self _imageWithImage:image        tintColor:tintColor]];
 
-    CGFloat scale  = isPopIn ? 1.2  : 1;
+    CATransform3D popTransform = CATransform3DIdentity;
+    
+    if (isPopIn) {
+        NSPoint globalPoint = [NSEvent mouseLocation];
+    
+        NSRect  globalRect  = NSMakeRect(globalPoint.x, globalPoint.y, 0, 0);
+        
+        NSRect  windowRect = [[self window] convertRectFromScreen:globalRect];
+        NSPoint windowPoint = windowRect.origin;
+
+        NSPoint locationInSelf = [self convertPoint:windowPoint fromView:nil];
+        CGFloat jumpY = ceil(locationInSelf.y);
+
+        if (jumpY < 0) jumpY = 0;
+        
+        CGFloat scale  = isPopIn ? 1.5  : 1;
+        popTransform = CATransform3DRotate(popTransform, 0.01 * M_PI, 0, 0, 1);
+        popTransform = CATransform3DScale(popTransform, scale, scale, 1);
+        popTransform = CATransform3DTranslate(popTransform, 0, jumpY + 2, 1);
+    }
 
     [transformAnimation setValues:@[
         [NSValue valueWithCATransform3D:CATransform3DMakeScale(1,   1,    1)],
-        [NSValue valueWithCATransform3D:CATransform3DMakeScale(scale, scale,  1)],
+        [NSValue valueWithCATransform3D:popTransform],
         [NSValue valueWithCATransform3D:CATransform3DMakeScale(1,   1,    1)],
     ]];
     
     [transformAnimation setTimingFunctions:@[
-        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
         [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
         [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]
     ]];
