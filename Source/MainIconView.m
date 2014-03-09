@@ -171,9 +171,9 @@
     }
 
     [transformAnimation setValues:@[
-        [NSValue valueWithCATransform3D:CATransform3DMakeScale(1,   1,    1)],
+        [NSValue valueWithCATransform3D:CATransform3DMakeScale(1, 1, 1)],
         [NSValue valueWithCATransform3D:popTransform],
-        [NSValue valueWithCATransform3D:CATransform3DMakeScale(1,   1,    1)],
+        [NSValue valueWithCATransform3D:CATransform3DMakeScale(1, 1, 1)],
     ]];
     
     [transformAnimation setTimingFunctions:@[

@@ -80,7 +80,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     [super windowDidLoad];
 
-    [(WhiteWindow *)[self window] setupWithHeaderView:[self headerView] mainView:[self mainView]];
+    WhiteWindow *window = (WhiteWindow *)[self window];
+
+    [window setupWithHeaderView:[self headerView] mainView:[self mainView]];
     
 
     [[self headerView] setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
@@ -118,7 +120,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         [[self mainView] addSubview:topShadow];
         [[self mainView] addSubview:bottomShadow];
         
-        [(WhiteWindow *)[self window] setHiddenViewsWhenInactive:@[ topShadow, bottomShadow ]];
+        [window setHiddenViewsWhenInactive:@[ topShadow, bottomShadow ]];
     }
     
     [self setPlayer:[Player sharedInstance]];
@@ -128,12 +130,27 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[self volumeSlider] setDragDelegate:self];
     [self _updateDragSongsView];
 
-    [[self window] setExcludedFromWindowsMenu:YES];
+    [window setExcludedFromWindowsMenu:YES];
+
+    [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
 }
 
 
 #pragma mark - Private Methods
 
+- (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender
+{
+    return NSDragOperationCopy;
+}
+
+
+- (BOOL) performDragOperation:(id <NSDraggingInfo>)sender
+{
+    return [[self tracksController] acceptDrop:sender row:-1 dropOperation:NSTableViewDropOn];
+}
+
+
+#pragma mark - Private Methods
 
 - (void) _updatePlayButton
 {
