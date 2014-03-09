@@ -296,7 +296,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
-- (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
+- (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
     [self _updateInsertionPointWorkaround:NO];
 
@@ -367,6 +367,12 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     }
     
     return NO;
+}
+
+
+- (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
+{
+    return [self acceptDrop:info row:row dropOperation:dropOperation];
 }
 
 

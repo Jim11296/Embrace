@@ -203,7 +203,7 @@
             title = NSLocalizedString(@"Show Issue", nil);
 
         } else if (playbackAction == PlaybackActionTogglePause) {
-            title = NSLocalizedString(@"Pause after playing", nil);
+            title = NSLocalizedString(@"Pause", nil);
             
             BOOL yn = [[[Player sharedInstance] currentTrack] pausesAfterPlaying];
             state = yn ? NSOnState : NSOffState;

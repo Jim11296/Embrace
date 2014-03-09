@@ -29,6 +29,8 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 
 - (void) revealEndTimeForTrack:(Track *)track;
 
+- (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
+
 - (Track *) trackAtIndex:(NSUInteger)index;
 @property (nonatomic, readonly) NSArray *tracks;
 

@@ -81,14 +81,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="60" horizontalPageScroll="10" verticalLineScroll="60" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
                                 <rect key="frame" x="0.0" y="32" width="320" height="323"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowHeight="60" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -235,7 +235,7 @@
                                             </binding>
                                         </connections>
                                     </textField>
-                                    <imageView appearanceType="lightContent" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="rx0-fs-t7a">
+                                    <imageView appearanceType="lightContent" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="rx0-fs-t7a" customClass="NoDropImageView">
                                         <rect key="frame" x="20" y="10" width="15" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="padding_template" id="k41-UM-ODJ"/>
@@ -254,12 +254,12 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="68"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <subviews>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.20000000000000001" id="G6E-ZJ-gAt">
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.20000000000000001" id="G6E-ZJ-gAt" customClass="NoDropImageView">
                     <rect key="frame" x="245" y="24" width="32" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="full_volume_template" id="ba0-vH-lls"/>
                 </imageView>
-                <imageView alphaValue="0.20000000000000001" id="EkW-m3-Ouh">
+                <imageView alphaValue="0.20000000000000001" id="EkW-m3-Ouh" customClass="NoDropImageView">
                     <rect key="frame" x="49" y="24" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="no_volume_template" id="tws-Vj-Z0D"/>
