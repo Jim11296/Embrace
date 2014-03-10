@@ -273,8 +273,19 @@
     } else if (action == @selector(sendCrashReports:)){
         BOOL hasCrashReports = [_crashSender hasCrashReports];
 
-        [[self crashReportMenuItem] setHidden:!hasCrashReports];
+        [[self crashReportMenuItem]  setHidden:!hasCrashReports];
         [[self crashReportSeparator] setHidden:!hasCrashReports];
+
+        return YES;
+
+    } else if (action == @selector(openSupportFolder:)){
+        NSUInteger modifierFlags = [NSEvent modifierFlags];
+        
+        NSUInteger mask = NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask;
+        BOOL visible = ((modifierFlags & mask) == mask);
+    
+        [[self openSupportSeparator] setHidden:!visible];
+        [[self openSupportMenuItem]  setHidden:!visible];
 
         return YES;
     }
@@ -605,6 +616,15 @@
             }
         }];
     }
+}
+
+
+- (IBAction) openSupportFolder:(id)sender
+{
+    NSString *file = GetApplicationSupportDirectory();
+    file = [file stringByDeletingLastPathComponent];
+
+    [[NSWorkspace sharedWorkspace] openFile:file];
 }
 
 

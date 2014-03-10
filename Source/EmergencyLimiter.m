@@ -10,7 +10,7 @@
 
 #import <Accelerate/Accelerate.h>
 
-#define CHECK_RESULTS 1
+#define CHECK_RESULTS 0
 
 static float sPeakValue =  1.0 - (2.0 / 32767.0);
 

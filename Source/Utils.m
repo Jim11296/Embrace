@@ -73,7 +73,8 @@ BOOL CheckError(OSStatus error, const char *operation)
 	if (error == noErr) return YES;
 	
 	NSLog(@"Error: %s (%@)\n", operation, GetStringForFourCharCode(error));
-    
+    EmbraceLog(@"CheckError", @"Error: %s (%@)", operation, GetStringForFourCharCode(error));
+
     return NO;
 }
 
@@ -264,5 +265,69 @@ NSString *GetApplicationSupportDirectory()
     return sFindOrCreateDirectory(NSApplicationSupportDirectory, NSUserDomainMask, name, NULL);
 }
 
+
+static NSURL        *sLogFileURL = nil;
+static NSFileHandle *sLogFileHandle = nil;
+
+void EmbraceRotateLogs()
+{
+    EmbraceLog(@"EmbraceRotateLogs", @"EmbraceRotateLogs() called, rotating");
+
+    [sLogFileHandle closeFile];
+    sLogFileHandle = nil;
+    
+    NSURL *previousURL = [sLogFileURL URLByDeletingLastPathComponent];
+    previousURL = [previousURL URLByAppendingPathComponent:@"previous.log"];
+
+    NSError *error = nil;
+    
+    [[NSFileManager defaultManager] removeItemAtURL:previousURL error:&error];
+    [[NSFileManager defaultManager] moveItemAtURL:sLogFileURL toURL:previousURL error:&error];
+
+    sLogFileURL = nil;
+}
+
+
+void EmbraceLog(NSString *category, NSString *format, ...)
+{
+    va_list v;
+
+    if (!sLogFileHandle) {
+        NSError *error = nil;
+
+        NSString *path = GetApplicationSupportDirectory();
+        path = [path stringByAppendingPathComponent:@"Logs"];
+
+        [[NSFileManager defaultManager] createDirectoryAtURL:[NSURL fileURLWithPath:path] withIntermediateDirectories:YES attributes:nil error:&error];
+
+        path = [path stringByAppendingPathComponent:@"current.log"];
+
+        if (!sLogFileURL) {
+            sLogFileURL = [NSURL fileURLWithPath:path];
+        }
+
+        [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
+        
+        sLogFileHandle = [NSFileHandle fileHandleForUpdatingURL:sLogFileURL error:&error];
+        if (error) {
+            NSLog(@"Error opening log file: %@", error);
+        }
+    }
+
+    va_start(v, format);
+
+    static NSData *sNewline = nil;
+    if (!sNewline) {
+        UInt8 byte = '\n';
+        sNewline = [NSData dataWithBytes:&byte length:1];
+    }
+    
+    NSString *line = [[NSString alloc] initWithFormat:format arguments:v];
+
+    [sLogFileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+    [sLogFileHandle writeData:sNewline];
+    
+    va_end(v);
+}
 
 

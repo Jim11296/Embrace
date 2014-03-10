@@ -442,6 +442,8 @@ typedef struct {
 
     double preGain = preamp + replayGain;
 
+    EmbraceLog(@"Player", @"updating preGain to %g, trackLoudness=%g, trackPeak=%g, replayGain=%g", preGain, trackLoudness, trackPeak, replayGain);
+
     AudioUnitParameter parameter = {
         _limiterAudioUnit,
         kLimiterParam_PreGain,
@@ -555,6 +557,7 @@ static OSStatus sInputRenderCallback(
     _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack outputFormat:outputStream];
     
     if (![_currentScheduler setup]) {
+        EmbraceLog(@"Player", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
         [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
         return;
     }
@@ -787,6 +790,7 @@ static OSStatus sInputRenderCallback(
         WrappedAudioDevice *controller = [device controller];
         
         if ([controller isHoggedByMe]) {
+            EmbraceLog(@"Player", @"Un-oink");
             [controller releaseHogMode];
         }
     }
@@ -801,6 +805,7 @@ static OSStatus sInputRenderCallback(
         [controller setFrameSize:_outputFrames];
 
         if (_outputHogMode) {
+            EmbraceLog(@"Player", @"Oink!");
             _tookHogMode = [controller takeHogMode];
         }
 
@@ -899,12 +904,16 @@ static OSStatus sInputRenderCallback(
 
 - (void) _setupAndStartPlayback
 {
+    EmbraceLog(@"Player", @"_setupAndStartPlayback");
+    
     PlayerShouldUseCrashPad = 0;
 
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
     if (![track didAnalyzeLoudness] && ![track trackError]) {
+        EmbraceLog(@"Player", @"%@ isn't ready, calling startPriorityAnalysis", track);
+
         [track startPriorityAnalysis];
         [self performSelector:@selector(_setupAndStartPlayback) withObject:nil afterDelay:0.1];
         return;
@@ -912,6 +921,7 @@ static OSStatus sInputRenderCallback(
 
     NSURL *fileURL = [track fileURL];
     if (!fileURL) {
+        EmbraceLog(@"Player", @"No URL for %@!", track);
         [self hardStop];
         return;
     }
@@ -930,6 +940,7 @@ static OSStatus sInputRenderCallback(
 
     BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_generatorAudioUnit timeStamp:timestamp];
     if (!didScheldule) {
+        EmbraceLog(@"Player", @"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
         [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
         return;
     }
@@ -961,6 +972,7 @@ static OSStatus sInputRenderCallback(
         _currentStartHostTime = startTime.mHostTime;
     }
 
+    EmbraceLog(@"Player", @"setup complete, starting graph");
     [self _startGraph];
 }
 
@@ -1120,6 +1132,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) hardSkip
 {
+    EmbraceLog(@"Player", @"-hardSkip");
+    
     if (!_currentTrack) return;
 
     Track *nextTrack = nil;
@@ -1145,6 +1159,8 @@ static OSStatus sInputRenderCallback(
 - (void) hardStop
 {
     if (!_currentTrack) return;
+
+    EmbraceLog(@"Player", @"-hardStop");
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setupAndStartPlayback) object:nil];
 

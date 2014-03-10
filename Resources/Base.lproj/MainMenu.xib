@@ -23,14 +23,23 @@
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="oex-bD-CGM"/>
-                            <menuItem title="Send Crash Report…" id="H4P-8S-3EP">
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="oex-bD-CGM"/>
+                            <menuItem title="Send Crash Report…" hidden="YES" id="H4P-8S-3EP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="sendCrashReports:" target="494" id="x9E-zb-h8e"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="236">
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="236">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Open Support Folder" hidden="YES" id="Zbe-Fj-v6o">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openSupportFolder:" target="494" id="XS0-Pz-ba6"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="VFt-Em-ItT">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
                             <menuItem title="Preferences…" keyEquivalent="," id="129">
@@ -401,6 +410,8 @@ CA
                 <outlet property="crashReportMenuItem" destination="H4P-8S-3EP" id="R8o-wr-Axn"/>
                 <outlet property="crashReportSeparator" destination="oex-bD-CGM" id="JR6-hR-9EA"/>
                 <outlet property="debugMenuItem" destination="SIh-TN-z42" id="zFu-2M-2jM"/>
+                <outlet property="openSupportMenuItem" destination="Zbe-Fj-v6o" id="iB2-6X-UnM"/>
+                <outlet property="openSupportSeparator" destination="236" id="0zG-yK-6Kr"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>

@@ -84,6 +84,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [_audioFile open],
         "[_audioFile open]"
     )) {
+        EmbraceLog(@"TrackScheduler", @"%@, Could not open AudioFile", _track);
         [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
@@ -92,6 +93,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [_audioFile getFileDataFormat:&fileFormat],
         "[_audioFile getFileDataFormat:]"
     )) {
+        EmbraceLog(@"TrackScheduler", @"%@, Could not get data format for AudioFile", _track);
         [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
@@ -102,6 +104,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [_audioFile setClientDataFormat:&_clientFormat],
         "[_audioFile getClientDataFormat:]"
     )) {
+        EmbraceLog(@"TrackScheduler", @"%@, Could not set client format for AudioFile", _track);
         [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
@@ -110,6 +113,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         ![_audioFile convert] &&
         ![_audioFile canRead])
     {
+        EmbraceLog(@"TrackScheduler", @"%@, read/convert/read error: %ld", _track, (long)[_audioFile audioFileError]);
         [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
@@ -119,6 +123,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [_audioFile getFileLengthFrames:&fileLengthFrames],
         "[_audioFile getFileLengthFrames:]"
     )) {
+        EmbraceLog(@"TrackScheduler", @"%@, could not get file length frames for AudioFile", _track);
         [self setAudioFileError:[_audioFile audioFileError]];
         return NO;
     }
@@ -128,11 +133,13 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         NSInteger totalFrames = fileLengthFrames;
         
         NSInteger startFrame  = [_track startTime] * _clientFormat.mSampleRate;
+        NSInteger stopFrame   = 0;
+
         if (startFrame < 0) startFrame = 0;
         if (startFrame > totalFrames) startFrame = totalFrames;
 
         if ([_track stopTime]) {
-            NSInteger stopFrame  = [_track stopTime] * _clientFormat.mSampleRate;
+            stopFrame  = [_track stopTime] * _clientFormat.mSampleRate;
             if (stopFrame < 0) stopFrame = 0;
             if (stopFrame > totalFrames) stopFrame = totalFrames;
 
@@ -141,11 +148,14 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             totalFrames -= startFrame;
         }
 
+        EmbraceLog(@"TrackScheduler", @"%@ fileLengthFrames: %ld, totalFrames: %ld, startFrame: %ld, stopFrame: %ld", _track, (long)fileLengthFrames, (long)totalFrames, (long)startFrame, (long)stopFrame);
+
         if (startFrame) {
             if (!CheckError(
                 [_audioFile seekToFrame:startFrame],
                 "[_audioFile seekToFrame:]"
             )) {
+                EmbraceLog(@"TrackScheduler", @"%@ seekToFrame failed for AudioFile", _track);
                 [self setAudioFileError:[_audioFile audioFileError]];
             }
         }
@@ -161,6 +171,8 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
 - (void) _setupBuffers
 {
+    EmbraceLog(@"TrackScheduler", @"%@ setting up buffers", _track);
+    
     UInt32 bufferCount = _clientFormat.mChannelsPerFrame;
 
     UInt32 totalFrames = (UInt32)[self totalFrames];
@@ -278,6 +290,8 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         return NO;
     }
 
+    EmbraceLog(@"TrackScheduler", @"%@ startScheduling called", _track);
+    
     ScheduledAudioSlice *slice = _slice;
 
     NSInteger totalFrames = [self totalFrames];
@@ -299,8 +313,11 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     //
     int64_t fiveSecondsInNs = 5 * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(primeSemaphore, dispatch_time(0, fiveSecondsInNs))) {
+        EmbraceLog(@"TrackScheduler", @"dispatch_semaphore_wait() timed out for %@", _track);
         [self setAudioFileError:AudioFileErrorReadTooSlow];
     }
+
+    EmbraceLog(@"TrackScheduler", @"%@ primed!", _track);
     
     if ([self rawError] || [self audioFileError]) {
         [self setShouldCancelRead:YES];
@@ -322,6 +339,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
 - (void) stopScheduling:(AudioUnit)audioUnit
 {
+    EmbraceLog(@"TrackScheduler", @"%@ stopScheduling called", _track);
     AudioUnitReset(audioUnit, kAudioUnitScope_Global, 0);
 }
 

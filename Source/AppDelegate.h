@@ -59,10 +59,14 @@
 - (IBAction) showDebugWindow:(id)sender;
 
 - (IBAction) sendCrashReports:(id)sender;
+- (IBAction) openSupportFolder:(id)sender;
 
 @property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
 
 @property (nonatomic, weak) IBOutlet NSMenuItem *crashReportSeparator;
 @property (nonatomic, weak) IBOutlet NSMenuItem *crashReportMenuItem;
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *openSupportSeparator;
+@property (nonatomic, weak) IBOutlet NSMenuItem *openSupportMenuItem;
 
 @end

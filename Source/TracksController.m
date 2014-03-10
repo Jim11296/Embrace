@@ -298,6 +298,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
+    EmbraceLog(@"TracksController", @"Accepting drop");
+
     [self _updateInsertionPointWorkaround:NO];
 
     NSPasteboard *pboard = [info draggingPasteboard];
@@ -317,6 +319,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
             row--;
         }
 
+        EmbraceLog(@"TracksController", @"Moving track from %ld to %ld", (long)_rowOfDraggedTrack, row);
+
         Track *draggedTrack = [self trackAtIndex:_rowOfDraggedTrack];
         [[self tableView] moveRowAtIndex:_rowOfDraggedTrack toIndex:row];
         
@@ -333,6 +337,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         NSMutableArray    *tracks   = [NSMutableArray array];
         NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
 
+        EmbraceLog(@"TracksController", @"Adding tracks: %@", filenames);
+        
         for (NSString *filename in filenames) {
             NSURL *URL = [NSURL fileURLWithPath:filename];
 
@@ -354,6 +360,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
     } else if (URLString) {
         NSURL *URL = [NSURL URLWithString:URLString];
+
+        EmbraceLog(@"TracksController", @"Adding track: %@", URL);
 
         Track *track = [Track trackWithFileURL:URL];
         if (track) {
