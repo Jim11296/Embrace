@@ -431,7 +431,11 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) clear
 {
+    EmbraceLog(@"SetlistController", @"-clear");
+
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
+
+    EmbraceRotateLogs();
 
     [[self tracksController] removeAllTracks];
 }
@@ -439,6 +443,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) resetPlayedTracks
 {
+    EmbraceLog(@"SetlistController", @"-resetPlayedTracks");
     [[self tracksController] resetPlayedTracks];
 }
 
@@ -466,12 +471,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) openFileAtURL:(NSURL *)URL
 {
+    EmbraceLog(@"SetlistController", @"-openFileAtURL: %@", URL);
+
     [[self tracksController] addTrackAtURL:URL];
 }
 
 
 - (void) copyToPasteboard:(NSPasteboard *)pasteboard
 {
+    EmbraceLog(@"SetlistController", @"-copyToPasteboard:");
+
     NSString *contents = [self _contentsAsString];
 
     NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:contents ofType:NSPasteboardTypeString];
@@ -483,13 +492,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) saveToFileAtURL:(NSURL *)url
 {
+    EmbraceLog(@"SetlistController", @"-saveToFileAtURL:%@", url);
+
     NSString *contents = [self _contentsAsString];
 
     NSError *error = nil;
     [contents writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
 
     if (error) {
-        NSLog(@"Error saving set list: %@", error);
+        EmbraceLog(@"SetlistController", @"Error saving set list to %@, %@", url, error);
         NSBeep();
     }
     
@@ -499,6 +510,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) exportToPlaylist
 {
+    EmbraceLog(@"SetlistController", @"exportToPlaylist");
+
     NSMutableArray *fileURLs = [NSMutableArray array];
     
     for (Track *track in [[self tracksController] tracks]) {
@@ -687,18 +700,21 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) increaseVolume:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-increaseVolume:");
     [self _increaseOrDecreaseVolumeByAmount:0.04];
 }
 
 
 - (IBAction) decreaseVolume:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-decreaseVolume:");
     [self _increaseOrDecreaseVolumeByAmount:-0.04];
 }
 
 
 - (IBAction) increaseAutoGap:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-increaseAutoGap:");
     NSTimeInterval value = [self minimumSilenceBetweenTracks] + 1;
     if (value > sAutoGapMaximum) value = sAutoGapMaximum;
     [self setMinimumSilenceBetweenTracks:value];
@@ -707,6 +723,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) decreaseAutoGap:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-decreaseAutoGap:");
     NSTimeInterval value = [self minimumSilenceBetweenTracks] - 1;
     if (value < sAutoGapMinimum) value = sAutoGapMinimum;
     [self setMinimumSilenceBetweenTracks:value];
@@ -715,18 +732,22 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) changeVolume:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-changeVolume:");
     [sender setNeedsDisplay];
 }
 
 
 - (IBAction) delete:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-delete:");
     [[self tracksController] delete:sender];
 }
 
 
 - (void) revealEndTime:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-revealEndTime:");
+
     Track *track = [[self tracksController] selectedTrack];
     if (!track) return;
 
@@ -745,6 +766,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) togglePauseAfterPlaying:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-togglePauseAfterPlaying:");
+
     Track *track = [[self tracksController] selectedTrack];
     
     if ([track trackStatus] != TrackStatusPlayed) {
@@ -756,6 +779,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) toggleMarkAsPlayed:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-toggleMarkAsPlayed:");
+
     Track *track = [[self tracksController] selectedTrack];
 
     if ([[self tracksController] canChangeTrackStatusOfTrack:track]) {
@@ -772,6 +797,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) showGearMenu:(id)sender
 {
+    EmbraceLog(@"SetlistController", @"-showGearMenu:");
+
     NSButton *gearButton = [self gearButton];
     NSMenu *menu = [gearButton menu];
     [NSMenu popUpContextMenu:menu withEvent:[NSApp currentEvent] forView:gearButton];
@@ -952,6 +979,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             padding = 0;
         }
     }
+
+    EmbraceLog(@"SetlistController", @"-player:getNextTrack:getPadding:, currentTrack=%@, nextTrack=%@, padding=%g", currentTrack, trackToPlay, padding);
     
     *outNextTrack = trackToPlay;
     *outPadding   = padding;

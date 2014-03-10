@@ -174,6 +174,22 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 }
 
 
+- (NSString *) description
+{
+    NSString *friendlyString = [self title];
+    
+    if ([friendlyString length] == 0) {
+        friendlyString = [[_fileURL path] lastPathComponent];
+    }
+
+    if ([friendlyString length]) {
+        return [NSString stringWithFormat:@"<%@: %p, \"%@\">", [self class], self, friendlyString];
+    } else {
+        return [super description];
+    }
+}
+
+
 - (void) dealloc
 {
     [self _clearTrackDataForAnalysis];
@@ -194,6 +210,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (id) valueForUndefinedKey:(NSString *)key
 {
+    EmbraceLog(@"Track", @"-valueForUndefinedKey: %@", key);
     NSLog(@"-[Track valueForUndefinedKey:], key: %@", key);
     return nil;
 }
@@ -201,6 +218,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
+    EmbraceLog(@"Track", @"-setValue:forUndefinedKey: %@", key);
     NSLog(@"-[Track setValue:forUndefinedKey:], key: %@", key);
 }
 
@@ -316,6 +334,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void) _handleResolvedURL:(NSURL *)fileURL bookmark:(NSData *)bookmark
 {
+    EmbraceLog(@"Track", @"%@ resolved %@ to bookmark %@", self, fileURL, bookmark);
+
     if (![_bookmark isEqual:bookmark]) {
         _bookmark = bookmark;
         _dirty = YES;
@@ -323,8 +343,9 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     _fileURL = fileURL;
 
+
     if (![_fileURL startAccessingSecurityScopedResource]) {
-        NSLog(@"startAccessingSecurityScopedResource failed");
+        EmbraceLog(@"Track", @"%@, -startAccessingSecurityScopedResource failed for %@", self, _fileURL);
     }
 
 
@@ -355,12 +376,12 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     dispatch_async(sResolverQueue, ^{
         if (!bookmark) {
             [fileURL startAccessingSecurityScopedResource];
-
+            
             NSError *error = nil;
             bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
 
             if (error) {
-                NSLog(@"Error creating bookmark for %@: %@", fileURL, error);
+                EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, fileURL, error);
             }
 
             [fileURL stopAccessingSecurityScopedResource];
@@ -377,8 +398,18 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
                                               error: &error];
 
         if (isStale) {
-            [fileURL startAccessingSecurityScopedResource];
+            EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
+
+            if (![fileURL startAccessingSecurityScopedResource]) {
+                EmbraceLog(@"Track", @"%@ -startAccessingSecurityScopedResource failed for %@", self, fileURL);
+            }
+
             bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+
+            if (error) {
+                EmbraceLog(@"Track", @"%@ error refreshing bookmark: %@", self, error);
+            }
+
             [fileURL stopAccessingSecurityScopedResource];
         }
 
@@ -461,6 +492,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void) _handleTrackAnalyzerDidAnalyze:(TrackAnalyzerResult *)result
 {
+    EmbraceLog(@"Track", @"%@ analysis result %@.  loudness: %g, peak: %g, error: %ld", self, result, [result loudness], [result peak], (long)[result error]);
+
     if (_trackAnalyzer && result) {
         NSMutableDictionary *state = [NSMutableDictionary dictionary];
         
@@ -485,6 +518,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 {
     [_trackAnalyzer cancel];
     _trackAnalyzer = nil;
+
+    EmbraceLog(@"Track", @"%@ requesting analysis, immediately=%ld", self, (long)immediately);
 
     TrackAnalyzer *trackAnalyzer = [[TrackAnalyzer alloc] init];
     
@@ -511,8 +546,13 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 {
     iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
     
-    [self setStartTime:[metadata startTime]];
-    [self setStopTime: [metadata stopTime]];
+    NSTimeInterval startTime = [metadata startTime];
+    NSTimeInterval stopTime  = [metadata stopTime];
+    
+    EmbraceLog(@"Track", @"%@ updated startTime=%g, stopTime=%g", self, startTime, stopTime);
+    
+    [self setStartTime:startTime];
+    [self setStopTime: stopTime];
 }
 
 
@@ -525,17 +565,29 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     iTunesPasteboardMetadata *pasteboardMetadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:fileURL];
     
     if (pasteboardMetadata) {
-        if (!_title)      [self setTitle:[pasteboardMetadata title]];
-        if (!_artist)     [self setArtist:[pasteboardMetadata artist]];
-        if (!_duration)   [self setDuration:[pasteboardMetadata duration]];
-        if (!_databaseID) [self setDatabaseID:[pasteboardMetadata trackID]];
+        NSString      *title      = [pasteboardMetadata title];
+        NSString      *artist     = [pasteboardMetadata artist];
+        NSTimeInterval duration   = [pasteboardMetadata duration];
+        NSInteger      databaseID = [pasteboardMetadata trackID];
+
+        EmbraceLog(@"Track", @"%@ has pasteboard metadata: title=%@, artist=%@, duration=%g, databaseID=%ld", self, title, artist, duration, databaseID);
+        
+        if (!_title)      [self setTitle:title];
+        if (!_artist)     [self setArtist:artist];
+        if (!_duration)   [self setDuration:duration];
+        if (!_databaseID) [self setDatabaseID:databaseID];
     }
 
     if ([[iTunesManager sharedInstance] didParseLibrary]) {
         iTunesLibraryMetadata *libraryMetadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:fileURL];
 
-        [self setStartTime:[libraryMetadata startTime]];
-        [self setStopTime: [libraryMetadata stopTime]];
+        NSTimeInterval startTime = [libraryMetadata startTime];
+        NSTimeInterval stopTime  = [libraryMetadata stopTime];
+        
+        EmbraceLog(@"Track", @"%@ has library metadata: startTime=%g, stopTime=%g", self, startTime, stopTime);
+        
+        [self setStartTime:startTime];
+        [self setStopTime: stopTime];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidUpdateLibraryMetadata:) name:iTunesManagerDidUpdateLibraryMetadataNotification object:nil];
@@ -764,6 +816,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 - (void) setTrackError:(TrackError)trackError
 {
     if (_trackError != trackError) {
+        EmbraceLog(@"Track", @"%@ setting error to %ld", self, trackError);
+
         _trackError = trackError;
         _dirty = YES;
         [self _saveStateImmediately:NO];
