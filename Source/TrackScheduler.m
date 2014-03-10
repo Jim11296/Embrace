@@ -11,6 +11,7 @@
 #import "AudioFile.h"
 #import "Player.h"
 
+#define ADD_WHITE_NOISE_TO_BUFFER 0
 
 @interface TrackScheduler ()
 @property (atomic) NSInteger      totalFrames;
@@ -135,7 +136,9 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             if (stopFrame < 0) stopFrame = 0;
             if (stopFrame > totalFrames) stopFrame = totalFrames;
 
-            totalFrames = stopFrame;
+            totalFrames = (stopFrame - startFrame);
+        } else {
+            totalFrames -= startFrame;
         }
 
         if (startFrame) {
@@ -171,6 +174,14 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         list->mBuffers[i].mNumberChannels = 1;
         list->mBuffers[i].mDataByteSize = (UInt32)totalBytes;
         list->mBuffers[i].mData = malloc(totalBytes);
+
+#if ADD_WHITE_NOISE_TO_BUFFER
+        float *samples = (float *) list->mBuffers[i].mData;
+        for (NSInteger z= 0; z < totalFrames; z++) {
+            float diff = 1.0 - -1.0;
+            samples[z] =  (((float) rand() / RAND_MAX) * diff) - 1.0;
+        }
+#endif
     }
 
     _slice = calloc(1, sizeof(ScheduledAudioSlice));
@@ -286,7 +297,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     // Wait for the prime semaphore, this should be very fast.  If we can't decode at least 10 seconds
     // of audio in 5 seconds, something is wrong, and flip the error to "read too slow"
     //
-    int64_t fiveSecondsInNs = 15 * 1000 * 1000 * 1000;
+    int64_t fiveSecondsInNs = 5 * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(primeSemaphore, dispatch_time(0, fiveSecondsInNs))) {
         [self setAudioFileError:AudioFileErrorReadTooSlow];
     }
