@@ -71,8 +71,7 @@ static NSDictionary *sGetStateDictionaryForDevice(CAHALAudioDevice *device)
 }
 
 
-
-static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary *dictionary)
+static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary *dictionary, NSDictionary *defaults)
 {
     UInt32 channels = 0;
     
@@ -92,8 +91,8 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary 
                 device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
             {
                 NSNumber *number = [inVolumes objectForKey:@(i)];
-                if (!number) number = @(1.0);
-
+                if (!number) number = [defaults objectForKey:sVolumesKey];
+                
                 device->SetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i, [number floatValue]);
             }
         } catch (...) { }
@@ -103,8 +102,8 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary 
                 device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
             {
                 NSNumber *number = [inMutes objectForKey:@(i)];
-                if (!number) number = @(NO);
-
+                if (!number) number = [defaults objectForKey:sMutesKey];
+                
                 device->SetMuteControlValue(kAudioDevicePropertyScopeOutput, i, [number boolValue]);
             }
         } catch (...) { }
@@ -114,12 +113,32 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary 
                 device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
             {
                 NSNumber *number = [inPans objectForKey:@(i)];
-                if (!number) number = @(0.5);
+                if (!number) number = [defaults objectForKey:sPansKey];
 
                 device->SetStereoPanControlValue(kAudioDevicePropertyScopeOutput, i, [number floatValue]);
             }
         } catch (...) { }
     }
+}
+
+
+static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedState)
+{
+    try {
+        if (prehoggedState) {
+            sSetStateDictionaryForDevice(device, nil, @{
+                sVolumesKey: @(0.0),
+                sMutesKey:   @YES,
+                sPansKey:    @(0.5)
+            });
+        }
+        
+        device->ReleaseHogMode();
+        
+        if (prehoggedState) {
+            sSetStateDictionaryForDevice(device, prehoggedState, nil);
+        }
+    } catch (...) { }
 }
 
 
@@ -131,13 +150,11 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary 
 {
     for (NSNumber *number in sObjectIDToPrehoggedState) {
         UInt32 objectID = [number unsignedIntValue];
-        CAHALAudioDevice device = CAHALAudioDevice(objectID);
-        device.ReleaseHogMode();
 
         NSDictionary *prehoggedState = [sObjectIDToPrehoggedState objectForKey:@(objectID)];
-        if (prehoggedState) {
-            sSetStateDictionaryForDevice(&device, prehoggedState);
-        }
+        CAHALAudioDevice device = CAHALAudioDevice(objectID);
+
+        sReleaseHogMode(&device, prehoggedState);
     }
 
     [sObjectIDToPrehoggedState removeAllObjects];
@@ -286,7 +303,13 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary 
                 
                 state = sGetStateDictionaryForDevice(_device);
                 didHog = (BOOL)_device->TakeHogMode();
-                sSetStateDictionaryForDevice(_device, nil);
+
+
+                sSetStateDictionaryForDevice(_device, nil, @{
+                    sVolumesKey: @(1.0),
+                    sMutesKey:   @NO,
+                    sPansKey:    @(0.5)
+                });
             }
         }
     } catch (...) { }
@@ -310,17 +333,14 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSDictionary 
 
 - (void) releaseHogMode
 {
-    try {
-        _device->ReleaseHogMode();
-        
-        id key = @( [self objectID] );
-        
-        NSDictionary *prehoggedState = [sObjectIDToPrehoggedState objectForKey:key];
-        if (prehoggedState) {
-            sSetStateDictionaryForDevice(_device, prehoggedState);
-            [sObjectIDToPrehoggedState removeObjectForKey:key];
-        }
-    } catch (...) { }
+    id key = @( [self objectID] );
+    NSDictionary *prehoggedState = [sObjectIDToPrehoggedState objectForKey:key];
+
+    sReleaseHogMode(_device, prehoggedState);
+
+    if (prehoggedState) {
+        [sObjectIDToPrehoggedState removeObjectForKey:key];
+    }
 }
 
 
