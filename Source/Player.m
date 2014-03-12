@@ -156,6 +156,8 @@ typedef struct {
 - (id) init
 {
     if ((self = [super init])) {
+        EmbraceLog(@"Player", @"-init");
+
         _volume = -1;
 
         [self _buildTailGraph];
@@ -414,6 +416,8 @@ typedef struct {
 
 - (void) _updateLoudnessAndPreAmp
 {
+    EmbraceLog(@"Player", @"-_updateLoudnessAndPreAmp");
+
     if (![_currentTrack didAnalyzeLoudness]) {
         return;
     }
@@ -750,6 +754,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) _checkIssues
 {
+    EmbraceLog(@"Player", @"-_checkIssues");
+
     PlayerIssue issue = PlayerIssueNone;
     
     BOOL isHogged = [[_outputDevice controller] isHoggedByAnotherProcess];
@@ -763,6 +769,8 @@ static OSStatus sInputRenderCallback(
     }
 
     if (issue != _issue) {
+        EmbraceLog(@"Player", @"issue is %ld", (long) issue);
+
         [self setIssue:issue];
 
         for (id<PlayerListener> listener in _listeners) {
@@ -775,6 +783,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) _reconfigureOutput
 {
+    EmbraceLog(@"Player", @"-_reconfigureOutput");
+
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);
     
@@ -904,7 +914,7 @@ static OSStatus sInputRenderCallback(
 
 - (void) _setupAndStartPlayback
 {
-    EmbraceLog(@"Player", @"_setupAndStartPlayback");
+    EmbraceLog(@"Player", @"-_setupAndStartPlayback");
     
     PlayerShouldUseCrashPad = 0;
 
@@ -979,6 +989,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) _startGraph
 {
+    EmbraceLog(@"Player", @"-_startGraph");
+
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);
 
@@ -992,6 +1004,7 @@ static OSStatus sInputRenderCallback(
 
 - (void) _stopGraph
 {
+    EmbraceLog(@"Player", @"-_stopGraph");
     CheckError(AUGraphStop(_graph), "AUGraphStop");
 }
 
@@ -1027,6 +1040,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) playNextTrack
 {
+    EmbraceLog(@"Player", @"-playNextTrack");
+
     Track *nextTrack = nil;
     NSTimeInterval padding = 0;
 
@@ -1058,6 +1073,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) play
 {
+    EmbraceLog(@"Player", @"-play");
+
     if (_currentTrack) return;
 
     [self _reconfigureOutput];
@@ -1096,6 +1113,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) softPause
 {
+    EmbraceLog(@"Player", @"-softPause");
+
     if (_currentTrack) {
         TrackStatus trackStatus = [_currentTrack trackStatus];
         BOOL isEndSilence   = _timeRemaining <= [_currentTrack silenceAtEnd];
@@ -1133,7 +1152,7 @@ static OSStatus sInputRenderCallback(
 - (void) hardSkip
 {
     EmbraceLog(@"Player", @"-hardSkip");
-    
+
     if (!_currentTrack) return;
 
     Track *nextTrack = nil;
@@ -1158,9 +1177,9 @@ static OSStatus sInputRenderCallback(
 
 - (void) hardStop
 {
-    if (!_currentTrack) return;
-
     EmbraceLog(@"Player", @"-hardStop");
+
+    if (!_currentTrack) return;
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setupAndStartPlayback) object:nil];
 

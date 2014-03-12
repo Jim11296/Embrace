@@ -268,6 +268,7 @@ NSString *GetApplicationSupportDirectory()
 
 static NSURL        *sLogFileURL = nil;
 static NSFileHandle *sLogFileHandle = nil;
+static NSDateFormatter *sLogFileDateFormatter = nil;
 
 void EmbraceRotateLogs()
 {
@@ -276,13 +277,17 @@ void EmbraceRotateLogs()
     [sLogFileHandle closeFile];
     sLogFileHandle = nil;
     
-    NSURL *previousURL = [sLogFileURL URLByDeletingLastPathComponent];
-    previousURL = [previousURL URLByAppendingPathComponent:@"previous.log"];
+    NSURL *previousURL1 = [sLogFileURL URLByDeletingLastPathComponent];
+    previousURL1 = [previousURL1 URLByAppendingPathComponent:@"previous.1.log"];
+
+    NSURL *previousURL2 = [sLogFileURL URLByDeletingLastPathComponent];
+    previousURL2 = [previousURL2 URLByAppendingPathComponent:@"previous.2.log"];
 
     NSError *error = nil;
     
-    [[NSFileManager defaultManager] removeItemAtURL:previousURL error:&error];
-    [[NSFileManager defaultManager] moveItemAtURL:sLogFileURL toURL:previousURL error:&error];
+    [[NSFileManager defaultManager] removeItemAtURL:previousURL2 error:&error];
+    [[NSFileManager defaultManager] moveItemAtURL:previousURL1 toURL:previousURL2 error:&error];
+    [[NSFileManager defaultManager] moveItemAtURL:sLogFileURL toURL:previousURL1 error:&error];
 
     sLogFileURL = nil;
 }
@@ -316,16 +321,17 @@ void EmbraceLog(NSString *category, NSString *format, ...)
 
     va_start(v, format);
 
-    static NSData *sNewline = nil;
-    if (!sNewline) {
-        UInt8 byte = '\n';
-        sNewline = [NSData dataWithBytes:&byte length:1];
+    if (!sLogFileDateFormatter) {
+        sLogFileDateFormatter = [[NSDateFormatter alloc] init];
+        [sLogFileDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+        [sLogFileDateFormatter setDateStyle:NSDateFormatterNoStyle];
     }
-    
-    NSString *line = [[NSString alloc] initWithFormat:format arguments:v];
 
+    NSString *dateString = [sLogFileDateFormatter stringFromDate:[NSDate date]];
+    NSString *contents = [[NSString alloc] initWithFormat:format arguments:v];
+
+    NSString *line = [NSString stringWithFormat:@"%@ [%@] %@\n", dateString, category, contents];
     [sLogFileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
-    [sLogFileHandle writeData:sNewline];
     
     va_end(v);
 }
