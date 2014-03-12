@@ -67,6 +67,8 @@ static NSString * const sLocationKey  = @"Location";
 
     dispatch_queue_t _tunesQueue;
     
+    NSTimer *_checkTimer;
+    
 }
 
 
@@ -86,15 +88,22 @@ static NSString * const sLocationKey  = @"Location";
 - (id) init
 {
     if ((self = [super init])) {
-        NSArray  *paths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
-        NSString *path  = [paths firstObject];
+        NSArray  *musicPaths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
+        NSString *musicPath  = [musicPaths firstObject];
         
-        path = [path stringByAppendingPathComponent:@"iTunes"];
-        path = [path stringByAppendingPathComponent:@"iTunes Library.xml"];
-            
-        _libraryURL = [NSURL fileURLWithPath:path];
+        NSString *iTunesPath             = [musicPath  stringByAppendingPathComponent:@"iTunes"];
+        NSString *iTunesLibraryPath      = [iTunesPath stringByAppendingPathComponent:@"iTunes Library.xml"];
+        NSString *iTunesMusicLibraryPath = [iTunesPath stringByAppendingPathComponent:@"iTunes Music Library.xml"];
 
-        [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:iTunesLibraryPath]) {
+            _libraryURL = [NSURL fileURLWithPath:iTunesLibraryPath];
+        } else {
+            _libraryURL = [NSURL fileURLWithPath:iTunesMusicLibraryPath];
+        }
+
+        EmbraceLog(@"iTunesManager", @"_libraryURL is: %@", _libraryURL);
+
+        _checkTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
         [self _checkLibrary:nil];
         
         _trackIDToLibraryMetadataMap    = [NSMutableDictionary dictionary];
@@ -112,10 +121,21 @@ static NSString * const sLocationKey  = @"Location";
     
     [_libraryURL getResourceValue:&value forKey:NSURLContentModificationDateKey error:&error];
 
+    if (error) {
+        EmbraceLog(@"iTunesManager", @"Could not get modification date for %@: error: %@", _libraryURL, error);
+        [_checkTimer invalidate];
+        _checkTimer = nil;
+    }
+
+
     if (!error && [value isKindOfClass:[NSDate class]]) {
         NSTimeInterval timeInterval = [value timeIntervalSinceReferenceDate];
         
         if (timeInterval > _lastCheckTime) {
+            if (_lastCheckTime) {
+                EmbraceLog(@"iTunesManager", @"iTunes XML modified!");
+            }
+
             if ([self _parseLibraryXML]) {
                 _lastCheckTime = timeInterval;
             }

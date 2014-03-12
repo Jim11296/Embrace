@@ -15,7 +15,7 @@
 NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPlayDurationNotification";
 
 
-#define DUMP_UNKNOWN_TAGS 1
+#define DUMP_UNKNOWN_TAGS 0
 
 static NSString * const sTypeKey          = @"trackType";
 static NSString * const sStatusKey        = @"trackStatus";
@@ -706,8 +706,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
             NSLog(@"common: %@ %@, key: %@ %@, value: %@",
                 commonKey, GetStringForFourCharCodeObject(commonKey),
                 key, GetStringForFourCharCodeObject(key),
-                [item value],
-                debugStringValue
+                [item value]
             );
 #endif
         }
