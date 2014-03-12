@@ -21,7 +21,10 @@
 {
     if ((self = [super init])) {
         _fileURL = fileURL;
-        [_fileURL startAccessingSecurityScopedResource];
+        
+        if (![_fileURL startAccessingSecurityScopedResource]) {
+            EmbraceLog(@"AudioFile", @"%@, -startAccessingSecurityScopedResource failed", self);
+        }
     }
 
     return self;
@@ -38,6 +41,18 @@
     }
 
     [self _clearAudioFile];
+}
+
+
+- (NSString *) description
+{
+    NSString *friendlyString = [_fileURL path];
+
+    if ([friendlyString length]) {
+        return [NSString stringWithFormat:@"<%@: %p, \"%@\">", [self class], self, friendlyString];
+    } else {
+        return [super description];
+    }
 }
 
 
@@ -65,6 +80,7 @@
 
     if (err == noErr) {
         err = ExtAudioFileOpenURL((__bridge CFURLRef)_exportedURL, &_audioFile);
+        if (err != noErr) EmbraceLog(@"AudioFile", @"%@, ExtAudioFileOpenURL() failed %ld", self, (long)err);
     }
     
     if (err == noErr) {
@@ -74,6 +90,8 @@
     if (err == noErr) {
         err = [self getFileDataFormat:&fileDataFormat];
     }
+
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -_reopenAudioFileWithURL: error %ld", self, (long)err);
     
     return err;
 }
@@ -88,6 +106,7 @@
     }
     
     if (err != noErr) {
+        EmbraceLog(@"AudioFile", @"ExtAudioFileOpenURL() returned %ld", (long)err);
         _audioFileError = AudioFileErrorOpenFailed;
     }
     
@@ -215,41 +234,61 @@
 
 - (OSStatus) readFrames:(inout UInt32 *)ioNumberFrames intoBufferList:(inout AudioBufferList *)bufferList
 {
-    return ExtAudioFileRead(_audioFile, ioNumberFrames, bufferList);
+    OSStatus err = ExtAudioFileRead(_audioFile, ioNumberFrames, bufferList);
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -readFrames:intoBufferList: error %ld", self, (long)err);
+    return err;
 }
 
 
 - (OSStatus) seekToFrame:(SInt64)startFrame
 {
-    return ExtAudioFileSeek(_audioFile, startFrame);
+    OSStatus err = ExtAudioFileSeek(_audioFile, startFrame);
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -seekToFrame: error %ld", self, (long)err);
+    return err;
 }
 
 
 - (OSStatus) getFileDataFormat:(AudioStreamBasicDescription *)fileDataFormat
 {
     UInt32 size = sizeof(AudioStreamBasicDescription);
-    return ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileDataFormat, &size, fileDataFormat);
+    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileDataFormat, &size, fileDataFormat);
+
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -getFileDataFormat: error %ld", self, (long)err);
+
+    return err;
 }
 
 
 - (OSStatus) getFileLengthFrames:(SInt64 *)fileLengthFrames
 {
     UInt32 size = sizeof(SInt64);
-    return ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileLengthFrames, &size, fileLengthFrames);
+    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileLengthFrames, &size, fileLengthFrames);
+
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -getFileLengthFrames: error %ld", self, (long)err);
+
+    return err;
 }
 
 
 - (OSStatus) setClientDataFormat:(AudioStreamBasicDescription *)clientDataFormat
 {
     UInt32 size = sizeof(AudioStreamBasicDescription);
-    return ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, size, clientDataFormat);
+    OSStatus err = ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, size, clientDataFormat);
+
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -setClientDataFormat: error %ld", self, (long)err);
+
+    return err;
 }
 
 
 - (OSStatus) getClientDataFormat:(AudioStreamBasicDescription *)clientDataFormat
 {
     UInt32 size = sizeof(AudioStreamBasicDescription);
-    return ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, &size, clientDataFormat);
+    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, &size, clientDataFormat);
+    
+    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -getClientDataFormat: returned %ld", self, (long)err);
+
+    return err;
 }
 
 

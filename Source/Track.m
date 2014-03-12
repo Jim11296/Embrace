@@ -15,7 +15,7 @@
 NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPlayDurationNotification";
 
 
-#define DUMP_UNKNOWN_TAGS 0
+#define DUMP_UNKNOWN_TAGS 1
 
 static NSString * const sTypeKey          = @"trackType";
 static NSString * const sStatusKey        = @"trackStatus";
@@ -549,7 +549,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     NSTimeInterval startTime = [metadata startTime];
     NSTimeInterval stopTime  = [metadata stopTime];
     
-    EmbraceLog(@"Track", @"%@ updated startTime=%g, stopTime=%g", self, startTime, stopTime);
+    EmbraceLog(@"Track", @"%@ updated startTime=%g, stopTime=%g with %@", self, startTime, stopTime, metadata);
     
     [self setStartTime:startTime];
     [self setStopTime: stopTime];

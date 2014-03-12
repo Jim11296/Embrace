@@ -69,6 +69,7 @@ static NSString * const sLocationKey  = @"Location";
     
 }
 
+
 + (id) sharedInstance
 {
     static iTunesManager *sSharedInstance = nil;
@@ -161,6 +162,8 @@ static NSString * const sLocationKey  = @"Location";
 {
     if (_parsing) return NO;
 
+    EmbraceLog(@"iTunesManager", @"Starting library parse...");
+
     __weak id weakSelf = self;
     
     _parsing = YES;
@@ -204,6 +207,8 @@ static NSString * const sLocationKey  = @"Location";
             }
 
         } @catch (NSException *e) { }
+
+        EmbraceLog(@"iTunesManager", @"Got results for %ld tracks", [results count]);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf _parseLibraryXMLFinished:results];
@@ -340,8 +345,6 @@ static NSString * const sLocationKey  = @"Location";
 
     } completion:nil];
 }
-
-
 
 
 - (iTunesLibraryMetadata *) libraryMetadataForTrackID:(NSInteger)trackID
