@@ -251,17 +251,39 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (NSString *) _contentsAsString
 {
-    NSMutableString *result = [NSMutableString string];
+    NSMutableArray *played = [NSMutableArray array];
+    NSMutableArray *queued = [NSMutableArray array];
 
     for (Track *track in [[self tracksController] tracks]) {
-        if ([track trackStatus] == TrackStatusQueued) continue;
+        NSMutableString *line = [NSMutableString string];
 
         NSString *artist = [track artist];
-        if (artist) [result appendFormat:@"%@ %C ", artist, (unichar)0x2014];
+        if (artist) [line appendFormat:@"%@ %C ", artist, (unichar)0x2014];
         
         NSString *title = [track title];
         if (!title) title = @"???";
-        [result appendFormat:@"%@\n", title];
+
+        [line appendFormat:@"%@", title];
+        
+        if ([track trackStatus] == TrackStatusQueued) {
+            [queued addObject:line];
+        } else {
+            [played addObject:line];
+        }
+    }
+    
+    NSString *result = @"";
+    NSString *playedString = [played count] ? [played componentsJoinedByString:@"\n"] : nil;
+    NSString *queuedString = [queued count] ? [queued componentsJoinedByString:@"\n"] : nil;
+
+    if (playedString && queuedString) {
+        result = [NSString stringWithFormat:@"%@\n\nUnplayed:\n%@", playedString, queuedString];
+
+    } else if (queuedString) {
+        result = queuedString;
+
+    } else if (playedString) {
+        result = playedString;
     }
     
     return result;
