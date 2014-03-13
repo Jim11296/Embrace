@@ -72,6 +72,7 @@
 		558DC0C71877861E00C85770 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C21877861E00C85770 /* Images.xcassets */; };
 		55959EC218854F5C007D653A /* pause_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55959EC118854F5C007D653A /* pause_template@2x.png */; };
 		5595A7BC18793B9000A7B996 /* WhiteWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5595A7BB18793B9000A7B996 /* WhiteWindow.m */; };
+		559A671618D18EA200AB5918 /* URLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 559A671518D18EA200AB5918 /* URLExtensions.m */; };
 		55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A0B167188F447100866F04 /* CurrentTrackWindow.xib */; };
 		55A0B16B188F59F000866F04 /* CurrentTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A0B16A188F59F000866F04 /* CurrentTrackController.m */; };
 		55A0B16D188F6FD700866F04 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A0B16C188F6FD700866F04 /* Accelerate.framework */; };
@@ -289,6 +290,8 @@
 		55959EC118854F5C007D653A /* pause_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pause_template@2x.png"; path = "Resources/pause_template@2x.png"; sourceTree = SOURCE_ROOT; };
 		5595A7BA18793B9000A7B996 /* WhiteWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WhiteWindow.h; path = Source/WhiteWindow.h; sourceTree = SOURCE_ROOT; };
 		5595A7BB18793B9000A7B996 /* WhiteWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WhiteWindow.m; path = Source/WhiteWindow.m; sourceTree = SOURCE_ROOT; };
+		559A671418D18EA200AB5918 /* URLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URLExtensions.h; path = Source/URLExtensions.h; sourceTree = "<group>"; };
+		559A671518D18EA200AB5918 /* URLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = URLExtensions.m; path = Source/URLExtensions.m; sourceTree = "<group>"; };
 		55A0B167188F447100866F04 /* CurrentTrackWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CurrentTrackWindow.xib; path = Resources/CurrentTrackWindow.xib; sourceTree = SOURCE_ROOT; };
 		55A0B169188F59F000866F04 /* CurrentTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentTrackController.h; path = Source/CurrentTrackController.h; sourceTree = SOURCE_ROOT; };
 		55A0B16A188F59F000866F04 /* CurrentTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentTrackController.m; path = Source/CurrentTrackController.m; sourceTree = SOURCE_ROOT; };
@@ -755,6 +758,8 @@
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
 				55BC0B291878E4EF00D84481 /* Utils.h */,
 				55BC0B2A1878E4EF00D84481 /* Utils.m */,
+				559A671418D18EA200AB5918 /* URLExtensions.h */,
+				559A671518D18EA200AB5918 /* URLExtensions.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1048,6 +1053,7 @@
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
+				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
 				55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */,
 				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,

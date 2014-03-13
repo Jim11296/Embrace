@@ -22,8 +22,8 @@
     if ((self = [super init])) {
         _fileURL = fileURL;
         
-        if (![_fileURL startAccessingSecurityScopedResource]) {
-            EmbraceLog(@"AudioFile", @"%@, -startAccessingSecurityScopedResource failed", self);
+        if (![_fileURL embrace_startAccessingResourceWithKey:@"audio-file"]) {
+            EmbraceLog(@"AudioFile", @"%@, -embrace_startAccessingResource failed", self);
         }
     }
 
@@ -33,7 +33,7 @@
 
 - (void) dealloc
 {
-    [_fileURL stopAccessingSecurityScopedResource];
+    [_fileURL embrace_stopAccessingResourceWithKey:@"audio-file"];
 
     if (_exportedURL) {
         NSError *error;

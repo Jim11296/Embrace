@@ -196,7 +196,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    [_fileURL stopAccessingSecurityScopedResource];
+    [_fileURL embrace_stopAccessingResourceWithKey:@"track"];
     _fileURL = nil;
 }
 
@@ -344,8 +344,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     _fileURL = fileURL;
 
 
-    if (![_fileURL startAccessingSecurityScopedResource]) {
-        EmbraceLog(@"Track", @"%@, -startAccessingSecurityScopedResource failed for %@", self, _fileURL);
+    if (![_fileURL embrace_startAccessingResourceWithKey:@"track"]) {
+        EmbraceLog(@"Track", @"%@, -embrace_startAccessingResource failed for %@", self, _fileURL);
     }
 
 
@@ -375,7 +375,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     dispatch_async(sResolverQueue, ^{
         if (!bookmark) {
-            [fileURL startAccessingSecurityScopedResource];
+            [fileURL embrace_startAccessingResourceWithKey:@"bookmark"];
             
             NSError *error = nil;
             bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
@@ -384,7 +384,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
                 EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, fileURL, error);
             }
 
-            [fileURL stopAccessingSecurityScopedResource];
+            [fileURL embrace_stopAccessingResourceWithKey:@"bookmark"];
         }
 
         NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
@@ -400,8 +400,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         if (isStale) {
             EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
 
-            if (![fileURL startAccessingSecurityScopedResource]) {
-                EmbraceLog(@"Track", @"%@ -startAccessingSecurityScopedResource failed for %@", self, fileURL);
+            if (![fileURL embrace_startAccessingResourceWithKey:@"bookmark-refresh"]) {
+                EmbraceLog(@"Track", @"%@ -embrace_startAccessingResource failed for %@", self, fileURL);
             }
 
             bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
@@ -410,7 +410,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
                 EmbraceLog(@"Track", @"%@ error refreshing bookmark: %@", self, error);
             }
 
-            [fileURL stopAccessingSecurityScopedResource];
+            [fileURL embrace_stopAccessingResourceWithKey:@"bookmark-refresh"];
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
