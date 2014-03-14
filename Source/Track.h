@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 
 - (void) cancelLoad;
 
+- (void) clearAndCleanup;
 - (void) startPriorityAnalysis;
 
 // estimatedEndTime may either be a relative date (when not playing a track)
@@ -48,7 +49,8 @@ typedef NS_ENUM(NSInteger, TrackError) {
 - (NSDate *) estimatedEndTimeDate;
 
 
-@property (nonatomic, readonly) NSURL *fileURL;
+@property (nonatomic, readonly) NSURL *externalURL;
+@property (nonatomic, readonly) NSURL *internalURL;
 @property (nonatomic, readonly) NSUUID *UUID;
 
 

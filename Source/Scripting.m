@@ -114,7 +114,7 @@
 
 - (NSURL *) scriptingFile
 {
-    return [self fileURL];
+    return [self externalURL];
 }
 
 

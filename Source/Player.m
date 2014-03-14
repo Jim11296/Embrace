@@ -929,7 +929,7 @@ static OSStatus sInputRenderCallback(
         return;
     }
 
-    NSURL *fileURL = [track fileURL];
+    NSURL *fileURL = [track internalURL];
     if (!fileURL) {
         EmbraceLog(@"Player", @"No URL for %@!", track);
         [self hardStop];
