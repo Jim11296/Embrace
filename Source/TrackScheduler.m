@@ -73,7 +73,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
 - (BOOL) _setupAudioFile
 {
-    NSURL *url = [_track fileURL];
+    NSURL *url = [_track internalURL];
 
     AudioStreamBasicDescription fileFormat = {0};
     SInt64 fileLengthFrames = 0;

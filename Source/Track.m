@@ -71,6 +71,7 @@ static NSString * const sGenreKey         = @"genre";
 
     NSMutableArray *_dirtyKeys;
     BOOL            _dirty;
+    BOOL            _cleared;
 }
 
 @dynamic playDuration, silenceAtStart, silenceAtEnd;
@@ -104,6 +105,34 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 }
 
 
+static NSURL *sGetInternalDirectoryURL()
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *appSupport = GetApplicationSupportDirectory();
+    
+    NSString *files = [appSupport stringByAppendingPathComponent:@"Files"];
+    NSURL *result = [NSURL fileURLWithPath:files];
+
+    if (![manager fileExistsAtPath:files]) {
+        NSError *error = nil;
+        [manager createDirectoryAtURL:result withIntermediateDirectories:YES attributes:nil error:&error];
+    }
+    
+    return result;
+}
+
+
+static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
+{
+    if (!UUID) return nil;
+    
+    NSURL *result = [sGetInternalDirectoryURL() URLByAppendingPathComponent:[UUID UUIDString]];
+    result = [result URLByAppendingPathExtension:extension];
+
+    return result;
+}
+
+
 + (NSSet *) keyPathsForValuesAffectingValueForKey:(NSString *)key
 {
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
@@ -128,7 +157,8 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 + (void) clearPersistedState
 {
     NSError *error;
-    [[NSFileManager defaultManager] removeItemAtURL:sGetStateDirectoryURL() error:&error];
+    [[NSFileManager defaultManager] removeItemAtURL:sGetStateDirectoryURL()    error:&error];
+    [[NSFileManager defaultManager] removeItemAtURL:sGetInternalDirectoryURL() error:&error];
 }
 
 
@@ -160,7 +190,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     if ((self = [super init])) {
         _UUID = UUID;
 
-        [self _resolveURL:url bookmark:bookmark];
+        [self _resolveExternalURL:url bookmark:bookmark];
         
         [self _invalidateSilence];
         
@@ -179,7 +209,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     NSString *friendlyString = [self title];
     
     if ([friendlyString length] == 0) {
-        friendlyString = [[_fileURL path] lastPathComponent];
+        friendlyString = [[[self externalURL] path] lastPathComponent];
     }
 
     if ([friendlyString length]) {
@@ -195,9 +225,6 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     [self _clearTrackDataForAnalysis];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    [_fileURL embrace_stopAccessingResourceWithKey:@"track"];
-    _fileURL = nil;
 }
 
 
@@ -278,6 +305,9 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     // Never save the state until we have a bookmark
     if (!_bookmark) return;
 
+    // This track is dead
+    if (_cleared) return;
+
     if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
     if (_artist)         [state setObject:_artist               forKey:sArtistKey];
     if (_title)          [state setObject:_title                forKey:sTitleKey];
@@ -332,24 +362,19 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 #pragma mark - Bookmarks
 
-- (void) _handleResolvedURL:(NSURL *)fileURL bookmark:(NSData *)bookmark
+- (void) _handleResolvedExternalURL:(NSURL *)externalURL internalURL:(NSURL *)internalURL bookmark:(NSData *)bookmark
 {
-    EmbraceLog(@"Track", @"%@ resolved %@ to bookmark %@", self, fileURL, bookmark);
+    EmbraceLog(@"Track", @"%@ resolved %@ to bookmark %@, internalURL: %@", self, externalURL, bookmark, internalURL);
 
     if (![_bookmark isEqual:bookmark]) {
         _bookmark = bookmark;
         _dirty = YES;
     }
 
-    _fileURL = fileURL;
+    _internalURL = internalURL;
+    _externalURL = externalURL;
 
-
-    if (![_fileURL embrace_startAccessingResourceWithKey:@"track"]) {
-        EmbraceLog(@"Track", @"%@, -embrace_startAccessingResource failed for %@", self, _fileURL);
-    }
-
-
-    [self _loadMetadataViaManagerWithFileURL:_fileURL];
+    [self _loadMetadataViaManagerWithFileURL:externalURL];
     [self _loadMetadataViaAsset];
     
     [self _loadMetadataViaAnalysisIfNeeded];
@@ -360,7 +385,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 }
 
 
-- (void) _resolveURL:(NSURL *)inURL bookmark:(NSData *)inBookmark
+- (void) _resolveExternalURL:(NSURL *)inURL bookmark:(NSData *)inBookmark
 {
     static dispatch_queue_t sResolverQueue = NULL;
     
@@ -370,51 +395,64 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
         sResolverQueue = dispatch_queue_create("Track.resolve-bookmark", NULL);
     });
     
-    __block NSURL  *fileURL  = inURL;
-    __block NSData *bookmark = inBookmark;
+    __block NSURL  *externalURL = inURL;
+    __block NSData *bookmark    = inBookmark;
+
+    NSUUID *UUID = _UUID;
 
     dispatch_async(sResolverQueue, ^{
         if (!bookmark) {
-            [fileURL embrace_startAccessingResourceWithKey:@"bookmark"];
+            [externalURL embrace_startAccessingResourceWithKey:@"bookmark"];
             
             NSError *error = nil;
-            bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+            bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
 
             if (error) {
-                EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, fileURL, error);
+                EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, externalURL, error);
             }
 
-            [fileURL embrace_stopAccessingResourceWithKey:@"bookmark"];
+            [externalURL embrace_stopAccessingResourceWithKey:@"bookmark"];
         }
 
         NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
         
         BOOL isStale = NO;
         NSError *error = nil;
-        fileURL = [NSURL URLByResolvingBookmarkData: bookmark
-                                            options: options
-                                      relativeToURL: nil
-                                bookmarkDataIsStale: &isStale
-                                              error: &error];
+        externalURL = [NSURL URLByResolvingBookmarkData: bookmark
+                                                options: options
+                                          relativeToURL: nil
+                                    bookmarkDataIsStale: &isStale
+                                                  error: &error];
+
+        if (![externalURL embrace_startAccessingResourceWithKey:@"resolve"]) {
+            EmbraceLog(@"Track", @"%@, -embrace_startAccessingResource failed for %@", self, externalURL);
+        }
 
         if (isStale) {
             EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
 
-            if (![fileURL embrace_startAccessingResourceWithKey:@"bookmark-refresh"]) {
-                EmbraceLog(@"Track", @"%@ -embrace_startAccessingResource failed for %@", self, fileURL);
-            }
-
-            bookmark = [fileURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+            bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
 
             if (error) {
                 EmbraceLog(@"Track", @"%@ error refreshing bookmark: %@", self, error);
             }
-
-            [fileURL embrace_stopAccessingResourceWithKey:@"bookmark-refresh"];
         }
 
+        NSString *extension = [externalURL pathExtension];
+        NSURL *internalURL = sGetInternalURLForUUID(UUID, extension);
+
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[internalURL path]]) {
+            if ([[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
+                EmbraceLog(@"Track", @"%@, failed to copy to internal location: %@", self, error);
+            } else {
+                EmbraceLog(@"Track", @"%@, copied %@ to internal location: %@", self, externalURL, internalURL);
+            }
+        }
+
+        [externalURL embrace_stopAccessingResourceWithKey:@"resolve"];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self _handleResolvedURL:fileURL bookmark:bookmark];
+            [self _handleResolvedExternalURL:externalURL internalURL:internalURL bookmark:bookmark];
         });
     });
 }
@@ -524,7 +562,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
     TrackAnalyzer *trackAnalyzer = [[TrackAnalyzer alloc] init];
     
     id __weak weakSelf = self;
-    [trackAnalyzer analyzeFileAtURL:_fileURL immediately:immediately completion:^(TrackAnalyzerResult *result) {
+    [trackAnalyzer analyzeFileAtURL:_internalURL immediately:immediately completion:^(TrackAnalyzerResult *result) {
         [weakSelf _handleTrackAnalyzerDidAnalyze:result];
     }];
 
@@ -544,7 +582,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void) _handleDidUpdateLibraryMetadata:(NSNotification *)note
 {
-    iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:_fileURL];
+    iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:[self externalURL]];
     
     NSTimeInterval startTime = [metadata startTime];
     NSTimeInterval stopTime  = [metadata stopTime];
@@ -596,7 +634,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 - (void) _loadMetadataViaAsset
 {
-    if (!_fileURL) {
+    if (![self internalURL]) {
         return;
     }
     
@@ -722,7 +760,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
     __weak id weakSelf = self;
 
-    NSString *fallbackTitle = [[_fileURL lastPathComponent] stringByDeletingPathExtension];
+    NSString *fallbackTitle = [[[self externalURL] lastPathComponent] stringByDeletingPathExtension];
 
     dispatch_async(sLoaderQueue, ^{ @autoreleasepool {
         BOOL isCancelled = [weakSelf isCancelled];
@@ -730,7 +768,7 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
             return;
         }
 
-        NSURL *fileURL = [weakSelf fileURL];
+        NSURL *fileURL = [weakSelf internalURL];
         AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
 
         NSArray *commonMetadata = [asset commonMetadata];
@@ -767,6 +805,16 @@ static NSURL *sGetStateURLForUUID(NSUUID *UUID)
 
 
 #pragma mark - Public Methods
+
+- (void) clearAndCleanup
+{
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtURL:sGetStateURLForUUID(_UUID) error:&error];
+    if (_internalURL) [[NSFileManager defaultManager] removeItemAtURL:_internalURL error:&error];
+
+    _cleared = YES;
+}
+
 
 - (void) startPriorityAnalysis
 {

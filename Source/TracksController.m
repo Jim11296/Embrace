@@ -442,7 +442,13 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sModifiedAtKey];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"tracks"];
 
-    [Track clearPersistedState];
+    for (Track *track in tracksToRemove) {
+        [track clearAndCleanup];
+    }
+
+    if (!trackToKeep) {
+        [Track clearPersistedState];
+    }
 
     [[self tableView] deselectAll:nil];
     [[self tableView] reloadData];

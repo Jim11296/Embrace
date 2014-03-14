@@ -537,9 +537,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     NSMutableArray *fileURLs = [NSMutableArray array];
     
     for (Track *track in [[self tracksController] tracks]) {
-        if ([track fileURL]) {
-            [fileURLs addObject:[track fileURL]];
-        }
+        NSURL *fileURL = [track externalURL];
+        if (fileURL) [fileURLs addObject:fileURL];
     }
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
