@@ -99,6 +99,7 @@
 		55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1A18780D1000D84481 /* AudioToolbox.framework */; };
 		55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B2A1878E4EF00D84481 /* Utils.m */; };
 		55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BE7739187CD05600BC0D29 /* BorderedView.m */; };
+		55C24E1518D7D7800057D45E /* StereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* StereoField.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2785187A23BD0042C92A /* iTunesManager.m */; };
 		55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CF2787187A241A0042C92A /* ScriptingBridge.framework */; };
 		55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2799187A464B0042C92A /* TrackTableCellView.m */; };
@@ -339,6 +340,8 @@
 		55BC0B2A1878E4EF00D84481 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Source/Utils.m; sourceTree = SOURCE_ROOT; };
 		55BE7738187CD05600BC0D29 /* BorderedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BorderedView.h; path = Source/BorderedView.h; sourceTree = SOURCE_ROOT; };
 		55BE7739187CD05600BC0D29 /* BorderedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BorderedView.m; path = Source/BorderedView.m; sourceTree = SOURCE_ROOT; };
+		55C24E1318D7D7800057D45E /* StereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoField.h; path = Source/StereoField.h; sourceTree = "<group>"; };
+		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
 		55C5D57A18C94211000C95A4 /* ReceiptValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReceiptValidation.h; path = Source/ReceiptValidation.h; sourceTree = "<group>"; };
 		55CF2784187A23BD0042C92A /* iTunesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = SOURCE_ROOT; };
 		55CF2785187A23BD0042C92A /* iTunesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesManager.m; path = Source/iTunesManager.m; sourceTree = SOURCE_ROOT; };
@@ -773,6 +776,8 @@
 				55873FDD18AA1E720081772A /* TrackScheduler.m */,
 				55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */,
 				55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */,
+				55C24E1318D7D7800057D45E /* StereoField.h */,
+				55C24E1418D7D7800057D45E /* StereoField.m */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -1101,6 +1106,7 @@
 				55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */,
 				557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */,
 				557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */,
+				55C24E1518D7D7800057D45E /* StereoField.m in Sources */,
 				55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

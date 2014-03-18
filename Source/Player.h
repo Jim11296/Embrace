@@ -49,6 +49,10 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 @property (nonatomic) double matchLoudnessLevel;
 @property (nonatomic) double preAmpLevel;
 
+@property (nonatomic) float stereoLevel;   // -1.0 = Reverse, 0.0 = Mono, +1.0 = Stereo
+@property (nonatomic) float stereoBalance; // -1.0 = Left,                +1.0 = Right
+
+
 - (void) updateOutputDevice: (AudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames

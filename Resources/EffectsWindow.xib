@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B3116" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="EffectsController">
@@ -18,10 +18,10 @@
         <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="EffectsWindow" animationBehavior="default" id="5mm-8W-u52">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="159" width="400" height="316"/>
+            <rect key="contentRect" x="131" y="159" width="400" height="370"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="wIn-2X-2Cg">
-                <rect key="frame" x="0.0" y="0.0" width="400" height="316"/>
+                <rect key="frame" x="0.0" y="0.0" width="400" height="370"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="qZU-uX-xE4">
@@ -82,7 +82,7 @@
                         </connections>
                     </scrollView>
                     <slider verticalHuggingPriority="750" id="xES-Qz-MHM">
-                        <rect key="frame" x="136" y="269" width="244" height="25"/>
+                        <rect key="frame" x="136" y="323" width="244" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="below" numberOfTickMarks="11" sliderType="linear" id="fiN-kq-92O"/>
                         <connections>
@@ -90,7 +90,7 @@
                         </connections>
                     </slider>
                     <slider verticalHuggingPriority="750" id="6FA-d0-AmJ">
-                        <rect key="frame" x="136" y="181" width="244" height="25"/>
+                        <rect key="frame" x="136" y="235" width="244" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-12" maxValue="12" tickMarkPosition="below" numberOfTickMarks="9" sliderType="linear" id="1dj-S3-1gC"/>
                         <connections>
@@ -98,7 +98,7 @@
                         </connections>
                     </slider>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nyF-6l-NiT">
-                        <rect key="frame" x="22" y="279" width="106" height="17"/>
+                        <rect key="frame" x="22" y="333" width="106" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Match Loudness:" id="Odu-MX-Zha">
                             <font key="font" metaFont="system"/>
@@ -116,7 +116,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="a2Y-fP-cbh">
-                        <rect key="frame" x="22" y="191" width="106" height="17"/>
+                        <rect key="frame" x="22" y="245" width="106" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Preamp:" id="87z-wQ-nAg">
                             <font key="font" metaFont="system"/>
@@ -125,7 +125,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="YFS-7H-afh">
-                        <rect key="frame" x="120" y="164" width="52" height="14"/>
+                        <rect key="frame" x="120" y="218" width="52" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="-12 dB" id="qlm-s1-Nfw">
                             <font key="font" metaFont="smallSystem"/>
@@ -134,7 +134,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="5BV-yU-UBq">
-                        <rect key="frame" x="345" y="164" width="52" height="14"/>
+                        <rect key="frame" x="345" y="218" width="52" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="+12 dB" id="bv4-fm-1Qy">
                             <font key="font" metaFont="smallSystem"/>
@@ -143,7 +143,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="SmN-56-uXH">
-                        <rect key="frame" x="233" y="164" width="52" height="14"/>
+                        <rect key="frame" x="233" y="218" width="52" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0 dB" id="j0t-lk-bV4">
                             <font key="font" metaFont="smallSystem"/>
@@ -151,8 +151,70 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <slider verticalHuggingPriority="750" id="9Hj-hm-eOu">
+                        <rect key="frame" x="136" y="147" width="100" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="2" sliderType="linear" id="xTR-a8-3Q5"/>
+                        <connections>
+                            <binding destination="-2" name="value" keyPath="self.player.stereoLevel" id="4dU-Mf-OBb"/>
+                        </connections>
+                    </slider>
+                    <slider verticalHuggingPriority="750" id="DJR-QE-eBi">
+                        <rect key="frame" x="248" y="147" width="132" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="vOX-CI-E2h"/>
+                        <connections>
+                            <action selector="updateStereoBalance:" target="-2" id="7bg-fD-y6x"/>
+                            <binding destination="-2" name="value" keyPath="self.player.stereoBalance" id="eqn-n4-xmf"/>
+                        </connections>
+                    </slider>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="fx4-fO-g1N">
+                        <rect key="frame" x="22" y="157" width="106" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Stereo Field:" id="TKM-Z2-PYN">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="bjj-za-hHB">
+                        <rect key="frame" x="136" y="130" width="43" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Mono" id="azC-gW-eCo">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="EEH-E9-bqz">
+                        <rect key="frame" x="192" y="130" width="44" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Stereo" id="Llz-Fw-ay8">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="qUT-Mw-fcU">
+                        <rect key="frame" x="249" y="130" width="19" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="L" id="vnj-yw-bBY">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="VaD-Dr-dL1">
+                        <rect key="frame" x="360" y="130" width="20" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="R" id="Xb5-np-tSO">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="YGm-mO-CEg">
-                        <rect key="frame" x="120" y="252" width="52" height="14"/>
+                        <rect key="frame" x="120" y="306" width="52" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Off" id="wdZ-20-8WT">
                             <font key="font" metaFont="smallSystem"/>
@@ -161,7 +223,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="oTn-Pm-yn7">
-                        <rect key="frame" x="345" y="252" width="52" height="14"/>
+                        <rect key="frame" x="345" y="306" width="52" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="100%" id="B0h-Ff-ecl">
                             <font key="font" metaFont="smallSystem"/>
@@ -170,7 +232,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="BIO-xJ-OHH">
-                        <rect key="frame" x="233" y="252" width="52" height="14"/>
+                        <rect key="frame" x="233" y="306" width="52" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="50%" id="EPR-hF-9qD">
                             <font key="font" metaFont="smallSystem"/>
@@ -179,7 +241,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="5Gj-uc-L2S">
-                        <rect key="frame" x="136" y="218" width="244" height="28"/>
+                        <rect key="frame" x="136" y="272" width="244" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Match Loudness reconciles the perceived loudness of each track, but lowers volume." id="jts-2O-v46">
                             <font key="font" metaFont="smallSystem"/>
@@ -188,7 +250,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="p3D-Yi-Kli">
-                        <rect key="frame" x="136" y="130" width="244" height="28"/>
+                        <rect key="frame" x="136" y="184" width="244" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Pre-amplification reduces automatically  when clipping would occur." id="uN9-dM-e44">
                             <font key="font" metaFont="smallSystem"/>

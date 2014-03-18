@@ -16,6 +16,8 @@
 - (IBAction) editEffect:(id)sender;
 - (IBAction) delete:(id)sender;
 
+- (IBAction) updateStereoBalance:(id)sender;
+
 @property (nonatomic, strong) Player *player;
 @property (nonatomic, strong) IBOutlet NSArrayController *effectsArrayController;
 
