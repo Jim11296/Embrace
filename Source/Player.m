@@ -16,6 +16,7 @@
 #import "WrappedAudioDevice.h"
 #import "TrackScheduler.h"
 #import "EmergencyLimiter.h"
+#import "StereoField.h"
 
 #import <pthread.h>
 #import <signal.h>
@@ -29,6 +30,8 @@ static NSString * const sEffectsKey       = @"effects";
 static NSString * const sPreAmpKey        = @"pre-amp";
 static NSString * const sMatchLoudnessKey = @"match-loudness";
 static NSString * const sVolumeKey        = @"volume";
+static NSString * const sStereoLevelKey   = @"stereo-level";
+static NSString * const sStereoBalanceKey = @"stereo-balance";
 
 static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
@@ -73,6 +76,8 @@ typedef struct {
     volatile AudioUnit inputUnit;
     volatile NSInteger stopRequested;
     volatile NSInteger stopped;
+    volatile float     stereoLevel;
+    volatile float     previousStereoLevel;
 } RenderUserInfo;
 
 @implementation Player {
@@ -209,6 +214,20 @@ typedef struct {
         [self setPreAmpLevel:[preAmpNumber doubleValue]];
     } else {
         [self setPreAmpLevel:0];
+    }
+
+    NSNumber *stereoLevel = [[NSUserDefaults standardUserDefaults] objectForKey:sStereoLevelKey];
+    if ([stereoLevel isKindOfClass:[NSNumber class]]) {
+        [self setStereoLevel:[stereoLevel doubleValue]];
+    } else {
+        [self setStereoLevel:1.0];
+    }
+
+    NSNumber *stereoBalance = [[NSUserDefaults standardUserDefaults] objectForKey:sStereoBalanceKey];
+    if ([stereoBalance isKindOfClass:[NSNumber class]]) {
+        [self setStereoBalance:[stereoBalance doubleValue]];
+    } else {
+        [self setStereoBalance:0.5];
     }
     
     [self setEffects:effects];
@@ -489,6 +508,15 @@ static OSStatus sInputRenderCallback(
         userInfo->stopped = 1;
     }
 
+
+    BOOL canSkip = (userInfo->previousStereoLevel) == 1.0 && (userInfo->stereoLevel == 1.0);
+
+    // Process stereo field
+    if (!canSkip) {
+        ApplyStereoField(inNumberFrames, ioData, userInfo->previousStereoLevel, userInfo->stereoLevel);
+        userInfo->previousStereoLevel = userInfo->stereoLevel;
+    }
+
     return result;
 }
 
@@ -614,6 +642,8 @@ static OSStatus sInputRenderCallback(
     _renderUserInfo.stopped = 0;
     _renderUserInfo.stopRequested = 0;
     _renderUserInfo.inputUnit = _converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit;
+    _renderUserInfo.stereoLevel = _stereoLevel;
+    _renderUserInfo.previousStereoLevel = _stereoLevel;
 
     [self _reconnectGraph];
 }
@@ -679,6 +709,16 @@ static OSStatus sInputRenderCallback(
         &on,
         sizeof(on)
     ), "AudioUnitSetProperty[kAudioUnitProperty_MeteringMode]");
+
+    CheckError(AudioUnitSetParameter(_mixerAudioUnit,
+        kStereoMixerParam_Volume, kAudioUnitScope_Output, 0,
+        _volume, 0
+    ), "AudioUnitSetParameter[Volume]");
+
+    CheckError(AudioUnitSetParameter(_mixerAudioUnit,
+        kStereoMixerParam_Pan, kAudioUnitScope_Input, 0,
+        _stereoBalance, 0
+    ), "AudioUnitSetParameter[Volume]");
 
     _emergencyLimiter = EmergencyLimiterCreate();
 
@@ -1303,6 +1343,36 @@ static OSStatus sInputRenderCallback(
         _matchLoudnessLevel = matchLoudnessLevel;
         [[NSUserDefaults standardUserDefaults] setObject:@(matchLoudnessLevel) forKey:sMatchLoudnessKey];
         [self _updateLoudnessAndPreAmp];
+    }
+}
+
+
+- (void) setStereoLevel:(float)stereoLevel
+{
+    if (_stereoLevel != stereoLevel) {
+        _stereoLevel = stereoLevel;
+        [[NSUserDefaults standardUserDefaults] setObject:@(stereoLevel) forKey:sStereoLevelKey];
+
+        _renderUserInfo.stereoLevel = stereoLevel;
+    }
+}
+
+
+- (void) setStereoBalance:(float)stereoBalance
+{
+    if (stereoBalance < -1.0f) stereoBalance = -1.0f;
+    if (stereoBalance >  1.0f) stereoBalance =  1.0f;
+
+    if (_stereoBalance != stereoBalance) {
+        _stereoBalance = stereoBalance;
+        [[NSUserDefaults standardUserDefaults] setObject:@(stereoBalance) forKey:sStereoBalanceKey];
+
+        Float32 value = _stereoBalance;
+
+        CheckError(AudioUnitSetParameter(_mixerAudioUnit,
+            kStereoMixerParam_Pan, kAudioUnitScope_Input, 0,
+            value, 0
+        ), "AudioUnitSetParameter[Volume]");
     }
 }
 

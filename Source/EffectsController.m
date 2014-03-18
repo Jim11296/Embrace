@@ -156,6 +156,16 @@
 }
 
 
+- (IBAction) updateStereoBalance:(id)sender
+{
+    double doubleValue = [sender doubleValue];
+
+    if (doubleValue >= 0.48 && doubleValue <= 0.52) {
+        [sender setDoubleValue:0.5];
+    }
+}
+
+
 - (Player *) player
 {
     return [Player sharedInstance];
