@@ -50,9 +50,11 @@ static PLCrashReporterCallbacks sCrashReporterCallbacks = {
 
 void SetupCrashPad(PLCrashReporter *reporter)
 {
-    NSString *path = [[NSBundle mainBundle] executablePath];
-    path = [path stringByDeletingLastPathComponent];
-    path = [path stringByAppendingPathComponent:@"CrashPad"];
+    NSString *path = [[NSBundle mainBundle] sharedSupportPath];
+    path = [path stringByAppendingPathComponent:@"Crash Pad.app"];
+    path = [path stringByAppendingPathComponent:@"Contents"];
+    path = [path stringByAppendingPathComponent:@"MacOS"];
+    path = [path stringByAppendingPathComponent:@"Crash Pad"];
     
     if (!path) {
         NSLog(@"path is nil, not installing crash pad!");

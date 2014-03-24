@@ -30,6 +30,11 @@
 		552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C9E481883856A0041C160 /* PreferencesWindow.xib */; };
 		552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4B1883888E0041C160 /* PreferencesController.m */; };
 		552C9E4F1883EBA40041C160 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4E1883EBA40041C160 /* Preferences.m */; };
+		552EC02A18DFD527000B82AB /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
+		552EC02B18DFD52E000B82AB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
+		552EC02E18DFD617000B82AB /* Crash Pad.app in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 5559E61218DFD42500D61019 /* Crash Pad.app */; };
+		552EC03018DFDA7C000B82AB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C21877861E00C85770 /* Images.xcassets */; };
+		552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
 		553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
 		553DE143189F107100A355D1 /* ViewTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 553DE142189F107100A355D1 /* ViewTrackController.m */; };
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
@@ -109,9 +114,6 @@
 		55CF848C18BF179700EF33F7 /* stop_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848B18BF179700EF33F7 /* stop_template.png */; };
 		55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848D18BF27AC00EF33F7 /* Embrace.sdef */; };
 		55CF849118BF459600EF33F7 /* Scripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF849018BF459600EF33F7 /* Scripting.m */; };
-		55DD539D18B99F840084628D /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
-		55DD539E18B99F890084628D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC085187785BC00C85770 /* AppKit.framework */; };
-		55DD53A218B9A22B0084628D /* CrashPad in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 55DD539118B99F4C0084628D /* CrashPad */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
 		55E5B6D318B5A0AF00F9DF65 /* track_error_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E5B6D118B5A0AF00F9DF65 /* track_error_template.png */; };
@@ -136,6 +138,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		552EC02C18DFD543000B82AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 558DC077187785BC00C85770 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5559E61118DFD42500D61019;
+			remoteInfo = CrashPad;
+		};
 		554D318A18BADDBF007DEB16 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
@@ -150,13 +159,6 @@
 			remoteGlobalIDString = 05E731F20EFA1AAB005EDFB7;
 			remoteInfo = "CrashReporter-MacOSX-Static";
 		};
-		55DD539F18B99F960084628D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 558DC077187785BC00C85770 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 55DD539018B99F4C0084628D;
-			remoteInfo = CrashPad;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -164,9 +166,9 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 6;
+			dstSubfolderSpec = 12;
 			files = (
-				55DD53A218B9A22B0084628D /* CrashPad in Copy Crash Pad */,
+				552EC02E18DFD617000B82AB /* Crash Pad.app in Copy Crash Pad */,
 			);
 			name = "Copy Crash Pad";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,6 +217,20 @@
 		553E44E118C5D23400E8D7B9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CrashReporter.xcodeproj; path = PLCrashReporter/CrashReporter.xcodeproj; sourceTree = "<group>"; };
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
+		5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CrashPad-Info.plist"; path = "Resources/CrashPad-Info.plist"; sourceTree = SOURCE_ROOT; };
+		5559E61218DFD42500D61019 /* Crash Pad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Crash Pad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5559E61618DFD42600D61019 /* EmbraceCrashPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EmbraceCrashPad-Info.plist"; sourceTree = "<group>"; };
+		5559E61818DFD42600D61019 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5559E61A18DFD42600D61019 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		5559E61C18DFD42600D61019 /* EmbraceCrashPad-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EmbraceCrashPad-Prefix.pch"; sourceTree = "<group>"; };
+		5559E61E18DFD42600D61019 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		5559E62018DFD42600D61019 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5559E62118DFD42600D61019 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5559E62418DFD42600D61019 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		5559E62618DFD42600D61019 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		5559E63318DFD42600D61019 /* EmbraceCrashPadTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EmbraceCrashPadTests-Info.plist"; sourceTree = "<group>"; };
+		5559E63518DFD42600D61019 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5559E63718DFD42600D61019 /* EmbraceCrashPadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmbraceCrashPadTests.m; sourceTree = "<group>"; };
 		555A70191890BCBF00305EC6 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = Source/Application.h; sourceTree = SOURCE_ROOT; };
 		555A701A1890BCBF00305EC6 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Application.m; path = Source/Application.m; sourceTree = SOURCE_ROOT; };
 		555B3C7F1880EE740088C15C /* CloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloseButton.m; path = Source/CloseButton.m; sourceTree = SOURCE_ROOT; };
@@ -357,7 +373,6 @@
 		55CF848F18BF459600EF33F7 /* Scripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scripting.h; path = Source/Scripting.h; sourceTree = "<group>"; };
 		55CF849018BF459600EF33F7 /* Scripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Scripting.m; path = Source/Scripting.m; sourceTree = "<group>"; };
 		55DD538C18B99A530084628D /* CrashPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = CrashPad.entitlements; path = Resources/CrashPad.entitlements; sourceTree = "<group>"; };
-		55DD539118B99F4C0084628D /* CrashPad */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CrashPad; sourceTree = BUILT_PRODUCTS_DIR; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
 		55E0B34018CBFA6900B4087C /* NoDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoDropImageView.h; path = Source/NoDropImageView.h; sourceTree = SOURCE_ROOT; };
@@ -393,6 +408,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5559E60F18DFD42500D61019 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				552EC02B18DFD52E000B82AB /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		558DC07C187785BC00C85770 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -414,14 +437,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		55DD538E18B99F4C0084628D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				55DD539E18B99F890084628D /* AppKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -439,6 +454,48 @@
 				554D318B18BADDBF007DEB16 /* libCrashReporter.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5559E61418DFD42600D61019 /* EmbraceCrashPad */ = {
+			isa = PBXGroup;
+			children = (
+				5559E62018DFD42600D61019 /* AppDelegate.h */,
+				5559E62118DFD42600D61019 /* AppDelegate.m */,
+				5559E62318DFD42600D61019 /* MainMenu.xib */,
+				5559E62618DFD42600D61019 /* Images.xcassets */,
+				5559E61518DFD42600D61019 /* Supporting Files */,
+			);
+			path = EmbraceCrashPad;
+			sourceTree = "<group>";
+		};
+		5559E61518DFD42600D61019 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5559E61618DFD42600D61019 /* EmbraceCrashPad-Info.plist */,
+				5559E61718DFD42600D61019 /* InfoPlist.strings */,
+				5559E61A18DFD42600D61019 /* main.m */,
+				5559E61C18DFD42600D61019 /* EmbraceCrashPad-Prefix.pch */,
+				5559E61D18DFD42600D61019 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5559E63118DFD42600D61019 /* EmbraceCrashPadTests */ = {
+			isa = PBXGroup;
+			children = (
+				5559E63718DFD42600D61019 /* EmbraceCrashPadTests.m */,
+				5559E63218DFD42600D61019 /* Supporting Files */,
+			);
+			path = EmbraceCrashPadTests;
+			sourceTree = "<group>";
+		};
+		5559E63218DFD42600D61019 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5559E63318DFD42600D61019 /* EmbraceCrashPadTests-Info.plist */,
+				5559E63418DFD42600D61019 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		556ACE30187BB3F800AED4BC /* Wrapped C++ */ = {
@@ -514,6 +571,8 @@
 				55BC0B1D1878D85000D84481 /* Other Sources */,
 				55708C7C18B8A9690059110C /* Crash Pad */,
 				558DC089187785BC00C85770 /* Resources */,
+				5559E61418DFD42600D61019 /* EmbraceCrashPad */,
+				5559E63118DFD42600D61019 /* EmbraceCrashPadTests */,
 				558DC081187785BC00C85770 /* Frameworks */,
 				558DC080187785BC00C85770 /* Products */,
 			);
@@ -523,7 +582,7 @@
 			isa = PBXGroup;
 			children = (
 				558DC07F187785BC00C85770 /* Embrace.app */,
-				55DD539118B99F4C0084628D /* CrashPad */,
+				5559E61218DFD42500D61019 /* Crash Pad.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -597,6 +656,7 @@
 				55A0B16E1890A80400866F04 /* Test Sounds */,
 				55F7ABDB18AF1BE8006B6FBB /* Safe Presets */,
 				55F7ABDC18AF1BF5006B6FBB /* Images */,
+				5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */,
 				558DC0CA1877868400C85770 /* Info.plist */,
 				55F7ABF718B21C31006B6FBB /* Localizable.strings */,
 				558DC0C01877861E00C85770 /* InfoPlist.strings */,
@@ -831,6 +891,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5559E61118DFD42500D61019 /* CrashPad */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5559E63918DFD42600D61019 /* Build configuration list for PBXNativeTarget "CrashPad" */;
+			buildPhases = (
+				5559E60E18DFD42500D61019 /* Sources */,
+				5559E60F18DFD42500D61019 /* Frameworks */,
+				5559E61018DFD42500D61019 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CrashPad;
+			productName = EmbraceCrashPad;
+			productReference = 5559E61218DFD42500D61019 /* Crash Pad.app */;
+			productType = "com.apple.product-type.application";
+		};
 		558DC07E187785BC00C85770 /* Embrace */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
@@ -847,29 +924,13 @@
 			buildRules = (
 			);
 			dependencies = (
-				55DD53A018B99F960084628D /* PBXTargetDependency */,
+				552EC02D18DFD543000B82AB /* PBXTargetDependency */,
 				55AB41DE18BADFE700DBCD7B /* PBXTargetDependency */,
 			);
 			name = Embrace;
 			productName = Embrace;
 			productReference = 558DC07F187785BC00C85770 /* Embrace.app */;
 			productType = "com.apple.product-type.application";
-		};
-		55DD539018B99F4C0084628D /* CrashPad */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 55DD539A18B99F4C0084628D /* Build configuration list for PBXNativeTarget "CrashPad" */;
-			buildPhases = (
-				55DD538D18B99F4C0084628D /* Sources */,
-				55DD538E18B99F4C0084628D /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CrashPad;
-			productName = CrashPad;
-			productReference = 55DD539118B99F4C0084628D /* CrashPad */;
-			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -909,7 +970,7 @@
 			projectRoot = "";
 			targets = (
 				558DC07E187785BC00C85770 /* Embrace */,
-				55DD539018B99F4C0084628D /* CrashPad */,
+				5559E61118DFD42500D61019 /* CrashPad */,
 			);
 		};
 /* End PBXProject section */
@@ -925,6 +986,15 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5559E61018DFD42500D61019 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */,
+				552EC03018DFDA7C000B82AB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		558DC07D187785BC00C85770 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1015,7 +1085,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "MACOS=\"${BUILT_PRODUCTS_DIR}\"/\"${EXECUTABLE_FOLDER_PATH}\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$MACOS/CrashPad\"\nfi";
+			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
 		};
 		55C5D57918C941CA000C95A4 /* Generate Receipt Validation */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1049,6 +1119,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5559E60E18DFD42500D61019 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				552EC02A18DFD527000B82AB /* CrashPad_main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		558DC07B187785BC00C85770 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1111,30 +1189,54 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		55DD538D18B99F4C0084628D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				55DD539D18B99F840084628D /* CrashPad_main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		552EC02D18DFD543000B82AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5559E61118DFD42500D61019 /* CrashPad */;
+			targetProxy = 552EC02C18DFD543000B82AB /* PBXContainerItemProxy */;
+		};
 		55AB41DE18BADFE700DBCD7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "CrashReporter-MacOSX-Static";
 			targetProxy = 55AB41DD18BADFE700DBCD7B /* PBXContainerItemProxy */;
 		};
-		55DD53A018B99F960084628D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 55DD539018B99F4C0084628D /* CrashPad */;
-			targetProxy = 55DD539F18B99F960084628D /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		5559E61718DFD42600D61019 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5559E61818DFD42600D61019 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5559E61D18DFD42600D61019 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5559E61E18DFD42600D61019 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		5559E62318DFD42600D61019 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5559E62418DFD42600D61019 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		5559E63418DFD42600D61019 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5559E63518DFD42600D61019 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		558DC0BC1877861E00C85770 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1162,6 +1264,34 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		5559E63A18DFD42600D61019 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		5559E63B18DFD42600D61019 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */;
+			buildSettings = {
+			};
+			name = Profile;
+		};
+		5559E63C18DFD42600D61019 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		5559E63D18DFD42600D61019 /* Submission */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */;
+			buildSettings = {
+			};
+			name = Submission;
+		};
 		558DC0AE187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1213,17 +1343,6 @@
 			};
 			name = Release;
 		};
-		55AF60A318C94ACD00BE2212 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				MACH_O_TYPE = mh_execute;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 		55AF60A418C94AD100BE2212 /* Submission */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1242,42 +1361,20 @@
 			};
 			name = Submission;
 		};
-		55AF60A618C94AD100BE2212 /* Submission */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				MACH_O_TYPE = mh_execute;
-				SKIP_INSTALL = YES;
-			};
-			name = Submission;
-		};
-		55DD539B18B99F4C0084628D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				MACH_O_TYPE = mh_execute;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		55DD539C18B99F4C0084628D /* Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				MACH_O_TYPE = mh_execute;
-				SKIP_INSTALL = YES;
-			};
-			name = Profile;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5559E63918DFD42600D61019 /* Build configuration list for PBXNativeTarget "CrashPad" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5559E63A18DFD42600D61019 /* Debug */,
+				5559E63B18DFD42600D61019 /* Profile */,
+				5559E63C18DFD42600D61019 /* Release */,
+				5559E63D18DFD42600D61019 /* Submission */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Profile;
+		};
 		558DC07A187785BC00C85770 /* Build configuration list for PBXProject "Embrace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1296,17 +1393,6 @@
 				558DC0B2187785BC00C85770 /* Profile */,
 				55AF60A218C94ACD00BE2212 /* Release */,
 				55AF60A518C94AD100BE2212 /* Submission */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Profile;
-		};
-		55DD539A18B99F4C0084628D /* Build configuration list for PBXNativeTarget "CrashPad" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				55DD539B18B99F4C0084628D /* Debug */,
-				55DD539C18B99F4C0084628D /* Profile */,
-				55AF60A318C94ACD00BE2212 /* Release */,
-				55AF60A618C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Profile;
