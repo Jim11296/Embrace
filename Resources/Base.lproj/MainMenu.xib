@@ -253,7 +253,7 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="ThV-ek-Daj"/>
-                                        <menuItem title="Key Signature" tag="4" enabled="NO" id="08M-kr-e41">
+                                        <menuItem title="Key Signatures" tag="4" enabled="NO" id="08M-kr-e41">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem title="Open Key Notation" tag="2" indentationLevel="1" id="tpq-gq-csW">

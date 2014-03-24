@@ -27,7 +27,7 @@ static NSDictionary *sGetDefaultValues()
         @"showsBPM":          @YES,
         @"showsComments":     @NO,
         @"showsGrouping":     @NO,
-        @"showsKeySignature": @YES,
+        @"showsKeySignature": @NO,
         @"showsEnergyLevel":  @NO,
         @"showsGenre":        @NO,
 
