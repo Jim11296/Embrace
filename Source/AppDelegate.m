@@ -262,6 +262,11 @@
         [menuItem setState:(yn ? NSOnState : NSOffState)];
         
         return isEnabled;
+
+    } else if (action == @selector(changeKeySignatureDisplay:)) {
+        KeySignatureDisplayMode mode = [[Preferences sharedInstance] keySignatureDisplayMode];
+        BOOL yn = mode == [menuItem tag];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
     
     } else if (action == @selector(changeViewLayout:)) {
         NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
@@ -515,6 +520,13 @@
     
     BOOL yn = [preferences isViewAttributeSelected:attribute];
     [preferences setViewAttribute:attribute selected:!yn];
+}
+
+
+- (IBAction) changeKeySignatureDisplay:(id)sender
+{
+    Preferences *preferences = [Preferences sharedInstance];
+    [preferences setKeySignatureDisplayMode:[sender tag]];
 }
 
 

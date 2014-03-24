@@ -28,6 +28,7 @@ static NSString * const sArtistKey        = @"artist";
 static NSString * const sStartTimeKey     = @"startTime";
 static NSString * const sStopTimeKey      = @"stopTime";
 static NSString * const sDurationKey      = @"duration";
+static NSString * const sInitialKeyKey    = @"initialKey";
 static NSString * const sTonalityKey      = @"tonality";
 static NSString * const sTrackLoudnessKey = @"trackLoudness";
 static NSString * const sTrackPeakKey     = @"trackPeak";
@@ -58,6 +59,7 @@ static NSString * const sGenreKey         = @"genre";
 @property (nonatomic) NSInteger databaseID;
 @property (nonatomic) NSInteger energyLevel;
 @property (nonatomic) NSString *genre;
+@property (nonatomic) NSString *initialKey;
 
 @property (atomic, getter=isCancelled) BOOL cancelled;
 @end
@@ -144,6 +146,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         affectingKeys = @[ @"overviewData", @"startTime" ];
     } else if ([key isEqualToString:@"silenceAtEnd"]) {
         affectingKeys = @[ @"overviewData", @"stopTime" ];
+    } else if ([key isEqualToString:@"tonality"]) {
+        affectingKeys = @[ @"initialKey" ];
     }
 
     if (affectingKeys) {
@@ -327,6 +331,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
     if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
     if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:sEnergyLevelKey];
+    if (_initialKey)     [state setObject:  _initialKey         forKey:sInitialKeyKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -637,16 +642,6 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (![self internalURL]) {
         return;
     }
-    
-    void (^parseTonality)(NSString *, NSMutableDictionary *) = ^(NSString *string, NSMutableDictionary *dictionary) {
-        Tonality tonality = Tonality_Unknown;
-        tonality = GetTonalityForString(string);
-
-        if (tonality != Tonality_Unknown) {
-            [dictionary setObject:@(tonality) forKey:sTonalityKey];
-        }
-    };
-
 
     void (^parseMetadataItem)(AVMetadataItem *, NSMutableDictionary *) = ^(AVMetadataItem *item, NSMutableDictionary *dictionary) {
 
@@ -673,7 +668,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             [dictionary setObject:[item stringValue] forKey:sTitleKey];
 
         } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
-            parseTonality(stringValue, dictionary);
+            [dictionary setObject:[item stringValue] forKey:sInitialKeyKey];
 
         } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
             [dictionary setObject:numberValue forKey:sEnergyLevelKey];
@@ -699,10 +694,10 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             }
             
         } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2.3 TKEY tag
-            parseTonality(stringValue, dictionary);
+            [dictionary setObject:stringValue forKey:sInitialKeyKey];
 
         } else if ([key isEqual:@((UInt32) '\00TKE')] && stringValue) { // Initial key as ID3v2.2 TKE tag
-            parseTonality(stringValue, dictionary);
+            [dictionary setObject:stringValue forKey:sInitialKeyKey];
 
         } else if ([key isEqual:@((UInt32) 'tmpo')] && numberValue) { // Tempo key, 'tmpo'
             [dictionary setObject:numberValue forKey:sBPMKey];
