@@ -1292,6 +1292,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Ricci Adams (XXXXXXXXXX)";
 				SKIP_INSTALL = YES;
 			};
 			name = Submission;
