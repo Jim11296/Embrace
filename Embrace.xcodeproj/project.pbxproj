@@ -1220,6 +1220,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				MACH_O_TYPE = mh_execute;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -1248,6 +1249,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				MACH_O_TYPE = mh_execute;
+				SKIP_INSTALL = YES;
 			};
 			name = Submission;
 		};
@@ -1258,6 +1260,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				MACH_O_TYPE = mh_execute;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1268,6 +1271,7 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/CrashPad.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				MACH_O_TYPE = mh_execute;
+				SKIP_INSTALL = YES;
 			};
 			name = Profile;
 		};
