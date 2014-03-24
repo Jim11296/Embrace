@@ -136,10 +136,4 @@
 }
 
 
-- (NSString *) scriptingCamelotKeycode
-{
-    return GetCamelotStringForTonality([self tonality]);
-}
-
-
 @end

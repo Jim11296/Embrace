@@ -375,7 +375,6 @@
 
     BOOL showsArtist         = [preferences showsArtist];
     BOOL showsBeatsPerMinute = [preferences showsBPM];
-    BOOL showsCamelot        = [preferences showsCamelot];
     BOOL showsComments       = [preferences showsComments];
     BOOL showsGrouping       = [preferences showsGrouping];
     BOOL showsKeySignature   = [preferences showsKeySignature];
@@ -431,13 +430,23 @@
         arrayForTonality = right3;
     }
     
-    Tonality tonality = [track tonality];
-    if (showsCamelot && (tonality != Tonality_Unknown)) {
-        [arrayForTonality addObject:GetCamelotStringForTonality(tonality)];
-    }
+    if (showsKeySignature) {
+        KeySignatureDisplayMode displayMode = [preferences keySignatureDisplayMode];
+        NSString *keySignatureString = nil;
+        
+        if (displayMode == KeySignatureDisplayModeRaw) {
+            keySignatureString = [track initialKey];
 
-    if (showsKeySignature && (tonality != Tonality_Unknown)) {
-        [arrayForTonality addObject:GetTraditionalStringForTonality(tonality)];
+        } else if (displayMode == KeySignatureDisplayModeTraditional) {
+            keySignatureString = GetTraditionalStringForTonality([track tonality]);
+
+        } else if (displayMode == KeySignatureDisplayModeOpenKeyNotation) {
+            keySignatureString = GetOpenKeyNotationStringForTonality([track tonality]);
+        }
+        
+        if ([keySignatureString length]) {
+            [arrayForTonality addObject:keySignatureString];
+        }
     }
 
     NSMutableArray *arrayForGenre = left2;

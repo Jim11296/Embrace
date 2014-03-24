@@ -13,31 +13,31 @@
 typedef NS_ENUM(NSInteger, Tonality) {
     Tonality_Unknown,
     
-    Tonality_1A_AbMinor = 1,
-    Tonality_2A_EbMinor,
-    Tonality_3A_BbMinor,
-    Tonality_4A_FMinor,
-    Tonality_5A_CMinor,
-    Tonality_6A_GMinor,
-    Tonality_7A_DMinor,
-    Tonality_8A_AMinor,
-    Tonality_9A_EMinor,
-    Tonality_10A_BMinor,
-    Tonality_11A_FsMinor,
-    Tonality_12A_DbMinor,
+    Tonality_Minor__6___1A__Ab = 1,
+    Tonality_Minor__7___2A__Eb,
+    Tonality_Minor__8___3A__Bb,
+    Tonality_Minor__9___4A__F,
+    Tonality_Minor_10___5A__C,
+    Tonality_Minor_11___6A__G,
+    Tonality_Minor_12___7A__D,
+    Tonality_Minor__1___8A__A,
+    Tonality_Minor__2___9A__E,
+    Tonality_Minor__3__10A__B,
+    Tonality_Minor__4__11A__Fs,
+    Tonality_Minor__5__12A__Cs,
 
-    Tonality_1B_BMajor = 13,
-    Tonality_2B_FsMajor,
-    Tonality_3B_DbMajor,
-    Tonality_4B_AbMajor,
-    Tonality_5B_EbMajor,
-    Tonality_6B_BbMajor,
-    Tonality_7B_FMajor,
-    Tonality_8B_CMajor,
-    Tonality_9B_GMajor,
-    Tonality_10B_DMajor,
-    Tonality_11B_AMajor,
-    Tonality_12B_EMajor
+    Tonality_Major__6___1B__B = 13,
+    Tonality_Major__7___2B__Fs,
+    Tonality_Major__8___3B__Db,
+    Tonality_Major__9___4B__Ab,
+    Tonality_Major_10___5B__Eb,
+    Tonality_Major_11___6B__Bb,
+    Tonality_Major_12___7B__F,
+    Tonality_Major__1___8B__C,
+    Tonality_Major__2___9B__G,
+    Tonality_Major__3__10B__D,
+    Tonality_Major__4__11B__A,
+    Tonality_Major__5__12B__E
 };
 
 extern BOOL CheckError(OSStatus error, const char *operation);
@@ -53,7 +53,7 @@ extern NSString *GetStringForFourCharCodeObject(id object);
 
 extern Tonality GetTonalityForString(NSString *string);
 extern NSString *GetTraditionalStringForTonality(Tonality tonality);
-extern NSString *GetCamelotStringForTonality(Tonality tonality);
+extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality);
 
 extern NSColor *GetRGBColor(int rgb, CGFloat alpha);
 

@@ -132,10 +132,6 @@
 				<cocoa key="scriptingArtist"/>
             </property>
 
-			<property name="camelot keycode" access="r" code="kcam" type="text" description="the Camelot keycode of the track">
-				<cocoa key="scriptingCamelotKeycode"/>
-            </property>
-
 			<property name="comment" access="r" code="comm" type="text" description="freeform notes about the track">
 				<cocoa key="scriptingComment"/>
             </property>

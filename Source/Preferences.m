@@ -28,9 +28,10 @@ static NSDictionary *sGetDefaultValues()
         @"showsComments":     @NO,
         @"showsGrouping":     @NO,
         @"showsKeySignature": @YES,
-        @"showsCamelot":      @NO,
         @"showsEnergyLevel":  @NO,
         @"showsGenre":        @NO,
+
+        @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
         @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
         @"mainOutputSampleRate":  @(0),
@@ -162,9 +163,6 @@ static void sRegisterDefaults()
     } else if (attribute == ViewAttributeKeySignature) {
         return @"showsKeySignature";
     
-    } else if (attribute == ViewAttributeCamelotKeycode) {
-        return @"showsCamelot";
-
     } else if (attribute == ViewAttributeEnergyLevel) {
         return @"showsEnergyLevel";
 

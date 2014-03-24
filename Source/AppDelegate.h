@@ -26,6 +26,7 @@
 
 - (IBAction) changeViewLayout:(id)sender;
 - (IBAction) changeViewAttributes:(id)sender;
+- (IBAction) changeKeySignatureDisplay:(id)sender;
 - (IBAction) revealEndTime:(id)sender;
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;

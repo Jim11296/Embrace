@@ -68,6 +68,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSString *comments;
 @property (nonatomic, readonly) NSString *grouping;
 @property (nonatomic, readonly) NSString *genre;
+@property (nonatomic, readonly) NSString *initialKey;
 
 @property (nonatomic, readonly) NSInteger beatsPerMinute;
 @property (nonatomic, readonly) NSTimeInterval startTime;

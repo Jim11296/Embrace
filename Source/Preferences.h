@@ -10,10 +10,10 @@
 
 @class AudioDevice;
 
-typedef NS_ENUM(NSInteger, TonalityDisplayMode) {
-    TonalityDisplayModeNone,
-    TonalityDisplayModeTraditional,
-    TonalityDisplayModeCamelot
+typedef NS_ENUM(NSInteger, KeySignatureDisplayMode) {
+    KeySignatureDisplayModeRaw,
+    KeySignatureDisplayModeTraditional,
+    KeySignatureDisplayModeOpenKeyNotation
 };
 
 
@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, ViewAttribute) {
     ViewAttributeComments,
     ViewAttributeGrouping,
     ViewAttributeKeySignature,
-    ViewAttributeCamelotKeycode,
+    ViewAttributeRawKeySignature,
     ViewAttributeEnergyLevel,
     ViewAttributeGenre
 };
@@ -42,12 +42,13 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic) BOOL showsArtist;
 @property (nonatomic) BOOL showsBPM;
-@property (nonatomic) BOOL showsCamelot;
 @property (nonatomic) BOOL showsComments;
 @property (nonatomic) BOOL showsGrouping;
 @property (nonatomic) BOOL showsKeySignature;
 @property (nonatomic) BOOL showsEnergyLevel;
 @property (nonatomic) BOOL showsGenre;
+
+@property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 
 @property (nonatomic) AudioDevice *mainOutputAudioDevice;
 @property (nonatomic) double       mainOutputSampleRate;
