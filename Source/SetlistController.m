@@ -457,8 +457,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
 
-    EmbraceRotateLogs();
-
     [[self tracksController] removeAllTracks];
 }
 

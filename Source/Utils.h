@@ -64,6 +64,3 @@ extern NSString *GetStringForTime(NSTimeInterval time);
 extern NSString *GetApplicationSupportDirectory();
 
 
-extern void EmbraceRotateLogs(void);
-extern void EmbraceLog(NSString *category, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
-

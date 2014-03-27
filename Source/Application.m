@@ -57,6 +57,10 @@
             NSCommandKeyMask;
 
         if (([event modifierFlags] & commonModifiers) == 0 && [keysPressed isEqualToString:@" "]) {
+            if ([event isARepeat]) {
+                return;
+            }
+            
             [(AppDelegate *)[self delegate] performPreferredPlaybackAction:self];
             return;
         }

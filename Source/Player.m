@@ -114,7 +114,8 @@ typedef struct {
     BOOL         _tookHogMode;
     BOOL         _hadErrorDuringReconfigure;
 
-    IOPMAssertionID _powerAssertionID;
+    IOPMAssertionID _systemPowerAssertionID;
+    IOPMAssertionID _displayPowerAssertionID;
     
     NSMutableDictionary *_effectToNodeMap;
     NSHashTable *_listeners;
@@ -367,12 +368,16 @@ typedef struct {
     NSTimeInterval roundedTimeElapsed;
     NSTimeInterval roundedTimeRemaining;
 
+    char logBranchTaken = 0;
+
     if (timeStamp.mSampleTime < 0) {
         _timeElapsed   = GetDeltaInSecondsForHostTimes(GetCurrentHostTime(), _currentStartHostTime);
         _timeRemaining = [_currentTrack playDuration];
         
         roundedTimeElapsed = floor(_timeElapsed);
         roundedTimeRemaining = round([_currentTrack playDuration]);
+
+        logBranchTaken = 'a';
 
     } else {
         Float64 sampleRate = [_currentScheduler clientFormat].mSampleRate;
@@ -382,15 +387,22 @@ typedef struct {
         
         roundedTimeElapsed = floor(_timeElapsed);
         roundedTimeRemaining = round([_currentTrack playDuration]) - roundedTimeElapsed;
+
+        logBranchTaken = 'b';
     }
 
     if (_timeRemaining < 0 || [_currentTrack trackError]) {
+        Float64 sampleRate = [_currentScheduler clientFormat].mSampleRate;
+
+        EmbraceLog(@"Player", @"Marking track as done.  _timeElapsed: %g, _timeRemaining: %g, error: %ld", _timeElapsed, _timeRemaining, (long) [_currentTrack trackError]);
+        EmbraceLog(@"Player", @"Branch taken was: %c.  _currentStartHostTime: %@, sampleRate: %g, currentPlayTime: %g", logBranchTaken, @(_currentStartHostTime), (double)sampleRate, (double)currentPlayTime);
+        
         done = YES;
 
         status = TrackStatusPlayed;
         _timeElapsed = [_currentTrack playDuration];
         _timeRemaining = 0;
-        
+
         roundedTimeElapsed = round([_currentTrack playDuration]);
         roundedTimeRemaining = 0;
     }
@@ -1131,21 +1143,28 @@ static OSStatus sInputRenderCallback(
             [listener player:self didUpdatePlaying:YES];
         }
         
-        if (_powerAssertionID) {
-            IOPMAssertionRelease(_powerAssertionID);
-            _powerAssertionID = 0;
+        if (_displayPowerAssertionID) {
+            IOPMAssertionRelease(_displayPowerAssertionID);
+            _displayPowerAssertionID = 0;
         }
-        
-        
-        
-        BOOL preventDisplaySleep = [[NSUserDefaults standardUserDefaults] boolForKey:@"PreventDisplaySleepWhenPlaying"];
-        CFStringRef name = preventDisplaySleep ? kIOPMAssertPreventUserIdleDisplaySleep : kIOPMAssertPreventUserIdleSystemSleep;
-        
+
+        if (_systemPowerAssertionID) {
+            IOPMAssertionRelease(_systemPowerAssertionID);
+            _systemPowerAssertionID = 0;
+        }
+       
         IOPMAssertionCreateWithName(
-            name,
+            kIOPMAssertPreventUserIdleDisplaySleep,
             kIOPMAssertionLevelOn,
             CFSTR("Embrace is playing audio"),
-            &_powerAssertionID
+            &_displayPowerAssertionID
+        );
+
+        IOPMAssertionCreateWithName(
+            kIOPMAssertPreventUserIdleSystemSleep,
+            kIOPMAssertionLevelOn,
+            CFSTR("Embrace is playing audio"),
+            &_systemPowerAssertionID
         );
     }
 }
@@ -1234,7 +1253,10 @@ static OSStatus sInputRenderCallback(
     }
 
     Boolean isRunning = 0;
-    AUGraphIsRunning(_graph, &isRunning);
+    CheckError(
+        AUGraphIsRunning(_graph, &isRunning),
+        "AUGraphIsRunning"
+    );
     
     if (isRunning) {
         _renderUserInfo.stopRequested = 1;
@@ -1271,9 +1293,14 @@ static OSStatus sInputRenderCallback(
         [listener player:self didUpdatePlaying:NO];
     }
 
-    if (_powerAssertionID) {
-        IOPMAssertionRelease(_powerAssertionID);
-        _powerAssertionID = 0;
+    if (_displayPowerAssertionID) {
+        IOPMAssertionRelease(_displayPowerAssertionID);
+        _displayPowerAssertionID = 0;
+    }
+
+    if (_systemPowerAssertionID) {
+        IOPMAssertionRelease(_systemPowerAssertionID);
+        _systemPowerAssertionID = 0;
     }
 }
 
@@ -1413,16 +1440,6 @@ static OSStatus sInputRenderCallback(
 - (BOOL) isPlaying
 {
     return _currentTrack != nil;
-}
-
-
-- (NSArray *) debugInternalEffects
-{
-    Effect *effect = [[Effect alloc] initWithEffectType:nil];
-    
-//    [effect _setAudioUnit:_limiterAudioUnit];
-    
-    return @[ effect ];
 }
 
 
