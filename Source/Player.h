@@ -44,8 +44,6 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 - (AudioUnit) audioUnitForEffect:(Effect *)effect;
 - (void) saveEffectState;
 
-@property (nonatomic, strong) NSArray *debugInternalEffects;
-
 @property (nonatomic) double matchLoudnessLevel;
 @property (nonatomic) double preAmpLevel;
 

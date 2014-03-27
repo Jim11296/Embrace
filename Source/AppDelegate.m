@@ -89,6 +89,7 @@
     [[self debugMenuItem] setHidden:NO];
 #endif
 
+    EmbraceLog(@"Hello", @"Embrace finished launching at %@", [NSDate date]);
 }
 
 

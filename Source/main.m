@@ -18,6 +18,8 @@ int main(int argc, const char * argv[])
 #if APP_STORE
     CheckReceiptAndRun(argc, argv);
 #else
+    EmbraceOpenLogFile();
+    EmbraceLog(@"Hello", @"Embrace launched at %@", [NSDate date]);
     return NSApplicationMain(argc,  (const char **) argv);
 #endif
 }

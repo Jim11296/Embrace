@@ -14,6 +14,7 @@
     #import <CoreAudioKit/CoreAudioKit.h>
 
     #import "Utils.h"
+    #import "Log.h"
     #import "WrappedUtils.h"
     #import "Application.h"
     #import "URLExtensions.h"
