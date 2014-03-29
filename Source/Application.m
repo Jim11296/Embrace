@@ -60,6 +60,8 @@
             if ([event isARepeat]) {
                 return;
             }
+
+            EmbraceLog(@"Application", @"Sending performPreferredPlaybackAction: due to space bar");
             
             [(AppDelegate *)[self delegate] performPreferredPlaybackAction:self];
             return;

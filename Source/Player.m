@@ -182,6 +182,8 @@ typedef struct {
             [self _checkIssues];
             
             if (![_outputDevice isConnected]) {
+                EmbraceLog(@"Player", @"Calling -hardStop due to %@ -isConnected returning false", _outputDevice);
+
                 [self hardStop];
             }
         }
@@ -338,7 +340,11 @@ typedef struct {
 
     TrackStatus status = TrackStatusPlaying;
 
-    AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize);
+    CheckError(
+        AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize),
+        "AudioUnitGetProperty[ kAudioUnitProperty_CurrentPlayTime ]"
+    );
+
     Float64 currentPlayTime = timeStamp.mSampleTime;
     BOOL done = NO;
     
@@ -1108,6 +1114,7 @@ static OSStatus sInputRenderCallback(
         [self _setupAndStartPlayback];
 
     } else {
+        EmbraceLog(@"Player", @"Calling -hardStop due to nil nextTrack");
         [self hardStop];
     }
 }
@@ -1180,18 +1187,24 @@ static OSStatus sInputRenderCallback(
         BOOL isStartSilence = _timeElapsed   <  [_currentTrack silenceAtStart];
 
         if (_volume == 0) {
+            EmbraceLog(@"Player", @"Calling -hardStop due to volume=0");
             [self hardStop];
         
         } else if (isEndSilence) {
+            EmbraceLog(@"Player", @"Calling -hardStop due to isEndSilence");
+
             [_currentTrack setTrackStatus:TrackStatusPlayed];
             [self hardStop];
             
         } else if (isStartSilence) {
+            EmbraceLog(@"Player", @"Calling -hardStop due to isStartSilence");
+
             Track *track = _currentTrack;
             [self hardStop];
             [track setTrackStatus:TrackStatusQueued];
 
         } else if (trackStatus == TrackStatusQueued) {
+            EmbraceLog(@"Player", @"Calling -hardStop due to trackStatus == TrackStatusQueued");
             [self hardStop];
 
         } else if (trackStatus == TrackStatusPlaying) {
@@ -1199,10 +1212,12 @@ static OSStatus sInputRenderCallback(
         
         // This shouldn't happen, if it does advance to next song
         } else if (trackStatus == TrackStatusPlayed) {
+            EmbraceLog(@"Player", @"Track already played? Calling -playNextTrack");
             [self playNextTrack];
         }
         
     } else {
+        EmbraceLog(@"Player", @"Calling -hardStop due to nil _currentTrack");
         [self hardStop];
     }
 }
@@ -1229,6 +1244,7 @@ static OSStatus sInputRenderCallback(
         [self _setupAndStartPlayback];
 
     } else {
+        EmbraceLog(@"Player", @"Calling -hardStop due to nil nextTrack");
         [self hardStop];
     }
 }
