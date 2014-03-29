@@ -18,7 +18,6 @@
 typedef NS_ENUM(NSInteger, PlaybackAction) {
     PlaybackActionPlay = 0,
     PlaybackActionPause,
-    PlaybackActionTogglePause,
     PlaybackActionShowIssue
 };
 

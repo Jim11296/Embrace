@@ -162,7 +162,12 @@
         NSPoint locationInSelf = [self convertPoint:windowPoint fromView:nil];
         CGFloat jumpY = ceil(locationInSelf.y);
 
-        if (jumpY < 0) jumpY = 0;
+        if (jumpY <  0) jumpY = 0;
+        if (jumpY > 14) jumpY = 14;
+
+        if (!NSPointInRect(locationInSelf, [self bounds])) {
+            jumpY = 0;
+        }
         
         CGFloat scale  = isPopIn ? 1.5  : 1;
         popTransform = CATransform3DRotate(popTransform, 0.01 * M_PI, 0, 0, 1);

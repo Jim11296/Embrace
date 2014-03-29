@@ -133,6 +133,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
+
 }
 
 
@@ -181,9 +182,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         }
 
     } else if (action == PlaybackActionPause) {
-        image = [NSImage imageNamed:@"pause_template"];
-
-    } else if (action == PlaybackActionTogglePause) {
         image = _confirmPause ? [NSImage imageNamed:@"stop_template"] : [NSImage imageNamed:@"pause_template"];
         alert = _confirmPause;
         enabled = YES;
@@ -361,6 +359,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 - (void) _clearConfirmPause
 {
     EmbraceLogMethod();
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmPause) object:nil];
 
     _confirmPause = NO;
     [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"pause_template"] alert:NO];
@@ -561,7 +561,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (PlaybackAction) preferredPlaybackAction
 {
-    Player        *player      = [Player sharedInstance];
+    Player *player = [Player sharedInstance];
 
     PlayerIssue issue = [player issue];
 
@@ -569,13 +569,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         return PlaybackActionShowIssue;
     
     } else if ([player isPlaying]) {
-        double volume = [player volume];
-
-        if (volume == 0) {
-            return PlaybackActionPause;
-        } else {
-            return PlaybackActionTogglePause;
-        }
+        return PlaybackActionPause;
 
     } else {
         return PlaybackActionPlay;
@@ -587,26 +581,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     if (action == PlaybackActionPlay) {
         Track *next = [[self tracksController] firstQueuedTrack];
-
         return next != nil;
-
-    } else if (action == PlaybackActionTogglePause) {
-        return YES;
-
-    } else if (action == PlaybackActionShowIssue) {
-        return YES;
-
-    } else if (action == PlaybackActionPause) {
-        Player *player = [Player sharedInstance];
-
-        BOOL isVolumeZero  = [player volume] == 0;
-        BOOL isAutoGapping = [player timeElapsed] < 0;
-        
-        return isVolumeZero || isAutoGapping;
-
-    } else {
-        return NO;
     }
+    
+    return YES;
 }
 
 
@@ -678,23 +656,31 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     PlaybackAction action = [self preferredPlaybackAction];
 
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmPause) object:nil];
+
     if (action == PlaybackActionShowIssue) {
         [self showAlertForIssue:[[Player sharedInstance] issue]];
 
-    } else if (action == PlaybackActionTogglePause) {
-        if (!_confirmPause) {
+    } else if (action == PlaybackActionPause) {
+        BOOL isAtBeginningOfSong = [[Player sharedInstance] isAtBeginningOfSong];
+    
+        EmbraceLog(@"SetlistController", @"Performing PlaybackActionPause, _confirmPause is %ld", (long)_confirmPause);
+
+        if (!_confirmPause && !isAtBeginningOfSong) {
             _confirmPause = YES;
 
             [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"stop_template"] alert:YES];
             
             [self _updatePlayButton];
-            [self performSelector:@selector(_clearConfirmPause) withObject:nil afterDelay:5];
+            [self performSelector:@selector(_clearConfirmPause) withObject:nil afterDelay:2];
 
         } else {
             NSEvent *currentEvent = [NSApp currentEvent];
             NSEventType type = [currentEvent type];
             
             BOOL isDoubleClick = NO;
+
+            EmbraceLog(@"SetlistController", @"About to -hardStop with event: %@", currentEvent);
 
             if ((type == NSLeftMouseDown) || (type == NSRightMouseDown) || (type == NSOtherMouseDown)) {
                 isDoubleClick = [currentEvent clickCount] >= 2;
@@ -706,21 +692,18 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             }
         }
 
-    } else if (action == PlaybackActionPlay) {
+    } else {
         if (_didAutoPause) {
             _didAutoPause = NO;
 
-            [[Player sharedInstance] playOrSoftPause];
+            [[Player sharedInstance] play];
             [[Player sharedInstance] setVolume:_volumeBeforeAutoPause];
             
             _volumeBeforeKeyboard = 0;
 
         } else {
-            [[Player sharedInstance] playOrSoftPause];
+            [[Player sharedInstance] play];
         }
-    
-    } else {
-        [[Player sharedInstance] playOrSoftPause];
     }
 }
 

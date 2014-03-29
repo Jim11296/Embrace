@@ -319,14 +319,14 @@ CA
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="dRV-R7-nTR"/>
-                            <menuItem title="Hard Skip" keyEquivalent="," id="vXd-hf-SdA">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="Hard Skip" id="vXd-hf-SdA">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="hardSkip:" target="494" id="bUf-dw-4XJ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Hard Stop" keyEquivalent="." id="blg-iO-m7Q">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="Hard Stop" id="blg-iO-m7Q">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="hardPause:" target="494" id="1YX-td-uRq"/>
                                 </connections>

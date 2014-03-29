@@ -1120,16 +1120,6 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) playOrSoftPause
-{
-    if (_currentTrack) {
-        [self softPause];
-    } else {
-        [self play];
-    }
-}
-
-
 - (void) play
 {
     EmbraceLog(@"Player", @"-play");
@@ -1177,52 +1167,6 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) softPause
-{
-    EmbraceLog(@"Player", @"-softPause");
-
-    if (_currentTrack) {
-        TrackStatus trackStatus = [_currentTrack trackStatus];
-        BOOL isEndSilence   = _timeRemaining <= [_currentTrack silenceAtEnd];
-        BOOL isStartSilence = _timeElapsed   <  [_currentTrack silenceAtStart];
-
-        if (_volume == 0) {
-            EmbraceLog(@"Player", @"Calling -hardStop due to volume=0");
-            [self hardStop];
-        
-        } else if (isEndSilence) {
-            EmbraceLog(@"Player", @"Calling -hardStop due to isEndSilence");
-
-            [_currentTrack setTrackStatus:TrackStatusPlayed];
-            [self hardStop];
-            
-        } else if (isStartSilence) {
-            EmbraceLog(@"Player", @"Calling -hardStop due to isStartSilence");
-
-            Track *track = _currentTrack;
-            [self hardStop];
-            [track setTrackStatus:TrackStatusQueued];
-
-        } else if (trackStatus == TrackStatusQueued) {
-            EmbraceLog(@"Player", @"Calling -hardStop due to trackStatus == TrackStatusQueued");
-            [self hardStop];
-
-        } else if (trackStatus == TrackStatusPlaying) {
-            [_currentTrack setPausesAfterPlaying:![_currentTrack pausesAfterPlaying]];
-        
-        // This shouldn't happen, if it does advance to next song
-        } else if (trackStatus == TrackStatusPlayed) {
-            EmbraceLog(@"Player", @"Track already played? Calling -playNextTrack");
-            [self playNextTrack];
-        }
-        
-    } else {
-        EmbraceLog(@"Player", @"Calling -hardStop due to nil _currentTrack");
-        [self hardStop];
-    }
-}
-
-
 - (void) hardSkip
 {
     EmbraceLog(@"Player", @"-hardSkip");
@@ -1258,9 +1202,18 @@ static OSStatus sInputRenderCallback(
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setupAndStartPlayback) object:nil];
 
-    [_currentTrack setTrackStatus:TrackStatusPlayed];
-    [_currentTrack setPausesAfterPlaying:NO];
-    
+    if ([self isAtBeginningOfSong]) {
+        EmbraceLog(@"Player", @"Remarking %@ as queued due to _timeElapsed of %g", _currentTrack, _timeElapsed);
+
+        [_currentTrack setTrackStatus:TrackStatusQueued];
+
+    } else {
+        EmbraceLog(@"Player", @"Marking %@ as played", _currentTrack);
+
+        [_currentTrack setTrackStatus:TrackStatusPlayed];
+        [_currentTrack setPausesAfterPlaying:NO];
+    }
+
     [self setCurrentTrack:nil];
 
     if (_tickTimer) {
@@ -1318,6 +1271,12 @@ static OSStatus sInputRenderCallback(
         IOPMAssertionRelease(_systemPowerAssertionID);
         _systemPowerAssertionID = 0;
     }
+}
+
+
+- (BOOL) isAtBeginningOfSong
+{
+    return _timeElapsed < 2.0;
 }
 
 
