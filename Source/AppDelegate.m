@@ -56,6 +56,8 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    EmbraceLogMethod();
+
     // Load preferences
     [Preferences sharedInstance];
 
@@ -128,6 +130,8 @@
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)hasVisibleWindows
 {
+    EmbraceLogMethod();
+
     if (!hasVisibleWindows) {
         [self showSetlistWindow:self];
     }
@@ -138,6 +142,8 @@
 
 - (BOOL) application:(NSApplication *)sender openFile:(NSString *)filename
 {
+    EmbraceLogMethod();
+
     NSURL *fileURL = [NSURL fileURLWithPath:filename];
 
     if (IsAudioFileAtURL(fileURL)) {
@@ -151,6 +157,8 @@
 
 - (void) application:(NSApplication *)sender openFiles:(NSArray *)filenames
 {
+    EmbraceLogMethod();
+
     for (NSString *filename in [filenames reverseObjectEnumerator]) {
         NSURL *fileURL = [NSURL fileURLWithPath:filename];
 
@@ -163,6 +171,8 @@
 
 - (void) applicationWillTerminate:(NSNotification *)notification
 {
+    EmbraceLogMethod();
+
     [self _saveVisibleWindows];
 
     [[Player sharedInstance] saveEffectState];
@@ -174,6 +184,8 @@
 
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
+    EmbraceLogMethod();
+
     if ([[Player sharedInstance] isPlaying]) {
         NSString *messageText     = NSLocalizedString(@"Quit Embrace", nil);
         NSString *informativeText = NSLocalizedString(@"Music is currently playing. Are you sure you want to quit?", nil);
@@ -403,6 +415,8 @@
 
 - (IBAction) clearSetlist:(id)sender
 {
+    EmbraceLogMethod();
+
     if ([_setlistController shouldPromptForClear]) {
         NSString *messageText     = NSLocalizedString(@"Clear Set List", nil);
         NSString *informativeText = NSLocalizedString(@"You haven't saved or exported the current set list. Are you sure you want to clear it?", nil);
@@ -422,6 +436,8 @@
 
 - (IBAction) resetPlayedTracks:(id)sender
 {
+    EmbraceLogMethod();
+
     if ([_setlistController shouldPromptForClear]) {
         NSString *messageText     = NSLocalizedString(@"Reset Played Tracks", nil);
         NSString *informativeText = NSLocalizedString(@"Are you sure you want to reset all played tracks to the queued state?", nil);
@@ -441,6 +457,8 @@
 
 - (IBAction) openFile:(id)sender
 {
+    EmbraceLogMethod();
+
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
     if (!LoadPanelState(openPanel, @"open-file-panel")) {
@@ -468,12 +486,16 @@
 
 - (IBAction) copySetlist:(id)sender
 {
+    EmbraceLogMethod();
+
     [_setlistController copyToPasteboard:[NSPasteboard generalPasteboard]];
 }
 
 
 - (IBAction) saveSetlist:(id)sender
 {
+    EmbraceLogMethod();
+
     NSSavePanel *savePanel = [NSSavePanel savePanel];
 
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -510,12 +532,15 @@
 
 - (IBAction) changeViewLayout:(id)sender
 {
+    EmbraceLogMethod();
     [[Preferences sharedInstance] setNumberOfLayoutLines:[sender tag]];
 }
 
 
 - (IBAction) changeViewAttributes:(id)sender
 {
+    EmbraceLogMethod();
+
     Preferences *preferences = [Preferences sharedInstance];
     ViewAttribute attribute = [sender tag];
     
@@ -526,28 +551,50 @@
 
 - (IBAction) changeKeySignatureDisplay:(id)sender
 {
+    EmbraceLogMethod();
+
     Preferences *preferences = [Preferences sharedInstance];
     [preferences setKeySignatureDisplayMode:[sender tag]];
 }
 
 
-- (IBAction) exportSetlist:(id)sender                  {  [_setlistController exportToPlaylist]; }
-- (IBAction) performPreferredPlaybackAction:(id)sender {  [_setlistController performPreferredPlaybackAction:self]; }
-- (IBAction) increaseVolume:(id)sender                 {  [_setlistController increaseVolume:self];  }
-- (IBAction) decreaseVolume:(id)sender                 {  [_setlistController decreaseVolume:self];  }
-- (IBAction) increaseAutoGap:(id)sender                {  [_setlistController increaseAutoGap:self]; }
-- (IBAction) decreaseAutoGap:(id)sender                {  [_setlistController decreaseAutoGap:self]; }
-- (IBAction) revealEndTime:(id)sender                  {  [_setlistController revealEndTime:self];     }
+- (IBAction) exportSetlist:(id)sender   {  EmbraceLogMethod();  [_setlistController exportToPlaylist]; }
+- (IBAction) increaseAutoGap:(id)sender {  EmbraceLogMethod();  [_setlistController increaseAutoGap:self]; }
+- (IBAction) decreaseAutoGap:(id)sender {  EmbraceLogMethod();  [_setlistController decreaseAutoGap:self]; }
+- (IBAction) revealEndTime:(id)sender   {  EmbraceLogMethod();  [_setlistController revealEndTime:self];     }
+
+
+- (IBAction) performPreferredPlaybackAction:(id)sender
+{
+    EmbraceLog(@"AppDelegate", @"performPreferredPlaybackAction:  sender=%@, event=%@", sender, [NSApp currentEvent]);
+    [_setlistController performPreferredPlaybackAction:self];
+}
+
+
+- (IBAction) increaseVolume:(id)sender
+{
+    EmbraceLog(@"AppDelegate", @"increaseVolume:  sender=%@, event=%@", sender, [NSApp currentEvent]);
+    [_setlistController increaseVolume:self];
+}
+
+
+- (IBAction) decreaseVolume:(id)sender
+{
+    EmbraceLog(@"AppDelegate", @"decreaseVolume:  sender=%@, event=%@", sender, [NSApp currentEvent]);
+    [_setlistController decreaseVolume:self];
+}
 
 
 - (IBAction) hardSkip:(id)sender
 {
+    EmbraceLog(@"AppDelegate", @"hardSkip:  sender=%@, event=%@", sender, [NSApp currentEvent]);
     [[Player sharedInstance] hardSkip];
 }
 
 
 - (IBAction) hardPause:(id)sender
 {
+    EmbraceLog(@"AppDelegate", @"hardPause:  sender=%@, event=%@", sender, [NSApp currentEvent]);
     [[Player sharedInstance] hardStop];
 }
 
@@ -572,18 +619,21 @@
 
 - (IBAction) showSetlistWindow:(id)sender
 {
+    EmbraceLogMethod();
     [self _toggleWindowForController:_setlistController sender:sender];
 }
 
 
 - (IBAction) showEffectsWindow:(id)sender
 {
+    EmbraceLogMethod();
     [self _toggleWindowForController:_effectsController sender:sender];
 }
 
 
 - (IBAction) showCurrentTrack:(id)sender
 {
+    EmbraceLogMethod();
     [self _toggleWindowForController:_currentTrackController sender:sender];
 }
 
@@ -591,6 +641,8 @@
 - (IBAction) showDebugWindow:(id)sender
 {
 #if DEBUG
+    EmbraceLogMethod();
+
     if (!_debugController) {
         _debugController = [[DebugController alloc] init];
     }
@@ -602,6 +654,8 @@
 
 - (IBAction) sendCrashReports:(id)sender
 {
+    EmbraceLogMethod();
+
     NSAlert *(^makeAlertOne)() = ^{
         NSString *messageText     = NSLocalizedString(@"Send Crash Report?", nil);
         NSString *informativeText = NSLocalizedString(@"Information about the crash, your operating system, and device will be sent. No personal information is included.", nil);
@@ -634,6 +688,8 @@
 
 - (IBAction) openSupportFolder:(id)sender
 {
+    EmbraceLogMethod();
+
     NSString *file = GetApplicationSupportDirectory();
     file = [file stringByDeletingLastPathComponent];
 
@@ -643,6 +699,8 @@
 
 - (IBAction) showPreferences:(id)sender
 {
+    EmbraceLogMethod();
+
     if (!_preferencesController) {
         _preferencesController = [[PreferencesController alloc] init];
     }
@@ -653,6 +711,8 @@
 
 - (IBAction) sendFeedback:(id)sender
 {
+    EmbraceLogMethod();
+
     NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/contact/"];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
@@ -660,6 +720,8 @@
 
 - (IBAction) viewWebsite:(id)sender
 {
+    EmbraceLogMethod();
+
     NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/projects/embrace"];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
@@ -667,6 +729,8 @@
 
 - (IBAction) viewOnAppStore:(id)sender
 {
+    EmbraceLogMethod();
+
     NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/buy/embrace"];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
@@ -674,6 +738,8 @@
 
 - (IBAction) openAcknowledgements:(id)sender
 {
+    EmbraceLogMethod();
+
     NSString *fromPath = [[NSBundle mainBundle] pathForResource:@"Acknowledgements" ofType:@"rtf"];
     NSString *toPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[fromPath lastPathComponent]];
 

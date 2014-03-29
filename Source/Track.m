@@ -447,7 +447,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         NSURL *internalURL = sGetInternalURLForUUID(UUID, extension);
 
         if (![[NSFileManager defaultManager] fileExistsAtPath:[internalURL path]]) {
-            if ([[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
+            if (![[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
                 EmbraceLog(@"Track", @"%@, failed to copy to internal location: %@", self, error);
             } else {
                 EmbraceLog(@"Track", @"%@, copied %@ to internal location: %@", self, externalURL, internalURL);

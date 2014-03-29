@@ -113,3 +113,21 @@ void EmbraceLog(NSString *category, NSString *format, ...)
     va_end(v);
 }
 
+
+void _EmbraceLogMethod(const char *f)
+{
+    NSString *string = [NSString stringWithUTF8String:f];
+
+    if ([string hasPrefix:@"-["] || [string hasPrefix:@"+["]) {
+        NSCharacterSet *cs = [NSCharacterSet characterSetWithCharactersInString:@"+-[]"];
+        
+        string = [string stringByTrimmingCharactersInSet:cs];
+        NSArray *components = [string componentsSeparatedByString:@" "];
+        
+        EmbraceLog([components firstObject], @"%@", [components lastObject]);
+        
+    } else {
+        EmbraceLog(@"Function", @"%@", string);
+    }
+}
+
