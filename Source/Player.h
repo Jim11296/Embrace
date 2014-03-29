@@ -31,12 +31,11 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 
 + (instancetype) sharedInstance;
 
-- (void) playOrSoftPause;
-
 - (void) play;
-- (void) softPause;
 - (void) hardSkip;
 - (void) hardStop;
+
+- (BOOL) isAtBeginningOfSong;
 
 @property (nonatomic) double volume;
 
