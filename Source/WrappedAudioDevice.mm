@@ -388,6 +388,20 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 }
 
 
+- (UInt32) preferredAvailableFrameSize
+{
+    NSArray *availableFrameSizes = [self availableFrameSizes];
+
+    for (NSNumber *n in @[ @2048, @4096, @1024, @6144, @8192, @512 ]) {
+        if ([availableFrameSizes containsObject:n]) {
+            return [n unsignedIntValue];
+        }
+    }
+    
+    return [[availableFrameSizes lastObject] unsignedIntValue];
+}
+
+
 - (NSArray *) availableFrameSizes
 {
     NSMutableArray *frameSizes = [NSMutableArray array];

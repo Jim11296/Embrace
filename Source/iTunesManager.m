@@ -103,7 +103,12 @@ static NSString * const sLocationKey  = @"Location";
 
         EmbraceLog(@"iTunesManager", @"_libraryURL is: %@", _libraryURL);
 
-        _checkTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
+        _checkTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
+        
+        if ([_checkTimer respondsToSelector:@selector(setTolerance:)]) {
+            [_checkTimer setTolerance:5.0];
+        }
+        
         [self _checkLibrary:nil];
         
         _trackIDToLibraryMetadataMap    = [NSMutableDictionary dictionary];

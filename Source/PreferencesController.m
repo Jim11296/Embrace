@@ -175,15 +175,13 @@
     NSMenu *menu = [[self framesPopUp] menu];
     
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    UInt32 selectedFrames = [[Preferences sharedInstance] mainOutputFrames];
-    
-    if (!selectedFrames) {
-        selectedFrames = [[[[device controller] availableFrameSizes] firstObject] unsignedIntValue];
-    }
+    UInt32 selectedFrames  = [[Preferences sharedInstance] mainOutputFrames];
+    UInt32 preferredFrames = [[device controller] preferredAvailableFrameSize];
     
     [menu removeAllItems];
     
-    NSMenuItem *itemToSelect = nil;
+    NSMenuItem *selectedItem  = nil;
+    NSMenuItem *preferredItem = nil;
 
     for (NSNumber *number in [device frameSizes]) {
         NSMenuItem *item = [[NSMenuItem alloc] init];
@@ -192,13 +190,16 @@
         [item setRepresentedObject:number];
         
         if ([number unsignedIntegerValue] == selectedFrames) {
-            itemToSelect = item;
+            selectedItem = item;
+        }
+        if ([number unsignedIntegerValue] == preferredFrames) {
+            preferredItem = item;
         }
         
         [menu addItem:item];
     }
     
-    [[self framesPopUp] selectItem:itemToSelect];
+    [[self framesPopUp] selectItem:selectedItem ? selectedItem : preferredItem];
 }
 
 

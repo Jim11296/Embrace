@@ -933,6 +933,50 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (void) player:(Player *)player didInterruptPlaybackWithReason:(PlayerInterruptionReason)reason
+{
+    NSString *messageText = NSLocalizedString(@"Another application interrupted playback.", nil);
+
+    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    NSString *deviceName = [device name];
+
+    NSString *otherButton = NSLocalizedString(@"Show Preferences", nil);
+
+    NSString *informativeText = NSLocalizedString(@"To prevent this, enable \\U201cTake exclusive access\\U201d in Preferences.", nil);
+
+    if (reason == PlayerInterruptionReasonHoggedByOtherProcess) {
+        pid_t hogModeOwner = [[device controller] hogModeOwner];
+        NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
+        
+        if (owner) {
+            NSString *format = NSLocalizedString(@"The application \\U201c%@\\U201d interrupted playback by taking exclusive access to \\U201c%@\\U201d.", nil);
+            NSString *applicationName = [owner localizedName];
+            messageText = [NSString stringWithFormat:format, applicationName, deviceName];
+
+        } else {
+            NSString *format = NSLocalizedString(@"Another application interrupted playback by taking exclusive access to \\U201c%@\\U201d.", nil);
+            messageText = [NSString stringWithFormat:format, deviceName];
+        }
+
+    } else if (reason == PlayerInterruptionReasonSampleRateChanged) {
+        NSString *format = NSLocalizedString(@"Another application interrupted playback by changing the sample rate of \\U201c%@\\U201d.", nil);
+        messageText = [NSString stringWithFormat:format, deviceName];
+
+    } else if (reason == PlayerInterruptionReasonFramesChanged) {
+        NSString *format = NSLocalizedString(@"Another application interrupted playback by changing the buffer size of \\U201c%@\\U201d.", nil);
+        messageText = [NSString stringWithFormat:format, deviceName];
+    }
+
+    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@""];
+    [alert setAlertStyle:NSCriticalAlertStyle];
+    if (informativeText) [alert setInformativeText:informativeText];
+
+    if ([alert runModal] == NSAlertOtherReturn) {
+        [GetAppDelegate() showPreferences:nil];
+    }
+}
+
+
 - (void) playerDidTick:(Player *)player
 {
     NSTimeInterval timeElapsed   = [player timeElapsed];
