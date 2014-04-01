@@ -78,7 +78,9 @@ typedef struct {
     volatile NSInteger stopped;
     volatile float     stereoLevel;
     volatile float     previousStereoLevel;
+    volatile UInt64    sampleTime;
 } RenderUserInfo;
+
 
 @implementation Player {
     Track         *_currentTrack;
@@ -110,10 +112,14 @@ typedef struct {
     double       _outputSampleRate;
     UInt32       _outputFrames;
     BOOL         _outputHogMode;
+    
+    AudioDeviceID _listeningDeviceID;
 
     BOOL         _tookHogMode;
     BOOL         _hadErrorDuringReconfigure;
+    BOOL         _hadChangeDuringPlayback;
 
+    id<NSObject>    _processActivityToken;
     IOPMAssertionID _systemPowerAssertionID;
     IOPMAssertionID _displayPowerAssertionID;
     
@@ -340,11 +346,19 @@ typedef struct {
 
     TrackStatus status = TrackStatusPlaying;
 
-    CheckError(
+    if (!CheckError(
         AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize),
         "AudioUnitGetProperty[ kAudioUnitProperty_CurrentPlayTime ]"
-    );
+    )) {
+        EmbraceLog(@"Player", @"Early return from -_tick: due to error to AudioUnitGetProperty()");
+        return;
+    }
 
+    if ((timeStamp.mFlags & kAudioTimeStampSampleTimeValid) == 0) {
+        EmbraceLog(@"Player", @"Early return from -_tick: due to error to kAudioTimeStampSampleTimeValid == 0");
+        return;
+    }
+    
     Float64 currentPlayTime = timeStamp.mSampleTime;
     BOOL done = NO;
     
@@ -496,6 +510,143 @@ typedef struct {
 }
 
 
+- (void) _takePowerAssertions
+{
+    [self _clearPowerAssertions];
+
+    NSProcessInfo *processInfo = [NSProcessInfo processInfo];
+    NSString *reason = @"Embrace is playing audio";
+    
+    if ([processInfo respondsToSelector:@selector(beginActivityWithOptions:reason:)]) {
+        NSActivityOptions options = NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityLatencyCritical;
+        _processActivityToken = [processInfo beginActivityWithOptions:options reason:reason];
+    
+    } else {
+        IOPMAssertionCreateWithName(
+            kIOPMAssertPreventUserIdleDisplaySleep,
+            kIOPMAssertionLevelOn,
+            (__bridge CFStringRef)reason,
+            &_displayPowerAssertionID
+        );
+
+        IOPMAssertionCreateWithName(
+            kIOPMAssertPreventUserIdleSystemSleep,
+            kIOPMAssertionLevelOn,
+            (__bridge CFStringRef)reason,
+            &_systemPowerAssertionID
+        );
+    }
+}
+
+
+- (void) _clearPowerAssertions
+{
+    if (_processActivityToken) {
+        NSProcessInfo *processInfo = [NSProcessInfo processInfo];
+        
+        if ([processInfo respondsToSelector:@selector(endActivity:)]) {
+            [processInfo endActivity:_processActivityToken];
+        }
+
+        _processActivityToken = nil;
+    }
+
+    if (_displayPowerAssertionID) {
+        IOPMAssertionRelease(_displayPowerAssertionID);
+        _displayPowerAssertionID = 0;
+    }
+
+    if (_systemPowerAssertionID) {
+        IOPMAssertionRelease(_systemPowerAssertionID);
+        _systemPowerAssertionID = 0;
+    }
+}
+
+
+#pragma mark - Audio Device Notifications
+
+static OSStatus sDetectAudioDeviceChange(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
+{
+    Player *player = (__bridge Player *)inClientData;
+
+    for (NSInteger i = 0; i < inNumberAddresses; i++) {
+        AudioObjectPropertyAddress address = inAddresses[i];
+
+        if (address.mSelector == kAudioDeviceProcessorOverload) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EmbraceLog(@"Player", @"kAudioDeviceProcessorOverload on audio device %ld", (long)inObjectID);
+                [player _handleAudioDeviceProcessorOverload];
+            });
+
+        } else if (address.mSelector == kAudioDevicePropertyIOStoppedAbnormally) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EmbraceLog(@"Player", @"kAudioDevicePropertyIOStoppedAbnormally on audio device %ld", (long)inObjectID);
+                [player _handleAudioDeviceIOStoppedAbnormally];
+            });
+
+        } else if (address.mSelector == kAudioDevicePropertyDeviceHasChanged) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EmbraceLog(@"Player", @"kAudioDevicePropertyDeviceHasChanged on audio device %ld", (long)inObjectID);
+                [player _handleAudioDeviceHasChanged];
+            });
+
+        } else if (address.mSelector == kAudioDevicePropertyNominalSampleRate) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EmbraceLog(@"Player", @"kAudioDevicePropertyNominalSampleRate changed on audio device %ld", (long)inObjectID);
+                [player _handleAudioDeviceHasChanged];
+            });
+
+        } else if (address.mSelector == kAudioDevicePropertyHogMode) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                EmbraceLog(@"Player", @"kAudioDevicePropertyHogMode changed on audio device %ld", (long)inObjectID);
+                [player _handleAudioDeviceHasChanged];
+            });
+        }
+    }
+
+    return noErr;
+}
+
+
+- (void) _handleAudioDeviceProcessorOverload
+{
+    NSLog(@"_handleAudioDeviceProcessorOverload");
+}
+
+
+- (void) _handleAudioDeviceIOStoppedAbnormally
+{
+    NSLog(@"_handleAudioDeviceIOStoppedAbnormally");
+
+}
+
+
+- (void) _handleAudioDeviceHasChanged
+{
+    WrappedAudioDevice *device = [_outputDevice controller];
+    
+    PlayerInterruptionReason reason = PlayerInterruptionReasonNone;
+    
+    if ([device isHoggedByAnotherProcess]) {
+        reason = PlayerInterruptionReasonHoggedByOtherProcess;
+
+    } else if ([device nominalSampleRate] != _outputSampleRate) {
+        reason = PlayerInterruptionReasonSampleRateChanged;
+
+    } else if ([device frameSize] != _outputFrames) {
+        reason = PlayerInterruptionReasonFramesChanged;
+    }
+    
+    if (!_hadChangeDuringPlayback && (reason != PlayerInterruptionReasonNone)) {
+        for (id<PlayerListener> listener in _listeners) {
+            [listener player:self didInterruptPlaybackWithReason:reason];
+        }
+
+        _hadChangeDuringPlayback = YES;
+    }
+}
+
+
 #pragma mark - Graph
 
 static OSStatus sInputRenderCallback(
@@ -510,7 +661,19 @@ static OSStatus sInputRenderCallback(
     
     AudioUnit unit = userInfo->inputUnit;
     
-    OSStatus result = AudioUnitRender(unit, ioActionFlags, inTimeStamp, 0, inNumberFrames, ioData);
+    AudioTimeStamp timestampToUse = {0};
+    timestampToUse.mSampleTime = userInfo->sampleTime;
+    timestampToUse.mHostTime   = inTimeStamp->mHostTime;
+    timestampToUse.mFlags      = kAudioTimeStampSampleTimeValid|kAudioTimeStampHostTimeValid;
+
+    OSStatus result = AudioUnitRender(unit, ioActionFlags, &timestampToUse, 0, inNumberFrames, ioData);
+
+    userInfo->sampleTime += inNumberFrames;
+
+//    if (rand() % 100 == 0) {
+//        NSLog(@"SLEEPING");
+//        usleep(500000);
+//    }
 
     if (userInfo->stopRequested) {
         for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
@@ -662,6 +825,7 @@ static OSStatus sInputRenderCallback(
     _renderUserInfo.inputUnit = _converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit;
     _renderUserInfo.stereoLevel = _stereoLevel;
     _renderUserInfo.previousStereoLevel = _stereoLevel;
+    _renderUserInfo.sampleTime = 0;
 
     [self _reconnectGraph];
 }
@@ -843,10 +1007,31 @@ static OSStatus sInputRenderCallback(
 {
     EmbraceLog(@"Player", @"-_reconfigureOutput");
 
+    // Properties that we will listen for
+    //
+    AudioObjectPropertyAddress overloadPropertyAddress   = { kAudioDeviceProcessorOverload,           kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+    AudioObjectPropertyAddress ioStoppedPropertyAddress  = { kAudioDevicePropertyIOStoppedAbnormally, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+    AudioObjectPropertyAddress changedPropertyAddress    = { kAudioDevicePropertyDeviceHasChanged,    kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+    AudioObjectPropertyAddress sampleRatePropertyAddress = { kAudioDevicePropertyNominalSampleRate,   kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+    AudioObjectPropertyAddress hogModePropertyAddress    = { kAudioDevicePropertyHogMode,             kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+
+    // Remove old listeners
+    //
+    if (_listeningDeviceID) {
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &overloadPropertyAddress,   sDetectAudioDeviceChange, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &ioStoppedPropertyAddress,  sDetectAudioDeviceChange, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &changedPropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &sampleRatePropertyAddress, sDetectAudioDeviceChange, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &hogModePropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
+    
+        _listeningDeviceID = 0;
+    }
+
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);
     
     _hadErrorDuringReconfigure = NO;
+    _hadChangeDuringPlayback   = NO;
     
     if (isRunning) AUGraphStop(_graph);
     
@@ -865,16 +1050,17 @@ static OSStatus sInputRenderCallback(
     
 
     WrappedAudioDevice *controller = [_outputDevice controller];
+    AudioDeviceID deviceID = [controller objectID];
     
     if ([_outputDevice isConnected] && ![controller isHoggedByAnotherProcess]) {
-        AudioDeviceID deviceID = [controller objectID];
-        
         [controller setNominalSampleRate:_outputSampleRate];
         [controller setFrameSize:_outputFrames];
 
         if (_outputHogMode) {
-            EmbraceLog(@"Player", @"Oink!");
             _tookHogMode = [controller takeHogMode];
+            EmbraceLog(@"Player", @"-takeHogMode returned %ld", (long)_tookHogMode);
+        } else {
+            EmbraceLog(@"Player", @"_outputHogMode is NO, not taking hog mode");
         }
 
         if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
@@ -893,6 +1079,18 @@ static OSStatus sInputRenderCallback(
         ), "AudioUnitSetProperty[CurrentDevice]")) {
             _hadErrorDuringReconfigure = YES;
         }
+
+        // Register for new listeners
+        //
+        if (deviceID) {
+            AudioObjectAddPropertyListener(deviceID, &overloadPropertyAddress,   sDetectAudioDeviceChange, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &ioStoppedPropertyAddress,  sDetectAudioDeviceChange, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &changedPropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &sampleRatePropertyAddress, sDetectAudioDeviceChange, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &hogModePropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
+
+            _listeningDeviceID = deviceID;
+        }
     }
 
     UInt32 maxFrames;
@@ -910,13 +1108,6 @@ static OSStatus sInputRenderCallback(
         Float64 inputSampleRate  = _outputSampleRate;
         Float64 outputSampleRate = _outputSampleRate;
 
-//        if (unit == _generatorAudioUnit) {
-//            inputSampleRate = 0;
-//            outputSampleRate = 0;
-//            
-//        } else if (unit == _converterAudioUnit) {
-//            inputSampleRate = 0;
-//            
         if (unit == _outputAudioUnit) {
             outputSampleRate = 0;
         }
@@ -1140,29 +1331,8 @@ static OSStatus sInputRenderCallback(
             [listener player:self didUpdatePlaying:YES];
         }
         
-        if (_displayPowerAssertionID) {
-            IOPMAssertionRelease(_displayPowerAssertionID);
-            _displayPowerAssertionID = 0;
-        }
-
-        if (_systemPowerAssertionID) {
-            IOPMAssertionRelease(_systemPowerAssertionID);
-            _systemPowerAssertionID = 0;
-        }
-       
-        IOPMAssertionCreateWithName(
-            kIOPMAssertPreventUserIdleDisplaySleep,
-            kIOPMAssertionLevelOn,
-            CFSTR("Embrace is playing audio"),
-            &_displayPowerAssertionID
-        );
-
-        IOPMAssertionCreateWithName(
-            kIOPMAssertPreventUserIdleSystemSleep,
-            kIOPMAssertionLevelOn,
-            CFSTR("Embrace is playing audio"),
-            &_systemPowerAssertionID
-        );
+        [self _takePowerAssertions];
+        
     }
 }
 
@@ -1261,16 +1431,8 @@ static OSStatus sInputRenderCallback(
     for (id<PlayerListener> listener in _listeners) {
         [listener player:self didUpdatePlaying:NO];
     }
-
-    if (_displayPowerAssertionID) {
-        IOPMAssertionRelease(_displayPowerAssertionID);
-        _displayPowerAssertionID = 0;
-    }
-
-    if (_systemPowerAssertionID) {
-        IOPMAssertionRelease(_systemPowerAssertionID);
-        _systemPowerAssertionID = 0;
-    }
+    
+    [self _clearPowerAssertions];
 }
 
 
@@ -1290,7 +1452,7 @@ static OSStatus sInputRenderCallback(
     }
 
     if (!frames) {
-        frames = [[[[outputDevice controller] availableFrameSizes] firstObject] doubleValue];
+        frames = [[outputDevice controller] preferredAvailableFrameSize];
     }
 
     if (_outputDevice     != outputDevice ||
@@ -1300,6 +1462,7 @@ static OSStatus sInputRenderCallback(
     {
         if (_outputDevice != outputDevice) {
             [_outputDevice removeObserver:self forKeyPath:@"connected"];
+            
             _outputDevice = outputDevice;
             [_outputDevice addObserver:self forKeyPath:@"connected" options:0 context:NULL];
         }

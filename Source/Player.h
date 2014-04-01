@@ -18,6 +18,15 @@ typedef NS_ENUM(NSInteger, PlayerIssue) {
     PlayerIssueErrorConfiguringOutputDevice
 };
 
+typedef NS_ENUM(NSInteger, PlayerInterruptionReason) {
+    PlayerInterruptionReasonNone = 0,
+    PlayerInterruptionReasonFramesChanged,
+    PlayerInterruptionReasonSampleRateChanged,
+    PlayerInterruptionReasonChannelLayoutChanged,
+    PlayerInterruptionReasonHoggedByOtherProcess
+};
+
+
 
 typedef NS_ENUM(NSInteger, PlayerStatus) {
     PlayerStatusPaused = 0,
@@ -88,11 +97,11 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing;
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue;
 - (void) player:(Player *)player didUpdateVolume:(double)volume;
+- (void) player:(Player *)player didInterruptPlaybackWithReason:(PlayerInterruptionReason)reason;
 - (void) playerDidTick:(Player *)player;
 @end
 
 @protocol PlayerTrackProvider <NSObject>
-
 - (void) player:(Player *)player getNextTrack:(Track **)outNextTrack getPadding:(NSTimeInterval *)outPadding;
 @end
 

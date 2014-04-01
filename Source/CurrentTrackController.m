@@ -172,7 +172,7 @@
 - (void) player:(Player *)player didUpdatePlaying:(BOOL)playing { }
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue { }
 - (void) player:(Player *)player didUpdateVolume:(double)volume { }
-
+- (void) player:(Player *)player didInterruptPlaybackWithReason:(PlayerInterruptionReason)reason { }
 
 - (void) playerDidTick:(Player *)player
 {
