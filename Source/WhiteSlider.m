@@ -28,6 +28,20 @@ static BOOL sNeedsMountainLionWorkaround()
 }
 
 
+- (void) awakeFromNib
+{
+    [super awakeFromNib];
+    
+    if (sNeedsMountainLionWorkaround()) {
+        [self setNeedsDisplay];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setNeedsDisplay];
+        });
+    }
+}
+
+
 - (void) setNeedsDisplayInRect:(NSRect)invalidRect
 {
     if (sNeedsMountainLionWorkaround()) {
@@ -116,7 +130,9 @@ static BOOL sNeedsMountainLionWorkaround()
     if (sNeedsMountainLionWorkaround()) {
         cellFrame = [self drawingRectForBounds: cellFrame];
         
-        NSRect trackRect = NSInsetRect(cellFrame, 3, 8);
+        NSRect trackRect = NSInsetRect(cellFrame, 3, 0);
+        trackRect.origin.y = 8;
+        trackRect.size.height = 5;
         
         [self drawBarInside:trackRect flipped:[controlView isFlipped]];
         [self drawKnob];
