@@ -942,14 +942,14 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     NSString *otherButton = NSLocalizedString(@"Show Preferences", nil);
 
-    NSString *informativeText = NSLocalizedString(@"To prevent this, enable \\U201cTake exclusive access\\U201d in Preferences.", nil);
+    NSString *informativeText = NSLocalizedString(@"You can prevent this by quitting other applications when using Embrace, or by giving Embrace exclusive access in Preferences.", nil);
 
     if (reason == PlayerInterruptionReasonHoggedByOtherProcess) {
         pid_t hogModeOwner = [[device controller] hogModeOwner];
         NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
         
         if (owner) {
-            NSString *format = NSLocalizedString(@"The application \\U201c%@\\U201d interrupted playback by taking exclusive access to \\U201c%@\\U201d.", nil);
+            NSString *format = NSLocalizedString(@"%@ interrupted playback by taking exclusive access to \\U201c%@\\U201d.", nil);
             NSString *applicationName = [owner localizedName];
             messageText = [NSString stringWithFormat:format, applicationName, deviceName];
 
@@ -958,12 +958,11 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
             messageText = [NSString stringWithFormat:format, deviceName];
         }
 
-    } else if (reason == PlayerInterruptionReasonSampleRateChanged) {
-        NSString *format = NSLocalizedString(@"Another application interrupted playback by changing the sample rate of \\U201c%@\\U201d.", nil);
-        messageText = [NSString stringWithFormat:format, deviceName];
-
-    } else if (reason == PlayerInterruptionReasonFramesChanged) {
-        NSString *format = NSLocalizedString(@"Another application interrupted playback by changing the buffer size of \\U201c%@\\U201d.", nil);
+    } else if (reason == PlayerInterruptionReasonSampleRateChanged ||
+               reason == PlayerInterruptionReasonFramesChanged     ||
+               reason == PlayerInterruptionReasonChannelLayoutChanged)
+    {
+        NSString *format = NSLocalizedString(@"Another application interrupted playback by changing the configuration of \\U201c%@\\U201d.", nil);
         messageText = [NSString stringWithFormat:format, deviceName];
     }
 
