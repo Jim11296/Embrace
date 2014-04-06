@@ -8,20 +8,34 @@
 
 #import "WhiteSlider.h"
 
-@implementation WhiteSlider {
-
+static BOOL sNeedsMountainLionWorkaround()
+{
+    return floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8;
 }
+
+
+@implementation WhiteSlider
+
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
     [_dragDelegate whiteSliderDidStartDrag:self];
-
+    
     _doubleValueBeforeDrag = [self doubleValue];
     [super mouseDown:theEvent];
-
+    
     [_dragDelegate whiteSliderDidEndDrag:self];
 }
 
+
+- (void) setNeedsDisplayInRect:(NSRect)invalidRect
+{
+    if (sNeedsMountainLionWorkaround()) {
+        [super setNeedsDisplayInRect:[self bounds]];
+    } else {
+        [super setNeedsDisplayInRect:invalidRect];
+    }
+}
 
 
 @end
@@ -48,15 +62,15 @@
     [shadow setShadowOffset:NSMakeSize(0, -1)];
     [shadow setShadowBlurRadius:2];
     [shadow set];
-
+    
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
-
+    
     NSShadow *shadow2 = [[NSShadow alloc] init];
     [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.25]];
     [shadow2 setShadowOffset:NSMakeSize(0, 0)];
     [shadow2 setShadowBlurRadius:2];
     [shadow2 set];
-
+    
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
 }
 
@@ -69,19 +83,19 @@
     
     NSRect leftRect, rightRect;
     NSDivideRect(_cellFrame, &leftRect, &rightRect, midX - _cellFrame.origin.x, NSMinXEdge);
-
+    
     CGFloat radius = aRect.size.height > aRect.size.width ? aRect.size.width : aRect.size.height;
     radius /= 2;
-
+    
     NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundedRect:aRect xRadius:radius yRadius:radius];
-
+    
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
-
+    
     [GetRGBColor(0x0, 0.66) set];
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
     [roundedPath fill];
-
+    
     [NSGraphicsContext restoreGraphicsState];
     
     [GetRGBColor(0x0, 0.15) set];
@@ -95,11 +109,21 @@
 - (void) drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     _cellFrame = cellFrame;
-
+    
     NSInteger numberOfTickMarks = [self numberOfTickMarks];
     [self setNumberOfTickMarks:0];
-   
-    [super drawWithFrame:cellFrame inView:controlView];
+    
+    if (sNeedsMountainLionWorkaround()) {
+        cellFrame = [self drawingRectForBounds: cellFrame];
+        
+        NSRect trackRect = NSInsetRect(cellFrame, 3, 8);
+        
+        [self drawBarInside:trackRect flipped:[controlView isFlipped]];
+        [self drawKnob];
+        
+    } else {
+        [super drawWithFrame:cellFrame inView:controlView];
+    }
     
     [self setNumberOfTickMarks:numberOfTickMarks];
 }
