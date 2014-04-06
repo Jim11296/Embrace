@@ -28,20 +28,6 @@ static BOOL sNeedsMountainLionWorkaround()
 }
 
 
-- (void) awakeFromNib
-{
-    [super awakeFromNib];
-    
-    if (sNeedsMountainLionWorkaround()) {
-        [self setNeedsDisplay];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self setNeedsDisplay];
-        });
-    }
-}
-
-
 - (void) setNeedsDisplayInRect:(NSRect)invalidRect
 {
     if (sNeedsMountainLionWorkaround()) {
@@ -62,7 +48,13 @@ static BOOL sNeedsMountainLionWorkaround()
 - (NSRect) knobRectFlipped:(BOOL)flipped
 {
     NSRect result = [super knobRectFlipped:flipped];
+
     result = NSInsetRect(result, 3, 3);
+
+    if (sNeedsMountainLionWorkaround()) {
+        result.origin.y = 3;
+    }
+
     return result;
 }
 
@@ -128,14 +120,28 @@ static BOOL sNeedsMountainLionWorkaround()
     [self setNumberOfTickMarks:0];
     
     if (sNeedsMountainLionWorkaround()) {
+        [super drawWithFrame:cellFrame inView:controlView];
+        
+        NSShadow *noShadow = [[NSShadow alloc] init];
+        [noShadow set];
+        
+        NSRect knobRect = [self knobRectFlipped:[controlView isFlipped]];
+        
         cellFrame = [self drawingRectForBounds: cellFrame];
+        [[NSColor clearColor] set];
+        NSRectFill(cellFrame);
         
         NSRect trackRect = NSInsetRect(cellFrame, 3, 0);
         trackRect.origin.y = 8;
         trackRect.size.height = 5;
+
+        if (numberOfTickMarks > 0) {
+            trackRect.origin.y += 2;
+            knobRect.origin.y  += 2;
+        }
         
         [self drawBarInside:trackRect flipped:[controlView isFlipped]];
-        [self drawKnob];
+        [self drawKnob:knobRect];
         
     } else {
         [super drawWithFrame:cellFrame inView:controlView];
