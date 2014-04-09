@@ -185,12 +185,12 @@
         typeToUse = AVFileTypeCoreAudioFormat;
         extension = @"caf";
 
-    } else if ([fileTypes containsObject:AVFileTypeAppleM4A]) {
-        typeToUse = AVFileTypeAppleM4A;
+    } else if ([fileTypes containsObject:@"com.apple.m4a-audio"]) {
+        typeToUse = @"com.apple.m4a-audio";
         extension = @"m4a";
 
-    } else if ([fileTypes containsObject:AVFileTypeMPEGLayer3]) {
-        typeToUse = AVFileTypeMPEGLayer3;
+    } else if ([fileTypes containsObject:@"public.mp3"]) {
+        typeToUse = @"public.mp3";
         extension = @"mp3";
 
     } else {
