@@ -144,14 +144,35 @@ static NSString *sFindOrCreateDirectory(
 }
 
 
+static OSStatus sGroupError = noErr;
+
 BOOL CheckError(OSStatus error, const char *operation)
 {
-	if (error == noErr) return YES;
-	
+	if (error == noErr) {
+        return YES;
+	}
+
+    if (sGroupError != noErr) {
+        sGroupError = error;
+    }
+
 	NSLog(@"Error: %s (%@)\n", operation, GetStringForFourCharCode(error));
     EmbraceLog(@"CheckError", @"Error: %s (%@)", operation, GetStringForFourCharCode(error));
 
     return NO;
+}
+
+
+BOOL CheckErrorGroup(void (^callback)())
+{
+    OSStatus previousGroupError = sGroupError;
+    callback();
+
+    BOOL result = (sGroupError == noErr);
+    
+    sGroupError = previousGroupError;
+    
+    return result;
 }
 
 
