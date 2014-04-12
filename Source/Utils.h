@@ -41,6 +41,7 @@ typedef NS_ENUM(NSInteger, Tonality) {
 };
 
 extern BOOL CheckError(OSStatus error, const char *operation);
+extern BOOL CheckErrorGroup(void (^block)());
 
 extern NSArray *GetAvailableAudioFileUTIs(void);
 extern BOOL IsAudioFileAtURL(NSURL *fileURL);
