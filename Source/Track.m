@@ -76,7 +76,7 @@ static NSString * const sGenreKey         = @"genre";
     BOOL            _cleared;
 }
 
-@dynamic playDuration, silenceAtStart, silenceAtEnd;
+@dynamic playDuration, silenceAtStart, silenceAtEnd, tonality;
 
 
 static NSURL *sGetStateDirectoryURL()
@@ -322,7 +322,6 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
     if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
     if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
-    if (_tonality)       [state setObject:@(_tonality)          forKey:sTonalityKey];
     if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:sBPMKey];
     if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
     if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
@@ -897,6 +896,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 - (BOOL) didAnalyzeLoudness
 {
     return (_overviewData != nil);
+}
+
+
+- (Tonality) tonality
+{
+    return GetTonalityForString([self initialKey]);
 }
 
 
