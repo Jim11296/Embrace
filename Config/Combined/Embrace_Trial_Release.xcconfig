@@ -1,0 +1,4 @@
+#include "../Base.xcconfig"
+#include "../ConfigRelease.xcconfig"
+#include "../TargetEmbrace.xcconfig"
+#include "../Trial.xcconfig"

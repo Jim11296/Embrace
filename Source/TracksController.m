@@ -16,6 +16,29 @@
 #import "TrackTableView.h"
 #import "iTunesManager.h"
 
+
+#if TRIAL
+#define MAXIMUM_TRACK_COUNT_FOR_TRIAL 5
+
+#define TrackTrialCheck(A) {                                                            \
+    (A)();                                                                              \
+    dispatch_async(dispatch_get_main_queue(), ^{                                        \
+        NSTableView *TV = [self tableView];                                             \
+        NSIndexSet  *IS = [NSIndexSet indexSetWithIndex:MAXIMUM_TRACK_COUNT_FOR_TRIAL]; \
+        while ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {                       \
+            [TV beginUpdates];                                                          \
+            [TV removeRowsAtIndexes:IS withAnimation:NSTableViewAnimationEffectNone];   \
+            [_tracks removeObjectsAtIndexes:IS];                                        \
+            [TV endUpdates];                                                            \
+        }                                                                               \
+    });                                                                                 \
+}
+
+#else
+#define TrackTrialCheck(A) (A)()
+#endif
+
+
 NSString * const TracksControllerDidModifyTracksNotificationName = @"TracksControllerDidModifyTracks";
 
 static NSString * const sTrackUUIDsKey = @"track-uuids";
@@ -95,35 +118,87 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) _updateInsertionPointWorkaround:(BOOL)yn
 {
-    [(TrackTableView *)_tableView updateInsertionPointWorkaround:yn];
+    TrackTrialCheck(^{
+        [(TrackTableView *)_tableView updateInsertionPointWorkaround:yn];
+    });
 }
 
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
-    [[self tableView] reloadData];
+    TrackTrialCheck(^{
+        [[self tableView] reloadData];
+    });
 }
 
 
 - (void) _handleTableViewSelectionDidChange:(NSNotification *)note
 {
-    NSIndexSet *selectionIndexes = [[self tableView] selectedRowIndexes];
-    
-    [[self tableView] enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *view, NSInteger row) {
-        TrackTableCellView *trackView = (TrackTableCellView *)[view viewAtColumn:0];
-        [trackView setSelected:[selectionIndexes containsIndex:row]];
-    }];
+    TrackTrialCheck(^{
+        NSIndexSet *selectionIndexes = [[self tableView] selectedRowIndexes];
+        
+        [[self tableView] enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *view, NSInteger row) {
+            TrackTableCellView *trackView = (TrackTableCellView *)[view viewAtColumn:0];
+            [trackView setSelected:[selectionIndexes containsIndex:row]];
+        }];
+    });
 }
 
 
 - (void) _didModifyTracks
 {
-    NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
-    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
+    TrackTrialCheck(^{
+        NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
+        [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:TracksControllerDidModifyTracksNotificationName object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TracksControllerDidModifyTracksNotificationName object:self];
 
-    [self _saveState];
+        [self _saveState];
+    });
+}
+
+
+#if TRIAL
+
+- (void) _displayTrialAlert
+{
+    NSString *messageText = NSLocalizedString(@"Maximum tracks reached.", nil);
+    NSString *otherButton = NSLocalizedString(@"Purchase", nil);
+
+    NSString *informativeText = NSLocalizedString(@"This version of Embrace is fully functional, but is limited to five tracks in the Set List.  To add an unlimited number of tracks, purchase the full edition. ", nil);
+
+    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@"%@", informativeText];
+    [alert setAlertStyle:NSInformationalAlertStyle];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([alert runModal] == NSAlertOtherReturn) {
+            // Purchase
+        }
+    });
+}
+
+#endif
+
+
+- (void) removeTrack:(Track *)track
+{
+    NSInteger index = [_tracks indexOfObject:track];
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+
+    if (index != NSNotFound) {
+        if ([track trackStatus] == TrackStatusQueued) {
+            [track cancelLoad];
+            [indexSet addIndex:index];
+        }
+    }
+
+    [[self tableView] beginUpdates];
+
+    [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectNone];
+    [_tracks removeObjectsAtIndexes:indexSet];
+    [[self tableView] endUpdates];
+
+    [self _didModifyTracks];
 }
 
 
@@ -167,13 +242,25 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return [_tracks count];
+    __block NSInteger result = 0;
+    
+    TrackTrialCheck(^{
+        result = [_tracks count];
+    });
+    
+    return result;
 }
 
 
 - (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    return [_tracks objectAtIndex:row];
+    __block id result = nil;
+
+    TrackTrialCheck(^{
+        result = [_tracks objectAtIndex:row];
+    });
+    
+    return result;
 }
 
 
@@ -195,26 +282,38 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    TrackTableCellView *cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
+    __block NSView *result = nil;
 
-    NSIndexSet *selectionIndexes = [tableView selectedRowIndexes];
-    [cellView setSelected:[selectionIndexes containsIndex:row]];
+    TrackTrialCheck(^{
+        TrackTableCellView *cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
+
+        NSIndexSet *selectionIndexes = [tableView selectedRowIndexes];
+        [cellView setSelected:[selectionIndexes containsIndex:row]];
+
+        result = cellView;
+    });
     
-    return cellView;
+    return result;
 }
 
 
 - (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
-    
-    if (numberOfLines == 1) {
-        return 25;
-    } else if (numberOfLines == 3) {
-        return 56;
-    }
-    
-    return 40;
+    __block CGFloat result = 0;
+
+    TrackTrialCheck(^{
+        NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
+        
+        if (numberOfLines == 1) {
+            result =  25;
+        } else if (numberOfLines == 3) {
+            result =  56;
+        }
+        
+        result = 40;
+    });
+
+    return result;
 }
 
 
@@ -329,7 +428,17 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
             [_tracks insertObject:draggedTrack atIndex:row];
         }
 
-        [self _didModifyTracks];
+#if TRIAL
+        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _displayTrialAlert];
+            });
+        }
+#endif
+
+        TrackTrialCheck(^{
+            [self _didModifyTracks];
+        });
 
         return YES;
 
@@ -353,8 +462,18 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
         [_tracks insertObjects:tracks atIndexes:indexSet];
         [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+
+#if TRIAL
+        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _displayTrialAlert];
+            });
+        }
+#endif
         
-        [self _didModifyTracks];
+        TrackTrialCheck(^{
+            [self _didModifyTracks];
+        });
 
         return YES;
 
@@ -369,7 +488,17 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
             [[self tableView] insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
         }
 
-        [self _didModifyTracks];
+#if TRIAL
+        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _displayTrialAlert];
+            });
+        }
+#endif
+
+        TrackTrialCheck(^{
+            [self _didModifyTracks];
+        });
 
         return YES;
     }
@@ -394,22 +523,31 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (Track *) firstQueuedTrack
 {
-    for (Track *track in _tracks) {
-        if ([track trackStatus] == TrackStatusQueued) {
-            return track;
+    __block Track *result = nil;
+
+    TrackTrialCheck(^{
+        for (Track *track in _tracks) {
+            if ([track trackStatus] == TrackStatusQueued) {
+                result =  track;
+                break;
+            }
         }
-    }
+    });
 
-    return nil;
+    return result;
 }
-
 
 
 - (Track *) selectedTrack
 {
-    NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
+    __block Track *result;
     
-    return [self trackAtIndex:[selectedRows firstIndex]];
+    TrackTrialCheck(^{
+        NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
+        result = [self trackAtIndex:[selectedRows firstIndex]];
+    });
+
+    return result;
 }
 
 
@@ -418,8 +556,24 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     Track *track = [Track trackWithFileURL:URL];
 
     if (track) {
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[_tracks count]];
+
         [_tracks addObject:track];
-        [self _didModifyTracks];
+        [_tableView insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+
+#if TRIAL
+        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _displayTrialAlert];
+            });
+
+            return;
+        }
+#endif
+
+        TrackTrialCheck(^{
+            [self _didModifyTracks];
+        });
     }
 }
 
@@ -459,7 +613,9 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) deselectAllTracks
 {
-    [[self tableView] deselectAll:nil];
+    TrackTrialCheck(^{
+        [[self tableView] deselectAll:nil];
+    });
 }
 
 
@@ -475,28 +631,34 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) revealEndTimeForTrack:(Track *)track
 {
-    NSInteger index = [_tracks indexOfObject:track];
-    
-    if (index != NSNotFound) {
-        id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
+    TrackTrialCheck(^{
+        NSInteger index = [_tracks indexOfObject:track];
         
-        if ([view respondsToSelector:@selector(revealEndTime)]) {
-            [view revealEndTime];
+        if (index != NSNotFound) {
+            id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
+            
+            if ([view respondsToSelector:@selector(revealEndTime)]) {
+                [view revealEndTime];
+            }
         }
-    }
+    });
 }
 
 
 - (BOOL) canDeleteSelectedObjects
 {
-    Track *selectedTrack = [self selectedTrack];
-    if (!selectedTrack) return NO;
+    __block BOOL result = NO;
 
-    if ([selectedTrack trackStatus] == TrackStatusQueued) {
-        return YES;
-    }
-    
-    return NO;
+    TrackTrialCheck(^{
+        Track *selectedTrack = [self selectedTrack];
+        if (!selectedTrack) return;
+        
+        if ([selectedTrack trackStatus] == TrackStatusQueued) {
+            result = YES;
+        }
+    });
+
+    return result;
 }
 
 
@@ -525,11 +687,15 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (Track *) trackAtIndex:(NSUInteger)index
 {
-    if (index < [_tracks count]) {
-        return [_tracks objectAtIndex:index];
-    }
+    __block Track *result = nil;
+    
+    TrackTrialCheck(^{
+        if (index < [_tracks count]) {
+            result = [_tracks objectAtIndex:index];
+        }
+    });
 
-    return nil;
+    return result;
 }
 
 
