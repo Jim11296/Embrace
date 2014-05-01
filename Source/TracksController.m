@@ -162,17 +162,17 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) _displayTrialAlert
 {
-    NSString *messageText = NSLocalizedString(@"Maximum tracks reached.", nil);
-    NSString *otherButton = NSLocalizedString(@"Purchase", nil);
-
-    NSString *informativeText = NSLocalizedString(@"This version of Embrace is fully functional, but is limited to five tracks in the Set List.  To add an unlimited number of tracks, purchase the full edition. ", nil);
-
+    NSString *messageText = NSLocalizedString(@"You can only add five songs to the Set List in your trial of Embrace.", nil);
+    NSString *otherButton = NSLocalizedString(@"View in App Store", nil);
+    NSString *informativeText = NSLocalizedString(@"To add more, purchase Embrace from the App Store.", nil);
+    
     NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@"%@", informativeText];
     [alert setAlertStyle:NSInformationalAlertStyle];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([alert runModal] == NSAlertOtherReturn) {
-            // Purchase
+            NSURL *url = [NSURL URLWithString:@"macappstore://itunes.apple.com/us/app/embrace/id817962217?mt=12"];
+            [[NSWorkspace sharedWorkspace] openURL:url];
         }
     });
 }
