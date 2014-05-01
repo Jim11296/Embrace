@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "which rchook &amp;&amp; rchook xcode-app-build-pre-action">
+               scriptText = "which rchook &amp;&amp; rchook xcode-app-build-pre-action &gt; /tmp/rchook.pre">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
@@ -105,7 +105,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "which rchook &amp;&amp; rchook xcode-app-archive-post-action -z &quot;$HOME/Desktop/Embrace&quot; -u &quot;<redacted>&quot; &gt; /tmp/moo">
+               scriptText = "which rchook &amp;&amp; rchook xcode-app-archive-post-action -z &quot;$HOME/Desktop/Embrace&quot; -u &quot;<redacted>&quot; &gt; /tmp/rchook.post">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
