@@ -231,6 +231,11 @@
             [menuItem setTitle:NSLocalizedString(@"Clear Set List", nil)];
         }
 
+// Disable this when playing in the trial version.  Else it's too easy to DJ with the trial.
+#if TRIAL
+        return ![[Player sharedInstance] isPlaying];
+#endif
+
         return YES;
     
     } else if (action == @selector(resetPlayedTracks:)) {
