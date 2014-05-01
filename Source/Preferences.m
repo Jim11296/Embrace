@@ -181,12 +181,18 @@ static void sRegisterDefaults()
     // Do audio device checking
     AudioDevice *device = [self mainOutputAudioDevice];
     
-    if (![[device sampleRates] containsObject:@([self mainOutputSampleRate])]) {
-        [self setMainOutputSampleRate:[[[device sampleRates] firstObject] doubleValue]];
+    CGFloat mainOutputSampleRate = [self mainOutputSampleRate];
+    if (![[device sampleRates] containsObject:@(mainOutputSampleRate)]) {
+        if (mainOutputSampleRate != 0) {
+            [self setMainOutputSampleRate:0];
+        }
     }
 
-    if (![[device frameSizes] containsObject:@([self mainOutputFrames])]) {
-        [self setMainOutputFrames:[[[device frameSizes] firstObject] unsignedIntValue]];
+    CGFloat mainOutputFrames = [self mainOutputFrames];
+    if (![[device frameSizes] containsObject:@(mainOutputFrames)]) {
+        if (mainOutputFrames != 0) {
+            [self setMainOutputFrames:0];
+        }
     }
 
     NSDictionary *defaultValuesDictionary = sGetDefaultValues();

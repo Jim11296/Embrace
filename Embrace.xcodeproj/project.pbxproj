@@ -59,6 +59,10 @@
 		55717BFC187EB53500213213 /* full_volume_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55717BFA187EB53500213213 /* full_volume_template@2x.png */; };
 		55717BFD187EB53500213213 /* no_volume_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55717BFB187EB53500213213 /* no_volume_template@2x.png */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
+		557C2C641910F954004A6364 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */; };
+		557C2C651910F954004A6364 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */; };
+		557C2C661910F954004A6364 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */; };
+		557C2C681910F9CD004A6364 /* Trial.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C671910F9CD004A6364 /* Trial.xcconfig */; };
 		557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */; };
 		557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */; };
 		557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */; };
@@ -265,6 +269,10 @@
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
 		557C2C591897403E002FAFEA /* CABitOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABitOperations.h; path = CoreAudio/PublicUtility/CABitOperations.h; sourceTree = "<group>"; };
 		557C2C5F1897403E002FAFEA /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = CoreAudio/PublicUtility/CAByteOrder.h; sourceTree = "<group>"; };
+		557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
+		557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Release.xcconfig; sourceTree = "<group>"; };
+		557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Debug.xcconfig; sourceTree = "<group>"; };
+		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Trial.xcconfig; sourceTree = "<group>"; };
 		557C2C771897403E002FAFEA /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = CoreAudio/PublicUtility/CAException.h; sourceTree = "<group>"; };
 		557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioDevice.cpp; path = CoreAudio/PublicUtility/CAHALAudioDevice.cpp; sourceTree = "<group>"; };
 		557C2C7E1897403E002FAFEA /* CAHALAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioDevice.h; path = CoreAudio/PublicUtility/CAHALAudioDevice.h; sourceTree = "<group>"; };
@@ -555,6 +563,38 @@
 			name = "Public Utility";
 			sourceTree = "<group>";
 		};
+		557C2C5E1910F933004A6364 /* Crash Pad */ = {
+			isa = PBXGroup;
+			children = (
+				55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */,
+				55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */,
+				55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */,
+				55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */,
+			);
+			name = "Crash Pad";
+			sourceTree = "<group>";
+		};
+		557C2C5F1910F93C004A6364 /* Embrace */ = {
+			isa = PBXGroup;
+			children = (
+				55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */,
+				55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */,
+				55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */,
+				55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */,
+			);
+			name = Embrace;
+			sourceTree = "<group>";
+		};
+		557C2C601910F944004A6364 /* Embrace Trial */ = {
+			isa = PBXGroup;
+			children = (
+				557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */,
+				557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */,
+				557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */,
+			);
+			name = "Embrace Trial";
+			sourceTree = "<group>";
+		};
 		558DC076187785BC00C85770 = {
 			isa = PBXGroup;
 			children = (
@@ -702,6 +742,7 @@
 				55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */,
 				55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */,
 				55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */,
+				557C2C671910F9CD004A6364 /* Trial.xcconfig */,
 				55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */,
 				55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */,
 			);
@@ -711,14 +752,9 @@
 		55AF60CA18C94BD700BE2212 /* Combined */ = {
 			isa = PBXGroup;
 			children = (
-				55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */,
-				55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */,
-				55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */,
-				55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */,
-				55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */,
-				55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */,
-				55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */,
-				55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */,
+				557C2C5F1910F93C004A6364 /* Embrace */,
+				557C2C5E1910F933004A6364 /* Crash Pad */,
+				557C2C601910F944004A6364 /* Embrace Trial */,
 			);
 			path = Combined;
 			sourceTree = "<group>";
@@ -1025,6 +1061,7 @@
 				550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */,
 				55A0B1741890A81900866F04 /* test_g.m4a in Resources */,
 				55717BFD187EB53500213213 /* no_volume_template@2x.png in Resources */,
+				557C2C681910F9CD004A6364 /* Trial.xcconfig in Resources */,
 				55224BEA18A79BAA00407B46 /* issue_small@2x.png in Resources */,
 				55E5B6D418B5A0AF00F9DF65 /* track_error_template@2x.png in Resources */,
 				5515B46A189B4DC300FBC886 /* issue_template.png in Resources */,
@@ -1043,6 +1080,7 @@
 				5515B46D189B4DC300FBC886 /* play_template.png in Resources */,
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				552C9DC01882A5D90041C160 /* padding_template@2x.png in Resources */,
+				557C2C661910F954004A6364 /* Embrace_Trial_Debug.xcconfig in Resources */,
 				55A708AD18A70E96007BD7C0 /* drag_songs@2x.png in Resources */,
 				55E5B6D318B5A0AF00F9DF65 /* track_error_template.png in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
@@ -1053,11 +1091,13 @@
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
 				55F7ABE118AF3D52006B6FBB /* drag_icon.png in Resources */,
 				55717BF2187EA63700213213 /* play_template@2x.png in Resources */,
+				557C2C641910F954004A6364 /* Embrace_Trial_Profile.xcconfig in Resources */,
 				55717BD4187EA45500213213 /* close_pressed@2x.png in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
 				5515B469189B4DC300FBC886 /* no_volume_template.png in Resources */,
 				55717BD3187EA45500213213 /* close_pressed.png in Resources */,
 				55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */,
+				557C2C651910F954004A6364 /* Embrace_Trial_Release.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1103,8 +1143,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "RECEIGEN=\"/Applications/Receigen.app/Contents/MacOS/Receigen\"\n\nINPUT=\"$INFOPLIST_FILE\"\nBUNDLE_ID=`/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \"$INPUT\"`\nBUNDLE_VERSION=`/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INPUT\"`\n\nEXPANDED_BUNDLE_ID=`eval \"echo $BUNDLE_ID\"`\nEXPANDED_BUNDLE_VERSION=`eval \"echo $BUNDLE_VERSION\"`\n\nHEADER=\"$PROJECT_DIR/Source/ReceiptValidation.h\"\n\necho \"Plist is for '$EXPANDED_BUNDLE_ID' '$EXPANDED_BUNDLE_VERSION'\"\n\n# Check if the generation is needed\nif [ -e \"$HEADER\" ]; then\n\tHEADER_BUNDLE_VERSION=`grep \"// CFBundleShortVersionString\" \"$HEADER\" | awk '{print $NF}'`\n\tHEADER_BUNDLE_ID=`grep \"// CFBundleIdentifier\" \"$HEADER\" | awk '{print $NF}'`\n\n    echo \"Receigen generated header is for '$HEADER_BUNDLE_ID' '$HEADER_BUNDLE_VERSION'\"\n\n\tif [[ \"$HEADER_BUNDLE_VERSION\" == \"$EXPANDED_BUNDLE_VERSION\" ]] && [[ \"$HEADER_BUNDLE_ID\" == \"$EXPANDED_BUNDLE_ID\" ]]; then\n        echo \"Skipping header generation!\"\n        SKIP=\"YES\"\n\tfi\nfi\n\nif [ \"x$SKIP\" = \"x\" ]; then\n\t\"$RECEIGEN\" --identifier \"$EXPANDED_BUNDLE_ID\" --version \"$EXPANDED_BUNDLE_VERSION\" --os osx  \\\n\t\t--success runapplication --failure exitwith173 > \"$HEADER\"\nfi\n";
+			shellPath = /bin/bash;
+			shellScript = "RECEIGEN=\"/Applications/Receigen.app/Contents/MacOS/Receigen\"\n\nINPUT=\"$INFOPLIST_FILE\"\nBUNDLE_ID=`/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \"$INPUT\"`\nBUNDLE_VERSION=`/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INPUT\"`\n\nEXPANDED_BUNDLE_ID=`eval \"echo $BUNDLE_ID\"`\nEXPANDED_BUNDLE_VERSION=`eval \"echo $BUNDLE_VERSION\"`\n\nHEADER=\"$PROJECT_DIR/Source/ReceiptValidation.h\"\n\necho \"Plist is for '$EXPANDED_BUNDLE_ID' '$EXPANDED_BUNDLE_VERSION'\"\n\nif [[ \"$EXPANDED_BUNDLE_ID\" == *\"Trial\"* ]]; then\n    exit 0\nfi\n\n\n# Check if the generation is needed\nif [ -e \"$HEADER\" ]; then\n\tHEADER_BUNDLE_VERSION=`grep \"// CFBundleShortVersionString\" \"$HEADER\" | awk '{print $NF}'`\n\tHEADER_BUNDLE_ID=`grep \"// CFBundleIdentifier\" \"$HEADER\" | awk '{print $NF}'`\n\n    echo \"Receigen generated header is for '$HEADER_BUNDLE_ID' '$HEADER_BUNDLE_VERSION'\"\n\n\tif [[ \"$HEADER_BUNDLE_VERSION\" == \"$EXPANDED_BUNDLE_VERSION\" ]] && [[ \"$HEADER_BUNDLE_ID\" == \"$EXPANDED_BUNDLE_ID\" ]]; then\n        echo \"Skipping header generation!\"\n        SKIP=\"YES\"\n\tfi\nfi\n\nif [ \"x$SKIP\" = \"x\" ]; then\n\t\"$RECEIGEN\" --identifier \"$EXPANDED_BUNDLE_ID\" --version \"$EXPANDED_BUNDLE_VERSION\" --os osx  \\\n\t\t--success runapplication --failure exitwith173 > \"$HEADER\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
@@ -1304,6 +1344,81 @@
 			};
 			name = Submission;
 		};
+		557C2C691910F9FB004A6364 /* Trial Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Trial Debug";
+		};
+		557C2C6A1910F9FB004A6364 /* Trial Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					<redacted>,
+				);
+			};
+			name = "Trial Debug";
+		};
+		557C2C6B1910F9FB004A6364 /* Trial Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */;
+			buildSettings = {
+				SKIP_INSTALL = YES;
+			};
+			name = "Trial Debug";
+		};
+		557C2C6C1910FA13004A6364 /* Trial Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Trial Profile";
+		};
+		557C2C6D1910FA13004A6364 /* Trial Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					<redacted>,
+				);
+			};
+			name = "Trial Profile";
+		};
+		557C2C6E1910FA13004A6364 /* Trial Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */;
+			buildSettings = {
+				SKIP_INSTALL = YES;
+			};
+			name = "Trial Profile";
+		};
+		557C2C6F1910FA1D004A6364 /* Trial Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Trial Release";
+		};
+		557C2C701910FA1D004A6364 /* Trial Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					<redacted>,
+				);
+			};
+			name = "Trial Release";
+		};
+		557C2C711910FA1D004A6364 /* Trial Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */;
+			buildSettings = {
+				SKIP_INSTALL = YES;
+			};
+			name = "Trial Release";
+		};
 		558DC0AE187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1380,8 +1495,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5559E63A18DFD42600D61019 /* Debug */,
+				557C2C6B1910F9FB004A6364 /* Trial Debug */,
 				5559E63B18DFD42600D61019 /* Profile */,
+				557C2C6E1910FA13004A6364 /* Trial Profile */,
 				5559E63C18DFD42600D61019 /* Release */,
+				557C2C711910FA1D004A6364 /* Trial Release */,
 				5559E63D18DFD42600D61019 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1391,8 +1509,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0AE187785BC00C85770 /* Debug */,
+				557C2C691910F9FB004A6364 /* Trial Debug */,
 				558DC0AF187785BC00C85770 /* Profile */,
+				557C2C6C1910FA13004A6364 /* Trial Profile */,
 				55AF60A118C94ACD00BE2212 /* Release */,
+				557C2C6F1910FA1D004A6364 /* Trial Release */,
 				55AF60A418C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1402,8 +1523,11 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0B1187785BC00C85770 /* Debug */,
+				557C2C6A1910F9FB004A6364 /* Trial Debug */,
 				558DC0B2187785BC00C85770 /* Profile */,
+				557C2C6D1910FA13004A6364 /* Trial Profile */,
 				55AF60A218C94ACD00BE2212 /* Release */,
+				557C2C701910FA1D004A6364 /* Trial Release */,
 				55AF60A518C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
