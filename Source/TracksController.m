@@ -160,7 +160,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 #if TRIAL
 
-- (void) _displayTrialAlert
+- (void) _reallyDisplayTrialAlert
 {
     NSString *messageText = NSLocalizedString(@"You can only add five songs to the Set List in your trial of Embrace.", nil);
     NSString *otherButton = NSLocalizedString(@"View in App Store", nil);
@@ -169,12 +169,16 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@"%@", informativeText];
     [alert setAlertStyle:NSInformationalAlertStyle];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([alert runModal] == NSAlertOtherReturn) {
-            NSURL *url = [NSURL URLWithString:@"macappstore://itunes.apple.com/us/app/embrace/id817962217?mt=12"];
-            [[NSWorkspace sharedWorkspace] openURL:url];
-        }
-    });
+    if ([alert runModal] == NSAlertOtherReturn) {
+        NSURL *url = [NSURL URLWithString:@"macappstore://itunes.apple.com/us/app/embrace/id817962217?mt=12"];
+        [[NSWorkspace sharedWorkspace] openURL:url];
+    }
+}
+
+- (void) _displayTrialAlert
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyDisplayTrialAlert) object:nil];
+    [self performSelector:@selector(_reallyDisplayTrialAlert) withObject:nil afterDelay:0.1];
 }
 
 #endif
