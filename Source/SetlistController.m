@@ -28,6 +28,7 @@
 #import "ViewTrackController.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
+#import "TrialBottomView.h"
 #import "WhiteSlider.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -98,6 +99,37 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     [self _handlePreferencesDidChange:nil];
 
+#if TRIAL
+    {
+        NSScrollView *scrollView      = [self scrollView];
+        BorderedView *bottomContainer = [self bottomContainer];
+    
+
+        // Fix up the bottom here
+        NSRect bottomFrame = [bottomContainer frame];
+        bottomFrame.size.height += 38;
+        
+        NSRect trialBottomViewFrame = bottomFrame;
+        trialBottomViewFrame.origin.y = 34;
+        trialBottomViewFrame.size.height = 32;
+        trialBottomViewFrame.size.width = 172;
+        trialBottomViewFrame.origin.x = round((bottomFrame.size.width - 172) / 2);
+       
+        NSRect scrollFrame = [scrollView frame];
+        scrollFrame.size.height -= 38;
+        scrollFrame.origin.y += 38;
+        [[self scrollView] setFrame:scrollFrame];
+        
+        [[self bottomContainer] setFrame:bottomFrame];
+
+        TrialBottomView *bv = [[TrialBottomView alloc] initWithFrame:trialBottomViewFrame];
+        [bv setAutoresizingMask:NSViewMinXMargin|NSViewMaxXMargin|NSViewHeightSizable];
+        [[self bottomContainer] addSubview:bv];
+
+    }
+#endif
+
+
     // Add top and bottom shadows
     {
         NSRect mainBounds = [[self mainView] bounds];
@@ -136,6 +168,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 }
 
+#if TRIAL
+
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector
+{
+    NSLog(@"%@", NSStringFromSelector(commandSelector));
+    return YES;
+}
+
+#endif
 
 #pragma mark - Private Methods
 

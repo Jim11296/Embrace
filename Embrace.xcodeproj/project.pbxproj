@@ -63,6 +63,7 @@
 		557C2C651910F954004A6364 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */; };
 		557C2C661910F954004A6364 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */; };
 		557C2C681910F9CD004A6364 /* Trial.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 557C2C671910F9CD004A6364 /* Trial.xcconfig */; };
+		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
 		557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */; };
 		557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */; };
 		557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */; };
@@ -273,6 +274,8 @@
 		557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Release.xcconfig; sourceTree = "<group>"; };
 		557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Debug.xcconfig; sourceTree = "<group>"; };
 		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Trial.xcconfig; sourceTree = "<group>"; };
+		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
+		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
 		557C2C771897403E002FAFEA /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = CoreAudio/PublicUtility/CAException.h; sourceTree = "<group>"; };
 		557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioDevice.cpp; path = CoreAudio/PublicUtility/CAHALAudioDevice.cpp; sourceTree = "<group>"; };
 		557C2C7E1897403E002FAFEA /* CAHALAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioDevice.h; path = CoreAudio/PublicUtility/CAHALAudioDevice.h; sourceTree = "<group>"; };
@@ -827,6 +830,8 @@
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
 				55E0B34018CBFA6900B4087C /* NoDropImageView.h */,
 				55E0B34118CBFA6900B4087C /* NoDropImageView.m */,
+				557C2C7319138994004A6364 /* TrialBottomView.h */,
+				557C2C7419138994004A6364 /* TrialBottomView.m */,
 			);
 			name = View;
 			path = Embrace;
@@ -1200,6 +1205,7 @@
 				557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */,
 				553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */,
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
+				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
