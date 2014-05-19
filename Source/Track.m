@@ -129,7 +129,10 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (!UUID) return nil;
     
     NSURL *result = [sGetInternalDirectoryURL() URLByAppendingPathComponent:[UUID UUIDString]];
-    result = [result URLByAppendingPathExtension:extension];
+
+    if (extension) {
+        result = [result URLByAppendingPathExtension:extension];
+    }
 
     return result;
 }
@@ -416,6 +419,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             }
 
             [externalURL embrace_stopAccessingResourceWithKey:@"bookmark"];
+        }
+
+        if (!bookmark) {
+            [self setTitle:[inURL lastPathComponent]];
+            [self setTrackError:TrackErrorOpenFailed];
+            return;
         }
 
         NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;

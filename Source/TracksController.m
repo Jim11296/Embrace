@@ -309,12 +309,12 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
         NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
         
         if (numberOfLines == 1) {
-            result =  25;
+            result = 25;
         } else if (numberOfLines == 3) {
-            result =  56;
+            result = 56;
+        } else {
+            result = 40;
         }
-        
-        result = 40;
     });
 
     return result;
@@ -532,7 +532,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     TrackTrialCheck(^{
         for (Track *track in _tracks) {
             if ([track trackStatus] == TrackStatusQueued) {
-                result =  track;
+                result = track;
                 break;
             }
         }
