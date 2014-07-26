@@ -408,65 +408,82 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     NSUUID *UUID = _UUID;
 
     dispatch_async(sResolverQueue, ^{
-        if (!bookmark) {
-            [externalURL embrace_startAccessingResourceWithKey:@"bookmark"];
+        NSURL *internalURL;
+
+        @try {
+            if (!bookmark) {
+                [externalURL embrace_startAccessingResourceWithKey:@"bookmark"];
+                
+                NSError *error = nil;
+                bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+
+                if (error) {
+                    EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, externalURL, error);
+                }
+
+                [externalURL embrace_stopAccessingResourceWithKey:@"bookmark"];
+            }
+
+            if (!bookmark) {
+                [self setTitle:[inURL lastPathComponent]];
+                [self setTrackError:TrackErrorOpenFailed];
+                return;
+            }
+
+            NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
             
+            BOOL isStale = NO;
             NSError *error = nil;
-            bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+            externalURL = [NSURL URLByResolvingBookmarkData: bookmark
+                                                    options: options
+                                              relativeToURL: nil
+                                        bookmarkDataIsStale: &isStale
+                                                      error: &error];
 
-            if (error) {
-                EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, externalURL, error);
+            if (!externalURL) {
+                [self setTrackError:TrackErrorOpenFailed];
+                return;
             }
 
-            [externalURL embrace_stopAccessingResourceWithKey:@"bookmark"];
-        }
+            if (![externalURL embrace_startAccessingResourceWithKey:@"resolve"]) {
+                EmbraceLog(@"Track", @"%@, -embrace_startAccessingResource failed for %@", self, externalURL);
+            }
 
-        if (!bookmark) {
-            [self setTitle:[inURL lastPathComponent]];
+            if (isStale) {
+                EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
+
+                bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+
+                if (error) {
+                    EmbraceLog(@"Track", @"%@ error refreshing bookmark: %@", self, error);
+                }
+            }
+
+            NSString *extension = [externalURL pathExtension];
+            internalURL = sGetInternalURLForUUID(UUID, extension);
+
+            if (![[NSFileManager defaultManager] fileExistsAtPath:[internalURL path]]) {
+                if (externalURL) {
+                    if (![[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
+                        EmbraceLog(@"Track", @"%@, failed to copy to internal location: %@", self, error);
+                    } else {
+                        EmbraceLog(@"Track", @"%@, copied %@ to internal location: %@", self, externalURL, internalURL);
+                    }
+                }
+            }
+
+            [externalURL embrace_stopAccessingResourceWithKey:@"resolve"];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _handleResolvedExternalURL:externalURL internalURL:internalURL bookmark:bookmark];
+            });
+            
+        } @catch (NSException *e) {
+            EmbraceLog(@"Track", @"Resolving bookmark raised exception %@", e);
+            externalURL = internalURL = nil;
+
             [self setTrackError:TrackErrorOpenFailed];
-            return;
         }
-
-        NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
-        
-        BOOL isStale = NO;
-        NSError *error = nil;
-        externalURL = [NSURL URLByResolvingBookmarkData: bookmark
-                                                options: options
-                                          relativeToURL: nil
-                                    bookmarkDataIsStale: &isStale
-                                                  error: &error];
-
-        if (![externalURL embrace_startAccessingResourceWithKey:@"resolve"]) {
-            EmbraceLog(@"Track", @"%@, -embrace_startAccessingResource failed for %@", self, externalURL);
-        }
-
-        if (isStale) {
-            EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
-
-            bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
-
-            if (error) {
-                EmbraceLog(@"Track", @"%@ error refreshing bookmark: %@", self, error);
-            }
-        }
-
-        NSString *extension = [externalURL pathExtension];
-        NSURL *internalURL = sGetInternalURLForUUID(UUID, extension);
-
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[internalURL path]]) {
-            if (![[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
-                EmbraceLog(@"Track", @"%@, failed to copy to internal location: %@", self, error);
-            } else {
-                EmbraceLog(@"Track", @"%@, copied %@ to internal location: %@", self, externalURL, internalURL);
-            }
-        }
-
-        [externalURL embrace_stopAccessingResourceWithKey:@"resolve"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self _handleResolvedExternalURL:externalURL internalURL:internalURL bookmark:bookmark];
-        });
     });
 }
 
