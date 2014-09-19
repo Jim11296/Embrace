@@ -36,13 +36,13 @@
 
 - (void) mouseEntered:(NSEvent *)theEvent
 {
-    [[(WhiteWindow *)[self window] closeButton] setForceVisible:YES];
+    [[(WhiteWindow *)[self window] closeButton] setAlwaysVisible:YES];
 }
 
 
 - (void) mouseExited:(NSEvent *)theEvent
 {
-    [[(WhiteWindow *)[self window] closeButton] setForceVisible:NO];
+    [[(WhiteWindow *)[self window] closeButton] setAlwaysVisible:NO];
 }
 
 

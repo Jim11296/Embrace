@@ -8,11 +8,12 @@
 
 #import "Button.h"
 #import "MainIconView.h"
-
+#import "NoDropImageView.h"
 
 @implementation Button {
     BOOL _highlighted;
     MainIconView *_iconView;
+    NSImageView  *_backgroundView;
 }
 
 
@@ -39,17 +40,23 @@
 
 - (void) _setupButton
 {
-    _alertColor       = GetRGBColor(0xff0000, 1.0);
+    _alertColor       = GetRGBColor(0xe5443b, 1.0);
     _alertActiveColor = GetRGBColor(0xe00000, 1.0);
-    _normalColor      = GetRGBColor(0x1866E9, 1.0);
-    _activeColor      = GetRGBColor(0x0a48b1, 1.0);
-    _inactiveColor    = GetRGBColor(0x000000, 0.5);
-    _disabledColor    = GetRGBColor(0x000000, 0.25);
+    _normalColor      = GetRGBColor(0x606060, 1.0);
+    _activeColor      = GetRGBColor(0x202020, 1.0);
+    _inactiveColor    = GetRGBColor(0xb0b0b0, 1.0);
+    _disabledColor    = GetRGBColor(0xb0b0b0, 1.0);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSWindowDidBecomeMainNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidResignActiveNotification object:nil];
 
+    _backgroundView = [[NoDropImageView alloc] initWithFrame:[self bounds]];
+    [self addSubview:_backgroundView];
+    
+    [_backgroundView setImage:[NSImage imageNamed:@"button_normal"]];
+    [_backgroundView setImageScaling:NSImageScaleNone];
+    
     _iconView = [[MainIconView alloc] initWithFrame:[self bounds]];
     [self addSubview:_iconView];
 
@@ -88,14 +95,22 @@
 }
 
 
+- (void) windowDidUpdateMain:(NSWindow *)window
+{
+    [self _update:nil];
+}
+
+
 - (void) _update:(NSNotification *)note
 {
     NSColor *color = _normalColor;
 
+    BOOL isInactive = ![[self window] isMainWindow] || ![NSApp isActive];
+    
     if (![self isEnabled]) {
         color = _disabledColor;
 
-    } else if (![[self window] isMainWindow] || ![NSApp isActive]) {
+    } else if (isInactive) {
         color = _inactiveColor;
 
     } else if ([self isAlert]) {
@@ -107,6 +122,14 @@
 
     [_iconView setImage:[self image]];
     [_iconView setTintColor:color];
+    
+    if (isInactive) {
+        [_backgroundView setImage:[NSImage imageNamed:@"button_inactive"]];
+    } else if (_highlighted) {
+        [_backgroundView setImage:[NSImage imageNamed:@"button_pressed"]];
+    } else {
+        [_backgroundView setImage:[NSImage imageNamed:@"button_normal"]];
+    }
 }
 
 

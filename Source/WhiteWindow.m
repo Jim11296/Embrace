@@ -8,9 +8,12 @@
 
 #import "WhiteWindow.h"
 #import "CloseButton.h"
+#import "BorderedView.h"
 
-
-@implementation WhiteWindow
+@implementation WhiteWindow {
+    BorderedView   *_headerView;
+    NSHashTable    *_mainListeners;
+}
 
 - (void) dealloc
 {
@@ -41,10 +44,23 @@
         backgroundColor = [NSColor colorWithCalibratedWhite:(0xFF / 255.0) alpha:1.0];
     }
 
+    if (isMainWindow) {
+        [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xf4f4f4, 1.0)];
+        [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xd0d0d0, 1.0)];
+
+        [_headerView setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xD0 / 255.0) alpha:1.0]];
+
+    } else {
+        [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xffffff, 1.0)];
+        [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xf8f8f8, 1.0)];
+
+        [_headerView setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xF0 / 255.0) alpha:1.0]];
+    }
+
     [self setBackgroundColor:backgroundColor];
 
-    for (NSView *view in _hiddenViewsWhenInactive) {
-        [view setHidden:!isMainWindow];
+    for (id<MainWindowListener> listener in _mainListeners) {
+        [listener windowDidUpdateMain:self];
     }
 }
 
@@ -65,7 +81,7 @@
 }
 
 
-- (void) setupWithHeaderView:(NSView *)headerView mainView:(NSView *)mainView
+- (void) setupWithHeaderView:(BorderedView *)headerView mainView:(NSView *)mainView
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateActiveness:) name:NSWindowDidBecomeMainNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateActiveness:) name:NSWindowDidResignMainNotification object:nil];
@@ -124,7 +140,7 @@
 
 
     NSView *closeButtonSuperview = headerView ? headerView : [contentView superview];
-    NSRect  closeButtonFrame = NSMakeRect(4, 0, 12, 12);
+    NSRect  closeButtonFrame = NSMakeRect(8, 5, 12, 12);
     
     closeButtonFrame.origin.y = [closeButtonSuperview bounds].size.height - 16;
     
@@ -136,6 +152,9 @@
     [whiteCloseButton setAction:@selector(_handleCloseButton:)];
 
     _closeButton = whiteCloseButton;
+    _headerView = headerView;
+    
+    [self addMainListener:_closeButton];
 }
 
 
@@ -160,17 +179,19 @@
 }
 
 
-- (void) setHiddenViewsWhenInactive:(NSArray *)hiddenViewsWhenInactive
+- (void) addMainListener:(id<MainWindowListener>)listener
 {
-    if (_hiddenViewsWhenInactive != hiddenViewsWhenInactive) {
-        for (NSView *view in _hiddenViewsWhenInactive) {
-            [view setHidden:NO];
-        }
-
-        _hiddenViewsWhenInactive = hiddenViewsWhenInactive;
-        
-        [self _updateActiveness:nil];
+    if (!_mainListeners) {
+        _mainListeners = [NSHashTable weakObjectsHashTable];
     }
+    
+    [_mainListeners addObject:listener];
+}
+
+
+- (NSArray *) mainListeners
+{
+    return [_mainListeners allObjects];
 }
 
 

@@ -349,13 +349,13 @@
     [borderedView setUsesDashes:usesDashes];
 
     if (_selected) {
-        [borderedView setBackgroundColor:GetRGBColor(0xecf2fe, 1.0)];
+        [borderedView setBackgroundColor:GetInactiveHighlightColor()];
     } else {
         [borderedView setBackgroundColor:nil];
     }
 
     if (_drawsInsertionPointWorkaround) {
-        [borderedView setTopBorderColor:GetRGBColor(0x3874d7, 1.0)];
+        [borderedView setTopBorderColor:GetActiveHighlightColor()];
         [borderedView setTopBorderHeight:3];
     } else {
         [borderedView setTopBorderColor:nil];
@@ -585,14 +585,14 @@
         CGRect rightFrame = [right frame];
         CGRect endFrame   = [_endTimeField frame];
 
-        CGFloat maxWidth = superBounds.size.width - (14 + 14);
+        CGFloat maxWidth = superBounds.size.width - (6 + 6);
 
         BOOL lastLine = (lineNumber == numberOfLines);
 
         leftFrame.origin.x  =
         rightFrame.origin.x =
         endFrame.origin.x   =
-            14;
+            6;
 
         leftFrame.size.width  =
         rightFrame.size.width =

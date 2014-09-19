@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Button : NSButton
+@interface Button : NSButton <MainWindowListener>
 
 - (void) performOpenAnimationToImage:(NSImage *)image enabled:(BOOL)enabled;
 

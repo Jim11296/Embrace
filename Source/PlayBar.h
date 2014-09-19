@@ -11,5 +11,6 @@
 @interface PlayBar : NSView
 
 @property (nonatomic) float percentage;
+@property (nonatomic, getter=isPlaying) BOOL playing;
 
 @end

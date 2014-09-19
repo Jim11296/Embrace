@@ -50,10 +50,17 @@
 {
     NSImage *image;
 
-    if (_highlighted) {
-        image = [NSImage imageNamed:@"close_pressed"];
+    if (![[self window] isMainWindow]) {
+        image = [NSImage imageNamed:@"close_button_inactive"];
+    
+    } else if (_highlighted) {
+        image = [NSImage imageNamed:@"close_button_pressed"];
+
+    } else if (_mouseInside) {
+        image = [NSImage imageNamed:@"close_button_hover"];
+
     } else {
-        image = [NSImage imageNamed:@"close_normal"];
+        image = [NSImage imageNamed:@"close_button_normal"];
     }
 
     NSRect bounds = [self bounds];
@@ -73,9 +80,15 @@
 }
 
 
+- (void) windowDidUpdateMain:(NSWindow *)window
+{
+    [self setNeedsDisplay:YES];
+}
+
+
 - (void) _updateVisibility
 {
-    BOOL visible = _mouseInside || _forceVisible;
+    BOOL visible = _mouseInside || _alwaysVisible;
 
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [[self animator] setAlphaValue:(visible ? 1.0 : 0.0)];
@@ -87,14 +100,14 @@
 {
     _mouseInside = YES;
     [self _setHighlighted:NO];
-    [self _updateVisibility];
+    [self setNeedsDisplay:YES];
 }
 
 
 - (void) mouseExited:(NSEvent *)theEvent
 {
     _mouseInside = NO;
-    [self _updateVisibility];
+    [self setNeedsDisplay:YES];
 }
 
 
@@ -121,10 +134,10 @@
 }
 
 
-- (void) setForceVisible:(BOOL)forceVisible
+- (void) setAlwaysVisible:(BOOL)alwaysVisible
 {
-    if (_forceVisible != forceVisible) {
-        _forceVisible = forceVisible;
+    if (_alwaysVisible != alwaysVisible) {
+        _alwaysVisible = alwaysVisible;
         [self _updateVisibility];
     }
 }

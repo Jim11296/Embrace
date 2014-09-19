@@ -19,21 +19,24 @@
 
     bounds = NSInsetRect(bounds, 1, 0);
 
-    void (^drawMeter)(NSRect, float, float) = ^(NSRect rect, float average, float peak) {
-        BOOL didClip = NO;
-
-        if (average > 0) {
-            didClip = YES;
-            average = 0;
+    void (^drawLimiter)(NSRect) = ^(NSRect rect) {
+        NSBezierPath *roundedPath = [NSBezierPath bezierPathWithOvalInRect:rect];
+        
+        if (_limiterActive) {
+            [[NSColor redColor] set];
+        } else {
+            [GetRGBColor(0xc6c6c6, 1.0) set];
         }
         
-        if (peak > 0) {
-            didClip = YES;
-            peak = 0;
-        }
+        [roundedPath fill];
+    };
+
+    void (^drawMeter)(NSRect, float, float) = ^(NSRect rect, float average, float peak) {
+        if (average > 0) average = 0;
+        if (peak > 0)    peak = 0;
     
-        CGFloat averageX = (60 + average) * ( bounds.size.width      / 60);
-        CGFloat peakX    = (60 + peak)    * ((bounds.size.width - 2) / 60);
+        CGFloat averageX = (60 + average) * ( rect.size.width      / 60);
+        CGFloat peakX    = (60 + peak)    * ((rect.size.width - 2) / 60);
         
         if (averageX < 0) averageX = 0;
         if (peakX    < 0) peakX = 0;
@@ -57,14 +60,14 @@
         if (_metering) {
             [NSGraphicsContext saveGraphicsState];
 
-            [GetRGBColor(0x0, 0.66) set];
+            [GetRGBColor(0x707070, 1.0) set];
             [[NSBezierPath bezierPathWithRect:leftRect] addClip];
             [roundedPath fill];
 
             [NSGraphicsContext restoreGraphicsState];
         }
 
-        [GetRGBColor(0x0, 0.15) set];
+        [GetRGBColor(0xc6c6c6, 1.0) set];
         [[NSBezierPath bezierPathWithRect:rightRect] addClip];
         [roundedPath fill];
         
@@ -74,14 +77,12 @@
             rect.origin.x = peakX - 1;
             rect.size.width = 3;
         
-            if (didClip || _limiterActive) {
-                [[NSColor redColor] set];
+            if (peakX < 1) {
+                [[NSColor clearColor] set];
+            } else if (peakX < 10) {
+                [GetRGBColor(0x0, (peakX / 10.0)) set];
             } else {
-                if (peakX < 10) {
-                    [GetRGBColor(0x0, (peakX / 10.0)) set];
-                } else {
-                    [[NSColor blackColor] set];
-                }
+                [GetRGBColor(0x0, 1.0) set];
             }
 
             [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
@@ -96,12 +97,28 @@
     NSRect rightChannelBar = leftChannelBar;
     rightChannelBar.origin.y -= 4;
 
+    NSRect leftLimiter = leftChannelBar;
+    NSRect rightLimiter = rightChannelBar;
+    
+    leftChannelBar.size.width  -= 4;
+    rightChannelBar.size.width -= 4;
+    
+    leftLimiter.size.width = rightLimiter.size.width = 3;
+    leftLimiter.origin.x   = rightLimiter.origin.x = CGRectGetMaxX(leftChannelBar) + 1;
+
     if (_metering) {
-        drawMeter(leftChannelBar,  _leftAveragePower, _leftPeakPower);
+        drawMeter(leftChannelBar,  _leftAveragePower,  _leftPeakPower);
         drawMeter(rightChannelBar, _rightAveragePower, _rightPeakPower);
+        
+        drawLimiter(leftLimiter);
+        drawLimiter(rightLimiter);
+        
     } else {
         drawMeter(leftChannelBar,  0, 0);
         drawMeter(rightChannelBar, 0, 0);
+
+        drawLimiter(leftLimiter);
+        drawLimiter(rightLimiter);
     }
 }
 

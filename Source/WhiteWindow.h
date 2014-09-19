@@ -8,14 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-@class CloseButton;
+@class CloseButton, BorderedView;
+
+@protocol MainWindowListener <NSObject>
+- (void) windowDidUpdateMain:(NSWindow *)window;
+@end
 
 @interface WhiteWindow : NSWindow
 
-- (void) setupWithHeaderView:(NSView *)contentView mainView:(NSView *)mainView;
+- (void) setupWithHeaderView:(BorderedView *)headerView mainView:(NSView *)mainView;
 - (void) setupAsParentWindow;
 
-@property (nonatomic, strong) NSArray *hiddenViewsWhenInactive;
+@property (nonatomic, readonly) NSArray *mainListeners;
+- (void) addMainListener:(id<MainWindowListener>)listener;
+
 @property (nonatomic, strong, readonly) CloseButton *closeButton;
 
 @end

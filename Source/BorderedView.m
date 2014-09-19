@@ -20,6 +20,11 @@
         NSRectFill(bounds);
     }
 
+    if (_backgroundGradientTopColor || _backgroundGradientBottomColor) {
+        NSGradient *g = [[NSGradient alloc] initWithStartingColor:_backgroundGradientTopColor endingColor:_backgroundGradientBottomColor];
+        [g drawInRect:bounds angle:-90];
+    }
+
     CGFloat onePixel = scale > 1 ? 0.5 : 1;
 
     void (^fillRect)(NSRect) = ^(NSRect rect) {
@@ -72,6 +77,24 @@
 {
     if (_backgroundColor != backgroundColor) {
         _backgroundColor = backgroundColor;
+        [self setNeedsDisplay:YES];
+    }
+}
+
+
+- (void) setBackgroundGradientBottomColor:(NSColor *)backgroundGradientBottomColor
+{
+    if (_backgroundGradientBottomColor != backgroundGradientBottomColor) {
+        _backgroundGradientBottomColor = backgroundGradientBottomColor;
+        [self setNeedsDisplay:YES];
+    }
+}
+
+
+- (void) setBackgroundGradientTopColor:(NSColor *)backgroundGradientTopColor
+{
+    if (_backgroundGradientTopColor != backgroundGradientTopColor) {
+        _backgroundGradientTopColor = backgroundGradientTopColor;
         [self setNeedsDisplay:YES];
     }
 }
