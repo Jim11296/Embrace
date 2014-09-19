@@ -12,6 +12,9 @@
 
 @property (nonatomic) NSColor *backgroundColor;
 
+@property (nonatomic) NSColor *backgroundGradientTopColor;
+@property (nonatomic) NSColor *backgroundGradientBottomColor;
+
 @property (nonatomic) NSColor *topBorderColor;
 @property (nonatomic) CGFloat topBorderHeight;
 @property (nonatomic) CGFloat topBorderLeftInset;

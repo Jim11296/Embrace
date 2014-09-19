@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CloseButton : NSButton
-@property (nonatomic, assign) BOOL forceVisible;
+@interface CloseButton : NSButton <MainWindowListener>
+@property (nonatomic, assign) BOOL alwaysVisible;
 @end

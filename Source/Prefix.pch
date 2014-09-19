@@ -18,4 +18,5 @@
     #import "WrappedUtils.h"
     #import "Application.h"
     #import "URLExtensions.h"
+    #import "WhiteWindow.h"
 #endif

@@ -452,6 +452,9 @@ NSColor *GetRGBColor(int rgb, CGFloat alpha)
 }
 
 
+NSColor *GetInactiveHighlightColor() {   return GetRGBColor(0xd2e3f8, 1.0); }
+NSColor *GetActiveHighlightColor() { return GetRGBColor(0x0065dc, 1.0); }
+
 extern AppDelegate *GetAppDelegate(void)
 {
     return (AppDelegate *)[NSApp delegate];

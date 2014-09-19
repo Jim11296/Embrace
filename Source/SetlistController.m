@@ -30,6 +30,7 @@
 #import "TracksController.h"
 #import "TrialBottomView.h"
 #import "WhiteSlider.h"
+#import "CloseButton.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -85,8 +86,11 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     [window setupWithHeaderView:[self headerView] mainView:[self mainView]];
     
+    [[window closeButton] setAlwaysVisible:YES];
+    
+    [window addMainListener:[self gearButton]];
+    [window addMainListener:[self playButton]];
 
-    [[self headerView] setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
     [[self bottomContainer] setTopBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
 
 
@@ -129,32 +133,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     }
 #endif
 
-
-    // Add top and bottom shadows
-    {
-        NSRect mainBounds = [[self mainView] bounds];
-
-        NSRect topShadowFrame    = NSMakeRect(0, 0, mainBounds.size.width, 4);
-        NSRect bottomShadowFrame = NSMakeRect(0, 0, mainBounds.size.width, 4);
-        
-        bottomShadowFrame.origin.y = NSMinY([[self scrollView] frame]);
-
-        topShadowFrame.origin.y = mainBounds.size.height - 4;
-        
-        ShadowView *topShadow    = [[ShadowView alloc] initWithFrame:topShadowFrame];
-        ShadowView *bottomShadow = [[ShadowView alloc] initWithFrame:bottomShadowFrame];
-        
-        [topShadow setAutoresizingMask:NSViewWidthSizable|NSViewMinYMargin];
-        [bottomShadow setAutoresizingMask:NSViewWidthSizable|NSViewMaxYMargin];
-        
-        [bottomShadow setFlipped:YES];
-        
-        [[self mainView] addSubview:topShadow];
-        [[self mainView] addSubview:bottomShadow];
-        
-        [window setHiddenViewsWhenInactive:@[ topShadow, bottomShadow ]];
-    }
-    
     [self setPlayer:[Player sharedInstance]];
     [self _setupPlayer];
 
@@ -948,11 +926,20 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     if (playing) {
         [[self levelMeter] setMetering:YES];
+        [[self playBar] setPlaying:YES];
+        
+        [[self playOffsetField]    setHidden:NO];
+        [[self playRemainingField] setHidden:NO];
         
     } else {
         [[self playOffsetField] setStringValue:GetStringForTime(0)];
         [[self playRemainingField] setStringValue:GetStringForTime(0)];
+
+        [[self playOffsetField]    setHidden:YES];
+        [[self playRemainingField] setHidden:YES];
+
         [[self playBar] setPercentage:0];
+        [[self playBar] setPlaying:NO];
 
         [[self levelMeter] setMetering:NO];
     }
@@ -1041,6 +1028,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     }
 
     [[self playBar] setPercentage:percentage];
+
     [[self levelMeter] setLeftAveragePower: leftAveragePower
                          rightAveragePower: rightAveragePower
                              leftPeakPower: leftPeakPower

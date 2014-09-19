@@ -49,7 +49,7 @@ static BOOL sNeedsMountainLionWorkaround()
 {
     NSRect result = [super knobRectFlipped:flipped];
 
-    result = NSInsetRect(result, 3, 3);
+    result = NSInsetRect(result, 4, 4);
 
     if (sNeedsMountainLionWorkaround()) {
         result.origin.y = 3;
@@ -64,7 +64,7 @@ static BOOL sNeedsMountainLionWorkaround()
     [[NSColor whiteColor] set];
     
     NSShadow *shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.25]];
+    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.20]];
     [shadow setShadowOffset:NSMakeSize(0, -1)];
     [shadow setShadowBlurRadius:2];
     [shadow set];
@@ -72,9 +72,9 @@ static BOOL sNeedsMountainLionWorkaround()
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
     
     NSShadow *shadow2 = [[NSShadow alloc] init];
-    [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.25]];
+    [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.65]];
     [shadow2 setShadowOffset:NSMakeSize(0, 0)];
-    [shadow2 setShadowBlurRadius:2];
+    [shadow2 setShadowBlurRadius:1];
     [shadow2 set];
     
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
@@ -97,17 +97,37 @@ static BOOL sNeedsMountainLionWorkaround()
     
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext saveGraphicsState];
     
-    [GetRGBColor(0x0, 0.66) set];
+    [GetRGBColor(0x686868, 1.0) set];
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
     [roundedPath fill];
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [GetRGBColor(0x0, 0.15) set];
+    [GetRGBColor(0xababab, 1.0) set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     
+    [NSGraphicsContext restoreGraphicsState];
+
+/*
+    NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:CGRectInset(aRect, -4, -4)];
+    
+    [fullPath appendBezierPath:[NSBezierPath bezierPathWithRect:aRect]];
+    [fullPath setWindingRule:NSEvenOddWindingRule];
+    
+    [roundedPath addClip];
+
+    NSShadow *shadow = [[NSShadow alloc] init];
+    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.15]];
+    [shadow setShadowOffset:NSMakeSize(0, -0.5)];
+    [shadow setShadowBlurRadius:1];
+    [shadow set];
+
+    [fullPath fill];
+*/
+
     [NSGraphicsContext restoreGraphicsState];
 }
 

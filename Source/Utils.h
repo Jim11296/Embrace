@@ -58,6 +58,9 @@ extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality);
 
 extern NSColor *GetRGBColor(int rgb, CGFloat alpha);
 
+extern NSColor *GetInactiveHighlightColor(void);
+extern NSColor *GetActiveHighlightColor(void);
+
 extern AppDelegate *GetAppDelegate(void);
 
 extern NSString *GetStringForTime(NSTimeInterval time);

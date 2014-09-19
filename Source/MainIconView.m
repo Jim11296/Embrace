@@ -61,11 +61,20 @@
     
     NSRect bounds = [self bounds];
     
-    bounds.size = _image ? [_image size] : NSZeroSize;
-    [_mainLayer setFrame:bounds];
+    NSRect mainFrame = bounds;
+    NSRect auxFrame  = bounds;
+    
+    mainFrame.size = _image ? [_image size] : NSZeroSize;
+    mainFrame.origin.x = round((bounds.size.width  - mainFrame.size.width)  / 2);
+    mainFrame.origin.y = round((bounds.size.height - mainFrame.size.height) / 2);
+    
+    [_mainLayer setFrame:mainFrame];
 
-    bounds.size = _auxImage ? [_auxImage size] : NSZeroSize;
-    [_auxLayer setFrame:bounds];
+    auxFrame.size = _auxImage ? [_auxImage size] : NSZeroSize;
+    auxFrame.origin.x = round((bounds.size.width  - auxFrame.size.width)  / 2);
+    auxFrame.origin.y = round((bounds.size.height - auxFrame.size.height) / 2);
+
+    [_auxLayer setFrame:auxFrame];
 }
 
 
