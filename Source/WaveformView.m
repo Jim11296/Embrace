@@ -39,6 +39,8 @@
 
         _activeWaveformColor = GetRGBColor(0x202020, 1.0);
         _inactiveWaveformColor = GetRGBColor(0xababab, 1.0);
+
+        [self setPercentage:FLT_EPSILON];
     }
     
     return self;
@@ -50,6 +52,19 @@
     [_track removeObserver:self forKeyPath:@"overviewData"];
 }
 
+
+- (void) viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    
+    [_activeLayer setNeedsDisplay];
+    [_inactiveLayer setNeedsDisplay];
+}
+
+- (BOOL) allowsVibrancy
+{
+    return YES;
+}
 
 - (BOOL) wantsUpdateLayer { return YES; }
 - (void) updateLayer { }
@@ -82,6 +97,9 @@
 {
     [_inactiveLayer setContentsScale:newScale];
     [_activeLayer   setContentsScale:newScale];
+
+    [_inactiveLayer setNeedsDisplay];
+    [_activeLayer   setNeedsDisplay];
 
     return YES;
 }
@@ -168,32 +186,47 @@
         color = _inactiveWaveformColor;
     }
 
-    NSRect middleLineRect = CGRectMake(0, (size.height - 1) / 2, size.width, 1);
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, middleLineRect);
+//    NSRect middleLineRect = CGRectMake(0, (size.height - 1) / 2, size.width, 1);
+//    CGContextSetFillColorWithColor(context, [color CGColor]);
+//    CGContextFillRect(context, middleLineRect);
 
     CGAffineTransform transform = CGAffineTransformMakeScale(size.width / sampleCount, 1);
 
     transform = CGAffineTransformTranslate(transform, -start, 0);
-
     transform = CGAffineTransformTranslate(transform, 0, size.height / 2);
-    transform = CGAffineTransformScale(transform, 1, size.height / (2 * 256));
 
     CGContextConcatCTM(context, transform);
 
-    UInt8 *samples = (UInt8 *)[data bytes];
+    vDSP_Length length = [data length];
+    UInt8 *byteSamples  = (UInt8 *)[data bytes];
+    float *floatSamples = malloc(length * sizeof(float));
+    
+    vDSP_vfltu8(byteSamples, 1, floatSamples, 1, length);
 
-    if (start < end) {
-        CGContextMoveToPoint(context, start, samples[start]);
+    float scalar = size.height / (2 * 256);
+    vDSP_vsmul(floatSamples, 1, &scalar, floatSamples, 1, length);
+
+    CGFloat min = 1.0 / scale;
+
+    for (NSInteger i = 0; i < end; i++) {
+        CGFloat s = floatSamples[i];
+        if (s < min) s = min;
+        floatSamples[i] = s;
     }
 
+    if (start < end) {
+        CGContextMoveToPoint(context, start, floatSamples[start]);
+    }
+    
     for (NSInteger i = start + 1; i < end; i++) {
-        CGContextAddLineToPoint(context, i, samples[i]);
+        CGContextAddLineToPoint(context, i, floatSamples[i]);
     }
 
     for (NSInteger i = end - 1; i >= start; i--) {
-        CGContextAddLineToPoint(context, i, -samples[i]);
+        CGContextAddLineToPoint(context, i, -floatSamples[i]);
     }
+    
+    free(floatSamples);
     
     CGContextClosePath(context);
 
@@ -208,6 +241,8 @@
         [_track removeObserver:self forKeyPath:@"overviewData"];
         _track = track;
         [_track addObserver:self forKeyPath:@"overviewData" options:0 context:NULL];
+
+        [self setPercentage:FLT_EPSILON];
 
         [_activeLayer   setNeedsDisplay];
         [_inactiveLayer setNeedsDisplay];
@@ -226,12 +261,41 @@
 }
 
 
+- (void) setInactiveWaveformColor:(NSColor *)color
+{
+    if (_inactiveWaveformColor != color) {
+        _inactiveWaveformColor = color;
+        
+        [_activeLayer   setNeedsDisplay];
+        [_inactiveLayer setNeedsDisplay];
+    }
+}
+
+
+- (void) setActiveWaveformColor:(NSColor *)color
+{
+    if (_activeWaveformColor != color) {
+        _activeWaveformColor = color;
+        
+        [_activeLayer   setNeedsDisplay];
+        [_inactiveLayer setNeedsDisplay];
+    }
+}
+
+
 - (void) setShowsDebugInformation:(BOOL)showsDebugInformation
 {
     if (_showsDebugInformation != showsDebugInformation) {
         _showsDebugInformation = showsDebugInformation;
         [self setNeedsLayout:YES];
     }
+}
+
+
+- (void) redisplay
+{
+    [_activeLayer   setNeedsDisplay];
+    [_inactiveLayer setNeedsDisplay];
 }
 
 

@@ -1,22 +1,22 @@
 //
-//  LegacyCurrentTrackController.m
+//  CurrentTrackController.m
 //  Embrace
 //
 //  Created by Ricci Adams on 2014-01-21.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
-#import "LegacyCurrentTrackController.h"
+#import "CurrentTrackController.h"
 #import "Player.h"
-#import "EmbraceWindow.h"
+#import "WhiteWindow.h"
 #import "WaveformView.h"
 #import "CloseButton.h"
 
-@interface LegacyCurrentTrackController () <PlayerListener, NSWindowDelegate>
+@interface CurrentTrackController () <PlayerListener, NSWindowDelegate>
 @end
 
 
-@implementation LegacyCurrentTrackController {
+@implementation CurrentTrackController {
     NSTrackingArea *_closeButtonTrackingArea;
 }
 
@@ -36,13 +36,13 @@
 
 - (void) mouseEntered:(NSEvent *)theEvent
 {
-    [[(EmbraceWindow *)[self window] closeButton] setAlwaysVisible:YES];
+    [[(WhiteWindow *)[self window] closeButton] setAlwaysVisible:YES];
 }
 
 
 - (void) mouseExited:(NSEvent *)theEvent
 {
-    [[(EmbraceWindow *)[self window] closeButton] setAlwaysVisible:NO];
+    [[(WhiteWindow *)[self window] closeButton] setAlwaysVisible:NO];
 }
 
 
@@ -86,7 +86,7 @@
     NSRect contentRect = [[self childWindow] frame];
     NSUInteger styleMask = NSTitledWindowMask|NSClosableWindowMask|NSResizableWindowMask|NSTexturedBackgroundWindowMask;
 
-    EmbraceWindow *window = [[EmbraceWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
+    WhiteWindow *window = [[WhiteWindow alloc] initWithContentRect:contentRect styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
     [window setupAsParentWindow];
 
     [self setWindow:window];

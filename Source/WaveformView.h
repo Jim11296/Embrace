@@ -12,6 +12,8 @@
 
 @interface WaveformView : NSView
 
+- (void) redisplay;
+
 @property (nonatomic, strong) Track *track;
 
 @property (nonatomic) BOOL showsDebugInformation;

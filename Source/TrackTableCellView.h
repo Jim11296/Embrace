@@ -27,6 +27,7 @@
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeLeftField;
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
 
+@property (nonatomic, weak) IBOutlet NSImageView *speakerImageView;
 
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 

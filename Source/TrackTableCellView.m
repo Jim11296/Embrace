@@ -118,7 +118,7 @@
 
     [_endTimeField setFont:[[self lineTwoLeftField] font]];
 
-    [self _updateAll];
+    [self _updateAllAnimated:NO];
 }
 
 
@@ -154,7 +154,7 @@
 {
     if (object == _observedObject) {
         if ([_observedKeyPaths containsObject:keyPath]) {
-            [self _updateAll];
+            [self _updateAllAnimated:[keyPath isEqualToString:@"trackStatus"]];
         }
     }
 }
@@ -187,7 +187,7 @@
         [_observedObject addObserver:self forKeyPath:keyPath options:0 context:NULL];
     }
 
-    [self _updateAll];
+    [self _updateAllAnimated:NO];
 }
 
 
@@ -238,8 +238,12 @@
 {
     TrackStatus trackStatus = [[self track] trackStatus];
 
+    if ([[self window] isMainWindow] && _selected)  {
+        return [NSColor whiteColor];
+    }
+
     if (trackStatus == TrackStatusPlaying) {
-        return GetRGBColor(0x1866e9, 1.0);
+        return GetRGBColor(_selected ? 0x0 : 0x1866e9, 1.0);
     } else if (trackStatus == TrackStatusPlayed) {
         return GetRGBColor(0x000000, 0.4);
     }
@@ -252,8 +256,12 @@
 {
     TrackStatus trackStatus = [[self track] trackStatus];
 
+    if ([[self window] isMainWindow] && _selected)  {
+        return [NSColor colorWithCalibratedWhite:1.0 alpha:0.66];
+    }
+
     if (trackStatus == TrackStatusPlaying) {
-        return GetRGBColor(0x1866e9, 0.8);
+        return GetRGBColor(_selected ? 0x0 : 0x1866e9, 0.8);
     } else if (trackStatus == TrackStatusPlayed) {
         return GetRGBColor(0x000000, 0.33);
     }
@@ -305,10 +313,11 @@
 
 #pragma mark - Update
 
-- (void) _updateAll
+- (void) _updateAllAnimated:(BOOL)animated
 {
     [self _updateBorderedView];
-    [self _updateFieldsAnimated:NO];
+    [self _updateSpeakerImage];
+    [self _updateFieldsAnimated:animated];
     [self _updateErrorButton];
 
     NSColor *topTextColor    = [self _topTextColor];
@@ -324,6 +333,29 @@
 
     [_endTimeField setFont:[[self lineTwoLeftField] font]];
     [_endTimeField setTextColor:bottomTextColor];
+}
+
+
+- (void) _updateSpeakerImage
+{
+    TrackStatus trackStatus = [[self track] trackStatus];
+
+    if ([[self window] isMainWindow] && _selected)  {
+        [[self speakerImageView] setImage:[NSImage imageNamed:@"white_speaker"]];
+        return;
+    }
+
+    if (trackStatus == TrackStatusPlaying) {
+        if (_selected) {
+            [[self speakerImageView] setImage:[NSImage imageNamed:@"black_speaker"]];
+        } else {
+            [[self speakerImageView] setImage:[NSImage imageNamed:@"blue_speaker"]];
+        }
+
+        return;
+    }
+    
+    [[self speakerImageView] setImage:[NSImage imageNamed:@"black_speaker"]];
 }
 
 
@@ -349,7 +381,11 @@
     [borderedView setUsesDashes:usesDashes];
 
     if (_selected) {
-        [borderedView setBackgroundColor:GetInactiveHighlightColor()];
+        if ([[self window] isMainWindow]) {
+            [borderedView setBackgroundColor:GetActiveHighlightColor()];
+        } else {
+            [borderedView setBackgroundColor:GetInactiveHighlightColor()];
+        }
     } else {
         [borderedView setBackgroundColor:nil];
     }
@@ -578,21 +614,43 @@
     NSTextField *line3Left  = [self lineThreeLeftField];
     NSTextField *line3Right = [self lineThreeRightField];
 
+    NSImageView *speakerImageView = [self speakerImageView];
+
     NSRect superBounds = [[line2Left superview] bounds];
+
+    CGFloat textLeftX = 6;
+
+    BOOL isPlaying = [[self track] trackStatus] == TrackStatusPlaying;
+    if (isPlaying) {
+        textLeftX += 24;
+    }
+
+    NSRect speakerFrame = NSZeroRect;
+    speakerFrame.size = [[speakerImageView image] size];
+    speakerFrame.origin.y = round((superBounds.size.height - speakerFrame.size.height) / 2);
+    speakerFrame.origin.x = isPlaying ? 8 : -speakerFrame.size.width;
+    
+    if (animated) {
+        [[speakerImageView animator] setFrame:speakerFrame];
+        [[speakerImageView animator] setAlphaValue:(isPlaying ? 1.0 : 0.0)];
+    } else {
+        [speakerImageView setFrame:speakerFrame];
+        [speakerImageView setAlphaValue:(isPlaying ? 1.0 : 0.0)];
+    }
 
     void (^layoutLine)(NSTextField *, NSTextField *, CGFloat, CGFloat, NSInteger) = ^(NSTextField *left, NSTextField *right, CGFloat leftFittedWidth, CGFloat rightFittedWidth, NSInteger lineNumber) {
         CGRect leftFrame  = [left  frame];
         CGRect rightFrame = [right frame];
         CGRect endFrame   = [_endTimeField frame];
 
-        CGFloat maxWidth = superBounds.size.width - (6 + 6);
-
         BOOL lastLine = (lineNumber == numberOfLines);
+
+        CGFloat maxWidth = superBounds.size.width - (textLeftX + 6);
 
         leftFrame.origin.x  =
         rightFrame.origin.x =
         endFrame.origin.x   =
-            6;
+            textLeftX;
 
         leftFrame.size.width  =
         rightFrame.size.width =
@@ -732,7 +790,7 @@
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
-    [self _updateAll];
+    [self _updateAllAnimated:NO];
 }
 
 
@@ -740,7 +798,7 @@
 {
     if (_drawsInsertionPointWorkaround != drawsInsertionPointWorkaround) {
         _drawsInsertionPointWorkaround = drawsInsertionPointWorkaround;
-        [self _updateAll];
+        [self _updateAllAnimated:NO];
     }
 }
 
@@ -749,7 +807,7 @@
 {
     if (_selected != selected) {
         _selected = selected;
-        [self _updateAll];
+        [self _updateAllAnimated:NO];
     }
 }
 

@@ -298,4 +298,33 @@
 }
 
 
+- (void) setWiggling:(BOOL)wiggling
+{
+    if (_wiggling != wiggling) {
+        _wiggling = wiggling;
+
+        if (!wiggling) {
+            [_mainLayer removeAnimationForKey:@"wiggling"];
+        } else {
+            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
+            
+            CGAffineTransform from = CGAffineTransformMakeScale(1,   1);
+            CGAffineTransform to   = CGAffineTransformMakeScale(0.9, 0.95);
+            
+           
+            
+            [animation setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(from)]];
+            [animation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(to)]];
+            
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+            [animation setRepeatCount:INFINITY];
+            [animation setAutoreverses:YES];
+            [animation setDuration:0.1];
+            
+            [_mainLayer addAnimation:animation forKey:@"wiggling"];
+        }
+    }
+}
+
+
 @end
