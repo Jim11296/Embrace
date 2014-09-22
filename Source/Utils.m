@@ -483,5 +483,3 @@ NSString *GetApplicationSupportDirectory()
     NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleExecutable"];
     return sFindOrCreateDirectory(NSApplicationSupportDirectory, NSUserDomainMask, name, NULL);
 }
-
-

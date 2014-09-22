@@ -67,7 +67,7 @@
                 <outlet property="delegate" destination="-2" id="SRi-5i-aw6"/>
             </connections>
         </menu>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="WhiteWindow">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="EmbraceWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="533" y="338" width="320" height="354"/>
@@ -82,7 +82,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="60" horizontalPageScroll="10" verticalLineScroll="60" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
-                                <rect key="frame" x="0.0" y="32" width="320" height="323"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="326"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
@@ -115,7 +115,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                                     <subviews>
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0mJ-te-wAf">
-                                                                            <rect key="frame" x="6" y="40" width="252" height="17"/>
+                                                                            <rect key="frame" x="31" y="40" width="252" height="17"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Title" id="7sP-hf-Z5h">
                                                                                 <font key="font" metaFont="system"/>
@@ -124,7 +124,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="KYa-Yb-9f5">
-                                                                            <rect key="frame" x="6" y="21" width="144" height="17"/>
+                                                                            <rect key="frame" x="31" y="21" width="144" height="17"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 2 Left" id="bc4-y0-9mN">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -133,7 +133,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="Cd2-5a-ZGp">
-                                                                            <rect key="frame" x="6" y="5" width="144" height="17"/>
+                                                                            <rect key="frame" x="31" y="5" width="144" height="17"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 3 Left" id="WvC-6Z-80D">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -168,21 +168,24 @@
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
                                                                         </textField>
+                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="gtl-mJ-WxD" customClass="NoDropImageView">
+                                                                            <rect key="frame" x="0.0" y="20" width="24" height="24"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="speaker_template" id="o3E-8L-KKf"/>
+                                                                        </imageView>
                                                                     </subviews>
                                                                 </customView>
                                                             </subviews>
                                                             <connections>
-                                                                <outlet property="artistField" destination="KYa-Yb-9f5" id="itI-37-BHD"/>
                                                                 <outlet property="borderedView" destination="G0T-eR-fVJ" id="E1h-VY-rZr"/>
                                                                 <outlet property="durationField" destination="oJ2-ys-Q1u" id="XEM-Dt-grU"/>
                                                                 <outlet property="lineThreeLeftField" destination="Cd2-5a-ZGp" id="3uN-uw-VVf"/>
                                                                 <outlet property="lineThreeRightField" destination="9DW-9o-kn1" id="f9o-fT-Hg5"/>
                                                                 <outlet property="lineTwoLeftField" destination="KYa-Yb-9f5" id="GUb-YJ-aFB"/>
                                                                 <outlet property="lineTwoRightField" destination="vHN-Td-1li" id="PFc-IX-QTx"/>
+                                                                <outlet property="speakerImageView" destination="gtl-mJ-WxD" id="6o6-bq-HKJ"/>
                                                                 <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
                                                                 <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>
-                                                                <outlet property="tonalityAndBPMField" destination="vHN-Td-1li" id="A5j-Nr-MJt"/>
-                                                                <outlet property="tonalityField" destination="vHN-Td-1li" id="bmS-mG-wDh"/>
                                                             </connections>
                                                         </tableCellView>
                                                     </prototypeCellViews>
@@ -207,19 +210,19 @@
                                 </scroller>
                             </scrollView>
                             <customView appearanceType="aqua" id="MK7-2f-n0z" customClass="BorderedView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="32"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <slider toolTip="Adjust the silence between tracks." verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
-                                        <rect key="frame" x="41" y="4" width="228" height="25"/>
+                                        <rect key="frame" x="29" y="1" width="254" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="15" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
                                         <connections>
                                             <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
                                         </connections>
                                     </slider>
-                                    <textField verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="27g-A4-whb">
-                                        <rect key="frame" x="270" y="5" width="36" height="18"/>
+                                    <textField verticalHuggingPriority="750" alphaValue="0.5" id="27g-A4-whb">
+                                        <rect key="frame" x="272" y="3" width="42" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="right" title="0:00" id="kXQ-cJ-H9c">
                                             <font key="font" metaFont="smallSystem"/>
@@ -234,8 +237,8 @@
                                             </binding>
                                         </connections>
                                     </textField>
-                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.33000000000000002" id="rx0-fs-t7a" customClass="NoDropImageView">
-                                        <rect key="frame" x="20" y="10" width="15" height="12"/>
+                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.5" id="rx0-fs-t7a" customClass="NoDropImageView">
+                                        <rect key="frame" x="8" y="8" width="15" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="padding_template" id="k41-UM-ODJ"/>
                                     </imageView>
@@ -270,7 +273,7 @@
                         <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
                     </connections>
                 </slider>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="rvF-zp-fPR">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
                     <rect key="frame" x="269" y="3" width="46" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
@@ -289,7 +292,7 @@
                         <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
                     </connections>
                 </customView>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.33000000000000002" id="Ceq-EF-rHK">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
                     <rect key="frame" x="5" y="3" width="46" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
@@ -310,7 +313,7 @@
                     </connections>
                 </customView>
             </subviews>
-            <point key="canvasLocation" x="303" y="412"/>
+            <point key="canvasLocation" x="216" y="500"/>
         </customView>
         <menu id="Kdj-dO-hkZ">
             <items>
@@ -377,5 +380,6 @@
     </objects>
     <resources>
         <image name="padding_template" width="7.5524473190307617" height="6"/>
+        <image name="speaker_template" width="8.5" height="6"/>
     </resources>
 </document>

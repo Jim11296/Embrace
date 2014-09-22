@@ -169,28 +169,13 @@
 
 - (void) setWiggling:(BOOL)wiggling
 {
-    if (_wiggling != wiggling) {
-        _wiggling = wiggling;
+    [_iconView setWiggling:wiggling];
+}
 
-        if (!wiggling) {
-            [[self layer] removeAnimationForKey:@"wiggling"];
-        } else {
-            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
-            
-            CGAffineTransform from = CGAffineTransformMakeScale(1,    1);
-            CGAffineTransform to   = CGAffineTransformMakeScale(0.95, 0.95);
-            
-            [animation setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(from)]];
-            [animation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(to)]];
-            
-            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-            [animation setRepeatCount:INFINITY];
-            [animation setAutoreverses:YES];
-            [animation setDuration:0.15];
-            
-            [[self layer] addAnimation:animation forKey:@"wiggling"];
-        }
-    }
+
+- (BOOL) isWiggling
+{
+    return [_iconView isWiggling];
 }
 
 

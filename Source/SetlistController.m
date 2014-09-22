@@ -20,17 +20,15 @@
 #import "WaveformView.h"
 #import "BorderedView.h"
 #import "Button.h"
-#import "WhiteWindow.h"
+#import "EmbraceWindow.h"
 #import "LevelMeter.h"
 #import "PlayBar.h"
 #import "Preferences.h"
-#import "ShadowView.h"
 #import "ViewTrackController.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
 #import "TrialBottomView.h"
 #import "WhiteSlider.h"
-#import "CloseButton.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -82,17 +80,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     [super windowDidLoad];
 
-    WhiteWindow *window = (WhiteWindow *)[self window];
+    EmbraceWindow *window = (EmbraceWindow *)[self window];
 
-    [window setupWithHeaderView:[self headerView] mainView:[self mainView]];
-    
-    [[window closeButton] setAlwaysVisible:YES];
+    [window setupWithHeaderView:[self headerView]
+                       mainView:[self mainView]
+                     footerView:[self bottomContainer]];
     
     [window addMainListener:[self gearButton]];
     [window addMainListener:[self playButton]];
 
-    [[self bottomContainer] setTopBorderColor:[NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0]];
-
+    [[self bottomContainer] setTopBorderColor:GetRGBColor(0x0, 0.15)];
 
     [[self playButton] setImage:[NSImage imageNamed:@"play_template"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"gear_template"]];
@@ -143,7 +140,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
-
 }
 
 #if TRIAL
@@ -206,7 +202,11 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         enabled = YES;
 
     } else {
-        image = [NSImage imageNamed:@"play_template"];
+        if (_didAutoPause) {
+            image = [NSImage imageNamed:@"resume_template"];
+        } else {
+            image = [NSImage imageNamed:@"play_template"];
+        }
 
         Track *next = [[self tracksController] firstQueuedTrack];
 
@@ -221,7 +221,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [playButton setEnabled:enabled];
 
     if (enabled) {
-        [playButton setWiggling:((action == PlaybackActionPause) && _inVolumeDrag && isVolumeZero) || _didAutoPause];
+        [playButton setWiggling:((action == PlaybackActionPause) && _inVolumeDrag && isVolumeZero)];
     } else {
         [playButton setWiggling:NO];
     }
@@ -357,7 +357,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         BOOL isVolumeZero = [player volume] == 0;
 
         if (action == PlaybackActionPause && !_inVolumeDrag && isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"play_template"] enabled:YES];
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"resume_template"] enabled:YES];
             _volumeBeforeAutoPause = beforeVolume;
             _didAutoPause = YES;
 
@@ -829,8 +829,10 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     EmbraceLogMethod();
 
     NSButton *gearButton = [self gearButton];
-    NSMenu *menu = [gearButton menu];
-    [NSMenu popUpContextMenu:menu withEvent:[NSApp currentEvent] forView:gearButton];
+
+    NSRect bounds = [gearButton bounds];
+    NSPoint point = NSMakePoint(1, CGRectGetMaxY(bounds) + 6);
+    [[gearButton menu] popUpMenuPositioningItem:nil atLocation:point inView:gearButton];
 }
 
 
@@ -896,7 +898,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (BOOL) window:(WhiteWindow *)window cancelOperation:(id)sender
+- (BOOL) window:(EmbraceWindow *)window cancelOperation:(id)sender
 {
     if ([[self tracksController] selectedTrack]) {
         [[self tracksController] deselectAllTracks];

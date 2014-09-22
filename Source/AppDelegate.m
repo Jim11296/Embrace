@@ -13,6 +13,7 @@
 #import "PreferencesController.h"
 #import "EditEffectController.h"
 #import "CurrentTrackController.h"
+#import "LegacyCurrentTrackController.h"
 #import "ViewTrackController.h"
 #import "TracksController.h"
 #import "Preferences.h"
@@ -33,7 +34,7 @@
 @implementation AppDelegate {
     SetlistController      *_setlistController;
     EffectsController      *_effectsController;
-    CurrentTrackController *_currentTrackController;
+    NSWindowController     *_currentTrackController;
     PreferencesController  *_preferencesController;
 
 #if DEBUG
@@ -58,6 +59,8 @@
 {
     EmbraceLogMethod();
 
+    EmbraceCheckCompatibility();
+
     // Load preferences
     [Preferences sharedInstance];
 
@@ -76,10 +79,15 @@
         [_crashReporter enableCrashReporter];
     }
 
-    _setlistController      = [[SetlistController     alloc] init];
-    _effectsController      = [[EffectsController      alloc] init];
-    _currentTrackController = [[CurrentTrackController alloc] init];
+    _setlistController = [[SetlistController alloc] init];
+    _effectsController = [[EffectsController alloc] init];
     
+    if (IsLegacyOS()) {
+        _currentTrackController = [[LegacyCurrentTrackController alloc] init];
+    } else {
+        _currentTrackController = [[CurrentTrackController alloc] init];
+    }
+
     [self _showPreviouslyVisibleWindows];
 
     BOOL hasCrashReports = [_crashSender hasCrashReports];
