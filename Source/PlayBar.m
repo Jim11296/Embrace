@@ -94,13 +94,13 @@
     NSRect bounds = [self bounds];
 
     NSRect barFrame = bounds;
-    barFrame.size.height = 2;
+    barFrame.size.height = 4;
 
     NSRect bottomFrame = bounds;
     bottomFrame.size.height = 1;
 
     NSRect playheadFrame = bounds;
-    playheadFrame.size.height = 4;
+    playheadFrame.size.height = 8;
 
     if (!_playing) {
         barFrame.origin.y = -barFrame.size.height;

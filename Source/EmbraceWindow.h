@@ -1,5 +1,5 @@
 //
-//  MainWindow.h
+//  EmbraceWindow
 //  Embrace
 //
 //  Created by Ricci Adams on 2014-01-04.
@@ -14,9 +14,12 @@
 - (void) windowDidUpdateMain:(NSWindow *)window;
 @end
 
-@interface WhiteWindow : NSWindow
+@interface EmbraceWindow : NSWindow
 
-- (void) setupWithHeaderView:(BorderedView *)headerView mainView:(NSView *)mainView;
+- (void) setupWithHeaderView: (BorderedView *) headerView
+                    mainView: (NSView *) mainView
+                  footerView: (BorderedView *) footerView;
+
 - (void) setupAsParentWindow;
 
 @property (nonatomic, readonly) NSArray *mainListeners;
@@ -26,7 +29,7 @@
 
 @end
 
-@protocol WhiteWindowDelegate <NSObject>
+@protocol EmbraceWindowDelegate <NSObject>
 @optional
-- (BOOL) window:(WhiteWindow *)window cancelOperation:(id)sender;
+- (BOOL) window:(EmbraceWindow *)window cancelOperation:(id)sender;
 @end

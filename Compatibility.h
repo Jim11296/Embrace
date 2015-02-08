@@ -8,6 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Compatibility : NSObject
+extern BOOL IsLegacyOS(void);
 
-@end
+extern NSString *EmbraceCompatibilityLookup(UInt32 unused, ...);
+extern void EmbraceCompatibilityLookup_(UInt32 unused, ...);
+
+static inline NSString *EmbraceGetPrivateName(const UInt8 *obfuscatedSelName)
+{
+    return EmbraceCompatibilityLookup(0, obfuscatedSelName);
+}
+
+static inline void EmbraceSizzle(NSString *cls, NSString *originalSelName, NSString *altSelName)
+{
+    EmbraceCompatibilityLookup_(0, cls, originalSelName, altSelName);
+}
+
+extern void EmbraceCheckCompatibility(void);
+
+

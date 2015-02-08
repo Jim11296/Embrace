@@ -1,5 +1,5 @@
 //
-//  CurrentTrackController.h
+//  LegacyCurrentTrackController
 //  Embrace
 //
 //  Created by Ricci Adams on 2014-01-21.
@@ -8,7 +8,7 @@
 
 @class WaveformView, Player;
 
-@interface CurrentTrackController : NSWindowController
+@interface LegacyCurrentTrackController : NSWindowController
 
 @property (nonatomic, strong) IBOutlet NSWindow *childWindow;
 

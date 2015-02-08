@@ -1,18 +1,19 @@
 //
-//  MainWindow.m
+//  EmbraceWindow.m
 //  Embrace
 //
 //  Created by Ricci Adams on 2014-01-04.
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
-#import "WhiteWindow.h"
-#import "CloseButton.h"
+#import "EmbraceWindow.h"
 #import "BorderedView.h"
 
-@implementation WhiteWindow {
+@implementation EmbraceWindow {
     BorderedView   *_headerView;
+    BorderedView   *_footerView;
     NSHashTable    *_mainListeners;
+    NSVisualEffectView *_effectsView;
 }
 
 - (void) dealloc
@@ -35,29 +36,32 @@
 - (void) _updateActiveness:(NSNotification *)note
 {
     BOOL isMainWindow = [self isMainWindow];
-
-    NSColor *backgroundColor;
     
-    if (isMainWindow) {
-        backgroundColor = [NSColor colorWithCalibratedWhite:(0xF8 / 255.0) alpha:1.0];
-    } else {
-        backgroundColor = [NSColor colorWithCalibratedWhite:(0xFF / 255.0) alpha:1.0];
+    if (IsLegacyOS()) {
+        NSColor *backgroundColor;
+
+        if (isMainWindow) {
+            backgroundColor = [NSColor colorWithCalibratedWhite:(0xe8 / 255.0) alpha:1.0];
+
+            [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xf4f4f4, 1.0)];
+            [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xd0d0d0, 1.0)];
+
+        } else {
+            backgroundColor = [NSColor colorWithCalibratedWhite:(0xFF / 255.0) alpha:1.0];
+
+            [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xffffff, 1.0)];
+            [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xf8f8f8, 1.0)];
+        }
+
+        [self setBackgroundColor:backgroundColor];
     }
 
     if (isMainWindow) {
-        [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xf4f4f4, 1.0)];
-        [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xd0d0d0, 1.0)];
-
-        [_headerView setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xD0 / 255.0) alpha:1.0]];
-
+        [_footerView setBackgroundColor:GetRGBColor(0xe0e0e0, 1.0)];
     } else {
-        [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xffffff, 1.0)];
-        [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xf8f8f8, 1.0)];
-
-        [_headerView setBottomBorderColor:[NSColor colorWithCalibratedWhite:(0xF0 / 255.0) alpha:1.0]];
+        [_footerView setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
     }
 
-    [self setBackgroundColor:backgroundColor];
 
     for (id<MainWindowListener> listener in _mainListeners) {
         [listener windowDidUpdateMain:self];
@@ -81,25 +85,16 @@
 }
 
 
-- (void) setupWithHeaderView:(BorderedView *)headerView mainView:(NSView *)mainView
+- (void) setupWithHeaderView: (BorderedView *) headerView
+                    mainView: (NSView *) mainView
+                  footerView: (BorderedView *) footerView
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateActiveness:) name:NSWindowDidBecomeMainNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateActiveness:) name:NSWindowDidResignMainNotification object:nil];
 
-    NSButton *miniaturizeButton = [self standardWindowButton:NSWindowMiniaturizeButton];
-    NSButton *zoomButton        = [self standardWindowButton:NSWindowZoomButton];
-    NSButton *closeButton       = [self standardWindowButton:NSWindowCloseButton];
-
-    NSColor *backgroundColor = [NSColor colorWithCalibratedWhite:(0xF8 / 255.0) alpha:1.0];
-
     [self setMovableByWindowBackground:YES];
     [self setTitle:@""];
-    [self setBackgroundColor:backgroundColor];
     [self setHasShadow:YES];
-
-    [miniaturizeButton setHidden:YES];
-    [zoomButton setHidden:YES];
-    [closeButton setHidden:YES];
 
     NSRect frame = [self frame];
     frame.origin = NSZeroPoint;
@@ -112,21 +107,44 @@
     
     CGFloat titlebarHeight = windowSize.height - contentSize.height;
     CGFloat contentTopPadding = headerSize.height - titlebarHeight;
+
+    [[self standardWindowButton:NSWindowZoomButton] setHidden:YES];
+    [[self standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     
     if (headerView) {
         NSRect headerFrame = [headerView frame];
-        headerFrame.origin.y = contentSize.height - contentTopPadding;
         headerFrame.origin.x = 0;
         headerFrame.size.width = frame.size.width;
 
-        NSView *frameView = [contentView superview];
-        [frameView addSubview:headerView];
-        [headerView setFrame:headerFrame];
-
         [headerView setWantsLayer:YES];
         [contentView setWantsLayer:YES];
+
+        if (!IsLegacyOS()) {
+            [self setStyleMask:([self styleMask] | NSFullSizeContentViewWindowMask)];
+            [self setTitlebarAppearsTransparent:YES];
+            [self setTitleVisibility:NSWindowTitleHidden];
+ 
+            NSRect parentBounds = [[self contentView] bounds];
+            headerFrame.origin.y = NSMaxY(parentBounds) - headerFrame.size.height;
+
+            [headerView setFrame:headerFrame];
+            [[self contentView] addSubview:headerView];
+
+        } else {
+            headerFrame.origin.y = contentSize.height - contentTopPadding;
+
+            NSView *frameView = [contentView superview];
+            [frameView addSubview:headerView];
+            [headerView setFrame:headerFrame];
+        }
+
+        _headerView = headerView;
     }
 
+    if (IsLegacyOS() && mainView) {
+        NSView *closeButton = [self standardWindowButton:NSWindowCloseButton];
+        [[_headerView superview] addSubview:closeButton positioned:NSWindowAbove relativeTo:mainView];
+    }
 
     if (mainView) {
         NSRect headerRect = [headerView convertRect:[headerView bounds] toView:contentView];
@@ -137,30 +155,31 @@
         
         [[self contentView] addSubview:mainView];
     }
-
-
-    NSView *closeButtonSuperview = headerView ? headerView : [contentView superview];
-    NSRect  closeButtonFrame = NSMakeRect(8, 5, 12, 12);
     
-    closeButtonFrame.origin.y = [closeButtonSuperview bounds].size.height - 16;
+    _footerView = footerView;
     
-    CloseButton *whiteCloseButton = [[CloseButton alloc] initWithFrame:closeButtonFrame];
-    [whiteCloseButton setAutoresizingMask:NSViewMaxXMargin | NSViewMinYMargin];
-    [closeButtonSuperview addSubview:whiteCloseButton];
-    
-    [whiteCloseButton setTarget:self];
-    [whiteCloseButton setAction:@selector(_handleCloseButton:)];
-
-    _closeButton = whiteCloseButton;
-    _headerView = headerView;
-    
-    [self addMainListener:_closeButton];
+    [self _updateActiveness:nil];
 }
 
 
 - (void) setupAsParentWindow
 {
-    [self setupWithHeaderView:nil mainView:nil];
+    [self setupWithHeaderView:nil mainView:nil footerView:nil];
+
+    if (!IsLegacyOS()) {
+        [self setTitlebarAppearsTransparent:YES];
+        [self setTitleVisibility:NSWindowTitleHidden];
+
+        [self setStyleMask:([self styleMask] | NSFullSizeContentViewWindowMask)];
+        
+
+        _effectsView = [[NSVisualEffectView alloc] initWithFrame:[[self contentView] bounds]];
+        [_effectsView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+        [_effectsView setState:NSVisualEffectStateActive];
+
+        [[self contentView] addSubview:_effectsView];
+        
+    }
 }
 
 

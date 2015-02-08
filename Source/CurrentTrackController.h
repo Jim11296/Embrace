@@ -8,11 +8,13 @@
 
 @class WaveformView, Player;
 
-@interface LegacyCurrentTrackController : NSWindowController
+@interface CurrentTrackController : NSWindowController <NSMenuDelegate>
 
-@property (nonatomic, strong) IBOutlet NSWindow *childWindow;
+- (IBAction) changeAppearance:(id)sender;
+- (IBAction) changePinning:(id)sender;
 
 @property (nonatomic, weak) IBOutlet WaveformView *waveformView;
+@property (nonatomic, weak) IBOutlet NSVisualEffectView *effectView;
 
 @property (nonatomic, strong) IBOutlet NSView *mainView;
 
@@ -21,6 +23,5 @@
 @property (nonatomic, weak) IBOutlet NSTextField *rightLabel;
 
 @property (nonatomic, weak) Player *player;
-
 
 @end
