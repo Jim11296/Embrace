@@ -240,12 +240,19 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         }
 
         err = [_audioFile readFrames:&frameCount intoBufferList:fillBufferList];
-        
+
+        // ExtAudioFileRead() is documented to return 0 when the end of the file is reached.
+        //
+        if ((frameCount == 0) || (framesRemaining == 0)) {
+            break;
+        }
+
         if (err) {
             [self setAudioFileError:[_audioFile audioFileError]];
             [self setRawError:err];
         }
 
+   
         framesAvailable += frameCount;
         
         if ((framesAvailable >= primeAmount) && needsSignal) {
@@ -257,13 +264,10 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     
         bytesRead       += frameCount * _clientFormat.mBytesPerFrame;
         bytesRemaining  -= frameCount * _clientFormat.mBytesPerFrame;
-        
-        if (framesRemaining == 0) {
-            PlayerShouldUseCrashPad = 1;
-            break;
-        }
     }
-    
+
+    PlayerShouldUseCrashPad = 1;
+
     if (needsSignal) {
         dispatch_semaphore_signal(primeSemaphore);
     }
