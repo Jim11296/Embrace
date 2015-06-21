@@ -32,7 +32,6 @@
 #import "PLCrashHostInfo.h"
 
 #import "PLCrashSignalHandler.h"
-
 #import "PLCrashFeatureConfig.h"
 
 #import "PLCrashAsync.h"
@@ -50,7 +49,6 @@
 #define NSDEBUG(msg, args...) {\
     NSLog(@"[PLCrashReporter] " msg, ## args); \
 }
-
 
 /** @internal
  * CrashReporter cache directory name. */

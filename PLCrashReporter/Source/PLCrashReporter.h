@@ -31,7 +31,6 @@
 
 #import "PLCrashReporterConfig.h"
 
-
 @class PLCrashMachExceptionServer;
 @class PLCrashMachExceptionPortSet;
 

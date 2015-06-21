@@ -321,7 +321,9 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
             writer->process_info.process_id = pinfo.processID;
 
             /* Retrieve name and start time. */
-            writer->process_info.process_name = strdup([pinfo.processName UTF8String]);
+            if (pinfo.processName != nil) {
+                writer->process_info.process_name = strdup([pinfo.processName UTF8String]);
+            }
             writer->process_info.start_time = pinfo.startTime.tv_sec;
 
             /* Retrieve path */
@@ -344,7 +346,9 @@ plcrash_error_t plcrash_log_writer_init (plcrash_log_writer_t *writer,
             /* Retrieve name */
             PLCrashProcessInfo *parentInfo = [[[PLCrashProcessInfo alloc] initWithProcessID: pinfo.parentProcessID] autorelease];
             if (parentInfo != nil) {
-                writer->process_info.parent_process_name = strdup([parentInfo.processName UTF8String]);
+                if (parentInfo.processName != nil) {
+                    writer->process_info.parent_process_name = strdup([parentInfo.processName UTF8String]);
+                }
             } else {
                 PLCF_DEBUG("Could not retreive parent process name: %s", strerror(errno));
             }
