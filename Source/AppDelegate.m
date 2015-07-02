@@ -13,7 +13,6 @@
 #import "PreferencesController.h"
 #import "EditEffectController.h"
 #import "CurrentTrackController.h"
-#import "LegacyCurrentTrackController.h"
 #import "ViewTrackController.h"
 #import "TracksController.h"
 #import "Preferences.h"
@@ -79,14 +78,9 @@
         [_crashReporter enableCrashReporter];
     }
 
-    _setlistController = [[SetlistController alloc] init];
-    _effectsController = [[EffectsController alloc] init];
-    
-    if (IsLegacyOS()) {
-        _currentTrackController = [[LegacyCurrentTrackController alloc] init];
-    } else {
-        _currentTrackController = [[CurrentTrackController alloc] init];
-    }
+    _setlistController      = [[SetlistController alloc] init];
+    _effectsController      = [[EffectsController alloc] init];
+    _currentTrackController = [[CurrentTrackController alloc] init];
 
     [self _showPreviouslyVisibleWindows];
 
@@ -330,7 +324,7 @@
     
     } else if (trackError == TrackErrorProtectedContent) {
         messageText     = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
-        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes or Quicktime Player.", nil);
+        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes.", nil);
 
     } else if (trackError == TrackErrorOpenFailed) {
         messageText = NSLocalizedString(@"The file cannot be opened.", nil);

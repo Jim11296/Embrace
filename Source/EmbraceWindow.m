@@ -37,25 +37,6 @@
 {
     BOOL isMainWindow = [self isMainWindow];
     
-    if (IsLegacyOS()) {
-        NSColor *backgroundColor;
-
-        if (isMainWindow) {
-            backgroundColor = [NSColor colorWithCalibratedWhite:(0xe8 / 255.0) alpha:1.0];
-
-            [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xf4f4f4, 1.0)];
-            [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xd0d0d0, 1.0)];
-
-        } else {
-            backgroundColor = [NSColor colorWithCalibratedWhite:(0xFF / 255.0) alpha:1.0];
-
-            [_headerView setBackgroundGradientTopColor:   GetRGBColor(0xffffff, 1.0)];
-            [_headerView setBackgroundGradientBottomColor:GetRGBColor(0xf8f8f8, 1.0)];
-        }
-
-        [self setBackgroundColor:backgroundColor];
-    }
-
     if (isMainWindow) {
         [_footerView setBackgroundColor:GetRGBColor(0xe0e0e0, 1.0)];
     } else {
@@ -101,13 +82,6 @@
     
     NSView *contentView = [self contentView];
 
-    NSSize windowSize = [self frame].size;
-    NSSize contentSize = [contentView frame].size;
-    NSSize headerSize  = [headerView frame].size;
-    
-    CGFloat titlebarHeight = windowSize.height - contentSize.height;
-    CGFloat contentTopPadding = headerSize.height - titlebarHeight;
-
     [[self standardWindowButton:NSWindowZoomButton] setHidden:YES];
     [[self standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     
@@ -119,31 +93,17 @@
         [headerView setWantsLayer:YES];
         [contentView setWantsLayer:YES];
 
-        if (!IsLegacyOS()) {
-            [self setStyleMask:([self styleMask] | NSFullSizeContentViewWindowMask)];
-            [self setTitlebarAppearsTransparent:YES];
-            [self setTitleVisibility:NSWindowTitleHidden];
- 
-            NSRect parentBounds = [[self contentView] bounds];
-            headerFrame.origin.y = NSMaxY(parentBounds) - headerFrame.size.height;
+        [self setStyleMask:([self styleMask] | NSFullSizeContentViewWindowMask)];
+        [self setTitlebarAppearsTransparent:YES];
+        [self setTitleVisibility:NSWindowTitleHidden];
 
-            [headerView setFrame:headerFrame];
-            [[self contentView] addSubview:headerView];
+        NSRect parentBounds = [[self contentView] bounds];
+        headerFrame.origin.y = NSMaxY(parentBounds) - headerFrame.size.height;
 
-        } else {
-            headerFrame.origin.y = contentSize.height - contentTopPadding;
-
-            NSView *frameView = [contentView superview];
-            [frameView addSubview:headerView];
-            [headerView setFrame:headerFrame];
-        }
+        [headerView setFrame:headerFrame];
+        [[self contentView] addSubview:headerView];
 
         _headerView = headerView;
-    }
-
-    if (IsLegacyOS() && mainView) {
-        NSView *closeButton = [self standardWindowButton:NSWindowCloseButton];
-        [[_headerView superview] addSubview:closeButton positioned:NSWindowAbove relativeTo:mainView];
     }
 
     if (mainView) {
@@ -166,20 +126,17 @@
 {
     [self setupWithHeaderView:nil mainView:nil footerView:nil];
 
-    if (!IsLegacyOS()) {
-        [self setTitlebarAppearsTransparent:YES];
-        [self setTitleVisibility:NSWindowTitleHidden];
+    [self setTitlebarAppearsTransparent:YES];
+    [self setTitleVisibility:NSWindowTitleHidden];
 
-        [self setStyleMask:([self styleMask] | NSFullSizeContentViewWindowMask)];
-        
+    [self setStyleMask:([self styleMask] | NSFullSizeContentViewWindowMask)];
+    
 
-        _effectsView = [[NSVisualEffectView alloc] initWithFrame:[[self contentView] bounds]];
-        [_effectsView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-        [_effectsView setState:NSVisualEffectStateActive];
+    _effectsView = [[NSVisualEffectView alloc] initWithFrame:[[self contentView] bounds]];
+    [_effectsView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [_effectsView setState:NSVisualEffectStateActive];
 
-        [[self contentView] addSubview:_effectsView];
-        
-    }
+    [[self contentView] addSubview:_effectsView];
 }
 
 

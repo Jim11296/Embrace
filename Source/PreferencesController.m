@@ -116,7 +116,7 @@
                 }];
 
                 [item setAttributedTitle:as];
-                [item setImage:[NSImage imageNamed:@"issue_small"]];
+                [item setImage:[NSImage imageNamed:@"IssueSmall"]];
 
 
             } else {
