@@ -97,7 +97,8 @@
 
     _errorButton = [[Button alloc] initWithFrame:NSMakeRect(0, 0, 16, 16)];
 
-    [_errorButton setImage:[NSImage imageNamed:@"track_error_template"]];
+    [_errorButton setImage:[NSImage imageNamed:@"TrackErrorTemplate"]];
+    [_errorButton setIconOnly:YES];
     [_errorButton setAutoresizingMask:NSViewMinXMargin];
     [_errorButton setTarget:self];
     [_errorButton setAction:@selector(_errorButtonClicked:)];

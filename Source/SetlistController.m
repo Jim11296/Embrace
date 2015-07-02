@@ -91,8 +91,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     [[self bottomContainer] setTopBorderColor:GetRGBColor(0x0, 0.15)];
 
-    [[self playButton] setImage:[NSImage imageNamed:@"play_template"]];
-    [[self gearButton] setImage:[NSImage imageNamed:@"gear_template"]];
+    [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
+    [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
@@ -183,7 +183,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     Button *playButton = [self playButton];
     
     if (action == PlaybackActionShowIssue) {
-        image = [NSImage imageNamed:@"issue_template"];
+        image = [NSImage imageNamed:@"IssueTemplate"];
         alert = YES;
 
         PlayerIssue issue = [player issue];
@@ -197,15 +197,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         }
 
     } else if (action == PlaybackActionPause) {
-        image = _confirmPause ? [NSImage imageNamed:@"stop_template"] : [NSImage imageNamed:@"pause_template"];
+        image = _confirmPause ? [NSImage imageNamed:@"StopTemplate"] : [NSImage imageNamed:@"PauseTemplate"];
         alert = _confirmPause;
         enabled = YES;
 
     } else {
         if (_didAutoPause) {
-            image = [NSImage imageNamed:@"resume_template"];
+            image = [NSImage imageNamed:@"ResumeTemplate"];
         } else {
-            image = [NSImage imageNamed:@"play_template"];
+            image = [NSImage imageNamed:@"PlayTemplate"];
         }
 
         Track *next = [[self tracksController] firstQueuedTrack];
@@ -357,14 +357,14 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         BOOL isVolumeZero = [player volume] == 0;
 
         if (action == PlaybackActionPause && !_inVolumeDrag && isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"resume_template"] enabled:YES];
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"ResumeTemplate"] enabled:YES];
             _volumeBeforeAutoPause = beforeVolume;
             _didAutoPause = YES;
 
             [[Player sharedInstance] hardStop];
 
         } else if (action == PlaybackActionPlay && _didAutoPause && !isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"pause_template"] enabled:NO];
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"PauseTemplate"] enabled:NO];
             _didAutoPause = NO;
 
             [[Player sharedInstance] play];
@@ -382,7 +382,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmPause) object:nil];
 
     _confirmPause = NO;
-    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"pause_template"] alert:NO];
+    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"PauseTemplate"] alert:NO];
     [self _updatePlayButton];
 }
 
@@ -688,7 +688,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         if (!_confirmPause && !isAtBeginningOfSong) {
             _confirmPause = YES;
 
-            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"stop_template"] alert:YES];
+            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"StopTemplate"] alert:YES];
             
             [self _updatePlayButton];
             [self performSelector:@selector(_clearConfirmPause) withObject:nil afterDelay:2];

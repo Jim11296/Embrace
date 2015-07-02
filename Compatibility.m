@@ -27,26 +27,6 @@ IMP (*class_getMethodImplementation)(Class cls, SEL name);
 const char *(*method_getTypeEncoding)(Method m);
 
 
-
-
-BOOL IsLegacyOS()
-{
-    NSProcessInfo *processInfo = [NSProcessInfo processInfo];
-
-    if ([processInfo respondsToSelector:@selector(operatingSystemVersion)]) {
-        NSOperatingSystemVersion version = [processInfo operatingSystemVersion];
-        
-        if (version.majorVersion > 10) {
-            return NO;
-        } else if (version.minorVersion >= 10) {
-            return NO;
-        }
-    }
-
-    return YES;
-}
-
-
 static inline void *sCompatibilityLookup(const UInt8 *inName)
 {
     const UInt8 *i = inName;
@@ -142,8 +122,6 @@ void EmbraceCompatibilityLookup_(UInt32 unused, ...)
 
 void EmbraceCheckCompatibility()
 {
-    if (IsLegacyOS()) return;
-
     // Check for DebugUseDarkerTrackWindow
     {
         // Pref name = DebugUseDarkerTrackWindow

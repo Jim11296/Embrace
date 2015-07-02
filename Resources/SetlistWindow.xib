@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SetlistController">
@@ -89,8 +89,9 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowHeight="60" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
                                                 <tableColumn identifier="SongCell" width="320" minWidth="40" maxWidth="3200" id="1q8-uL-zIt">
@@ -240,7 +241,7 @@
                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.5" id="rx0-fs-t7a" customClass="NoDropImageView">
                                         <rect key="frame" x="8" y="8" width="15" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="padding_template" id="k41-UM-ODJ"/>
+                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="PaddingTemplate" id="k41-UM-ODJ"/>
                                     </imageView>
                                 </subviews>
                             </customView>
@@ -379,6 +380,6 @@
         </customView>
     </objects>
     <resources>
-        <image name="padding_template" width="7.5524473190307617" height="6"/>
+        <image name="PaddingTemplate" width="7.5524473190307617" height="6"/>
     </resources>
 </document>

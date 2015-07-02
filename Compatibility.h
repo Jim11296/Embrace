@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-extern BOOL IsLegacyOS(void);
-
 extern NSString *EmbraceCompatibilityLookup(UInt32 unused, ...);
 extern void EmbraceCompatibilityLookup_(UInt32 unused, ...);
 

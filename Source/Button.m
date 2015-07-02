@@ -24,6 +24,7 @@
     return self;
 }
 
+
 - (id) initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -130,6 +131,8 @@
     } else {
         [_backgroundView setImage:[NSImage imageNamed:@"button_normal"]];
     }
+
+    [_backgroundView setHidden:_iconOnly];
 }
 
 
@@ -148,6 +151,15 @@
 {
     if (_alert != alert) {
         _alert = alert;
+        [self _update:nil];
+    }
+}
+
+
+- (void) setIconOnly:(BOOL)iconOnly
+{
+    if (_iconOnly != iconOnly) {
+        _iconOnly = iconOnly;
         [self _update:nil];
     }
 }

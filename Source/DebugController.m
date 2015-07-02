@@ -93,11 +93,11 @@
 {
     Button *button = [[self _setlistController] playButton];
 
-    [button setImage:[NSImage imageNamed:@"pause_template"]];
+    [button setImage:[NSImage imageNamed:@"PauseTemplate"]];
     [button setEnabled:YES];
     
 
-//    [button flipToImage:[NSImage imageNamed:@"play_template"] enabled:YES];
+//    [button flipToImage:[NSImage imageNamed:@"PlayTemplate"] enabled:YES];
 }
 
 
