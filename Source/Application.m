@@ -76,7 +76,7 @@
 
             EmbraceLog(@"Application", @"Sending performPreferredPlaybackAction: due to space bar");
             
-            [(AppDelegate *)[self delegate] performPreferredPlaybackAction:self];
+            [(AppDelegate *)[self delegate] performPreferredPlaybackAction];
             return;
         }
 

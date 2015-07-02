@@ -29,6 +29,54 @@
 #import <CrashReporter.h>
 #import "CrashReportSender.h"
 
+@interface AppDelegate ()
+
+- (IBAction) openFile:(id)sender;
+
+- (IBAction) clearSetlist:(id)sender;
+- (IBAction) resetPlayedTracks:(id)sender;
+
+- (IBAction) copySetlist:(id)sender;
+- (IBAction) saveSetlist:(id)sender;
+- (IBAction) exportSetlist:(id)sender;
+
+- (IBAction) changeViewLayout:(id)sender;
+- (IBAction) changeViewAttributes:(id)sender;
+- (IBAction) changeKeySignatureDisplay:(id)sender;
+- (IBAction) revealEndTime:(id)sender;
+
+- (IBAction) performPreferredPlaybackAction:(id)sender;
+- (IBAction) hardSkip:(id)sender;
+- (IBAction) hardPause:(id)sender;
+
+- (IBAction) increaseVolume:(id)sender;
+- (IBAction) decreaseVolume:(id)sender;
+- (IBAction) increaseAutoGap:(id)sender;
+- (IBAction) decreaseAutoGap:(id)sender;
+
+- (IBAction) showSetlistWindow:(id)sender;
+- (IBAction) showEffectsWindow:(id)sender;
+- (IBAction) showPreferences:(id)sender;
+- (IBAction) showCurrentTrack:(id)sender;
+
+- (IBAction) sendFeedback:(id)sender;
+- (IBAction) viewOnAppStore:(id)sender;
+
+- (IBAction) openAcknowledgements:(id)sender;
+
+- (IBAction) showDebugWindow:(id)sender;
+- (IBAction) sendCrashReports:(id)sender;
+- (IBAction) openSupportFolder:(id)sender;
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *crashReportSeparator;
+@property (nonatomic, weak) IBOutlet NSMenuItem *crashReportMenuItem;
+
+@property (nonatomic, weak) IBOutlet NSMenuItem *openSupportSeparator;
+@property (nonatomic, weak) IBOutlet NSMenuItem *openSupportMenuItem;
+
+@end
 
 @implementation AppDelegate {
     SetlistController      *_setlistController;
@@ -204,6 +252,139 @@
 }
 
 
+#pragma mark - Public Methods
+
+- (void) performPreferredPlaybackAction
+{
+    [self performPreferredPlaybackAction:self];
+}
+
+
+- (void) displayErrorForTrack:(Track *)track
+{
+    TrackError trackError = [track trackError];
+    if (!trackError) return;
+
+    NSString *messageText     = @"";
+    NSString *informativeText = @"";
+    
+    if (trackError == TrackErrorConversionFailed) {
+        messageText = NSLocalizedString(@"The file cannot be read because it is in an unknown format.", nil);
+    
+    } else if (trackError == TrackErrorProtectedContent) {
+        messageText     = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
+        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes.\n\nIf this file was downloaded from Apple Music, you will need to first remove the download and then purchase it from the iTunes Store.", nil);
+
+    } else if (trackError == TrackErrorOpenFailed) {
+        messageText = NSLocalizedString(@"The file cannot be opened.", nil);
+    
+    } else {
+        messageText = NSLocalizedString(@"The file cannot be read.", nil);
+    }
+    
+    if (![messageText length]) {
+        return;
+    }
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    [alert setMessageText:messageText];
+    [alert setInformativeText:informativeText];
+
+    [alert runModal];
+}
+
+
+- (void) showEffectsWindow
+{
+    [self showEffectsWindow:self];
+}
+
+
+- (void) showCurrentTrack
+{
+    [self showCurrentTrack:self];
+}
+
+
+- (void) showPreferences
+{
+    [self showPreferences:self];
+}
+
+
+- (EditEffectController *) editControllerForEffect:(Effect *)effect
+{
+    if (!_editEffectControllers) {
+        _editEffectControllers = [NSMutableArray array];
+    }
+
+    for (EditEffectController *controller in _editEffectControllers) {
+        if ([[controller effect] isEqual:effect]) {
+            return controller;
+        }
+    }
+    
+    EditEffectController *controller = [[EditEffectController alloc] initWithEffect:effect index:[_editEffectControllers count]];
+
+    if (controller) {
+        [_editEffectControllers addObject:controller];
+    }
+
+    return controller;
+}
+
+
+- (void) closeEditControllerForEffect:(Effect *)effect
+{
+    NSMutableArray *toRemove = [NSMutableArray array];
+
+    for (EditEffectController *controller in _editEffectControllers) {
+        if ([controller effect] == effect) {
+            [controller close];
+            if (controller) [toRemove addObject:controller];
+        }
+    }
+    
+    [_editEffectControllers removeObjectsInArray:toRemove];
+}
+
+
+- (ViewTrackController *) viewTrackControllerForTrack:(Track *)track
+{
+    if (!_viewTrackControllers) {
+        _viewTrackControllers = [NSMutableArray array];
+    }
+
+    for (ViewTrackController *controller in _viewTrackControllers) {
+        if ([[controller track] isEqual:track]) {
+            return controller;
+        }
+    }
+    
+    ViewTrackController *controller = [[ViewTrackController alloc] initWithTrack:track];
+    if (controller) [_viewTrackControllers addObject:controller];
+    return controller;
+}
+
+
+- (void) closeViewTrackControllerForEffect:(Track *)track
+{
+    NSMutableArray *toRemove = [NSMutableArray array];
+
+    for (ViewTrackController *controller in _viewTrackControllers) {
+        if ([controller track] == track) {
+            [controller close];
+            if (controller) [toRemove addObject:controller];
+        }
+    }
+    
+    [_viewTrackControllers removeObjectsInArray:toRemove];
+}
+
+
+#pragma mark - IBActions
+
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
     SEL action = [menuItem action];
@@ -311,110 +492,6 @@
     }
 
     return YES;
-}
-
-- (void) displayErrorForTrackError:(NSInteger)trackError
-{
-    if (!trackError) return;
-
-    NSString *messageText     = @"";
-    NSString *informativeText = @"";
-    
-    if (trackError == TrackErrorConversionFailed) {
-        messageText = NSLocalizedString(@"The file cannot be read because it is in an unknown format.", nil);
-    
-    } else if (trackError == TrackErrorProtectedContent) {
-        messageText     = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
-        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes.", nil);
-
-    } else if (trackError == TrackErrorOpenFailed) {
-        messageText = NSLocalizedString(@"The file cannot be opened.", nil);
-    
-    } else {
-        messageText = NSLocalizedString(@"The file cannot be read.", nil);
-    }
-    
-    if (![messageText length]) {
-        return;
-    }
-    
-    NSAlert *alert = [[NSAlert alloc] init];
-    
-    [alert setMessageText:messageText];
-    [alert setInformativeText:informativeText];
-
-    [alert runModal];
-}
-
-
-
-- (EditEffectController *) editControllerForEffect:(Effect *)effect
-{
-    if (!_editEffectControllers) {
-        _editEffectControllers = [NSMutableArray array];
-    }
-
-    for (EditEffectController *controller in _editEffectControllers) {
-        if ([[controller effect] isEqual:effect]) {
-            return controller;
-        }
-    }
-    
-    EditEffectController *controller = [[EditEffectController alloc] initWithEffect:effect index:[_editEffectControllers count]];
-
-    if (controller) {
-        [_editEffectControllers addObject:controller];
-    }
-
-    return controller;
-}
-
-
-- (void) closeEditControllerForEffect:(Effect *)effect
-{
-    NSMutableArray *toRemove = [NSMutableArray array];
-
-    for (EditEffectController *controller in _editEffectControllers) {
-        if ([controller effect] == effect) {
-            [controller close];
-            if (controller) [toRemove addObject:controller];
-        }
-    }
-    
-    [_editEffectControllers removeObjectsInArray:toRemove];
-}
-
-
-- (ViewTrackController *) viewTrackControllerForTrack:(Track *)track
-{
-    if (!_viewTrackControllers) {
-        _viewTrackControllers = [NSMutableArray array];
-    }
-
-    for (ViewTrackController *controller in _viewTrackControllers) {
-        if ([[controller track] isEqual:track]) {
-            return controller;
-        }
-    }
-    
-    ViewTrackController *controller = [[ViewTrackController alloc] initWithTrack:track];
-    if (controller) [_viewTrackControllers addObject:controller];
-    return controller;
-}
-
-
-- (void) closeViewTrackControllerForEffect:(Track *)track
-{
-    NSMutableArray *toRemove = [NSMutableArray array];
-
-    for (ViewTrackController *controller in _viewTrackControllers) {
-        if ([controller track] == track) {
-            [controller close];
-            if (controller) [toRemove addObject:controller];
-        }
-    }
-    
-    [_viewTrackControllers removeObjectsInArray:toRemove];
 }
 
 

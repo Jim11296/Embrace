@@ -13,40 +13,13 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-- (void) displayErrorForTrackError:(NSInteger)trackError;
+- (void) performPreferredPlaybackAction;
 
-- (IBAction) openFile:(id)sender;
+- (void) displayErrorForTrack:(Track *)track;
 
-- (IBAction) clearSetlist:(id)sender;
-- (IBAction) resetPlayedTracks:(id)sender;
-
-- (IBAction) copySetlist:(id)sender;
-- (IBAction) saveSetlist:(id)sender;
-- (IBAction) exportSetlist:(id)sender;
-
-- (IBAction) changeViewLayout:(id)sender;
-- (IBAction) changeViewAttributes:(id)sender;
-- (IBAction) changeKeySignatureDisplay:(id)sender;
-- (IBAction) revealEndTime:(id)sender;
-
-- (IBAction) performPreferredPlaybackAction:(id)sender;
-- (IBAction) hardSkip:(id)sender;
-- (IBAction) hardPause:(id)sender;
-
-- (IBAction) increaseVolume:(id)sender;
-- (IBAction) decreaseVolume:(id)sender;
-- (IBAction) increaseAutoGap:(id)sender;
-- (IBAction) decreaseAutoGap:(id)sender;
-
-- (IBAction) showSetlistWindow:(id)sender;
-- (IBAction) showEffectsWindow:(id)sender;
-- (IBAction) showPreferences:(id)sender;
-- (IBAction) showCurrentTrack:(id)sender;
-
-- (IBAction) sendFeedback:(id)sender;
-- (IBAction) viewOnAppStore:(id)sender;
-
-- (IBAction) openAcknowledgements:(id)sender;
+- (void) showEffectsWindow;
+- (void) showCurrentTrack;
+- (void) showPreferences;
 
 @property (nonatomic, readonly) SetlistController *setlistController;
 
@@ -56,18 +29,5 @@
 - (ViewTrackController *) viewTrackControllerForTrack:(Track *)track;
 - (void) closeViewTrackControllerForEffect:(Track *)track;
 
-// Debug
-- (IBAction) showDebugWindow:(id)sender;
-
-- (IBAction) sendCrashReports:(id)sender;
-- (IBAction) openSupportFolder:(id)sender;
-
-@property (nonatomic, weak) IBOutlet NSMenuItem *debugMenuItem;
-
-@property (nonatomic, weak) IBOutlet NSMenuItem *crashReportSeparator;
-@property (nonatomic, weak) IBOutlet NSMenuItem *crashReportMenuItem;
-
-@property (nonatomic, weak) IBOutlet NSMenuItem *openSupportSeparator;
-@property (nonatomic, weak) IBOutlet NSMenuItem *openSupportMenuItem;
 
 @end

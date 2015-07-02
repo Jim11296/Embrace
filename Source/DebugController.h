@@ -17,8 +17,6 @@
 
 - (IBAction) showIssueDialog:(id)sender;
 
-- (IBAction) doFlipAnimation:(id)sender;
-
 - (IBAction) explode:(id)sender;
 
 

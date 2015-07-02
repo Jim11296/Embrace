@@ -12,6 +12,19 @@
 #import "Player.h"
 #import "WrappedAudioDevice.h"
 
+@interface PreferencesController ()
+
+- (IBAction) changeMainDevice:(id)sender;
+- (IBAction) changeMainDeviceAttributes:(id)sender;
+
+@property (nonatomic, weak)   IBOutlet NSPopUpButton *mainDevicePopUp;
+@property (nonatomic, weak)   IBOutlet NSPopUpButton *sampleRatePopUp;
+@property (nonatomic, weak)   IBOutlet NSPopUpButton *framesPopUp;
+@property (nonatomic, weak)   IBOutlet NSButton      *hogModeButton;
+
+@end
+
+
 @implementation PreferencesController
 
 - (void) dealloc

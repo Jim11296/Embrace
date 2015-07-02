@@ -8,11 +8,6 @@
 
 #import "WhiteSlider.h"
 
-static BOOL sNeedsMountainLionWorkaround()
-{
-    return floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_8;
-}
-
 
 @implementation WhiteSlider
 
@@ -28,13 +23,9 @@ static BOOL sNeedsMountainLionWorkaround()
 }
 
 
-- (void) setNeedsDisplayInRect:(NSRect)invalidRect
+- (void) windowDidUpdateMain:(NSWindow *)window
 {
-    if (sNeedsMountainLionWorkaround()) {
-        [super setNeedsDisplayInRect:[self bounds]];
-    } else {
-        [super setNeedsDisplayInRect:invalidRect];
-    }
+    [self setNeedsDisplay:YES];
 }
 
 
@@ -51,33 +42,45 @@ static BOOL sNeedsMountainLionWorkaround()
 
     result = NSInsetRect(result, 4, 4);
 
-    if (sNeedsMountainLionWorkaround()) {
-        result.origin.y = 3;
-    }
-
     return result;
 }
 
 
 - (void) drawKnob:(NSRect)knobRect
 {
-    [[NSColor whiteColor] set];
+    BOOL isMainWindow = [[[self controlView] window] isMainWindow];
     
     NSShadow *shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.20]];
-    [shadow setShadowOffset:NSMakeSize(0, -1)];
-    [shadow setShadowBlurRadius:2];
+    
+    if (isMainWindow) {
+        [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.2]];
+        [shadow setShadowOffset:NSMakeSize(0, -1)];
+        [shadow setShadowBlurRadius:2];
+    } else {
+        [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.45]];
+        [shadow setShadowOffset:NSMakeSize(0, 0)];
+        [shadow setShadowBlurRadius:1];
+    }
+
     [shadow set];
     
+    [[NSColor whiteColor] set];
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
     
-    NSShadow *shadow2 = [[NSShadow alloc] init];
-    [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.65]];
-    [shadow2 setShadowOffset:NSMakeSize(0, 0)];
-    [shadow2 setShadowBlurRadius:1];
-    [shadow2 set];
-    
-    [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
+    if (isMainWindow) {
+        NSShadow *shadow2 = [[NSShadow alloc] init];
+        [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.65]];
+        [shadow2 setShadowOffset:NSMakeSize(0, 0)];
+        [shadow2 setShadowBlurRadius:1];
+        [shadow2 set];
+
+        NSGradient *g = [[NSGradient alloc] initWithColors:@[
+            [NSColor colorWithCalibratedWhite:(0xf1 / 255.0) alpha:1.0],
+            [NSColor colorWithCalibratedWhite:(0xfe / 255.0) alpha:1.0],
+        ]];
+
+        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:knobRect] angle:-90];
+    }
 }
 
 
@@ -97,7 +100,6 @@ static BOOL sNeedsMountainLionWorkaround()
     
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext saveGraphicsState];
     
     [GetRGBColor(0x686868, 1.0) set];
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
@@ -110,25 +112,6 @@ static BOOL sNeedsMountainLionWorkaround()
     [roundedPath fill];
     
     [NSGraphicsContext restoreGraphicsState];
-
-/*
-    NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:CGRectInset(aRect, -4, -4)];
-    
-    [fullPath appendBezierPath:[NSBezierPath bezierPathWithRect:aRect]];
-    [fullPath setWindingRule:NSEvenOddWindingRule];
-    
-    [roundedPath addClip];
-
-    NSShadow *shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.15]];
-    [shadow setShadowOffset:NSMakeSize(0, -0.5)];
-    [shadow setShadowBlurRadius:1];
-    [shadow set];
-
-    [fullPath fill];
-*/
-
-    [NSGraphicsContext restoreGraphicsState];
 }
 
 
@@ -139,33 +122,7 @@ static BOOL sNeedsMountainLionWorkaround()
     NSInteger numberOfTickMarks = [self numberOfTickMarks];
     [self setNumberOfTickMarks:0];
     
-    if (sNeedsMountainLionWorkaround()) {
-        [super drawWithFrame:cellFrame inView:controlView];
-        
-        NSShadow *noShadow = [[NSShadow alloc] init];
-        [noShadow set];
-        
-        NSRect knobRect = [self knobRectFlipped:[controlView isFlipped]];
-        
-        cellFrame = [self drawingRectForBounds: cellFrame];
-        [[NSColor clearColor] set];
-        NSRectFill(cellFrame);
-        
-        NSRect trackRect = NSInsetRect(cellFrame, 3, 0);
-        trackRect.origin.y = 8;
-        trackRect.size.height = 5;
-
-        if (numberOfTickMarks > 0) {
-            trackRect.origin.y += 2;
-            knobRect.origin.y  += 2;
-        }
-        
-        [self drawBarInside:trackRect flipped:[controlView isFlipped]];
-        [self drawKnob:knobRect];
-        
-    } else {
-        [super drawWithFrame:cellFrame inView:controlView];
-    }
+    [super drawWithFrame:cellFrame inView:controlView];
     
     [self setNumberOfTickMarks:numberOfTickMarks];
 }

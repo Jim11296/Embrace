@@ -14,17 +14,6 @@
 
 - (id) initWithEffect:(Effect *)effect index:(NSInteger)index;
 
-- (IBAction) switchView:(id)sender;
-
-- (IBAction) loadPreset:(id)sender;
-- (IBAction) savePreset:(id)sender;
-- (IBAction) restoreDefaultValues:(id)sender;
-- (IBAction) toggleBypass:(id)sender;
-
-@property (nonatomic, weak) IBOutlet NSView *containerView;
-@property (nonatomic, weak) IBOutlet NSToolbarItem *modeToolbarItem;
-@property (nonatomic, weak) IBOutlet NSSegmentedControl *modeControl;
-
 @property (nonatomic, weak) Effect *effect;
 
 @end

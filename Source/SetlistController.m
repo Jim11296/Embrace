@@ -39,7 +39,30 @@ static NSTimeInterval sAutoGapMinimum = 0;
 static NSTimeInterval sAutoGapMaximum = 15.0;
 
 
-@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate, EmbraceWindowListener>
+
+@property (nonatomic, strong, readwrite) IBOutlet TracksController *tracksController;
+
+@property (nonatomic, strong) IBOutlet NSView *dragSongsView;
+
+@property (nonatomic, strong) IBOutlet NSMenu *gearMenu;
+
+@property (nonatomic, strong) IBOutlet NSMenu *tableMenu;
+
+@property (nonatomic, weak)   IBOutlet BorderedView *topContainer;
+
+@property (nonatomic, weak)   IBOutlet NSTextField  *playOffsetField;
+@property (nonatomic, weak)   IBOutlet PlayBar      *playBar;
+@property (nonatomic, weak)   IBOutlet NSTextField  *playRemainingField;
+@property (nonatomic, weak)   IBOutlet Button       *playButton;
+@property (nonatomic, weak)   IBOutlet Button       *gearButton;
+@property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
+@property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
+
+@property (nonatomic, weak)   IBOutlet NSView *mainView;
+@property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
+@property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
+@property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
 
 @end
 
@@ -82,17 +105,32 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     EmbraceWindow *window = (EmbraceWindow *)[self window];
 
-    [window setupWithHeaderView:[self headerView]
-                       mainView:[self mainView]
-                     footerView:[self bottomContainer]];
+
+    //[window setupWithHeaderView:[self headerView]
+      //                 mainView:[self mainView]
+        //             footerView:[self bottomContainer]];
     
-    [window addMainListener:[self gearButton]];
-    [window addMainListener:[self playButton]];
+    [window setTitlebarAppearsTransparent:YES];
+    [window setTitleVisibility:NSWindowTitleHidden];
+    [window setMovableByWindowBackground:YES];
+    [window setTitle:@""];
+    [[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
+    [[window standardWindowButton:NSWindowZoomButton]        setHidden:YES];
+    
+    
+    [window addListener:[self gearButton]];
+    [window addListener:[self playButton]];
+    [window addListener:[self volumeSlider]];
+    [window addListener:[self autoGapSlider]];
+    [window addListener:self];
 
     [[self bottomContainer] setTopBorderColor:GetRGBColor(0x0, 0.15)];
 
     [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
+    
+    
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
@@ -658,7 +696,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     if (otherButton)     [alert addButtonWithTitle:otherButton];
     
     if ([alert runModal] == NSAlertSecondButtonReturn) {
-        [GetAppDelegate() showPreferences:nil];
+        [GetAppDelegate() showPreferences];
     }
 }
 
@@ -843,13 +881,13 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (IBAction) showEffects:(id)sender
 {
-    [GetAppDelegate() showEffectsWindow:self];
+    [GetAppDelegate() showEffectsWindow];
 }
 
 
 - (IBAction) showCurrentTrack:(id)sender
 {
-    [GetAppDelegate() showCurrentTrack:self];
+    [GetAppDelegate() showCurrentTrack];
 }
 
 
@@ -911,6 +949,25 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     }
 
     return NO;
+}
+
+
+- (void) windowDidUpdateMain:(EmbraceWindow *)window
+{
+    BorderedView *topContainer    = [self topContainer];
+    BorderedView *bottomContainer = [self bottomContainer];
+    
+    if ([window isMainWindow]) {
+        [topContainer setBackgroundGradientTopColor:      [NSColor colorWithCalibratedWhite:(0xec / 255.0) alpha:1.0]];
+        [topContainer setBackgroundGradientBottomColor:   [NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
+        [bottomContainer setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xe0 / 255.0) alpha:1.0]];
+        [bottomContainer setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
+    } else {
+        [topContainer    setBackgroundGradientTopColor:nil];
+        [topContainer    setBackgroundGradientBottomColor:nil];
+        [bottomContainer setBackgroundGradientTopColor:nil];
+        [bottomContainer setBackgroundGradientBottomColor:nil];
+    }
 }
 
 
@@ -1006,7 +1063,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [alert addButtonWithTitle:NSLocalizedString(@"Show Preferences", nil)];
 
     if ([alert runModal] == NSAlertSecondButtonReturn) {
-        [GetAppDelegate() showPreferences:nil];
+        [GetAppDelegate() showPreferences];
     }
 }
 

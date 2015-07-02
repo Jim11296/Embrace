@@ -11,7 +11,7 @@
 #import "Track.h"
 
 @interface ViewTrackController ()
-
+@property (nonatomic, weak) IBOutlet WaveformView *waveformView;
 @end
 
 

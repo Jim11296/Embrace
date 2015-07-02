@@ -36,8 +36,6 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 
 @property (nonatomic, readonly) NSTimeInterval modificationTime;
 
-
-@property (nonatomic, weak) IBOutlet TrackTableView *tableView;
 - (IBAction) delete:(id)sender;
 
 

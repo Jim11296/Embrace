@@ -14,8 +14,6 @@
 
 - (id) initWithTrack:(Track *)track;
 
-@property (nonatomic, weak) IBOutlet WaveformView *waveformView;
-
 @property (nonatomic, strong) Track *track;
 
 @end
