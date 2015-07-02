@@ -43,10 +43,10 @@
 {
     _alertColor       = GetRGBColor(0xe5443b, 1.0);
     _alertActiveColor = GetRGBColor(0xe00000, 1.0);
-    _normalColor      = GetRGBColor(0x606060, 1.0);
-    _activeColor      = GetRGBColor(0x202020, 1.0);
-    _inactiveColor    = GetRGBColor(0xb0b0b0, 1.0);
-    _disabledColor    = GetRGBColor(0xb0b0b0, 1.0);
+    _normalColor      = GetRGBColor(0x737373, 1.0);
+    _activeColor      = GetRGBColor(0x4c4c4c, 1.0);
+    _inactiveColor    = GetRGBColor(0xb2b2b2, 1.0);
+    _disabledColor    = GetRGBColor(0xb2b2b2, 1.0);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSWindowDidBecomeMainNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidBecomeActiveNotification object:nil];

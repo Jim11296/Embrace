@@ -61,29 +61,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 
 @property (nonatomic) NSTimeInterval minimumSilenceBetweenTracks;
 
-@property (nonatomic, strong) IBOutlet TracksController *tracksController;
-
 @property (nonatomic, weak) Player *player;
-
-@property (nonatomic, strong) IBOutlet NSView *dragSongsView;
-
-@property (nonatomic, strong) IBOutlet NSMenu *gearMenu;
-
-@property (nonatomic, strong) IBOutlet NSMenu *tableMenu;
-
-@property (nonatomic, strong) IBOutlet BorderedView *headerView;
-@property (nonatomic, weak)   IBOutlet NSTextField  *playOffsetField;
-@property (nonatomic, weak)   IBOutlet PlayBar      *playBar;
-@property (nonatomic, weak)   IBOutlet NSTextField  *playRemainingField;
-@property (nonatomic, weak)   IBOutlet Button       *playButton;
-@property (nonatomic, weak)   IBOutlet Button       *gearButton;
-@property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
-@property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
-
-@property (nonatomic, weak)   IBOutlet NSView *mainView;
-@property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
-@property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
-@property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
-
+@property (nonatomic, strong, readonly) TracksController *tracksController;
 
 @end

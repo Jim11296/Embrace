@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
@@ -12,7 +11,6 @@
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
-                <outlet property="headerView" destination="K7L-NV-xHB" id="KSF-t0-JoR"/>
                 <outlet property="levelMeter" destination="9x2-yQ-Jbg" id="V38-xr-dDB"/>
                 <outlet property="mainView" destination="kmP-AQ-nuK" id="LUd-qc-cK2"/>
                 <outlet property="playBar" destination="pkk-ZT-czS" id="NoQ-ry-IUU"/>
@@ -21,6 +19,7 @@
                 <outlet property="playRemainingField" destination="rvF-zp-fPR" id="SEU-xg-Wuf"/>
                 <outlet property="scrollView" destination="9qw-rj-zd3" id="IsL-0T-5Wf"/>
                 <outlet property="tableMenu" destination="trO-cQ-b0j" id="5ek-RH-DVO"/>
+                <outlet property="topContainer" destination="K7L-NV-xHB" id="C70-T5-Zve"/>
                 <outlet property="tracksController" destination="PiM-Bj-V6d" id="vGc-HC-w7B"/>
                 <outlet property="volumeSlider" destination="1QF-Cc-1Ru" id="aZX-Qs-S9B"/>
                 <outlet property="window" destination="gir-FZ-88a" id="eb8-8W-6sk"/>
@@ -68,28 +67,90 @@
             </connections>
         </menu>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="EmbraceWindow">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="533" y="338" width="320" height="354"/>
+            <rect key="contentRect" x="533" y="338" width="320" height="424"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="240" height="354"/>
             <view key="contentView" id="eL9-9a-De5">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="424"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <customView appearanceType="aqua" id="K7L-NV-xHB" userLabel="Header" customClass="BorderedView">
+                        <rect key="frame" x="0.0" y="352" width="320" height="72"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <subviews>
+                            <customView appearanceType="aqua" id="9x2-yQ-Jbg" customClass="LevelMeter">
+                                <rect key="frame" x="57" y="35" width="210" height="16"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </customView>
+                            <customView appearanceType="aqua" id="pkk-ZT-czS" customClass="PlayBar">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </customView>
+                            <slider verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
+                                <rect key="frame" x="55" y="18" width="210" height="20"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
+                                <connections>
+                                    <action selector="changeVolume:" target="-2" id="jC8-Ne-Dew"/>
+                                    <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
+                                </connections>
+                            </slider>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
+                                <rect key="frame" x="269" y="6" width="46" height="14"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
+                                    <font key="font" metaFont="system" size="10"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
+                                </connections>
+                            </textField>
+                            <customView id="Twn-WM-C4J" customClass="Button">
+                                <rect key="frame" x="7" y="23" width="42" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
+                                </connections>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
+                                <rect key="frame" x="5" y="6" width="46" height="14"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
+                                    <font key="font" metaFont="system" size="10"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
+                                </connections>
+                            </textField>
+                            <customView id="4bi-5W-Bp7" customClass="Button">
+                                <rect key="frame" x="271" y="23" width="42" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
+                                    <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
+                                </connections>
+                            </customView>
+                        </subviews>
+                    </customView>
                     <customView id="kmP-AQ-nuK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="60" horizontalPageScroll="10" verticalLineScroll="60" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
-                                <rect key="frame" x="0.0" y="28" width="320" height="326"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="324"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="323"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="324"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" multipleSelection="NO" autosaveColumns="NO" rowHeight="60" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="324"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -252,70 +313,8 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="0yp-VE-8Mm"/>
             </connections>
+            <point key="canvasLocation" x="567" y="314"/>
         </window>
-        <customView appearanceType="aqua" id="K7L-NV-xHB" userLabel="Header" customClass="BorderedView">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="72"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-            <subviews>
-                <customView appearanceType="aqua" id="9x2-yQ-Jbg" customClass="LevelMeter">
-                    <rect key="frame" x="57" y="35" width="210" height="16"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                </customView>
-                <customView appearanceType="aqua" id="pkk-ZT-czS" customClass="PlayBar">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                </customView>
-                <slider verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
-                    <rect key="frame" x="55" y="18" width="210" height="20"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
-                    <connections>
-                        <action selector="changeVolume:" target="-2" id="jC8-Ne-Dew"/>
-                        <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
-                    </connections>
-                </slider>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
-                    <rect key="frame" x="269" y="6" width="46" height="14"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
-                        <font key="font" metaFont="system" size="10"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                    <connections>
-                        <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
-                    </connections>
-                </textField>
-                <customView id="Twn-WM-C4J" customClass="Button">
-                    <rect key="frame" x="7" y="23" width="42" height="24"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <connections>
-                        <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
-                    </connections>
-                </customView>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
-                    <rect key="frame" x="5" y="6" width="46" height="14"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
-                        <font key="font" metaFont="system" size="10"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                    <connections>
-                        <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
-                    </connections>
-                </textField>
-                <customView id="4bi-5W-Bp7" customClass="Button">
-                    <rect key="frame" x="271" y="23" width="42" height="24"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <connections>
-                        <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
-                        <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
-                    </connections>
-                </customView>
-            </subviews>
-            <point key="canvasLocation" x="216" y="500"/>
-        </customView>
         <menu id="Kdj-dO-hkZ">
             <items>
                 <menuItem title="Show Effects" id="gPO-SM-HTI">

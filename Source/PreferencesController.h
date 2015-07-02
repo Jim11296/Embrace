@@ -12,14 +12,6 @@
 
 @interface PreferencesController : NSWindowController
 
-- (IBAction) changeMainDevice:(id)sender;
-- (IBAction) changeMainDeviceAttributes:(id)sender;
-
-@property (nonatomic, weak)   IBOutlet NSPopUpButton *mainDevicePopUp;
-@property (nonatomic, weak)   IBOutlet NSPopUpButton *sampleRatePopUp;
-@property (nonatomic, weak)   IBOutlet NSPopUpButton *framesPopUp;
-@property (nonatomic, weak)   IBOutlet NSButton      *hogModeButton;
-
 // For bindings
 @property (nonatomic, weak) Preferences *preferences;
 @property (nonatomic, weak) Player *player;

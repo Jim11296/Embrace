@@ -47,6 +47,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 @interface TracksController ()
 @property (nonatomic) NSUInteger count;
+@property (nonatomic, weak) IBOutlet TrackTableView *tableView;
 @end
 
 

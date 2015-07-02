@@ -16,6 +16,21 @@
 #define SLOW_ANIMATIONS 0
 
 @interface TrackTableCellView () <ApplicationEventListener>
+
+@property (nonatomic, weak) IBOutlet BorderedView *borderedView;
+
+@property (nonatomic, weak) IBOutlet NSTextField *titleField;
+@property (nonatomic, weak) IBOutlet NSTextField *durationField;
+
+@property (nonatomic, weak) IBOutlet NSTextField *lineTwoLeftField;
+@property (nonatomic, weak) IBOutlet NSTextField *lineTwoRightField;
+
+@property (nonatomic, weak) IBOutlet NSTextField *lineThreeLeftField;
+@property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
+
+@property (nonatomic, weak) IBOutlet NSImageView *speakerImageView;
+
+
 @end
 
 
@@ -30,6 +45,7 @@
     CGFloat  _line3LeftFittedWidth;
     CGFloat  _line3RightFittedWidth;
     CGFloat  _endTimeFittedWidth;
+    CGFloat  _errorWidth;
 
     Button      *_errorButton;
     NSTextField *_endTimeField;
@@ -104,6 +120,7 @@
     [_errorButton setAction:@selector(_errorButtonClicked:)];
     [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
     [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
+    [_errorButton setInactiveColor:[self _bottomTextColor]];
 
     [_errorButton setAlert:YES];
     
@@ -273,7 +290,7 @@
 
 - (void) _errorButtonClicked:(id)sender
 {
-    [GetAppDelegate() displayErrorForTrackError:[[self track] trackError]];
+    [GetAppDelegate() displayErrorForTrack:[self track]];
 }
 
 
@@ -577,6 +594,14 @@
     } else {
         _endTimeFittedWidth = 0;
     }
+
+    TrackError trackError = [[self track] trackError];
+
+    if (trackError) {
+        _line1RightFittedWidth = 24;
+        _line2RightFittedWidth = 24;
+        _line3RightFittedWidth = 24;
+    }
 }
 
 
@@ -763,7 +788,7 @@
     
     if (trackError) {
         NSSize boundsSize = [self bounds].size;
-        NSRect errorFrame = NSMakeRect(boundsSize.width - 34, round((boundsSize.height - 16) / 2), 16, 16);
+        NSRect errorFrame = NSMakeRect(boundsSize.width - 24, round((boundsSize.height - 16) / 2), 16, 16);
         
         [_errorButton setFrame:errorFrame];
         [self addSubview:_errorButton];

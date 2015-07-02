@@ -8,28 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
-@class CloseButton, BorderedView;
+@class EmbraceWindow;
 
-@protocol MainWindowListener <NSObject>
+
+@protocol EmbraceWindowListener <NSObject>
 - (void) windowDidUpdateMain:(NSWindow *)window;
 @end
 
-@interface EmbraceWindow : NSWindow
 
-- (void) setupWithHeaderView: (BorderedView *) headerView
-                    mainView: (NSView *) mainView
-                  footerView: (BorderedView *) footerView;
-
-- (void) setupAsParentWindow;
-
-@property (nonatomic, readonly) NSArray *mainListeners;
-- (void) addMainListener:(id<MainWindowListener>)listener;
-
-@property (nonatomic, strong, readonly) CloseButton *closeButton;
-
-@end
-
-@protocol EmbraceWindowDelegate <NSObject>
+@protocol EmbraceWindowDelegate <NSWindowDelegate>
 @optional
 - (BOOL) window:(EmbraceWindow *)window cancelOperation:(id)sender;
+@end
+
+
+@interface EmbraceWindow : NSWindow
+
+@property (nonatomic, readonly) NSArray *listeners;
+- (void) addListener:(id<EmbraceWindowListener>)listener;
+
+@property (atomic, assign) id<EmbraceWindowDelegate> delegate;
 @end

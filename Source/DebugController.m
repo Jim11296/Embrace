@@ -89,19 +89,6 @@
 }
 
 
-- (IBAction) doFlipAnimation:(id)sender
-{
-    Button *button = [[self _setlistController] playButton];
-
-    [button setImage:[NSImage imageNamed:@"PauseTemplate"]];
-    [button setEnabled:YES];
-    
-
-//    [button flipToImage:[NSImage imageNamed:@"PlayTemplate"] enabled:YES];
-}
-
-
-
 - (void) debugPlayPauseTick:(NSTimer *)timer
 {
     Player *player = [Player sharedInstance];

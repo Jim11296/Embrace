@@ -10,7 +10,7 @@
 
 @protocol WhiteSliderDragDelegate;
 
-@interface WhiteSlider : NSSlider
+@interface WhiteSlider : NSSlider <EmbraceWindowListener>
 
 @property (nonatomic, weak) id<WhiteSliderDragDelegate> dragDelegate;
 @property (nonatomic) double doubleValueBeforeDrag;
