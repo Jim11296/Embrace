@@ -129,10 +129,10 @@
     Effect *selectedEffect = [[[self effectsArrayController] selectedObjects] lastObject];
 
     if ([selectedEffect audioUnitError]) {
-        NSString *messageText     = NSLocalizedString(@"Could not load Effect", nil);
-        NSString *informativeText = NSLocalizedString(@"Contact the effect's manufacturer for a sandbox-compliant version.", nil);
+        NSAlert *alert = [[NSAlert alloc] init];
         
-        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        [alert setMessageText:NSLocalizedString(@"Could not load Effect", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Contact the effect's manufacturer for a sandbox-compliant version.", nil)];
         
         [alert runModal];
         

@@ -189,14 +189,15 @@
     EmbraceLogMethod();
 
     if ([[Player sharedInstance] isPlaying]) {
-        NSString *messageText     = NSLocalizedString(@"Quit Embrace", nil);
-        NSString *informativeText = NSLocalizedString(@"Music is currently playing. Are you sure you want to quit?", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Quit", nil);
-        
-        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        NSAlert *alert = [[NSAlert alloc] init];
+
+        [alert setMessageText:NSLocalizedString(@"Quit Embrace", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Music is currently playing. Are you sure you want to quit?", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Quit",   nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
         [alert setAlertStyle:NSCriticalAlertStyle];
-        
-        return [alert runModal] == NSOKButton ? NSTerminateNow : NSTerminateCancel;
+
+        return [alert runModal] == NSAlertFirstButtonReturn ? NSTerminateNow : NSTerminateCancel;
     }
     
     return NSTerminateNow;
@@ -337,7 +338,10 @@
         return;
     }
     
-    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    [alert setMessageText:messageText];
+    [alert setInformativeText:informativeText];
 
     [alert runModal];
 }
@@ -419,13 +423,14 @@
     EmbraceLogMethod();
 
     if ([_setlistController shouldPromptForClear]) {
-        NSString *messageText     = NSLocalizedString(@"Clear Set List", nil);
-        NSString *informativeText = NSLocalizedString(@"You haven't saved or exported the current set list. Are you sure you want to clear it?", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Clear", nil);
+        NSAlert *alert = [[NSAlert alloc] init];
         
-        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        [alert setMessageText:NSLocalizedString(@"Clear Set List", nil)];
+        [alert setInformativeText:NSLocalizedString(@"You haven't saved or exported the current set list. Are you sure you want to clear it?", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Clear",  nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
         
-        if ([alert runModal] == NSOKButton) {
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
             [_setlistController clear];
         }
     
@@ -440,13 +445,14 @@
     EmbraceLogMethod();
 
     if ([_setlistController shouldPromptForClear]) {
-        NSString *messageText     = NSLocalizedString(@"Reset Played Tracks", nil);
-        NSString *informativeText = NSLocalizedString(@"Are you sure you want to reset all played tracks to the queued state?", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Reset", nil);
+        NSAlert *alert = [[NSAlert alloc] init];
+
+        [alert setMessageText:NSLocalizedString(@"Reset Played Tracks", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Are you sure you want to reset all played tracks to the queued state?", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Reset",  nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
         
-        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
-        
-        if ([alert runModal] == NSOKButton) {
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
             [_setlistController resetPlayedTracks];
         }
     
@@ -477,7 +483,7 @@
 
 
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
+        if (result == NSFileHandlingPanelOKButton) {
             SavePanelState(openPanel, @"open-file-panel");
             [weakSetlistController openFileAtURL:[openPanel URL]];
         }
@@ -523,7 +529,7 @@
     __weak id weakSetlistController = _setlistController;
     
     [savePanel beginWithCompletionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
+        if (result == NSFileHandlingPanelOKButton) {
             SavePanelState(savePanel, @"save-set-list-panel");
             [weakSetlistController saveToFileAtURL:[savePanel URL]];
         }
@@ -658,28 +664,34 @@
     EmbraceLogMethod();
 
     NSAlert *(^makeAlertOne)() = ^{
-        NSString *messageText     = NSLocalizedString(@"Send Crash Report?", nil);
-        NSString *informativeText = NSLocalizedString(@"Information about the crash, your operating system, and device will be sent. No personal information is included.", nil);
-        NSString *defaultButton   = NSLocalizedString(@"Send", nil);
-    
-        return [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:@"%@", informativeText];
+        NSAlert *alert = [[NSAlert alloc] init];
+        
+        [alert setMessageText:NSLocalizedString(@"Send Crash Report?", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Information about the crash, your operating system, and device will be sent. No personal information is included.", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Send", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+
+        return alert;
     };
 
     NSAlert *(^makeAlertTwo)() = ^{
-        NSString *messageText     = NSLocalizedString(@"Crash Report Sent", nil);
-        NSString *informativeText = NSLocalizedString(@"Thank you for your crash report.  If you have any additional information regarding the crash, please contact me.", nil);
-        NSString *otherButton     = NSLocalizedString(@"Contact", nil);
-            
-        return [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@"%@", informativeText];
+        NSAlert *alert = [[NSAlert alloc] init];
+
+        [alert setMessageText:NSLocalizedString(@"Crash Report Sent", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Thank you for your crash report.  If you have any additional information regarding the crash, please contact me.", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Contact", nil)];
+
+        return alert;
     };
     
-    BOOL okToSend = [makeAlertOne() runModal] == NSOKButton;
+    BOOL okToSend = [makeAlertOne() runModal] == NSAlertFirstButtonReturn;
 
     if (okToSend) {
         [_crashSender sendCrashReportsWithCompletionHandler:^(BOOL didSend) {
             NSModalResponse response = [makeAlertTwo() runModal];
             
-            if (response == NSAlertOtherReturn) {
+            if (response == NSAlertSecondButtonReturn) {
                 [self sendFeedback:nil];
             }
         }];

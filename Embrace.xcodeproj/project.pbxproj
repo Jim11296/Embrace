@@ -1212,6 +1212,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = "Trial Debug";
 		};
@@ -1237,6 +1238,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = "Trial Profile";
 		};
@@ -1262,6 +1264,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = "Trial Release";
 		};
@@ -1294,6 +1297,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = Debug;
 		};
@@ -1305,6 +1309,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = Profile;
 		};
@@ -1322,6 +1327,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = Release;
 		};
@@ -1340,6 +1346,7 @@
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 			};
 			name = Submission;
 		};
