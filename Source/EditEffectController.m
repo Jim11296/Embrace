@@ -274,7 +274,7 @@
     __weak id weakEffect = _effect;
 
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
+        if (result == NSFileHandlingPanelOKButton) {
             [weakEffect loadAudioPresetAtFileURL:[openPanel URL]];
         }
     }];
@@ -295,7 +295,7 @@
     __weak id weakEffect = _effect;
 
     [savePanel beginWithCompletionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
+        if (result == NSFileHandlingPanelOKButton) {
             [weakEffect saveAudioPresetAtFileURL:[savePanel URL]];
         }
     }];

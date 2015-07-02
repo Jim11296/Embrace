@@ -648,11 +648,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         otherButton = NSLocalizedString(@"Show Preferences", nil);
     }
 
-    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@""];
-    [alert setAlertStyle:NSCriticalAlertStyle];
-    if (informativeText) [alert setInformativeText:informativeText];
+    NSAlert *alert = [[NSAlert alloc] init];
     
-    if ([alert runModal] == NSAlertOtherReturn) {
+    [alert setMessageText:messageText];
+    [alert setAlertStyle:NSCriticalAlertStyle];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+
+    if (informativeText) [alert setInformativeText:informativeText];
+    if (otherButton)     [alert addButtonWithTitle:otherButton];
+    
+    if ([alert runModal] == NSAlertSecondButtonReturn) {
         [GetAppDelegate() showPreferences:nil];
     }
 }
@@ -970,10 +975,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     NSString *deviceName = [device name];
 
-    NSString *otherButton = NSLocalizedString(@"Show Preferences", nil);
-
-    NSString *informativeText = NSLocalizedString(@"You can prevent this by quitting other applications when using Embrace, or by giving Embrace exclusive access in Preferences.", nil);
-
     if (reason == PlayerInterruptionReasonHoggedByOtherProcess) {
         pid_t hogModeOwner = [[device controller] hogModeOwner];
         NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
@@ -996,11 +997,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         messageText = [NSString stringWithFormat:format, deviceName];
     }
 
-    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@""];
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    [alert setMessageText:messageText];
     [alert setAlertStyle:NSCriticalAlertStyle];
-    if (informativeText) [alert setInformativeText:informativeText];
+    [alert setInformativeText:NSLocalizedString(@"You can prevent this by quitting other applications when using Embrace, or by giving Embrace exclusive access in Preferences.", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Show Preferences", nil)];
 
-    if ([alert runModal] == NSAlertOtherReturn) {
+    if ([alert runModal] == NSAlertSecondButtonReturn) {
         [GetAppDelegate() showPreferences:nil];
     }
 }
