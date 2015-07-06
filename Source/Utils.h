@@ -40,6 +40,20 @@ typedef NS_ENUM(NSInteger, Tonality) {
     Tonality_Major__5__12B__E
 };
 
+
+typedef NS_ENUM(NSInteger, TrackLabel) {
+    TrackLabelNone,
+    TrackLabelRed,
+    TrackLabelOrange,
+    TrackLabelYellow,
+    TrackLabelGreen,
+    TrackLabelBlue,
+    TrackLabelPurple,
+        
+    TrackLabelMultiple = NSNotFound
+};
+
+
 extern BOOL CheckError(OSStatus error, const char *operation);
 extern BOOL CheckErrorGroup(void (^block)());
 
@@ -52,7 +66,7 @@ extern void SavePanelState(NSSavePanel *panel, NSString *name);
 extern NSString *GetStringForFourCharCode(OSStatus fcc);
 extern NSString *GetStringForFourCharCodeObject(id object);
 
-extern Tonality GetTonalityForString(NSString *string);
+extern Tonality  GetTonalityForString(NSString *string);
 extern NSString *GetTraditionalStringForTonality(Tonality tonality);
 extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality);
 
@@ -60,6 +74,9 @@ extern NSColor *GetRGBColor(int rgb, CGFloat alpha);
 
 extern NSColor *GetInactiveHighlightColor(void);
 extern NSColor *GetActiveHighlightColor(void);
+
+extern NSColor *GetBorderColorForTrackLabel(TrackLabel trackLabel);
+extern NSColor *GetFillColorForTrackLabel(TrackLabel trackLabel);
 
 extern AppDelegate *GetAppDelegate(void);
 

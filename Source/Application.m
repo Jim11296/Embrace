@@ -76,11 +76,11 @@
 
             EmbraceLog(@"Application", @"Sending performPreferredPlaybackAction: due to space bar");
             
-            [(AppDelegate *)[self delegate] performPreferredPlaybackAction];
+            [GetAppDelegate() performPreferredPlaybackAction];
             return;
         }
 
-        [[(AppDelegate *)[self delegate] setlistController] handleNonSpaceKeyDown];
+        [[GetAppDelegate() setlistController] handleNonSpaceKeyDown];
     }
     
     [super sendEvent:event];

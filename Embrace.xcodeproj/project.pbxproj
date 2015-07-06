@@ -25,12 +25,6 @@
 		552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
 		553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
 		5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */; };
-		5537D76719CFBDEC00DE8117 /* black_speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76119CFBDEC00DE8117 /* black_speaker.png */; };
-		5537D76819CFBDEC00DE8117 /* black_speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76219CFBDEC00DE8117 /* black_speaker@2x.png */; };
-		5537D76919CFBDEC00DE8117 /* blue_speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76319CFBDEC00DE8117 /* blue_speaker.png */; };
-		5537D76A19CFBDEC00DE8117 /* blue_speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76419CFBDEC00DE8117 /* blue_speaker@2x.png */; };
-		5537D76B19CFBDEC00DE8117 /* white_speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76519CFBDEC00DE8117 /* white_speaker.png */; };
-		5537D76C19CFBDEC00DE8117 /* white_speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76619CFBDEC00DE8117 /* white_speaker@2x.png */; };
 		553DE143189F107100A355D1 /* ViewTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 553DE142189F107100A355D1 /* ViewTrackController.m */; };
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
@@ -38,6 +32,9 @@
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
 		555A701B1890BCBF00305EC6 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 555A701A1890BCBF00305EC6 /* Application.m */; };
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
+		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
+		556098141B47CABD008516C3 /* LabelMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556098131B47CABD008516C3 /* LabelMenuView.m */; };
+		556098171B48B061008516C3 /* StripeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556098161B48B061008516C3 /* StripeView.m */; };
 		556ACE24187ABB8100AED4BC /* EditEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556ACE23187ABB8100AED4BC /* EditEffectWindow.xib */; };
 		556ACE2F187B901400AED4BC /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE2E187B901400AED4BC /* WaveformView.m */; };
 		556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE35187BB43A00AED4BC /* WrappedUtils.mm */; };
@@ -188,12 +185,6 @@
 		553614CD18B4C3B2007BDAD6 /* AudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFile.m; path = Source/AudioFile.m; sourceTree = "<group>"; };
 		5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentTrackController.m; path = Source/CurrentTrackController.m; sourceTree = SOURCE_ROOT; };
 		5537D75D19CEBA7300DE8117 /* CurrentTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentTrackController.h; path = Source/CurrentTrackController.h; sourceTree = SOURCE_ROOT; };
-		5537D76119CFBDEC00DE8117 /* black_speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = black_speaker.png; path = Resources/black_speaker.png; sourceTree = SOURCE_ROOT; };
-		5537D76219CFBDEC00DE8117 /* black_speaker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "black_speaker@2x.png"; path = "Resources/black_speaker@2x.png"; sourceTree = SOURCE_ROOT; };
-		5537D76319CFBDEC00DE8117 /* blue_speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blue_speaker.png; path = Resources/blue_speaker.png; sourceTree = SOURCE_ROOT; };
-		5537D76419CFBDEC00DE8117 /* blue_speaker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue_speaker@2x.png"; path = "Resources/blue_speaker@2x.png"; sourceTree = SOURCE_ROOT; };
-		5537D76519CFBDEC00DE8117 /* white_speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = white_speaker.png; path = Resources/white_speaker.png; sourceTree = SOURCE_ROOT; };
-		5537D76619CFBDEC00DE8117 /* white_speaker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "white_speaker@2x.png"; path = "Resources/white_speaker@2x.png"; sourceTree = SOURCE_ROOT; };
 		55394ED01884C94F00474E20 /* Embrace.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Embrace.entitlements; path = Resources/Embrace.entitlements; sourceTree = "<group>"; };
 		553DE141189F107100A355D1 /* ViewTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewTrackController.h; path = Source/ViewTrackController.h; sourceTree = SOURCE_ROOT; };
 		553DE142189F107100A355D1 /* ViewTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewTrackController.m; path = Source/ViewTrackController.m; sourceTree = SOURCE_ROOT; };
@@ -208,6 +199,11 @@
 		555A70191890BCBF00305EC6 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = Source/Application.h; sourceTree = SOURCE_ROOT; };
 		555A701A1890BCBF00305EC6 /* Application.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Application.m; path = Source/Application.m; sourceTree = SOURCE_ROOT; };
 		555B3C821880EFD20088C15C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TrackTableCellView.xib; path = Resources/TrackTableCellView.xib; sourceTree = SOURCE_ROOT; };
+		556098121B47CABD008516C3 /* LabelMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LabelMenuView.h; path = Source/LabelMenuView.h; sourceTree = SOURCE_ROOT; };
+		556098131B47CABD008516C3 /* LabelMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LabelMenuView.m; path = Source/LabelMenuView.m; sourceTree = SOURCE_ROOT; };
+		556098151B48B061008516C3 /* StripeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StripeView.h; path = Source/StripeView.h; sourceTree = SOURCE_ROOT; };
+		556098161B48B061008516C3 /* StripeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StripeView.m; path = Source/StripeView.m; sourceTree = SOURCE_ROOT; };
 		556ACE23187ABB8100AED4BC /* EditEffectWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditEffectWindow.xib; path = Resources/EditEffectWindow.xib; sourceTree = SOURCE_ROOT; };
 		556ACE2D187B901400AED4BC /* WaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaveformView.h; path = Source/WaveformView.h; sourceTree = SOURCE_ROOT; };
 		556ACE2E187B901400AED4BC /* WaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaveformView.m; path = Source/WaveformView.m; sourceTree = SOURCE_ROOT; };
@@ -621,6 +617,7 @@
 				558DC0C01877861E00C85770 /* InfoPlist.strings */,
 				558DC0BC1877861E00C85770 /* MainMenu.xib */,
 				55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */,
+				5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */,
 				55A0B167188F447100866F04 /* CurrentTrackWindow.xib */,
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
@@ -714,6 +711,14 @@
 				55BE7739187CD05600BC0D29 /* BorderedView.m */,
 				55717BF3187EA65400213213 /* Button.h */,
 				55717BF4187EA65400213213 /* Button.m */,
+				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
+				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
+				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
+				55A708B018A715C1007BD7C0 /* DragSongsHereView.m */,
+				5595A7BA18793B9000A7B996 /* EmbraceWindow.h */,
+				5595A7BB18793B9000A7B996 /* EmbraceWindow.m */,
+				556098121B47CABD008516C3 /* LabelMenuView.h */,
+				556098131B47CABD008516C3 /* LabelMenuView.m */,
 				55ADE93618824338008DC245 /* LevelMeter.h */,
 				55ADE93718824338008DC245 /* LevelMeter.m */,
 				55F7ABEE18B08569006B6FBB /* MainIconView.h */,
@@ -726,16 +731,12 @@
 				55CF2799187A464B0042C92A /* TrackTableCellView.m */,
 				55ADE93318815EA8008DC245 /* PlayBar.h */,
 				55ADE93418815EA8008DC245 /* PlayBar.m */,
+				556098151B48B061008516C3 /* StripeView.h */,
+				556098161B48B061008516C3 /* StripeView.m */,
 				556ACE2D187B901400AED4BC /* WaveformView.h */,
 				556ACE2E187B901400AED4BC /* WaveformView.m */,
 				55717BF6187EAB8C00213213 /* WhiteSlider.h */,
 				55717BF7187EAB8C00213213 /* WhiteSlider.m */,
-				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
-				55A708B018A715C1007BD7C0 /* DragSongsHereView.m */,
-				5595A7BA18793B9000A7B996 /* EmbraceWindow.h */,
-				5595A7BB18793B9000A7B996 /* EmbraceWindow.m */,
-				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
-				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
 				55E0B34018CBFA6900B4087C /* NoDropImageView.h */,
 				55E0B34118CBFA6900B4087C /* NoDropImageView.m */,
 				557C2C7319138994004A6364 /* TrialBottomView.h */,
@@ -812,12 +813,6 @@
 		55F7ABDC18AF1BF5006B6FBB /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				5537D76119CFBDEC00DE8117 /* black_speaker.png */,
-				5537D76219CFBDEC00DE8117 /* black_speaker@2x.png */,
-				5537D76319CFBDEC00DE8117 /* blue_speaker.png */,
-				5537D76419CFBDEC00DE8117 /* blue_speaker@2x.png */,
-				5537D76519CFBDEC00DE8117 /* white_speaker.png */,
-				5537D76619CFBDEC00DE8117 /* white_speaker@2x.png */,
 				55F6C71F19CE7FE600B22793 /* button_inactive.png */,
 				55F6C72019CE7FE600B22793 /* button_normal.png */,
 				55F6C72119CE7FE600B22793 /* button_pressed.png */,
@@ -943,7 +938,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */,
-				5537D76C19CFBDEC00DE8117 /* white_speaker@2x.png in Resources */,
 				55F6C72619CE7FE600B22793 /* button_pressed.png in Resources */,
 				55A708AE18A70E96007BD7C0 /* drag_songs.png in Resources */,
 				55A9A31019CBDF6C002ED9CE /* Images.xcassets in Resources */,
@@ -955,27 +949,23 @@
 				55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
 				55A9A30E19CBAC8A002ED9CE /* button_pressed@2x.png in Resources */,
-				5537D76A19CFBDEC00DE8117 /* blue_speaker@2x.png in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
 				55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */,
 				550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */,
 				55F6C72519CE7FE600B22793 /* button_normal.png in Resources */,
-				5537D76719CFBDEC00DE8117 /* black_speaker.png in Resources */,
 				55A0B1741890A81900866F04 /* test_g.m4a in Resources */,
 				55A9A30D19CBAC8A002ED9CE /* button_normal@2x.png in Resources */,
 				55F6C72419CE7FE600B22793 /* button_inactive.png in Resources */,
-				5537D76919CFBDEC00DE8117 /* blue_speaker.png in Resources */,
 				55A9A30C19CBAC8A002ED9CE /* button_inactive@2x.png in Resources */,
 				554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */,
 				55F7ABE218AF3D52006B6FBB /* drag_icon@2x.png in Resources */,
 				55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */,
 				553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */,
+				5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */,
 				556ACE24187ABB8100AED4BC /* EditEffectWindow.xib in Resources */,
 				558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */,
 				55A0B1751890A81900866F04 /* test_f.m4a in Resources */,
 				552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */,
-				5537D76B19CFBDEC00DE8117 /* white_speaker.png in Resources */,
-				5537D76819CFBDEC00DE8117 /* black_speaker@2x.png in Resources */,
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				55A708AD18A70E96007BD7C0 /* drag_songs@2x.png in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
@@ -1088,6 +1078,7 @@
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
+				556098141B47CABD008516C3 /* LabelMenuView.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
 				5506802D1887509300441AAE /* TrackAnalyzer.m in Sources */,
@@ -1101,6 +1092,7 @@
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
+				556098171B48B061008516C3 /* StripeView.m in Sources */,
 				55F3B7B61877908900E8FEC8 /* Track.m in Sources */,
 				558513C718794A2600C268E3 /* EffectsController.m in Sources */,
 				556ACE2F187B901400AED4BC /* WaveformView.m in Sources */,

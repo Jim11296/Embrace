@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6246"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -190,22 +189,30 @@ CA
                                     <items>
                                         <menuItem title="1 Line" tag="1" keyEquivalent="1" id="ZlJ-oO-qnt">
                                             <connections>
-                                                <action selector="changeViewLayout:" target="494" id="ekA-hN-xMf"/>
+                                                <action selector="changeNumberOfLayoutLines:" target="494" id="1ko-vl-Tso"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="2 Lines" tag="2" keyEquivalent="2" id="mJJ-xf-yIR">
                                             <connections>
-                                                <action selector="changeViewLayout:" target="494" id="55G-iQ-Ofu"/>
+                                                <action selector="changeNumberOfLayoutLines:" target="494" id="HEy-sm-Vba"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="3 Lines" tag="3" keyEquivalent="3" id="x5O-HT-tFT">
                                             <connections>
-                                                <action selector="changeViewLayout:" target="494" id="1Rn-QK-Eut"/>
+                                                <action selector="changeNumberOfLayoutLines:" target="494" id="FEq-9u-Gxj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="FFx-rN-abX"/>
+                                        <menuItem title="Shorten Played Tracks" id="JoZ-et-klf">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeShortensPlayedTracks:" target="494" id="qp8-CL-W2x"/>
                                             </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Ma8-PW-oNm"/>
                             <menuItem title="Track Attributes" id="nyA-hj-AJk">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Track Attributes" id="IIo-eS-3Ci">
@@ -226,6 +233,12 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeViewAttributes:" target="494" id="1hB-nO-DDk"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Duplicate Status" tag="8" id="UPI-ga-0d0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="h4D-Re-tZZ"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Energy Level" tag="6" id="TSJ-mZ-RTl">
@@ -252,26 +265,29 @@ CA
                                                 <action selector="changeViewAttributes:" target="494" id="TeA-OO-XNQ"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="ThV-ek-Daj"/>
-                                        <menuItem title="Key Signatures" tag="4" enabled="NO" id="08M-kr-e41">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Open Key Notation" tag="2" indentationLevel="1" id="tpq-gq-csW">
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Key Signatures" id="LrL-rw-HrZ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Key Signatures" id="QDw-jW-t4d">
+                                    <items>
+                                        <menuItem title="Open Key Notation" tag="2" id="Vdd-L9-b9f">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeKeySignatureDisplay:" target="494" id="wZK-XB-Q6R"/>
+                                                <action selector="changeKeySignatureDisplayMode:" target="494" id="NHx-uc-zJu"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Raw Value" indentationLevel="1" id="mT1-wH-CHb">
+                                        <menuItem title="Raw Value" id="Gfm-gp-FYc">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeKeySignatureDisplay:" target="494" id="XIq-gG-3Ee"/>
+                                                <action selector="changeKeySignatureDisplayMode:" target="494" id="nkR-vD-iMB"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Traditional Notation" tag="1" indentationLevel="1" id="CuH-rG-zFr">
+                                        <menuItem title="Traditional Notation" tag="1" id="qWj-gt-x5e">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeKeySignatureDisplay:" target="494" id="zMT-At-K5M"/>
+                                                <action selector="changeKeySignatureDisplayMode:" target="494" id="EAs-X4-Kg7"/>
                                             </connections>
                                         </menuItem>
                                     </items>

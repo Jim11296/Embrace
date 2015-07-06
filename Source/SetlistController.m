@@ -21,6 +21,7 @@
 #import "BorderedView.h"
 #import "Button.h"
 #import "EmbraceWindow.h"
+#import "LabelMenuView.h"
 #import "LevelMeter.h"
 #import "PlayBar.h"
 #import "Preferences.h"
@@ -45,9 +46,15 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 @property (nonatomic, strong) IBOutlet NSView *dragSongsView;
 
-@property (nonatomic, strong) IBOutlet NSMenu *gearMenu;
+@property (nonatomic, strong) IBOutlet NSMenu        *gearMenu;
+@property (nonatomic, strong) IBOutlet LabelMenuView *gearLabelMenuView;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearLabelSeparator;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearLabelMenuItem;
 
-@property (nonatomic, strong) IBOutlet NSMenu *tableMenu;
+@property (nonatomic, strong) IBOutlet NSMenu        *tableMenu;
+@property (nonatomic, strong) IBOutlet LabelMenuView *tableLabelMenuView;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableLabelSeparator;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableLabelMenuItem;
 
 @property (nonatomic, weak)   IBOutlet BorderedView *topContainer;
 
@@ -104,12 +111,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [super windowDidLoad];
 
     EmbraceWindow *window = (EmbraceWindow *)[self window];
-
-
-    //[window setupWithHeaderView:[self headerView]
-      //                 mainView:[self mainView]
-        //             footerView:[self bottomContainer]];
-    
+   
     [window setTitlebarAppearsTransparent:YES];
     [window setTitleVisibility:NSWindowTitleHidden];
     [window setMovableByWindowBackground:YES];
@@ -128,9 +130,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
     [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
-    
-    
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
@@ -816,6 +815,18 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (void) changeLabel:(id)sender
+{
+    NSInteger selectedTag = [sender selectedTag];
+    
+    if (selectedTag >= TrackLabelNone && selectedTag <= TrackLabelPurple) {
+        for (Track *track in [[self tracksController] selectedTracks]) {
+            [track setTrackLabel:selectedTag];
+        }
+    }
+}
+
+
 - (void) revealEndTime:(id)sender
 {
     EmbraceLogMethod();
@@ -917,6 +928,44 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     
     
     return YES;
+}
+
+
+- (void) menuWillOpen:(NSMenu *)menu
+{
+    BOOL showLabels = YES;
+
+    NSMutableSet *selectedLabels = [NSMutableSet set];
+    TrackLabel    trackLabel     = TrackLabelNone;
+    
+    for (Track *track in [[self tracksController] selectedTracks]) {
+        [selectedLabels addObject:@([track trackLabel])];
+    }
+
+    NSInteger selectedLabelsCount = [selectedLabels count];
+    if (selectedLabelsCount > 1) {
+        trackLabel = TrackLabelMultiple;
+    } else if (selectedLabelsCount == 1) {
+        trackLabel = [[selectedLabels anyObject] integerValue];
+    } else if (selectedLabelsCount == 0) {
+        trackLabel = TrackLabelNone;
+        showLabels = NO;
+    }
+
+    if ([menu isEqual:[self gearMenu]]) {
+        [[self gearLabelSeparator] setHidden:!showLabels];
+        [[self gearLabelMenuItem]  setHidden:!showLabels];
+        [[self gearLabelMenuItem]  setView:showLabels ? [self gearLabelMenuView] : nil];
+
+        [[self gearLabelMenuView] setSelectedTag:trackLabel];
+    
+    } else if ([menu isEqual:[self tableMenu]]) {
+        [[self tableLabelSeparator] setHidden:!showLabels];
+        [[self tableLabelMenuItem]  setHidden:!showLabels];
+        [[self tableLabelMenuItem]  setView:showLabels ? [self tableLabelMenuView] : nil];
+       
+        [[self tableLabelMenuView] setSelectedTag:trackLabel];
+    }
 }
 
 

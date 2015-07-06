@@ -10,6 +10,9 @@
                 <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
+                <outlet property="gearLabelMenuItem" destination="pYs-4n-BUC" id="5rf-Xl-jpd"/>
+                <outlet property="gearLabelMenuView" destination="hg8-Ej-WfS" id="jXy-Ur-2YB"/>
+                <outlet property="gearLabelSeparator" destination="g95-hB-sI5" id="psg-8K-Bnh"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
                 <outlet property="levelMeter" destination="9x2-yQ-Jbg" id="V38-xr-dDB"/>
                 <outlet property="mainView" destination="kmP-AQ-nuK" id="LUd-qc-cK2"/>
@@ -18,6 +21,9 @@
                 <outlet property="playOffsetField" destination="Ceq-EF-rHK" id="Bhd-Pk-UD7"/>
                 <outlet property="playRemainingField" destination="rvF-zp-fPR" id="SEU-xg-Wuf"/>
                 <outlet property="scrollView" destination="9qw-rj-zd3" id="IsL-0T-5Wf"/>
+                <outlet property="tableLabelMenuItem" destination="anf-f4-hIA" id="tUf-vn-9NQ"/>
+                <outlet property="tableLabelMenuView" destination="lH7-Ja-gL2" id="Vp1-DN-CP9"/>
+                <outlet property="tableLabelSeparator" destination="ek2-yc-gNp" id="5WA-1k-8vF"/>
                 <outlet property="tableMenu" destination="trO-cQ-b0j" id="5ek-RH-DVO"/>
                 <outlet property="topContainer" destination="K7L-NV-xHB" id="C70-T5-Zve"/>
                 <outlet property="tracksController" destination="PiM-Bj-V6d" id="vGc-HC-w7B"/>
@@ -33,7 +39,22 @@
             </connections>
         </customObject>
         <userDefaultsController representsSharedInstance="YES" id="Bui-lf-GNg"/>
-        <menu id="trO-cQ-b0j">
+        <customView id="hg8-Ej-WfS" userLabel="Label Menu (Gear Button)" customClass="LabelMenuView">
+            <rect key="frame" x="0.0" y="0.0" width="164" height="27"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <connections>
+                <action selector="changeLabel:" target="-2" id="WvL-GJ-uNb"/>
+            </connections>
+            <point key="canvasLocation" x="664" y="649.5"/>
+        </customView>
+        <customView id="lH7-Ja-gL2" userLabel="Label Menu (Table View)" customClass="LabelMenuView">
+            <rect key="frame" x="0.0" y="0.0" width="164" height="27"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <connections>
+                <action selector="changeLabel:" target="-2" id="z6Z-o0-m2K"/>
+            </connections>
+        </customView>
+        <menu id="trO-cQ-b0j" userLabel="Table View Menu">
             <items>
                 <menuItem title="Reveal End Time" id="cKF-wa-D4g">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -59,6 +80,13 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleMarkAsPlayed:" target="-2" id="K6W-ss-716"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="ek2-yc-gNp"/>
+                <menuItem title="&lt;LabelMenuView&gt;" id="anf-f4-hIA">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <outlet property="view" destination="lH7-Ja-gL2" id="Xxu-qw-VcE"/>
                     </connections>
                 </menuItem>
             </items>
@@ -167,90 +195,6 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                    <prototypeCellViews>
-                                                        <tableCellView identifier="TrackCell" id="7VA-Gs-oX4" customClass="TrackTableCellView">
-                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <subviews>
-                                                                <customView id="G0T-eR-fVJ" customClass="BorderedView">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                                                    <subviews>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="0mJ-te-wAf">
-                                                                            <rect key="frame" x="31" y="40" width="252" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Title" id="7sP-hf-Z5h">
-                                                                                <font key="font" metaFont="system"/>
-                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                        </textField>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="KYa-Yb-9f5">
-                                                                            <rect key="frame" x="31" y="21" width="144" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 2 Left" id="bc4-y0-9mN">
-                                                                                <font key="font" metaFont="smallSystem"/>
-                                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                        </textField>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="Cd2-5a-ZGp">
-                                                                            <rect key="frame" x="31" y="5" width="144" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 3 Left" id="WvC-6Z-80D">
-                                                                                <font key="font" metaFont="smallSystem"/>
-                                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                        </textField>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="vHN-Td-1li">
-                                                                            <rect key="frame" x="162" y="21" width="144" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="Line 2 Right" id="rJn-DL-0hx">
-                                                                                <font key="font" metaFont="smallSystem"/>
-                                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                        </textField>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="9DW-9o-kn1">
-                                                                            <rect key="frame" x="162" y="5" width="144" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="Line 3 Right" id="OYz-2S-INr">
-                                                                                <font key="font" metaFont="smallSystem"/>
-                                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                        </textField>
-                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="oJ2-ys-Q1u">
-                                                                            <rect key="frame" x="262" y="40" width="44" height="17"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" id="KKa-4i-CRW">
-                                                                                <font key="font" metaFont="system"/>
-                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                            </textFieldCell>
-                                                                        </textField>
-                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="gtl-mJ-WxD" customClass="NoDropImageView">
-                                                                            <rect key="frame" x="0.0" y="20" width="24" height="24"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="o3E-8L-KKf"/>
-                                                                        </imageView>
-                                                                    </subviews>
-                                                                </customView>
-                                                            </subviews>
-                                                            <connections>
-                                                                <outlet property="borderedView" destination="G0T-eR-fVJ" id="E1h-VY-rZr"/>
-                                                                <outlet property="durationField" destination="oJ2-ys-Q1u" id="XEM-Dt-grU"/>
-                                                                <outlet property="lineThreeLeftField" destination="Cd2-5a-ZGp" id="3uN-uw-VVf"/>
-                                                                <outlet property="lineThreeRightField" destination="9DW-9o-kn1" id="f9o-fT-Hg5"/>
-                                                                <outlet property="lineTwoLeftField" destination="KYa-Yb-9f5" id="GUb-YJ-aFB"/>
-                                                                <outlet property="lineTwoRightField" destination="vHN-Td-1li" id="PFc-IX-QTx"/>
-                                                                <outlet property="speakerImageView" destination="gtl-mJ-WxD" id="6o6-bq-HKJ"/>
-                                                                <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
-                                                                <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>
-                                                            </connections>
-                                                        </tableCellView>
-                                                    </prototypeCellViews>
                                                 </tableColumn>
                                             </tableColumns>
                                             <connections>
@@ -315,7 +259,7 @@
             </connections>
             <point key="canvasLocation" x="567" y="314"/>
         </window>
-        <menu id="Kdj-dO-hkZ">
+        <menu id="Kdj-dO-hkZ" userLabel="Gear Button Menu">
             <items>
                 <menuItem title="Show Effects" id="gPO-SM-HTI">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -356,7 +300,17 @@
                         <action selector="toggleMarkAsPlayed:" target="-2" id="wsR-4J-9Ik"/>
                     </connections>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="g95-hB-sI5"/>
+                <menuItem title="&lt;LabelMenuView&gt;" id="pYs-4n-BUC">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <outlet property="view" destination="hg8-Ej-WfS" id="6c4-on-68S"/>
+                    </connections>
+                </menuItem>
             </items>
+            <connections>
+                <outlet property="delegate" destination="-2" id="KIN-6W-345"/>
+            </connections>
         </menu>
         <customView id="Fvc-DQ-N2K" userLabel="Drag Songs Here View">
             <rect key="frame" x="0.0" y="0.0" width="128" height="193"/>

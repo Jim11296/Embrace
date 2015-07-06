@@ -61,6 +61,8 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic) NSTimeInterval estimatedEndTime;
 @property (nonatomic) TrackError trackError;
 
+@property (nonatomic) TrackLabel trackLabel;
+
 
 // Metadata
 @property (nonatomic, readonly) NSString *title;
@@ -88,5 +90,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSTimeInterval silenceAtStart;
 @property (nonatomic, readonly) NSTimeInterval silenceAtEnd;
 @property (nonatomic, readonly) BOOL didAnalyzeLoudness;
+
+@property (nonatomic, readonly, getter=isDuplicate) BOOL duplicate;
 
 @end

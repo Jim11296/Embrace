@@ -54,6 +54,8 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (void) saveToFileAtURL:(NSURL *)url;
 - (void) exportToPlaylist;
 
+- (IBAction) changeLabel:(id)sender;
+
 - (IBAction) revealEndTime:(id)sender;
 - (BOOL) canRevealEndTime;
 

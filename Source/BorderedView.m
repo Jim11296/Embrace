@@ -27,25 +27,35 @@
 
     CGFloat onePixel = scale > 1 ? 0.5 : 1;
 
-    void (^fillRect)(NSRect) = ^(NSRect rect) {
-        if (_usesDashes) {
+    void (^fillRect)(NSRect, NSColor *, NSColor *) = ^(NSRect rect, NSColor *lineColor, NSColor *dashBackgroundColor) {
+        if (dashBackgroundColor) {
+            [dashBackgroundColor set];
+            NSRectFill(rect);
+        
+            [lineColor set];
+
             NSRect dashRect = rect;
             dashRect.size.width = 2;
 
             for (CGFloat x = 0; x < rect.size.width; ) {
                 dashRect.origin.x = x;
-                NSRectFill(dashRect);
+
+                if (scale > 1) {
+                    [[NSBezierPath bezierPathWithOvalInRect:dashRect] fill];
+                } else {
+                    NSRectFill(dashRect);
+                }
+
                 x += dashRect.size.width * 2;
             }
 
         } else {
+            [lineColor set];
             NSRectFill(rect);
         }
     };
     
     if (_topBorderColor) {
-        [_topBorderColor set];
-
         CGFloat height = _topBorderHeight;
         if (height <= 0) height = onePixel;
         
@@ -53,12 +63,10 @@
         rect.size.width -= _topBorderLeftInset + _topBorderRightInset;
         rect.origin.x += _topBorderLeftInset;
         
-        fillRect(rect);
+        fillRect(rect, _topBorderColor, _topDashBackgroundColor);
     }
     
     if (_bottomBorderColor) {
-        [_bottomBorderColor set];
-
         CGFloat height = _bottomBorderHeight;
         if (height <= 0) height = onePixel;
 
@@ -66,7 +74,7 @@
         rect.size.width -= _bottomBorderLeftInset + _bottomBorderRightInset;
         rect.origin.x += _bottomBorderLeftInset;
 
-        fillRect(rect);
+        fillRect(rect, _bottomBorderColor, _bottomDashBackgroundColor);
     }
 }
 
@@ -171,12 +179,23 @@
     }
 }
 
-- (void) setUsesDashes:(BOOL)usesDashes
+
+- (void) setTopDashBackgroundColor:(NSColor *)topDashBackgroundColor
 {
-    if (_usesDashes != usesDashes) {
-        _usesDashes = usesDashes;
+    if (_topDashBackgroundColor != topDashBackgroundColor) {
+        _topDashBackgroundColor = topDashBackgroundColor;
         [self setNeedsDisplay:YES];
     }
 }
+
+
+- (void) setBottomDashBackgroundColor:(NSColor *)bottomDashBackgroundColor
+{
+    if (_bottomDashBackgroundColor != bottomDashBackgroundColor) {
+        _bottomDashBackgroundColor = bottomDashBackgroundColor;
+        [self setNeedsDisplay:YES];
+    }
+}
+
 
 @end

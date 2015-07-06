@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="EffectsController">
@@ -14,7 +13,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="EffectsWindow" animationBehavior="default" id="5mm-8W-u52">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -32,10 +31,10 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" id="vHS-gl-QKQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="238" height="62"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="238" height="19"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="16" height="2"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn editable="NO" width="222" minWidth="40" maxWidth="1000" id="129-Cv-tCS">
@@ -98,7 +97,7 @@
                         </connections>
                     </slider>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nyF-6l-NiT">
-                        <rect key="frame" x="22" y="333" width="106" height="17"/>
+                        <rect key="frame" x="10" y="333" width="118" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Match Loudness:" id="Odu-MX-Zha">
                             <font key="font" metaFont="system"/>
@@ -152,15 +151,15 @@
                         </textFieldCell>
                     </textField>
                     <slider verticalHuggingPriority="750" id="9Hj-hm-eOu">
-                        <rect key="frame" x="136" y="147" width="100" height="25"/>
+                        <rect key="frame" x="136" y="147" width="140" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="2" sliderType="linear" id="xTR-a8-3Q5"/>
+                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-1" maxValue="1" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="xTR-a8-3Q5"/>
                         <connections>
                             <binding destination="-2" name="value" keyPath="self.player.stereoLevel" id="4dU-Mf-OBb"/>
                         </connections>
                     </slider>
                     <slider verticalHuggingPriority="750" id="DJR-QE-eBi">
-                        <rect key="frame" x="248" y="147" width="132" height="25"/>
+                        <rect key="frame" x="280" y="147" width="100" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" tickMarkPosition="below" numberOfTickMarks="3" sliderType="linear" id="vOX-CI-E2h"/>
                         <connections>
@@ -178,7 +177,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="bjj-za-hHB">
-                        <rect key="frame" x="136" y="130" width="43" height="14"/>
+                        <rect key="frame" x="185" y="130" width="43" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Mono" id="azC-gW-eCo">
                             <font key="font" metaFont="smallSystem"/>
@@ -187,7 +186,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="EEH-E9-bqz">
-                        <rect key="frame" x="192" y="130" width="44" height="14"/>
+                        <rect key="frame" x="225" y="130" width="44" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Stereo" id="Llz-Fw-ay8">
                             <font key="font" metaFont="smallSystem"/>
@@ -196,7 +195,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="qUT-Mw-fcU">
-                        <rect key="frame" x="249" y="130" width="19" height="14"/>
+                        <rect key="frame" x="281" y="130" width="19" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="L" id="vnj-yw-bBY">
                             <font key="font" metaFont="smallSystem"/>
@@ -302,6 +301,15 @@
                             <binding destination="ljB-2h-dI3" name="enabled" keyPath="selectedObjects.@count" id="woT-dP-TSh"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="S8E-5J-wwM">
+                        <rect key="frame" x="131" y="130" width="51" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Reverse" id="dnF-pK-BrH">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
             <connections>

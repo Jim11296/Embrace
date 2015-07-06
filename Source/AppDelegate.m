@@ -40,9 +40,11 @@
 - (IBAction) saveSetlist:(id)sender;
 - (IBAction) exportSetlist:(id)sender;
 
-- (IBAction) changeViewLayout:(id)sender;
+- (IBAction) changeNumberOfLayoutLines:(id)sender;
+- (IBAction) changeShortensPlayedTracks:(id)sender;
+
 - (IBAction) changeViewAttributes:(id)sender;
-- (IBAction) changeKeySignatureDisplay:(id)sender;
+- (IBAction) changeKeySignatureDisplayMode:(id)sender;
 - (IBAction) revealEndTime:(id)sender;
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;
@@ -450,22 +452,31 @@
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
     } else if (action == @selector(changeViewAttributes:)) {
+        TrackViewAttribute viewAttribute = [menuItem tag];
         BOOL isEnabled = [[Preferences sharedInstance] numberOfLayoutLines] > 1;
+        
+        if (viewAttribute == TrackViewAttributeDuplicateStatus) {
+            isEnabled = YES;
+        }
 
-        BOOL yn = [[Preferences sharedInstance] isViewAttributeSelected:[menuItem tag]];
+        BOOL yn = [[Preferences sharedInstance] isTrackViewAttributeSelected:viewAttribute];
         if (!isEnabled) yn = NO;
 
         [menuItem setState:(yn ? NSOnState : NSOffState)];
         
         return isEnabled;
 
-    } else if (action == @selector(changeKeySignatureDisplay:)) {
+    } else if (action == @selector(changeKeySignatureDisplayMode:)) {
         KeySignatureDisplayMode mode = [[Preferences sharedInstance] keySignatureDisplayMode];
         BOOL yn = mode == [menuItem tag];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
     
-    } else if (action == @selector(changeViewLayout:)) {
+    } else if (action == @selector(changeNumberOfLayoutLines:)) {
         NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
+
+    } else if (action == @selector(changeShortensPlayedTracks:)) {
+        NSInteger yn = [[Preferences sharedInstance] shortensPlayedTracks];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
     } else if (action == @selector(revealEndTime:)) {
@@ -614,10 +625,19 @@
 }
 
 
-- (IBAction) changeViewLayout:(id)sender
+- (IBAction) changeNumberOfLayoutLines:(id)sender
 {
     EmbraceLogMethod();
     [[Preferences sharedInstance] setNumberOfLayoutLines:[sender tag]];
+}
+
+
+- (IBAction) changeShortensPlayedTracks:(id)sender
+{
+    EmbraceLogMethod();
+    
+    Preferences *preferences = [Preferences sharedInstance];
+    [preferences setShortensPlayedTracks:![preferences shortensPlayedTracks]];
 }
 
 
@@ -626,14 +646,14 @@
     EmbraceLogMethod();
 
     Preferences *preferences = [Preferences sharedInstance];
-    ViewAttribute attribute = [sender tag];
+    TrackViewAttribute attribute = [sender tag];
     
-    BOOL yn = [preferences isViewAttributeSelected:attribute];
-    [preferences setViewAttribute:attribute selected:!yn];
+    BOOL yn = [preferences isTrackViewAttributeSelected:attribute];
+    [preferences setTrackViewAttribute:attribute selected:!yn];
 }
 
 
-- (IBAction) changeKeySignatureDisplay:(id)sender
+- (IBAction) changeKeySignatureDisplayMode:(id)sender
 {
     EmbraceLogMethod();
 
