@@ -71,7 +71,7 @@
 
 - (NSImage *) dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
 {
-    return [NSImage imageNamed:@"drag_icon"];
+    return [NSImage imageNamed:@"DragIcon"];
 }
 
 

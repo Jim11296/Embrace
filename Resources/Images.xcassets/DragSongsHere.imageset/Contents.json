@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "button_inactive.png"
+      "filename" : "drag_songs.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "button_inactive@2x.png"
+      "filename" : "drag_songs@2x.png"
     },
     {
       "idiom" : "universal",

@@ -172,6 +172,9 @@
     CGFloat scale = [[self window] backingScaleFactor];
 
     NSData *data = [self _reduceOverviewDataForTrack:_track toCount:size.width * scale];
+    vDSP_Length length = [data length];
+
+    if (length == 0) return;
 
     CGContextSetInterpolationQuality(context, kCGInterpolationLow);
 
@@ -197,7 +200,6 @@
 
     CGContextConcatCTM(context, transform);
 
-    vDSP_Length length = [data length];
     UInt8 *byteSamples  = (UInt8 *)[data bytes];
     float *floatSamples = malloc(length * sizeof(float));
     

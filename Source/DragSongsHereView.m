@@ -17,7 +17,7 @@
 
 - (void) updateLayer
 {
-    [[self layer] setContents:[NSImage imageNamed:@"drag_songs"]];
+    [[self layer] setContents:[NSImage imageNamed:@"DragSongsHere"]];
 }
 
 @end
