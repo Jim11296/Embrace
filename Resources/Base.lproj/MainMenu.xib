@@ -350,6 +350,39 @@ CA
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Help" id="490">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Help" systemMenu="help" id="491">
+                        <items>
+                            <menuItem title="Send Feedback" id="492">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="sendFeedback:" target="494" id="RUA-mJ-gdv"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="h8X-Gz-NjX"/>
+                            <menuItem title="View Website" id="P5t-fr-so8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewWebsite:" target="494" id="XFv-d6-R0O"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View on App Store" id="LCB-EU-dvJ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewOnAppStore:" target="494" id="3Cl-Ra-ISE"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="qkD-3U-L82"/>
+                            <menuItem title="Acknowledgements" id="FJZ-vc-A3o">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openAcknowledgements:" target="494" id="fAI-5v-igA"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
@@ -389,39 +422,6 @@ CA
                             <menuItem title="Bring All to Front" id="5">
                                 <connections>
                                     <action selector="arrangeInFront:" target="-1" id="39"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Help" id="490">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Help" systemMenu="help" id="491">
-                        <items>
-                            <menuItem title="Send Feedback" id="492">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="sendFeedback:" target="494" id="RUA-mJ-gdv"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="h8X-Gz-NjX"/>
-                            <menuItem title="View Website" id="P5t-fr-so8">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="viewWebsite:" target="494" id="XFv-d6-R0O"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="View on App Store" id="LCB-EU-dvJ">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="viewOnAppStore:" target="494" id="3Cl-Ra-ISE"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="qkD-3U-L82"/>
-                            <menuItem title="Acknowledgements" id="FJZ-vc-A3o">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="openAcknowledgements:" target="494" id="fAI-5v-igA"/>
                                 </connections>
                             </menuItem>
                         </items>

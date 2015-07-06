@@ -55,7 +55,7 @@
     _backgroundView = [[NoDropImageView alloc] initWithFrame:[self bounds]];
     [self addSubview:_backgroundView];
     
-    [_backgroundView setImage:[NSImage imageNamed:@"button_normal"]];
+    [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormal"]];
     [_backgroundView setImageScaling:NSImageScaleNone];
     
     _iconView = [[MainIconView alloc] initWithFrame:[self bounds]];
@@ -125,11 +125,11 @@
     [_iconView setTintColor:color];
     
     if (isInactive) {
-        [_backgroundView setImage:[NSImage imageNamed:@"button_inactive"]];
+        [_backgroundView setImage:[NSImage imageNamed:@"ButtonInactive"]];
     } else if (_highlighted) {
-        [_backgroundView setImage:[NSImage imageNamed:@"button_pressed"]];
+        [_backgroundView setImage:[NSImage imageNamed:@"ButtonPressed"]];
     } else {
-        [_backgroundView setImage:[NSImage imageNamed:@"button_normal"]];
+        [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormal"]];
     }
 
     [_backgroundView setHidden:_iconOnly];

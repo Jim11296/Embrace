@@ -227,7 +227,7 @@
                                             <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
                                         </connections>
                                     </slider>
-                                    <textField verticalHuggingPriority="750" alphaValue="0.5" id="27g-A4-whb">
+                                    <textField toolTip="Adjust the silence between tracks." verticalHuggingPriority="750" alphaValue="0.5" id="27g-A4-whb">
                                         <rect key="frame" x="272" y="3" width="42" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="right" title="0:00" id="kXQ-cJ-H9c">
@@ -243,7 +243,7 @@
                                             </binding>
                                         </connections>
                                     </textField>
-                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.5" id="rx0-fs-t7a" customClass="NoDropImageView">
+                                    <imageView toolTip="Adjust the silence between tracks." horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.5" id="rx0-fs-t7a" customClass="NoDropImageView">
                                         <rect key="frame" x="8" y="8" width="15" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="PaddingTemplate" id="k41-UM-ODJ"/>

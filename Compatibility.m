@@ -99,19 +99,9 @@ void EmbraceCompatibilityLookup_(UInt32 unused, ...)
 	Method originalMethod = class_getInstanceMethod(cls, originalSel);
 	Method altMethod      = class_getInstanceMethod(cls, altSel);
 
-    BOOL yn;
-
     if (originalMethod && altMethod) {
-
-        yn = class_addMethod(cls,
-					originalSel,
-					class_getMethodImplementation(cls, originalSel),
-					method_getTypeEncoding(originalMethod));
-
-        yn = class_addMethod(cls,
-					altSel,
-					class_getMethodImplementation(cls, altSel),
-					method_getTypeEncoding(altMethod));
+        class_addMethod(cls, originalSel, class_getMethodImplementation(cls, originalSel), method_getTypeEncoding(originalMethod));
+        class_addMethod(cls, altSel,      class_getMethodImplementation(cls, altSel),      method_getTypeEncoding(altMethod));
 
         method_exchangeImplementations(class_getInstanceMethod(cls, originalSel), class_getInstanceMethod(cls, altSel));
     }

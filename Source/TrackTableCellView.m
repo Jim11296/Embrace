@@ -495,13 +495,11 @@
 
     CGFloat bottomBorderHeight = -1;
     CGFloat topConstraintValue = 0;
-    BOOL usesDashes = NO;
 
     if ([track pausesAfterPlaying] && ([track trackStatus] != TrackStatusPlayed)) {
         bottomBorderColor = [NSColor redColor];
         bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
         bottomBorderHeight = 2;
-        usesDashes = YES;
     }
 
 

@@ -288,20 +288,15 @@ extern Tonality GetTonalityForString(NSString *string)
     
     NSInteger decimal = 0;
     char alpha = 0;
-    char sharpOrFlat = 0;
 
     char c;
     while ((c = *bufferPtr)) {
         if (isnumber(c)) {
             decimal = strtod(bufferPtr, &bufferPtr);
 
-        } else if (c == '#') {
-            sharpOrFlat = '#';
-            bufferPtr++;
-
         } else if (isalpha(c)) {
             if (alpha && (c == 'b')) {
-                sharpOrFlat = c;
+                // This is a flat, but we will map it via arrays below
             } else {
                 alpha = c;
             }
