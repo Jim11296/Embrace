@@ -19,6 +19,7 @@ NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPl
 
 static NSString * const sTypeKey          = @"trackType";
 static NSString * const sStatusKey        = @"trackStatus";
+static NSString * const sLabelKey         = @"trackLabel";
 static NSString * const sTrackErrorKey    = @"trackError";
 
 static NSString * const sBookmarkKey      = @"bookmark";
@@ -321,6 +322,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_comments)       [state setObject:_comments             forKey:sCommentsKey];
     if (_grouping)       [state setObject:_grouping             forKey:sGroupingKey];
     if (_genre)          [state setObject:_genre                forKey:sGenreKey];
+    if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
     if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
     if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
@@ -866,6 +868,16 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         _trackStatus = trackStatus;
         _dirty = YES;
         [self _saveStateImmediately:YES];
+    }
+}
+
+
+- (void) setTrackLabel:(TrackLabel)trackLabel
+{
+    if (_trackLabel != trackLabel) {
+        _trackLabel = trackLabel;
+        _dirty = YES;
+        [self _saveStateImmediately:NO];
     }
 }
 

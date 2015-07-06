@@ -55,6 +55,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     BOOL _didInit;
     NSMutableArray *_tracks;
     NSUInteger _rowOfDraggedTrack;
+    
+    NSTrackingArea *_trackingArea;
 }
 
 
@@ -70,6 +72,13 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 #if DEBUG
     [[self tableView] setDoubleAction:@selector(viewSelectedTrack:)];
 #endif
+
+    NSNib *nib = [[NSNib alloc] initWithNibNamed:@"TrackTableCellView" bundle:nil];
+    [[self tableView] registerNib:nib forIdentifier:@"TrackCell"];
+    
+//
+//    - (instancetype)initWithNibNamed:(NSString *)nibName bundle:(NSBundle *)bundle;
+
     
     [self _loadState];
     [[self tableView] reloadData];
@@ -306,15 +315,31 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 {
     __block CGFloat result = 0;
 
+    const CGFloat kOneLineHeight   = 25;
+    const CGFloat kTwoLineHeight   = 40;
+    const CGFloat kThreeLineHeight = 56;
+    
+
     TrackTrialCheck(^{
-        NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
+        Preferences *preferences = [Preferences sharedInstance];
+        NSInteger numberOfLines = [preferences numberOfLayoutLines];
+        BOOL shortensPlayedTracks = [preferences shortensPlayedTracks];
+        
+        Track *track = [self trackAtIndex:row];
+        if (shortensPlayedTracks && ([track trackStatus] == TrackStatusPlayed)) {
+        
+            if (row != [[self tableView] rowWithMouseInside]) {
+                result = kOneLineHeight;
+                return;
+            }
+        }
         
         if (numberOfLines == 1) {
-            result = 25;
+            result = kOneLineHeight;
         } else if (numberOfLines == 3) {
-            result = 56;
+            result = kThreeLineHeight;
         } else {
-            result = 40;
+            result = kTwoLineHeight;
         }
     });
 
@@ -518,6 +543,19 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
+- (void) trackTableView:(TrackTableView *)tableView didModifyRowWithMouseInside:(NSInteger)row oldRow:(NSInteger)oldRow
+{
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    
+    if (row    != NSNotFound) [indexSet addIndex:row];
+    if (oldRow != NSNotFound) [indexSet addIndex:oldRow];
+    
+    [tableView beginUpdates];
+    [tableView noteHeightOfRowsWithIndexesChanged:indexSet];
+    [tableView endUpdates];
+}
+
+
 #pragma mark - Public
 
 - (void) saveState
@@ -550,6 +588,19 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     TrackTrialCheck(^{
         NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
         result = [self trackAtIndex:[selectedRows firstIndex]];
+    });
+
+    return result;
+}
+
+
+- (NSArray *) selectedTracks
+{
+    __block NSArray *result;
+    
+    TrackTrialCheck(^{
+        NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
+        result = selectedRows ? [_tracks objectsAtIndexes:selectedRows] : nil;
     });
 
     return result;

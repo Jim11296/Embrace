@@ -21,15 +21,17 @@ static NSDictionary *sGetDefaultValues()
     dispatch_once(&onceToken, ^{
 
     sDefaultValues = @{
-        @"numberOfLayoutLines": @2,
+        @"numberOfLayoutLines":  @2,
+        @"shortensPlayedTracks": @YES,
 
-        @"showsArtist":       @YES,
-        @"showsBPM":          @YES,
-        @"showsComments":     @NO,
-        @"showsGrouping":     @NO,
-        @"showsKeySignature": @NO,
-        @"showsEnergyLevel":  @NO,
-        @"showsGenre":        @NO,
+        @"showsArtist":          @YES,
+        @"showsBPM":             @YES,
+        @"showsComments":        @NO,
+        @"showsGrouping":        @NO,
+        @"showsKeySignature":    @NO,
+        @"showsEnergyLevel":     @NO,
+        @"showsGenre":           @NO,
+        @"showsDuplicateStatus": @YES,
 
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
@@ -146,28 +148,31 @@ static void sRegisterDefaults()
 }
 
 
-- (NSString *) _keyForViewAttribute:(ViewAttribute)attribute
+- (NSString *) _keyForTrackViewAttribute:(TrackViewAttribute)attribute
 {
-    if (attribute == ViewAttributeArtist) {
+    if (attribute == TrackViewAttributeArtist) {
         return @"showsArtist";
 
-    } else if (attribute == ViewAttributeBeatsPerMinute) {
+    } else if (attribute == TrackViewAttributeBeatsPerMinute) {
         return @"showsBPM";
         
-    } else if (attribute == ViewAttributeComments) {
+    } else if (attribute == TrackViewAttributeComments) {
         return @"showsComments";
 
-    } else if (attribute == ViewAttributeGrouping) {
+    } else if (attribute == TrackViewAttributeGrouping) {
         return @"showsGrouping";
 
-    } else if (attribute == ViewAttributeKeySignature) {
+    } else if (attribute == TrackViewAttributeKeySignature) {
         return @"showsKeySignature";
     
-    } else if (attribute == ViewAttributeEnergyLevel) {
+    } else if (attribute == TrackViewAttributeEnergyLevel) {
         return @"showsEnergyLevel";
 
-    } else if (attribute == ViewAttributeGenre) {
+    } else if (attribute == TrackViewAttributeGenre) {
         return @"showsGenre";
+
+    } else if (attribute == TrackViewAttributeDuplicateStatus) {
+        return @"showsDuplicateStatus";
     }
     
     return nil;
@@ -228,18 +233,18 @@ static void sRegisterDefaults()
 }
 
 
-- (void) setViewAttribute:(ViewAttribute)attribute selected:(BOOL)selected
+- (void) setTrackViewAttribute:(TrackViewAttribute)attribute selected:(BOOL)selected
 {
-    NSString *key = [self _keyForViewAttribute:attribute];
+    NSString *key = [self _keyForTrackViewAttribute:attribute];
     if (!key) return;
     
     [self setValue:@(selected) forKey:key];
 }
 
 
-- (BOOL) isViewAttributeSelected:(ViewAttribute)attribute
+- (BOOL) isTrackViewAttributeSelected:(TrackViewAttribute)attribute
 {
-    NSString *key = [self _keyForViewAttribute:attribute];
+    NSString *key = [self _keyForTrackViewAttribute:attribute];
     if (!key) return NO;
 
     return [[self valueForKey:key] boolValue];

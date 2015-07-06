@@ -10,7 +10,9 @@
 #import "TrackTableCellView.h"
 
 
-@implementation TrackTableView
+@implementation TrackTableView {
+    NSHashTable *_cellsWithMouseInside;
+}
 
 - (NSMenu *) menuForEvent:(NSEvent *)theEvent
 {
@@ -93,6 +95,35 @@
         [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
     }
 
+}
+
+
+- (void) _trackTableViewCell:(TrackTableCellView *)cellView mouseInside:(BOOL)mouseInside
+{
+    if (!_cellsWithMouseInside) {
+        _cellsWithMouseInside = [NSHashTable weakObjectsHashTable];
+    }
+
+    if (mouseInside) {
+        [_cellsWithMouseInside addObject:cellView];
+    } else {
+        [_cellsWithMouseInside removeObject:cellView];
+    }
+    
+    NSInteger rowWithMouseInside = _rowWithMouseInside;
+    NSInteger count = [_cellsWithMouseInside count];
+
+    if (count == 1) {
+        rowWithMouseInside = [self rowForView:[_cellsWithMouseInside anyObject]];
+    } else if (count == 0) {
+        rowWithMouseInside = NSNotFound;
+    }
+
+    if (_rowWithMouseInside != rowWithMouseInside) {
+        NSInteger oldRow = _rowWithMouseInside;
+        _rowWithMouseInside = rowWithMouseInside;
+        [_delegate trackTableView:self didModifyRowWithMouseInside:rowWithMouseInside oldRow:oldRow];
+    }
 }
 
 

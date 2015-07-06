@@ -11,13 +11,20 @@
 #import "BorderedView.h"
 #import "Button.h"
 #import "AppDelegate.h"
+#import "NoDropImageView.h"
 #import "Preferences.h"
+#import "TrackTableView.h"
+#import "StripeView.h"
 
 #define SLOW_ANIMATIONS 0
 
 @interface TrackTableCellView () <ApplicationEventListener>
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderedViewTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *titleDurationConstraint;
+
 @property (nonatomic, weak) IBOutlet BorderedView *borderedView;
+@property (nonatomic, weak) IBOutlet StripeView   *stripeView;
 
 @property (nonatomic, weak) IBOutlet NSTextField *titleField;
 @property (nonatomic, weak) IBOutlet NSTextField *durationField;
@@ -29,31 +36,36 @@
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
 
 @property (nonatomic, weak) IBOutlet NSImageView *speakerImageView;
+@property (nonatomic, weak) IBOutlet Button *errorButton;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerLeftConstraint;
 
 @end
 
 
+@interface TrackTableView (Private)
+- (void) _trackTableViewCell:(TrackTableCellView *)cellView mouseInside:(BOOL)mouseInside;
+@end
+
+
 @implementation TrackTableCellView {
-    NSArray *_observedKeyPaths;
-    id       _observedObject;
+    NSArray        *_observedKeyPaths;
+    id              _observedObject;
 
-    CGFloat  _line1LeftFittedWidth;
-    CGFloat  _line1RightFittedWidth;
-    CGFloat  _line2LeftFittedWidth;
-    CGFloat  _line2RightFittedWidth;
-    CGFloat  _line3LeftFittedWidth;
-    CGFloat  _line3RightFittedWidth;
-    CGFloat  _endTimeFittedWidth;
-    CGFloat  _errorWidth;
-
-    Button      *_errorButton;
-    NSTextField *_endTimeField;
-    BOOL         _endTimeVisible;
+    NSTextField    *_endTimeField;
+    BOOL            _showsEndTime;
     
+    NSArray        *_errorButtonConstraints;
+    NSArray        *_endTimeConstraints;
+
+    NoDropImageView *_duplicateImageView;
+    NSArray         *_duplicateConstraints;
+
     NSTrackingArea *_trackingArea;
     BOOL            _mouseInside;
     BOOL            _endTimeRequested;
+    BOOL            _animatesSpeakerImage;
+    BOOL            _animatesEndTime;
 }
 
 
@@ -98,20 +110,37 @@
     _mouseInside = NO;
 }
 
+
+- (TrackTableView *) _tableView
+{
+    NSView *view = [self superview];
+    
+    while (view) {
+        if ([view isKindOfClass:[TrackTableView class]]) {
+            return (TrackTableView *)view;
+        }
+
+        view = [view superview];
+    }
+    
+    return nil;
+}
+
+
 - (void) _setupTrackTableCellView
 {
     [(Application *)NSApp registerEventListener:self];
 
-    _endTimeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
+   
+    NSTrackingAreaOptions options = NSTrackingInVisibleRect | NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways;
+    _trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:options owner:self userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
 
-    [_endTimeField setBezeled:NO];
-    [_endTimeField setDrawsBackground:NO];
-    [_endTimeField setSelectable:NO];
-    [_endTimeField setEditable:NO];
-    [_endTimeField setAlignment:NSRightTextAlignment];
-    [_endTimeField setAlphaValue:0];
 
-    _errorButton = [[Button alloc] initWithFrame:NSMakeRect(0, 0, 16, 16)];
+- (void) awakeFromNib
+{
+    [_endTimeField setFont:[[self lineTwoLeftField] font]];
 
     [_errorButton setImage:[NSImage imageNamed:@"TrackErrorTemplate"]];
     [_errorButton setIconOnly:YES];
@@ -121,22 +150,80 @@
     [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
     [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
     [_errorButton setInactiveColor:[self _bottomTextColor]];
-
     [_errorButton setAlert:YES];
+
+    _endTimeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
+
+    [_endTimeField setBezeled:NO];
+    [_endTimeField setDrawsBackground:NO];
+    [_endTimeField setSelectable:NO];
+    [_endTimeField setEditable:NO];
+    [_endTimeField setAlignment:NSRightTextAlignment];
+    [_endTimeField setAlphaValue:0];
+    [_endTimeField setContentHuggingPriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_endTimeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_endTimeField setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_endTimeField setDrawsBackground:YES];
+
+#if 0
+    [_titleField setBackgroundColor:[NSColor yellowColor]];
+    [_titleField setDrawsBackground:YES];
+    [_lineThreeLeftField setBackgroundColor:[NSColor yellowColor]];
+    [_lineThreeLeftField setDrawsBackground:YES];
+    [_lineTwoLeftField setBackgroundColor:[NSColor yellowColor]];
+    [_lineTwoLeftField setDrawsBackground:YES];
+    [_lineThreeRightField setBackgroundColor:[NSColor yellowColor]];
+    [_lineThreeRightField setDrawsBackground:YES];
+    [_lineTwoRightField setBackgroundColor:[NSColor yellowColor]];
+    [_lineTwoRightField setDrawsBackground:YES];
+#endif
+
+    _errorButtonConstraints = @[
+        [NSLayoutConstraint constraintWithItem:_titleField         attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_lineTwoLeftField   attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_lineThreeLeftField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0]
+    ];
     
-    NSTrackingAreaOptions options = NSTrackingInVisibleRect | NSTrackingMouseEnteredAndExited | NSTrackingActiveAlways;
-    _trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:options owner:self userInfo:nil];
-    [self addTrackingArea:_trackingArea];
+    [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
+
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [context setDuration:0];
+        [self _updateView];
+    } completionHandler:nil];
 }
 
 
-- (void) awakeFromNib
+- (void) _adjustConstraintsForLineLayout
 {
-    [[[self lineTwoLeftField] superview] addSubview:_endTimeField];
+    if (_endTimeConstraints) {
+        [NSLayoutConstraint deactivateConstraints:_endTimeConstraints];
+        _endTimeConstraints = nil;
+    }
+    
+    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
 
-    [_endTimeField setFont:[[self lineTwoLeftField] font]];
+    NSTextField *targetField = nil;
 
-    [self _updateAllAnimated:NO];
+    if (numberOfLines == 1) {
+        targetField = [self durationField];
+    } else if (numberOfLines == 2) {
+        targetField = [self lineTwoRightField];
+    } else if (numberOfLines == 3) {
+        targetField = [self lineThreeRightField];
+    }
+
+    NSTextField *oldTargetField = [[_endTimeConstraints lastObject] secondItem];
+
+    if (targetField && (targetField != oldTargetField)) {
+        _endTimeConstraints = @[
+            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeLeading  relatedBy:NSLayoutRelationEqual toItem:targetField attribute:NSLayoutAttributeLeading  multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0]
+        ];
+        
+        [[targetField superview] addSubview:_endTimeField positioned:NSWindowAbove relativeTo:targetField];
+        [NSLayoutConstraint activateConstraints:_endTimeConstraints];
+    }
 }
 
 
@@ -144,7 +231,11 @@
 {
     [super mouseEntered:theEvent];
     _mouseInside = YES;
+
     [self _updateEndTimeVisibilityAnimated:NO];
+    [self _updateView];
+    
+    [[self _tableView] _trackTableViewCell:self mouseInside:YES];
 }
 
 
@@ -152,7 +243,11 @@
 {
     [super mouseExited:theEvent];
     _mouseInside = NO;
+
     [self _updateEndTimeVisibilityAnimated:NO];
+    [self _updateView];
+
+    [[self _tableView] _trackTableViewCell:self mouseInside:NO];
 }
 
 
@@ -172,7 +267,7 @@
 {
     if (object == _observedObject) {
         if ([_observedKeyPaths containsObject:keyPath]) {
-            [self _updateAllAnimated:[keyPath isEqualToString:@"trackStatus"]];
+            [self _updateView];
         }
     }
 }
@@ -196,7 +291,9 @@
         @"grouping",
         @"beatsPerMinute",
         @"trackStatus",
-        @"trackError"
+        @"trackError",
+        @"trackLabel",
+        @"duplicate"
     ];
     
     _observedObject = objectValue;
@@ -205,14 +302,7 @@
         [_observedObject addObserver:self forKeyPath:keyPath options:0 context:NULL];
     }
 
-    [self _updateAllAnimated:NO];
-}
-
-
-- (void) layout
-{
-    [super layout];
-    [self _updateFieldsAnimated:NO];
+    [self _updateView];
 }
 
 
@@ -263,7 +353,7 @@
     if (trackStatus == TrackStatusPlaying) {
         return GetRGBColor(_selected ? 0x0 : 0x1866e9, 1.0);
     } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.4);
+        return GetRGBColor(0x000000, 0.5);
     }
     
     return [NSColor blackColor];
@@ -281,7 +371,7 @@
     if (trackStatus == TrackStatusPlaying) {
         return GetRGBColor(_selected ? 0x0 : 0x1866e9, 0.8);
     } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.33);
+        return GetRGBColor(0x000000, 0.4);
     }
     
     return GetRGBColor(0x000000, 0.66);
@@ -309,112 +399,168 @@
     
     BOOL isCommandKeyDown = (modifierFlags == NSAlternateKeyMask);
     
-    BOOL endTimeVisible = ((isCommandKeyDown && _mouseInside) || _endTimeRequested);
+    BOOL showsEndTime = ((isCommandKeyDown && _mouseInside) || _endTimeRequested);
 
     if ([[self track] trackStatus] == TrackStatusPlayed) {
-        endTimeVisible = NO;
+        showsEndTime = NO;
     }
 
-    if (_endTimeVisible != endTimeVisible) {
-        _endTimeVisible = endTimeVisible;
-
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-    #if SLOW_ANIMATIONS
-            [context setDuration:1];
-    #endif
-
-            [self _updateFieldsAnimated:animated];
-        } completionHandler:NULL];
+    if (_showsEndTime != showsEndTime) {
+        _showsEndTime = showsEndTime;
+        _animatesEndTime = animated;
+        [self _updateView];
     }
 }
 
 
 #pragma mark - Update
 
-- (void) _updateAllAnimated:(BOOL)animated
+- (void) _updateView
 {
-    [self _updateBorderedView];
+    Track      *track       = [self track];
+    TrackStatus trackStatus = [track trackStatus];
+    BOOL        isPlaying   = (trackStatus == TrackStatusPlaying);
+
+    [self _updateStripeAndBorderedView];
     [self _updateSpeakerImage];
-    [self _updateFieldsAnimated:animated];
-    [self _updateErrorButton];
 
-    NSColor *topTextColor    = [self _topTextColor];
-    NSColor *bottomTextColor = [self _bottomTextColor];
+    if ([self track]) {
+        [self _updateFieldStrings];
+        [self _updateFieldHidden];
+        [self _updateFieldColors];
+        [self _updateFieldAlphas];
+        [self _updateDuplicateIcon];
+    }
 
-    [[self titleField]    setTextColor:topTextColor];
-    [[self durationField] setTextColor:topTextColor];
+    [self _adjustConstraintsForLineLayout];
 
-    [[self lineTwoLeftField]    setTextColor:bottomTextColor];
-    [[self lineTwoRightField]   setTextColor:bottomTextColor];
-    [[self lineThreeLeftField]  setTextColor:bottomTextColor];
-    [[self lineThreeRightField] setTextColor:bottomTextColor];
+    // Update constraints
+    if ([track trackError] != TrackErrorNone) {
+        [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
+    } else {
+        [NSLayoutConstraint deactivateConstraints:_errorButtonConstraints];
+    }
 
-    [_endTimeField setFont:[[self lineTwoLeftField] font]];
-    [_endTimeField setTextColor:bottomTextColor];
+    if (_animatesSpeakerImage) {
+        [[_speakerLeftConstraint animator] setConstant:(  isPlaying ? 4.0 : -18.0)];
+        [[_speakerImageView      animator] setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+
+    } else {
+        [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
+        [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+    }
 }
 
-
-- (void) _updateSpeakerImage
+- (void) _updateDuplicateIcon
 {
-    TrackStatus trackStatus = [[self track] trackStatus];
-
-    if ([[self window] isMainWindow] && _selected)  {
-        [[self speakerImageView] setImage:[NSImage imageNamed:@"white_speaker"]];
-        return;
-    }
-
-    if (trackStatus == TrackStatusPlaying) {
-        if (_selected) {
-            [[self speakerImageView] setImage:[NSImage imageNamed:@"black_speaker"]];
-        } else {
-            [[self speakerImageView] setImage:[NSImage imageNamed:@"blue_speaker"]];
-        }
-
-        return;
-    }
+    BOOL showsDuplicateIcon = [[Preferences sharedInstance] showsDuplicateStatus] && [[self track] isDuplicate];
+    CGFloat constant = 8;
     
-    [[self speakerImageView] setImage:[NSImage imageNamed:@"black_speaker"]];
+    if (showsDuplicateIcon && !_duplicateImageView) {
+        _duplicateImageView = [[NoDropImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+        [_duplicateImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [_duplicateImageView setImage:[NSImage imageNamed:@"DuplicateTemplate"]];
+        [[_durationField superview] addSubview:_duplicateImageView];
+        
+        _duplicateConstraints = @[
+            [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0],
+            [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0]
+        ];
+
+        [NSLayoutConstraint activateConstraints:_duplicateConstraints];
+
+        constant = 18;
+
+    } else if (!showsDuplicateIcon && _duplicateImageView) {
+        [_duplicateImageView removeFromSuperview];
+        _duplicateImageView = nil;
+        
+        [NSLayoutConstraint deactivateConstraints:_duplicateConstraints];
+        _duplicateConstraints = nil;
+    }
+
+    [_titleDurationConstraint setConstant:constant];
 }
 
 
-- (void) _updateBorderedView
+- (void) _updateStripeAndBorderedView
 {
     Track *track = [self track];
     if (!track) return;
 
     BorderedView *borderedView = [self borderedView];
 
-    NSColor *bottomBorderColor = [NSColor colorWithCalibratedWhite:(0xE8 / 255.0) alpha:1.0];
+    NSColor *bottomBorderColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.1];
+    NSColor *bottomDashBackgroundColor = nil;
+
     CGFloat bottomBorderHeight = -1;
+    CGFloat topConstraintValue = 0;
     BOOL usesDashes = NO;
 
     if ([track pausesAfterPlaying] && ([track trackStatus] != TrackStatusPlayed)) {
         bottomBorderColor = [NSColor redColor];
+        bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
         bottomBorderHeight = 2;
         usesDashes = YES;
     }
 
+
     [borderedView setBottomBorderColor:bottomBorderColor];
     [borderedView setBottomBorderHeight:bottomBorderHeight];
-    [borderedView setUsesDashes:usesDashes];
+    [borderedView setBottomDashBackgroundColor:bottomDashBackgroundColor];
+
+    TrackLabel trackLabel = [track trackLabel];
+    [[self stripeView] setFillColor:GetFillColorForTrackLabel(trackLabel)];
+    [[self stripeView] setBorderColor:GetBorderColorForTrackLabel(trackLabel)];
 
     if (_selected) {
         if ([[self window] isMainWindow]) {
             [borderedView setBackgroundColor:GetActiveHighlightColor()];
+            topConstraintValue = -2;
         } else {
             [borderedView setBackgroundColor:GetInactiveHighlightColor()];
         }
     } else {
-        [borderedView setBackgroundColor:nil];
+        [borderedView setBackgroundColor:[NSColor whiteColor]];
     }
+    
+   
+    [_endTimeField setBackgroundColor:[borderedView backgroundColor]];
 
     if (_drawsInsertionPointWorkaround) {
         [borderedView setTopBorderColor:GetActiveHighlightColor()];
         [borderedView setTopBorderHeight:3];
+        topConstraintValue = 0;
+
     } else {
         [borderedView setTopBorderColor:nil];
         [borderedView setTopBorderHeight:0];
     }
+
+    [_borderedViewTopConstraint setConstant:topConstraintValue];
+}
+
+
+- (void) _updateSpeakerImage
+{
+    BOOL isPlaying   = ([[self track] trackStatus] == TrackStatusPlaying);
+
+    if ([[self window] isMainWindow] && _selected)  {
+        [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerWhite"]];
+        return;
+    }
+
+    if (isPlaying) {
+        if (_selected) {
+            [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerBlack"]];
+        } else {
+            [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerBlue"]];
+        }
+
+        return;
+    }
+    
+    [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerBlack"]];
 }
 
 
@@ -515,17 +661,10 @@
 
     NSString *joiner = NSLocalizedString(@" \\U2013 ", nil);
     
-    NSString *left2String = [left2  componentsJoinedByString:joiner];
-    [[self lineTwoLeftField] setStringValue:left2String];
-
-    NSString *right2String = [right2 componentsJoinedByString:joiner];
-    [[self lineTwoRightField] setStringValue:right2String];
-
-    NSString *left3String = [left3 componentsJoinedByString:joiner];
-    [[self lineThreeLeftField]  setStringValue:left3String];
-
-    NSString *right3String = [right3 componentsJoinedByString:joiner];
-    [[self lineThreeRightField] setStringValue:right3String];
+    [[self lineTwoLeftField]    setStringValue:[left2  componentsJoinedByString:joiner]];
+    [[self lineTwoRightField]   setStringValue:[right2 componentsJoinedByString:joiner]];
+    [[self lineThreeLeftField]  setStringValue:[left3  componentsJoinedByString:joiner]];
+    [[self lineThreeRightField] setStringValue:[right3 componentsJoinedByString:joiner]];
 
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterNoStyle];
@@ -535,16 +674,9 @@
     NSString *endTimeString = [formatter stringFromDate:endTime];
 
     [_endTimeField setStringValue:endTimeString];
-
-    CGFloat (^getFittedWidth)(NSTextField *) = ^(NSTextField *field) {
-        NSRect frame = [field frame];
-        [field sizeToFit];
-        CGFloat result = [field frame].size.width;
-        [field setFrame:frame];
-        
-        return result;
-    };
-
+    [_endTimeField setFont:[[self lineTwoLeftField] font]];
+    [_endTimeField setTextColor:[self _bottomTextColor]];
+    
     NSString *titleString = [track title];
     if (!titleString) titleString = @"";
     [[self titleField] setStringValue:titleString];
@@ -552,56 +684,6 @@
     NSString *durationString = GetStringForTime(round([track playDuration]));
     if (!durationString) durationString = @"";
     [[self durationField] setStringValue:durationString];
-
-    if ([titleString length]) {
-        _line1LeftFittedWidth = getFittedWidth([self titleField]);
-    } else {
-        _line1LeftFittedWidth = 0;
-    }
-
-    if ([durationString length]) {
-        _line1RightFittedWidth = getFittedWidth([self durationField]);
-    } else {
-        _line1RightFittedWidth = 0;
-    }
-    
-    if ([left2String length]) {
-        _line2LeftFittedWidth = getFittedWidth([self lineTwoLeftField]);
-    } else {
-        _line2LeftFittedWidth = 0;
-    }
-
-    if ([right2String length]) {
-        _line2RightFittedWidth = getFittedWidth([self lineTwoRightField]);
-    } else {
-        _line2RightFittedWidth = 0;
-    }
-
-    if ([left3String length]) {
-        _line3LeftFittedWidth = getFittedWidth([self lineThreeLeftField]);
-    } else {
-        _line3LeftFittedWidth = 0;
-    }
-
-    if ([right3String length]) {
-        _line3RightFittedWidth = getFittedWidth([self lineThreeRightField]);
-    } else {
-        _line3RightFittedWidth = 0;
-    }
-    
-    if ([endTimeString length]) {
-        _endTimeFittedWidth = getFittedWidth(_endTimeField);
-    } else {
-        _endTimeFittedWidth = 0;
-    }
-
-    TrackError trackError = [[self track] trackError];
-
-    if (trackError) {
-        _line1RightFittedWidth = 24;
-        _line2RightFittedWidth = 24;
-        _line3RightFittedWidth = 24;
-    }
 }
 
 
@@ -609,194 +691,73 @@
 {
     NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
 
-    NSTextField *line1Right = [self durationField];
-    NSTextField *line2Left  = [self lineTwoLeftField];
-    NSTextField *line2Right = [self lineTwoRightField];
-    NSTextField *line3Left  = [self lineThreeLeftField];
-    NSTextField *line3Right = [self lineThreeRightField];
+    NSTextField *line1Right  = [self durationField];
+    NSTextField *line2Left   = [self lineTwoLeftField];
+    NSTextField *line2Right  = [self lineTwoRightField];
+    NSTextField *line3Left   = [self lineThreeLeftField];
+    NSTextField *line3Right  = [self lineThreeRightField];
+    Button      *errorButton = [self errorButton];
 
     BOOL showError = [[self track] trackError] != TrackErrorNone;
 
-    [line2Left  setHidden:(numberOfLines < 2)];
-    [line3Left  setHidden:(numberOfLines < 3)];
-
-    [line1Right setHidden:showError];
-    [line2Right setHidden:showError || (numberOfLines < 2)];
-    [line3Right setHidden:showError || (numberOfLines < 3)];
+    [line1Right  setHidden:showError];
+    [line2Left   setHidden:(numberOfLines < 2)];
+    [line2Right  setHidden:showError || (numberOfLines < 2)];
+    [line3Left   setHidden:(numberOfLines < 3)];
+    [line3Right  setHidden:showError || (numberOfLines < 3)];
+    [errorButton setHidden:!showError];
 }
 
 
-- (void) _updateFieldFramesAnimated:(BOOL)animated
+- (void) _updateFieldColors
 {
-    Track *track = [self track];
-    if (!track) return;
+    NSColor *topTextColor    = [self _topTextColor];
+    NSColor *bottomTextColor = [self _bottomTextColor];
 
-    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
+    [[self titleField]    setTextColor:topTextColor];
+    [[self durationField] setTextColor:topTextColor];
 
-    NSTextField *line1Left  = [self titleField];
-    NSTextField *line1Right = [self durationField];
-    NSTextField *line2Left  = [self lineTwoLeftField];
-    NSTextField *line2Right = [self lineTwoRightField];
-    NSTextField *line3Left  = [self lineThreeLeftField];
-    NSTextField *line3Right = [self lineThreeRightField];
+    [[self lineTwoLeftField]    setTextColor:bottomTextColor];
+    [[self lineTwoRightField]   setTextColor:bottomTextColor];
+    [[self lineThreeLeftField]  setTextColor:bottomTextColor];
+    [[self lineThreeRightField] setTextColor:bottomTextColor];
+}
 
-    NSImageView *speakerImageView = [self speakerImageView];
 
-    NSRect superBounds = [[line2Left superview] bounds];
+- (void) _updateFieldAlphas
+{
+    BOOL shortensPlayedTracks = [[Preferences sharedInstance] shortensPlayedTracks];
+    BOOL isPlayedTrack        = [[self track] trackStatus] == TrackStatusPlayed;
+    
+    CGFloat line2LeftAlpha  = 1.0;
+    CGFloat line2RightAlpha = 1.0;
+    CGFloat line3LeftAlpha  = 1.0;
+    CGFloat line3RightAlpha = 1.0;
+    CGFloat endTimeAlpha    = 0.0;
 
-    CGFloat textLeftX = 6;
+    if (shortensPlayedTracks && isPlayedTrack) {
+        line2LeftAlpha  = _mouseInside ? 1.0 : 0.0;
+        line2RightAlpha = _mouseInside ? 1.0 : 0.0;
+        line3LeftAlpha  = _mouseInside ? 1.0 : 0.0;
+        line3RightAlpha = _mouseInside ? 1.0 : 0.0;
 
-    BOOL isPlaying = [[self track] trackStatus] == TrackStatusPlaying;
-    if (isPlaying) {
-        textLeftX += 24;
+        [[[self lineTwoLeftField]    animator] setAlphaValue:line2LeftAlpha];
+        [[[self lineThreeLeftField]  animator] setAlphaValue:line3LeftAlpha];
+        [[[self lineTwoRightField]   animator] setAlphaValue:line2RightAlpha];
+        [[[self lineThreeRightField] animator] setAlphaValue:line3RightAlpha];
     }
 
-    NSRect speakerFrame = NSZeroRect;
-    speakerFrame.size = [[speakerImageView image] size];
-    speakerFrame.origin.y = round((superBounds.size.height - speakerFrame.size.height) / 2);
-    speakerFrame.origin.x = isPlaying ? 8 : -speakerFrame.size.width;
+    endTimeAlpha = _showsEndTime ? 1.0 : 0.0;
     
-    if (animated) {
-        [[speakerImageView animator] setFrame:speakerFrame];
-        [[speakerImageView animator] setAlphaValue:(isPlaying ? 1.0 : 0.0)];
+    if (_animatesEndTime) {
+        [[_endTimeField animator] setAlphaValue:endTimeAlpha];
     } else {
-        [speakerImageView setFrame:speakerFrame];
-        [speakerImageView setAlphaValue:(isPlaying ? 1.0 : 0.0)];
+        [_endTimeField setAlphaValue:endTimeAlpha];
     }
 
-    void (^layoutLine)(NSTextField *, NSTextField *, CGFloat, CGFloat, NSInteger) = ^(NSTextField *left, NSTextField *right, CGFloat leftFittedWidth, CGFloat rightFittedWidth, NSInteger lineNumber) {
-        CGRect leftFrame  = [left  frame];
-        CGRect rightFrame = [right frame];
-        CGRect endFrame   = [_endTimeField frame];
-
-        BOOL lastLine = (lineNumber == numberOfLines);
-
-        CGFloat maxWidth = superBounds.size.width - (textLeftX + 6);
-
-        leftFrame.origin.x  =
-        rightFrame.origin.x =
-        endFrame.origin.x   =
-            textLeftX;
-
-        leftFrame.size.width  =
-        rightFrame.size.width =
-        endFrame.size.width   =
-            maxWidth;
-        
-        endFrame.size.width = _endTimeFittedWidth;
-        endFrame.origin.x += maxWidth - _endTimeFittedWidth;
-        endFrame.origin.y = rightFrame.origin.y;
-        endFrame.size.height = rightFrame.size.height;
-
-        if (lastLine && (numberOfLines == 1)) {
-            endFrame.origin.y -= 3.0;
-        }
-
-        if (rightFittedWidth > maxWidth) {
-            rightFittedWidth = maxWidth;
-        }
-
-        rightFrame.size.width = rightFittedWidth;
-        rightFrame.origin.x += maxWidth - rightFittedWidth;
-
-        leftFrame.size.width -= ((lastLine && _endTimeVisible) ? _endTimeFittedWidth : rightFittedWidth);
-        if (leftFrame.size.width < 0) {
-            leftFrame.size.width = 0;
-        }
-
-        if (animated) {
-            [[left  animator] setFrame:leftFrame];
-            [[right animator] setFrame:rightFrame];
-
-            if (lastLine) [[_endTimeField animator] setFrame:endFrame];
-
-        } else {
-            [left  setFrame:leftFrame];
-            [right setFrame:rightFrame];
-
-            if (lastLine) [_endTimeField setFrame:endFrame];
-        }
-    };
-    
-    if (numberOfLines < 2) {
-        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
-    
-    } else if (numberOfLines == 2) {
-        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
-        layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 2);
-    
-    } else if (numberOfLines == 3) {
-        layoutLine(line1Left, line1Right, _line1LeftFittedWidth, _line1RightFittedWidth, 1);
-        layoutLine(line2Left, line2Right, _line2LeftFittedWidth, _line2RightFittedWidth, 2);
-        layoutLine(line3Left, line3Right, _line3LeftFittedWidth, _line3RightFittedWidth, 3);
-    }
+    [_endTimeField setContentCompressionResistancePriority:(_showsEndTime ? (NSLayoutPriorityDefaultHigh + 1) : 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
 }
 
-
-- (void) _updateFieldAlphasAnimated:(BOOL)animated
-{
-    NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
-
-    NSTextField *line1Right = [self durationField];
-    NSTextField *line2Right = [self lineTwoRightField];
-    NSTextField *line3Right = [self lineThreeRightField];
-
-    CGFloat line1Alpha = 1.0;
-    CGFloat line2Alpha = 2.0;
-    CGFloat line3Alpha = 3.0;
-
-    if (numberOfLines == 1) {
-        line1Alpha = (_endTimeVisible ? 0.0 : 1.0);
-    } else if (numberOfLines == 2) {
-        line2Alpha = (_endTimeVisible ? 0.0 : 1.0);
-    } else if (numberOfLines == 3) {
-        line3Alpha = (_endTimeVisible ? 0.0 : 1.0);
-    }
-    
-    if (animated) {
-        [[line1Right animator] setAlphaValue:line1Alpha];
-        [[line2Right animator] setAlphaValue:line2Alpha];
-        [[line3Right animator] setAlphaValue:line3Alpha];
-
-        [[_endTimeField animator] setAlphaValue:(_endTimeVisible ? 1.0 : 0)];
-
-    } else {
-        [line1Right setAlphaValue:line1Alpha];
-        [line2Right setAlphaValue:line2Alpha];
-        [line3Right setAlphaValue:line3Alpha];
-
-        [_endTimeField setAlphaValue:(_endTimeVisible ? 1.0 : 0)];
-    }
-}
-
-
-- (void) _updateFieldsAnimated:(BOOL)animated
-{
-    Track *track = [self track];
-    if (!track) return;
-    
-    [self _updateFieldStrings];
-    [self _updateFieldHidden];
-    [self _updateFieldFramesAnimated:animated];
-    [self _updateFieldAlphasAnimated:animated];
-}
-
-
-- (void) _updateErrorButton
-{
-    TrackError trackError = [[self track] trackError];
-    
-    if (trackError) {
-        NSSize boundsSize = [self bounds].size;
-        NSRect errorFrame = NSMakeRect(boundsSize.width - 24, round((boundsSize.height - 16) / 2), 16, 16);
-        
-        [_errorButton setFrame:errorFrame];
-        [self addSubview:_errorButton];
-
-    } else if (!trackError) {
-        [_errorButton removeFromSuperview];
-    }
-}
 
 
 #pragma mark - Public Methods
@@ -816,7 +777,7 @@
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
-    [self _updateAllAnimated:NO];
+    [self _updateView];
 }
 
 
@@ -824,7 +785,7 @@
 {
     if (_drawsInsertionPointWorkaround != drawsInsertionPointWorkaround) {
         _drawsInsertionPointWorkaround = drawsInsertionPointWorkaround;
-        [self _updateAllAnimated:NO];
+        [self _updateView];
     }
 }
 
@@ -833,7 +794,7 @@
 {
     if (_selected != selected) {
         _selected = selected;
-        [self _updateAllAnimated:NO];
+        [self _updateView];
     }
 }
 

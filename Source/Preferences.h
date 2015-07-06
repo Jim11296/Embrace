@@ -17,15 +17,16 @@ typedef NS_ENUM(NSInteger, KeySignatureDisplayMode) {
 };
 
 
-typedef NS_ENUM(NSInteger, ViewAttribute) {
-    ViewAttributeArtist,
-    ViewAttributeBeatsPerMinute,
-    ViewAttributeComments,
-    ViewAttributeGrouping,
-    ViewAttributeKeySignature,
-    ViewAttributeRawKeySignature,
-    ViewAttributeEnergyLevel,
-    ViewAttributeGenre
+typedef NS_ENUM(NSInteger, TrackViewAttribute) {
+    TrackViewAttributeArtist          = 0,
+    TrackViewAttributeBeatsPerMinute  = 1,
+    TrackViewAttributeComments        = 2,
+    TrackViewAttributeGrouping        = 3,
+    TrackViewAttributeKeySignature    = 4,
+    TrackViewAttributeRawKeySignature = 5,
+    TrackViewAttributeEnergyLevel     = 6,
+    TrackViewAttributeGenre           = 7,
+    TrackViewAttributeDuplicateStatus = 8
 };
 
 extern NSString * const PreferencesDidChangeNotification;
@@ -36,17 +37,19 @@ extern NSString * const PreferencesDidChangeNotification;
 + (id) sharedInstance;
 
 @property (nonatomic) NSInteger numberOfLayoutLines;
+@property (nonatomic) BOOL shortensPlayedTracks;
 
-- (void) setViewAttribute:(ViewAttribute)attribute selected:(BOOL)selected;
-- (BOOL) isViewAttributeSelected:(ViewAttribute)attribute;
+- (void) setTrackViewAttribute:(TrackViewAttribute)attribute selected:(BOOL)selected;
+- (BOOL) isTrackViewAttributeSelected:(TrackViewAttribute)attribute;
 
 @property (nonatomic) BOOL showsArtist;
 @property (nonatomic) BOOL showsBPM;
 @property (nonatomic) BOOL showsComments;
+@property (nonatomic) BOOL showsDuplicateStatus;
+@property (nonatomic) BOOL showsGenre;
 @property (nonatomic) BOOL showsGrouping;
 @property (nonatomic) BOOL showsKeySignature;
 @property (nonatomic) BOOL showsEnergyLevel;
-@property (nonatomic) BOOL showsGenre;
 
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 
