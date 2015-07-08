@@ -18,5 +18,8 @@
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 
 @property (nonatomic, assign) BOOL drawsInsertionPointWorkaround;
+@property (nonatomic, assign) BOOL drawsLighterSelectedBackground;
+
+@property (nonatomic, assign, getter=isExpandedPlayedTrack) BOOL expandedPlayedTrack;
 
 @end

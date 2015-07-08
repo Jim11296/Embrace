@@ -251,10 +251,25 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 }
 
 
-- (void)setValue:(id)value forUndefinedKey:(NSString *)key
+- (void) setValue:(id)value forUndefinedKey:(NSString *)key
 {
     EmbraceLog(@"Track", @"-setValue:forUndefinedKey: %@", key);
     NSLog(@"-[Track setValue:forUndefinedKey:], key: %@", key);
+}
+
+
+- (Track *) duplicatedTrack
+{
+    NSUUID *UUID = [NSUUID UUID];
+
+    NSMutableDictionary *state = [NSMutableDictionary dictionary];
+    [self _writeStateToDictionary:state];
+
+    NSData *bookmark = [state objectForKey:sBookmarkKey];
+
+    Track *result = [[[self class] alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
+    result->_dirty = YES;
+    return result;
 }
 
 
@@ -305,11 +320,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     }
 }
 
-
-- (void) _reallySaveState
+- (void) _writeStateToDictionary:(NSMutableDictionary *)state
 {
-    NSMutableDictionary *state = [NSMutableDictionary dictionary];
-
     // Never save the state until we have a bookmark
     if (!_bookmark) return;
 
@@ -340,6 +352,14 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
     }
+}
+
+
+- (void) _reallySaveState
+{
+    NSMutableDictionary *state = [NSMutableDictionary dictionary];
+
+    [self _writeStateToDictionary:state];
 
     NSURL *url = _UUID ? sGetStateURLForUUID(_UUID) : nil;
     if (url) [state writeToURL:url atomically:YES];

@@ -17,8 +17,6 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (void) saveState;
 
 - (Track *) firstQueuedTrack;
-- (Track *) selectedTrack;
-
 - (NSArray *) selectedTracks;
 
 - (void) addTrackAtURL:(NSURL *)fileURL;
@@ -26,12 +24,15 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (void) deselectAllTracks;
 - (void) resetPlayedTracks;
 
-- (BOOL) canDeleteSelectedObjects;
-- (BOOL) canChangeTrackStatusOfTrack:(Track *)track;
+- (void) revealEndTime:(id)sender;
+- (BOOL) canRevealEndTime;
 
-- (void) revealEndTimeForTrack:(Track *)track;
+- (void) togglePauseAfterPlaying:(id)sender;
+- (void) toggleMarkAsPlayed:(id)sender;
 
 - (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
+
+- (void) didFinishTrack:(Track *)finishedTrack;
 
 - (Track *) trackAtIndex:(NSUInteger)index;
 @property (nonatomic, readonly) NSArray *tracks;

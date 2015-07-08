@@ -181,13 +181,13 @@ inline static void sDecay(EmergencyLimiter *self, UInt32 frameCount, AudioBuffer
 
 #pragma mark - Public Functions
 
-EmergencyLimiter *EmergencyLimiterCreate(NSInteger holdTime, NSInteger decayTime)
+EmergencyLimiter *EmergencyLimiterCreate()
 {
     EmergencyLimiter *self = malloc(sizeof(EmergencyLimiter));
     
-    self->_holdTime  = holdTime;
-    self->_decayTime = decayTime;
-    self->_initialDecayTime = decayTime;
+    self->_holdTime  = 0.0;
+    self->_decayTime = 0.0;
+    self->_initialDecayTime = 0.0;
 
     EmergencyLimiterReset(self);
     

@@ -367,6 +367,12 @@ CA
                                     <action selector="viewWebsite:" target="494" id="XFv-d6-R0O"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="View Facebook Group" id="CFu-eL-gpn">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewFacebookGroup:" target="494" id="IZM-8W-bNu"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="View on App Store" id="LCB-EU-dvJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>

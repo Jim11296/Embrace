@@ -10,8 +10,8 @@
 #import "Track.h"
 #import "AudioFile.h"
 #import "Player.h"
+#import "ProtectedBuffer.h"
 
-#define ADD_WHITE_NOISE_TO_BUFFER 0
 
 @interface TrackScheduler ()
 @property (atomic) NSInteger      totalFrames;
@@ -28,12 +28,14 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 }
 
 
+
 @implementation TrackScheduler {
     AudioFile *_audioFile;
     AudioStreamBasicDescription _clientFormat;
     AudioStreamBasicDescription _outputFormat;
 
     ScheduledAudioSlice *_slice;
+    NSArray *_protectedBuffers;
 }
 
 
@@ -56,11 +58,19 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         AudioBufferList *list = _slice->mBufferList;
 
         for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
-            free(list->mBuffers[i].mData);
+            list->mBuffers[i].mData = NULL;
         }
 
         free(_slice->mBufferList);
         free(_slice);
+    }
+}
+
+
+- (void) _lockBuffers
+{
+    for (ProtectedBuffer *protectedBuffer in _protectedBuffers) {
+        [protectedBuffer lock];
     }
 }
 
@@ -182,23 +192,23 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
     list->mNumberBuffers = bufferCount;
 
+    NSMutableArray *protectedBuffers = [NSMutableArray array];
+
     for (NSInteger i = 0; i < bufferCount; i++) {
+        ProtectedBuffer *protectedBuffer = [[ProtectedBuffer alloc] initWithCapacity:totalBytes];
+    
         list->mBuffers[i].mNumberChannels = 1;
         list->mBuffers[i].mDataByteSize = (UInt32)totalBytes;
-        list->mBuffers[i].mData = malloc(totalBytes);
+        list->mBuffers[i].mData = (void *)[protectedBuffer bytes];
 
-#if ADD_WHITE_NOISE_TO_BUFFER
-        float *samples = (float *) list->mBuffers[i].mData;
-        for (NSInteger z= 0; z < totalFrames; z++) {
-            float diff = 1.0 - -1.0;
-            samples[z] =  (((float) rand() / RAND_MAX) * diff) - 1.0;
-        }
-#endif
+        [protectedBuffers addObject:protectedBuffer];
     }
 
     _slice = calloc(1, sizeof(ScheduledAudioSlice));
     _slice->mNumberFrames = (UInt32)totalFrames;
     _slice->mBufferList = list;
+    
+    _protectedBuffers = protectedBuffers;
 }
 
 
@@ -308,6 +318,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [self _readDataInBackgroundIntoSlice:slice primeAmount:primeAmount primeSemaphore:primeSemaphore];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self _lockBuffers];
             [self _cleanupAudioFile];
         });
     });

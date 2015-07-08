@@ -9,8 +9,15 @@
 #import <Foundation/Foundation.h>
 
 
+extern NSString * const EmbraceLockedTrackPasteboardType;
+extern NSString * const EmbraceQueuedTrackPasteboardType;
+
+
 @interface TrackTableView : NSTableView
 - (void) updateInsertionPointWorkaround:(BOOL)yn;
+
+- (void) updateSelectedColorWorkaround:(BOOL)yn;
+- (void) willDrawInsertionPointAboveRow:(NSInteger)row;
 
 @property (nonatomic, readonly) NSInteger rowWithMouseInside;
 @end
@@ -18,5 +25,4 @@
 
 @protocol TrackTableViewDelegate <NSTableViewDelegate>
 - (void) trackTableView:(TrackTableView *)tableView draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint;
-- (void) trackTableView:(TrackTableView *)tableView didModifyRowWithMouseInside:(NSInteger)row oldRow:(NSInteger)oldRow;
 @end

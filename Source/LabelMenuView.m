@@ -25,7 +25,7 @@ static CGFloat sDotHeight         = 14;
     NSArray  *_trackingAreas;
     NSInteger _selectedTag;
     NSInteger _hoverTag;
-    BOOL      _mouseInside;
+    BOOL      _didEnterAndExit;
 }
 
 
@@ -63,6 +63,8 @@ static CGFloat sDotHeight         = 14;
         [trackingAreas addObject:trackingArea];
         [self addTrackingArea:trackingArea];
     }
+    
+    _didEnterAndExit = NO;
 }
 
 
@@ -92,7 +94,7 @@ static CGFloat sDotHeight         = 14;
     
     
     NSInteger tagToCircle = _hoverTag;
-    if (tagToCircle == NSNotFound) {
+    if (tagToCircle == NSNotFound && (_didEnterAndExit == NO)) {
         tagToCircle = _selectedTag;
     }
     
@@ -140,10 +142,11 @@ static CGFloat sDotHeight         = 14;
 - (void) mouseEntered:(NSEvent *)event
 {
     NSInteger tag = [[(id)[event userData] objectForKey:sTagKey] integerValue];
-    _hoverTag = tag;
-    _mouseInside = YES;
 
-	[self setNeedsDisplay:YES];
+    if (tag != sMasterTag) {
+        _hoverTag = tag;
+        [self setNeedsDisplay:YES];
+    }
 }
 
 
@@ -153,10 +156,9 @@ static CGFloat sDotHeight         = 14;
 
     if (tag == sMasterTag) {
         _hoverTag = NSNotFound;
+        _didEnterAndExit = YES;
+        [self setNeedsDisplay:YES];
     }
-
-    _mouseInside = NO;
-	[self setNeedsDisplay:YES];
 }
 
 

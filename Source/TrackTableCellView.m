@@ -253,13 +253,15 @@
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    [super mouseDown:theEvent];
-
     NSUInteger mask = (NSControlKeyMask | NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask);
     
     if (([theEvent modifierFlags] & mask) == NSControlKeyMask) {
-        [self _tryToPresentContextMenuWithEvent:theEvent];
+        if ([self _tryToPresentContextMenuWithEvent:theEvent]) {
+            return;
+        }
     }
+
+    [super mouseDown:theEvent];
 }
 
 
@@ -326,7 +328,7 @@
 
     while (superview) {
         if ([superview isKindOfClass:[NSTableView class]]) {
-            menu = [superview menu];
+            menu = [superview menuForEvent:event];
             if (menu) break;
         }
         
@@ -346,7 +348,7 @@
 {
     TrackStatus trackStatus = [[self track] trackStatus];
 
-    if ([[self window] isMainWindow] && _selected)  {
+    if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
         return [NSColor whiteColor];
     }
 
@@ -364,7 +366,7 @@
 {
     TrackStatus trackStatus = [[self track] trackStatus];
 
-    if ([[self window] isMainWindow] && _selected)  {
+    if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
         return [NSColor colorWithCalibratedWhite:1.0 alpha:0.66];
     }
 
@@ -512,14 +514,16 @@
     [[self stripeView] setBorderColor:GetBorderColorForTrackLabel(trackLabel)];
 
     if (_selected) {
-        if ([[self window] isMainWindow]) {
+        if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
             [borderedView setBackgroundColor:GetActiveHighlightColor()];
-            topConstraintValue = -2;
         } else {
             [borderedView setBackgroundColor:GetInactiveHighlightColor()];
         }
+        
+        topConstraintValue = -2;
+
     } else {
-        [borderedView setBackgroundColor:[NSColor whiteColor]];
+       [borderedView setBackgroundColor:[NSColor whiteColor]];
     }
     
    
@@ -527,7 +531,7 @@
 
     if (_drawsInsertionPointWorkaround) {
         [borderedView setTopBorderColor:GetActiveHighlightColor()];
-        [borderedView setTopBorderHeight:3];
+        [borderedView setTopBorderHeight:2];
         topConstraintValue = 0;
 
     } else {
@@ -727,25 +731,19 @@
     BOOL shortensPlayedTracks = [[Preferences sharedInstance] shortensPlayedTracks];
     BOOL isPlayedTrack        = [[self track] trackStatus] == TrackStatusPlayed;
     
-    CGFloat line2LeftAlpha  = 1.0;
-    CGFloat line2RightAlpha = 1.0;
-    CGFloat line3LeftAlpha  = 1.0;
-    CGFloat line3RightAlpha = 1.0;
-    CGFloat endTimeAlpha    = 0.0;
-
     if (shortensPlayedTracks && isPlayedTrack) {
-        line2LeftAlpha  = _mouseInside ? 1.0 : 0.0;
-        line2RightAlpha = _mouseInside ? 1.0 : 0.0;
-        line3LeftAlpha  = _mouseInside ? 1.0 : 0.0;
-        line3RightAlpha = _mouseInside ? 1.0 : 0.0;
-
-        [[[self lineTwoLeftField]    animator] setAlphaValue:line2LeftAlpha];
-        [[[self lineThreeLeftField]  animator] setAlphaValue:line3LeftAlpha];
-        [[[self lineTwoRightField]   animator] setAlphaValue:line2RightAlpha];
-        [[[self lineThreeRightField] animator] setAlphaValue:line3RightAlpha];
+        [[[self lineTwoLeftField]    animator] setAlphaValue:_expandedPlayedTrack ? 1.0 : 0.0];
+        [[[self lineThreeLeftField]  animator] setAlphaValue:_expandedPlayedTrack ? 1.0 : 0.0];
+        [[[self lineTwoRightField]   animator] setAlphaValue:_expandedPlayedTrack ? 1.0 : 0.0];
+        [[[self lineThreeRightField] animator] setAlphaValue:_expandedPlayedTrack ? 1.0 : 0.0];
+    } else {
+        [[self lineTwoLeftField]    setAlphaValue:1.0];
+        [[self lineThreeLeftField]  setAlphaValue:1.0];
+        [[self lineTwoRightField]   setAlphaValue:1.0];
+        [[self lineThreeRightField] setAlphaValue:1.0];
     }
 
-    endTimeAlpha = _showsEndTime ? 1.0 : 0.0;
+    CGFloat endTimeAlpha = _showsEndTime ? 1.0 : 0.0;
     
     if (_animatesEndTime) {
         [[_endTimeField animator] setAlphaValue:endTimeAlpha];
@@ -783,6 +781,24 @@
 {
     if (_drawsInsertionPointWorkaround != drawsInsertionPointWorkaround) {
         _drawsInsertionPointWorkaround = drawsInsertionPointWorkaround;
+        [self _updateView];
+    }
+}
+
+
+- (void) setDrawsLighterSelectedBackground:(BOOL)drawsLighterSelectedBackground
+{
+    if (_drawsLighterSelectedBackground != drawsLighterSelectedBackground) {
+        _drawsLighterSelectedBackground = drawsLighterSelectedBackground;
+        [self _updateView];
+    }
+}
+
+
+- (void) setExpandedPlayedTrack:(BOOL)expandedPlayedTrack
+{
+    if (_expandedPlayedTrack != expandedPlayedTrack) {
+        _expandedPlayedTrack = expandedPlayedTrack;
         [self _updateView];
     }
 }

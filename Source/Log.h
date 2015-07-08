@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+extern void EmbraceCleanupLogs(NSURL *directoryURL);
 
-extern void EmbraceOpenLogFile();
+extern void EmbraceOpenLogFile(void);
 extern void EmbraceLog(NSString *category, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 
 extern void _EmbraceLogMethod(const char *f);

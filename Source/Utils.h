@@ -82,4 +82,4 @@ extern AppDelegate *GetAppDelegate(void);
 
 extern NSString *GetStringForTime(NSTimeInterval time);
 
-extern NSString *GetApplicationSupportDirectory();
+extern NSString *GetApplicationSupportDirectory(void);
