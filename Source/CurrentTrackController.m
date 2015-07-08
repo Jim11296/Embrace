@@ -376,6 +376,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 - (void) player:(Player *)player didUpdateIssue:(PlayerIssue)issue { }
 - (void) player:(Player *)player didUpdateVolume:(double)volume { }
 - (void) player:(Player *)player didInterruptPlaybackWithReason:(PlayerInterruptionReason)reason { }
+- (void) player:(Player *)player didFinishTrack:(Track *)finishedTrack { }
 
 - (void) playerDidTick:(Player *)player
 {

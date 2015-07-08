@@ -43,7 +43,7 @@ NSString * const TracksControllerDidModifyTracksNotificationName = @"TracksContr
 
 static NSString * const sTrackUUIDsKey = @"track-uuids";
 static NSString * const sModifiedAtKey = @"modified-at";
-static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
+
 
 @interface TracksController ()
 @property (nonatomic) NSUInteger count;
@@ -54,11 +54,9 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 @implementation TracksController {
     BOOL _didInit;
     NSMutableArray *_tracks;
-    NSUInteger _rowOfDraggedTrack;
-    
-    NSTrackingArea *_trackingArea;
+    NSIndexSet *_draggedIndexSet;
+    BOOL _draggedIndexSetIsContiguous;
 }
-
 
 
 - (void) awakeFromNib
@@ -68,23 +66,41 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTableViewSelectionDidChange:) name:NSTableViewSelectionDidChangeNotification object:[self tableView]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
-    [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, sTrackPasteboardType ]];
+    [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, EmbraceQueuedTrackPasteboardType, EmbraceLockedTrackPasteboardType ]];
 #if DEBUG
-    [[self tableView] setDoubleAction:@selector(viewSelectedTrack:)];
+    [[self tableView] setDoubleAction:@selector(viewClickedTrack:)];
 #endif
 
     NSNib *nib = [[NSNib alloc] initWithNibNamed:@"TrackTableCellView" bundle:nil];
     [[self tableView] registerNib:nib forIdentifier:@"TrackCell"];
-    
-//
-//    - (instancetype)initWithNibNamed:(NSString *)nibName bundle:(NSBundle *)bundle;
 
-    
     [self _loadState];
     [[self tableView] reloadData];
     
     _didInit = YES;
 }
+
+
+- (BOOL) validateMenuItem:(NSMenuItem *)menuItem
+{
+    SEL action = [menuItem action];
+
+    if (action == @selector(delete:)) {
+        return [self _validateDeleteWithMenuItem:menuItem];
+     
+    } else if (action == @selector(toggleMarkAsPlayed:)) {
+        return [self _validateToggleMarkAsPlayedWithMenuItem:menuItem];
+        
+    } else if (action == @selector(togglePauseAfterPlaying:)) {
+        return [self _validateTogglePauseAfterPlayingWithMenuItem:menuItem];
+    
+    } else if (action == @selector(revealEndTime:)) {
+        return [self canRevealEndTime];
+    }
+    
+    return YES;
+}
+
 
 
 #pragma mark - Private Methods
@@ -107,7 +123,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableArray *tracks = [NSMutableArray array];
 
-    NSArray  *trackUUIDs  = [defaults objectForKey:sTrackUUIDsKey];
+    NSArray *trackUUIDs  = [defaults objectForKey:sTrackUUIDsKey];
 
     if ([trackUUIDs isKindOfClass:[NSArray class]]) {
         for (NSString *uuidString in trackUUIDs) {
@@ -123,14 +139,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     }
     
     _tracks = tracks;
-}
-
-
-- (void) _updateInsertionPointWorkaround:(BOOL)yn
-{
-    TrackTrialCheck(^{
-        [(TrackTableView *)_tableView updateInsertionPointWorkaround:yn];
-    });
 }
 
 
@@ -165,6 +173,25 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
         [self _saveState];
     });
+}
+
+
+- (BOOL) _isIndexSetContiguous:(NSIndexSet *)indexSet
+{
+    NSUInteger row = [indexSet firstIndex];
+    if (row == NSNotFound) return NO;
+
+    while (row != NSNotFound) {
+        NSUInteger nextRow = [indexSet indexGreaterThanIndex:row];
+        
+        if ((nextRow != NSNotFound) && (nextRow != (row + 1))) {
+            return NO;
+        }
+        
+        row = nextRow;
+    }
+
+    return YES;
 }
 
 
@@ -216,42 +243,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
-#pragma mark - IBActions
-
-- (IBAction) delete:(id)sender
-{
-    NSIndexSet *indexSet = [[self tableView] selectedRowIndexes];
-    NSMutableIndexSet *indexSetToRemove = [NSMutableIndexSet indexSet];
-    
-    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
-        Track *track = [self trackAtIndex:index];
-        if (!track) return;
-
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track cancelLoad];
-            [indexSetToRemove addIndex:index];
-        }
-    }];
-    
-    [[self tableView] beginUpdates];
-
-    [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-    [_tracks removeObjectsAtIndexes:indexSet];
-
-    NSUInteger indexToSelect = [indexSet lastIndex];
-
-    if (indexToSelect >= [_tracks count]) {
-        indexToSelect--;
-    }
-
-    [[self tableView] selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect] byExtendingSelection:NO];
-
-    [[self tableView] endUpdates];
-
-    [self _didModifyTracks];
-}
-
-
 #pragma mark - Table View Delegate
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *)tableView
@@ -281,16 +272,28 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 - (BOOL) tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
     NSArray *tracksToDrag = [_tracks objectsAtIndexes:rowIndexes];
-    
-    Track *track = [tracksToDrag firstObject];
 
-    if ([track trackStatus] == TrackStatusQueued) {
-        [pboard setData:[NSData data] forType:sTrackPasteboardType];
-        _rowOfDraggedTrack = [rowIndexes firstIndex];
-        return YES;
+    BOOL hasQueued    = NO;
+    BOOL hasNotQueued = NO;
+
+    for (Track *track in tracksToDrag) {
+        if ([track trackStatus] != TrackStatusQueued) {
+            hasNotQueued = YES;
+        } else {
+            hasQueued = YES;
+        }
     }
-
-    return NO;
+    
+    // Don't allow queued and non-queued
+    if (hasNotQueued && hasQueued) {
+        return NO;
+    }
+    
+    [pboard setData:[NSData data] forType:(hasQueued ? EmbraceQueuedTrackPasteboardType : EmbraceLockedTrackPasteboardType)];
+    _draggedIndexSet = rowIndexes;
+    _draggedIndexSetIsContiguous = [self _isIndexSetContiguous:_draggedIndexSet];
+    
+    return YES;
 }
 
 
@@ -349,24 +352,19 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
-    [self _updateInsertionPointWorkaround:NO];
-
+    [_tableView updateInsertionPointWorkaround:NO];
+    [_tableView updateSelectedColorWorkaround:NO];
+    
     if (operation == NSDragOperationNone) {
         NSRect frame = [[[self tableView] window] frame];
 
+        BOOL isLockedTrack = [[session draggingPasteboard] dataForType:EmbraceLockedTrackPasteboardType] != nil;
+
         if (!NSPointInRect(screenPoint, frame)) {
-            if (_rowOfDraggedTrack != NSNotFound) {
-                Track *draggedTrack = [self trackAtIndex:_rowOfDraggedTrack];
-
+            if (!isLockedTrack && ([_draggedIndexSet count] != 0)) {
                 [[self tableView] beginUpdates];
-
-                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:_rowOfDraggedTrack];
-                [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-
-                if (draggedTrack) {
-                    [_tracks removeObject:draggedTrack];
-                }
-
+                [[self tableView] removeRowsAtIndexes:_draggedIndexSet withAnimation:NSTableViewAnimationEffectFade];
+                [_tracks removeObjectsAtIndexes:_draggedIndexSet];
                 [[self tableView] endUpdates];
  
                 [self _didModifyTracks];
@@ -375,48 +373,70 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
             }
         }
     }
+
+    _draggedIndexSet = nil;
 }
 
 
 - (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
     NSPasteboard *pasteboard = [info draggingPasteboard];
-    BOOL isMove = ([pasteboard dataForType:sTrackPasteboardType] != nil);
 
-    [self _updateInsertionPointWorkaround:NO];
+    BOOL isLockedTrack =  ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
+    BOOL isQueuedTrack =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
+    
+    [_tableView updateInsertionPointWorkaround:NO];
+
+    NSDragOperation mask = [info draggingSourceOperationMask];
+    BOOL isCopy = (mask & (NSDragOperationGeneric|NSDragOperationCopy)) == NSDragOperationCopy;
     
     if (dropOperation == NSTableViewDropAbove) {
         Track *track = [self trackAtIndex:row];
 
         if (!track || [track trackStatus] == TrackStatusQueued) {
             if (row == 0) {
-                [self _updateInsertionPointWorkaround:YES];
+                [_tableView updateInsertionPointWorkaround:YES];
             }
 
-            if (isMove) {
-                if ((row == _rowOfDraggedTrack) || (row == (_rowOfDraggedTrack + 1))) {
+            if (isCopy) {
+                [_tableView willDrawInsertionPointAboveRow:row];
+                return NSDragOperationCopy;
+
+            } else if (!_draggedIndexSetIsContiguous) {
+                [_tableView willDrawInsertionPointAboveRow:row];
+                return NSDragOperationGeneric;
+
+            } else if (isQueuedTrack) {
+                if ((row >= [_draggedIndexSet firstIndex]) && (row <= ([_draggedIndexSet lastIndex] + 1))) {
                     return NSDragOperationNone;
                 } else {
-                    return NSDragOperationMove;
+                    [_tableView willDrawInsertionPointAboveRow:row];
+
+                    if (isCopy) {
+                        return NSDragOperationCopy;
+                    } else {
+                        return NSDragOperationGeneric;
+                    }
                 }
-            
+
             } else {
+                return NSDragOperationNone;
+            }
+        }
+    }
+
+    if (!isQueuedTrack && !isLockedTrack) {
+        if (dropOperation == NSTableViewDropOn) {
+            Track *track = [self trackAtIndex:row];
+
+            if (!track || [track trackStatus] == TrackStatusQueued) {
+                [_tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
+                [_tableView willDrawInsertionPointAboveRow:(row + 1)];
                 return NSDragOperationCopy;
             }
         }
-    }
-
-    if (!isMove && (dropOperation == NSTableViewDropOn)) {
-        Track *track = [self trackAtIndex:row];
-
-        if (!track || [track trackStatus] == TrackStatusQueued) {
-            [tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
-            return NSDragOperationCopy;
-        }
-    }
     
-    // Always accept a drag from iTunes, target end of table in this case
-    if (!isMove) {
+        // Always accept a drag from iTunes, target end of table in this case
         [tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
         return NSDragOperationCopy;
     }
@@ -429,7 +449,10 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 {
     EmbraceLog(@"TracksController", @"Accepting drop");
 
-    [self _updateInsertionPointWorkaround:NO];
+    NSDragOperation dragOperation = [self tableView:_tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+    NSLog(@"%ld,%ld -> %ld", (long)row, (long)dropOperation, (long)dragOperation);
+
+    [_tableView updateInsertionPointWorkaround:NO];
 
     NSPasteboard *pboard = [info draggingPasteboard];
 
@@ -443,20 +466,58 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
     // Let manager extract any metadata from the pasteboard 
     [[iTunesManager sharedInstance] extractMetadataFromPasteboard:pboard];
 
-    if ([pboard dataForType:sTrackPasteboardType]) {
-        if (_rowOfDraggedTrack < row) {
-            row--;
+    if ([pboard dataForType:EmbraceQueuedTrackPasteboardType] ||
+        [pboard dataForType:EmbraceLockedTrackPasteboardType])
+    {
+        [[self tableView] beginUpdates];
+
+        if (dragOperation == NSDragOperationCopy) {
+            EmbraceLog(@"TracksController", @"Duplicating track from %@ to %ld", _draggedIndexSet, row);
+
+            NSMutableArray *duplicatedTracks = [NSMutableArray array];
+            
+            for (Track *oldTrack in [_tracks objectsAtIndexes:_draggedIndexSet]) {
+                [duplicatedTracks addObject:[oldTrack duplicatedTrack]];
+            }
+            
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row, [duplicatedTracks count])];
+            
+            [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+            [_tracks insertObjects:duplicatedTracks atIndexes:indexSet];
+
+        } else if (dragOperation == NSDragOperationGeneric) {
+            EmbraceLog(@"TracksController", @"Moving track from %@ to %ld", _draggedIndexSet, row);
+
+            __block NSInteger oldIndexOffset = 0;
+            __block NSInteger newIndexOffset = 0;
+
+
+            [_draggedIndexSet enumerateIndexesUsingBlock:^(NSUInteger oldIndex, BOOL *stop) {
+                Track *track = [self trackAtIndex:(oldIndex + oldIndexOffset)];
+                
+                if (track) {
+                    NSInteger toIndex, fromIndex;
+
+                    if (oldIndex < row) {
+                        fromIndex = oldIndex + oldIndexOffset;
+                        toIndex   = row - 1;
+                        oldIndexOffset--;
+                    } else {
+                        fromIndex = oldIndex;
+                        toIndex = row + newIndexOffset;
+                        newIndexOffset++;
+                    }
+
+                    [_tableView moveRowAtIndex:fromIndex toIndex:toIndex];
+                    [_tracks removeObjectAtIndex:fromIndex];
+                    [_tracks insertObject:track atIndex:toIndex];
+                }
+            }];
         }
-
-        EmbraceLog(@"TracksController", @"Moving track from %ld to %ld", (long)_rowOfDraggedTrack, row);
-
-        Track *draggedTrack = [self trackAtIndex:_rowOfDraggedTrack];
-        [[self tableView] moveRowAtIndex:_rowOfDraggedTrack toIndex:row];
         
-        if (draggedTrack) {
-            [_tracks removeObject:draggedTrack];
-            [_tracks insertObject:draggedTrack atIndex:row];
-        }
+        [[self tableView] endUpdates];
+        
+        [[self tableView] reloadData];
 
 #if TRIAL
         if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
@@ -543,16 +604,216 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
-- (void) trackTableView:(TrackTableView *)tableView didModifyRowWithMouseInside:(NSInteger)row oldRow:(NSInteger)oldRow
+#pragma mark - Selected Track Actions
+
+- (void) delete:(id)sender
 {
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    NSIndexSet *indexSet = [[self tableView] selectedRowIndexes];
+    NSMutableIndexSet *indexSetToRemove = [NSMutableIndexSet indexSet];
     
-    if (row    != NSNotFound) [indexSet addIndex:row];
-    if (oldRow != NSNotFound) [indexSet addIndex:oldRow];
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+        Track *track = [self trackAtIndex:index];
+        if (!track) return;
+
+        if ([track trackStatus] == TrackStatusQueued) {
+            [track cancelLoad];
+            [indexSetToRemove addIndex:index];
+        }
+    }];
     
-    [tableView beginUpdates];
-    [tableView noteHeightOfRowsWithIndexesChanged:indexSet];
-    [tableView endUpdates];
+    [[self tableView] beginUpdates];
+
+    [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+    [_tracks removeObjectsAtIndexes:indexSet];
+
+    NSUInteger indexToSelect = [indexSet lastIndex];
+
+    if (indexToSelect >= [_tracks count]) {
+        indexToSelect--;
+    }
+
+    [[self tableView] selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect] byExtendingSelection:NO];
+
+    [[self tableView] endUpdates];
+
+    [self _didModifyTracks];
+}
+
+
+- (BOOL) _validateDeleteWithMenuItem:(NSMenuItem *)menuItem
+{
+    NSArray *selectedTracks = [self selectedTracks];
+    if ([selectedTracks count] == 0) {
+        return NO;
+    }
+
+    for (Track *track in selectedTracks) {
+        if ([track trackStatus] != TrackStatusQueued) {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+
+- (void) revealEndTime:(id)sender
+{
+    EmbraceLogMethod();
+
+    TrackTrialCheck(^{
+        for (Track *track in [self selectedTracks]) {
+            if ([track trackStatus] == TrackStatusPlayed) {
+                continue;
+            }
+
+            NSInteger index = [_tracks indexOfObject:track];
+            
+            if (index != NSNotFound) {
+                id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
+                
+                if ([view respondsToSelector:@selector(revealEndTime)]) {
+                    [view revealEndTime];
+                }
+            }
+        }
+    });
+}
+
+
+- (BOOL) canRevealEndTime
+{
+    EmbraceLogMethod();
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+
+- (void) togglePauseAfterPlaying:(id)sender
+{
+    EmbraceLogMethod();
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            [track setPausesAfterPlaying:![track pausesAfterPlaying]];
+        }
+    }
+}
+
+
+- (BOOL) _validateTogglePauseAfterPlayingWithMenuItem:(NSMenuItem *)menuItem
+{
+    NSArray *selectedTracks = [self selectedTracks];
+    
+    BOOL isEnabled = YES;
+    BOOL isOn      = NO;
+    BOOL isOff     = NO;
+    
+    for (Track *track in selectedTracks) {
+        BOOL canPause = [track trackStatus] != TrackStatusPlayed;
+        if (!canPause) isEnabled = NO;
+
+        BOOL pausesAfterPlaying = (canPause && [track pausesAfterPlaying]);
+        if ( pausesAfterPlaying) isOn  = YES;
+        if (!pausesAfterPlaying) isOff = YES;
+    }
+    
+    if (isOff && isOn) {
+        [menuItem setState:NSMixedState];
+        isEnabled = NO;
+    } else if (isOn) {
+        [menuItem setState:NSOnState];
+    } else {
+        [menuItem setState:NSOffState];
+    }
+
+    return isEnabled;
+}
+
+
+- (void) toggleMarkAsPlayed:(id)sender
+{
+    // Be paranoid and double-check the validity
+    //
+    if (![self _validateToggleMarkAsPlayedWithMenuItem:nil]) {
+        return;
+    }
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] == TrackStatusQueued) {
+            [track setTrackStatus:TrackStatusPlayed];
+        } else if ([track trackStatus] == TrackStatusPlayed) {
+            [track setTrackStatus:TrackStatusQueued];
+        }
+    }
+
+    [[self tableView] beginUpdates];
+    [[self tableView] noteHeightOfRowsWithIndexesChanged:[[self tableView] selectedRowIndexes]];
+    [[self tableView] endUpdates];
+}
+
+
+- (void) didFinishTrack:(Track *)finishedTrack
+{
+    NSInteger row = finishedTrack ? [_tracks indexOfObject:finishedTrack] : NSNotFound;
+
+    if (row != NSNotFound) {
+        [[self tableView] beginUpdates];
+        [[self tableView] noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+        [[self tableView] endUpdates];
+    }
+}
+
+
+- (BOOL) _validateToggleMarkAsPlayedWithMenuItem:(NSMenuItem *)menuItem
+{
+    BOOL isOn = NO;
+    BOOL isOff = NO;
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] == TrackStatusPlayed) {
+            isOn = YES;
+        } else {
+            isOff = YES;
+        }
+    }
+
+    if (isOn && isOff) {
+        [menuItem setState:NSMixedState];
+        return NO;
+    } else if (isOn) {
+        [menuItem setState:NSOnState];
+    } else {
+        [menuItem setState:NSOffState];
+    }
+
+    if ([[Player sharedInstance] currentTrack]) {
+        return NO;
+    }
+
+    NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
+
+    if (![self _isIndexSetContiguous:selectedRows]) {
+        return NO;
+    }
+
+    NSInteger firstSelectedRow = [selectedRows firstIndex];
+    NSInteger lastSelectedRow  = [selectedRows lastIndex];
+    NSInteger count            = [_tracks count];
+    
+    Track *previousTrack = firstSelectedRow      > 0       ? [_tracks objectAtIndex:(firstSelectedRow - 1)] : nil;
+    Track *nextTrack     = (lastSelectedRow + 1) < count   ? [_tracks objectAtIndex:(lastSelectedRow  + 1)] : nil;
+    
+    BOOL isPreviousPlayed = !previousTrack || ([previousTrack trackStatus] == TrackStatusPlayed);
+    BOOL isNextPlayed     =                    [nextTrack     trackStatus] == TrackStatusPlayed;
+
+    return (isPreviousPlayed != isNextPlayed);
 }
 
 
@@ -575,19 +836,6 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
                 break;
             }
         }
-    });
-
-    return result;
-}
-
-
-- (Track *) selectedTrack
-{
-    __block Track *result;
-    
-    TrackTrialCheck(^{
-        NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
-        result = [self trackAtIndex:[selectedRows firstIndex]];
     });
 
     return result;
@@ -636,6 +884,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) removeAllTracks
 {
+    EmbraceLogMethod();
+
     NSMutableArray *tracksToRemove = [_tracks mutableCopy];
     Track *trackToKeep = [[Player sharedInstance] currentTrack];
 
@@ -669,6 +919,8 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) deselectAllTracks
 {
+    EmbraceLogMethod();
+
     TrackTrialCheck(^{
         [[self tableView] deselectAll:nil];
     });
@@ -677,67 +929,13 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 
 - (void) resetPlayedTracks
 {
+    EmbraceLogMethod();
+
     if ([[Player sharedInstance] isPlaying]) return;
 
     for (Track *track in _tracks) {
         [track setTrackStatus:TrackStatusQueued];
     }
-}
-
-
-- (void) revealEndTimeForTrack:(Track *)track
-{
-    TrackTrialCheck(^{
-        NSInteger index = [_tracks indexOfObject:track];
-        
-        if (index != NSNotFound) {
-            id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
-            
-            if ([view respondsToSelector:@selector(revealEndTime)]) {
-                [view revealEndTime];
-            }
-        }
-    });
-}
-
-
-- (BOOL) canDeleteSelectedObjects
-{
-    __block BOOL result = NO;
-
-    TrackTrialCheck(^{
-        Track *selectedTrack = [self selectedTrack];
-        if (!selectedTrack) return;
-        
-        if ([selectedTrack trackStatus] == TrackStatusQueued) {
-            result = YES;
-        }
-    });
-
-    return result;
-}
-
-
-- (BOOL) canChangeTrackStatusOfTrack:(Track *)track
-{
-    NSInteger index = [_tracks indexOfObject:track];
-    if (index == NSNotFound) {
-        return NO;
-    }
-    
-    if ([[Player sharedInstance] currentTrack]) {
-        return NO;
-    }
-
-    NSInteger count = [_tracks count];
-    
-    Track *previousTrack = index > 0           ? [_tracks objectAtIndex:(index - 1)] : nil;
-    Track *nextTrack     = (index + 1) < count ? [_tracks objectAtIndex:(index + 1)] : nil;
-    
-    BOOL isPreviousPlayed = !previousTrack || ([previousTrack trackStatus] == TrackStatusPlayed);
-    BOOL isNextPlayed     =                    [nextTrack     trackStatus] == TrackStatusPlayed;
-
-    return (isPreviousPlayed != isNextPlayed);
 }
 
 
@@ -755,7 +953,7 @@ static NSString * const sTrackPasteboardType = @"com.iccir.Embrace.Track";
 }
 
 
-- (IBAction) viewSelectedTrack:(id)sender
+- (IBAction) viewClickedTrack:(id)sender
 {
     NSInteger clickedRow = [[self tableView] clickedRow];
 

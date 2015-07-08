@@ -831,50 +831,34 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     EmbraceLogMethod();
 
-    Track *track = [[self tracksController] selectedTrack];
-    if (!track) return;
+    NSArray *tracks = [[self tracksController] selectedTracks];
+    if ([tracks count] == 0) return;
 
     [self _calculateStartAndEndTimes];
 
-    [[self tracksController] revealEndTimeForTrack:track];
+    [[self tracksController] revealEndTime:self];
 }
 
 
 - (BOOL) canRevealEndTime
 {
-    Track *track = [[self tracksController] selectedTrack];
-    return track && ([track trackStatus] != TrackStatusPlayed);
+    return [[self tracksController] canRevealEndTime];
 }
 
 
 - (IBAction) togglePauseAfterPlaying:(id)sender
 {
     EmbraceLogMethod();
-
-    Track *track = [[self tracksController] selectedTrack];
-    
-    if ([track trackStatus] != TrackStatusPlayed) {
-        [track setPausesAfterPlaying:![track pausesAfterPlaying]];
-        [self _updatePlayButton];
-    }
+    [[self tracksController] togglePauseAfterPlaying:self];
+    [self _updatePlayButton];
 }
 
 
 - (IBAction) toggleMarkAsPlayed:(id)sender
 {
     EmbraceLogMethod();
-
-    Track *track = [[self tracksController] selectedTrack];
-
-    if ([[self tracksController] canChangeTrackStatusOfTrack:track]) {
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track setTrackStatus:TrackStatusPlayed];
-        } else if ([track trackStatus] == TrackStatusPlayed) {
-            [track setTrackStatus:TrackStatusQueued];
-        }
-
-        [self _updatePlayButton];
-    }
+    [[self tracksController] toggleMarkAsPlayed:self];
+    [self _updatePlayButton];
 }
 
 
@@ -908,24 +892,13 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 {
     SEL action = [menuItem action];
 
-    if (action == @selector(delete:)) {
-        return [[self tracksController] canDeleteSelectedObjects];
-
-    } else if (action == @selector(toggleMarkAsPlayed:)) {
-        Track *track = [[self tracksController] selectedTrack];
-        [menuItem setState:([track trackStatus] == TrackStatusPlayed)];
-        return [[self tracksController] canChangeTrackStatusOfTrack:track];
-    
-    } else if (action == @selector(togglePauseAfterPlaying:)) {
-        Track *track = [[self tracksController] selectedTrack];
-        BOOL canPause = [track trackStatus] != TrackStatusPlayed;
-        [menuItem setState:canPause && [track pausesAfterPlaying]];
-        return canPause;
-
-    } else if (action == @selector(revealEndTime:)) {
-        return [self canRevealEndTime];
+    if (action == @selector(delete:) ||
+        action == @selector(toggleMarkAsPlayed:) ||
+        action == @selector(togglePauseAfterPlaying:) ||
+        action == @selector(revealEndTime:))
+    {
+        return [[self tracksController] validateMenuItem:menuItem];
     }
-    
     
     return YES;
 }
@@ -992,7 +965,9 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (BOOL) window:(EmbraceWindow *)window cancelOperation:(id)sender
 {
-    if ([[self tracksController] selectedTrack]) {
+    NSArray *selectedTracks = [[self tracksController] selectedTracks];
+    
+    if ([selectedTracks count] > 0) {
         [[self tracksController] deselectAllTracks];
         return YES;
     }
@@ -1181,6 +1156,12 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     
     *outNextTrack = trackToPlay;
     *outPadding   = padding;
+}
+
+
+- (void) player:(Player *)player didFinishTrack:(Track *)finishedTrack
+{
+    [[self tracksController] didFinishTrack:finishedTrack];
 }
 
 

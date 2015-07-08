@@ -1370,6 +1370,11 @@ static OSStatus sInputRenderCallback(
     }
     
     if (nextTrack) {
+        if (_currentTrack) {
+            for (id<PlayerListener> listener in _listeners) {
+                [listener player:self didFinishTrack:_currentTrack];
+            }
+        }
         [self setCurrentTrack:nextTrack];
         _currentPadding = padding;
 
@@ -1423,6 +1428,9 @@ static OSStatus sInputRenderCallback(
     [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
     
     if (nextTrack) {
+        for (id<PlayerListener> listener in _listeners) {
+            [listener player:self didFinishTrack:_currentTrack];
+        }
         [self setCurrentTrack:nextTrack];
         _currentPadding = 0;
 
@@ -1456,6 +1464,9 @@ static OSStatus sInputRenderCallback(
         [_currentTrack setPausesAfterPlaying:NO];
     }
 
+    for (id<PlayerListener> listener in _listeners) {
+        [listener player:self didFinishTrack:_currentTrack];
+    }
     [self setCurrentTrack:nil];
 
     if (_tickTimer) {

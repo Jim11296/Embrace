@@ -26,10 +26,12 @@
     return self;
 }
 
+
 - (NSString *) windowNibName
 {
     return @"ViewTrackWindow";
 }
+
 
 - (void) windowDidLoad
 {

@@ -480,7 +480,7 @@
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
     } else if (action == @selector(revealEndTime:)) {
-        return [_setlistController canRevealEndTime];
+        return [_setlistController validateMenuItem:menuItem];
 
     } else if (action == @selector(sendCrashReports:)){
         BOOL hasCrashReports = [_crashSender hasCrashReports];
@@ -835,6 +835,17 @@
     NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/projects/embrace"];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
+
+
+
+- (IBAction) viewFacebookGroup:(id)sender
+{
+    EmbraceLogMethod();
+
+    NSURL *url = [NSURL URLWithString:@"https://www.facebook.com/groups/embrace.users"];
+    [[NSWorkspace sharedWorkspace] openURL:url];
+}
+
 
 
 - (IBAction) viewOnAppStore:(id)sender

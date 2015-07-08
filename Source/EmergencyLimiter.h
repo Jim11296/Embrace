@@ -10,7 +10,7 @@
 
 typedef struct EmergencyLimiter EmergencyLimiter;
 
-extern EmergencyLimiter *EmergencyLimiterCreate();
+extern EmergencyLimiter *EmergencyLimiterCreate(void);
 extern void EmergencyLimiterFree(EmergencyLimiter *limiter);
 
 extern void EmergencyLimiterReset(EmergencyLimiter *limiter);

@@ -9,10 +9,21 @@
 #import "TrackTableView.h"
 #import "TrackTableCellView.h"
 
+NSString * const EmbraceLockedTrackPasteboardType = @"com.iccir.Embrace.Track.Locked";
+NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Queued";
+
 
 @implementation TrackTableView {
-    NSHashTable *_cellsWithMouseInside;
+    NSHashTable       *_cellsWithMouseInside;
+    NSMutableIndexSet *_rowsNeedingUpdatedHeight;
 }
+
+- (void) viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    _rowWithMouseInside = NSNotFound;
+}
+
 
 - (NSMenu *) menuForEvent:(NSEvent *)theEvent
 {
@@ -27,9 +38,13 @@
         location = [self convertPoint:location fromView:nil];
         NSInteger row = [self rowAtPoint:location];
         
-        if (row >= 0) {
+        if ([[self selectedRowIndexes] containsIndex:row]) {
+            return [self menu];
+
+        } else if (row >= 0) {
             [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
             return [self menu];
+
         } else {
             [self deselectAll:self];
             return nil;
@@ -38,6 +53,21 @@
 
 
     return [super menuForEvent:theEvent];
+}
+
+- (void) updateSelectedColorWorkaround:(BOOL)yn
+{
+    [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
+        NSInteger numberOfColumns = [rowView numberOfColumns];
+
+        for (NSInteger i = 0; i < numberOfColumns; i++) {
+            id view = [rowView viewAtColumn:i];
+
+            if ([view respondsToSelector:@selector(setDrawsLighterSelectedBackground:)]) {
+                [view setDrawsLighterSelectedBackground:yn];
+            }
+        }
+    }];
 }
 
 
@@ -59,13 +89,23 @@
 }
 
 
+- (void) willDrawInsertionPointAboveRow:(NSInteger)row
+{
+    [[self selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+        if ((index == row) || (index == (row - 1))) {
+            [self updateSelectedColorWorkaround:YES];
+        }
+    }];
+}
+
+
 - (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
 {
     if (context == NSDraggingContextOutsideApplication) {
         return NSDragOperationDelete;
     }
     
-    return NSDragOperationMove;
+    return NSDragOperationCopy|NSDragOperationGeneric;
 }
 
 
@@ -86,15 +126,38 @@
 {
     NSRect frame = [[self window] frame];
 
+    BOOL isLockedTrack = [[session draggingPasteboard] dataForType:EmbraceLockedTrackPasteboardType] != nil;
+
     if (NSPointInRect(screenPoint, frame)) {
         [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
-        [[NSCursor arrowCursor] set];
 
     } else {
-        [[NSCursor disappearingItemCursor] set];
-        [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
+        if (isLockedTrack) {
+            [[NSCursor operationNotAllowedCursor] set];
+            [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
+
+        } else {
+            [[NSCursor disappearingItemCursor] set];
+            [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
+        }
+    }
+}
+
+
+- (void) _dispatchHeightUpdate
+{
+    if ([_rowsNeedingUpdatedHeight count]) {
+        [self beginUpdates];
+
+        [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
+            [[rowView viewAtColumn:0] setExpandedPlayedTrack:(row == _rowWithMouseInside)];
+        }];
+
+        [self noteHeightOfRowsWithIndexesChanged:_rowsNeedingUpdatedHeight];
+        [self endUpdates];
     }
 
+    _rowsNeedingUpdatedHeight = nil;
 }
 
 
@@ -104,12 +167,24 @@
         _cellsWithMouseInside = [NSHashTable weakObjectsHashTable];
     }
 
+    if (!_rowsNeedingUpdatedHeight) {
+        _rowsNeedingUpdatedHeight = [NSMutableIndexSet indexSet];
+    }
+
+    NSInteger row = [self rowForView:cellView];
+    if (row != NSNotFound) {
+        [_rowsNeedingUpdatedHeight addIndex:row];
+    }
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_dispatchHeightUpdate) object:nil];
+    [self performSelector:@selector(_dispatchHeightUpdate) withObject:nil afterDelay:0.2];
+
     if (mouseInside) {
         [_cellsWithMouseInside addObject:cellView];
     } else {
         [_cellsWithMouseInside removeObject:cellView];
     }
-    
+
     NSInteger rowWithMouseInside = _rowWithMouseInside;
     NSInteger count = [_cellsWithMouseInside count];
 
@@ -119,11 +194,7 @@
         rowWithMouseInside = NSNotFound;
     }
 
-    if (_rowWithMouseInside != rowWithMouseInside) {
-        NSInteger oldRow = _rowWithMouseInside;
-        _rowWithMouseInside = rowWithMouseInside;
-        [_delegate trackTableView:self didModifyRowWithMouseInside:rowWithMouseInside oldRow:oldRow];
-    }
+    _rowWithMouseInside = rowWithMouseInside;
 }
 
 

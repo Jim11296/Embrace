@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 //
 - (NSDate *) estimatedEndTimeDate;
 
+- (Track *) duplicatedTrack;
 
 @property (nonatomic, readonly) NSURL *externalURL;
 @property (nonatomic, readonly) NSURL *internalURL;
