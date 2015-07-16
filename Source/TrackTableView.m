@@ -177,7 +177,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     }
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_dispatchHeightUpdate) object:nil];
-    [self performSelector:@selector(_dispatchHeightUpdate) withObject:nil afterDelay:0.2];
+    [self performSelector:@selector(_dispatchHeightUpdate) withObject:nil afterDelay:0.25];
 
     if (mouseInside) {
         [_cellsWithMouseInside addObject:cellView];

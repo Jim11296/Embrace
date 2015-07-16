@@ -14,9 +14,10 @@ extern NSString * const TrackDidModifyPlayDurationNotificationName;
 @class TrackAnalyzer;
 
 typedef NS_ENUM(NSInteger, TrackStatus) {
-    TrackStatusQueued,  // Track is queued
-    TrackStatusPlaying, // Track is active
-    TrackStatusPlayed   // Track was played
+    TrackStatusQueued    = 0,  // Track is queued
+    TrackStatusPreparing = 3,  // Track is preparing or in auto gap
+    TrackStatusPlaying   = 1,  // Track is active
+    TrackStatusPlayed    = 2   // Track was played
 };
 
 
@@ -63,7 +64,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic) TrackError trackError;
 
 @property (nonatomic) TrackLabel trackLabel;
-
+@property (nonatomic, getter=isDuplicate) BOOL duplicate;
 
 // Metadata
 @property (nonatomic, readonly) NSString *title;
@@ -91,7 +92,5 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSTimeInterval silenceAtStart;
 @property (nonatomic, readonly) NSTimeInterval silenceAtEnd;
 @property (nonatomic, readonly) BOOL didAnalyzeLoudness;
-
-@property (nonatomic, readonly, getter=isDuplicate) BOOL duplicate;
 
 @end

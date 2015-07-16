@@ -11,12 +11,14 @@
 #import "SetlistController.h"
 #import "EffectsController.h"
 #import "PreferencesController.h"
-#import "EditEffectController.h"
+#import "EditGraphicEQEffectController.h"
+#import "EditSystemEffectController.h"
 #import "CurrentTrackController.h"
 #import "ViewTrackController.h"
 #import "TracksController.h"
 #import "Preferences.h"
 #import "DebugController.h"
+#import "EffectAdditions.h"
 
 #import "Player.h"
 #import "Effect.h"
@@ -115,6 +117,8 @@
 
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
+    
+    [EffectType embrace_registerMappedEffects];
     
     PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeBSD symbolicationStrategy:PLCrashReporterSymbolicationStrategyAll];
     _crashReporter = [[PLCrashReporter alloc] initWithConfiguration:config];
@@ -327,7 +331,16 @@
         }
     }
     
-    EditEffectController *controller = [[EditEffectController alloc] initWithEffect:effect index:[_editEffectControllers count]];
+    Class cls = [EditSystemEffectController class];
+    NSString *effectName = [[effect type] name];
+
+    if ([effectName isEqualToString:EmbraceMappedEffect10BandEQ] ||
+        [effectName isEqualToString:EmbraceMappedEffect31BandEQ]
+    ) {
+        cls = [EditGraphicEQEffectController class];
+    }
+    
+    EditEffectController *controller = [[cls alloc] initWithEffect:effect index:[_editEffectControllers count]];
 
     if (controller) {
         [_editEffectControllers addObject:controller];

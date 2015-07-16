@@ -12,8 +12,46 @@
 #import "AppDelegate.h"
 #import "EffectType.h"
 #import "Effect.h"
+#import "EffectAdditions.h"
 #import "Player.h"
 
+
+typedef NS_ENUM(NSInteger, EffectCategory) {
+    EffectCategoryEqualizers = 1,
+    EffectCategoryFilters,
+    EffectCategoryDynamics,
+    EffectCategoryOther
+};
+
+
+static EffectCategory sGetCategory(NSString *name)
+{
+    EffectCategory result = EffectCategoryOther;
+
+    NSDictionary *map = @{
+        @"EmbraceGraphicEQ10":    @( EffectCategoryEqualizers ),
+        @"EmbraceGraphicEQ31":    @( EffectCategoryEqualizers ),
+
+        @"AUBandpass":            @( EffectCategoryFilters ),
+        @"AUParametricEQ":        @( EffectCategoryFilters ),
+        @"AULowpass":             @( EffectCategoryFilters ),
+        @"AULowShelfFilter":      @( EffectCategoryFilters ),
+        @"AUHipass":              @( EffectCategoryFilters ),
+        @"AUHighShelfFilter":     @( EffectCategoryFilters ),
+        @"AUFilter":              @( EffectCategoryFilters ),
+
+        @"AUDynamicsProcessor":   @( EffectCategoryDynamics ),
+        @"AUMultibandCompressor": @( EffectCategoryDynamics ),
+        @"AUPeakLimiter":         @( EffectCategoryDynamics )
+    };
+
+    NSNumber *categoryNumber = [map objectForKey:name];
+    if (categoryNumber) {
+        result = [categoryNumber integerValue];
+    }
+
+    return result;
+}
 
 
 @interface EffectsController () <NSMenuDelegate>
@@ -58,7 +96,8 @@
     [super windowDidLoad];
 
     NSMenu *menu = [[self addButton] menu];
-    NSMenu *specialMenu = [[NSMenu alloc] init];
+    NSMenu *filterMenu = [[NSMenu alloc] init];
+    NSMenu *otherMenu  = [[NSMenu alloc] init];
     
     NSArray *allEffectTypes = [EffectType allEffectTypes];
     
@@ -66,8 +105,8 @@
         EffectType *typeA = (EffectType *)objectA;
         EffectType *typeB = (EffectType *)objectB;
         
-        EffectFriendlyCategory categoryA = [typeA friendlyCategory];
-        EffectFriendlyCategory categoryB = [typeB friendlyCategory];
+        EffectCategory categoryA = sGetCategory([typeA name]);
+        EffectCategory categoryB = sGetCategory([typeB name]);
         
         if (categoryA > categoryB) {
             return NSOrderedDescending;
@@ -81,42 +120,56 @@
         }
     }];
     
-    EffectFriendlyCategory lastFriendlyCategory = 0;
+    EffectCategory lastCategory = 0;
     
     BOOL didAddItem = NO;
 
     for (EffectType *type in allEffectTypes) {
-        EffectFriendlyCategory friendlyCategory = [type friendlyCategory];
+        NSString *name = [type name];
+        EffectCategory category = sGetCategory(name);
+        NSString *friendlyName = [type friendlyName];
 
-        if (friendlyCategory != lastFriendlyCategory) {
+        if (category != lastCategory) {
             if (didAddItem) {
                 [menu addItem:[NSMenuItem separatorItem]];
             }
 
-            lastFriendlyCategory = friendlyCategory;
+            lastCategory = category;
         }
     
-        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[type friendlyName] action:NULL keyEquivalent:@""];
+        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:friendlyName action:NULL keyEquivalent:@""];
         [menuItem setRepresentedObject:type];
 
-        if (friendlyCategory != EffectFriendlyCategorySpecial) {
-            [menu addItem:menuItem];
-        } else {
-            [specialMenu addItem:menuItem];
+        if (category == EffectCategoryOther) {
+            [otherMenu addItem:menuItem];
             
             [menuItem setTarget:[[self addButton] target]];
             [menuItem setAction:[[self addButton] action]];
+
+        } else if (category == EffectCategoryFilters) {
+            [filterMenu addItem:menuItem];
+            
+            [menuItem setTarget:[[self addButton] target]];
+            [menuItem setAction:[[self addButton] action]];
+
+        } else {
+            [menu addItem:menuItem];
         }
 
         didAddItem = YES;
     }
+
+    NSMenuItem *filterMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Filters", nil) action:nil keyEquivalent:@""];
+    [filterMenuItem setSubmenu:filterMenu];
     
-    NSMenuItem *specialMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Special", nil) action:nil keyEquivalent:@""];
-    [specialMenuItem setSubmenu:specialMenu];
-    
-    [specialMenu setAutoenablesItems:NO];
-    
-    [menu addItem:specialMenuItem];
+    NSMenuItem *otherMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Other Effects", nil) action:nil keyEquivalent:@""];
+    [otherMenuItem setSubmenu:otherMenu];
+
+    [filterMenu setAutoenablesItems:NO];
+    [otherMenu setAutoenablesItems:NO];
+
+    [menu addItem:filterMenuItem];
+    [menu addItem:otherMenuItem];
     
     [[self tableView] setDoubleAction:@selector(editEffect:)];
 

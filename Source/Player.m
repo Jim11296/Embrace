@@ -394,6 +394,8 @@ typedef struct {
     char logBranchTaken = 0;
 
     if (timeStamp.mSampleTime < 0) {
+        status = TrackStatusPreparing;
+
         _timeElapsed   = GetDeltaInSecondsForHostTimes(GetCurrentHostTime(), _currentStartHostTime);
         _timeRemaining = [_currentTrack playDuration];
         
