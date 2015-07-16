@@ -38,6 +38,7 @@
 @property (nonatomic, weak) IBOutlet NSImageView *speakerImageView;
 @property (nonatomic, weak) IBOutlet Button *errorButton;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerLeftConstraint;
 
 @end
@@ -64,8 +65,8 @@
     NSTrackingArea *_trackingArea;
     BOOL            _mouseInside;
     BOOL            _endTimeRequested;
-    BOOL            _animatesSpeakerImage;
     BOOL            _animatesEndTime;
+    BOOL            _animatesSpeakerImage;
 }
 
 
@@ -189,7 +190,9 @@
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [context setDuration:0];
         [self _updateView];
-    } completionHandler:nil];
+    } completionHandler:^{
+        _animatesSpeakerImage = YES;
+    }];
 }
 
 
@@ -203,14 +206,20 @@
     NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
 
     NSTextField *targetField = nil;
+    CGFloat speakerTopY = 0;
 
     if (numberOfLines == 1) {
         targetField = [self durationField];
+        speakerTopY = 0;
     } else if (numberOfLines == 2) {
         targetField = [self lineTwoRightField];
+        speakerTopY = 7;
     } else if (numberOfLines == 3) {
         targetField = [self lineThreeRightField];
+        speakerTopY = 16;
     }
+    
+    [_speakerTopConstraint setConstant:speakerTopY];
 
     NSTextField *oldTargetField = [[_endTimeConstraints lastObject] secondItem];
 
@@ -268,7 +277,20 @@
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (object == _observedObject) {
-        if ([_observedKeyPaths containsObject:keyPath]) {
+    
+        if ([keyPath isEqualToString:@"trackStatus"]) {
+            
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *ac) {
+                [ac setAllowsImplicitAnimation:YES];
+                [ac setDuration:0.35];
+                [self _updateSpeakerIcon];
+                
+                [self layoutSubtreeIfNeeded];
+            } completionHandler:nil];
+
+            [self _updateView];
+
+        } else if ([_observedKeyPaths containsObject:keyPath]) {
             [self _updateView];
         }
     }
@@ -352,7 +374,7 @@
         return [NSColor whiteColor];
     }
 
-    if (trackStatus == TrackStatusPlaying) {
+    if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
         return GetRGBColor(_selected ? 0x0 : 0x1866e9, 1.0);
     } else if (trackStatus == TrackStatusPlayed) {
         return GetRGBColor(0x000000, 0.5);
@@ -370,7 +392,7 @@
         return [NSColor colorWithCalibratedWhite:1.0 alpha:0.66];
     }
 
-    if (trackStatus == TrackStatusPlaying) {
+    if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
         return GetRGBColor(_selected ? 0x0 : 0x1866e9, 0.8);
     } else if (trackStatus == TrackStatusPlayed) {
         return GetRGBColor(0x000000, 0.4);
@@ -419,21 +441,20 @@
 
 - (void) _updateView
 {
-    Track      *track       = [self track];
-    TrackStatus trackStatus = [track trackStatus];
-    BOOL        isPlaying   = (trackStatus == TrackStatusPlaying);
+    Track *track = [self track];
 
     [self _updateStripeAndBorderedView];
     [self _updateSpeakerImage];
 
     if ([self track]) {
+        [self _updateDuplicateIcon];
         [self _updateFieldStrings];
         [self _updateFieldHidden];
         [self _updateFieldColors];
         [self _updateFieldAlphas];
-        [self _updateDuplicateIcon];
     }
 
+    [self _updateSpeakerIcon];
     [self _adjustConstraintsForLineLayout];
 
     // Update constraints
@@ -442,26 +463,30 @@
     } else {
         [NSLayoutConstraint deactivateConstraints:_errorButtonConstraints];
     }
-
-    if (_animatesSpeakerImage) {
-        [[_speakerLeftConstraint animator] setConstant:(  isPlaying ? 4.0 : -18.0)];
-        [[_speakerImageView      animator] setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
-
-    } else {
-        [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
-        [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
-    }
 }
+
+
+- (void) _updateSpeakerIcon
+{
+    TrackStatus trackStatus = [[self track] trackStatus];
+    BOOL        isPlaying   = (trackStatus == TrackStatusPlaying);
+    
+    [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
+    [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+}
+
 
 - (void) _updateDuplicateIcon
 {
     BOOL showsDuplicateIcon = [[Preferences sharedInstance] showsDuplicateStatus] && [[self track] isDuplicate];
-    CGFloat constant = 8;
     
     if (showsDuplicateIcon && !_duplicateImageView) {
+        NSImage *image = [NSImage imageNamed:@"DuplicateTemplate"];
+        [image setTemplate:YES];
+        
         _duplicateImageView = [[NoDropImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
         [_duplicateImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [_duplicateImageView setImage:[NSImage imageNamed:@"DuplicateTemplate"]];
+        [_duplicateImageView setImage:image];
         [[_durationField superview] addSubview:_duplicateImageView];
         
         _duplicateConstraints = @[
@@ -471,8 +496,6 @@
 
         [NSLayoutConstraint activateConstraints:_duplicateConstraints];
 
-        constant = 18;
-
     } else if (!showsDuplicateIcon && _duplicateImageView) {
         [_duplicateImageView removeFromSuperview];
         _duplicateImageView = nil;
@@ -481,7 +504,7 @@
         _duplicateConstraints = nil;
     }
 
-    [_titleDurationConstraint setConstant:constant];
+    [_titleDurationConstraint setConstant:showsDuplicateIcon ? 18 : 8];
 }
 
 
@@ -545,7 +568,7 @@
 
 - (void) _updateSpeakerImage
 {
-    BOOL isPlaying   = ([[self track] trackStatus] == TrackStatusPlaying);
+    BOOL isPlaying = ([[self track] trackStatus] == TrackStatusPlaying);
 
     if ([[self window] isMainWindow] && _selected)  {
         [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerWhite"]];
@@ -723,6 +746,8 @@
     [[self lineTwoRightField]   setTextColor:bottomTextColor];
     [[self lineThreeLeftField]  setTextColor:bottomTextColor];
     [[self lineThreeRightField] setTextColor:bottomTextColor];
+    
+    [_duplicateImageView setTintColor:topTextColor];
 }
 
 
@@ -765,6 +790,7 @@
 
     _endTimeRequested = YES;
     [self _updateEndTimeVisibilityAnimated:YES];
+
 }
 
 

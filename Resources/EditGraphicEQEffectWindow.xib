@@ -1,84 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B3116" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="EditEffectController">
+        <customObject id="-2" userLabel="File's Owner" customClass="EditGraphicEQEffectController">
             <connections>
-                <outlet property="containerView" destination="QjC-XB-GIk" id="AtY-lc-Q5t"/>
-                <outlet property="modeControl" destination="ITg-zo-Igb" id="Yew-52-ZAO"/>
-                <outlet property="modeToolbarItem" destination="KQx-SR-72V" id="okJ-GS-jNR"/>
+                <outlet property="backgroundView" destination="wze-ct-bgL" id="4H9-R9-l5i"/>
+                <outlet property="graphicEQView" destination="y1v-uw-fLy" id="hEm-bY-Dbg"/>
+                <outlet property="toolbar" destination="meN-VO-IvV" id="L1T-7S-fiv"/>
                 <outlet property="window" destination="5mm-8W-u52" id="RhH-N2-3zC"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="5mm-8W-u52">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="159" width="240" height="160"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" texturedBackground="YES" unifiedTitleAndToolbar="YES"/>
+            <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="564" y="492" width="240" height="160"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" id="wIn-2X-2Cg">
                 <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="WpL-KR-LJI">
-                        <rect key="frame" x="-1" y="-1" width="242" height="162"/>
+                    <customView id="wze-ct-bgL" customClass="BorderedView">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="cS9-gR-JAk">
-                            <rect key="frame" x="1" y="1" width="240" height="160"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <view id="QjC-XB-GIk">
-                                    <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                            </subviews>
-                        </clipView>
-                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="4J7-Ux-heF">
-                            <rect key="frame" x="1" y="145" width="240" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="a4t-9F-ucl">
-                            <rect key="frame" x="225" y="1" width="16" height="160"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
+                        <subviews>
+                            <customView id="y1v-uw-fLy" customClass="GraphicEQView">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </customView>
+                        </subviews>
+                    </customView>
                 </subviews>
             </view>
             <toolbar key="toolbar" implicitIdentifier="5EA7A9ED-9BC9-445F-BB78-6FA70E749604" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="meN-VO-IvV">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="F2a-ag-Lat"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Djo-0R-cRX"/>
-                    <toolbarItem implicitItemIdentifier="064952C8-105A-4496-B3E6-B7244A8CBDBB" label="Custom View" paletteLabel="Custom View" id="KQx-SR-72V">
-                        <nil key="toolTip"/>
-                        <size key="minSize" width="67" height="24"/>
-                        <size key="maxSize" width="72" height="25"/>
-                        <segmentedControl key="view" verticalHuggingPriority="750" id="ITg-zo-Igb">
-                            <rect key="frame" x="5" y="14" width="67" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <segmentedCell key="cell" alignment="left" style="texturedSquare" trackingMode="selectOne" id="OdN-qe-wxh">
-                                <font key="font" metaFont="system"/>
-                                <segments>
-                                    <segment image="NSIconViewTemplate" width="32"/>
-                                    <segment image="NSListViewTemplate" width="32" selected="YES" tag="1"/>
-                                </segments>
-                            </segmentedCell>
-                        </segmentedControl>
-                        <connections>
-                            <action selector="switchView:" target="-2" id="xlv-Uq-Im4"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="7073E97C-63B1-42C7-80C0-D9513F38356A" label="Custom View" paletteLabel="Custom View" image="NSActionTemplate" id="V7A-fq-fJ9">
+                    <toolbarItem implicitItemIdentifier="7073E97C-63B1-42C7-80C0-D9513F38356A" explicitItemIdentifier="Gear" label="Gear Menu" paletteLabel="Gear Menu" image="NSActionTemplate" id="V7A-fq-fJ9">
                         <nil key="toolTip"/>
                         <size key="minSize" width="48" height="25"/>
                         <size key="maxSize" width="48" height="25"/>
                         <popUpButton key="view" verticalHuggingPriority="750" id="Vhz-Hc-1lJ">
                             <rect key="frame" x="15" y="14" width="48" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <popUpButtonCell key="cell" type="squareTextured" title="Item 1" bezelStyle="texturedSquare" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="ET6-Ie-CeB">
+                            <popUpButtonCell key="cell" type="squareTextured" title="Item 1" bezelStyle="texturedSquare" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="7Nt-8j-k46" id="ET6-Ie-CeB">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="menu"/>
                                 <menu key="menu" title="OtherViews" id="ofp-hi-2Ng">
@@ -117,20 +85,35 @@
                             </popUpButtonCell>
                         </popUpButton>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="NSToolbarSeparatorItem" id="Pyy-6K-BWd"/>
+                    <toolbarItem implicitItemIdentifier="9E3F8819-3CF3-48D5-8092-352F37A43181" explicitItemIdentifier="Flatten" label="Flatten" paletteLabel="Flatten" image="NSExitFullScreenTemplate" id="L7J-TV-BmH">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="48" height="25"/>
+                        <size key="maxSize" width="48" height="32"/>
+                        <button key="view" verticalHuggingPriority="750" id="r3g-K3-whW">
+                            <rect key="frame" x="0.0" y="14" width="48" height="25"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSExitFullScreenTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mVa-6F-cXi">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                        </button>
+                        <connections>
+                            <action selector="flatten:" target="y1v-uw-fLy" id="zTD-Np-f0b"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
-                    <toolbarItem reference="KQx-SR-72V"/>
                     <toolbarItem reference="Djo-0R-cRX"/>
+                    <toolbarItem reference="L7J-TV-BmH"/>
                     <toolbarItem reference="V7A-fq-fJ9"/>
                 </defaultToolbarItems>
             </toolbar>
+            <point key="canvasLocation" x="597" y="415"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="Rzj-OB-R5q"/>
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
-        <image name="NSIconViewTemplate" width="11" height="10"/>
-        <image name="NSListViewTemplate" width="11" height="10"/>
+        <image name="NSExitFullScreenTemplate" width="15" height="15"/>
     </resources>
 </document>

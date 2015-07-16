@@ -75,6 +75,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[self tableView] registerNib:nib forIdentifier:@"TrackCell"];
 
     [self _loadState];
+    [self _detectDuplicates];
     [[self tableView] reloadData];
     
     _didInit = YES;
@@ -163,9 +164,49 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
+- (void) _detectDuplicates
+{
+    NSMutableDictionary *urlToTrackMap        = [NSMutableDictionary dictionaryWithCapacity:[_tracks count]];
+    NSMutableDictionary *databaseIDToTrackMap = [NSMutableDictionary dictionaryWithCapacity:[_tracks count]];
+
+    for (Track *track in _tracks) {
+        NSInteger databaseID = [track databaseID];
+        NSURL *externalURL = [track externalURL];
+        BOOL isDuplicate = NO;
+        
+        if (databaseID) {
+            NSNumber *key = @(databaseID);
+            Track *existingTrack = [databaseIDToTrackMap objectForKey:key];
+            
+            if (existingTrack) {
+                [existingTrack setDuplicate:YES];
+                isDuplicate = YES;
+            }
+
+            [databaseIDToTrackMap setObject:track forKey:key];
+        }
+        
+        if (externalURL) {
+            Track *existingTrack = [urlToTrackMap objectForKey:externalURL];
+            
+            if (existingTrack) {
+                [existingTrack setDuplicate:YES];
+                isDuplicate = YES;
+            }
+            
+            [urlToTrackMap setObject:track forKey:externalURL];
+        }
+        
+        [track setDuplicate:isDuplicate];
+    }
+}
+
+
 - (void) _didModifyTracks
 {
     TrackTrialCheck(^{
+        [self _detectDuplicates];
+
         NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
         [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
 
@@ -318,8 +359,8 @@ static NSString * const sModifiedAtKey = @"modified-at";
 {
     __block CGFloat result = 0;
 
-    const CGFloat kOneLineHeight   = 25;
-    const CGFloat kTwoLineHeight   = 40;
+    const CGFloat kOneLineHeight   = 24;
+    const CGFloat kTwoLineHeight   = 39;
     const CGFloat kThreeLineHeight = 56;
     
 
@@ -447,11 +488,9 @@ static NSString * const sModifiedAtKey = @"modified-at";
 
 - (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
-    EmbraceLog(@"TracksController", @"Accepting drop");
+    EmbraceLog(@"TracksController", @"Accepting drop: %@ -> %ld, %ld", _draggedIndexSet, (long)row, (long)dropOperation);
 
     NSDragOperation dragOperation = [self tableView:_tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
-    NSLog(@"%ld,%ld -> %ld", (long)row, (long)dropOperation, (long)dragOperation);
-
     [_tableView updateInsertionPointWorkaround:NO];
 
     NSPasteboard *pboard = [info draggingPasteboard];
@@ -752,10 +791,14 @@ static NSString * const sModifiedAtKey = @"modified-at";
             [track setTrackStatus:TrackStatusQueued];
         }
     }
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [context setDuration:0];
 
-    [[self tableView] beginUpdates];
-    [[self tableView] noteHeightOfRowsWithIndexesChanged:[[self tableView] selectedRowIndexes]];
-    [[self tableView] endUpdates];
+        [[self tableView] beginUpdates];
+        [[self tableView] noteHeightOfRowsWithIndexesChanged:[[self tableView] selectedRowIndexes]];
+        [[self tableView] endUpdates];
+    } completionHandler:nil];
 }
 
 
