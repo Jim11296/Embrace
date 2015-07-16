@@ -98,6 +98,14 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
 - (void) _setAudioUnit:(AudioUnit)audioUnit error:(OSStatus)err
 {
+    if ((audioUnit != _audioUnit) && audioUnit) {
+        MappedEffectTypeConfigurator configurator = [[self type] configurator];
+        
+        if (configurator) {
+            configurator(audioUnit);
+        }
+    }
+
     _audioUnit = audioUnit;
     _audioUnitError = err;
 

@@ -119,7 +119,6 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     [[window standardWindowButton:NSWindowZoomButton]        setHidden:YES];
     
-    
     [window addListener:[self gearButton]];
     [window addListener:[self playButton]];
     [window addListener:[self volumeSlider]];
@@ -177,6 +176,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
+    
+    [self windowDidUpdateMain:nil];
 }
 
 #if TRIAL
@@ -475,7 +476,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         if (status == TrackStatusPlayed) {
             continue;
 
-        } else if (status == TrackStatusPlaying) {
+        } else if (status == TrackStatusPreparing || status == TrackStatusPlaying) {
             if ([track isEqual:[player currentTrack]]) {
                 time += [player timeRemaining];
                 endTime = now + time;
@@ -982,14 +983,18 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     BorderedView *bottomContainer = [self bottomContainer];
     
     if ([window isMainWindow]) {
-        [topContainer setBackgroundGradientTopColor:      [NSColor colorWithCalibratedWhite:(0xec / 255.0) alpha:1.0]];
-        [topContainer setBackgroundGradientBottomColor:   [NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
+        [topContainer    setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xec / 255.0) alpha:1.0]];
+        [topContainer    setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
         [bottomContainer setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xe0 / 255.0) alpha:1.0]];
         [bottomContainer setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
+        [topContainer    setBackgroundColor:nil];
+        [bottomContainer setBackgroundColor:nil];
     } else {
-        [topContainer    setBackgroundGradientTopColor:nil];
+        [topContainer    setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
+        [bottomContainer setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
+        [topContainer    setBackgroundGradientTopColor:   nil];
         [topContainer    setBackgroundGradientBottomColor:nil];
-        [bottomContainer setBackgroundGradientTopColor:nil];
+        [bottomContainer setBackgroundGradientTopColor:   nil];
         [bottomContainer setBackgroundGradientBottomColor:nil];
     }
 }

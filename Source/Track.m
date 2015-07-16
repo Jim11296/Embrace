@@ -269,6 +269,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
     Track *result = [[[self class] alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
     result->_dirty = YES;
+    
+    [result setTrackStatus:TrackStatusQueued];
+    
     return result;
 }
 
@@ -357,6 +360,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (void) _reallySaveState
 {
+    // Never save the state until we have a bookmark
+    if (!_bookmark) return;
+
+    // This track is dead
+    if (_cleared) return;
+
     NSMutableDictionary *state = [NSMutableDictionary dictionary];
 
     [self _writeStateToDictionary:state];

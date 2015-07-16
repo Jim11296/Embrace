@@ -19,4 +19,34 @@
     return self;
 }
 
+
+
+- (void) drawRect:(NSRect)dirtyRect
+{
+    if (!_tintColor) {
+        [super drawRect:dirtyRect];
+        return;
+    }
+
+    NSImage *image = [self image];
+    NSSize size = [image size];
+    NSRect rect = NSZeroRect;
+    rect.size = size;
+
+    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
+
+    
+    [_tintColor set];
+    NSRectFillUsingOperation(rect, NSCompositeSourceIn);
+}
+
+
+- (void) setTintColor:(NSColor *)tintColor
+{
+    if (_tintColor != tintColor) {
+        _tintColor = tintColor;
+        [self setNeedsDisplay];
+    }
+}
+
 @end

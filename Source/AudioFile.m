@@ -209,7 +209,7 @@
         dispatch_semaphore_signal(semaphore);
     }];
 
-    int64_t fifteenSecondsInNs = 15 * 1000 * 1000 * 1000;
+    int64_t fifteenSecondsInNs = 15l * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(semaphore, dispatch_time(0, fifteenSecondsInNs))) {
         EmbraceLog(@"AudioFile", @"%@ dispatch_semaphore_wait() timed out!", self);
         [session cancelExport];

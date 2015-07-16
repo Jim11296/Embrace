@@ -35,6 +35,8 @@
         [_playhead     setBackgroundColor:[GetRGBColor(0x000000, 1.0) CGColor]];
         [_bottomBorder setBackgroundColor:[GetRGBColor(0x0, 0.15) CGColor]];
 
+        [_playhead setCornerRadius:1];
+
         [self setWantsLayer:YES];
         [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
         [[self layer] setMasksToBounds:YES];
@@ -48,44 +50,6 @@
     return self;
 }
 
-/*
-
-- (void) drawRect:(NSRect)dirtyRect
-{
-	[super drawRect:dirtyRect];
-	
-    NSRect bounds = [self bounds];
-
-    CGFloat barHeight = 5;
-
-    NSRect barRect = bounds;
-    barRect.size.height = barHeight;
-    barRect.origin.y = 0;
-
-    CGFloat midX = bounds.size.width * _percentage;
-    
-    NSRect leftRect, rightRect;
-    NSDivideRect(bounds, &leftRect, &rightRect, midX - bounds.origin.x, NSMinXEdge);
-
-    NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRect:barRect];
-    
-    [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext saveGraphicsState];
-
-    [GetRGBColor(0x0, 0.66) set];
-    [[NSBezierPath bezierPathWithRect:leftRect] addClip];
-    [roundedPath fill];
-
-    [NSGraphicsContext restoreGraphicsState];
-    
-    [GetRGBColor(0x0, 0.15) set];
-    [[NSBezierPath bezierPathWithRect:rightRect] addClip];
-    [roundedPath fill];
-    
-    [NSGraphicsContext restoreGraphicsState];
-}
-
-*/
 
 - (void) layout
 {
@@ -94,7 +58,7 @@
     NSRect bounds = [self bounds];
 
     NSRect barFrame = bounds;
-    barFrame.size.height = 4;
+    barFrame.size.height = 3;
 
     NSRect bottomFrame = bounds;
     bottomFrame.size.height = 1;
@@ -105,9 +69,9 @@
     if (!_playing) {
         barFrame.origin.y = -barFrame.size.height;
         playheadFrame.origin.y = -playheadFrame.size.height;
+    } else {
+        playheadFrame.origin.y = -1;
     }
-
-    
 
     CGFloat midX = bounds.size.width * _percentage;
     
@@ -119,9 +83,9 @@
     playheadFrame.origin.x = round((bounds.size.width - 2) * _percentage * scale) / scale;
     playheadFrame.size.width = 2;
     
-    [_activeBar setFrame:leftRect];
-    [_inactiveBar setFrame:rightRect];
-    [_playhead setFrame:playheadFrame];
+    [_activeBar    setFrame:leftRect];
+    [_inactiveBar  setFrame:rightRect];
+    [_playhead     setFrame:playheadFrame];
     [_bottomBorder setFrame:bottomFrame];
 }
 
