@@ -40,6 +40,19 @@ static inline void *sCompatibilityLookup(const UInt8 *inName)
     return dlsym(RTLD_NEXT, (char *)buffer);
 }
 
+@interface NSObject (EmbraceCompatibility)
+- (BOOL) embrace_compatibility1;
+@end
+
+@implementation NSObject (EmbraceCompatibility)
+
+- (BOOL) embrace_compatibility1;
+{
+    return NO;
+}
+
+@end
+
 
 static void sInit()
 {

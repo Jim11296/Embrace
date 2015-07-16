@@ -8,6 +8,7 @@
 
 #import "EffectType.h"
 
+static NSMutableArray *sMappedEffectTypes = nil;
 
 @implementation EffectType {
     AudioComponent _component;
@@ -16,58 +17,6 @@
 
 @synthesize AudioComponent = _component;
 @synthesize AudioComponentDescription = _componentDescription;
-
-+ (EffectFriendlyCategory) friendlyCategoryForName:(NSString *)name
-{
-    EffectFriendlyCategory result = EffectFriendlyCategorySpecial;
-
-    NSDictionary *map = @{
-        @"AUGraphicEQ":           @( EffectFriendlyCategoryEqualizers ),
-        @"AUNBandEQ":             @( EffectFriendlyCategoryEqualizers ),
-        @"AUParametricEQ":        @( EffectFriendlyCategoryEqualizers ),
-
-        @"AULowpass":             @( EffectFriendlyCategoryFilters ),
-        @"AULowShelfFilter":      @( EffectFriendlyCategoryFilters ),
-        @"AUHipass":              @( EffectFriendlyCategoryFilters ),
-        @"AUHighShelfFilter":     @( EffectFriendlyCategoryFilters ),
-
-        @"AUDynamicsProcessor":   @( EffectFriendlyCategoryDynamics ),
-        @"AUMultibandCompressor": @( EffectFriendlyCategoryDynamics ),
-        @"AUPeakLimiter":         @( EffectFriendlyCategoryDynamics )
-    };
-
-    NSNumber *categoryNumber = [map objectForKey:name];
-    if (categoryNumber) {
-        result = [categoryNumber integerValue];
-    }
-
-    return result;
-}
-
-
-+ (NSString *) friendlyNameForName:(NSString *)name
-{
-    NSDictionary *map = @{
-        @"AUDynamicsProcessor":   NSLocalizedString(@"Dynamics Processor", nil),
-        @"AUGraphicEQ":           NSLocalizedString(@"Graphic Equalizer", nil),
-        @"AUHipass":              NSLocalizedString(@"Highpass Filter", nil),
-        @"AUHighShelfFilter":     NSLocalizedString(@"Highshelf Filter", nil),
-        @"AUPeakLimiter":         NSLocalizedString(@"Peak Limiter", nil),
-        @"AULowpass":             NSLocalizedString(@"Lowpass Filter", nil),
-        @"AULowShelfFilter":      NSLocalizedString(@"Lowshelf Filter", nil),
-        @"AUMultibandCompressor": NSLocalizedString(@"Multiband Compressor", nil),
-        @"AUNBandEQ":             NSLocalizedString(@"N-Band Equalizer", nil),
-        @"AUParametricEQ":        NSLocalizedString(@"Parametric Equalizer", nil),
-    };
-    
-    NSString *friendlyName = [map objectForKey:name];
-    
-    if (!friendlyName) {
-        friendlyName = name;
-    }
-    
-    return friendlyName;
-}
 
 
 static BOOL sIsBlacklistedComponent(AudioComponent component)
@@ -84,12 +33,23 @@ static BOOL sIsBlacklistedComponent(AudioComponent component)
 }
 
 
++ (void) registerMappedTypeWithName: (NSString *) name
+          audioComponentDescription: (const AudioComponentDescription *) audioComponentDescription
+                       configurator: (MappedEffectTypeConfigurator) configurator
+{
+    if (!sMappedEffectTypes) {
+        sMappedEffectTypes = [NSMutableArray array];
+    }
+
+    EffectType *effectType = [[self alloc] _initAsMappedWithName:name audioComponentDescription:audioComponentDescription configurator:configurator];
+    if (effectType) [sMappedEffectTypes addObject:effectType];
+}
 
 + (NSArray *) allEffectTypes
 {
-    static NSArray *sAllEffectTypes = nil;
+    static NSArray *sBuiltInEffectTypes = nil;
 
-    if (!sAllEffectTypes) {
+    if (!sBuiltInEffectTypes) {
         AudioComponentDescription description;
 
         description.componentType = kAudioUnitType_Effect;
@@ -119,10 +79,36 @@ static BOOL sIsBlacklistedComponent(AudioComponent component)
             }
         } while (current != 0);
         
-        sAllEffectTypes = types;
+        sBuiltInEffectTypes = types;
     }
     
-    return sAllEffectTypes;
+    NSMutableArray *result = [NSMutableArray array];
+    
+    if (sMappedEffectTypes)  [result addObjectsFromArray:sMappedEffectTypes];
+    if (sBuiltInEffectTypes) [result addObjectsFromArray:sBuiltInEffectTypes];
+    
+    return result;
+}
+
+
+- (id) _initAsMappedWithName:(NSString *)name audioComponentDescription:(const AudioComponentDescription *)acd configurator:(MappedEffectTypeConfigurator)configurator
+{
+    if ((self = [super init])) {
+        _manufacturer = nil;
+        _componentDescription = *acd;
+        _component = AudioComponentFindNext(NULL, &_componentDescription);
+        _name = _fullName = name;
+        
+        if (!_component) {
+            self = nil;
+            return nil;
+        }
+
+        _mapped = YES;
+        _configurator = configurator;
+    }
+    
+    return self;
 }
 
 
@@ -163,16 +149,5 @@ static BOOL sIsBlacklistedComponent(AudioComponent component)
     return self;
 }
 
-
-- (NSString *) friendlyName
-{
-    return [EffectType friendlyNameForName:[self name]];
-}
-
-
-- (EffectFriendlyCategory) friendlyCategory
-{
-    return [EffectType friendlyCategoryForName:[self name]];
-}
 
 @end

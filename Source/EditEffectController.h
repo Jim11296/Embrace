@@ -16,4 +16,9 @@
 
 @property (nonatomic, weak) Effect *effect;
 
+- (IBAction) loadPreset:(id)sender;
+- (IBAction) savePreset:(id)sender;
+- (IBAction) restoreDefaultValues:(id)sender;
+- (IBAction) toggleBypass:(id)sender;
+
 @end

@@ -95,7 +95,7 @@
             </connections>
         </menu>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="EmbraceWindow">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="533" y="338" width="320" height="424"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
@@ -105,11 +105,11 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView appearanceType="aqua" id="K7L-NV-xHB" userLabel="Header" customClass="BorderedView">
-                        <rect key="frame" x="0.0" y="352" width="320" height="72"/>
+                        <rect key="frame" x="0.0" y="353" width="320" height="71"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
                             <customView appearanceType="aqua" id="9x2-yQ-Jbg" customClass="LevelMeter">
-                                <rect key="frame" x="57" y="35" width="210" height="16"/>
+                                <rect key="frame" x="57" y="36" width="210" height="16"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </customView>
                             <customView appearanceType="aqua" id="pkk-ZT-czS" customClass="PlayBar">
@@ -117,7 +117,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </customView>
                             <slider verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
-                                <rect key="frame" x="55" y="18" width="210" height="20"/>
+                                <rect key="frame" x="55" y="19" width="210" height="20"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
                                 <connections>
@@ -126,10 +126,10 @@
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
-                                <rect key="frame" x="269" y="6" width="46" height="14"/>
+                                <rect key="frame" x="269" y="7" width="46" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
-                                    <font key="font" metaFont="system" size="10"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -138,17 +138,17 @@
                                 </connections>
                             </textField>
                             <customView id="Twn-WM-C4J" customClass="Button">
-                                <rect key="frame" x="7" y="23" width="42" height="24"/>
+                                <rect key="frame" x="7" y="24" width="42" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
                                 </connections>
                             </customView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
-                                <rect key="frame" x="5" y="6" width="46" height="14"/>
+                                <rect key="frame" x="5" y="7" width="46" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
-                                    <font key="font" metaFont="system" size="10"/>
+                                    <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -157,7 +157,7 @@
                                 </connections>
                             </textField>
                             <customView id="4bi-5W-Bp7" customClass="Button">
-                                <rect key="frame" x="271" y="23" width="42" height="24"/>
+                                <rect key="frame" x="271" y="24" width="42" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
@@ -167,14 +167,14 @@
                         </subviews>
                     </customView>
                     <customView id="kmP-AQ-nuK">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="355"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
-                                <rect key="frame" x="0.0" y="28" width="320" height="324"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="325"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="324"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">

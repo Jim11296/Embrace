@@ -326,7 +326,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     // Wait for the prime semaphore, this should be very fast.  If we can't decode at least 10 seconds
     // of audio in 5 seconds, something is wrong, and flip the error to "read too slow"
     //
-    int64_t fiveSecondsInNs = 5 * 1000 * 1000 * 1000;
+    int64_t fiveSecondsInNs = 5l * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(primeSemaphore, dispatch_time(0, fiveSecondsInNs))) {
         EmbraceLog(@"TrackScheduler", @"dispatch_semaphore_wait() timed out for %@", _track);
         [self setAudioFileError:AudioFileErrorReadTooSlow];
