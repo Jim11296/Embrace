@@ -254,9 +254,9 @@ const CGFloat sTrackWidth      = 5;
     }
 
     void (^sendValue)() = ^{
-        NSInteger index = [_bandViews indexOfObject:_selectedBandView];
+        NSInteger bandIndex = [_bandViews indexOfObject:_selectedBandView];
         
-        if (index != NSNotFound) {
+        if (bandIndex != NSNotFound) {
             AudioUnitParameter parameter = {0};
             parameter.mAudioUnit   = _audioUnit;
             parameter.mParameterID = (AudioUnitParameterID)index;
