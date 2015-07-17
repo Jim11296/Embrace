@@ -258,6 +258,44 @@
 }
 
 
+#pragma mark - Private Methods
+
+- (EditEffectController *) _equalizerEffectController
+{
+    for (Effect *effect in [[Player sharedInstance] effects]) {
+        NSString *effectName = [[effect type] name];
+
+        if ([effectName isEqualToString:EmbraceMappedEffect10BandEQ] ||
+            [effectName isEqualToString:EmbraceMappedEffect31BandEQ] ||
+            [effectName isEqualToString:@"AUGraphicEQ"] ||
+            [effectName isEqualToString:@"AUNBandEQ"]
+        ) {
+            return [self editControllerForEffect:effect];
+        }
+    }
+
+    return nil;
+}
+
+
+- (void) _toggleWindowForController:(NSWindowController *)controller sender:(id)sender
+{
+    BOOL orderIn = YES;
+
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+        if ([sender state] == NSOnState) {
+            orderIn = NO;
+        }
+    }
+    
+    if (orderIn) {
+        [controller showWindow:self];
+    } else {
+        [[controller window] orderOut:self];
+    }
+}
+
+
 #pragma mark - Public Methods
 
 - (void) performPreferredPlaybackAction
@@ -463,7 +501,19 @@
     } else if (action == @selector(showCurrentTrack:)) {
         BOOL yn = [_currentTrackController isWindowLoaded] && [[_currentTrackController window] isMainWindow];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
+        
+    } else if (action == @selector(showEqualizer:)) {
+        EditEffectController *equalizerController = [self _equalizerEffectController];
 
+        if (equalizerController) {
+            BOOL yn = [equalizerController isWindowLoaded] && [[equalizerController window] isMainWindow];
+            [menuItem setState:(yn ? NSOnState : NSOffState)];
+
+        } else {
+            [menuItem setState:NSOffState];
+            return NO;
+        }
+        
     } else if (action == @selector(changeViewAttributes:)) {
         TrackViewAttribute viewAttribute = [menuItem tag];
         BOOL isEnabled = [[Preferences sharedInstance] numberOfLayoutLines] > 1;
@@ -716,24 +766,6 @@
 }
 
 
-- (void) _toggleWindowForController:(NSWindowController *)controller sender:(id)sender
-{
-    BOOL orderIn = YES;
-
-    if ([sender isKindOfClass:[NSMenuItem class]]) {
-        if ([sender state] == NSOnState) {
-            orderIn = NO;
-        }
-    }
-    
-    if (orderIn) {
-        [controller showWindow:self];
-    } else {
-        [[controller window] orderOut:self];
-    }
-}
-
-
 - (IBAction) showSetlistWindow:(id)sender
 {
     EmbraceLogMethod();
@@ -752,6 +784,17 @@
 {
     EmbraceLogMethod();
     [self _toggleWindowForController:_currentTrackController sender:sender];
+}
+
+
+- (IBAction) showEqualizer:(id)sender
+{
+    EmbraceLogMethod();
+
+    EditEffectController *equalizerController = [self _equalizerEffectController];
+    if (equalizerController) {
+        [self _toggleWindowForController:equalizerController sender:sender];
+    }
 }
 
 
