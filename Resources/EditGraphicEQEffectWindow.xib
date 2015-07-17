@@ -85,14 +85,14 @@
                             </popUpButtonCell>
                         </popUpButton>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="9E3F8819-3CF3-48D5-8092-352F37A43181" explicitItemIdentifier="Flatten" label="Flatten" paletteLabel="Flatten" image="NSExitFullScreenTemplate" id="L7J-TV-BmH">
+                    <toolbarItem implicitItemIdentifier="9E3F8819-3CF3-48D5-8092-352F37A43181" explicitItemIdentifier="Flatten" label="Flatten" paletteLabel="Flatten" image="FlattenTemplate" id="L7J-TV-BmH">
                         <nil key="toolTip"/>
                         <size key="minSize" width="48" height="25"/>
                         <size key="maxSize" width="48" height="32"/>
-                        <button key="view" verticalHuggingPriority="750" id="r3g-K3-whW">
+                        <button key="view" toolTip="Flatten all bands" verticalHuggingPriority="750" id="r3g-K3-whW">
                             <rect key="frame" x="0.0" y="14" width="48" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSExitFullScreenTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mVa-6F-cXi">
+                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="FlattenTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mVa-6F-cXi">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -113,7 +113,7 @@
         <userDefaultsController representsSharedInstance="YES" id="Rzj-OB-R5q"/>
     </objects>
     <resources>
+        <image name="FlattenTemplate" width="9" height="9"/>
         <image name="NSActionTemplate" width="14" height="14"/>
-        <image name="NSExitFullScreenTemplate" width="15" height="15"/>
     </resources>
 </document>

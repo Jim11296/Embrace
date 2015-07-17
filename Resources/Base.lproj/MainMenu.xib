@@ -122,8 +122,8 @@
                                     <action selector="saveSetlist:" target="494" id="KHx-V9-rYa"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Export to iTunes…" keyEquivalent="e" id="112">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="Export to iTunes…" id="112">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="exportSetlist:" target="494" id="SGv-aQ-4hz"/>
                                 </connections>
@@ -416,6 +416,12 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="showCurrentTrack:" target="494" id="Wp8-ec-Fio"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Equalizer" keyEquivalent="e" id="cOX-sn-C2h">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showEqualizer:" target="494" id="fE8-ju-1j9"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Debug" hidden="YES" keyEquivalent="0" id="SIh-TN-z42">

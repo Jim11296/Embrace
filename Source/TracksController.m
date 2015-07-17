@@ -553,11 +553,13 @@ static NSString * const sModifiedAtKey = @"modified-at";
                 }
             }];
         }
-        
+
+        TrackTrialCheck(^{
+            [self _didModifyTracks];
+        });
+
         [[self tableView] endUpdates];
         
-        [[self tableView] reloadData];
-
 #if TRIAL
         if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -565,10 +567,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
             });
         }
 #endif
-
-        TrackTrialCheck(^{
-            [self _didModifyTracks];
-        });
 
         return YES;
 
