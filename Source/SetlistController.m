@@ -907,7 +907,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) menuWillOpen:(NSMenu *)menu
 {
-    BOOL showLabels = YES;
+    BOOL showLabels = [[Preferences sharedInstance] showsColorLabels];
 
     NSMutableSet *selectedLabels = [NSMutableSet set];
     TrackLabel    trackLabel     = TrackLabelNone;
@@ -925,7 +925,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         trackLabel = TrackLabelNone;
         showLabels = NO;
     }
-
+    
     if ([menu isEqual:[self gearMenu]]) {
         [[self gearLabelSeparator] setHidden:!showLabels];
         [[self gearLabelMenuItem]  setHidden:!showLabels];

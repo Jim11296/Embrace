@@ -26,7 +26,9 @@ typedef NS_ENUM(NSInteger, TrackViewAttribute) {
     TrackViewAttributeRawKeySignature = 5,
     TrackViewAttributeEnergyLevel     = 6,
     TrackViewAttributeGenre           = 7,
-    TrackViewAttributeDuplicateStatus = 8
+    TrackViewAttributeDuplicateStatus = 8,
+    TrackViewAttributePlayingStatus   = 9,
+    TrackViewAttributeColorLabels     = 10
 };
 
 extern NSString * const PreferencesDidChangeNotification;
@@ -50,6 +52,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) BOOL showsGrouping;
 @property (nonatomic) BOOL showsKeySignature;
 @property (nonatomic) BOOL showsEnergyLevel;
+@property (nonatomic) BOOL showsPlayingStatus;
+@property (nonatomic) BOOL showsColorLabels;
 
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 
