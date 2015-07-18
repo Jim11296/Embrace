@@ -471,6 +471,10 @@
     TrackStatus trackStatus = [[self track] trackStatus];
     BOOL        isPlaying   = (trackStatus == TrackStatusPlaying);
     
+    if (![[Preferences sharedInstance] showsPlayingStatus]) {
+        isPlaying = NO;
+    }
+    
     [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
     [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
 }
@@ -535,6 +539,7 @@
     TrackLabel trackLabel = [track trackLabel];
     [[self stripeView] setFillColor:GetFillColorForTrackLabel(trackLabel)];
     [[self stripeView] setBorderColor:GetBorderColorForTrackLabel(trackLabel)];
+    [[self stripeView] setHidden:![[Preferences sharedInstance] showsColorLabels]];
 
     if (_selected) {
         if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
@@ -570,7 +575,7 @@
 {
     BOOL isPlaying = ([[self track] trackStatus] == TrackStatusPlaying);
 
-    if ([[self window] isMainWindow] && _selected)  {
+    if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
         [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerWhite"]];
         return;
     }

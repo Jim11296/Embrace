@@ -118,6 +118,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 - (void) draggingExited:(id <NSDraggingInfo>)sender
 {
     [super draggingExited:sender];
+    [self updateSelectedColorWorkaround:NO];
     [self updateInsertionPointWorkaround:NO];
 }
 

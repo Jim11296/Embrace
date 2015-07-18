@@ -416,6 +416,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
     }
 
     _draggedIndexSet = nil;
+    _draggedIndexSetIsContiguous = NO;
 }
 
 
@@ -423,13 +424,18 @@ static NSString * const sModifiedAtKey = @"modified-at";
 {
     NSPasteboard *pasteboard = [info draggingPasteboard];
 
-    BOOL isLockedTrack =  ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
-    BOOL isQueuedTrack =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
-    
+    BOOL isLockedTrack   =  ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
+    BOOL isQueuedTrack   =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
+    BOOL isExternalTrack = !isLockedTrack && !isQueuedTrack;
+
     [_tableView updateInsertionPointWorkaround:NO];
 
     NSDragOperation mask = [info draggingSourceOperationMask];
     BOOL isCopy = (mask & (NSDragOperationGeneric|NSDragOperationCopy)) == NSDragOperationCopy;
+    
+    if (isExternalTrack) {
+        isCopy = YES;
+    }
     
     if (dropOperation == NSTableViewDropAbove) {
         Track *track = [self trackAtIndex:row];

@@ -229,6 +229,12 @@ CA
                                                 <action selector="changeViewAttributes:" target="494" id="jK9-Bc-dxG"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Color Labels" tag="10" id="xKj-VM-5bN">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="Ubw-hG-qhY"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Comments" tag="2" id="eGL-AW-03d">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -263,6 +269,12 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeViewAttributes:" target="494" id="TeA-OO-XNQ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Playing Status" tag="9" id="ufO-D6-hjz">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="ThG-3N-YBL"/>
                                             </connections>
                                         </menuItem>
                                     </items>

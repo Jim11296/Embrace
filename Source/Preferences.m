@@ -22,7 +22,7 @@ static NSDictionary *sGetDefaultValues()
 
     sDefaultValues = @{
         @"numberOfLayoutLines":  @2,
-        @"shortensPlayedTracks": @YES,
+        @"shortensPlayedTracks": @NO,
 
         @"showsArtist":          @YES,
         @"showsBPM":             @YES,
@@ -32,6 +32,8 @@ static NSDictionary *sGetDefaultValues()
         @"showsEnergyLevel":     @NO,
         @"showsGenre":           @NO,
         @"showsDuplicateStatus": @YES,
+        @"showsPlayingStatus":   @YES,
+        @"showsColorLabels":     @YES,
 
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
@@ -173,6 +175,12 @@ static void sRegisterDefaults()
 
     } else if (attribute == TrackViewAttributeDuplicateStatus) {
         return @"showsDuplicateStatus";
+
+    } else if (attribute == TrackViewAttributePlayingStatus) {
+        return @"showsPlayingStatus";
+
+    } else if (attribute == TrackViewAttributeColorLabels) {
+        return @"showsColorLabels";
     }
     
     return nil;
