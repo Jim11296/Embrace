@@ -33,6 +33,9 @@
         [_mainLayer    setContentsGravity:kCAGravityLeft];
         [_auxLayer     setContentsGravity:kCAGravityLeft];
         
+        [_mainLayer setNeedsDisplayOnBoundsChange:YES];
+        [_auxLayer  setNeedsDisplayOnBoundsChange:YES];
+        
         [_auxLayer setHidden:YES];
 
         [self setWantsLayer:YES];

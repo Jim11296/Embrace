@@ -47,6 +47,7 @@
 		55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CC118B97ADB0059110C /* CrashPadClient.m */; };
 		55717BF5187EA65400213213 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* Button.m */; };
 		55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* WhiteSlider.m */; };
+		557ABAB61B68D48C006F69D9 /* DotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557ABAB51B68D48C006F69D9 /* DotView.m */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
 		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
 		557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */; };
@@ -227,6 +228,8 @@
 		55717BF4187EA65400213213 /* Button.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Button.m; path = Source/Button.m; sourceTree = SOURCE_ROOT; };
 		55717BF6187EAB8C00213213 /* WhiteSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WhiteSlider.h; path = Source/WhiteSlider.h; sourceTree = SOURCE_ROOT; };
 		55717BF7187EAB8C00213213 /* WhiteSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WhiteSlider.m; path = Source/WhiteSlider.m; sourceTree = SOURCE_ROOT; };
+		557ABAB41B68D48C006F69D9 /* DotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DotView.h; path = Source/DotView.h; sourceTree = SOURCE_ROOT; };
+		557ABAB51B68D48C006F69D9 /* DotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DotView.m; path = Source/DotView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
 		557C2C591897403E002FAFEA /* CABitOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABitOperations.h; path = CoreAudio/PublicUtility/CABitOperations.h; sourceTree = "<group>"; };
@@ -722,6 +725,8 @@
 				55717BF4187EA65400213213 /* Button.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
+				557ABAB41B68D48C006F69D9 /* DotView.h */,
+				557ABAB51B68D48C006F69D9 /* DotView.m */,
 				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
 				55A708B018A715C1007BD7C0 /* DragSongsHereView.m */,
 				5595A7BA18793B9000A7B996 /* EmbraceWindow.h */,
@@ -1080,6 +1085,7 @@
 				55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */,
 				55ADE93518815EA8008DC245 /* PlayBar.m in Sources */,
 				5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */,
+				557ABAB61B68D48C006F69D9 /* DotView.m in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,

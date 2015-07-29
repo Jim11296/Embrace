@@ -229,7 +229,13 @@ CA
                                                 <action selector="changeViewAttributes:" target="494" id="jK9-Bc-dxG"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Color Labels" tag="10" id="xKj-VM-5bN">
+                                        <menuItem title="Color Label Dot" tag="11" id="PBW-RG-pBB">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeViewAttributes:" target="494" id="3xi-Yd-QWp"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Color Label Stripe" tag="10" id="xKj-VM-5bN">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeViewAttributes:" target="494" id="Ubw-hG-qhY"/>
