@@ -907,7 +907,8 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 
 - (void) menuWillOpen:(NSMenu *)menu
 {
-    BOOL showLabels = [[Preferences sharedInstance] showsColorLabels];
+    BOOL showLabels = [[Preferences sharedInstance] showsLabelDots] ||
+                      [[Preferences sharedInstance] showsLabelStripes];
 
     NSMutableSet *selectedLabels = [NSMutableSet set];
     TrackLabel    trackLabel     = TrackLabelNone;

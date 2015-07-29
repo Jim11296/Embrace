@@ -33,7 +33,8 @@ static NSDictionary *sGetDefaultValues()
         @"showsGenre":           @NO,
         @"showsDuplicateStatus": @YES,
         @"showsPlayingStatus":   @YES,
-        @"showsColorLabels":     @YES,
+        @"showsLabelDots":       @NO,
+        @"showsLabelStripes":    @YES,
 
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
@@ -179,8 +180,11 @@ static void sRegisterDefaults()
     } else if (attribute == TrackViewAttributePlayingStatus) {
         return @"showsPlayingStatus";
 
-    } else if (attribute == TrackViewAttributeColorLabels) {
-        return @"showsColorLabels";
+    } else if (attribute == TrackViewAttributeLabelDots) {
+        return @"showsLabelDots";
+
+    } else if (attribute == TrackViewAttributeLabelStripes) {
+        return @"showsLabelStripes";
     }
     
     return nil;

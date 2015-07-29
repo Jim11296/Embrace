@@ -15,6 +15,7 @@
 #import "Preferences.h"
 #import "TrackTableView.h"
 #import "StripeView.h"
+#import "DotView.h"
 
 #define SLOW_ANIMATIONS 0
 
@@ -59,8 +60,13 @@
     NSArray        *_errorButtonConstraints;
     NSArray        *_endTimeConstraints;
 
-    NoDropImageView *_duplicateImageView;
-    NSArray         *_duplicateConstraints;
+    NoDropImageView    *_duplicateImageView;
+    NSArray            *_duplicateConstraints;
+    NSLayoutConstraint *_duplicateTrailingConstraint;
+    
+    DotView            *_dotView;
+    NSArray            *_dotConstraints;
+    NSLayoutConstraint *_dotTrailingConstraint;
 
     NSTrackingArea *_trackingArea;
     BOOL            _mouseInside;
@@ -447,7 +453,7 @@
     [self _updateSpeakerImage];
 
     if ([self track]) {
-        [self _updateDuplicateIcon];
+        [self _updateRightIcons];
         [self _updateFieldStrings];
         [self _updateFieldHidden];
         [self _updateFieldColors];
@@ -480,10 +486,13 @@
 }
 
 
-- (void) _updateDuplicateIcon
+- (void) _updateRightIcons
 {
+    TrackLabel trackLabel = [[self track] trackLabel];
+
     BOOL showsDuplicateIcon = [[Preferences sharedInstance] showsDuplicateStatus] && [[self track] isDuplicate];
-    
+    BOOL showsDot           = [[Preferences sharedInstance] showsLabelDots] && (trackLabel != TrackLabelNone);
+
     if (showsDuplicateIcon && !_duplicateImageView) {
         NSImage *image = [NSImage imageNamed:@"DuplicateTemplate"];
         [image setTemplate:YES];
@@ -492,9 +501,11 @@
         [_duplicateImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_duplicateImageView setImage:image];
         [[_durationField superview] addSubview:_duplicateImageView];
+
+        _duplicateTrailingConstraint = [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
         
         _duplicateConstraints = @[
-            [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0],
+            _duplicateTrailingConstraint,
             [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0]
         ];
 
@@ -506,9 +517,62 @@
         
         [NSLayoutConstraint deactivateConstraints:_duplicateConstraints];
         _duplicateConstraints = nil;
+        _duplicateTrailingConstraint = nil;
     }
 
-    [_titleDurationConstraint setConstant:showsDuplicateIcon ? 18 : 8];
+
+    if (showsDot && !_dotView) {
+        _dotView = [[DotView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [_dotView setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+        [[_durationField superview] addSubview:_dotView];
+
+        _dotTrailingConstraint = [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
+
+        _dotConstraints = @[
+            _dotTrailingConstraint,
+            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0],
+            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0],
+            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeHeight   relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0]
+        ];
+
+        [NSLayoutConstraint activateConstraints:_dotConstraints];
+
+        
+    } else if (!showsDot && _dotView) {
+        [_dotView removeFromSuperview];
+        _dotView = nil;
+        
+        [NSLayoutConstraint deactivateConstraints:_dotConstraints];
+        _dotConstraints = nil;
+        _dotTrailingConstraint = nil;
+    }
+
+
+    NSInteger constant = 8;
+    
+    if (showsDuplicateIcon && showsDot) {
+        constant = 28 + 4;
+        [_duplicateTrailingConstraint setConstant:-18];
+        [_dotTrailingConstraint setConstant:-4];
+
+    } else if (showsDuplicateIcon) {
+        constant = 18;
+        [_duplicateTrailingConstraint setConstant:-4];
+
+    } else if (showsDot) {
+        constant = 8;
+        [_dotTrailingConstraint setConstant:-4];
+    }
+
+    if (showsDot) {
+        NSColor *borderColor = [self isSelected] ? [NSColor whiteColor] : GetBorderColorForTrackLabel(trackLabel);
+
+        [_dotView setFillColor:GetFillColorForTrackLabel(trackLabel)];
+        [_dotView setBorderColor:borderColor];
+    }
+
+    [_titleDurationConstraint setConstant:constant];
 }
 
 
@@ -539,7 +603,7 @@
     TrackLabel trackLabel = [track trackLabel];
     [[self stripeView] setFillColor:GetFillColorForTrackLabel(trackLabel)];
     [[self stripeView] setBorderColor:GetBorderColorForTrackLabel(trackLabel)];
-    [[self stripeView] setHidden:![[Preferences sharedInstance] showsColorLabels]];
+    [[self stripeView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
 
     if (_selected) {
         if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
