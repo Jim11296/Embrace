@@ -132,41 +132,41 @@ typedef enum _ReceiptValidation_ReceiptAttributeType {
     ReceiptValidation_InAppAttributeTypeCancellationDate = 1712,
 
     // Storage key base value
-    ReceiptValidation_StoreNone = 3188,
+    ReceiptValidation_StoreNone = 35,
     // Bundle identifier
-    ReceiptValidation_StoreReceiptAttributeTypeBundleId = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleId << 1),
-    ReceiptValidation_StoreReceiptAttributeTypeBundleIdData = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleId << 1) + 1,
+    ReceiptValidation_StoreReceiptAttributeTypeBundleId = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleId << 2),
+    ReceiptValidation_StoreReceiptAttributeTypeBundleIdData = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleId << 2) + 1,
     // Application version
-    ReceiptValidation_StoreReceiptAttributeTypeBundleVersion = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleVersion << 1),
-    ReceiptValidation_StoreReceiptAttributeTypeBundleVersionData = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleId << 1) + 1,
+    ReceiptValidation_StoreReceiptAttributeTypeBundleVersion = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleVersion << 2),
+    ReceiptValidation_StoreReceiptAttributeTypeBundleVersionData = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeBundleId << 2) + 1,
     // Opaque value
-    ReceiptValidation_StoreReceiptAttributeTypeOpaqueValue = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeOpaqueValue << 1),
+    ReceiptValidation_StoreReceiptAttributeTypeOpaqueValue = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeOpaqueValue << 2),
     // Hash value
-    ReceiptValidation_StoreReceiptAttributeTypeHash = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeHash << 1),
+    ReceiptValidation_StoreReceiptAttributeTypeHash = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeHash << 2),
     // In-app purchase receipt
-    ReceiptValidation_StoreReceiptAttributeTypeInAppPurchase = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeInAppPurchase << 1),
+    ReceiptValidation_StoreReceiptAttributeTypeInAppPurchase = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeInAppPurchase << 2),
     // Original Application Version
-    ReceiptValidation_StoreReceiptAttributeTypeOriginalApplicationVersion = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeOriginalApplicationVersion << 1),
+    ReceiptValidation_StoreReceiptAttributeTypeOriginalApplicationVersion = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeOriginalApplicationVersion << 2),
     // Receipt Expiration Date
-    ReceiptValidation_StoreReceiptAttributeTypeExpirationDate = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeExpirationDate << 1),
+    ReceiptValidation_StoreReceiptAttributeTypeExpirationDate = ReceiptValidation_StoreNone + (ReceiptValidation_ReceiptAttributeTypeExpirationDate << 2),
     // Quantity
-    ReceiptValidation_StoreInAppAttributeTypeQuantity = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeQuantity << 1),
+    ReceiptValidation_StoreInAppAttributeTypeQuantity = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeQuantity << 2),
     // Product identifier
-    ReceiptValidation_StoreInAppAttributeTypeProductIdentifer = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeProductIdentifer << 1),
+    ReceiptValidation_StoreInAppAttributeTypeProductIdentifer = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeProductIdentifer << 2),
     // Transaction identifier
-    ReceiptValidation_StoreInAppAttributeTypeTransactionIdentifer = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeTransactionIdentifer << 1),
+    ReceiptValidation_StoreInAppAttributeTypeTransactionIdentifer = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeTransactionIdentifer << 2),
     // Purchase date
-    ReceiptValidation_StoreInAppAttributeTypePurchaseDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypePurchaseDate << 1),
+    ReceiptValidation_StoreInAppAttributeTypePurchaseDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypePurchaseDate << 2),
     // Original transaction identifier
-    ReceiptValidation_StoreInAppAttributeTypeOriginalTransactionIdentifer = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeOriginalTransactionIdentifer << 1),
+    ReceiptValidation_StoreInAppAttributeTypeOriginalTransactionIdentifer = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeOriginalTransactionIdentifer << 2),
     // Original purchase date
-    ReceiptValidation_StoreInAppAttributeTypeOriginalPurchaseDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeOriginalPurchaseDate << 1),
+    ReceiptValidation_StoreInAppAttributeTypeOriginalPurchaseDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeOriginalPurchaseDate << 2),
     // Subscription Expiration Date
-    ReceiptValidation_StoreInAppAttributeTypeSubscriptionExpirationDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeSubscriptionExpirationDate << 1),
+    ReceiptValidation_StoreInAppAttributeTypeSubscriptionExpirationDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeSubscriptionExpirationDate << 2),
     // Web Order Line Item ID
-    ReceiptValidation_StoreInAppAttributeTypeWebOrderLineItemId = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeWebOrderLineItemId << 1),
+    ReceiptValidation_StoreInAppAttributeTypeWebOrderLineItemId = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeWebOrderLineItemId << 2),
     // Cancellation Date
-    ReceiptValidation_StoreInAppAttributeTypeCancellationDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeCancellationDate << 1)
+    ReceiptValidation_StoreInAppAttributeTypeCancellationDate = ReceiptValidation_StoreNone + (ReceiptValidation_InAppAttributeTypeCancellationDate << 2)
 
 } ReceiptValidation_ReceiptAttributeType;
 
@@ -189,43 +189,43 @@ typedef enum _ReceiptValidation_ReceiptAttributeType {
 
 // Shared context for receipt validation
 typedef struct _ReceiptValidation_CheckingContext {
-    CFTypeRef dummy0000;
-    CFTypeRef dummy000E;
-    CFTypeRef dummy0001;
-    CFTypeRef ca_data;
-    CFTypeRef dummy0007;
-    CFTypeRef dummy000A;
-    CFTypeRef dummy0005;
-    CFTypeRef guid_data;
-    CFTypeRef receipt_dict;
     CFTypeRef dummy0003;
-    CFTypeRef dummy0002;
-    CFTypeRef dummy000B;
-    CFTypeRef dummy0009;
-    CFTypeRef main_bundle;
-    CFTypeRef dummy0008;
-    long argc;
+    CFTypeRef ca_data;
     CFTypeRef dummy0004;
-    CFTypeRef receipt_data;
-    CFTypeRef dummy0006;
+    CFTypeRef guid_data;
+    CFTypeRef dummy0008;
+    CFTypeRef dummy0001;
+    CFTypeRef dummy000B;
+    CFTypeRef main_bundle;
+    long argc;
+    CFTypeRef dummy0002;
     const char ** argv;
-    CFTypeRef dummy000D;
+    CFTypeRef dummy0006;
+    CFTypeRef receipt_data;
+    CFTypeRef dummy000A;
+    CFTypeRef dummy0009;
     CFTypeRef dummy000C;
+    CFTypeRef dummy0007;
+    CFTypeRef dummy0000;
+    CFTypeRef dummy0005;
+    CFTypeRef receipt_dict;
 } ReceiptValidation_CheckingContext;
 
 // Shared context for receipt parsing
 typedef struct _ReceiptValidation_ParsingContext {
-    CFTypeRef dummy0001;
-    CFTypeRef dummy0000;
-    CFTypeRef dummy0006;
-    CFTypeRef dummy0002;
-    struct _ReceiptValidation_ParsingContext * parent;
     CFTypeRef dummy0003;
     CFTypeRef dummy0004;
-    CFTypeRef dictionary;
-    const unsigned char * end;
-    CFTypeRef dummy0005;
     const unsigned char * ptr;
+    CFTypeRef dummy0001;
+    struct _ReceiptValidation_ParsingContext * parent;
+    CFTypeRef dummy0008;
+    CFTypeRef dummy0006;
+    CFTypeRef dictionary;
+    CFTypeRef dummy0005;
+    CFTypeRef dummy0007;
+    CFTypeRef dummy0002;
+    CFTypeRef dummy0000;
+    const unsigned char * end;
 } ReceiptValidation_ParsingContext;
 
 // Symbol ASN1_get_object
@@ -466,1642 +466,1233 @@ typedef X509_STORE *(*__ReceiptValidation_X509_STORE_new)();
 
 // Table for storing strings
 static const char *ReceiptValidation_Strings[608] = {
-    // "kSecClassCertificate" / M(Rot) / S(229) / L(20)
-    "\x50\x38\x4a\x48\x28\x51\x46\x58\x58\x28\x4a\x57\x59\x4e\x4b\x4e\x48\x46\x59\x4a\xe5",
-    // "CFStringCreateWithCString" / M(Xor2) / S(145) / L(25)
-    "\xf0\xf5\xe0\xc7\xc1\xda\xdd\xd4\xf0\xc1\xd6\xd2\xc7\xd6\xe4\xda\xc7\xdb\xf0\xe0\xc7\xc1\xda\xdd\xd4\xb3\xb7\x97\x6f\x48\x23\xb5\xf8\x69",
-    // "/System/Library/Frameworks/AppKit.framework/AppKit" / M(Xor4) / S(194) / L(50)
-    "\x89\xf5\xdf\xd5\xd2\xc3\xcb\x89\xea\xcf\xc4\xd4\xc7\xd4\xdf\x89\xe0\xd4\xc7\xcb\xc3\xd1\xc9\xd4\xcd\xd5\x89\xe7\xd6\xd6\xed\xcf\xd2\x88\xc0\xd4\xc7\xcb\xc3\xd1\xc9\xd4\xcd\x89\xe7\xd6\xd6\xed\xcf\xd2\xa6",
-    // "dlsym" / M(Xor1) / S(93) / L(5)
-    "\x39\x31\x2e\x24\x30\x5d\x6e\x7e\x3c\xc7\x5d\xda\x61\x1d\x9b\xd7",
-    // "CFReadStreamCreateWithFile" / M(Xor3) / S(163) / L(26)
-    "\x85\x80\x94\xa3\xa7\xa2\x95\xb2\xb4\xa3\xa7\xab\x85\xb4\xa3\xa7\xb2\xa3\x91\xaf\xb2\xae\x80\xaf\xaa\xa3\xc6\xc5\x7c\x9e\x38\x4c\xbd\x61\xc2",
-    // "glob" / M(Xor4) / S(69) / L(4)
-    "\x37\x3c\x3f\x32\x50\xcb\x08\xcc\x6b\xd0\xdc\x82\xab\xa1\xd3\xa6",
-    // "" / M(None) / S(0) / L(0)
-    "\x8e\x00\x9b\xbf\x9a\x3a\xc6\x41\x40\x02\x46\x1e\xc7\x66\x3e\xd2\x45\x37\xf2\x9e\x69\x02\x8f\x6d\x99\xce\xc3\x46\x7f\xbd\x42\x2a",
-    // "" / M(None) / S(0) / L(0)
-    "\x05\x84\x64\x66\xe1\x9f\x40\x11\x5f\xc6\xa6\x61\xae\x68\x0f\x17\x6f\x98\x3c\x6b\x61\x2d\x1b\x18\xb9\x40\xa8\xbd\x24\x6e\x12\xb1",
-    // "SecCertificateCopyData" / M(Xor1) / S(62) / L(22)
-    "\x6d\x5b\x5d\x7d\x5b\x4c\x4a\x57\x58\x57\x5d\x5f\x4a\x5b\x7d\x51\x4e\x47\x7a\x5f\x4a\x5f\x3e",
-    // "%02X:" / M(Xor4) / S(24) / L(5)
-    "\xa5\xb0\xb2\xd8\xba\x80\x4a\xf7\x0e\x03\x39\x1e\xa0\x93\x46\xd0",
-    // "RTLD_MAIN_ONLY" / M(Xor1) / S(206) / L(14)
-    "\x9c\x9a\x82\x8a\x91\x83\x8f\x87\x80\x91\x81\x80\x82\x97\xce\x8c",
-    // "CC_SHA1" / M(Xor1) / S(148) / L(7)
-    "\xd7\xd7\xcb\xc7\xdc\xd5\xa5\x94\x67\x87\x70\xf6\x4b\xc1\xe1\x83",
-    // "" / M(None) / S(0) / L(0)
-    "\xfe\x89\xd4\xa8\x23\xe5\x86\x3c\x1b\xd6\x19\xe4\x78\xb1\x79\xb0\x04\x5d\xe9\x18\x36\x4b\xfe\x82\x74\x19\x99\xae\xb4\x71\xd4\x67",
-    // "CFDictionaryGetValue" / M(Xor4) / S(183) / L(20)
-    "\x40\x45\x47\x6a\x60\x77\x6a\x6c\x6d\x62\x71\x7a\x44\x66\x77\x55\x62\x6f\x76\x66\x03",
-    // "CFArrayGetValueAtIndex" / M(Rot) / S(226) / L(22)
-    "\x25\x28\x23\x54\x54\x43\x5b\x29\x47\x56\x38\x43\x4e\x57\x47\x23\x56\x2b\x50\x46\x47\x5a\xe2",
-    // "glob" / M(Rot) / S(171) / L(4)
-    "\x12\x17\x1a\x0d\xab\x4b\xf3\x2a\xa8\xb3\xf1\x03\x08\xc8\x78\xb7",
-    // "" / M(None) / S(0) / L(0)
-    "\xc6\x56\x99\x38\x27\x3b\x42\x24\x5d\x68\xa7\x64\x6d\xea\xbe\x2d\xe9\xb2\x6b\xf3\x20\xb5\xc6\x04\x72\x85\x7b\xbe\x11\xd3\xdd\x99",
-    // "CFDateFormatterSetFormat" / M(Xor4) / S(35) / L(24)
-    "\xc0\xc5\xc7\xe2\xf7\xe6\xc5\xec\xf1\xee\xe2\xf7\xf7\xe6\xf1\xd0\xe6\xf7\xc5\xec\xf1\xee\xe2\xf7\x83\xcc\xdc\x9f\x0f\x62\xf7\x4a\xeb",
-    // "Apple Root CA" / M(Xor3) / S(222) / L(13)
-    "\xaf\x9e\x9e\x82\x8b\xce\xbc\x81\x81\x9a\xce\xad\xaf\xee\xdd\x1a",
-    // "Apple Root CA" / M(Xor4) / S(186) / L(13)
-    "\xe1\xd0\xd0\xcc\xc5\x80\xf2\xcf\xcf\xd4\x80\xe3\xe1\xa0\x50\x2e",
-    // "longjmp" / M(Rot) / S(43) / L(7)
-    "\x97\x9a\x99\x92\x95\x98\x9b\x2b\x90\x95\x0b\x61\x44\xf8\x7a\x45",
-    // "sk_num" / M(Xor2) / S(120) / L(6)
-    "\x1b\x03\x37\x06\x1d\x05\x68\x8f\x48\xc9\x8b\x44\x25\x8c\x32\xf1",
-    // "CFBundleCopyBundleURL" / M(Xor2) / S(189) / L(21)
-    "\xe8\xed\xe9\xde\xc5\xcf\xc7\xce\xe8\xc4\xdb\xd2\xe9\xde\xc5\xcf\xc7\xce\xfe\xf9\xe7\xab",
-    // "CFDataCreate" / M(Xor3) / S(167) / L(12)
-    "\xf4\xf1\xf3\xd6\xc3\xd6\xf4\xc5\xd2\xd6\xc3\xd2\xb7\x1e\xc6\xdd",
-    // "CFReadStreamRead" / M(Rot) / S(150) / L(16)
-    "\xd9\xdc\xe8\xfb\xf7\xfa\xe9\x0a\x08\xfb\xf7\x03\xe8\xfb\xf7\xfa\x96",
-    // "" / M(None) / S(0) / L(0)
-    "\xa8\xe1\x5c\x2a\xd7\x21\x92\xb8\xbc\x4f\x07\x7a\x04\x70\x40\x8b\x39\xc5\x7c\x64\xbd\x5e\x26\x3a\x36\x81\x3f\xb8\xdf\x09\x1f\xa8",
-    // "CFDictionarySetValue" / M(Xor4) / S(99) / L(20)
-    "\x5c\x59\x5b\x76\x7c\x6b\x76\x70\x71\x7e\x6d\x66\x4c\x7a\x6b\x49\x7e\x73\x6a\x7a\x1f",
-    // "" / M(None) / S(0) / L(0)
-    "\x1e\x39\x87\x88\xbf\xf0\x5a\x9e\x0f\xae\x1e\xc6\x8a\xcd\x00\xcd\xfc\x43\xf8\x7b\xd8\xbe\xd3\xb9\x4f\x78\x54\xdc\x14\x6d\x38\x77",
-    // "" / M(None) / S(0) / L(0)
-    "\xa6\xa2\x2e\xc5\xa4\xed\x52\x57\x5b\xdc\xa8\x6a\x6e\xb8\xf0\x2f\xc6\x79\x4e\x69\x32\x6f\x25\x38\x3d\x39\xb3\xd6\x2a\xce\x36\xaa",
-    // "/System/Library/Frameworks/IOKit.framework/IOKit" / M(Xor2) / S(194) / L(48)
-    "\xdc\xa0\x8a\x80\x87\x96\x9e\xdc\xbf\x9a\x91\x81\x92\x81\x8a\xdc\xb5\x81\x92\x9e\x96\x84\x9c\x81\x98\x80\xdc\xba\xbc\xb8\x9a\x87\xdd\x95\x81\x92\x9e\x96\x84\x9c\x81\x98\xdc\xba\xbc\xb8\x9a\x87\xf3",
-    // "" / M(None) / S(0) / L(0)
-    "\x3e\xbf\x3f\x0a\x85\x3c\x85\xbc\xfa\x40\x80\x15\x44\x69\xea\xd9\xa4\x34\xb2\x49\x88\x4a\x5f\x8f\x08\xe4\x26\xad\xd1\x40\x58\x3b",
-    // "611E5B662C593A08FF58D14AE22452D198DF6C60" / M(Xor1) / S(193) / L(40)
-    "\xf7\xf0\xf0\x84\xf4\x83\xf7\xf7\xf3\x82\xf4\xf8\xf2\x80\xf1\xf9\x87\x87\xf4\xf9\x85\xf0\xf5\x80\x84\xf3\xf3\xf5\xf4\xf3\x85\xf0\xf8\xf9\x85\x87\xf7\x82\xf7\xf1\xc1\x38\xbc\x69\xbc\x8b\x30\x9e\x40",
-    // "" / M(None) / S(0) / L(0)
-    "\x7f\x5e\x1b\x39\x72\x5a\xce\x0c\x93\x82\x54\x56\x75\xa3\xb6\x09\xa3\xcf\x5b\x9a\x6a\xbe\xf7\x43\xf4\x07\xf5\x34\xcf\x01\x94\xa9",
-    // "dlopen" / M(Xor4) / S(130) / L(6)
-    "\x44\x4c\x4f\x50\x45\x4e\x20\x01\xfa\x2d\x4a\x17\x71\x78\x4d\x07",
-    // "CFStringCreateWithBytes" / M(Xor1) / S(57) / L(23)
-    "\x7a\x7f\x6a\x4d\x4b\x50\x57\x5e\x7a\x4b\x5c\x58\x4d\x5c\x6e\x50\x4d\x51\x7b\x40\x4d\x5c\x4a\x39\xc8\x72\x8b\xfd\xda\x63\x6d\xcf",
-    // "PKCS7_get0_signers" / M(Xor4) / S(65) / L(18)
-    "\x83\x98\x90\x80\xe4\x8c\xb4\xb6\xa7\xe3\x8c\xa0\xba\xb4\xbd\xb6\xa1\xa0\xd3",
-    // "sha1" / M(Xor2) / S(30) / L(4)
-    "\x7d\x66\x6f\x3f\x0e\xe4\x48\x09\x67\xa2\xd7\x33\x0e\x2a\x31\x45",
-    // "IOMasterPort" / M(Xor2) / S(14) / L(12)
-    "\x57\x51\x53\x7f\x6d\x6a\x7b\x6c\x4e\x71\x6c\x6a\x1e\xd5\x65\xef",
-    // "CFDataCreateMutable" / M(Xor1) / S(97) / L(19)
-    "\x22\x27\x25\x00\x15\x00\x22\x13\x04\x00\x15\x04\x2c\x14\x15\x00\x03\x0d\x04\x61",
-    // "CFDictionaryGetValue" / M(Rot) / S(220) / L(20)
-    "\x1f\x22\x20\x45\x3f\x50\x45\x4b\x4a\x3d\x4e\x55\x23\x41\x50\x32\x3d\x48\x51\x41\xdc",
-    // "kSecClass" / M(Xor3) / S(64) / L(9)
-    "\x3b\x03\x35\x33\x13\x3c\x31\x23\x23\x50\x20\x66\xff\x30\x18\x1e",
-    // "X509_digest" / M(Xor4) / S(214) / L(11)
-    "\x38\x55\x50\x59\x3f\x04\x09\x07\x05\x13\x14\x60\x6d\xdc\x6c\x3e",
-    // "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" / M(Xor1) / S(234) / L(32)
-    "\x93\x93\x93\x93\xcd\xc7\xcd\xa7\xa7\xcd\xc7\xcd\x8e\x8e\xcd\xbe\xcd\xa2\xa2\xcd\xd0\xcd\x87\x87\xcd\xd0\xcd\x99\x99\xcd\xb0\xcd\xea",
-    // "kSecClassCertificate" / M(Xor4) / S(214) / L(20)
-    "\xe5\xdd\xeb\xed\xcd\xe2\xef\xfd\xfd\xcd\xeb\xfc\xfa\xe7\xe8\xe7\xed\xef\xfa\xeb\x8e",
-    // "CFBundleGetIdentifier" / M(Xor4) / S(152) / L(21)
-    "\x53\x56\x52\x65\x7e\x74\x7c\x75\x57\x75\x64\x59\x74\x75\x7e\x64\x79\x76\x79\x75\x62\x10",
-    // "objc_getClass" / M(Xor4) / S(161) / L(13)
-    "\x7f\x72\x7a\x73\x4f\x77\x75\x64\x53\x7c\x71\x63\x63\x10\x10\xeb",
-    // "SHA1" / M(Xor1) / S(104) / L(4)
-    "\x3b\x20\x29\x59\x68\x54\x83\x50\xeb\x11\x15\x15\xed\x39\x6b\x2d",
-    // "d2i_X509_bio" / M(Xor2) / S(248) / L(12)
-    "\x8c\xda\x81\xb7\xb0\xdd\xd8\xd1\xb7\x8a\x81\x87\xe8\x55\xa0\x67",
-    // "kCFTypeDictionaryKeyCallBacks" / M(Xor4) / S(101) / L(29)
-    "\x95\xbd\xb8\xaa\x87\x8e\x9b\xba\x97\x9d\x8a\x97\x91\x90\x9f\x8c\x87\xb5\x9b\x87\xbd\x9f\x92\x92\xbc\x9f\x9d\x95\x8d\xfe\x13\x15\x79\xd7\xab\x97\x0e\xc3",
-    // "X509_STORE_new" / M(Xor4) / S(209) / L(14)
-    "\x48\x25\x20\x29\x4f\x43\x44\x5f\x42\x55\x4f\x7e\x75\x67\x10\x9c",
-    // "BIO_new" / M(Xor2) / S(3) / L(7)
-    "\x51\x5a\x5c\x4c\x7d\x76\x64\x13\xbb\x2e\x8a\x23\x36\x24\x2b\x03",
-    // "objc_getClass" / M(Xor3) / S(206) / L(13)
-    "\xb1\xbc\xb4\xbd\x81\xb9\xbb\xaa\x9d\xb2\xbf\xad\xad\xde\xd7\xc1",
-    // "CFStringGetFileSystemRepresentation" / M(Xor4) / S(35) / L(35)
-    "\xaf\xaa\xbf\x98\x9e\x85\x82\x8b\xab\x89\x98\xaa\x85\x80\x89\xbf\x95\x9f\x98\x89\x81\xbe\x89\x9c\x9e\x89\x9f\x89\x82\x98\x8d\x98\x85\x83\x82\xec",
-    // "CFAbsoluteTimeGetCurrent" / M(Xor4) / S(155) / L(24)
-    "\xb8\xbd\xba\x99\x88\x94\x97\x8e\x8f\x9e\xaf\x92\x96\x9e\xbc\x9e\x8f\xb8\x8e\x89\x89\x9e\x95\x8f\xfb\x18\xd8\xde\x95\x0f\x78\x80\x74",
-    // "SecKeychainOpen" / M(Xor4) / S(161) / L(15)
-    "\x43\x75\x73\x5b\x75\x69\x73\x78\x71\x79\x7e\x5f\x60\x75\x7e\x10",
-    // "ASN1_OBJECT_free" / M(Xor2) / S(98) / L(16)
-    "\x32\x20\x3d\x42\x2c\x3c\x31\x39\x36\x30\x27\x2c\x15\x01\x16\x16\x73",
-    // "kSecMatchLimit" / M(Xor1) / S(50) / L(14)
-    "\x59\x61\x57\x51\x7f\x53\x46\x51\x5a\x7e\x5b\x5f\x5b\x46\x32\xd3",
-    // "CFStringCreateWithCString" / M(Xor2) / S(190) / L(25)
-    "\xdf\xda\xcf\xe8\xee\xf5\xf2\xfb\xdf\xee\xf9\xfd\xe8\xf9\xcb\xf5\xe8\xf4\xdf\xcf\xe8\xee\xf5\xf2\xfb\x9c\x15\x62\x97\xab\xc0\x5f\xd9\x9c",
-    // "" / M(None) / S(0) / L(0)
-    "\x0d\x2c\x5c\xbf\x31\x8f\xd8\x34\xb9\xcd\x28\x6e\x96\x35\x93\xfb\x43\x61\xca\x88\x23\xa4\xe3\x62\xe5\x65\x86\xf4\x79\x0a\xc9\xa0",
-    // "" / M(None) / S(0) / L(0)
-    "\x7b\x8e\x0e\x80\x8c\x35\xfc\x93\x08\x3e\xfd\xb3\xaf\x79\x39\xbd\xb9\xd6\x96\xce\x0e\x2b\x47\xfc\x39\x2a\x24\x84\x81\x92\xed\xc9",
-    // "CC_SHA1_Final" / M(Xor3) / S(177) / L(13)
-    "\x82\x82\x9e\x92\x89\x80\xf0\x9e\x87\xa8\xaf\xa0\xad\xc1\xbb\x20",
-    // "setDelegate:" / M(Xor2) / S(115) / L(12)
-    "\x10\x06\x17\x27\x06\x0f\x06\x04\x02\x17\x06\x59\x63\xec\x79\x95",
-    // "CC_SHA1_Final" / M(Rot) / S(49) / L(13)
-    "\x74\x74\x90\x84\x79\x72\x62\x90\x77\x9a\x9f\x92\x9d\x31\xe3\x1c",
-    // "IOIteratorNext" / M(Rot) / S(115) / L(14)
-    "\xbc\xc2\xbc\xe7\xd8\xe5\xd4\xe7\xe2\xe5\xc1\xd8\xeb\xe7\x73\x7d",
-    // "" / M(None) / S(0) / L(0)
-    "\x33\xf3\xb5\x0a\xa4\x8b\xfc\x9e\xd1\x72\x9e\xb5\x3d\x01\xd3\xb8\xe2\xa2\x79\x8c\x57\x24\xc2\xe1\xc0\xed\xb3\xf4\x98\x44\x01\x56",
-    // "" / M(None) / S(0) / L(0)
-    "\x9a\x88\x83\xbb\xf6\xc7\x10\x40\x56\xd6\x3c\xb1\x00\x81\x92\x4b\x80\x46\x6f\x5e\xc9\xce\xdf\xb4\x47\xd8\xf2\x47\x4e\x40\x29\x4c",
-    // "kCFTypeDictionaryKeyCallBacks" / M(Rot) / S(36) / L(29)
-    "\x8f\x67\x6a\x78\x9d\x94\x89\x68\x8d\x87\x98\x8d\x93\x92\x85\x96\x9d\x6f\x89\x9d\x67\x85\x90\x90\x66\x85\x87\x8f\x97\x24\xf5\xf4\x54\x63\x23\x87\x8f\x9e",
-    // "X509_STORE_free" / M(Xor1) / S(135) / L(15)
-    "\xdf\xb2\xb7\xbe\xd8\xd4\xd3\xc8\xd5\xc2\xd8\xe1\xf5\xe2\xe2\x87",
-    // "CFArrayAppendValue" / M(Rot) / S(193) / L(18)
-    "\x04\x07\x02\x33\x33\x22\x3a\x02\x31\x31\x26\x2f\x25\x17\x22\x2d\x36\x26\xc1",
-    // "ASN1_OBJECT_free" / M(Xor4) / S(202) / L(16)
-    "\x2b\x39\x24\x5b\x35\x25\x28\x20\x2f\x29\x3e\x35\x0c\x18\x0f\x0f\x6a",
-    // "SecKeychainOpen" / M(Xor2) / S(180) / L(15)
-    "\xf7\xc1\xc7\xef\xc1\xdd\xc7\xcc\xc5\xcd\xca\xeb\xd4\xc1\xca\xa4",
-    // "" / M(None) / S(0) / L(0)
-    "\x41\x9a\x5f\x4e\x3f\xda\xd8\xfa\x3e\xdd\x69\xb8\x93\x61\xde\x1a\xcc\xd7\xc0\x15\x36\x2d\x3a\x08\x4c\xcc\xa8\x6a\xbb\x7d\x6d\x8f",
-    // "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" / M(Xor1) / S(131) / L(66)
-    "\xac\xd0\xfa\xf0\xf7\xe6\xee\xac\xcf\xea\xe1\xf1\xe2\xf1\xfa\xac\xc5\xf1\xe2\xee\xe6\xf4\xec\xf1\xe8\xf0\xac\xc0\xec\xf1\xe6\xc5\xec\xf6\xed\xe7\xe2\xf7\xea\xec\xed\xad\xe5\xf1\xe2\xee\xe6\xf4\xec\xf1\xe8\xac\xc0\xec\xf1\xe6\xc5\xec\xf6\xed\xe7\xe2\xf7\xea\xec\xed\x83",
-    // "1.2.840.113635.100.6.11.1" / M(Xor1) / S(149) / L(25)
-    "\xa4\xbb\xa7\xbb\xad\xa1\xa5\xbb\xa4\xa4\xa6\xa3\xa6\xa0\xbb\xa4\xa5\xa5\xbb\xa3\xbb\xa4\xa4\xbb\xa4\x95\x64\xc5\x8e\x1c\x91\x44\xe8\xf7",
-    // "BIO_free" / M(Xor4) / S(89) / L(8)
-    "\xd2\xd9\xdf\xcf\xf6\xe2\xf5\xf5\x90\x89\x23\x31\xb4\xe8\xed\xb1",
-    // "CFDataCreateMutable" / M(Xor2) / S(237) / L(19)
-    "\xba\xbf\xbd\x98\x8d\x98\xba\x8b\x9c\x98\x8d\x9c\xb4\x8c\x8d\x98\x9b\x95\x9c\xf9",
-    // "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" / M(Xor2) / S(156) / L(32)
-    "\xc4\xc4\xc4\xc4\x9a\x90\x9a\xf0\xf0\x9a\x90\x9a\xd9\xd9\x9a\xe9\x9a\xf5\xf5\x9a\x87\x9a\xd0\xd0\x9a\x87\x9a\xce\xce\x9a\xe7\x9a\xbd",
-    // "kSecMatchSubjectContains" / M(Xor3) / S(193) / L(24)
-    "\x89\xb1\x87\x81\xaf\x83\x96\x81\x8a\xb1\x97\x80\x88\x87\x81\x96\xa1\x8d\x8c\x96\x83\x8b\x8c\x91\xe2\x6d\x18\x7a\x35\x49\x2e\xba\xd5",
-    // "" / M(None) / S(0) / L(0)
-    "\x6b\x41\x71\x24\xfb\x27\xdd\x09\xf2\x37\x0b\x34\x5c\xff\x50\xf9\x52\x65\xb6\x11\xcc\x84\x67\xd9\xb8\x28\x4e\x26\x8a\xf5\x5b\xaa",
-    // "IOIteratorNext" / M(Xor4) / S(125) / L(14)
-    "\x99\x9f\x99\xa4\xb5\xa2\xb1\xa4\xbf\xa2\x9e\xb5\xa8\xa4\xd0\xac",
-    // "" / M(None) / S(0) / L(0)
-    "\xb1\xf3\xaa\x5b\x52\xf4\x7f\xfe\x7e\x7d\x7c\xe0\xb8\x7b\xba\x2a\x00\xfe\xad\xfb\x19\x04\x29\xf3\x2e\xf4\x28\xa8\xe5\x90\x7b\xff",
-    // "" / M(None) / S(0) / L(0)
-    "\x18\xaf\x1f\x8c\xe6\x87\x04\xd6\xe1\x9c\x07\x64\x11\x75\xf5\x15\x48\xd0\x04\x99\x2b\xfc\x93\x19\xc2\x6a\x5b\x0d\x44\x79\x5f\x73",
-    // "CFURLCreateWithFileSystemPathRelativeToBase" / M(Rot) / S(20) / L(43)
-    "\x57\x5a\x69\x66\x60\x57\x86\x79\x75\x88\x79\x6b\x7d\x88\x7c\x5a\x7d\x80\x79\x67\x8d\x87\x88\x79\x81\x64\x75\x88\x7c\x66\x79\x80\x75\x88\x7d\x8a\x79\x68\x83\x56\x75\x87\x79\x14\x31\xaf\xdc\xe2\x9c\x21\xff\xc8",
-    // "CFReadStreamCreateWithFile" / M(Xor3) / S(151) / L(26)
-    "\xf9\xfc\xe8\xdf\xdb\xde\xe9\xce\xc8\xdf\xdb\xd7\xf9\xc8\xdf\xdb\xce\xdf\xed\xd3\xce\xd2\xfc\xd3\xd6\xdf\xba\x2e\x3f\x2f\x98\x74\xd9\xaa\x3d",
-    // "Apple Root CA" / M(Xor4) / S(241) / L(13)
-    "\x51\x60\x60\x7c\x75\x30\x42\x7f\x7f\x64\x30\x53\x51\x10\xba\x75",
-    // "OpenSSL_add_all_digests" / M(Xor4) / S(71) / L(23)
-    "\xaf\x90\x85\x8e\xb3\xb3\xac\xbf\x81\x84\x84\xbf\x81\x8c\x8c\xbf\x84\x89\x87\x85\x93\x94\x93\xe0\x69\x16\xd6\xb4\x4e\x38\xbe\x23",
-    // "strlen" / M(Xor3) / S(44) / L(6)
-    "\x4f\x48\x4e\x50\x59\x52\x3c\xa6\x14\xb4\xcf\xad\xad\x07\x32\x27",
-    // "sk_free" / M(Rot) / S(125) / L(7)
-    "\xf0\xe8\xdc\xe3\xef\xe2\xe2\x7d\x53\x9c\x4e\x1d\xa0\xe0\x7c\xa4",
-    // "setjmp" / M(Xor3) / S(165) / L(6)
-    "\xc6\xd0\xc1\xdf\xd8\xc5\xb5\xd9\xa4\x34\xb2\x49\x88\x4a\x5f\x8f",
-    // "exit" / M(Xor2) / S(203) / L(4)
-    "\xbe\xa3\xb2\xaf\xdb\xd0\x9d\x8a\x7e\x58\x03\x04\xd3\x28\x4d\x3e",
-    // "CFBundleShortVersionString" / M(Xor2) / S(25) / L(26)
-    "\x79\x7c\x78\x4f\x54\x5e\x56\x5f\x69\x52\x55\x48\x4e\x6c\x5f\x48\x49\x53\x55\x54\x69\x4e\x48\x53\x54\x5d\x3a\xb2\x18\x7e\xa0\x60\x37\xd3\xc5",
-    // "kCFDateFormatterTimeZone" / M(Xor3) / S(209) / L(24)
-    "\x99\xb1\xb4\xb6\x93\x86\x97\xb4\x9d\x80\x9f\x93\x86\x86\x97\x80\xa6\x9b\x9f\x97\xa8\x9d\x9c\x97\xf2\x67\xbf\x52\xb0\x2c\x05\xc2\x58",
-    // "IORegistryEntryCreateCFProperty" / M(Xor4) / S(83) / L(31)
-    "\x29\x2f\x32\x05\x07\x09\x13\x14\x12\x19\x25\x0e\x14\x12\x19\x23\x12\x05\x01\x14\x05\x23\x26\x30\x12\x0f\x10\x05\x12\x14\x19\x60",
-    // "objc_msgSend" / M(Xor4) / S(80) / L(12)
-    "\x6f\x62\x6a\x63\x5f\x6d\x73\x67\x53\x65\x6e\x64\x00\x7b\x8f\xe7",
-    // "CFBundleUnloadExecutable" / M(Xor3) / S(17) / L(24)
-    "\x71\x74\x70\x47\x5c\x56\x5e\x57\x67\x5c\x5e\x5d\x53\x56\x77\x4a\x57\x51\x47\x46\x53\x50\x5e\x57\x32\xbe\x05\x5e\xc2\x5e\xd3\x03\x2c",
-    // "EVP_MD_CTX_init" / M(Xor2) / S(145) / L(15)
-    "\xc4\xd7\xd1\xde\xcc\xc5\xde\xc2\xd5\xd9\xde\xe8\xef\xe8\xf5\x81",
-    // "61:1e:5b:66:2c:59:3a:08:ff:58:d1:4a:e2:24:52:d1:98:df:6c:60" / M(Xor3) / S(157) / L(59)
-    "\xd7\xd0\xdb\xd0\x84\xdb\xd4\x83\xdb\xd7\xd7\xdb\xd3\x82\xdb\xd4\xd8\xdb\xd2\x80\xdb\xd1\xd9\xdb\x87\x87\xdb\xd4\xd9\xdb\x85\xd0\xdb\xd5\x80\xdb\x84\xd3\xdb\xd3\xd5\xdb\xd4\xd3\xdb\x85\xd0\xdb\xd8\xd9\xdb\x85\x87\xdb\xd7\x82\xdb\xd7\xd1\xe1\xbd\x7c\xe0\x9e\x07\xe3\x7d\x91",
-    // "kSecMatchSubjectContains" / M(Xor2) / S(39) / L(24)
-    "\x6d\x55\x63\x65\x4b\x67\x72\x65\x6e\x55\x73\x64\x6c\x63\x65\x72\x45\x69\x68\x72\x67\x6f\x68\x75\x06\x2e\x39\x97\x11\x4b\x94\xc5\x5b",
-    // "CFDateFormatterCreate" / M(Rot) / S(219) / L(21)
-    "\x1e\x21\x1f\x3c\x4f\x40\x21\x4a\x4d\x48\x3c\x4f\x4f\x40\x4d\x1e\x4d\x40\x3c\x4f\x40\xdb",
-    // "" / M(None) / S(0) / L(0)
-    "\x79\xba\xc5\xee\xd3\x63\xed\xc7\x14\x1f\x55\x2b\xc3\x3c\x28\x15\x2d\x33\x18\x5e\xa6\x10\xe9\x53\x58\x86\xf2\x2c\x3d\x3b\x53\x4b",
-    // "CC_SHA1" / M(Xor4) / S(14) / L(7)
-    "\xa3\xa3\xbf\xb3\xa8\xa1\xd1\xe0\xcf\x32\xb8\x62\xac\x77\xde\xd9",
-    // "d2i_X509_bio" / M(Xor3) / S(126) / L(12)
-    "\xea\xbc\xe7\xd1\xd6\xbb\xbe\xb7\xd1\xec\xe7\xe1\x8e\x0f\xb0\xf1",
-    // "" / M(None) / S(0) / L(0)
-    "\x38\x0b\xb9\xec\xf4\x5a\x09\x56\xc6\xd1\x8a\x55\xaf\xbb\xab\x1b\xcf\x52\x28\xd4\x6d\xca\x5b\xb6\x2e\x3d\x36\xab\x7b\x1d\x3a\x00",
-    // "kSecClass" / M(Xor4) / S(57) / L(9)
-    "\xfb\xc3\xf5\xf3\xd3\xfc\xf1\xe3\xe3\x90\x0b\x8e\xe1\x4b\x00\xf3",
-    // "CFDateCompare" / M(Xor1) / S(193) / L(13)
-    "\x82\x87\x85\xa0\xb5\xa4\x82\xae\xac\xb1\xa0\xb3\xa4\xc1\x22\xe6",
-    // "" / M(None) / S(0) / L(0)
-    "\x92\x76\xbe\x89\x04\x5c\x5e\x41\x0d\x57\x84\x08\x65\x4b\xec\x65\x25\x6a\x58\x40\x6c\x6b\xc5\xfd\x4f\xd3\x66\x32\x10\x46\x5b\x06",
-    // "" / M(None) / S(0) / L(0)
-    "\x0d\xab\x4a\xbd\x37\x94\x36\x8c\x07\x36\x76\x07\xe7\x1f\xae\xc4\x93\xab\xa4\x2b\x88\x4e\x6a\xab\x48\xa7\xa0\x3d\x97\x4b\x50\xba",
-    // "CFTimeZoneCreateWithTimeIntervalFromGMT" / M(Xor3) / S(77) / L(39)
-    "\x3e\x3b\x29\x14\x10\x18\x27\x12\x13\x18\x3e\x0f\x18\x1c\x09\x18\x2a\x14\x09\x15\x29\x14\x10\x18\x34\x13\x09\x18\x0f\x0b\x1c\x11\x3b\x0f\x12\x10\x3a\x30\x29\x7d\x66\x41\x13\x14\xe7\xc7\xc4\x43",
-    // "kCFTypeDictionaryValueCallBacks" / M(Xor1) / S(87) / L(31)
-    "\x3c\x14\x11\x03\x2e\x27\x32\x13\x3e\x34\x23\x3e\x38\x39\x36\x25\x2e\x01\x36\x3b\x22\x32\x14\x36\x3b\x3b\x15\x36\x34\x3c\x24\x57",
-    // "RTLD_MAIN_ONLY" / M(Xor4) / S(196) / L(14)
-    "\x12\x14\x0c\x04\x1f\x0d\x01\x09\x0e\x1f\x0f\x0e\x0c\x19\x40\x90",
-    // "X509_NAME_get_text_by_NID" / M(Rot) / S(41) / L(25)
-    "\x81\x5e\x59\x62\x88\x77\x6a\x76\x6e\x88\x90\x8e\x9d\x88\x9d\x8e\xa1\x9d\x88\x8b\xa2\x88\x77\x72\x6d\x29\xf9\xc7\x84\x70\x4b\x0e\x55\x41",
-    // "SecKeychainSearchCreateFromAttributes" / M(Rot) / S(30) / L(37)
-    "\x71\x83\x81\x69\x83\x97\x81\x86\x7f\x87\x8c\x71\x83\x7f\x90\x81\x86\x61\x90\x83\x7f\x92\x83\x64\x90\x8d\x8b\x5f\x92\x92\x90\x87\x80\x93\x92\x83\x91\x1e",
-    // "X509_free" / M(Xor2) / S(146) / L(9)
-    "\xda\xb7\xb2\xbb\xdd\xe4\xf0\xe7\xe7\x82\x73\x22\x93\xf9\xc0\x99",
-    // "CC_SHA1_Update" / M(Rot) / S(102) / L(14)
-    "\xa9\xa9\xc5\xb9\xae\xa7\x97\xc5\xbb\xd6\xca\xc7\xda\xcb\x66\x30",
-    // "BIO_write" / M(Rot) / S(70) / L(9)
-    "\x88\x8f\x95\xa5\xbd\xb8\xaf\xba\xab\x46\x99\x14\xdd\x17\xdf\x3a",
-    // "kCFBundleIdentifierKey" / M(Xor3) / S(83) / L(22)
-    "\x01\x29\x2c\x28\x1f\x04\x0e\x06\x0f\x23\x0e\x0f\x04\x1e\x03\x0c\x03\x0f\x18\x21\x0f\x13\x6a",
-    // "" / M(None) / S(0) / L(0)
-    "\x42\xc9\x9a\x5f\x2f\xd3\xb3\x5a\x32\xc8\x6e\x43\x67\xf2\x38\x9c\x1c\x00\xc8\x4a\x57\x39\x21\x24\xde\xf2\x7e\x4d\x7a\x39\x3e\xd3",
-    // "SHA1" / M(Xor2) / S(165) / L(4)
-    "\xe6\xfd\xf4\x84\xb5\x40\x58\x3b\x7f\x5e\x1b\x39\x72\x5a\xce\x0c",
-    // "_MASReceipt/receipt" / M(Xor1) / S(66) / L(19)
-    "\x1d\x0f\x03\x11\x10\x27\x21\x27\x2b\x32\x36\x6d\x30\x27\x21\x27\x2b\x32\x36\x42",
-    // "CFDataGetBytePtr" / M(Xor4) / S(86) / L(16)
-    "\xf5\xf0\xf2\xd7\xc2\xd7\xf1\xd3\xc2\xf4\xcf\xc2\xd3\xe6\xc2\xc4\xb6",
-    // "X509_get_ext_by_OBJ" / M(Xor4) / S(146) / L(19)
-    "\x30\x5d\x58\x51\x37\x0f\x0d\x1c\x37\x0d\x10\x1c\x37\x0a\x11\x37\x27\x2a\x22\x68",
-    // "CFRelease" / M(Xor3) / S(34) / L(9)
-    "\x71\x74\x60\x57\x5e\x57\x53\x41\x57\x32\xa1\x23\x83\x28\x24\xeb",
-    // "%02X" / M(Xor3) / S(74) / L(4)
-    "\x7f\x6a\x68\x02\x5a\x3d\x36\xab\x7b\x1d\x3a\x00\x92\x76\xbe\x89",
-    // "" / M(None) / S(0) / L(0)
-    "\xde\x52\x76\x83\x19\x59\x7e\xba\xdd\x49\x5e\xc4\x5f\x35\xc9\x3c\xfe\x39\xca\x67\x21\x48\x6c\x6f\x35\x9c\x6f\xf1\x8a\xb4\xcb\x46",
-    // "%02X" / M(Rot) / S(162) / L(4)
-    "\xc7\xd2\xd4\xfa\xa2\x40\x02\x9a\xcd\x9b\xaf\x36\xa0\x2f\x26\x52",
-    // "" / M(None) / S(0) / L(0)
-    "\x6a\x9a\x4f\x23\xea\xe9\x79\x04\xa9\x68\x26\x54\x5f\x3a\x24\x23\xf8\xb0\x11\x17\x1a\xf5\x62\x63\x14\x38\x6a\x61\x1b\xcd\xc6\xca",
-    // "" / M(None) / S(0) / L(0)
-    "\x9e\x6b\x20\x90\x32\x3d\x64\xc5\x8e\x1c\x91\x44\x84\x92\xf7\xe8\xfe\xd0\xac\x6a\xe3\x5a\xee\x7f\x23\x05\x33\xcc\x04\x20\x13\x24",
-    // "" / M(None) / S(0) / L(0)
-    "\x44\xb4\x73\xbb\xbd\x83\x86\xae\x58\xec\x43\x43\x60\xec\xf9\x84\xd4\xeb\x89\x56\xba\xf1\x92\xec\xf2\xe3\xf5\xb0\x8b\x25\x1a\x07",
-    // "CC_SHA1_Update" / M(Xor2) / S(42) / L(14)
-    "\x79\x79\x65\x69\x72\x7b\x0b\x65\x6f\x4a\x5e\x5b\x4e\x5f\x3a\x59",
-    // "X509_STORE_add_cert" / M(Xor3) / S(203) / L(19)
-    "\x87\xea\xef\xe6\x80\x8c\x8b\x90\x8d\x9a\x80\xbe\xbb\xbb\x80\xbc\xba\xad\xab\xdf",
-    // "CFDictionaryAddValue" / M(Xor4) / S(194) / L(20)
-    "\xa9\xac\xae\x83\x89\x9e\x83\x85\x84\x8b\x98\x93\xab\x8e\x8e\xbc\x8b\x86\x9f\x8f\xea",
-    // "PKCS7_verify" / M(Xor3) / S(51) / L(12)
-    "\x13\x08\x00\x10\x74\x1c\x35\x26\x31\x2a\x25\x3a\x43\x98\x3c\x6b",
-    // "CFDateFormatterSetProperty" / M(Xor1) / S(110) / L(26)
-    "\x2d\x28\x2a\x0f\x1a\x0b\x28\x01\x1c\x03\x0f\x1a\x1a\x0b\x1c\x3d\x0b\x1a\x3e\x1c\x01\x1e\x0b\x1c\x1a\x17\x6e\x4f\x9a\x53\x72\x3b\x2a\xda\xfb",
-    // "kCFTypeArrayCallBacks" / M(Xor4) / S(28) / L(21)
-    "\x03\x2b\x2e\x3c\x11\x18\x0d\x29\x1a\x1a\x09\x11\x2b\x09\x04\x04\x2a\x09\x0b\x03\x1b\x68",
-    // "" / M(None) / S(0) / L(0)
-    "\xbb\xed\x3f\x7e\xa9\x91\xb8\x84\x74\xde\x26\x11\xbd\x7c\xe0\x9e\x07\xe3\x7d\x91\x00\x59\x34\x61\x06\x67\x86\x02\x4c\x43\x88\x84",
-    // "Contents/_MASReceipt/receipt" / M(Xor1) / S(234) / L(28)
-    "\xa9\x85\x84\x9e\x8f\x84\x9e\x99\xc5\xb5\xa7\xab\xb9\xb8\x8f\x89\x8f\x83\x9a\x9e\xc5\x98\x8f\x89\x8f\x83\x9a\x9e\xea\x64\xdb\x06\x8d\x01\x5e\xf7\x67",
-    // "X509_free" / M(Xor1) / S(220) / L(9)
-    "\x84\xe9\xec\xe5\x83\xba\xae\xb9\xb9\xdc\x2b\xe0\xa9\x37\xf6\xc3",
-    // "BIO_write" / M(Xor3) / S(209) / L(9)
-    "\xa3\xa8\xae\xbe\x96\x93\x88\x95\x84\xe1\xe7\xb0\xe2\x29\x7f\x16",
-    // "SHA1_Final" / M(Rot) / S(197) / L(10)
-    "\x18\x0d\x06\xf6\x24\x0b\x2e\x33\x26\x31\xc5\xfc\xd6\xf8\x8f\xa0",
-    // "SHA1" / M(Xor3) / S(176) / L(4)
-    "\x93\x88\x81\xf1\xc0\xc1\x08\x98\xb0\x4e\x0f\xe4\xf5\x43\xed\xf4",
-    // "strncmp" / M(Xor4) / S(33) / L(7)
-    "\x63\x64\x62\x7e\x73\x7d\x60\x10\x7e\x24\x9a\x6f\x17\x46\x8a\x66",
-    // "CFDateFormatterCreate" / M(Xor2) / S(78) / L(21)
-    "\x1b\x1e\x1c\x39\x2c\x3d\x1e\x37\x2a\x35\x39\x2c\x2c\x3d\x2a\x1b\x2a\x3d\x39\x2c\x3d\x58",
-    // "ASN1_get_object" / M(Xor2) / S(57) / L(15)
-    "\x68\x7a\x67\x18\x76\x4e\x4c\x5d\x76\x46\x4b\x43\x4c\x4a\x5d\x29",
-    // "init" / M(Xor4) / S(117) / L(4)
-    "\x39\x3e\x39\x24\x50\x7e\x2f\x42\x8b\x5e\xfd\xf9\xb2\xff\x1e\x34",
-    // "objc_msgSend" / M(Xor2) / S(180) / L(12)
-    "\xcb\xc6\xce\xc7\xfb\xc9\xd7\xc3\xf7\xc1\xca\xc0\xa4\x5b\xe5\x41",
-    // "SecKeychainSearchCreateFromAttributes" / M(Xor3) / S(156) / L(37)
-    "\x91\xa7\xa1\x89\xa7\xbb\xa1\xaa\xa3\xab\xac\x91\xa7\xa3\xb0\xa1\xaa\x81\xb0\xa7\xa3\xb6\xa7\x84\xb0\xad\xaf\x83\xb6\xb6\xb0\xab\xa0\xb7\xb6\xa7\xb1\xc2",
-    // "" / M(None) / S(0) / L(0)
-    "\xe8\x9e\x6f\x08\xc6\x5e\x80\xca\x78\xdb\x45\xf4\x7c\xe3\x7e\xf4\x1c\x10\x1a\xe8\xa4\x02\xcb\xdf\x29\x19\x93\x3e\xbc\x87\x6c\x9b",
-    // "SHA1_Update" / M(Xor2) / S(51) / L(11)
-    "\x70\x6b\x62\x12\x7c\x76\x53\x47\x42\x57\x46\x23\xdd\x30\xc3\x5f",
-    // "globfree" / M(Xor4) / S(191) / L(8)
-    "\x97\x9c\x9f\x92\x96\x82\x95\x95\xf0\x39\x32\x13\x24\x15\x6c\xbf",
-    // "" / M(None) / S(0) / L(0)
-    "\x27\xf4\xa0\xa5\x6a\xf0\xf2\xab\x98\xc4\xa0\xe2\x39\x8f\x16\x54\xca\xaa\x5f\xab\xde\x5a\xf7\xfa\xcd\xa1\x87\x51\xf1\x3c\xd6\xe5",
-    // "CFAbsoluteTimeGetCurrent" / M(Xor3) / S(31) / L(24)
-    "\x03\x06\x01\x22\x33\x2f\x2c\x35\x34\x25\x14\x29\x2d\x25\x07\x25\x34\x03\x35\x32\x32\x25\x2e\x34\x40\xb9\x4f\xea\xab\xfb\x39\x4f\x62",
-    // "/System/Library/Frameworks/Security.framework/Security" / M(Xor1) / S(132) / L(54)
-    "\xab\xd7\xfd\xf7\xf0\xe1\xe9\xab\xc8\xed\xe6\xf6\xe5\xf6\xfd\xab\xc2\xf6\xe5\xe9\xe1\xf3\xeb\xf6\xef\xf7\xab\xd7\xe1\xe7\xf1\xf6\xed\xf0\xfd\xaa\xe2\xf6\xe5\xe9\xe1\xf3\xeb\xf6\xef\xab\xd7\xe1\xe7\xf1\xf6\xed\xf0\xfd\x84",
-    // "CFDictionarySetValue" / M(Xor2) / S(81) / L(20)
-    "\x07\x02\x00\x2d\x27\x30\x2d\x2b\x2a\x25\x36\x3d\x17\x21\x30\x12\x25\x28\x31\x21\x44",
-    // "%02x" / M(Xor1) / S(111) / L(4)
-    "\x4a\x5f\x5d\x17\x6f\x18\x89\x6a\x47\x22\xa5\xc8\xea\xfa\xef\xe2",
-    // "kSecMatchSearchList" / M(Xor3) / S(7) / L(19)
-    "\x70\x48\x7e\x78\x56\x7a\x6f\x78\x73\x48\x7e\x7a\x69\x78\x73\x57\x72\x68\x6f\x1b",
-    // "" / M(None) / S(0) / L(0)
-    "\xc6\x5f\xf9\x7c\x97\xdb\x9c\x84\xec\x53\xed\x2a\x57\xc0\xcd\xe2\x06\x9c\xa0\x16\x4c\x37\x49\x7a\x9a\x33\x5e\x8d\x81\xd4\x74\xd6",
-    // "EVP_get_digestbyname" / M(Rot) / S(42) / L(20)
-    "\x6f\x80\x7a\x89\x91\x8f\x9e\x89\x8e\x93\x91\x8f\x9d\x9e\x8c\xa3\x98\x8b\x97\x8f\x2a",
-    // "61:1e:5b:66:2c:59:3a:08:ff:58:d1:4a:e2:24:52:d1:98:df:6c:60" / M(Xor1) / S(100) / L(59)
-    "\x52\x55\x5e\x55\x01\x5e\x51\x06\x5e\x52\x52\x5e\x56\x07\x5e\x51\x5d\x5e\x57\x05\x5e\x54\x5c\x5e\x02\x02\x5e\x51\x5c\x5e\x00\x55\x5e\x50\x05\x5e\x01\x56\x5e\x56\x50\x5e\x51\x56\x5e\x00\x55\x5e\x5d\x5c\x5e\x00\x02\x5e\x52\x07\x5e\x52\x54\x64\x87\x76\x45\x0b\xb4\x72\x3c\x25",
-    // "CFBundleGetMainBundle" / M(Xor2) / S(208) / L(21)
-    "\x85\x80\x84\xb3\xa8\xa2\xaa\xa3\x81\xa3\xb2\x8b\xa7\xaf\xa8\x84\xb3\xa8\xa2\xaa\xa3\xc6",
-    // "sel_registerName" / M(Rot) / S(102) / L(16)
-    "\xd9\xcb\xd2\xc5\xd8\xcb\xcd\xcf\xd9\xda\xcb\xd8\xb4\xc7\xd3\xcb\x66",
-    // "ASN1_INTEGER_free" / M(Xor2) / S(235) / L(17)
-    "\xb8\xaa\xb7\xc8\xa6\xb0\xb7\xad\xbc\xbe\xbc\xab\xa6\x9f\x8b\x9c\x9c\xf9",
-    // "" / M(None) / S(0) / L(0)
-    "\x70\x0f\x59\xbe\x2f\x74\xf4\x43\xa4\x3a\xdc\x84\x6c\xc9\x7f\xc4\x1e\xc2\x4a\x76\xfc\x18\x4b\x31\x10\x8f\x27\x62\xb2\xc2\x4a\x6d",
-    // "CFAbsoluteTimeGetCurrent" / M(Rot) / S(70) / L(24)
-    "\x89\x8c\x87\xa8\xb9\xb5\xb2\xbb\xba\xab\x9a\xaf\xb3\xab\x8d\xab\xba\x89\xbb\xb8\xb8\xab\xb4\xba\x46\x93\x5e\xc5\xd4\xbb\x9e\xd4\xe1",
-    // "%02x:" / M(Xor1) / S(18) / L(5)
-    "\x37\x22\x20\x6a\x28\x12\x22\xa5\x45\x4a\x9b\x08\x9b\x61\xe7\x02",
-    // "CFDataCreate" / M(Xor4) / S(124) / L(12)
-    "\x83\x86\x84\xa1\xb4\xa1\x83\xb2\xa5\xa1\xb4\xa5\xc0\x74\x71\x9a",
-    // "kSecMatchLimitAll" / M(Xor3) / S(70) / L(17)
-    "\x33\x0b\x3d\x3b\x15\x39\x2c\x3b\x30\x14\x31\x35\x31\x2c\x19\x34\x34\x58",
-    // "en0" / M(Xor1) / S(25) / L(3)
-    "\x7c\x77\x29\x19\xe0\x4d\xdb\xc1\x3b\x1f\xf0\x42\xa2\x2e\x99\x39",
-    // "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" / M(Rot) / S(151) / L(66)
-    "\xc6\xea\x10\x0a\x0b\xfc\x04\xc6\xe3\x00\xf9\x09\xf8\x09\x10\xc6\xdd\x09\xf8\x04\xfc\x0e\x06\x09\x02\x0a\xc6\xda\x06\x09\xfc\xdd\x06\x0c\x05\xfb\xf8\x0b\x00\x06\x05\xc5\xfd\x09\xf8\x04\xfc\x0e\x06\x09\x02\xc6\xda\x06\x09\xfc\xdd\x06\x0c\x05\xfb\xf8\x0b\x00\x06\x05\x97",
-    // "IOBSDNameMatching" / M(Xor1) / S(162) / L(17)
-    "\xeb\xed\xe0\xf1\xe6\xec\xc3\xcf\xc7\xef\xc3\xd6\xc1\xca\xcb\xcc\xc5\xa2",
-    // "OpenSSL_add_all_digests" / M(Xor2) / S(239) / L(23)
-    "\x80\xbf\xaa\xa1\x9c\x9c\x83\x90\xae\xab\xab\x90\xae\xa3\xa3\x90\xab\xa6\xa8\xaa\xbc\xbb\xbc\xcf\xd6\x9c\x0c\xd3\x35\x4d\xec\xd1",
-    // "IORegistryEntryGetParentEntry" / M(Xor4) / S(173) / L(29)
-    "\xe7\xe1\xfc\xcb\xc9\xc7\xdd\xda\xdc\xd7\xeb\xc0\xda\xdc\xd7\xe9\xcb\xda\xfe\xcf\xdc\xcb\xc0\xda\xeb\xc0\xda\xdc\xd7\xae\x43\xf1\xb5\xd4\x71\x6e\x54\xe0",
-    // "611e5b662c593a08ff58d14ae22452d198df6c60" / M(Xor3) / S(217) / L(40)
-    "\x3c\x3b\x3b\x6f\x3f\x68\x3c\x3c\x38\x69\x3f\x33\x39\x6b\x3a\x32\x6c\x6c\x3f\x32\x6e\x3b\x3e\x6b\x6f\x38\x38\x3e\x3f\x38\x6e\x3b\x33\x32\x6e\x6c\x3c\x69\x3c\x3a\x0a\xd0\xbe\xae\x13\x08\xc7\x78\xc1",
-    // "glob_b" / M(Xor1) / S(138) / L(6)
-    "\xed\xe6\xe5\xe8\xd5\xe8\x8a\x61\x38\x97\xd2\x05\xe6\x32\xe5\xbb",
-    // "IOMasterPort" / M(Rot) / S(153) / L(12)
-    "\xe2\xe8\xe6\xfa\x0c\x0d\xfe\x0b\xe9\x08\x0b\x0d\x99\x33\xc7\xc4",
-    // "CFBundleGetValueForInfoDictionaryKey" / M(Xor1) / S(220) / L(36)
-    "\x9f\x9a\x9e\xa9\xb2\xb8\xb0\xb9\x9b\xb9\xa8\x8a\xbd\xb0\xa9\xb9\x9a\xb3\xae\x95\xb2\xba\xb3\x98\xb5\xbf\xa8\xb5\xb3\xb2\xbd\xae\xa5\x97\xb9\xa5\xdc",
-    // "CFBundleShortVersionString" / M(Xor3) / S(58) / L(26)
-    "\x1e\x1b\x1f\x28\x33\x39\x31\x38\x0e\x35\x32\x2f\x29\x0b\x38\x2f\x2e\x34\x32\x33\x0e\x29\x2f\x34\x33\x3a\x5d\x77\x4d\xef\xd3\x5b\xd9\x15\x08",
-    // "SHA1_Final" / M(Rot) / S(172) / L(10)
-    "\xff\xf4\xed\xdd\x0b\xf2\x15\x1a\x0d\x18\xac\x9a\x6a\xbe\xf7\x43",
-    // "%02X:" / M(Xor3) / S(5) / L(5)
-    "\x30\x25\x27\x4d\x2f\x15\xf7\x9f\x7d\x37\xde\xc4\xa4\x85\x9f\x4c",
-    // "" / M(None) / S(0) / L(0)
-    "\x27\x82\x95\xf8\x60\x88\x46\xa7\x73\xbb\xe7\x9a\xc3\x8a\xf7\xd5\x7e\xdd\xcd\xb2\xa6\xf3\x85\xed\x92\xa3\x85\x7f\x72\x84\x13\x92",
-    // "PKCS7_verify" / M(Rot) / S(204) / L(12)
-    "\x1c\x17\x0f\x1f\x03\x2b\x42\x31\x3e\x35\x32\x45\xcc\x42\x44\x3b",
-    // "CFDataAppendBytes" / M(Xor2) / S(144) / L(17)
-    "\xc1\xc4\xc6\xe3\xf6\xe3\xc3\xf2\xf2\xe7\xec\xe6\xc0\xfb\xf6\xe7\xf1\x82",
-    // "" / M(None) / S(0) / L(0)
-    "\x13\x8f\x5a\x69\x03\x73\x1b\x65\x3d\x4e\x5a\x2a\x4a\xdf\xad\xbf\x7e\xb1\xcd\x01\x22\x7f\x7e\x70\x74\x37\x2e\x40\x44\xb6\xdd\x1a",
-    // "/System/Library/Frameworks/IOKit.framework/IOKit" / M(Rot) / S(100) / L(48)
-    "\x93\xb7\xdd\xd7\xd8\xc9\xd1\x93\xb0\xcd\xc6\xd6\xc5\xd6\xdd\x93\xaa\xd6\xc5\xd1\xc9\xdb\xd3\xd6\xcf\xd7\x93\xad\xb3\xaf\xcd\xd8\x92\xca\xd6\xc5\xd1\xc9\xdb\xd3\xd6\xcf\x93\xad\xb3\xaf\xcd\xd8\x64",
-    // "%02X" / M(Xor1) / S(110) / L(4)
-    "\x4b\x5e\x5c\x36\x6e\x75\xf5\x00\xae\xe7\x3e\xda\xd6\x5c\xea\x05",
-    // "SKReceiptRefreshRequest" / M(Xor4) / S(72) / L(23)
-    "\x53\x4b\x52\x65\x63\x65\x69\x70\x74\x52\x65\x66\x72\x65\x73\x68\x52\x65\x71\x75\x65\x73\x74\x00\x04\x1f\x7f\xbe\x75\xf3\x41\x61",
-    // "CFDateFormatterCreateDateFromString" / M(Xor3) / S(116) / L(35)
-    "\xdb\xde\xdc\xf9\xec\xfd\xde\xf7\xea\xf5\xf9\xec\xec\xfd\xea\xdb\xea\xfd\xf9\xec\xfd\xdc\xf9\xec\xfd\xde\xea\xf7\xf5\xcb\xec\xea\xf1\xf6\xff\x98",
-    // "X509_free" / M(Rot) / S(68) / L(9)
-    "\x9c\x79\x74\x7d\xa3\xaa\xb6\xa9\xa9\x44\x5f\x4e\x3f\xda\xd8\xfa",
-    // "" / M(None) / S(0) / L(0)
-    "\x70\x69\x4d\x43\x01\x24\x4b\xff\x8a\xff\x9a\xa2\x4a\x17\x40\x39\x70\x22\x78\x7b\xa7\x65\xe1\x2c\x27\x47\xd3\x5b\x40\xf7\x32\x61",
-    // "d2i_PKCS7_bio" / M(Rot) / S(99) / L(13)
-    "\xc7\x95\xcc\xc2\xb3\xae\xa6\xb6\x9a\xc2\xc5\xcc\xd2\x63\x7c\x4f",
-    // "" / M(None) / S(0) / L(0)
-    "\x5f\xfa\x2f\xcb\xe0\xdf\x27\xe6\xcb\x55\x93\xb1\xbb\xfd\xb9\x77\x4d\xef\xd3\x5b\xf2\x08\x15\xd9\x1a\xa8\x90\xdc\x54\x76\xa8\xe4",
-    // "CFDictionaryCreateMutable" / M(Xor1) / S(186) / L(25)
-    "\xf9\xfc\xfe\xd3\xd9\xce\xd3\xd5\xd4\xdb\xc8\xc3\xf9\xc8\xdf\xdb\xce\xdf\xf7\xcf\xce\xdb\xd8\xd6\xdf\xba\xe7\xd3\x18\x1d\x47\x66\x59\x14",
-    // "CFNumberCreate" / M(Xor2) / S(20) / L(14)
-    "\x47\x42\x4a\x71\x69\x66\x61\x76\x47\x76\x61\x65\x70\x61\x04\xd6",
-    // "" / M(None) / S(0) / L(0)
-    "\x85\x23\x66\xa7\x5e\xed\xcb\xb8\xc4\x16\x0b\xb9\x51\xfe\x78\x9f\x61\xd9\x82\xf0\x0a\x82\x16\xd3\xce\xb7\x95\xd7\x19\x17\x63\x28",
-    // "/System/Library/Frameworks/IOKit.framework/IOKit" / M(Xor4) / S(249) / L(48)
-    "\x86\xfa\xd0\xda\xdd\xcc\xc4\x86\xe5\xc0\xcb\xdb\xc8\xdb\xd0\x86\xef\xdb\xc8\xc4\xcc\xde\xc6\xdb\xc2\xda\x86\xe0\xe6\xe2\xc0\xdd\x87\xcf\xdb\xc8\xc4\xcc\xde\xc6\xdb\xc2\x86\xe0\xe6\xe2\xc0\xdd\xa9",
-    // "CFDataGetLength" / M(Xor4) / S(175) / L(15)
-    "\xb3\xb6\xb4\x91\x84\x91\xb7\x95\x84\xbc\x95\x9e\x97\x84\x98\xf0",
-    // "" / M(None) / S(0) / L(0)
-    "\xa2\xc6\xb7\x0f\xed\xc9\x8d\xf0\x6a\x85\x85\x9f\x88\x4a\x94\xa7\x3e\x74\x1e\xe2\x2f\xfe\x98\x9b\x93\x48\xf8\x8f\x37\xe1\xfc\xfb",
-    // "sha1" / M(Xor3) / S(129) / L(4)
-    "\xe2\xf9\xf0\xa0\x91\xaa\x63\x81\xab\x6d\x32\x2c\x39\x31\x97\x9f",
-    // "CFStringCreateWithBytes" / M(Rot) / S(28) / L(23)
-    "\x5f\x62\x6f\x90\x8e\x85\x8a\x83\x5f\x8e\x81\x7d\x90\x81\x73\x85\x90\x84\x5e\x95\x90\x81\x8f\x1c\xb7\x2c\x69\xfc\x54\xfa\xd9\xe8",
-    // "CFURLCreateWithFileSystemPathRelativeToBase" / M(Xor2) / S(197) / L(43)
-    "\xb2\xb7\xa4\xa3\xbd\xb2\x83\x94\x90\x85\x94\xa6\x98\x85\x99\xb7\x98\x9d\x94\xa2\x88\x82\x85\x94\x9c\xa1\x90\x85\x99\xa3\x94\x9d\x90\x85\x98\x87\x94\xa5\x9e\xb3\x90\x82\x94\xf1\x10\x35\x8e\x9c\x04\xad\x99\x86",
-    // "CFReadStreamCreateWithFile" / M(Xor2) / S(189) / L(26)
-    "\xdd\xd8\xcc\xfb\xff\xfa\xcd\xea\xec\xfb\xff\xf3\xdd\xec\xfb\xff\xea\xfb\xc9\xf7\xea\xf6\xd8\xf7\xf2\xfb\x9e\x54\x52\x55\xa5\xd9\x96\x0f\x6d",
-    // "kSecClassCertificate" / M(Xor2) / S(230) / L(20)
-    "\x98\xa0\x96\x90\xb0\x9f\x92\x80\x80\xb0\x96\x81\x87\x9a\x95\x9a\x90\x92\x87\x96\xf3",
-    // "" / M(None) / S(0) / L(0)
-    "\xb4\xfd\x26\x85\x96\x0d\xcb\x12\x44\x36\x21\x30\xde\x30\xfc\x60\x2c\xf6\xe6\x37\x64\x50\x3a\x3c\xd5\xe0\x87\x8f\xea\xd5\x17\x73",
-    // "" / M(None) / S(0) / L(0)
-    "\x93\xe2\x14\xe5\x75\x7f\x8d\x3a\x60\xf5\x16\x02\x46\x7e\x2f\x42\x8b\x5e\xfd\xf9\xb2\xff\x1e\x34\x08\xfd\xd8\xb9\xff\xe5\x0f\x8c",
-    // "CFURLCreateWithFileSystemPathRelativeToBase" / M(Xor2) / S(47) / L(43)
-    "\x58\x5d\x4e\x49\x57\x58\x69\x7e\x7a\x6f\x7e\x4c\x72\x6f\x73\x5d\x72\x77\x7e\x48\x62\x68\x6f\x7e\x76\x4b\x7a\x6f\x73\x49\x7e\x77\x7a\x6f\x72\x6d\x7e\x4f\x74\x59\x7a\x68\x7e\x1b\x0c\xcf\xd8\x89\xed\x33\xbb\x20",
-    // "" / M(None) / S(0) / L(0)
-    "\x15\x25\x8d\x7b\xb6\x1d\x64\x0f\x9c\x24\xa4\x3c\xc4\x98\x5f\x41\x6d\x04\xda\xdf\xad\x65\x30\x98\xe3\x87\xb8\x4d\x8b\x6c\xb5\x01",
-    // "" / M(None) / S(0) / L(0)
-    "\xc9\xd1\x04\x73\xd1\x96\xd4\xa2\x11\x5d\x59\x5e\xee\xaa\x63\x81\xab\x6d\x32\x2c\x39\x31\x97\x9f\xf5\x5f\x0a\x07\x0c\xf9\x2a\x71",
-    // "CFRelease" / M(Xor4) / S(60) / L(9)
-    "\x83\x86\x92\xa5\xac\xa5\xa1\xb3\xa5\xc0\x72\xb7\x73\x89\xfb\xe1",
-    // "" / M(None) / S(0) / L(0)
-    "\xb0\xff\x9a\xa4\x89\x9b\x2c\x26\x61\x69\x1d\x99\xf9\x56\x13\x6b\xda\x1e\x2c\xc4\x72\xb9\x15\x37\xd2\x52\xcb\x44\xa8\x37\xf4\xa8",
-    // "" / M(None) / S(0) / L(0)
-    "\x07\xc7\x3b\xc8\xc1\x49\xbf\xdd\xb7\x32\xb2\x4f\x4d\xd2\x3b\xc5\x68\xf5\xc7\x25\xad\x92\xf6\xc4\x39\x00\xf6\x8a\x3b\x19\xdc\x54",
-    // "%02x" / M(Rot) / S(148) / L(4)
-    "\xb9\xc4\xc6\x0c\x94\xd1\x99\xdc\xe3\x0f\x42\xc0\x9d\x23\x33\x22",
-    // "" / M(None) / S(0) / L(0)
-    "\x45\x82\x28\xfb\x4f\x70\xd2\x90\x97\xb2\x15\x67\xfd\xc8\xba\xf7\x46\x29\x57\x79\x9a\x95\xf5\x6b\xe6\xb2\x8c\x06\xc9\x99\xd0\x49",
-    // "CFDataGetBytePtr" / M(Xor3) / S(25) / L(16)
-    "\x69\x6c\x6e\x4b\x5e\x4b\x6d\x4f\x5e\x68\x53\x5e\x4f\x7a\x5e\x58\x2a",
-    // "EVP_get_digestbyname" / M(Xor4) / S(125) / L(20)
-    "\x04\x17\x11\x1e\x26\x24\x35\x1e\x25\x28\x26\x24\x32\x35\x23\x38\x2f\x20\x2c\x24\x41",
-    // "sk_value" / M(Xor4) / S(34) / L(8)
-    "\x53\x4b\x7f\x56\x41\x4c\x55\x45\x20\xe1\xf6\x6f\x48\xc1\xe2\xa9",
-    // "2.0" / M(Xor2) / S(65) / L(3)
-    "\x63\x7f\x61\x51\x80\xfc\xa7\x37\xce\x0b\xae\xe9\xae\x5f\x4a\x8b",
-    // "" / M(None) / S(0) / L(0)
-    "\x0e\xfc\x57\x69\x6b\x80\xc2\xc9\xdf\xf5\x6a\x1e\x38\xfd\xf0\x2b\x0d\x56\xdb\x5c\x6d\x5d\x00\x4f\xd7\x3d\xda\x9b\xb7\xf9\x00\x73",
-    // "" / M(None) / S(0) / L(0)
-    "\xf0\x6b\xb1\x6c\x1f\x9e\x86\x94\x5d\x9b\xa6\xec\x1b\xd5\xc8\x49\xec\xff\xa2\xd4\xab\xaf\x63\xb5\xb3\xdb\xc0\xd4\xe0\x3e\xa3\xfa",
-    // "CC_SHA1_Final" / M(Xor4) / S(140) / L(13)
-    "\x83\x83\x9f\x93\x88\x81\xf1\x9f\x86\xa9\xae\xa1\xac\xc0\xbd\xb5",
-    // "X509_STORE_add_cert" / M(Xor3) / S(17) / L(19)
-    "\x7d\x10\x15\x1c\x7a\x76\x71\x6a\x77\x60\x7a\x44\x41\x41\x7a\x46\x40\x57\x51\x25",
-    // "kCFTypeDictionaryKeyCallBacks" / M(Xor3) / S(139) / L(29)
-    "\xda\xf2\xf7\xe5\xc8\xc1\xd4\xf5\xd8\xd2\xc5\xd8\xde\xdf\xd0\xc3\xc8\xfa\xd4\xc8\xf2\xd0\xdd\xdd\xf3\xd0\xd2\xda\xc2\xb1\xd5\x6c\xf4\xb8\xd2\xf8\x35\xc4",
-    // "CFReadStreamRead" / M(Xor4) / S(184) / L(16)
-    "\x7b\x7e\x6a\x5d\x59\x5c\x6b\x4c\x4a\x5d\x59\x55\x6a\x5d\x59\x5c\x38",
-    // "IOMACAddress" / M(Xor4) / S(173) / L(12)
-    "\x99\x9f\x9d\x91\x93\x91\xb4\xb4\xa2\xb5\xa3\xa3\xd0\x1d\x64\x0f",
-    // "/usr/lib/libSystem.dylib" / M(Xor3) / S(99) / L(24)
-    "\xab\xf1\xf7\xf6\xab\xe8\xed\xe6\xab\xe8\xed\xe6\xd7\xfd\xf7\xf0\xe1\xe9\xaa\xe0\xfd\xe8\xed\xe6\x84\x9d\xb6\x8f\x48\xd2\xe2\xbc\x0f",
-    // "" / M(None) / S(0) / L(0)
-    "\x57\x26\x1b\xb8\x19\xb4\xb1\xc7\x51\xa9\x95\x53\x88\x4a\xc3\xe5\x3b\x97\x23\x7c\x4e\x8e\x30\xba\xb9\x6f\xf1\x8c\xb2\x76\x22\x44",
-    // "" / M(None) / S(0) / L(0)
-    "\x22\xd3\xea\xb7\x54\x00\x85\x7b\x46\x52\xeb\xcc\x49\x7a\x11\x82\xe6\xb2\x99\x14\xdd\x17\xdf\x3a\xd4\x99\x48\xe2\xdd\x25\x92\xb3",
-    // "" / M(None) / S(0) / L(0)
-    "\x0e\x76\x82\x4f\x02\xf9\x4d\xa8\xff\x50\x17\xc9\xa4\x8d\xb0\xc3\x09\x29\xc6\xf7\x67\x87\x70\xf6\x4b\xc1\xe1\x83\x3e\x69\x91\xdb",
-    // "setDelegate:" / M(Xor1) / S(108) / L(12)
-    "\x1f\x09\x18\x28\x09\x00\x09\x0b\x0d\x18\x09\x56\x6c\x96\xd4\xa2",
-    // "kCFBundleIdentifierKey" / M(Xor2) / S(86) / L(22)
-    "\x2a\x02\x07\x03\x34\x2f\x25\x2d\x24\x08\x25\x24\x2f\x35\x28\x27\x28\x24\x33\x0a\x24\x38\x41",
-    // "dlopen" / M(Rot) / S(55) / L(6)
-    "\x9b\xa3\xa6\xa7\x9c\xa5\x37\x2d\x56\xb6\x0e\xe1\x98\x94\x9d\x9d",
-    // "CFDictionarySetValue" / M(Xor4) / S(20) / L(20)
-    "\xe7\xe2\xe0\xcd\xc7\xd0\xcd\xcb\xca\xc5\xd6\xdd\xf7\xc1\xd0\xf2\xc5\xc8\xd1\xc1\xa4",
-    // "" / M(None) / S(0) / L(0)
-    "\x7d\xd9\x57\xd2\xbb\xf7\xc6\xcc\x19\x4b\xe3\x1c\x18\x3c\xa1\x31\xcd\x1a\x6c\x70\x47\x31\x8e\x1a\x5d\xd5\xcc\xf1\x70\x86\xee\x4d",
-    // "" / M(None) / S(0) / L(0)
-    "\x03\x5f\xcf\xe0\x0a\xda\xaf\xb9\x7b\x24\xad\x30\x82\x68\x87\x50\x8e\xd5\xfd\x14\x00\xc3\xc3\x64\x48\x4c\xfe\xf7\x84\x0c\xd6\xca",
-    // "" / M(None) / S(0) / L(0)
-    "\x70\x0a\xc4\x65\x5e\x93\x5e\xc5\xd4\xbb\x9e\xd4\x64\xec\x46\xe1\x33\x9e\xdc\xfd\xcd\x81\x37\x99\x89\xeb\xbd\xe8\x94\x9c\x86\x4a",
-    // "alloc" / M(Xor4) / S(54) / L(5)
-    "\x01\x0c\x0c\x0f\x03\x60\x1b\x65\x3d\x4e\x5a\x2a\x4a\xdf\xad\xbf",
-    // "IOBSDNameMatching" / M(Xor2) / S(147) / L(17)
-    "\xc8\xce\xc3\xd2\xc5\xcf\xe0\xec\xe4\xcc\xe0\xf5\xe2\xe9\xe8\xef\xe6\x81",
-    // "EVP_MD_CTX_init" / M(Rot) / S(14) / L(15)
-    "\x53\x64\x5e\x6d\x5b\x52\x6d\x51\x62\x66\x6d\x77\x7c\x77\x82\x0e",
-    // "Contents" / M(Xor1) / S(49) / L(8)
-    "\x72\x5e\x5f\x45\x54\x5f\x45\x42\x31\x43\xc2\xf2\xf8\xce\x39\x3e",
-    // "" / M(None) / S(0) / L(0)
-    "\x21\xf1\x18\x68\x39\xb2\x0e\xf1\x36\x88\x49\xb3\x2b\xcf\xd4\x16\x1e\xfd\x38\xb8\x7b\xb8\x96\x1d\xea\x85\x03\x59\x3c\x18\x4a\xaf",
-    // "CFArrayCreateMutable" / M(Xor2) / S(84) / L(20)
-    "\x02\x07\x00\x33\x33\x20\x38\x02\x33\x24\x20\x35\x24\x0c\x34\x35\x20\x23\x2d\x24\x41",
-    // "CFArrayGetCount" / M(Xor2) / S(1) / L(15)
-    "\x52\x57\x50\x63\x63\x70\x68\x56\x74\x65\x52\x7e\x64\x7f\x65\x11",
-    // "CFDateCreate" / M(Xor4) / S(103) / L(12)
-    "\x33\x36\x34\x11\x04\x15\x33\x02\x15\x11\x04\x15\x70\xce\x8e\xed",
-    // "sk_free" / M(Xor3) / S(124) / L(7)
-    "\xff\xe7\xd3\xea\xfe\xe9\xe9\x8c\x7b\x8e\x0e\x80\x8c\x35\xfc\x93",
-    // "CFDateFormatterCreateDateFromString" / M(Xor1) / S(191) / L(35)
-    "\xfc\xf9\xfb\xde\xcb\xda\xf9\xd0\xcd\xd2\xde\xcb\xcb\xda\xcd\xfc\xcd\xda\xde\xcb\xda\xfb\xde\xcb\xda\xf9\xcd\xd0\xd2\xec\xcb\xcd\xd6\xd1\xd8\xbf",
-    // "sk_num" / M(Xor2) / S(94) / L(6)
-    "\x3d\x25\x11\x20\x3b\x23\x4e\xbd\xb9\xd6\x96\xce\x0e\x2b\x47\xfc",
-    // "kCFTypeArrayCallBacks" / M(Xor4) / S(157) / L(21)
-    "\x15\x3d\x38\x2a\x07\x0e\x1b\x3f\x0c\x0c\x1f\x07\x3d\x1f\x12\x12\x3c\x1f\x1d\x15\x0d\x7e",
-    // "" / M(None) / S(0) / L(0)
-    "\x0d\xfb\xa3\xf4\x8b\xaa\xb2\x7f\x7a\xc8\x63\x6f\x70\x28\xb7\x29\x31\x34\x5e\x35\xbb\xec\xfc\xfa\xa3\x8d\xb5\x53\xaa\x88\xb3\x10",
-    // "CFEqual" / M(Xor3) / S(172) / L(7)
-    "\xff\xfa\xf9\xcd\xc9\xdd\xd0\xbc\x97\x17\xa9\x3f\x07\x14\xea\x45",
-    // "ASN1_INTEGER_free" / M(Xor4) / S(243) / L(17)
-    "\x57\x45\x58\x27\x49\x5f\x58\x42\x53\x51\x53\x44\x49\x70\x64\x73\x73\x16",
-    // "CFDataGetLength" / M(Xor4) / S(195) / L(15)
-    "\x73\x76\x74\x51\x44\x51\x77\x55\x44\x7c\x55\x5e\x57\x44\x58\x30",
-    // "OBJ_txt2obj" / M(Xor2) / S(65) / L(11)
-    "\x1e\x13\x1b\x0e\x25\x29\x25\x63\x3e\x33\x3b\x51\x69\x29\xcf\xfc",
-    // "CFReadStreamOpen" / M(Rot) / S(60) / L(16)
-    "\x7f\x82\x8e\xa1\x9d\xa0\x8f\xb0\xae\xa1\x9d\xa9\x8b\xac\xa1\xaa\x3c",
-    // "" / M(None) / S(0) / L(0)
-    "\x81\x6a\x10\x92\xba\xcf\xf8\x30\xdb\x28\x95\xca\x19\x8e\x18\x35\xf3\x5f\x02\xde\x10\x4b\x6f\x3a\x84\x8f\x3f\x55\xdd\x4e\xcf\x3c",
-    // "CFArrayAppendValue" / M(Xor2) / S(88) / L(18)
-    "\x08\x0d\x0a\x39\x39\x2a\x32\x0a\x3b\x3b\x2e\x25\x2f\x1d\x2a\x27\x3e\x2e\x4b",
-    // "CFStringGetFileSystemRepresentation" / M(Rot) / S(197) / L(35)
-    "\x08\x0b\x18\x39\x37\x2e\x33\x2c\x0c\x2a\x39\x0b\x2e\x31\x2a\x18\x3e\x38\x39\x2a\x32\x17\x2a\x35\x37\x2a\x38\x2a\x33\x39\x26\x39\x2e\x34\x33\xc5",
-    // "EVP_MD_CTX_init" / M(Xor1) / S(102) / L(15)
-    "\x23\x30\x36\x39\x2b\x22\x39\x25\x32\x3e\x39\x0f\x08\x0f\x12\x66",
-    // "EVP_DigestUpdate" / M(Xor2) / S(179) / L(16)
-    "\xe7\xf4\xf2\xfd\xe6\xcb\xc5\xc7\xd1\xd6\xf7\xd2\xc6\xc3\xd6\xc7\xa2",
-    // "receipt" / M(Xor3) / S(31) / L(7)
-    "\x5d\x4a\x4c\x4a\x46\x5f\x5b\x2f\x6d\x04\xda\xdf\xad\x65\x30\x98",
-    // "" / M(None) / S(0) / L(0)
-    "\xca\xe2\x98\xa3\xaa\xb5\x14\x42\xfe\xbe\x44\x22\x2b\xed\xdd\x7f\x62\x8a\x93\x8c\x26\xf6\x03\xee\xe5\xe1\x25\x56\xca\x46\x78\xa9",
-    // "IOMACAddress" / M(Rot) / S(251) / L(12)
-    "\x44\x4a\x48\x3c\x3e\x3c\x5f\x5f\x6d\x60\x6e\x6e\xfb\xe5\xaa\xed",
-    // "" / M(None) / S(0) / L(0)
-    "\x76\x5c\x05\xad\x98\x6d\x7b\x21\xc1\x71\xb8\x7e\xb6\xff\xc8\xcb\xb4\x75\x1b\xf3\x58\xa6\x9f\x1f\x4f\xca\x29\xc4\xb4\x4c\xea\x14",
-    // "init" / M(Xor4) / S(112) / L(4)
-    "\x69\x6e\x69\x74\x00\x14\x73\x36\x5f\xa7\x79\xed\x82\xc6\xa2\xe7",
-    // "CFArrayGetCount" / M(Xor2) / S(170) / L(15)
-    "\xf9\xfc\xfb\xc8\xc8\xdb\xc3\xfd\xdf\xce\xf9\xd5\xcf\xd4\xce\xba",
-    // "ASN1_OBJECT_free" / M(Xor2) / S(6) / L(16)
-    "\x56\x44\x59\x26\x48\x58\x55\x5d\x52\x54\x43\x48\x71\x65\x72\x72\x17",
-    // "" / M(None) / S(0) / L(0)
-    "\x5e\x19\xe2\xd4\xa1\xba\x13\xd8\xcc\xdc\x78\x35\x75\x87\xcf\x9f\x88\x1d\x2e\x8d\xff\xc8\xbe\x36\x77\x54\xf5\xf8\x41\x14\x77\x34",
-    // "" / M(None) / S(0) / L(0)
-    "\xb7\xc7\x23\xaa\xc0\x7f\xf7\x32\x36\x54\x4c\xaa\x3c\xb6\xea\x55\x65\xb4\xed\x24\xbd\x2d\x4e\x23\xa0\x7c\xce\xc9\x59\x41\x87\x88",
-    // "Contents" / M(Xor2) / S(172) / L(8)
-    "\xff\xd3\xd2\xc8\xd9\xd2\xc8\xcf\xbc\xd9\x82\xf0\x0a\x82\x16\xd3",
-    // "Contents/_MASReceipt" / M(Rot) / S(199) / L(20)
-    "\x0a\x36\x35\x3b\x2c\x35\x3b\x3a\xf6\x26\x14\x08\x1a\x19\x2c\x2a\x2c\x30\x37\x3b\xc7",
-    // "CFStringGetFileSystemRepresentation" / M(Xor1) / S(152) / L(35)
-    "\xdb\xde\xcb\xec\xea\xf1\xf6\xff\xdf\xfd\xec\xde\xf1\xf4\xfd\xcb\xe1\xeb\xec\xfd\xf5\xca\xfd\xe8\xea\xfd\xeb\xfd\xf6\xec\xf9\xec\xf1\xf7\xf6\x98",
-    // "glob" / M(Xor4) / S(58) / L(4)
-    "\xc7\xcc\xcf\xc2\xa0\x4a\x03\xde\x0f\xac\xa8\xcc\x8d\x9e\xd4\x71",
-    // "2.0" / M(Rot) / S(200) / L(3)
-    "\xfa\xf6\xf8\xc8\x14\x1f\x55\x2b\xc3\x3c\x28\x15\x2d\x33\x18\x5e",
-    // "" / M(None) / S(0) / L(0)
-    "\x21\x44\x99\x92\xfd\x65\xd7\xea\x42\x02\xd2\x83\x42\x22\x61\x3b\xed\x72\x9b\xa9\xdc\xbf\xac\x22\xa2\x1e\xc6\xdd\x80\x6e\x3e\x4f",
-    // "" / M(None) / S(0) / L(0)
-    "\x72\xbf\x2c\x0d\xa4\x52\xab\x04\x0c\xe5\x01\x2e\x53\x86\xb0\x0b\x83\x57\xd2\x74\xc1\xa2\x75\x88\xc1\x28\xc4\x85\x86\x84\x58\x40",
-    // "" / M(None) / S(0) / L(0)
-    "\x21\xd7\x62\x55\xaa\x25\x6e\x19\xa4\x29\x66\x4c\xd4\x0c\xf0\xd6\xfb\x92\xe6\xcc\xa5\x28\xe6\xd6\xbd\xe6\x0c\xe8\xf1\xba\x62\x4d",
-    // "BIO_new" / M(Xor3) / S(50) / L(7)
-    "\x00\x0b\x0d\x1d\x2c\x27\x35\x42\x3b\x97\x23\x7c\x4e\x8e\x30\xba",
-    // "CFReadStreamClose" / M(Xor2) / S(237) / L(17)
-    "\xbc\xb9\xad\x9a\x9e\x9b\xac\x8b\x8d\x9a\x9e\x92\xbc\x93\x90\x8c\x9a\xff",
-    // "_MASReceipt/receipt" / M(Rot) / S(254) / L(19)
-    "\x5d\x4b\x3f\x51\x50\x63\x61\x63\x67\x6e\x72\x2d\x70\x63\x61\x63\x67\x6e\x72\xfe",
-    // "" / M(None) / S(0) / L(0)
-    "\xa9\xfb\x45\x63\x68\x1d\xb4\x58\xa1\xf5\xd3\x01\x21\xc0\xfc\x51\xc6\x6b\x6b\xc0\x70\x05\xc1\x56\x56\xed\xe7\xe8\x54\x0d\xe3\xa0",
-    // "." / M(Xor4) / S(85) / L(1)
-    "\x7e\x50\xe9\x53\x58\x86\xf2\x2c\x3d\x3b\x53\x4b\x38\x0b\xb9\xec",
-    // "X509_STORE_add_cert" / M(Rot) / S(155) / L(19)
-    "\xf3\xd0\xcb\xd4\xfa\xee\xef\xea\xed\xe0\xfa\xfc\xff\xff\xfa\xfe\x00\x0d\x0f\x9b",
-    // "CFNumberCreate" / M(Xor2) / S(125) / L(14)
-    "\x2e\x2b\x23\x18\x00\x0f\x08\x1f\x2e\x1f\x08\x0c\x19\x08\x6d\xd9",
-    // "" / M(None) / S(0) / L(0)
-    "\x78\x83\xfc\x70\x98\xec\x84\xa4\x31\x63\xc2\x65\xaa\xee\xd4\xa1\xfd\xa3\x30\x67\x2d\x3f\x55\x75\x13\xe4\x2a\xfb\x53\xad\xd9\x57",
-    // "61:1e:5b:66:2c:59:3a:08:ff:58:d1:4a:e2:24:52:d1:98:df:6c:60" / M(Rot) / S(60) / L(59)
-    "\x72\x6d\x76\x6d\xa1\x76\x71\x9e\x76\x72\x72\x76\x6e\x9f\x76\x71\x75\x76\x6f\x9d\x76\x6c\x74\x76\xa2\xa2\x76\x71\x74\x76\xa0\x6d\x76\x70\x9d\x76\xa1\x6e\x76\x6e\x70\x76\x71\x6e\x76\xa0\x6d\x76\x75\x74\x76\xa0\xa2\x76\x72\x9f\x76\x72\x6c\x3c\x9f\x12\x79\xc2\x18\xa8\xd6\xd9",
-    // "Contents/_MASReceipt/receipt" / M(Rot) / S(137) / L(28)
-    "\xcc\xf8\xf7\xfd\xee\xf7\xfd\xfc\xb8\xe8\xd6\xca\xdc\xdb\xee\xec\xee\xf2\xf9\xfd\xb8\xfb\xee\xec\xee\xf2\xf9\xfd\x89\x30\xfc\x60\x2c\xf6\xe6\x37\x3c",
-    // "SecKeychainSearchCreateFromAttributes" / M(Xor3) / S(31) / L(37)
-    "\x16\x20\x26\x0e\x20\x3c\x26\x2d\x24\x2c\x2b\x16\x20\x24\x37\x26\x2d\x06\x37\x20\x24\x31\x20\x03\x37\x2a\x28\x04\x31\x31\x37\x2c\x27\x30\x31\x20\x36\x45",
-    // "CFDictionaryGetValue" / M(Xor2) / S(92) / L(20)
-    "\x0a\x0f\x0d\x20\x2a\x3d\x20\x26\x27\x28\x3b\x30\x0e\x2c\x3d\x1f\x28\x25\x3c\x2c\x49",
-    // "SHA1_Init" / M(Xor3) / S(111) / L(9)
-    "\x2c\x37\x3e\x4e\x20\x36\x11\x16\x0b\x7f\x5c\xbf\x31\x8f\xd8\x34",
-    // "" / M(None) / S(0) / L(0)
-    "\x15\xd5\xa3\xc2\xaf\x35\x26\x07\x59\x4b\x2a\x12\x87\xf2\x33\x3a\x13\x27\x8e\x20\xf1\x1b\xef\x91\xc2\x7c\x5e\x84\x76\xd4\xb9\x9c",
-    // "CFBundleGetIdentifier" / M(Xor1) / S(82) / L(21)
-    "\x11\x14\x10\x27\x3c\x36\x3e\x37\x15\x37\x26\x1b\x36\x37\x3c\x26\x3b\x34\x3b\x37\x20\x52",
-    // "CFBundleGetValueForInfoDictionaryKey" / M(Xor4) / S(136) / L(36)
-    "\xeb\xee\xea\xdd\xc6\xcc\xc4\xcd\xef\xcd\xdc\xfe\xc9\xc4\xdd\xcd\xee\xc7\xda\xe1\xc6\xce\xc7\xec\xc1\xcb\xdc\xc1\xc7\xc6\xc9\xda\xd1\xe3\xcd\xd1\xa8",
-    // "" / M(None) / S(0) / L(0)
-    "\x45\x1f\x92\x2d\xb9\x2b\x0c\x97\x52\xcc\xdc\x9f\x0f\x62\xf7\x4a\x18\x20\xcd\xeb\x57\x33\x35\x75\x28\x1e\xde\xb2\x67\x9e\x37\x55",
-    // "alloc" / M(Rot) / S(74) / L(5)
-    "\xab\xb6\xb6\xb9\xad\x4a\xaa\x16\x80\xc5\x06\xc7\xf0\xbc\x7d\xcd",
-    // "CFDateFormatterCreateDateFromString" / M(Xor4) / S(55) / L(35)
-    "\xff\xfa\xf8\xdd\xc8\xd9\xfa\xd3\xce\xd1\xdd\xc8\xc8\xd9\xce\xff\xce\xd9\xdd\xc8\xd9\xf8\xdd\xc8\xd9\xfa\xce\xd3\xd1\xef\xc8\xce\xd5\xd2\xdb\xbc",
-    // "X509_get_ext_by_OBJ" / M(Xor4) / S(150) / L(19)
-    "\xe0\x8d\x88\x81\xe7\xdf\xdd\xcc\xe7\xdd\xc0\xcc\xe7\xda\xc1\xe7\xf7\xfa\xf2\xb8",
-    // "PKCS7_free" / M(Rot) / S(169) / L(10)
-    "\xf9\xf4\xec\xfc\xe0\x08\x0f\x1b\x0e\x0e\xa9\x1e\xc7\x66\x3e\xd2",
-    // "" / M(None) / S(0) / L(0)
-    "\x78\xd1\x25\x84\x95\x84\x08\xa1\xf4\xcc\x2a\x3b\x65\x8b\xab\x3e\x77\x4f\xb8\xd6\xaa\x04\xa2\x3d\x8b\xe3\x0d\x66\xb0\xcd\x84\x5c",
-    // "CFBundleCopyBundleURL" / M(Xor1) / S(218) / L(21)
-    "\x99\x9c\x98\xaf\xb4\xbe\xb6\xbf\x99\xb5\xaa\xa3\x98\xaf\xb4\xbe\xb6\xbf\x8f\x88\x96\xda",
-    // "EVP_DigestUpdate" / M(Rot) / S(245) / L(16)
-    "\x3a\x4b\x45\x54\x39\x5e\x5c\x5a\x68\x69\x4a\x65\x59\x56\x69\x5a\xf5",
-    // "d2i_X509_bio" / M(Xor3) / S(118) / L(12)
-    "\xe2\xb4\xef\xd9\xde\xb3\xb6\xbf\xd9\xe4\xef\xe9\x86\x58\x31\x5a",
-    // "IOObjectRelease" / M(Xor1) / S(119) / L(15)
-    "\x3e\x38\x38\x15\x1d\x12\x14\x03\x25\x12\x1b\x12\x16\x04\x12\x77",
-    // "" / M(None) / S(0) / L(0)
-    "\x3d\xbe\xd8\xa3\xc0\xf3\x19\x3f\xca\x7e\x63\xbf\xd1\x51\x6f\x79\x95\x96\xb9\x6f\x2f\xfa\xd1\x07\x3d\xcf\xe4\xc0\xcd\x6f\x11\xf2",
-    // "CFRelease" / M(Xor1) / S(146) / L(9)
-    "\xd1\xd4\xc0\xf7\xfe\xf7\xf3\xe1\xf7\x92\x2c\x72\x89\xb9\x50\x1d",
-    // "BIO_free" / M(Rot) / S(24) / L(8)
-    "\x5a\x61\x67\x77\x7e\x8a\x7d\x7d\x18\xfd\x7c\x4e\x72\x10\x35\x8a",
-    // "exit" / M(Xor4) / S(78) / L(4)
-    "\x85\x98\x89\x94\xe0\xb9\x8c\x5d\x0c\x47\xf6\xab\xc3\x90\x09\xf4",
-    // "" / M(None) / S(0) / L(0)
-    "\x2e\x93\x6d\x63\x3e\xfa\xec\xec\xec\xeb\xe7\xd3\x18\x1d\x47\x66\x41\x88\x14\x59\xcc\x75\x74\xf1\x74\xe5\x6c\x9d\xc1\x3c\x6a\x67",
-    // "/System/Library/Frameworks/Security.framework/Security" / M(Xor4) / S(46) / L(54)
-    "\xcd\xb1\x9b\x91\x96\x87\x8f\xcd\xae\x8b\x80\x90\x83\x90\x9b\xcd\xa4\x90\x83\x8f\x87\x95\x8d\x90\x89\x91\xcd\xb1\x87\x81\x97\x90\x8b\x96\x9b\xcc\x84\x90\x83\x8f\x87\x95\x8d\x90\x89\xcd\xb1\x87\x81\x97\x90\x8b\x96\x9b\xe2",
-    // "CC_SHA1_Init" / M(Xor2) / S(242) / L(12)
-    "\xa1\xa1\xbd\xb1\xaa\xa3\xd3\xbd\xab\x8c\x8b\x96\xe2\xd5\xcc\xf1",
-    // "exit" / M(Xor4) / S(165) / L(4)
-    "\x35\x28\x39\x24\x50\x6e\x14\x81\x87\x93\x38\x40\x22\x34\x8f\x72",
-    // "CFBundleUnloadExecutable" / M(Rot) / S(241) / L(24)
-    "\x34\x37\x33\x66\x5f\x55\x5d\x56\x46\x5f\x5d\x60\x52\x55\x36\x69\x56\x54\x66\x65\x52\x53\x5d\x56\xf1\xa9\xce\x35\xca\x85\x67\xd1\x57",
-    // "X509_get_ext_by_OBJ" / M(Xor3) / S(180) / L(19)
-    "\x90\xfd\xf8\xf1\x97\xaf\xad\xbc\x97\xad\xb0\xbc\x97\xaa\xb1\x97\x87\x8a\x82\xc8",
-    // "" / M(None) / S(0) / L(0)
-    "\x45\x57\x03\xb3\xeb\xd8\xad\x97\x89\x51\x36\x67\x1c\x16\xd2\xc8\x9f\x58\x10\xd7\xb3\xa1\x31\x99\x67\x0d\xee\xb5\xc6\x01\xd2\x8c",
-    // "X509_digest" / M(Rot) / S(81) / L(11)
-    "\xa9\x86\x81\x8a\xb0\xb5\xba\xb8\xb6\xc4\xc5\x51\xc9\xce\xdf\xb4",
-    // "Contents/_MASReceipt/receipt" / M(Xor4) / S(153) / L(28)
-    "\x5e\x72\x73\x69\x78\x73\x69\x6e\x32\x42\x50\x5c\x4e\x4f\x78\x7e\x78\x74\x6d\x69\x32\x6f\x78\x7e\x78\x74\x6d\x69\x1d\xa2\x52\xd8\xd5\xb7\x3c\x15\xf0",
-    // "" / M(None) / S(0) / L(0)
-    "\x73\x21\x21\x4b\xf3\xf0\xa1\xa6\xf1\xe8\xf2\x7d\x62\x69\xe6\x1e\x90\x51\x72\xff\x20\x2c\x9d\x65\xa5\x56\x90\x1a\x15\x9e\x69\x9a",
-    // "" / M(None) / S(0) / L(0)
-    "\xa2\xe5\x0f\xbc\x00\x23\x51\xab\x97\x38\xba\x92\xc8\x1c\x46\xb4\xb7\x86\xd1\x21\x10\xe5\xf4\xb5\xcf\xf2\x84\xd8\x1c\x06\x33\xf8",
-    // "IOServiceGetMatchingServices" / M(Xor3) / S(229) / L(28)
-    "\x43\x45\x59\x6f\x78\x7c\x63\x69\x6f\x4d\x6f\x7e\x47\x6b\x7e\x69\x62\x63\x64\x6d\x59\x6f\x78\x7c\x63\x69\x6f\x79\x0a\xcb\xb0\x94\x45\x47\x71\x3e\xb8",
-    // "kCFDateFormatterTimeZone" / M(Xor4) / S(12) / L(24)
-    "\xe7\xcf\xca\xc8\xed\xf8\xe9\xca\xe3\xfe\xe1\xed\xf8\xf8\xe9\xfe\xd8\xe5\xe1\xe9\xd6\xe3\xe2\xe9\x8c\xa0\xbd\xda\x8b\xd0\xfc\x81\x5e",
-    // "X509_STORE_free" / M(Xor3) / S(72) / L(15)
-    "\x00\x6d\x68\x61\x07\x0b\x0c\x17\x0a\x1d\x07\x3e\x2a\x3d\x3d\x58",
-    // "CFDictionaryCreateMutable" / M(Rot) / S(62) / L(25)
-    "\x81\x84\x82\xa7\xa1\xb2\xa7\xad\xac\x9f\xb0\xb7\x81\xb0\xa3\x9f\xb2\xa3\x8b\xb3\xb2\x9f\xa0\xaa\xa3\x3e\xea\xfd\x74\x2b\x9d\x81\x73\xf4",
-    // "SKReceiptRefreshRequest" / M(Xor1) / S(186) / L(23)
-    "\xe9\xf1\xe8\xdf\xd9\xdf\xd3\xca\xce\xe8\xdf\xdc\xc8\xdf\xc9\xd2\xe8\xdf\xcb\xcf\xdf\xc9\xce\xba\x22\xa4\xc7\xa9\x67\xfa\x56\xb0",
-    // "/usr/lib/libSystem.dylib" / M(Xor2) / S(61) / L(24)
-    "\x33\x69\x6f\x6e\x33\x70\x75\x7e\x33\x70\x75\x7e\x4f\x65\x6f\x68\x79\x71\x32\x78\x65\x70\x75\x7e\x1c\xe0\x8b\xde\xfa\x1d\xfc\x9f\x92",
-    // "kSecMatchSubjectContains" / M(Rot) / S(173) / L(24)
-    "\x18\x00\x12\x10\xfa\x0e\x21\x10\x15\x00\x22\x0f\x17\x12\x10\x21\xf0\x1c\x1b\x21\x0e\x16\x1b\x20\xad\xdd\x52\xfa\xee\xf3\x26\x42\x25",
-    // "CFDataAppendBytes" / M(Xor3) / S(85) / L(17)
-    "\x24\x21\x23\x06\x13\x06\x26\x17\x17\x02\x09\x03\x25\x1e\x13\x02\x14\x67",
-    // "/System/Library/Keychains/SystemRootCertificates.keychain" / M(Xor3) / S(18) / L(57)
-    "\x7b\x07\x2d\x27\x20\x31\x39\x7b\x18\x3d\x36\x26\x35\x26\x2d\x7b\x1f\x31\x2d\x37\x3c\x35\x3d\x3a\x27\x7b\x07\x2d\x27\x20\x31\x39\x06\x3b\x3b\x20\x17\x31\x26\x20\x3d\x32\x3d\x37\x35\x20\x31\x27\x7a\x3f\x31\x2d\x37\x3c\x35\x3d\x3a\x54\x3e\xd3\xde\x52\x76\x83\xba\x7e",
-    // "" / M(None) / S(0) / L(0)
-    "\xa6\x52\x3d\xc1\x5a\x29\x47\xdd\xe0\xf4\x85\xf7\x19\x7c\x35\x15\x01\x85\x72\x54\x52\x55\xa5\xd9\x8a\x6d\x0f\x96\xa2\x36\x1a\x4f",
-    // "CFArrayGetValueAtIndex" / M(Rot) / S(219) / L(22)
-    "\x1e\x21\x1c\x4d\x4d\x3c\x54\x22\x40\x4f\x31\x3c\x47\x50\x40\x1c\x4f\x24\x49\x3f\x40\x53\xdb",
-    // "" / M(None) / S(0) / L(0)
-    "\x1c\x55\xa1\x5d\x2d\x7e\xbe\x6f\xf7\x64\xba\x1c\x63\xd1\x8b\x19\x69\x09\x3e\x2b\x44\x22\xfa\x06\x7e\xbf\x7d\x8e\xb0\x91\x5f\xcf",
-    // "Contents" / M(Xor1) / S(211) / L(8)
-    "\x90\xbc\xbd\xa7\xb6\xbd\xa7\xa0\xd3\x0c\x1c\xfa\x0c\x1f\x56\x2c",
-    // "" / M(None) / S(0) / L(0)
-    "\xae\x0a\xf4\xff\xd5\xc1\x63\xaf\xb5\x15\x49\x56\x51\x08\xa1\x23\x83\x28\x24\xeb\xb7\x92\xc8\xa8\x84\x8b\x0b\xd4\xfe\xe6\x7e\xfc",
-    // "Contents/_MASReceipt" / M(Xor2) / S(62) / L(20)
-    "\x68\x44\x45\x5f\x4e\x45\x5f\x58\x04\x74\x66\x6a\x78\x79\x4e\x48\x4e\x42\x5b\x5f\x2b",
-    // "" / M(None) / S(0) / L(0)
-    "\x5e\x6b\x2b\xf8\x14\x70\xe8\xee\xbb\x92\x00\xce\x4e\x4c\xbf\xc6\xe0\x48\xf9\x53\x9c\xb4\x02\x87\xa4\x0b\x78\xb4\xc8\x72\x8b\xfd",
-    // "CFArrayGetValueAtIndex" / M(Xor2) / S(164) / L(22)
-    "\xf0\xf5\xf2\xc1\xc1\xd2\xca\xf4\xd6\xc7\xe5\xd2\xdf\xc6\xd6\xf2\xc7\xfa\xdd\xd7\xd6\xcb\xb3",
-    // "SHA1_Init" / M(Xor3) / S(203) / L(9)
-    "\x88\x93\x9a\xea\x84\x92\xb5\xb2\xaf\xdb\x0a\x4e\xeb\xe9\x62\x2a",
-    // "glob_b" / M(Xor3) / S(252) / L(6)
-    "\x6b\x60\x63\x6e\x53\x6e\x0c\x35\xbe\x44\x3a\x44\xce\xd0\x51\x20",
-    // "PKCS7_verify" / M(Xor3) / S(115) / L(12)
-    "\xd3\xc8\xc0\xd0\xb4\xdc\xf5\xe6\xf1\xea\xe5\xfa\x83\x74\xb2\x52",
-    // "kSecClass" / M(Rot) / S(85) / L(9)
-    "\xc0\xa8\xba\xb8\x98\xc1\xb6\xc8\xc8\x55\x29\x8e\xdc\xd4\x8e\x5a",
-    // "CFBundleIdentifier" / M(Xor1) / S(159) / L(18)
-    "\xdc\xd9\xdd\xea\xf1\xfb\xf3\xfa\xd6\xfb\xfa\xf1\xeb\xf6\xf9\xf6\xfa\xed\x9f",
-    // "setDelegate:" / M(Xor4) / S(219) / L(12)
-    "\xc3\xd5\xc4\xf4\xd5\xdc\xd5\xd7\xd1\xc4\xd5\x8a\xb0\x98\x7c\x74",
-    // "glob_b" / M(Rot) / S(209) / L(6)
-    "\x38\x3d\x40\x33\x30\x33\xd1\xe6\x73\x5b\x38\x24\x11\x2b\x9e\x44",
-    // "BIO_s_mem" / M(Xor2) / S(152) / L(9)
-    "\xca\xc1\xc7\xd7\xfb\xd7\xe5\xed\xe5\x88\x7a\x24\xc2\xc8\x04\x16",
-    // "" / M(None) / S(0) / L(0)
-    "\xda\x63\x6d\xcf\x85\xbd\x6f\x90\xed\xda\x6f\xc9\xe3\x27\xad\x88\x93\x39\xf5\x89\x39\xc2\x26\x97\x39\xcd\xe5\x43\x45\x46\x1d\xf1",
-    // "" / M(None) / S(0) / L(0)
-    "\x4d\x6d\x2c\x2a\x4c\x42\xd9\x1f\xf5\x84\xb8\x19\x31\x8f\x9a\x8c\xa6\x2e\xc8\xe5\xb1\x48\xd4\x26\xd4\xe8\xd4\x69\x28\xdf\xa3\x94",
-    // "" / M(None) / S(0) / L(0)
-    "\x75\xbf\x18\x0e\x44\x2f\x8b\x7f\x81\x02\x18\xb1\xc3\xb3\xfb\xdf\x67\x7a\xde\x07\x5c\x3f\xdd\x7e\xb6\x4a\x3b\x52\x25\x77\xbb\x79",
-    // "" / M(None) / S(0) / L(0)
-    "\xbc\x85\xfc\xa7\x01\xad\xf6\x4b\x85\xd2\x0c\x03\xd3\xd4\x7f\x67\x3f\x49\x2c\xb4\x46\xbf\x98\x65\xc9\xca\xa5\xc6\x72\x5a\xf1\x53",
-    // "ASN1_INTEGER_get" / M(Rot) / S(118) / L(16)
-    "\xb7\xc9\xc4\xa7\xd5\xbf\xc4\xca\xbb\xbd\xbb\xc8\xd5\xdd\xdb\xea\x76",
-    // "strncmp" / M(Xor1) / S(231) / L(7)
-    "\x94\x93\x95\x89\x84\x8a\x97\xe7\x9a\x88\x83\xbb\xf6\xc7\x10\x40",
-    // "SecCertificateCopyData" / M(Xor1) / S(37) / L(22)
-    "\x76\x40\x46\x66\x40\x57\x51\x4c\x43\x4c\x46\x44\x51\x40\x66\x4a\x55\x5c\x61\x44\x51\x44\x25",
-    // "" / M(None) / S(0) / L(0)
-    "\xb6\xfd\x29\xae\x88\x5e\x66\x9e\xf2\x9e\xa4\xde\xe3\x07\x98\x22\x50\x49\x0b\x29\x91\xf0\x04\xc0\xa2\x89\x40\x87\x15\xd0\xcd\xe3",
-    // "sk_num" / M(Rot) / S(237) / L(6)
-    "\x60\x58\x4c\x5b\x62\x5a\xed\x75\xdc\xd8\x20\xc0\x4f\xd0\xd6\x3b",
-    // "CC_SHA1_Update" / M(Rot) / S(147) / L(14)
-    "\xd6\xd6\xf2\xe6\xdb\xd4\xc4\xf2\xe8\x03\xf7\xf4\x07\xf8\x93\xed",
-    // "CFDateFormatterSetProperty" / M(Xor1) / S(98) / L(26)
-    "\x21\x24\x26\x03\x16\x07\x24\x0d\x10\x0f\x03\x16\x16\x07\x10\x31\x07\x16\x32\x10\x0d\x12\x07\x10\x16\x1b\x62\xd1\x40\xa2\x6c\x25\x6f\x1e\x68",
-    // "/usr/lib/libSystem.dylib" / M(Xor4) / S(167) / L(24)
-    "\xa8\xf2\xf4\xf5\xa8\xeb\xee\xe5\xa8\xeb\xee\xe5\xd4\xfe\xf4\xf3\xe2\xea\xa9\xe3\xfe\xeb\xee\xe5\x87\x68\xad\xa6\x58\xc1\xa0\x73\x1c",
-    // "CFDataGetLength" / M(Xor3) / S(7) / L(15)
-    "\x54\x51\x53\x76\x63\x76\x50\x72\x63\x5b\x72\x79\x70\x63\x7f\x17",
-    // "" / M(None) / S(0) / L(0)
-    "\xb1\x0d\x76\x33\x50\x90\x66\x30\xa6\x00\xed\x72\x06\xa4\xbb\xa6\x7f\xd2\xb6\x21\xa0\x64\x56\x31\x86\x7e\xe3\x54\x37\xbe\xd3\xa8",
-    // "_MASReceipt" / M(Xor1) / S(136) / L(11)
-    "\xd7\xc5\xc9\xdb\xda\xed\xeb\xed\xe1\xf8\xfc\x88\x38\xb3\xd7\xdc",
-    // "en0" / M(Xor4) / S(202) / L(3)
-    "\xc5\xce\x90\xa0\x29\x0b\x35\xf6\x26\xb6\x92\x91\x29\xc7\x4b\xf3",
-    // "" / M(None) / S(0) / L(0)
-    "\xfc\x00\xff\x5e\x21\xbf\x64\x78\x3c\xd3\x03\x0c\x80\xcd\xfb\x48\x66\x73\xb7\xff\x6a\x90\x90\x4c\x26\x3a\x02\x37\xc2\xc2\xfc\x94",
-    // "CFURLCreateFromFileSystemRepresentation" / M(Xor3) / S(56) / L(39)
-    "\x2b\x2e\x3d\x3a\x24\x2b\x1a\x0d\x09\x1c\x0d\x2e\x1a\x07\x05\x2e\x01\x04\x0d\x3b\x11\x1b\x1c\x0d\x05\x3a\x0d\x18\x1a\x0d\x1b\x0d\x06\x1c\x09\x1c\x01\x07\x06\x68\xda\x7a\x1c\x39\xe2\xdf\xdf\x97",
-    // "" / M(None) / S(0) / L(0)
-    "\x02\xb4\x76\x35\x74\x80\x70\x95\xb0\x6f\xaa\x75\x5e\xbb\x83\x99\x30\x3c\x97\xcc\x07\x8d\x21\x84\x5d\xc8\x96\xa4\xcc\x72\x06\x50",
-    // "CFArrayAppendValue" / M(Rot) / S(95) / L(18)
-    "\xa2\xa5\xa0\xd1\xd1\xc0\xd8\xa0\xcf\xcf\xc4\xcd\xc3\xb5\xc0\xcb\xd4\xc4\x5f",
-    // "start" / M(Xor1) / S(185) / L(5)
-    "\xca\xcd\xd8\xcb\xcd\xb9\xf4\xa8\x07\xc7\x3b\xc8\xc1\x49\xbf\xdd",
-    // "dlsym" / M(Xor2) / S(173) / L(5)
-    "\xd9\xd1\xce\xc4\xd0\xbd\xec\x03\x3d\xc9\xfd\x89\xe4\x1e\xde\x20",
-    // "" / M(None) / S(0) / L(0)
-    "\x10\x35\x8e\x9c\x04\xad\x99\x86\x61\x52\x49\xd5\x68\x37\x05\xa8\xa4\x23\x55\x6a\x23\x5a\xaf\x94\x52\xe3\xf4\xb5\x46\x8d\x2a\x0e",
-    // "" / M(None) / S(0) / L(0)
-    "\x18\xa1\xb5\x13\xf3\x0f\xb0\xf1\xfd\x5f\xca\xfa\x9f\x3a\xe8\x2d\x56\xb6\x0e\xe1\x98\x94\x9d\x9d\xda\x83\x9b\x65\x78\x78\x6e\x7e",
-    // "" / M(None) / S(0) / L(0)
-    "\x3c\xc7\x5d\xda\x61\x1d\x9b\xd7\xdb\xe0\xa5\xcb\xe2\x1a\xce\x8c\xf0\xe0\x06\xe8\xea\x47\x20\x9d\x0a\x6a\xe7\x9b\xf7\xe9\x4f\x6a",
-    // "" / M(None) / S(0) / L(0)
-    "\x5c\xba\xb9\x66\x5f\x49\xd2\x13\xfd\xd7\xee\x2b\x7d\x12\x90\x9e\xfc\xf0\x68\xfc\x53\xc8\x8e\x57\x21\xcd\x1a\xf4\x76\xe6\x73\x70",
-    // "X509_NAME_get_text_by_NID" / M(Xor3) / S(187) / L(25)
-    "\x85\xe8\xed\xe4\x82\x93\x9c\x90\x98\x82\xba\xb8\xa9\x82\xa9\xb8\xa5\xa9\x82\xbf\xa4\x82\x93\x94\x99\xdd\x67\xd9\xb8\x28\x4e\x26\xaa\x5b",
-    // "%02X:" / M(Xor3) / S(8) / L(5)
-    "\x3d\x28\x2a\x40\x22\x18\x66\x32\x10\x46\x5b\x06\x0d\xab\x4a\xbd",
-    // "/System/Library/Keychains/SystemRootCertificates.keychain" / M(Xor2) / S(8) / L(57)
-    "\x65\x19\x33\x39\x3e\x2f\x27\x65\x06\x23\x28\x38\x2b\x38\x33\x65\x01\x2f\x33\x29\x22\x2b\x23\x24\x39\x65\x19\x33\x39\x3e\x2f\x27\x18\x25\x25\x3e\x09\x2f\x38\x3e\x23\x2c\x23\x29\x2b\x3e\x2f\x39\x64\x21\x2f\x33\x29\x22\x2b\x23\x24\x4a\x3e\xfc\x0f\x1b\x3e\xd3\x20\x60",
-    // "CFURLCreateCopyAppendingPathComponent" / M(Rot) / S(226) / L(37)
-    "\x25\x28\x37\x34\x2e\x25\x54\x47\x43\x56\x47\x25\x51\x52\x5b\x23\x52\x52\x47\x50\x46\x4b\x50\x49\x32\x43\x56\x4a\x25\x51\x4f\x52\x51\x50\x47\x50\x56\xe2",
-    // "" / M(None) / S(0) / L(0)
-    "\x0c\x27\x7c\x6a\xa1\xb1\xab\x8d\x8e\x55\x93\x8d\x7c\x88\x7f\x15\x18\x42\xb1\x1c\x49\xd3\xac\xa9\x5c\x28\x4a\xe3\x5f\xbc\x36\x05",
-    // "CC_SHA1_Init" / M(Xor4) / S(77) / L(12)
-    "\x93\x93\x8f\x83\x98\x91\xe1\x8f\x99\xbe\xb9\xa4\xd0\xd2\x2f\xa2",
-    // "CFDictionaryAddValue" / M(Xor4) / S(218) / L(20)
-    "\xa1\xa4\xa6\x8b\x81\x96\x8b\x8d\x8c\x83\x90\x9b\xa3\x86\x86\xb4\x83\x8e\x97\x87\xe2",
-    // "longjmp" / M(Xor1) / S(229) / L(7)
-    "\x89\x8a\x8b\x82\x8f\x88\x95\xe5\xee\xd5\x6d\x4a\x3a\xe5\x58\xf6",
-    // "" / M(Xor2) / S(117) / L(0)
-    "\x65\xdf\xc8\x6d\x1a\x48\x3b\xef\xe2\xed\xdb\x09\x04\x23\x8f\x3d",
-    // "" / M(None) / S(0) / L(0)
-    "\xaf\x9c\x98\x74\xb5\x7d\x8f\x3b\xa3\xd0\x9d\x8a\x7e\x58\x03\x04\xd3\x28\x4d\x3e\xb2\xd6\x24\x42\x53\x4b\xf3\x2a\xa8\xb3\xf1\x03",
-    // "receipt" / M(Rot) / S(190) / L(7)
-    "\x30\x23\x21\x23\x27\x2e\x32\xbe\xc4\xc1\x03\x3e\x54\x45\x9b\x96",
-    // "CC_SHA1" / M(Xor3) / S(250) / L(7)
-    "\x49\x49\x55\x59\x42\x4b\x3b\x0a\x15\xc4\xc8\x92\x92\xa5\x16\x51",
-    // "CFDictionaryCreateMutable" / M(Xor2) / S(244) / L(25)
-    "\x95\x90\x92\xbf\xb5\xa2\xbf\xb9\xb8\xb7\xa4\xaf\x95\xa4\xb3\xb7\xa2\xb3\x9b\xa3\xa2\xb7\xb4\xba\xb3\xd6\xe9\x48\xa2\x23\x0a\x33\x27\xf5",
-    // "CFDataGetBytePtr" / M(Rot) / S(233) / L(16)
-    "\x2c\x2f\x2d\x4a\x5d\x4a\x30\x4e\x5d\x2b\x62\x5d\x4e\x39\x5d\x5b\xe9",
-    // "SecItemCopyMatching" / M(Rot) / S(107) / L(19)
-    "\xbe\xd0\xce\xb4\xdf\xd0\xd8\xae\xda\xdb\xe4\xb8\xcc\xdf\xce\xd3\xd4\xd9\xd2\x6b",
-    // "BIO_s_mem" / M(Xor1) / S(230) / L(9)
-    "\xa4\xaf\xa9\xb9\x95\xb9\x8b\x83\x8b\xe6\x74\x89\x1f\x47\x14\xf0",
-    // "CFURLCreateCopyAppendingPathComponent" / M(Xor4) / S(220) / L(37)
-    "\xeb\xee\xfd\xfa\xe4\xeb\xda\xcd\xc9\xdc\xcd\xeb\xc7\xd8\xd1\xe9\xd8\xd8\xcd\xc6\xcc\xc1\xc6\xcf\xf8\xc9\xdc\xc0\xeb\xc7\xc5\xd8\xc7\xc6\xcd\xc6\xdc\xa8",
-    // "IOBSDNameMatching" / M(Xor3) / S(246) / L(17)
-    "\x41\x47\x4a\x5b\x4c\x46\x69\x65\x6d\x45\x69\x7c\x6b\x60\x61\x66\x6f\x08",
-    // "sk_value" / M(Xor1) / S(16) / L(8)
-    "\x63\x7b\x4f\x66\x71\x7c\x65\x75\x10\x38\x12\x26\x84\xcb\xfe\x1e",
-    // "SecItemCopyMatching" / M(Xor2) / S(191) / L(19)
-    "\xf8\xce\xc8\xe2\xdf\xce\xc6\xe8\xc4\xdb\xd2\xe6\xca\xdf\xc8\xc3\xc2\xc5\xcc\xab",
-    // "" / M(None) / S(0) / L(0)
-    "\x08\xc8\x78\xb7\xd0\x76\xa6\x72\xf3\xf3\x58\x35\xbe\x44\x3a\x44\xce\xd0\x51\x20\xeb\x6e\xb0\xf7\xdb\x4f\x13\xa0\xb3\x39\x32\x13",
-    // "start" / M(Xor3) / S(223) / L(5)
-    "\x9c\x9b\x8e\x9d\x9b\xef\xb1\x16\x61\x3d\xcb\x4d\x48\x23\xe8\xfe",
-    // "OBJ_txt2obj" / M(Xor4) / S(67) / L(11)
-    "\x7f\x72\x7a\x6f\x44\x48\x44\x02\x5f\x52\x5a\x30\xf3\x07\xff\x64",
-    // "NSApplicationMain" / M(Rot) / S(175) / L(17)
-    "\xfd\x02\xf0\x1f\x1f\x1b\x18\x12\x10\x23\x18\x1e\x1d\xfc\x10\x18\x1d\xaf",
-    // "NSApplicationMain" / M(Rot) / S(252) / L(17)
-    "\x4a\x4f\x3d\x6c\x6c\x68\x65\x5f\x5d\x70\x65\x6b\x6a\x49\x5d\x65\x6a\xfc",
-    // "IOIteratorNext" / M(Xor4) / S(238) / L(14)
-    "\xa9\xaf\xa9\x94\x85\x92\x81\x94\x8f\x92\xae\x85\x98\x94\xe0\xa0",
-    // "CFDateFormatterSetFormat" / M(Xor3) / S(167) / L(24)
-    "\x8b\x8e\x8c\xa9\xbc\xad\x8e\xa7\xba\xa5\xa9\xbc\xbc\xad\xba\x9b\xad\xbc\x8e\xa7\xba\xa5\xa9\xbc\xc8\x62\x62\x3f\x68\xab\xdb\xbc\x0b",
-    // "globfree" / M(Xor2) / S(200) / L(8)
-    "\xbf\xb4\xb7\xba\xbe\xaa\xbd\xbd\xd8\x16\x6d\x49\xcc\x67\xf2\xe1",
-    // "PKCS7_free" / M(Rot) / S(193) / L(10)
-    "\x11\x0c\x04\x14\xf8\x20\x27\x33\x26\x26\xc1\x76\x3f\x07\xba\x02",
-    // "SecKeychainOpen" / M(Rot) / S(173) / L(15)
-    "\x00\x12\x10\xf8\x12\x26\x10\x15\x0e\x16\x1b\xfc\x1d\x12\x1b\xad",
-    // "" / M(None) / S(0) / L(0)
-    "\x24\x15\x6c\xbf\x45\xaa\xc9\xbd\x0b\x28\x72\x62\xe0\x07\xcd\x12\x78\x1d\xc8\xeb\x68\x27\x9c\xa7\x78\x03\xbf\x1f\xed\x16\x6b\xa9",
-    // "IOMasterPort" / M(Xor4) / S(180) / L(12)
-    "\x09\x0f\x0d\x21\x33\x34\x25\x32\x10\x2f\x32\x34\x40\x1e\x58\x2c",
-    // "611E5B662C593A08FF58D14AE22452D198DF6C60" / M(Xor2) / S(105) / L(40)
-    "\x6e\x69\x69\x1d\x6d\x1a\x6e\x6e\x6a\x1b\x6d\x61\x6b\x19\x68\x60\x1e\x1e\x6d\x60\x1c\x69\x6c\x19\x1d\x6a\x6a\x6c\x6d\x6a\x1c\x69\x61\x60\x1c\x1e\x6e\x1b\x6e\x68\x58\xf3\x85\xed\x92\xa3\x85\x7f\x92",
-    // "kSecReturnRef" / M(Xor3) / S(208) / L(13)
-    "\x8b\xb3\x85\x83\xb2\x85\x94\x95\x92\x8e\xb2\x85\x86\xe0\xfb\xa4",
-    // "" / M(None) / S(0) / L(0)
-    "\x3a\x7b\x03\xf8\x48\x08\x2b\x7d\xc7\xb8\x3b\x2c\x9d\x0a\xd2\x21\x75\x4f\xe9\xa6\x47\xd5\x65\xef\xd3\x0c\x82\x7a\x9a\x2c\x43\xf1",
-    // "" / M(None) / S(0) / L(0)
-    "\x0e\xac\xef\xe7\x2b\x8d\x9a\xe2\x86\x37\x99\xcd\xf6\xcd\x64\xf0\x52\xd1\x73\x0e\xa3\x50\x2b\xd2\x54\xbd\x7e\xdc\x92\xde\xe4\x24",
-    // "OpenSSL_add_all_digests" / M(Rot) / S(163) / L(23)
-    "\xf2\x13\x08\x11\xf6\xf6\xef\x02\x04\x07\x07\x02\x04\x0f\x0f\x02\x07\x0c\x0a\x08\x16\x17\x16\xa3\x4a\x28\x2b\xf6\xb8\x87\x30\x49",
-    // "kSecMatchSearchList" / M(Rot) / S(190) / L(19)
-    "\x29\x11\x23\x21\x0b\x1f\x32\x21\x26\x11\x23\x1f\x30\x21\x26\x0a\x27\x31\x32\xbe",
-    // "" / M(None) / S(0) / L(0)
-    "\xc0\x95\xe0\x85\x7d\xb6\x58\x2f\xb0\x6d\xc1\xdf\xbd\x5d\xae\xea\x12\xf9\xb9\x3a\x7f\x30\x8e\x84\xf0\xbc\x7a\x2b\xcd\xfb\x45\x5c",
-    // "" / M(None) / S(0) / L(0)
-    "\xf1\xe2\x5e\xab\xe9\x97\x43\xf1\xb5\xd4\x71\x6e\x31\x59\xe0\x54\x79\x8b\xa8\xeb\xe8\x2a\x6a\x8f\x4b\xe7\xaa\x86\x45\xf8\xff\xe2",
-    // "CFBundleCopyBundleURL" / M(Xor2) / S(45) / L(21)
-    "\x78\x7d\x79\x4e\x55\x5f\x57\x5e\x78\x54\x4b\x42\x79\x4e\x55\x5f\x57\x5e\x6e\x69\x77\x3b",
-    // "CFBundleGetValueForInfoDictionaryKey" / M(Xor1) / S(216) / L(36)
-    "\x9b\x9e\x9a\xad\xb6\xbc\xb4\xbd\x9f\xbd\xac\x8e\xb9\xb4\xad\xbd\x9e\xb7\xaa\x91\xb6\xbe\xb7\x9c\xb1\xbb\xac\xb1\xb7\xb6\xb9\xaa\xa1\x93\xbd\xa1\xd8",
-    // "" / M(None) / S(0) / L(0)
-    "\x54\xda\x9b\xa1\xbb\x34\x31\xdf\xe1\xe5\x52\xd5\x2f\xcb\xb0\x94\x45\x47\x71\x3e\xb7\x7a\xdd\xb8\x27\xa0\x8d\x9c\xf2\x21\x5c\x67",
-    // "" / M(None) / S(0) / L(0)
-    "\xce\x8d\x85\xb0\x82\x29\x50\x5a\x76\x2d\x9f\xbb\xfb\xe9\x17\x30\x96\xf3\x59\x0b\x6c\xc8\x55\x2a\xac\xcd\x8d\x8c\x67\x2e\x3b\x2f",
-    // "kSecReturnRef" / M(Rot) / S(83) / L(13)
-    "\xbe\xa6\xb8\xb6\xa5\xb8\xc7\xc8\xc5\xc1\xa5\xb8\xb9\x53\x6f\x8d",
-    // "2.0" / M(Xor3) / S(25) / L(3)
-    "\x1b\x07\x19\x29\x76\xb2\xd3\x44\xfe\xf4\xff\x34\x9c\x04\x84\x01",
-    // "" / M(None) / S(0) / L(0)
-    "\x17\xed\x8a\x47\x1e\x6e\x04\x48\xe9\x67\xbf\x52\xb0\x2c\x05\xc2\x56\x46\xd1\x58\x90\x6d\x39\x37\x1c\x41\x4c\xdd\x06\x73\x91\xce",
-    // "CFStringCreateWithBytes" / M(Xor3) / S(28) / L(23)
-    "\x7f\x7a\x6f\x48\x4e\x55\x52\x5b\x7f\x4e\x59\x5d\x48\x59\x6b\x55\x48\x54\x7e\x45\x48\x59\x4f\x3c\x0d\x7d\x54\x50\x77\x9f\xf3\x5e",
-    // "kCFBundleIdentifierKey" / M(Xor4) / S(10) / L(22)
-    "\x8d\xa5\xa0\xa4\x93\x88\x82\x8a\x83\xaf\x82\x83\x88\x92\x8f\x80\x8f\x83\x94\xad\x83\x9f\xe6",
-    // "en0" / M(Xor2) / S(91) / L(3)
-    "\x2e\x25\x7b\x4b\xea\xd5\x17\x73\x93\xe2\x14\xe5\x75\x7f\x8d\x3a",
-    // "" / M(None) / S(0) / L(0)
-    "\xa7\x1e\x18\x22\x39\x6c\x95\x81\xbf\x0e\xdb\x94\xf2\xd8\xc7\x11\x8e\xb4\x6c\xd3\x4f\xa7\x1c\xa7\xd6\x0f\x58\x43\x08\xd7\x97\xcb",
-    // "NSApplicationMain" / M(Xor3) / S(43) / L(17)
-    "\x73\x6e\x7c\x4d\x4d\x51\x54\x5e\x5c\x49\x54\x52\x53\x70\x5c\x54\x53\x3d",
-    // "" / M(None) / S(0) / L(0)
-    "\x6b\x70\x56\x5c\x3f\x35\x88\x0d\xbb\x9d\xf5\xf4\x54\x63\x23\x87\x3e\xa0\x9e\x8f\x94\x79\x16\xdf\xe0\x52\x0d\x5b\x27\x23\x83\x1c",
-    // "alloc" / M(Rot) / S(245) / L(5)
-    "\x56\x61\x61\x64\x58\xf5\x28\x6d\xa9\xc5\xdf\xaa\x76\x13\x13\xbd",
-    // "strlen" / M(Xor2) / S(175) / L(6)
-    "\xcc\xcb\xcd\xd3\xda\xd1\xbf\x26\xf1\x65\x0a\x61\xf1\xf8\x01\x51",
-    // "longjmp" / M(Xor2) / S(97) / L(7)
-    "\x1d\x1e\x1f\x16\x1b\x1c\x01\x71\x58\x3f\xde\xa3\x2b\x1c\xc6\xb6",
-    // "CFBundleVersion" / M(Xor1) / S(200) / L(15)
-    "\x8b\x8e\x8a\xbd\xa6\xac\xa4\xad\x9e\xad\xba\xbb\xa1\xa7\xa6\xc8",
-    // "setjmp" / M(Xor2) / S(218) / L(6)
-    "\xb9\xaf\xbe\xa0\xa7\xba\xca\xb2\x14\x7c\xed\x52\xf0\x22\x8b\x45",
-    // "X509_STORE_free" / M(Xor4) / S(166) / L(15)
-    "\x38\x55\x50\x59\x3f\x33\x34\x2f\x32\x25\x3f\x06\x12\x05\x05\x60",
-    // "CFArrayCreateMutable" / M(Rot) / S(105) / L(20)
-    "\xac\xaf\xaa\xdb\xdb\xca\xe2\xac\xdb\xce\xca\xdd\xce\xb6\xde\xdd\xca\xcb\xd5\xce\x69",
-    // "/System/Library/Frameworks/AppKit.framework/AppKit" / M(Xor2) / S(32) / L(50)
-    "\x3c\x40\x6a\x60\x67\x76\x7e\x3c\x5f\x7a\x71\x61\x72\x61\x6a\x3c\x55\x61\x72\x7e\x76\x64\x7c\x61\x78\x60\x3c\x52\x63\x63\x58\x7a\x67\x3d\x75\x61\x72\x7e\x76\x64\x7c\x61\x78\x3c\x52\x63\x63\x58\x7a\x67\x13",
-    // "1.2.840.113635.100.6.11.1" / M(Xor3) / S(201) / L(25)
-    "\xda\xc5\xd9\xc5\xd3\xdf\xdb\xc5\xda\xda\xd8\xdd\xd8\xde\xc5\xda\xdb\xdb\xc5\xdd\xc5\xda\xda\xc5\xda\xeb\x8e\x84\x39\x2b\xa5\x95\x0d\x7b",
-    // "/System/Library/Keychains/SystemRootCertificates.keychain" / M(Xor4) / S(126) / L(57)
-    "\x53\x2f\x05\x0f\x08\x19\x11\x53\x30\x15\x1e\x0e\x1d\x0e\x05\x53\x37\x19\x05\x1f\x14\x1d\x15\x12\x0f\x53\x2f\x05\x0f\x08\x19\x11\x2e\x13\x13\x08\x3f\x19\x0e\x08\x15\x1a\x15\x1f\x1d\x08\x19\x0f\x52\x17\x19\x05\x1f\x14\x1d\x15\x12\x7c\x8c\x72\xa6\x2b\x86\xe9\xe6\x97",
-    // "ASN1_INTEGER_free" / M(Xor4) / S(64) / L(17)
-    "\xc1\xd3\xce\xb1\xdf\xc9\xce\xd4\xc5\xc7\xc5\xd2\xdf\xe6\xf2\xe5\xe5\x80",
-    // "globfree" / M(Rot) / S(9) / L(8)
-    "\x70\x75\x78\x6b\x6f\x7b\x6e\x6e\x09\x5e\x75\xa2\x50\x6c\x7e\x6b",
-    // "start" / M(Xor2) / S(141) / L(5)
-    "\xee\xe9\xfc\xef\xe9\x9d\xa1\x97\xc4\x87\xff\xe7\x67\xa4\xf9\x7e",
-    // "EVP_DigestFinal" / M(Xor4) / S(42) / L(15)
-    "\xe5\xf6\xf0\xff\xe4\xc9\xc7\xc5\xd3\xd4\xe6\xc9\xce\xc1\xcc\xa0",
-    // "receipt" / M(Xor2) / S(189) / L(7)
-    "\xdf\xc8\xce\xc8\xc4\xdd\xd9\xad\x26\xeb\x25\x03\xf7\x2a\x88\xf7",
-    // "" / M(None) / S(0) / L(0)
-    "\x6a\xc9\x43\x62\x79\x53\xdf\x63\xa0\xc8\x3d\x3a\xa5\x0f\x38\x49\xeb\x1b\x20\xff\xdf\x5a\x8e\xfd\x33\x90\x88\x74\x9e\x39\x20\x66",
-    // "61:1E:5B:66:2C:59:3A:08:FF:58:D1:4A:E2:24:52:D1:98:DF:6C:60" / M(Xor4) / S(206) / L(59)
-    "\x8e\x89\x82\x89\xfd\x82\x8d\xfa\x82\x8e\x8e\x82\x8a\xfb\x82\x8d\x81\x82\x8b\xf9\x82\x88\x80\x82\xfe\xfe\x82\x8d\x80\x82\xfc\x89\x82\x8c\xf9\x82\xfd\x8a\x82\x8a\x8c\x82\x8d\x8a\x82\xfc\x89\x82\x81\x80\x82\xfc\xfe\x82\x8e\xfb\x82\x8e\x88\xb8\xd4\xc9\xbb\x7c\x73\x5b\x6f\x13",
-    // "" / M(None) / S(0) / L(0)
-    "\xff\x30\x18\x1e\x0b\xc3\x6c\xcb\x9a\x6e\x0d\x8a\x57\x9f\x3a\x10\x17\x3d\x0d\x38\xc8\xae\x49\x6a\x2c\x33\x7f\x09\x70\x59\x86\xee",
-    // "X509_STORE_new" / M(Xor2) / S(136) / L(14)
-    "\xc0\xad\xa8\xa1\xc7\xcb\xcc\xd7\xca\xdd\xc7\xf6\xfd\xef\x98\x99",
-    // "CFNumberCreate" / M(Rot) / S(26) / L(14)
-    "\x5d\x60\x68\x8f\x87\x7c\x7f\x8c\x5d\x8c\x7f\x7b\x8e\x7f\x1a\xbc",
-    // "SHA1_Update" / M(Xor4) / S(204) / L(11)
-    "\x93\x88\x81\xf1\x9f\x95\xb0\xa4\xa1\xb4\xa5\xc0\x23\xa4\xe3\x62",
-    // "kSecReturnRef" / M(Xor1) / S(126) / L(13)
-    "\x15\x2d\x1b\x1d\x2c\x1b\x0a\x0b\x0c\x10\x2c\x1b\x18\x7e\xb1\x9a",
-    // "" / M(None) / S(0) / L(0)
-    "\xd6\xc4\x0d\x79\x6f\x5e\xa8\x19\x52\xff\x34\x9d\x30\x30\xcf\x3b\xad\xb0\x74\xd8\x33\xcb\x23\x9f\xbf\xd4\xb9\xc5\x15\x32\xcd\x6d",
-    // "strlen" / M(Rot) / S(123) / L(6)
-    "\xee\xef\xed\xe7\xe0\xe9\x7b\xb8\xe2\xa2\x79\x8c\x57\x24\xc2\xe1",
-    // "" / M(None) / S(0) / L(0)
-    "\xdc\x9b\x39\xe8\x7c\x1b\x75\x75\x97\xa0\xb0\xca\x72\x49\x4a\xdf\x95\x92\x8c\x82\x15\x8e\x7a\xaa\xdd\x86\xb3\x6e\x24\xe1\x2e\xdf",
-    // "" / M(Xor2) / S(23) / L(0)
-    "\x07\xfc\x93\x19\xc2\x6a\x5b\x0d\x44\x79\x5f\x73\x79\xba\xc5\xee",
-    // "" / M(None) / S(0) / L(0)
-    "\xea\x73\xfa\xe7\xde\x23\x2c\xab\x7d\x37\xd3\x6d\xcc\x6d\x18\x7a\x35\x49\x2e\xba\x6b\x0d\x02\xd5\x28\xec\x45\x19\x8e\x4c\xaf\x8f",
-    // "IORegistryEntryCreateCFProperty" / M(Xor2) / S(208) / L(31)
-    "\xb9\xbf\xa2\x95\x97\x99\x83\x84\x82\x89\xb5\x9e\x84\x82\x89\xb3\x82\x95\x91\x84\x95\xb3\xb6\xa0\x82\x9f\x80\x95\x82\x84\x89\xf0",
-    // "" / M(None) / S(0) / L(0)
-    "\x63\xe9\x91\x18\x46\x42\xfb\xa4\xce\xf3\xb0\x14\x10\x29\x43\xc8\x58\x3f\xde\xa3\x2b\x1c\xc6\xb6\x26\x38\x5b\xfe\x6d\x13\xdb\x3a",
-    // "CFArrayCreateMutable" / M(Xor3) / S(206) / L(20)
-    "\xa0\xa5\xa2\x91\x91\x82\x9a\xa0\x91\x86\x82\x97\x86\xae\x96\x97\x82\x81\x8f\x86\xe3",
-    // "CFDateCreate" / M(Rot) / S(72) / L(12)
-    "\x8b\x8e\x8c\xa9\xbc\xad\x8b\xba\xad\xa9\xbc\xad\x48\x27\xda\x08",
-    // "" / M(None) / S(0) / L(0)
-    "\xc1\xf6\x08\x0f\x27\xc3\x5d\x8c\xe6\x99\x9a\x1a\xbe\x77\xd6\xcb\x5e\xdc\xa2\x0b\x9d\x03\x55\x47\x84\x29\xe9\x70\x17\xa1\x97\xe2",
-    // "X509_NAME_get_text_by_NID" / M(Xor1) / S(224) / L(25)
-    "\xb8\xd5\xd0\xd9\xbf\xae\xa1\xad\xa5\xbf\x87\x85\x94\xbf\x94\x85\x98\x94\xbf\x82\x99\xbf\xae\xa9\xa4\xe0\xa8\x2f\x85\xff\x57\x29\x7d\x8a",
-    // "CFEqual" / M(Xor3) / S(64) / L(7)
-    "\x13\x16\x15\x21\x25\x31\x3c\x50\x62\x69\xe6\x1e\x90\x51\x72\xff",
-    // "/usr/lib/libobjc.dylib" / M(Xor3) / S(208) / L(22)
-    "\xc8\x92\x94\x95\xc8\x8b\x8e\x85\xc8\x8b\x8e\x85\x88\x85\x8d\x84\xc9\x83\x9e\x8b\x8e\x85\xe7",
-    // "CFStringCompare" / M(Xor4) / S(193) / L(15)
-    "\x53\x56\x43\x64\x62\x79\x7e\x77\x53\x7f\x7d\x60\x71\x62\x75\x10",
-    // "c2i_ASN1_INTEGER" / M(Xor1) / S(76) / L(16)
-    "\x2f\x7e\x25\x13\x0d\x1f\x02\x7d\x13\x05\x02\x18\x09\x0b\x09\x1e\x4c",
-    // "" / M(None) / S(0) / L(0)
-    "\x11\x0a\x40\x15\xd1\xe2\xe1\xd8\xe4\xab\xaf\xdd\x85\x02\x1d\x7c\x45\x32\xe8\x82\x9c\xec\xb6\xe9\xdb\x71\x27\x4a\xe4\x74\x1a\xa7",
-    // "IOObjectRelease" / M(Xor1) / S(102) / L(15)
-    "\x2f\x29\x29\x04\x0c\x03\x05\x12\x34\x03\x0a\x03\x07\x15\x03\x66",
-    // "" / M(None) / S(0) / L(0)
-    "\x38\x32\xd7\x0d\x1a\x21\x57\xde\x5c\x1e\x37\xe4\x69\x29\xcf\xfc\xcd\x70\x72\x9b\x2f\x50\xca\xb4\x74\xba\xe1\x9e\xac\xf8\xd7\xc1",
-    // "CFURLCreateCopyAppendingPathComponent" / M(Xor1) / S(123) / L(37)
-    "\x38\x3d\x2e\x29\x37\x38\x09\x1e\x1a\x0f\x1e\x38\x14\x0b\x02\x3a\x0b\x0b\x1e\x15\x1f\x12\x15\x1c\x2b\x1a\x0f\x13\x38\x14\x16\x0b\x14\x15\x1e\x15\x0f\x7b",
-    // "CFBundleVersion" / M(Xor3) / S(240) / L(15)
+    // "IOServiceGetMatchingServices" / M(Xor3) / S(174) / L(28)
+    "\x9a\x9c\x80\xb6\xa1\xa5\xba\xb0\xb6\x94\xb6\xa7\x9e\xb2\xa7\xb0\xbb\xba\xbd\xb4\x80\xb6\xa1\xa5\xba\xb0\xb6\xa0\xd3\x20\x4f\xc9\xc5\xf2\x81\x0e\x22",
+    // "" / M(None) / S(0) / L(0)
+    "\x72\xdd\x22\x34\x87\x10\x7f\xd5\x44\x6f\xcf\x3a\x03\x7e\x07\x6e\xb7\x31\xa5\xc6\xec\x4e\x9b\x6c\x8c\xe2\xc1\x13\xd8\x1c\xcc\xb2",
+    // "CFDataCreate" / M(Xor3) / S(233) / L(12)
+    "\xba\xbf\xbd\x98\x8d\x98\xba\x8b\x9c\x98\x8d\x9c\xf9\x40\x32\x84",
+    // "61:1E:5B:66:2C:59:3A:08:FF:58:D1:4A:E2:24:52:D1:98:DF:6C:60" / M(Xor3) / S(203) / L(59)
+    "\x39\x3e\x35\x3e\x4a\x35\x3a\x4d\x35\x39\x39\x35\x3d\x4c\x35\x3a\x36\x35\x3c\x4e\x35\x3f\x37\x35\x49\x49\x35\x3a\x37\x35\x4b\x3e\x35\x3b\x4e\x35\x4a\x3d\x35\x3d\x3b\x35\x3a\x3d\x35\x4b\x3e\x35\x36\x37\x35\x4b\x49\x35\x39\x4c\x35\x39\x3f\x0f\x0b\x8b\xe3\xb5\x3d\x31\x90\xdc",
+    // "BIO_write" / M(Xor1) / S(21) / L(9)
+    "\x57\x5c\x5a\x4a\x62\x67\x7c\x61\x70\x15\x23\x28\xa0\xdb\xb2\x45",
+    // "" / M(None) / S(0) / L(0)
+    "\xcd\x75\x41\xb3\xb1\x8b\x1c\x7d\x35\xc9\x87\x89\x77\xc9\x7c\xb7\x1a\xe7\x5a\x47\xb0\xb8\xf7\xb7\x2d\x51\xaf\xc4\xe7\x8e\x61\xed",
+    // "EVP_DigestUpdate" / M(Xor2) / S(181) / L(16)
+    "\xe1\xf2\xf4\xfb\xe0\xcd\xc3\xc1\xd7\xd0\xf1\xd4\xc0\xc5\xd0\xc1\xa4",
+    // "CFRelease" / M(Xor4) / S(252) / L(9)
+    "\x83\x86\x92\xa5\xac\xa5\xa1\xb3\xa5\xc0\x29\xb1\xc2\x92\x73\xf3",
+    // "CFDictionaryGetValue" / M(Xor2) / S(28) / L(20)
+    "\x4a\x4f\x4d\x60\x6a\x7d\x60\x66\x67\x68\x7b\x70\x4e\x6c\x7d\x5f\x68\x65\x7c\x6c\x09",
+    // "" / M(None) / S(0) / L(0)
+    "\x88\x9f\x9a\x83\xde\xf8\x0b\xa9\x69\x9b\x8b\x83\x90\x25\x37\x58\xe2\x1e\x28\x24\xa2\x1c\x7f\xa8\x1f\x24\x8d\x4f\x77\x5c\x5a\xa0",
+    // "strlen" / M(Xor4) / S(59) / L(6)
+    "\xc3\xc4\xc2\xdc\xd5\xde\xb0\xca\x0d\xff\xd9\x56\x5d\x61\xa8\x83",
+    // "CFStringGetFileSystemRepresentation" / M(Rot) / S(133) / L(35)
+    "\xc8\xcb\xd8\xf9\xf7\xee\xf3\xec\xcc\xea\xf9\xcb\xee\xf1\xea\xd8\xfe\xf8\xf9\xea\xf2\xd7\xea\xf5\xf7\xea\xf8\xea\xf3\xf9\xe6\xf9\xee\xf4\xf3\x85",
+    // "" / M(None) / S(0) / L(0)
+    "\x2d\x52\x49\x1c\x8c\x02\x68\x90\xfd\xca\x68\x93\xfa\x80\x0d\xdb\xf3\x4b\xb5\xa9\xc1\xbc\x31\xb5\xef\x99\x00\x3a\x53\xe8\x2a\x57",
+    // "%02x" / M(Xor2) / S(47) / L(4)
+    "\x1a\x0f\x0d\x47\x3f\x1a\xad\x94\xab\xd1\x6e\x4a\x6f\xf9\x77\x5c",
+    // "" / M(None) / S(0) / L(0)
+    "\x86\x9e\x7a\xe3\x52\x0a\x55\x12\x54\xdb\x59\xfe\x77\xc9\x1f\x9e\xa9\xeb\x65\x82\xdd\x05\xae\xa2\x83\xe8\x92\xe4\xe1\x0a\xad\x88",
+    // "CFArrayAppendValue" / M(Xor2) / S(129) / L(18)
+    "\xd1\xd4\xd3\xe0\xe0\xf3\xeb\xd3\xe2\xe2\xf7\xfc\xf6\xc4\xf3\xfe\xe7\xf7\x92",
+    // "SecCertificateCopyData" / M(Xor4) / S(229) / L(22)
+    "\xc0\xf6\xf0\xd0\xf6\xe1\xe7\xfa\xf5\xfa\xf0\xf2\xe7\xf6\xd0\xfc\xe3\xea\xd7\xf2\xe7\xf2\x93",
+    // "" / M(None) / S(0) / L(0)
+    "\x60\x02\xa5\xd9\x15\x8e\x7d\xe2\xdb\xd1\x09\x26\xf7\x39\x73\x5e\x8c\x22\x77\x3f\x6d\x2b\x69\xbd\xaf\xce\xd1\xa6\x37\x40\xc9\xd8",
+    // "CFArrayAppendValue" / M(Xor4) / S(24) / L(18)
+    "\x8b\x8e\x89\xba\xba\xa9\xb1\x89\xb8\xb8\xad\xa6\xac\x9e\xa9\xa4\xbd\xad\xc8",
+    // "" / M(None) / S(0) / L(0)
+    "\xc3\x17\x20\x4b\x82\x5e\x8d\x14\x1b\x21\x94\xfa\x44\x42\xc1\xb4\x95\xea\x4e\xdd\xda\x06\x1a\x6e\xcb\xc4\x71\x1c\xf8\x78\x70\x12",
+    // "NSApplicationMain" / M(Xor1) / S(188) / L(17)
+    "\xf2\xef\xfd\xcc\xcc\xd0\xd5\xdf\xdd\xc8\xd5\xd3\xd2\xf1\xdd\xd5\xd2\xbc",
+    // "/usr/lib/libSystem.dylib" / M(Rot) / S(103) / L(24)
+    "\x96\xdc\xda\xd9\x96\xd3\xd0\xc9\x96\xd3\xd0\xc9\xba\xe0\xda\xdb\xcc\xd4\x95\xcb\xe0\xd3\xd0\xc9\x67\x56\x1c\xd8\xc7\xbe\x8b\xdd\xde",
+    // "" / M(None) / S(0) / L(0)
+    "\x3a\xfd\xdb\x9a\xbd\x02\xec\xb2\xa6\x39\xe0\x20\x3b\x4a\xef\x40\xf6\x8a\xec\x5f\xf7\x8b\x9e\xc5\x33\xe8\x25\xdb\x67\xae\x0f\x76",
+    // "CFDataGetLength" / M(Xor3) / S(131) / L(15)
+    "\xd0\xd5\xd7\xf2\xe7\xf2\xd4\xf6\xe7\xdf\xf6\xfd\xf4\xe7\xfb\x93",
+    // "strncmp" / M(Xor2) / S(136) / L(7)
+    "\xeb\xec\xea\xf6\xfb\xf5\xe8\x98\xd6\x52\x81\x71\xde\x19\x95\x20",
+    // "CFStringCreateWithBytes" / M(Xor1) / S(220) / L(23)
+    "\x9f\x9a\x8f\xa8\xae\xb5\xb2\xbb\x9f\xae\xb9\xbd\xa8\xb9\x8b\xb5\xa8\xb4\x9e\xa5\xa8\xb9\xaf\xdc\x28\x58\xbe\xb2\x69\x1f\x85\x38",
+    // "kCFTypeArrayCallBacks" / M(Xor1) / S(220) / L(21)
+    "\xb7\x9f\x9a\x88\xa5\xac\xb9\x9d\xae\xae\xbd\xa5\x9f\xbd\xb0\xb0\x9e\xbd\xbf\xb7\xaf\xdc",
+    // "objc_msgSend" / M(Xor3) / S(221) / L(12)
+    "\x82\x8f\x87\x8e\xb2\x80\x9e\x8a\xbe\x88\x83\x89\xed\xf9\x27\x6c",
+    // "en0" / M(Xor1) / S(138) / L(3)
+    "\xef\xe4\xba\x8a\xf6\x5f\x2a\xc0\x7b\xea\x39\x33\x9e\xf0\x49\x0d",
+    // "IOMasterPort" / M(Xor4) / S(116) / L(12)
+    "\x09\x0f\x0d\x21\x33\x34\x25\x32\x10\x2f\x32\x34\x40\x88\x8b\x3e",
+    // "EVP_DigestUpdate" / M(Xor1) / S(115) / L(16)
+    "\x36\x25\x23\x2c\x37\x1a\x14\x16\x00\x07\x26\x03\x17\x12\x07\x16\x73",
+    // "CFBundleVersion" / M(Xor4) / S(176) / L(15)
     "\x43\x46\x42\x75\x6e\x64\x6c\x65\x56\x65\x72\x73\x69\x6f\x6e\x00",
-    // "X509_STORE_new" / M(Xor2) / S(191) / L(14)
-    "\xf7\x9a\x9f\x96\xf0\xfc\xfb\xe0\xfd\xea\xf0\xc1\xca\xd8\xaf\xa9",
-    // "611e5b662c593a08ff58d14ae22452d198df6c60" / M(Xor2) / S(72) / L(40)
-    "\x4f\x48\x48\x1c\x4c\x1b\x4f\x4f\x4b\x1a\x4c\x40\x4a\x18\x49\x41\x1f\x1f\x4c\x41\x1d\x48\x4d\x18\x1c\x4b\x4b\x4d\x4c\x4b\x1d\x48\x40\x41\x1d\x1f\x4f\x1a\x4f\x49\x79\x0f\x59\xbe\x2f\x74\xf4\x43\x84",
-    // "EVP_DigestInit" / M(Rot) / S(137) / L(14)
-    "\xce\xdf\xd9\xe8\xcd\xf2\xf0\xee\xfc\xfd\xd2\xf7\xf2\xfd\x89\x13",
-    // "kSecMatchLimit" / M(Xor2) / S(5) / L(14)
-    "\x7e\x46\x70\x76\x58\x74\x61\x76\x7d\x59\x7c\x78\x7c\x61\x15\x9d",
+    // "OBJ_txt2obj" / M(Xor2) / S(1) / L(11)
+    "\x5e\x53\x5b\x4e\x65\x69\x65\x23\x7e\x73\x7b\x11\x94\x9a\x3d\x8e",
+    // "kCFTypeDictionaryValueCallBacks" / M(Xor2) / S(236) / L(31)
+    "\xa7\x8f\x8a\x98\xb5\xbc\xa9\x88\xa5\xaf\xb8\xa5\xa3\xa2\xad\xbe\xb5\x9a\xad\xa0\xb9\xa9\x8f\xad\xa0\xa0\x8e\xad\xaf\xa7\xbf\xcc",
+    // "PKCS7_verify" / M(Rot) / S(243) / L(12)
+    "\x43\x3e\x36\x46\x2a\x52\x69\x58\x65\x5c\x59\x6c\xf3\xbc\x31\xb5",
+    // "strlen" / M(Rot) / S(111) / L(6)
+    "\xe2\xe3\xe1\xdb\xd4\xdd\x6f\xe8\x35\x64\x9e\x1b\x4f\xb3\x43\x23",
+    // "EVP_get_digestbyname" / M(Xor2) / S(77) / L(20)
+    "\x1d\x0e\x08\x07\x3f\x3d\x2c\x07\x3c\x31\x3f\x3d\x2b\x2c\x3a\x21\x36\x39\x35\x3d\x58",
+    // "_MASReceipt/receipt" / M(Xor3) / S(190) / L(19)
+    "\x8d\x9f\x93\x81\x80\xb7\xb1\xb7\xbb\xa2\xa6\xfd\xa0\xb7\xb1\xb7\xbb\xa2\xa6\xd2",
+    // "CFRelease" / M(Xor2) / S(226) / L(9)
+    "\xb1\xb4\xa0\x97\x9e\x97\x93\x81\x97\xf2\x26\xf5\xcb\x56\x1c\x75",
+    // "IORegistryEntryGetParentEntry" / M(Xor2) / S(109) / L(29)
+    "\x02\x04\x19\x2e\x2c\x22\x38\x3f\x39\x32\x0e\x25\x3f\x39\x32\x0c\x2e\x3f\x1b\x2a\x39\x2e\x25\x3f\x0e\x25\x3f\x39\x32\x4b\xa5\xf3\x72\xc8\xec\x68\x66\x0c",
+    // "SecItemCopyMatching" / M(Xor1) / S(110) / L(19)
+    "\x3d\x0b\x0d\x27\x1a\x0b\x03\x2d\x01\x1e\x17\x23\x0f\x1a\x0d\x06\x07\x00\x09\x6e",
+    // "CFBundleGetIdentifier" / M(Xor1) / S(88) / L(21)
+    "\x1b\x1e\x1a\x2d\x36\x3c\x34\x3d\x1f\x3d\x2c\x11\x3c\x3d\x36\x2c\x31\x3e\x31\x3d\x2a\x58",
     // "" / M(None) / S(0) / L(0)
-    "\x17\x04\xfb\xfd\x76\xd8\x1a\x39\xce\xb9\x7e\xfd\xa6\x7b\x8f\xe7\x84\x09\x27\xb0\x22\x37\xdc\x28\x60\x38\x42\x69\xc8\x54\x6e\x8b",
-    // "%02x" / M(Rot) / S(244) / L(4)
-    "\x19\x24\x26\x6c\xf4\xd1\x8a\x55\xaf\xbb\xab\x1b\xcf\x52\x28\xd4",
-    // "CFDateCompare" / M(Xor2) / S(250) / L(13)
-    "\xa9\xac\xae\x8b\x9e\x8f\xa9\x85\x87\x9a\x8b\x98\x8f\xea\x45\x63",
-    // "SecCertificateCopyData" / M(Xor2) / S(126) / L(22)
-    "\x3a\x0c\x0a\x2a\x0c\x1b\x1d\x00\x0f\x00\x0a\x08\x1d\x0c\x2a\x06\x19\x10\x2d\x08\x1d\x08\x69",
+    "\xbd\xdf\x75\xa9\x42\xd7\xb0\x2f\xa5\x94\xa3\x19\xdb\x89\xb7\x24\xeb\x99\x41\x01\xe9\xf0\x64\xf3\x3f\x96\x46\x9a\xaf\xe1\xa0\xb0",
+    // "CFBundleGetMainBundle" / M(Xor4) / S(144) / L(21)
+    "\x23\x26\x22\x15\x0e\x04\x0c\x05\x27\x05\x14\x2d\x01\x09\x0e\x22\x15\x0e\x04\x0c\x05\x60",
+    // "globfree" / M(Xor3) / S(136) / L(8)
+    "\xff\xf4\xf7\xfa\xfe\xea\xfd\xfd\x98\x7a\xfa\x63\x71\xfe\xf8\x93",
+    // "Apple Root CA" / M(Xor4) / S(122) / L(13)
+    "\xe1\xd0\xd0\xcc\xc5\x80\xf2\xcf\xcf\xd4\x80\xe3\xe1\xa0\x5b\xb8",
     // "" / M(None) / S(0) / L(0)
-    "\x3b\xfd\x4e\x3c\x7d\x5b\xb3\x67\x4a\x28\x2b\xf6\xb8\x87\x30\x49\x9e\xd4\x78\x9a\xe2\x30\xba\x8f\xcc\xf7\x5c\xe7\x2d\x3e\xbf\xd9",
-    // "/System/Library/Frameworks/AppKit.framework/AppKit" / M(Rot) / S(203) / L(50)
-    "\xfa\x1e\x44\x3e\x3f\x30\x38\xfa\x17\x34\x2d\x3d\x2c\x3d\x44\xfa\x11\x3d\x2c\x38\x30\x42\x3a\x3d\x36\x3e\xfa\x0c\x3b\x3b\x16\x34\x3f\xf9\x31\x3d\x2c\x38\x30\x42\x3a\x3d\x36\xfa\x0c\x3b\x3b\x16\x34\x3f\xcb",
+    "\xab\x76\xfd\x1c\xe2\x39\xc4\xb4\x4f\xaa\xe9\xbe\x12\xe5\xf5\x0f\xdc\x48\x28\xeb\xd2\x8c\xa1\x13\x00\x8f\x18\x31\x61\x02\xed\xc7",
+    // "CFArrayGetValueAtIndex" / M(Xor3) / S(155) / L(22)
+    "\xf1\xf4\xf3\xc0\xc0\xd3\xcb\xf5\xd7\xc6\xe4\xd3\xde\xc7\xd7\xf3\xc6\xfb\xdc\xd6\xd7\xca\xb2",
+    // "IOObjectRelease" / M(Rot) / S(38) / L(15)
+    "\x6f\x75\x75\x88\x90\x8b\x89\x9a\x78\x8b\x92\x8b\x87\x99\x8b\x26",
+    // "CC_SHA1_Update" / M(Xor4) / S(38) / L(14)
+    "\x23\x23\x3f\x33\x28\x21\x51\x3f\x35\x10\x04\x01\x14\x05\x60\xea",
+    // "kSecClassCertificate" / M(Rot) / S(165) / L(20)
+    "\x10\xf8\x0a\x08\xe8\x11\x06\x18\x18\xe8\x0a\x17\x19\x0e\x0b\x0e\x08\x06\x19\x0a\xa5",
+    // "EVP_DigestFinal" / M(Xor3) / S(89) / L(15)
+    "\x2c\x3f\x39\x36\x2d\x00\x0e\x0c\x1a\x1d\x2f\x00\x07\x08\x05\x69",
+    // "Contents/_MASReceipt/receipt" / M(Xor4) / S(73) / L(28)
+    "\xce\xe2\xe3\xf9\xe8\xe3\xf9\xfe\xa2\xd2\xc0\xcc\xde\xdf\xe8\xee\xe8\xe4\xfd\xf9\xa2\xff\xe8\xee\xe8\xe4\xfd\xf9\x8d\x73\x0f\xf2\x5b\x46\x14\x81\x5e",
+    // "CFStringCreateWithBytes" / M(Rot) / S(220) / L(23)
+    "\x1f\x22\x2f\x50\x4e\x45\x4a\x43\x1f\x4e\x41\x3d\x50\x41\x33\x45\x50\x44\x1e\x55\x50\x41\x4f\xdc\xa8\xb9\xd5\x56\xe4\xba\x64\xda",
+    // "SHA1_Update" / M(Xor4) / S(194) / L(11)
+    "\x73\x68\x61\x11\x7f\x75\x50\x44\x41\x54\x45\x20\x43\xd6\xe6\x77",
+    // "." / M(Xor1) / S(236) / L(1)
+    "\xc2\xec\xb5\xdb\x7e\xa4\x2b\x85\x2a\x97\x16\xb4\x00\x8d\xda\xfb",
+    // "CFNumberCreate" / M(Xor2) / S(212) / L(14)
+    "\x87\x82\x8a\xb1\xa9\xa6\xa1\xb6\x87\xb6\xa1\xa5\xb0\xa1\xc4\x88",
     // "" / M(None) / S(0) / L(0)
-    "\x14\x08\xa0\x4a\x55\x37\x36\xec\x6b\x67\xe6\x83\x95\xdf\x35\x5a\xd4\xc1\x74\xe4\x6c\x54\x6b\x09\xe1\x9f\xc6\xaa\x37\x9f\x6b\x11",
-    // "ASN1_INTEGER_get" / M(Xor4) / S(197) / L(16)
-    "\x54\x46\x5b\x24\x4a\x5c\x5b\x41\x50\x52\x50\x47\x4a\x72\x70\x61\x15",
-    // "PKCS7_get0_signers" / M(Xor3) / S(15) / L(18)
-    "\x72\x69\x61\x71\x15\x7d\x45\x47\x56\x12\x7d\x51\x4b\x45\x4c\x47\x50\x51\x22",
-    // "CFStringCompare" / M(Xor4) / S(130) / L(15)
-    "\x63\x66\x73\x54\x52\x49\x4e\x47\x63\x4f\x4d\x50\x41\x52\x45\x20",
-    // "" / M(Rot) / S(97) / L(0)
-    "\x61\x11\x76\x1a\xa9\xed\xdb\x96\xcc\xa3\x3a\xad\xc2\x65\x1a\x91",
+    "\xd6\xe5\xaf\xed\xde\x4f\x8d\x23\xb3\x6e\x8d\x4e\xdc\x29\x57\x90\x9c\x78\x69\x5b\x9f\xe2\x8a\xa4\x4b\x46\x0f\x25\x83\x13\x3e\x8e",
+    // "OpenSSL_add_all_digests" / M(Xor1) / S(99) / L(23)
+    "\x2c\x13\x06\x0d\x30\x30\x2f\x3c\x02\x07\x07\x3c\x02\x0f\x0f\x3c\x07\x0a\x04\x06\x10\x17\x10\x63\xa4\x04\x4a\xf0\x13\x36\x70\x5b",
+    // "CFDateFormatterCreate" / M(Xor1) / S(14) / L(21)
+    "\x4d\x48\x4a\x6f\x7a\x6b\x48\x61\x7c\x63\x6f\x7a\x7a\x6b\x7c\x4d\x7c\x6b\x6f\x7a\x6b\x0e",
+    // "ASN1_INTEGER_get" / M(Xor4) / S(54) / L(16)
+    "\xd7\xc5\xd8\xa7\xc9\xdf\xd8\xc2\xd3\xd1\xd3\xc4\xc9\xf1\xf3\xe2\x96",
+    // "IOServiceGetMatchingServices" / M(Xor4) / S(165) / L(28)
+    "\x90\x96\x8a\xbc\xab\xaf\xb0\xba\xbc\x9e\xbc\xad\x94\xb8\xad\xba\xb1\xb0\xb7\xbe\x8a\xbc\xab\xaf\xb0\xba\xbc\xaa\xd9\x21\x11\xe6\x7c\x8f\x96\x48\x9a",
+    // "Contents" / M(Xor4) / S(241) / L(8)
+    "\x53\x7f\x7e\x64\x75\x7e\x64\x63\x10\xae\x56\x74\x77\xee\xdf\xb8",
     // "" / M(None) / S(0) / L(0)
-    "\xf2\x74\xb2\x52\xf5\xd1\x81\x2c\xb8\x25\xc2\x2e\xb1\x68\xf5\xc1\x5a\x80\x06\x8c\x9d\xdd\x9a\xa1\x9b\x44\x0e\x07\x5d\x2f\x7e\x5c",
+    "\x3c\x96\x85\x9b\xe2\xbf\xa2\xe9\xcd\xbc\x3a\xb6\x7d\x3f\xe1\xe8\xd5\x36\x44\x8d\x3e\xd3\xa1\xd2\x51\xb8\x22\x84\xe6\xe3\xfa\x8e",
+    // "setjmp" / M(Xor2) / S(101) / L(6)
+    "\x06\x10\x01\x1f\x18\x05\x75\xeb\xd2\x8c\xa1\x13\x00\x8f\x18\x31",
+    // "%02X:" / M(Xor2) / S(197) / L(5)
+    "\xf0\xe5\xe7\x8d\xef\xd5\xdd\x29\x25\x5e\x13\x26\xa8\xa9\xd3\x26",
+    // "/usr/lib/libSystem.dylib" / M(Rot) / S(35) / L(24)
+    "\x52\x98\x96\x95\x52\x8f\x8c\x85\x52\x8f\x8c\x85\x76\x9c\x96\x97\x88\x90\x51\x87\x9c\x8f\x8c\x85\x23\xca\x6f\x59\xea\x1e\x3d\x5e\x29",
+    // "IORegistryEntryCreateCFProperty" / M(Xor2) / S(203) / L(31)
+    "\xa2\xa4\xb9\x8e\x8c\x82\x98\x9f\x99\x92\xae\x85\x9f\x99\x92\xa8\x99\x8e\x8a\x9f\x8e\xa8\xad\xbb\x99\x84\x9b\x8e\x99\x9f\x92\xeb",
+    // "kSecMatchLimitAll" / M(Xor4) / S(188) / L(17)
+    "\x53\x6b\x5d\x5b\x75\x59\x4c\x5b\x50\x74\x51\x55\x51\x4c\x79\x54\x54\x38",
+    // "SHA1_Update" / M(Xor2) / S(243) / L(11)
+    "\xb0\xab\xa2\xd2\xbc\xb6\x93\x87\x82\x97\x86\xe3\xe0\x8f\x7f\x61",
+    // "" / M(Xor2) / S(53) / L(0)
+    "\x25\x72\x1c\x7f\x7c\x6e\xe8\xb9\x04\x85\x59\xab\xa1\x8d\x04\x57",
     // "" / M(None) / S(0) / L(0)
-    "\x50\xce\xc9\x8a\xa5\x2d\xcf\x2e\x6f\xd0\x4a\x18\xd7\x9e\x36\xd6\x01\xfe\x82\xef\xf6\x5f\x9f\x1b\xef\xe5\xa0\x77\x00\x2c\x11\x1b",
-    // "CFEqual" / M(Rot) / S(102) / L(7)
-    "\xa9\xac\xab\xd7\xdb\xc7\xd2\x66\x56\x35\x79\x88\x7d\x17\x37\x13",
+    "\xcb\xcf\x5b\xd2\xea\x87\x10\xea\xcd\xa3\x4a\x55\xca\xa8\x95\x6d\xe4\x38\x6f\x8f\x27\xb3\x7e\x58\x2f\x59\x76\x5e\x5a\x53\x6a\x5e",
     // "" / M(None) / S(0) / L(0)
-    "\x8e\x70\xb4\x4d\x2f\x59\x3f\xf9\xea\x40\x76\x87\x20\xa0\x30\x68\x3a\x94\x0b\x74\xf9\xf8\xfb\x1b\x20\x02\x8d\x2f\x96\xb3\xb0\x57",
+    "\x0a\x34\x29\x3b\xab\x4f\x5b\xb4\xdd\x37\x7d\xa0\x79\xff\x3c\xaf\xec\x8f\x16\xca\x0d\xff\xd9\x56\x5d\x61\xa8\x83\x8c\x4a\x74\x0e",
+    // "PKCS7_verify" / M(Rot) / S(140) / L(12)
+    "\xdc\xd7\xcf\xdf\xc3\xeb\x02\xf1\xfe\xf5\xf2\x05\x8c\x95\x11\x55",
     // "" / M(None) / S(0) / L(0)
-    "\x9d\x78\xf4\x9f\x04\xc9\xa7\x8f\xce\x3f\x4b\xa0\x5e\xad\x75\xe0\x9d\x7f\x4c\xf8\x84\x4a\xf8\x9b\x5c\xd5\x24\x23\x2c\x5c\xeb\x6a",
-    // "CFBundleIdentifier" / M(Rot) / S(107) / L(18)
-    "\xae\xb1\xad\xe0\xd9\xcf\xd7\xd0\xb4\xcf\xd0\xd9\xdf\xd4\xd1\xd4\xd0\xdd\x6b",
+    "\x07\xfb\xee\x08\xbe\x1c\xb6\xa5\x16\xa3\x0c\x82\x7d\x53\x08\xeb\x3e\x89\x6a\x9d\x66\xe2\xaf\x68\xb3\x93\x44\x96\xf4\xe2\xd4\xa1",
     // "" / M(None) / S(0) / L(0)
-    "\x47\x7f\xd0\x56\x94\xcf\x3e\xba\xee\xee\x7c\x7e\x76\xe5\xc1\x1d\x4c\xe9\xf9\xd1\xee\x67\x23\x57\xdc\x0f\x1e\xd3\x51\xa5\x8f\xd7",
+    "\x17\xf5\xcf\x3e\x56\xb6\x06\x78\xde\xee\x98\x7c\x1d\x58\x8c\x32\xfd\x4d\xd3\xac\xbd\xba\x48\x5f\x82\x96\xe6\x2a\x73\x8e\x55\x04",
     // "" / M(None) / S(0) / L(0)
-    "\xbe\x86\x87\xc2\x0c\x57\x78\xb2\x14\x7c\xed\x52\xf0\x22\x8b\x45\x78\x1d\x26\xa0\xe5\x54\x83\x50\xeb\x11\x15\x15\xed\x39\x6b\x2d",
+    "\xc8\xe4\xd4\xc1\xc9\x4c\x74\x8e\x57\xaf\xa7\xcb\x7a\x9f\xab\xee\xa9\x15\xeb\xcb\xd0\x7e\xee\x9b\x23\x76\x23\x3b\x68\xdd\x6d\x00",
     // "" / M(None) / S(0) / L(0)
-    "\xb4\x9d\x81\xdf\xd5\x1c\x33\x3e\x85\xb4\x7f\xfc\xd6\xf8\x8f\xa0\x8b\x82\x34\x6c\xc3\x7d\xd5\x8c\x3e\x7a\xee\x77\x27\x95\x85\x25",
-    // "CFURLCreateFromFileSystemRepresentation" / M(Xor1) / S(133) / L(39)
-    "\xc6\xc3\xd0\xd7\xc9\xc6\xf7\xe0\xe4\xf1\xe0\xc3\xf7\xea\xe8\xc3\xec\xe9\xe0\xd6\xfc\xf6\xf1\xe0\xe8\xd7\xe0\xf5\xf7\xe0\xf6\xe0\xeb\xf1\xe4\xf1\xec\xea\xeb\x85\x80\xcd\xfb\x48\x66\x73\xb7\xff",
-    // "CFTimeZoneCreateWithTimeIntervalFromGMT" / M(Xor1) / S(237) / L(39)
-    "\xae\xab\xb9\x84\x80\x88\xb7\x82\x83\x88\xae\x9f\x88\x8c\x99\x88\xba\x84\x99\x85\xb9\x84\x80\x88\xa4\x83\x99\x88\x9f\x9b\x8c\x81\xab\x9f\x82\x80\xaa\xa0\xb9\xed\xd4\x74\x25\x07\x27\x66\xd2\x59",
+    "\xc5\xaf\x8c\x1c\xb7\x0e\xf2\x05\xc3\x81\x9e\x00\x14\x43\xc3\xda\x59\x00\x82\x3c\x69\xc7\xfe\xc5\xa7\x45\xbc\x95\xed\xa9\x61\xc2",
+    // "CFDateFormatterSetProperty" / M(Xor2) / S(203) / L(26)
+    "\xab\xae\xac\x89\x9c\x8d\xae\x87\x9a\x85\x89\x9c\x9c\x8d\x9a\xbb\x8d\x9c\xb8\x9a\x87\x98\x8d\x9a\x9c\x91\xe8\x10\xf7\x78\x8e\x60\x9f\x06\xa6",
+    // "SecCertificateCopyData" / M(Xor3) / S(254) / L(22)
+    "\x46\x70\x76\x56\x70\x67\x61\x7c\x73\x7c\x76\x74\x61\x70\x56\x7a\x65\x6c\x51\x74\x61\x74\x15",
+    // "dlsym" / M(Xor1) / S(46) / L(5)
+    "\x4a\x42\x5d\x57\x43\x2e\x7f\x3e\xc9\x5a\x54\xb9\x50\x21\x5c\xf8",
+    // "globfree" / M(Xor3) / S(127) / L(8)
+    "\xe8\xe3\xe0\xed\xe9\xfd\xea\xea\x8f\x6c\x91\x85\x22\x0c\xa7\x69",
+    // "PKCS7_free" / M(Xor3) / S(140) / L(10)
+    "\xcc\xd7\xdf\xcf\xab\xc3\xfa\xee\xf9\xf9\x9c\x01\xf0\x19\xb9\x8b",
+    // "objc_getClass" / M(Xor3) / S(97) / L(13)
+    "\x1e\x13\x1b\x12\x2e\x16\x14\x05\x32\x1d\x10\x02\x02\x71\x19\xcd",
     // "" / M(None) / S(0) / L(0)
-    "\x16\xa2\x79\x90\x26\xad\xc5\xc8\xf5\xc9\x6a\x80\x96\x3d\x27\x25\x5a\xdf\x01\xcd\x89\x4e\x8c\x82\xba\x6b\x32\x49\xfa\x1e\x25\xa4",
-    // "_MASReceipt/receipt" / M(Xor1) / S(18) / L(19)
-    "\x4d\x5f\x53\x41\x40\x77\x71\x77\x7b\x62\x66\x3d\x60\x77\x71\x77\x7b\x62\x66\x12",
-    // "%02x:" / M(Xor3) / S(244) / L(5)
-    "\x21\x34\x36\x7c\x3e\x04\x84\x08\x65\x4b\xec\x65\x25\x6a\x58\x40",
-    // "c2i_ASN1_INTEGER" / M(Xor1) / S(236) / L(16)
-    "\x8f\xde\x85\xb3\xad\xbf\xa2\xdd\xb3\xa5\xa2\xb8\xa9\xab\xa9\xbe\xec",
-    // "1.2.840.113635.100.6.11.1" / M(Xor3) / S(114) / L(25)
-    "\xa5\xba\xa6\xba\xac\xa0\xa4\xba\xa5\xa5\xa7\xa2\xa7\xa1\xba\xa5\xa4\xa4\xba\xa2\xba\xa5\xa5\xba\xa5\x94\x4b\xda\x3f\x86\xf5\xc2\xfa\x41",
-    // "IORegistryEntryGetParentEntry" / M(Rot) / S(150) / L(29)
-    "\xdf\xe5\xe8\xfb\xfd\xff\x09\x0a\x08\x0f\xdb\x04\x0a\x08\x0f\xdd\xfb\x0a\xe6\xf7\x08\xfb\x04\x0a\xdb\x04\x0a\x08\x0f\x96\x55\xd5\x13\x2e\x49\x6f\x2c\xb9",
-    // "CFDataCreateMutable" / M(Xor1) / S(160) / L(19)
-    "\xe3\xe6\xe4\xc1\xd4\xc1\xe3\xd2\xc5\xc1\xd4\xc5\xed\xd5\xd4\xc1\xc2\xcc\xc5\xa0",
-    // "BIO_new" / M(Xor3) / S(81) / L(7)
-    "\x23\x28\x2e\x3e\x0f\x04\x16\x61\xb7\xd3\x08\x62\x0b\x7d\x88\xae",
-    // "CFDataAppendBytes" / M(Xor4) / S(210) / L(17)
-    "\x87\x82\x80\xa5\xb0\xa5\x85\xb4\xb4\xa1\xaa\xa0\x86\xbd\xb0\xa1\xb7\xc4",
-    // "CFReadStreamOpen" / M(Xor1) / S(177) / L(16)
-    "\xf2\xf7\xe3\xd4\xd0\xd5\xe2\xc5\xc3\xd4\xd0\xdc\xfe\xc1\xd4\xdf\xb1",
-    // "kSecMatchLimitAll" / M(Rot) / S(252) / L(17)
-    "\x67\x4f\x61\x5f\x49\x5d\x70\x5f\x64\x48\x65\x69\x65\x70\x3d\x68\x68\xfc",
-    // "61:1E:5B:66:2C:59:3A:08:FF:58:D1:4A:E2:24:52:D1:98:DF:6C:60" / M(Rot) / S(200) / L(59)
-    "\xfe\xf9\x02\xf9\x0d\x02\xfd\x0a\x02\xfe\xfe\x02\xfa\x0b\x02\xfd\x01\x02\xfb\x09\x02\xf8\x00\x02\x0e\x0e\x02\xfd\x00\x02\x0c\xf9\x02\xfc\x09\x02\x0d\xfa\x02\xfa\xfc\x02\xfd\xfa\x02\x0c\xf9\x02\x01\x00\x02\x0c\x0e\x02\xfe\x0b\x02\xfe\xf8\xc8\xde\x2f\xa9\x65\x96\xb7\x24\x7d",
+    "\x14\x4b\x7d\xb1\x22\x54\x93\x76\x40\x1f\xbe\x18\x37\x51\x1c\x9e\x6b\xc9\x72\x67\xbe\xeb\xd5\xa3\x33\x5a\xc4\xfb\xe6\x9d\x56\x67",
     // "" / M(None) / S(0) / L(0)
-    "\x1d\xe9\xf9\x83\x57\x34\x01\x75\xdc\xd8\x20\xc0\x4f\xd0\xd6\x3b\xed\xfa\xfb\x6c\x4c\xfc\x1d\xb7\xbd\x38\x12\x26\x84\xcb\xfe\x1e",
-    // "IOServiceGetMatchingServices" / M(Xor1) / S(63) / L(28)
-    "\x76\x70\x6c\x5a\x4d\x49\x56\x5c\x5a\x78\x5a\x4b\x72\x5e\x4b\x5c\x57\x56\x51\x58\x6c\x5a\x4d\x49\x56\x5c\x5a\x4c\x3f\x5e\xb0\x20\x73\xa0\xa0\xec\xce",
-    // "CFStringCreateWithCString" / M(Rot) / S(100) / L(25)
-    "\xa7\xaa\xb7\xd8\xd6\xcd\xd2\xcb\xa7\xd6\xc9\xc5\xd8\xc9\xbb\xcd\xd8\xcc\xa7\xb7\xd8\xd6\xcd\xd2\xcb\x64\x1d\xf1\x4d\x6d\x2c\x2a\x1f\xd9",
-    // "PKCS7_get0_signers" / M(Xor2) / S(17) / L(18)
-    "\x52\x49\x41\x51\x35\x5d\x65\x67\x76\x32\x5d\x71\x6b\x65\x6c\x67\x70\x71\x02",
+    "\xbc\x10\x3a\x65\x61\x5d\x4e\x18\x43\xa3\x8a\x49\xad\x15\x60\xa5\x7a\xfb\xe2\xa7\x47\x0c\xd1\xa8\xc1\x7d\x82\x75\x50\xc6\x57\xc6",
+    // "sha1" / M(Xor1) / S(65) / L(4)
+    "\x32\x29\x20\x70\x41\xc6\x3e\xd3\xa4\xbe\xe9\x36\xc3\xc1\x17\x81",
+    // "ASN1_INTEGER_free" / M(Rot) / S(0) / L(17)
+    "\x41\x53\x4e\x31\x5f\x49\x4e\x54\x45\x47\x45\x52\x5f\x66\x72\x65\x65\x00",
+    // "CFDateFormatterSetProperty" / M(Xor4) / S(34) / L(26)
+    "\xe5\xe0\xe2\xc7\xd2\xc3\xe0\xc9\xd4\xcb\xc7\xd2\xd2\xc3\xd4\xf5\xc3\xd2\xf6\xd4\xc9\xd6\xc3\xd4\xd2\xdf\xa6\xcb\x70\x14\x5a\x37\x39\xfd\xdc",
+    // "CFDictionaryAddValue" / M(Xor3) / S(130) / L(20)
+    "\xd4\xd1\xd3\xfe\xf4\xe3\xfe\xf8\xf9\xf6\xe5\xee\xd6\xf3\xf3\xc1\xf6\xfb\xe2\xf2\x97",
+    // "X509_NAME_get_text_by_NID" / M(Xor3) / S(233) / L(25)
+    "\x53\x3e\x3b\x32\x54\x45\x4a\x46\x4e\x54\x6c\x6e\x7f\x54\x7f\x6e\x73\x7f\x54\x69\x72\x54\x45\x42\x4f\x0b\x7b\x59\xaa\x75\x2f\x58\x77\xd9",
+    // "start" / M(Xor3) / S(121) / L(5)
+    "\xfa\xfd\xe8\xfb\xfd\x89\x2e\xda\x44\xe6\x46\x32\x85\xc8\xf5\x9f",
     // "" / M(None) / S(0) / L(0)
-    "\xec\xce\x4a\x73\xfd\xd6\x9c\x26\xf1\x65\x0a\x61\xf1\xf8\x01\x51\xfe\x0e\xe6\x6c\x3c\x28\xb4\xb5\x7e\x24\x9a\x6f\x17\x46\x8a\x66",
-    // "%02x:" / M(Xor1) / S(82) / L(5)
-    "\x77\x62\x60\x2a\x68\x52\xcd\xec\x5a\xec\x67\xaa\x3c\xfa\x8e\x17",
-    // "CFBundleUnloadExecutable" / M(Xor2) / S(228) / L(24)
-    "\x86\x83\x87\xb0\xab\xa1\xa9\xa0\x90\xab\xa9\xaa\xa4\xa1\x80\xbd\xa0\xa6\xb0\xb1\xa4\xa7\xa9\xa0\xc5\xb6\xea\x55\x65\xb4\xed\x24\x23",
+    "\xe5\xd6\x0f\x7d\xd3\xb7\x3e\x56\xcf\x90\xd1\x18\x9c\xbb\xb4\x0f\x85\xe2\x2a\xed\x89\xbe\x32\x5e\x09\x7c\x24\x18\x27\xc8\xae\x85",
+    // "kSecReturnRef" / M(Xor4) / S(19) / L(13)
+    "\x5b\x63\x55\x53\x62\x55\x44\x45\x42\x5e\x62\x55\x56\x30\x24\x7f",
+    // "CFEqual" / M(Xor2) / S(0) / L(7)
+    "\x53\x56\x55\x61\x65\x71\x7c\x10\xb9\xb4\x86\xf0\x42\xb1\x99\x89",
+    // "kSecClass" / M(Xor2) / S(0) / L(9)
+    "\x7b\x43\x75\x73\x53\x7c\x71\x63\x63\x10\x55\x98\x6c\x5b\xb1\x88",
     // "" / M(None) / S(0) / L(0)
-    "\x82\x1f\x44\x6e\xcd\xdf\xd3\xd7\xd6\x6d\x0d\xaa\x6d\xdc\x6c\x3e\xbf\x97\x53\x65\x13\x7f\xb5\xaa\x13\x57\x73\x22\x93\xf9\xc0\x99",
+    "\xa9\x50\xdf\x72\xb9\x70\x27\x33\x07\xaf\x99\x43\xd9\xe9\xf4\x02\x2b\x50\xb9\x77\x9a\x46\x1a\x0a\xf1\xfe\x85\x9f\xc2\x3b\x98\x4c",
     // "" / M(None) / S(0) / L(0)
-    "\x3d\x90\x4b\xff\x57\xb2\xc5\xf2\x9f\x50\xa2\xc1\xca\x9e\x67\xcd\xf8\x97\x88\xf9\xc5\x92\x4d\x98\xb2\xd7\xaa\xd9\x98\xaa\xbc\x88",
-    // "CFDictionaryAddValue" / M(Xor3) / S(235) / L(20)
-    "\x43\x46\x44\x69\x63\x74\x69\x6f\x6e\x61\x72\x79\x41\x64\x64\x56\x61\x6c\x75\x65\x00",
-    // "CFReadStreamRead" / M(Rot) / S(205) / L(16)
-    "\x10\x13\x1f\x32\x2e\x31\x20\x41\x3f\x32\x2e\x3a\x1f\x32\x2e\x31\xcd",
-    // "OBJ_txt2obj" / M(Rot) / S(179) / L(11)
-    "\x02\xf5\xfd\x12\x27\x2b\x27\xe5\x22\x15\x1d\xb3\x64\xb8\x94\x5e",
-    // "objc_getClass" / M(Xor4) / S(2) / L(13)
-    "\x4f\x42\x4a\x43\x7f\x47\x45\x54\x63\x4c\x41\x53\x53\x20\x7a\x22",
-    // "IORegistryEntryGetParentEntry" / M(Xor1) / S(49) / L(29)
-    "\x78\x7e\x63\x54\x56\x58\x42\x45\x43\x48\x74\x5f\x45\x43\x48\x76\x54\x45\x61\x50\x43\x54\x5f\x45\x74\x5f\x45\x43\x48\x31\x99\xba\x54\x1a\x58\xb9\xaa\x9e",
-    // "611E5B662C593A08FF58D14AE22452D198DF6C60" / M(Xor4) / S(79) / L(40)
-    "\x29\x2e\x2e\x5a\x2a\x5d\x29\x29\x2d\x5c\x2a\x26\x2c\x5e\x2f\x27\x59\x59\x2a\x27\x5b\x2e\x2b\x5e\x5a\x2d\x2d\x2b\x2a\x2d\x5b\x2e\x26\x27\x5b\x59\x29\x5c\x29\x2f\x1f\xc0\xdb\x7e\x6c\xd8\xd4\x61\x0f",
-    // "Contents/_MASReceipt" / M(Xor1) / S(236) / L(20)
-    "\xaf\x83\x82\x98\x89\x82\x98\x9f\xc3\xb3\xa1\xad\xbf\xbe\x89\x8f\x89\x85\x9c\x98\xec",
-    // "PKCS7_free" / M(Xor3) / S(204) / L(10)
-    "\x8c\x97\x9f\x8f\xeb\x83\xba\xae\xb9\xb9\xdc\xe7\x2d\x3e\xbf\xd9",
-    // "CFURLCreateFromFileSystemRepresentation" / M(Xor3) / S(124) / L(39)
-    "\xef\xea\xf9\xfe\xe0\xef\xde\xc9\xcd\xd8\xc9\xea\xde\xc3\xc1\xea\xc5\xc0\xc9\xff\xd5\xdf\xd8\xc9\xc1\xfe\xc9\xdc\xde\xc9\xdf\xc9\xc2\xd8\xcd\xd8\xc5\xc3\xc2\xac\xc4\x97\x8f\x84\xa9\xa5\xac\xe4",
-    // "CFReadStreamClose" / M(Xor4) / S(121) / L(17)
-    "\xc1\xc4\xd0\xe7\xe3\xe6\xd1\xf6\xf0\xe7\xe3\xef\xc1\xee\xed\xf1\xe7\x82",
+    "\xb2\x34\xf1\xb8\xa1\x10\x7f\xa7\xbf\x1e\x2c\xce\xb1\xc6\x54\x41\x06\x17\x51\x16\xf4\x7d\x86\x35\xbe\xe2\xe9\x8d\xe5\x6e\x34\x97",
+    // "CFBundleGetValueForInfoDictionaryKey" / M(Xor4) / S(72) / L(36)
+    "\x2b\x2e\x2a\x1d\x06\x0c\x04\x0d\x2f\x0d\x1c\x3e\x09\x04\x1d\x0d\x2e\x07\x1a\x21\x06\x0e\x07\x2c\x01\x0b\x1c\x01\x07\x06\x09\x1a\x11\x23\x0d\x11\x68",
+    // "kSecClass" / M(Xor4) / S(21) / L(9)
+    "\x3b\x03\x35\x33\x13\x3c\x31\x23\x23\x50\x18\x70\xba\x83\xd2\xb4",
+    // "c2i_ASN1_INTEGER" / M(Xor2) / S(172) / L(16)
+    "\xde\x8f\xd4\xe2\xfc\xee\xf3\x8c\xe2\xf4\xf3\xe9\xf8\xfa\xf8\xef\xbd",
+    // "CFStringGetFileSystemRepresentation" / M(Xor4) / S(227) / L(35)
+    "\xaf\xaa\xbf\x98\x9e\x85\x82\x8b\xab\x89\x98\xaa\x85\x80\x89\xbf\x95\x9f\x98\x89\x81\xbe\x89\x9c\x9e\x89\x9f\x89\x82\x98\x8d\x98\x85\x83\x82\xec",
     // "" / M(None) / S(0) / L(0)
-    "\x79\x49\xb6\xe0\xf1\x8d\x26\xc8\x4e\xf0\x3a\x9b\xf2\x06\xf9\xc7\x84\x70\x4b\x0e\x2c\x0e\x41\x55\x39\x74\x41\x13\x1e\x7a\x62\x2f",
-    // "d2i_PKCS7_bio" / M(Xor2) / S(57) / L(13)
-    "\x4d\x1b\x40\x76\x79\x62\x6a\x7a\x1e\x76\x4b\x40\x46\x29\xaf\x94",
-    // "CFBundleShortVersionString" / M(Xor4) / S(101) / L(26)
-    "\x8c\x89\x8d\xba\xa1\xab\xa3\xaa\x9c\xa7\xa0\xbd\xbb\x99\xaa\xbd\xbc\xa6\xa0\xa1\x9c\xbb\xbd\xa6\xa1\xa8\xcf\xf2\x55\x49\x05\xba\x43\x05\x5c",
-    // "ASN1_INTEGER_get" / M(Xor2) / S(221) / L(16)
-    "\x8d\x9f\x82\xfd\x93\x85\x82\x98\x89\x8b\x89\x9e\x93\xab\xa9\xb8\xcc",
-    // "kSecMatchSearchList" / M(Xor3) / S(94) / L(19)
-    "\x19\x21\x17\x11\x3f\x13\x06\x11\x1a\x21\x17\x13\x00\x11\x1a\x3e\x1b\x01\x06\x72",
-    // "c2i_ASN1_INTEGER" / M(Xor1) / S(84) / L(16)
-    "\x37\x66\x3d\x0b\x15\x07\x1a\x65\x0b\x1d\x1a\x00\x11\x13\x11\x06\x54",
-    // "CFTimeZoneCreateWithTimeIntervalFromGMT" / M(Rot) / S(77) / L(39)
-    "\x90\x93\xa1\xb6\xba\xb2\xa7\xbc\xbb\xb2\x90\xbf\xb2\xae\xc1\xb2\xa4\xb6\xc1\xb5\xa1\xb6\xba\xb2\x96\xbb\xc1\xb2\xbf\xc3\xae\xb9\x93\xbf\xbc\xba\x94\x9a\xa1\x4d\x46\xbf\x98\x65\xc9\xca\xa5\xc6",
+    "\x35\xc3\xe0\xac\xba\x31\x83\x89\xe0\xc3\xac\xdc\xe1\xeb\xe2\xbd\x7b\xae\x38\x2e\x70\x98\x32\x94\x77\x95\x27\x46\x65\x2a\x1c\xe7",
+    // "kSecMatchSearchList" / M(Rot) / S(30) / L(19)
+    "\x89\x71\x83\x81\x6b\x7f\x92\x81\x86\x71\x83\x7f\x90\x81\x86\x6a\x87\x91\x92\x1e",
+    // "IOMACAddress" / M(Xor3) / S(2) / L(12)
+    "\x5b\x5d\x5f\x53\x51\x53\x76\x76\x60\x77\x61\x61\x12\x48\x5c\xae",
+    // "CFNumberCreate" / M(Rot) / S(218) / L(14)
+    "\x1d\x20\x28\x4f\x47\x3c\x3f\x4c\x1d\x4c\x3f\x3b\x4e\x3f\xda\x66",
+    // "glob_b" / M(Rot) / S(188) / L(6)
+    "\x23\x28\x2b\x1e\x1b\x1e\xbc\xef\xc3\xc6\x54\x16\x2f\x16\x8c\xaa",
+    // "X509_STORE_add_cert" / M(Rot) / S(209) / L(19)
+    "\x29\x06\x01\x0a\x30\x24\x25\x20\x23\x16\x30\x32\x35\x35\x30\x34\x36\x43\x45\xd1",
+    // "CFDateCreate" / M(Xor1) / S(39) / L(12)
+    "\x64\x61\x63\x46\x53\x42\x64\x55\x42\x46\x53\x42\x27\x21\xf7\xff",
+    // "setjmp" / M(Xor1) / S(51) / L(6)
+    "\x40\x56\x47\x59\x5e\x43\x33\x63\x49\x00\x9f\x1b\x42\xd5\x63\x09",
     // "" / M(None) / S(0) / L(0)
-    "\x36\xc3\xd1\x77\xfa\x69\x33\xf4\x94\x13\xfb\x63\x6a\x5b\x69\x67\x2d\x5d\xa4\x5f\xe2\x0c\x2a\xc6\xd9\x28\x25\xd4\x23\xe6\xc5\xca",
-    // "." / M(Xor4) / S(44) / L(1)
-    "\xee\xc0\x37\xe1\x8c\x7f\x88\x73\x8d\x4f\xd6\xea\x25\x1e\x95\x59",
-    // "BIO_write" / M(Xor2) / S(85) / L(9)
-    "\x07\x0c\x0a\x1a\x32\x37\x2c\x31\x20\x45\x3e\x6e\x73\xfd\xe3\x73",
+    "\x8d\xd7\xd0\x05\xd8\x6c\xfb\xed\x80\x13\xc3\x7c\x2c\x77\x91\x7e\x65\x64\xae\x0e\x27\x4f\x24\xf1\x1d\xf6\xc1\xd1\xa9\x88\xc0\xcb",
+    // "IOMasterPort" / M(Xor2) / S(206) / L(12)
+    "\x97\x91\x93\xbf\xad\xaa\xbb\xac\x8e\xb1\xac\xaa\xde\xc4\xce\xd1",
+    // "CFBundleGetIdentifier" / M(Xor1) / S(91) / L(21)
+    "\x18\x1d\x19\x2e\x35\x3f\x37\x3e\x1c\x3e\x2f\x12\x3f\x3e\x35\x2f\x32\x3d\x32\x3e\x29\x5b",
+    // "CFArrayAppendValue" / M(Xor3) / S(31) / L(18)
+    "\x71\x74\x73\x40\x40\x53\x4b\x73\x42\x42\x57\x5c\x56\x64\x53\x5e\x47\x57\x32",
+    // "/usr/lib/libobjc.dylib" / M(Xor3) / S(144) / L(22)
+    "\x88\xd2\xd4\xd5\x88\xcb\xce\xc5\x88\xcb\xce\xc5\xc8\xc5\xcd\xc4\x89\xc3\xde\xcb\xce\xc5\xa7",
     // "" / M(None) / S(0) / L(0)
-    "\x5c\xb5\x98\xd0\x98\xe8\x9d\x45\x1a\x95\xb2\xa9\xc0\xdf\xc8\x6d\x1a\x48\x3b\xef\xe2\xed\xdb\x09\x04\x23\x8f\x3d\xb5\x3c\x05\x4d",
-    // "CFDateFormatterCreate" / M(Xor2) / S(49) / L(21)
-    "\x64\x61\x63\x46\x53\x42\x61\x48\x55\x4a\x46\x53\x53\x42\x55\x64\x55\x42\x46\x53\x42\x27",
-    // "IOObjectRelease" / M(Xor4) / S(14) / L(15)
-    "\xa9\xaf\xaf\x82\x8a\x85\x83\x94\xb2\x85\x8c\x85\x81\x93\x85\xe0",
-    // "/usr/lib/libobjc.dylib" / M(Xor2) / S(174) / L(22)
-    "\x96\xcc\xca\xcb\x96\xd5\xd0\xdb\x96\xd5\xd0\xdb\xd6\xdb\xd3\xda\x97\xdd\xc0\xd5\xd0\xdb\xb9",
-    // "strncmp" / M(Xor1) / S(200) / L(7)
-    "\xbb\xbc\xba\xa6\xab\xa5\xb8\xc8\x73\x1f\xf2\x27\x85\x6c\x7d\xfe",
-    // "CFStringCompare" / M(Xor4) / S(249) / L(15)
-    "\xd3\xd6\xc3\xe4\xe2\xf9\xfe\xf7\xd3\xff\xfd\xe0\xf1\xe2\xf5\x90",
-    // "EVP_DigestInit" / M(Xor3) / S(41) / L(14)
-    "\x7c\x6f\x69\x66\x7d\x50\x5e\x5c\x4a\x4d\x70\x57\x50\x4d\x39\xa4",
-    // "sel_registerName" / M(Xor1) / S(174) / L(16)
-    "\xdd\xcb\xc2\xf1\xdc\xcb\xc9\xc7\xdd\xda\xcb\xdc\xe0\xcf\xc3\xcb\xae",
+    "\xa5\x02\x65\xb8\xc1\xd0\x58\xcd\x8d\x27\x51\x06\x82\x99\x3f\x4e\xfa\x87\x76\x35\x76\x84\xc3\xe1\x9c\x65\xcf\x05\xda\xee\x15\x7b",
+    // "1.2.840.113635.100.6.11.1" / M(Xor3) / S(137) / L(25)
+    "\x9a\x85\x99\x85\x93\x9f\x9b\x85\x9a\x9a\x98\x9d\x98\x9e\x85\x9a\x9b\x9b\x85\x9d\x85\x9a\x9a\x85\x9a\xab\xd4\x1e\x1b\x53\xc1\xc7\x77\xdf",
+    // "objc_msgSend" / M(Xor1) / S(16) / L(12)
+    "\x7f\x72\x7a\x73\x4f\x7d\x63\x77\x43\x75\x7e\x74\x10\xf9\xa2\xb9",
+    // "CFAbsoluteTimeGetCurrent" / M(Xor3) / S(91) / L(24)
+    "\x3f\x3a\x3d\x1e\x0f\x13\x10\x09\x08\x19\x28\x15\x11\x19\x3b\x19\x08\x3f\x09\x0e\x0e\x19\x12\x08\x7c\xd8\x89\x10\xff\x06\x20\xea\x36",
     // "" / M(None) / S(0) / L(0)
-    "\x76\xb2\xd3\x44\xfe\xf4\xff\x34\x9c\x04\x84\x01\xba\xde\x6e\x73\xf4\x02\x4a\x66\xb8\xa1\xaa\x7b\x83\x05\xe4\x06\xc1\xbd\x18\x5c",
-    // "IOServiceGetMatchingServices" / M(Xor2) / S(238) / L(28)
-    "\x82\x84\x98\xae\xb9\xbd\xa2\xa8\xae\x8c\xae\xbf\x86\xaa\xbf\xa8\xa3\xa2\xa5\xac\x98\xae\xb9\xbd\xa2\xa8\xae\xb8\xcb\x99\xc1\xc7\x9e\x60\x8a\x14\x10",
-    // "CFDateCreate" / M(Rot) / S(98) / L(12)
-    "\xa5\xa8\xa6\xc3\xd6\xc7\xa5\xd4\xc7\xc3\xd6\xc7\x62\x6b\x6b\xc0",
-    // "SecKeychainSearchCopyNext" / M(Xor3) / S(238) / L(25)
-    "\x43\x75\x73\x5b\x75\x69\x73\x78\x71\x79\x7e\x43\x75\x71\x62\x73\x78\x53\x7f\x60\x69\x5e\x75\x68\x64\x10\x8d\x2f\x96\xb3\xb0\x57\x9f\xf4",
-    // "dlsym" / M(Xor2) / S(110) / L(5)
-    "\x1a\x12\x0d\x07\x13\x7e\x65\x64\x9d\x7d\x95\x47\x0f\x76\x42\x4e",
-    // "sk_free" / M(Xor4) / S(129) / L(7)
-    "\x63\x7b\x4f\x76\x62\x75\x75\x10\xba\x6b\x32\x49\xfa\x1e\x25\xa4",
-    // "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" / M(Xor4) / S(97) / L(32)
-    "\xf8\xf8\xf8\xf8\xa6\xac\xa6\xcc\xcc\xa6\xac\xa6\xe5\xe5\xa6\xd5\xa6\xc9\xc9\xa6\xbb\xa6\xec\xec\xa6\xbb\xa6\xf2\xf2\xa6\xdb\xa6\x81",
-    // "IOMACAddress" / M(Rot) / S(66) / L(12)
-    "\x8b\x91\x8f\x83\x85\x83\xa6\xa6\xb4\xa7\xb5\xb5\x42\xd3\x1d\x54",
-    // "CFDateFormatterSetFormat" / M(Rot) / S(59) / L(24)
-    "\x7e\x81\x7f\x9c\xaf\xa0\x81\xaa\xad\xa8\x9c\xaf\xaf\xa0\xad\x8e\xa0\xaf\x81\xaa\xad\xa8\x9c\xaf\x3b\x48\x66\x4a\xfe\xe0\x80\x02\x17",
-    // "setjmp" / M(Rot) / S(115) / L(6)
-    "\xe6\xd8\xe7\xdd\xe0\xe3\x73\x71\xf2\x14\x01\xf1\xa9\xd9\x85\x87",
-    // "/usr/lib/libobjc.dylib" / M(Rot) / S(191) / L(22)
-    "\xee\x34\x32\x31\xee\x2b\x28\x21\xee\x2b\x28\x21\x2e\x21\x29\x22\xed\x23\x38\x2b\x28\x21\xbf",
-    // "CFArrayGetCount" / M(Rot) / S(247) / L(15)
-    "\x3a\x3d\x38\x69\x69\x58\x70\x3e\x5c\x6b\x3a\x66\x6c\x65\x6b\xf7",
-    // "SKReceiptRefreshRequest" / M(Xor3) / S(177) / L(23)
-    "\x82\x9a\x83\xb4\xb2\xb4\xb8\xa1\xa5\x83\xb4\xb7\xa3\xb4\xa2\xb9\x83\xb4\xa0\xa4\xb4\xa2\xa5\xd1\xda\x1e\x2c\xc4\x72\xb9\x15\x37",
+    "\x64\x60\x72\x7c\x81\x7e\x96\x7a\x95\x2d\x18\x07\x27\x69\xb8\x7e\xd3\xc7\x3f\x3a\xfb\xcf\x1f\x74\x78\x02\x3a\x61\x82\x09\xe1\x26",
+    // "EVP_DigestUpdate" / M(Xor1) / S(115) / L(16)
+    "\x36\x25\x23\x2c\x37\x1a\x14\x16\x00\x07\x26\x03\x17\x12\x07\x16\x73",
+    // "receipt" / M(Xor1) / S(126) / L(7)
+    "\x0c\x1b\x1d\x1b\x17\x0e\x0a\x7e\xd5\x98\x55\xf8\xa4\x09\x20\x68",
     // "" / M(None) / S(0) / L(0)
-    "\xb8\x18\x89\x6a\x47\x22\xa5\xc8\xea\xfa\xef\xe2\x06\x9f\x42\x2b\xf7\x40\x02\x9a\xcd\x9b\xaf\x36\xa0\x2f\x26\x52\x04\x95\x54\x12",
-    // "SecKeychainSearchCopyNext" / M(Xor4) / S(48) / L(25)
-    "\x33\x05\x03\x2b\x05\x19\x03\x08\x01\x09\x0e\x33\x05\x01\x12\x03\x08\x23\x0f\x10\x19\x2e\x05\x18\x14\x60\x07\x7a\x04\x70\x40\x8b\x64\x7c",
-    // "EVP_DigestInit" / M(Xor1) / S(70) / L(14)
-    "\x03\x10\x16\x19\x02\x2f\x21\x23\x35\x32\x0f\x28\x2f\x32\x46\xd2",
+    "\x89\xba\xd8\x16\xd3\x60\x3d\xe5\xdf\xe8\x5d\x30\xd6\x2f\xa0\xbd\xea\x0d\xbe\x16\xf4\x47\x24\xa0\xbb\x69\x86\x0e\x73\xce\x4d\x4a",
     // "" / M(None) / S(0) / L(0)
-    "\x82\x76\x22\xa5\x45\x4a\x9b\x08\x9b\x61\xe7\x02\x88\x7b\xb0\x64\x5e\xb8\xf7\x9f\x7d\x37\xde\xc4\xa4\x85\x9f\x4c\x62\x11\xd6\x25",
+    "\xe8\xd8\x00\x39\xa7\x85\x45\xe8\x71\xe3\xfa\x46\xad\x52\xe1\xcb\xec\xec\xaa\x70\x78\x38\xa9\x1b\xa7\x80\x96\xc3\x3e\x7f\x2f\xdc",
+    // "objc_getClass" / M(Xor2) / S(142) / L(13)
+    "\xf1\xfc\xf4\xfd\xc1\xf9\xfb\xea\xdd\xf2\xff\xed\xed\x9e\x36\xf3",
     // "" / M(None) / S(0) / L(0)
-    "\x1b\x72\x7b\xa8\x55\xfb\xa6\xdc\x9f\xd0\xa2\xd4\xb4\xbc\xb4\x0e\xf5\xcd\x80\xfe\xdd\x93\x10\x45\xc6\x5b\x43\x6b\x64\xfd\x9c\x0f",
-    // "CFReadStreamOpen" / M(Rot) / S(185) / L(16)
-    "\xfc\xff\x0b\x1e\x1a\x1d\x0c\x2d\x2b\x1e\x1a\x26\x08\x29\x1e\x27\xb9",
-    // "kCFDateFormatterTimeZone" / M(Xor4) / S(133) / L(24)
-    "\x4e\x66\x63\x61\x44\x51\x40\x63\x4a\x57\x48\x44\x51\x51\x40\x57\x71\x4c\x48\x40\x7f\x4a\x4b\x40\x25\x35\x34\x43\xe6\x7f\x7b\x31\xfd",
-    // "objc_msgSend" / M(Xor3) / S(29) / L(12)
-    "\x42\x4f\x47\x4e\x72\x40\x5e\x4a\x7e\x48\x43\x49\x2d\xad\x83\xea",
+    "\x22\x8b\x97\xf6\x98\xaf\x99\xb2\xe4\xeb\x75\xcc\x60\xbd\x87\xee\x38\x81\xd6\x06\x6e\x04\x3e\xb2\xdb\x1d\x65\x81\x64\xf7\x37\x58",
+    // "IOIteratorNext" / M(Rot) / S(174) / L(14)
+    "\xf7\xfd\xf7\x22\x13\x20\x0f\x22\x1d\x20\xfc\x13\x26\x22\xae\x12",
+    // "RTLD_MAIN_ONLY" / M(Xor1) / S(132) / L(14)
+    "\xd6\xd0\xc8\xc0\xdb\xc9\xc5\xcd\xca\xdb\xcb\xca\xc8\xdd\x84\x22",
+    // "BIO_write" / M(Rot) / S(145) / L(9)
+    "\xd3\xda\xe0\xf0\x08\x03\xfa\x05\xf6\x91\xde\x12\x27\x84\x6c\xf0",
     // "" / M(None) / S(0) / L(0)
-    "\xfd\x60\x5b\x35\x6c\x23\xe0\x9f\x28\x34\xc2\xda\x9b\x84\xb5\x8f\xe8\x2e\xae\xb9\x2e\xd7\x3e\xfc\x0f\x1b\x3e\xd3\xf0\xf3\x60\x20",
-    // "kCFTypeDictionaryValueCallBacks" / M(Xor4) / S(44) / L(31)
-    "\xeb\xc3\xc6\xd4\xf9\xf0\xe5\xc4\xe9\xe3\xf4\xe9\xef\xee\xe1\xf2\xf9\xd6\xe1\xec\xf5\xe5\xc3\xe1\xec\xec\xc2\xe1\xe3\xeb\xf3\x80",
-    // "kSecMatchLimitAll" / M(Xor1) / S(26) / L(17)
-    "\x71\x49\x7f\x79\x57\x7b\x6e\x79\x72\x56\x73\x77\x73\x6e\x5b\x76\x76\x1a",
-    // "IORegistryEntryCreateCFProperty" / M(Rot) / S(11) / L(31)
-    "\x54\x5a\x5d\x70\x72\x74\x7e\x7f\x7d\x84\x50\x79\x7f\x7d\x84\x4e\x7d\x70\x6c\x7f\x70\x4e\x51\x5b\x7d\x7a\x7b\x70\x7d\x7f\x84\x0b",
-    // "CFBundleGetMainBundle" / M(Xor4) / S(3) / L(21)
-    "\x01\x04\x00\x37\x2c\x26\x2e\x27\x05\x27\x36\x0f\x23\x2b\x2c\x00\x37\x2c\x26\x2e\x27\x42",
+    "\x7e\x6e\xad\x4d\xe2\xe4\xd7\x8f\x2f\xfa\xe2\xed\xce\xf1\x91\x1c\x07\xd8\x82\xa6\x0b\x8b\xe3\xb5\x3d\x31\x90\xdc\x20\xce\xcd\xab",
+    // "exit" / M(Xor4) / S(14) / L(4)
+    "\x85\x98\x89\x94\xe0\xcc\x7b\x1f\x5c\xe1\x2b\x65\x69\x9e\xe8\xc6",
+    // "CFDataGetBytePtr" / M(Xor3) / S(22) / L(16)
+    "\x64\x61\x63\x46\x53\x46\x60\x42\x53\x65\x5e\x53\x42\x77\x53\x55\x27",
+    // "ASN1_OBJECT_free" / M(Xor3) / S(198) / L(16)
+    "\x96\x84\x99\xe6\x88\x98\x95\x9d\x92\x94\x83\x88\xb1\xa5\xb2\xb2\xd7",
+    // "CFStringCreateWithCString" / M(Rot) / S(36) / L(25)
+    "\x67\x6a\x77\x98\x96\x8d\x92\x8b\x67\x96\x89\x85\x98\x89\x7b\x8d\x98\x8c\x67\x77\x98\x96\x8d\x92\x8b\x24\x13\xe3\x2c\x42\xe3\x54\xa1\x68",
+    // "CFDataGetLength" / M(Xor3) / S(111) / L(15)
+    "\x3c\x39\x3b\x1e\x0b\x1e\x38\x1a\x0b\x33\x1a\x11\x18\x0b\x17\x7f",
+    // "glob_b" / M(Xor1) / S(145) / L(6)
+    "\xf6\xfd\xfe\xf3\xce\xf3\x91\xe8\xd2\xb2\x93\x1e\x5f\xc7\x2a\x56",
+    // "PKCS7_get0_signers" / M(Xor4) / S(1) / L(18)
+    "\x43\x58\x50\x40\x24\x4c\x74\x76\x67\x23\x4c\x60\x7a\x74\x7d\x76\x61\x60\x13",
+    // "_MASReceipt/receipt" / M(Xor1) / S(2) / L(19)
+    "\x5d\x4f\x43\x51\x50\x67\x61\x67\x6b\x72\x76\x2d\x70\x67\x61\x67\x6b\x72\x76\x02",
+    // "CFReadStreamRead" / M(Xor2) / S(120) / L(16)
+    "\x2a\x2f\x3b\x0c\x08\x0d\x3a\x1d\x1b\x0c\x08\x04\x3b\x0c\x08\x0d\x69",
+    // "sk_num" / M(Rot) / S(173) / L(6)
+    "\x20\x18\x0c\x1b\x22\x1a\xad\xf7\xe7\x47\x56\x3a\xa2\xda\x12\xcd",
+    // "CFDateCreate" / M(Xor1) / S(8) / L(12)
+    "\x4b\x4e\x4c\x69\x7c\x6d\x4b\x7a\x6d\x69\x7c\x6d\x08\xb5\x64\x82",
+    // "/System/Library/Keychains/SystemRootCertificates.keychain" / M(Xor3) / S(62) / L(57)
+    "\xaf\xd3\xf9\xf3\xf4\xe5\xed\xaf\xcc\xe9\xe2\xf2\xe1\xf2\xf9\xaf\xcb\xe5\xf9\xe3\xe8\xe1\xe9\xee\xf3\xaf\xd3\xf9\xf3\xf4\xe5\xed\xd2\xef\xef\xf4\xc3\xe5\xf2\xf4\xe9\xe6\xe9\xe3\xe1\xf4\xe5\xf3\xae\xeb\xe5\xf9\xe3\xe8\xe1\xe9\xee\x80\xbd\x3c\xf4\x0f\x79\x8b\x00\xb1",
+    // "CFStringCreateWithCString" / M(Xor3) / S(81) / L(25)
+    "\x30\x35\x20\x07\x01\x1a\x1d\x14\x30\x01\x16\x12\x07\x16\x24\x1a\x07\x1b\x30\x20\x07\x01\x1a\x1d\x14\x73\x59\x39\xab\x46\xaf\xcf\xaa\xf2",
+    // "CFReadStreamCreateWithFile" / M(Xor4) / S(99) / L(26)
+    "\xca\xcf\xdb\xec\xe8\xed\xda\xfd\xfb\xec\xe8\xe4\xca\xfb\xec\xe8\xfd\xec\xde\xe0\xfd\xe1\xcf\xe0\xe5\xec\x89\xbf\xb7\x7a\x52\x5e\x87\xbc\xce",
     // "" / M(None) / S(0) / L(0)
-    "\x16\x7b\x7e\x20\x48\x11\xbb\x3c\xb7\x89\x23\xcc\x26\x33\xb8\x0a\xae\xaf\x69\xbc\x70\x7e\x3f\x00\x5d\x2b\x49\x12\xa9\x24\x57\xbc",
-    // "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" / M(Xor4) / S(17) / L(66)
-    "\x5c\x20\x0a\x00\x07\x16\x1e\x5c\x3f\x1a\x11\x01\x12\x01\x0a\x5c\x35\x01\x12\x1e\x16\x04\x1c\x01\x18\x00\x5c\x30\x1c\x01\x16\x35\x1c\x06\x1d\x17\x12\x07\x1a\x1c\x1d\x5d\x15\x01\x12\x1e\x16\x04\x1c\x01\x18\x5c\x30\x1c\x01\x16\x35\x1c\x06\x1d\x17\x12\x07\x1a\x1c\x1d\x73",
-    // "CFDateFormatterSetProperty" / M(Xor1) / S(11) / L(26)
-    "\x48\x4d\x4f\x6a\x7f\x6e\x4d\x64\x79\x66\x6a\x7f\x7f\x6e\x79\x58\x6e\x7f\x5b\x79\x64\x7b\x6e\x79\x7f\x72\x0b\x3e\x77\x4f\xb8\xd6\x3d\xa2\x04",
-    // "CFBundleIdentifier" / M(Rot) / S(255) / L(18)
-    "\x42\x45\x41\x74\x6d\x63\x6b\x64\x48\x63\x64\x6d\x73\x68\x65\x68\x64\x71\xff",
-    // "X509_digest" / M(Xor4) / S(202) / L(11)
-    "\xf8\x95\x90\x99\xff\xc4\xc9\xc7\xc5\xd3\xd4\xa0\x91\x42\x36\x28",
-    // "CFDataCreate" / M(Rot) / S(41) / L(12)
-    "\x6c\x6f\x6d\x8a\x9d\x8a\x6c\x9b\x8e\x8a\x9d\x8e\x29\x3f\x04\xa2",
-    // "init" / M(Xor3) / S(105) / L(4)
-    "\x10\x17\x10\x0d\x79\x74\xdb\xf9\x19\x52\x29\xbf\x1a\x9f\x8a\x78",
-    // "kCFTypeArrayCallBacks" / M(Xor1) / S(14) / L(21)
-    "\x65\x4d\x48\x5a\x77\x7e\x6b\x4f\x7c\x7c\x6f\x77\x4d\x6f\x62\x62\x4c\x6f\x6d\x65\x7d\x0e",
-    // "sk_value" / M(Xor2) / S(114) / L(8)
-    "\x11\x09\x3d\x14\x03\x0e\x17\x07\x62\xf3\xb5\x0a\xa4\x8b\xfc\x9e",
-    // "SecKeychainSearchCopyNext" / M(Rot) / S(135) / L(25)
-    "\xda\xec\xea\xd2\xec\x00\xea\xef\xe8\xf0\xf5\xda\xec\xe8\xf9\xea\xef\xca\xf6\xf7\x00\xd5\xec\xff\xfb\x87\x72\x86\xa3\x0b\x82\xca\xce\x0c",
-    // "SHA1_Init" / M(Xor3) / S(123) / L(9)
-    "\xd8\xc3\xca\xba\xd4\xc2\xe5\xe2\xff\x8b\xee\x77\x27\x95\x85\x25",
-    // "ASN1_get_object" / M(Xor3) / S(87) / L(15)
-    "\x26\x34\x29\x56\x38\x00\x02\x13\x38\x08\x05\x0d\x02\x04\x13\x67",
+    "\x85\x7a\x50\xd7\x5e\x0e\x24\xa6\x3d\xb9\xd0\x06\xeb\xe9\xb3\xa4\x9a\xee\xd7\x74\x9f\x02\xec\x60\xcd\x37\xa9\x9c\xd2\xca\xef\x27",
+    // "_MASReceipt" / M(Rot) / S(191) / L(11)
+    "\x1e\x0c\x00\x12\x11\x24\x22\x24\x28\x2f\x33\xbf\x1d\xf6\xc1\xd1",
+    // "kCFTypeDictionaryKeyCallBacks" / M(Xor1) / S(37) / L(29)
+    "\x4e\x66\x63\x71\x5c\x55\x40\x61\x4c\x46\x51\x4c\x4a\x4b\x44\x57\x5c\x6e\x40\x5c\x66\x44\x49\x49\x67\x44\x46\x4e\x56\x25\x0e\x7f\x98\xc9\x8e\x59\xc8\x1b",
+    // "EVP_DigestFinal" / M(Xor1) / S(209) / L(15)
+    "\x94\x87\x81\x8e\x95\xb8\xb6\xb4\xa2\xa5\x97\xb8\xbf\xb0\xbd\xd1",
+    // "" / M(Xor2) / S(33) / L(0)
+    "\x31\xc1\xed\xd4\x98\x48\x71\x68\x09\x5e\x02\x37\x5b\xe9\xa8\xf3",
+    // "CFDateCreate" / M(Xor4) / S(34) / L(12)
+    "\x63\x66\x64\x41\x54\x45\x63\x52\x45\x41\x54\x45\x20\xb3\x70\x4a",
+    // "CFTimeZoneCreateWithTimeIntervalFromGMT" / M(Xor1) / S(173) / L(39)
+    "\xee\xeb\xf9\xc4\xc0\xc8\xf7\xc2\xc3\xc8\xee\xdf\xc8\xcc\xd9\xc8\xfa\xc4\xd9\xc5\xf9\xc4\xc0\xc8\xe4\xc3\xd9\xc8\xdf\xdb\xcc\xc1\xeb\xdf\xc2\xc0\xea\xe0\xf9\xad\x1f\x70\xf7\x11\x2f\xf2\x81\x3b",
+    // "SHA1_Init" / M(Xor3) / S(139) / L(9)
+    "\xc8\xd3\xda\xaa\xc4\xd2\xf5\xf2\xef\x9b\xd8\xd8\x46\x8d\x5b\x8c",
     // "" / M(None) / S(0) / L(0)
-    "\x64\xf5\xaf\x00\x14\xe3\x19\x33\x20\xa9\xcb\xd2\x7b\xac\xe6\x3f\xc9\x48\xfd\x61\x3f\x50\x5f\x1a\xaf\x94\x62\xef\x5f\xe3\x4b\xda",
+    "\x37\xec\x30\x08\xf2\x73\x61\x28\x18\xb3\xb3\x05\x1a\x38\xa1\x3e\x31\xf2\xae\x96\xf5\x2d\xc7\x00\xe4\x75\x3a\x93\x0e\xdc\xaa\x3c",
+    // "IOMACAddress" / M(Xor2) / S(109) / L(12)
+    "\x34\x32\x30\x3c\x3e\x3c\x19\x19\x0f\x18\x0e\x0e\x7d\x72\xb0\x11",
+    // "/usr/lib/libobjc.dylib" / M(Xor4) / S(110) / L(22)
+    "\xcd\x97\x91\x90\xcd\x8e\x8b\x80\xcd\x8e\x8b\x80\x8d\x80\x88\x81\xcc\x86\x9b\x8e\x8b\x80\xe2",
+    // "EVP_get_digestbyname" / M(Xor4) / S(234) / L(20)
+    "\x77\x64\x62\x6d\x55\x57\x46\x6d\x56\x5b\x55\x57\x41\x46\x50\x4b\x5c\x53\x5f\x57\x32",
     // "" / M(None) / S(0) / L(0)
-    "\x3f\x86\xf5\xc2\x33\xb5\x41\xfa\x69\x9d\x09\x80\x1a\xc5\x00\xef\xed\x8c\x65\x78\xb7\x58\x1c\x92\x7a\xcb\xa6\xf7\x6d\xfa\xd2\xd3",
-    // "sha1" / M(Xor1) / S(52) / L(4)
-    "\x47\x5c\x55\x05\x34\x87\xb9\xba\x8e\xdb\x15\x48\x37\x1d\xe6\x2e",
-    // "_MASReceipt" / M(Rot) / S(255) / L(11)
-    "\x5e\x4c\x40\x52\x51\x64\x62\x64\x68\x6f\x73\xff\x21\x48\x6c\x6f",
-    // "CFReadStreamClose" / M(Xor4) / S(201) / L(17)
-    "\x61\x64\x70\x47\x43\x46\x71\x56\x50\x47\x43\x4f\x61\x4e\x4d\x51\x47\x22",
-    // "kSecMatchLimit" / M(Xor1) / S(91) / L(14)
-    "\x30\x08\x3e\x38\x16\x3a\x2f\x38\x33\x17\x32\x36\x32\x2f\x5b\x48",
-    // "EVP_DigestUpdate" / M(Xor1) / S(179) / L(16)
-    "\xf6\xe5\xe3\xec\xf7\xda\xd4\xd6\xc0\xc7\xe6\xc3\xd7\xd2\xc7\xd6\xb3",
+    "\x0c\x25\x4e\xdf\x13\x4d\x61\xa2\xca\x08\xd8\xa9\x38\xa1\xd2\x94\xa5\xc2\xd3\xe7\xde\x57\xe2\x7c\x22\xc4\xcc\x8f\x84\xc3\xa2\x99",
     // "" / M(None) / S(0) / L(0)
-    "\x05\x59\x75\x13\x6e\x74\xa0\x10\x4e\x96\xb7\xe5\xb7\x38\xb0\x2a\x8a\xc5\x7b\xa1\x45\x3f\x4c\x27\xb0\xed\x3e\x9e\x07\xcb\xdf\x51",
-    // "SecItemCopyMatching" / M(Rot) / S(174) / L(19)
-    "\x01\x13\x11\xf7\x22\x13\x1b\xf1\x1d\x1e\x27\xfb\x0f\x22\x11\x16\x17\x1c\x15\xae",
+    "\x3f\xb0\x69\x44\x90\xca\xd2\x53\xaa\x8b\xc8\xa7\x72\xbd\x93\x64\xea\x56\xbf\x11\x41\x6c\xe2\x0b\x14\xe1\xe4\x52\x75\xb7\x8d\x9a",
+    // "CFArrayCreateMutable" / M(Xor2) / S(142) / L(20)
+    "\xd8\xdd\xda\xe9\xe9\xfa\xe2\xd8\xe9\xfe\xfa\xef\xfe\xd6\xee\xef\xfa\xf9\xf7\xfe\x9b",
+    // "BIO_free" / M(Rot) / S(25) / L(8)
+    "\x5b\x62\x68\x78\x7f\x8b\x7e\x7e\x19\x4a\xcd\xb3\x9f\xbf\xcf\x2b",
     // "" / M(None) / S(0) / L(0)
-    "\x63\xc3\x1a\xcc\x87\x76\x45\x0b\xb4\x72\x3c\x25\x42\xde\xaf\x25\x83\xa7\x80\x8e\xb5\x69\x6c\x05\x33\x1e\xfb\xd0\xf1\xee\x92\x83",
-    // "61:1E:5B:66:2C:59:3A:08:FF:58:D1:4A:E2:24:52:D1:98:DF:6C:60" / M(Xor3) / S(11) / L(59)
-    "\x79\x7e\x75\x7e\x0a\x75\x7a\x0d\x75\x79\x79\x75\x7d\x0c\x75\x7a\x76\x75\x7c\x0e\x75\x7f\x77\x75\x09\x09\x75\x7a\x77\x75\x0b\x7e\x75\x7b\x0e\x75\x0a\x7d\x75\x7d\x7b\x75\x7a\x7d\x75\x0b\x7e\x75\x76\x77\x75\x0b\x09\x75\x79\x0c\x75\x79\x7f\x4f\xca\xaa\x5f\xab\xde\x5a\xf7\xfa",
-    // "BIO_free" / M(Rot) / S(85) / L(8)
-    "\x97\x9e\xa4\xb4\xbb\xc7\xba\xba\x55\x26\x1b\xb8\x19\xb4\xb1\xc7",
+    "\x96\x57\x8c\x0c\x0d\x18\x59\x6d\x3d\xc0\x5c\x81\x5d\x5a\x4a\x1c\xd7\x3b\x0e\xcb\xee\x19\xf5\xc5\x2e\x9b\x2e\x4e\xc4\xc7\x1c\xf5",
+    // "CC_SHA1_Update" / M(Xor4) / S(83) / L(14)
+    "\x73\x73\x6f\x63\x78\x71\x01\x6f\x65\x40\x54\x51\x44\x55\x30\x17",
+    // "kCFDateFormatterTimeZone" / M(Xor1) / S(204) / L(24)
+    "\xa7\x8f\x8a\x88\xad\xb8\xa9\x8a\xa3\xbe\xa1\xad\xb8\xb8\xa9\xbe\x98\xa5\xa1\xa9\x96\xa3\xa2\xa9\xcc\x34\xe8\xc4\x9f\x29\x10\xc3\x98",
+    // "sk_num" / M(Xor1) / S(30) / L(6)
+    "\x6d\x75\x41\x70\x6b\x73\x1e\x8f\x27\xb3\x7e\x58\x2f\x59\x76\x5e",
     // "" / M(None) / S(0) / L(0)
-    "\xba\xef\x22\x17\xfb\x29\xbc\x8d\x2b\xae\xfd\x21\x86\xb0\x87\x1d\xbb\xc9\x02\x71\xb1\xc8\x25\xf9\x91\xb8\x9c\x16\x6d\xa5\x9b\x09",
-    // "ASN1_get_object" / M(Xor4) / S(216) / L(15)
-    "\xc1\xd3\xce\xb1\xdf\xe7\xe5\xf4\xdf\xef\xe2\xea\xe5\xe3\xf4\x80",
-    // "CC_SHA1_Init" / M(Xor1) / S(137) / L(12)
-    "\xca\xca\xd6\xda\xc1\xc8\xb8\xd6\xc0\xe7\xe0\xfd\x89\xf6\x6d\xf4",
-    // "SHA1_Final" / M(Xor2) / S(53) / L(10)
-    "\x76\x6d\x64\x14\x7a\x63\x4c\x4b\x44\x49\x25\x81\xb5\x7a\x64\x4f",
-    // "CFBundleGetIdentifier" / M(Xor1) / S(155) / L(21)
-    "\xd8\xdd\xd9\xee\xf5\xff\xf7\xfe\xdc\xfe\xef\xd2\xff\xfe\xf5\xef\xf2\xfd\xf2\xfe\xe9\x9b",
-    // "CFBundleVersion" / M(Xor2) / S(61) / L(15)
-    "\x6e\x6b\x6f\x58\x43\x49\x41\x48\x7b\x48\x5f\x5e\x44\x42\x43\x2d",
-    // "." / M(Xor1) / S(108) / L(1)
-    "\x42\x6c\x6e\x73\xf4\x02\x4a\x66\xb8\xa1\xaa\x7b\x83\x05\xe4\x06",
-    // "RTLD_MAIN_ONLY" / M(Rot) / S(73) / L(14)
-    "\x9b\x9d\x95\x8d\xa8\x96\x8a\x92\x97\xa8\x98\x97\x95\xa2\x49\xc2",
-    // "/System/Library/Frameworks/Security.framework/Security" / M(Rot) / S(140) / L(54)
-    "\xbb\xdf\x05\xff\x00\xf1\xf9\xbb\xd8\xf5\xee\xfe\xed\xfe\x05\xbb\xd2\xfe\xed\xf9\xf1\x03\xfb\xfe\xf7\xff\xbb\xdf\xf1\xef\x01\xfe\xf5\x00\x05\xba\xf2\xfe\xed\xf9\xf1\x03\xfb\xfe\xf7\xbb\xdf\xf1\xef\x01\xfe\xf5\x00\x05\x8c",
-    // "BIO_s_mem" / M(Rot) / S(220) / L(9)
-    "\x1e\x25\x2b\x3b\x4f\x3b\x49\x41\x49\xdc\xea\xb7\x54\x00\x85\x7b",
-    // "EVP_DigestFinal" / M(Xor3) / S(17) / L(15)
-    "\x64\x77\x71\x7e\x65\x48\x46\x44\x52\x55\x67\x48\x4f\x40\x4d\x21",
-    // "EVP_DigestFinal" / M(Rot) / S(153) / L(15)
-    "\xde\xef\xe9\xf8\xdd\x02\x00\xfe\x0c\x0d\xdf\x02\x07\xfa\x05\x99",
-    // "SHA1_Update" / M(Xor1) / S(2) / L(11)
-    "\x51\x4a\x43\x33\x5d\x57\x72\x66\x63\x76\x67\x02\x96\x3d\x27\x25",
-    // "sel_registerName" / M(Xor4) / S(146) / L(16)
-    "\xc1\xd7\xde\xed\xc0\xd7\xd5\xdb\xc1\xc6\xd7\xc0\xfc\xd3\xdf\xd7\xb2",
-    // "dlopen" / M(Xor2) / S(68) / L(6)
-    "\x30\x38\x3b\x24\x31\x3a\x54\xc4\xd4\xc2\x95\xf3\xe4\x35\x6c\x7d",
-    // "kCFTypeDictionaryValueCallBacks" / M(Xor4) / S(109) / L(31)
-    "\xcb\xe3\xe6\xf4\xd9\xd0\xc5\xe4\xc9\xc3\xd4\xc9\xcf\xce\xc1\xd2\xd9\xf6\xc1\xcc\xd5\xc5\xe3\xc1\xcc\xcc\xe2\xc1\xc3\xcb\xd3\xa0",
-    // "_MASReceipt" / M(Xor4) / S(178) / L(11)
-    "\x7f\x6d\x61\x73\x72\x45\x43\x45\x49\x50\x54\x20\x26\x33\xb8\x0a",
+    "\xad\x04\x42\x93\xd0\xb8\xb8\x35\xb3\x9e\xe3\xa8\x57\x5e\xe1\x6b\x16\x98\xcd\x49\x8f\x88\x20\xe5\x1f\x97\x12\x3b\x39\x76\x6c\xb6",
+    // "sk_value" / M(Xor2) / S(226) / L(8)
+    "\x81\x99\xad\x84\x93\x9e\x87\x97\xf2\xca\xdd\x79\x25\x23\xd2\x8b",
     // "" / M(None) / S(0) / L(0)
-    "\x76\xee\x29\xa0\x78\xc6\x1a\x50\xd4\xc9\xbb\x7c\x73\x5b\x6f\x13\xec\xe4\x50\x8b\xc7\x4a\x4f\x8f\xa2\x90\x31\x3f\x6a\x46\x90\xe1",
-    // "CFBundleGetMainBundle" / M(Rot) / S(236) / L(21)
-    "\x2f\x32\x2e\x61\x5a\x50\x58\x51\x33\x51\x60\x39\x4d\x55\x5a\x2e\x61\x5a\x50\x58\x51\xec",
-    // "611e5b662c593a08ff58d14ae22452d198df6c60" / M(Xor4) / S(215) / L(40)
-    "\x11\x16\x16\x42\x12\x45\x11\x11\x15\x44\x12\x1e\x14\x46\x17\x1f\x41\x41\x12\x1f\x43\x16\x13\x46\x42\x15\x15\x13\x12\x15\x43\x16\x1e\x1f\x43\x41\x11\x44\x11\x17\x27\xfd\xfd\x5f\xb5\x8b\x7a\x3c\x7e",
-    // "d2i_PKCS7_bio" / M(Xor4) / S(179) / L(13)
-    "\x54\x02\x59\x6f\x60\x7b\x73\x63\x07\x6f\x52\x59\x5f\x30\x81\xc9",
-    // "CFDateCompare" / M(Xor3) / S(46) / L(13)
-    "\x7d\x78\x7a\x5f\x4a\x5b\x7d\x51\x53\x4e\x5f\x4c\x5b\x3e\x7a\x1a",
-    // "EVP_get_digestbyname" / M(Rot) / S(141) / L(20)
-    "\xd2\xe3\xdd\xec\xf4\xf2\x01\xec\xf1\xf6\xf4\xf2\x00\x01\xef\x06\xfb\xee\xfa\xf2\x8d",
+    "\x0f\x55\x22\x56\xe9\xc6\x53\x51\xf3\x46\x7a\xba\xa0\x92\x1f\xb3\x3c\x58\x59\xb1\x16\x80\x08\xba\x4f\x56\x8a\x75\x78\x74\xab\xf1",
+    // "CFDateFormatterCreateDateFromString" / M(Xor1) / S(247) / L(35)
+    "\xb4\xb1\xb3\x96\x83\x92\xb1\x98\x85\x9a\x96\x83\x83\x92\x85\xb4\x85\x92\x96\x83\x92\xb3\x96\x83\x92\xb1\x85\x98\x9a\xa4\x83\x85\x9e\x99\x90\xf7",
+    // "" / M(None) / S(0) / L(0)
+    "\x62\xb9\x4d\xda\xce\xfb\xef\xf9\x10\x25\x78\x32\x55\xd9\x87\xd9\x6e\x47\xca\xf9\xf7\x3f\x44\xec\xfc\x89\x4b\x7d\x25\x86\xf0\xe9",
+    // "" / M(None) / S(0) / L(0)
+    "\x9c\xe6\x60\xed\xfc\xeb\x93\xaf\x9d\xec\x38\x94\x76\x08\x39\xaa\xb0\x73\x0f\xf2\x5b\x46\x14\x81\x7c\xa6\xf4\x5e\x15\xc2\x0a\x29",
+    // "X509_free" / M(Xor3) / S(4) / L(9)
+    "\x4c\x21\x24\x2d\x4b\x72\x66\x71\x71\x14\x06\x78\xde\xee\x98\x7c",
+    // "kCFTypeDictionaryKeyCallBacks" / M(Xor4) / S(75) / L(29)
+    "\x49\x61\x64\x76\x5b\x52\x47\x66\x4b\x41\x56\x4b\x4d\x4c\x43\x50\x5b\x69\x47\x5b\x61\x43\x4e\x4e\x60\x43\x41\x49\x51\x22\x6e\x16\x3a\xdd\x7d\xfa\x2f\xe4",
+    // "X509_STORE_new" / M(Xor1) / S(127) / L(14)
+    "\x27\x4a\x4f\x46\x20\x2c\x2b\x30\x2d\x3a\x20\x11\x1a\x08\x7f\xa3",
+    // "IORegistryEntryCreateCFProperty" / M(Xor2) / S(144) / L(31)
+    "\xf9\xff\xe2\xd5\xd7\xd9\xc3\xc4\xc2\xc9\xf5\xde\xc4\xc2\xc9\xf3\xc2\xd5\xd1\xc4\xd5\xf3\xf6\xe0\xc2\xdf\xc0\xd5\xc2\xc4\xc9\xb0",
+    // "strncmp" / M(Xor4) / S(225) / L(7)
+    "\x63\x64\x62\x7e\x73\x7d\x60\x10\x9d\x9a\x9c\x49\x0a\x1f\x91\xd8",
+    // "CFDateFormatterCreateDateFromString" / M(Xor1) / S(127) / L(35)
+    "\x3c\x39\x3b\x1e\x0b\x1a\x39\x10\x0d\x12\x1e\x0b\x0b\x1a\x0d\x3c\x0d\x1a\x1e\x0b\x1a\x3b\x1e\x0b\x1a\x39\x0d\x10\x12\x2c\x0b\x0d\x16\x11\x18\x7f",
+    // "SKReceiptRefreshRequest" / M(Xor1) / S(8) / L(23)
+    "\x5b\x43\x5a\x6d\x6b\x6d\x61\x78\x7c\x5a\x6d\x6e\x7a\x6d\x7b\x60\x5a\x6d\x79\x7d\x6d\x7b\x7c\x08\x30\x3d\xc6\xf8\xaf\x44\x28\xb3",
+    // "CFDataCreateMutable" / M(Rot) / S(33) / L(19)
+    "\x64\x67\x65\x82\x95\x82\x64\x93\x86\x82\x95\x86\x6e\x96\x95\x82\x83\x8d\x86\x21",
+    // "X509_STORE_new" / M(Xor2) / S(72) / L(14)
+    "\x00\x6d\x68\x61\x07\x0b\x0c\x17\x0a\x1d\x07\x36\x3d\x2f\x58\xa3",
+    // "" / M(None) / S(0) / L(0)
+    "\xd9\xa7\xfc\xa5\x9c\xc9\x9e\x4f\x23\x94\xc5\xfc\xff\xcc\x6c\xbc\xe9\x83\xa8\x14\xc3\x7a\x9c\x83\xb6\xfc\xa7\x96\x9a\xd6\x8d\x93",
+    // "Contents/_MASReceipt" / M(Xor2) / S(135) / L(20)
+    "\xd1\xfd\xfc\xe6\xf7\xfc\xe6\xe1\xbd\xcd\xdf\xd3\xc1\xc0\xf7\xf1\xf7\xfb\xe2\xe6\x92",
+    // "" / M(None) / S(0) / L(0)
+    "\x31\xdf\x7d\xfe\x29\xff\x1b\x25\x86\x72\xb0\x11\xd7\x09\x61\x36\x93\xdc\xc5\x53\x6c\xbe\x51\xa9\x54\xc9\x51\x3a\xa6\x7c\x47\x67",
+    // "init" / M(Rot) / S(48) / L(4)
+    "\x99\x9e\x99\xa4\x30\x58\x0c\xb8\x4c\xa0\x0e\x67\x41\x93\x42\x79",
+    // "%02x" / M(Rot) / S(180) / L(4)
+    "\xd9\xe4\xe6\x2c\xb4\xbb\xb4\x0f\x85\xe2\x2a\xed\x89\xbe\x32\x5e",
+    // "CFDataGetLength" / M(Xor3) / S(199) / L(15)
+    "\x94\x91\x93\xb6\xa3\xb6\x90\xb2\xa3\x9b\xb2\xb9\xb0\xa3\xbf\xd7",
+    // "d2i_X509_bio" / M(Rot) / S(62) / L(12)
+    "\xa2\x70\xa7\x9d\x96\x73\x6e\x77\x9d\xa0\xa7\xad\x3e\x69\x7a\x73",
+    // "CFBundleUnloadExecutable" / M(Xor2) / S(177) / L(24)
+    "\xd3\xd6\xd2\xe5\xfe\xf4\xfc\xf5\xc5\xfe\xfc\xff\xf1\xf4\xd5\xe8\xf5\xf3\xe5\xe4\xf1\xf2\xfc\xf5\x90\xb2\xb8\xb7\x9e\x26\x89\x4b\xe9",
+    // "%02X:" / M(Xor2) / S(200) / L(5)
+    "\xfd\xe8\xea\x80\xe2\xd8\x98\x4c\xb2\x34\xf1\xb8\xa1\x10\x7f\xa7",
+    // "CFStringCompare" / M(Xor3) / S(185) / L(15)
+    "\x8a\x8f\x9a\xbd\xbb\xa0\xa7\xae\x8a\xa6\xa4\xb9\xa8\xbb\xac\xc9",
+    // "longjmp" / M(Rot) / S(165) / L(7)
+    "\x11\x14\x13\x0c\x0f\x12\x15\xa5\x78\x10\x7a\xc4\x52\xf7\x0d\x88",
+    // "CFReadStreamRead" / M(Xor3) / S(86) / L(16)
+    "\x24\x21\x35\x02\x06\x03\x34\x13\x15\x02\x06\x0a\x35\x02\x06\x03\x67",
+    // "" / M(None) / S(0) / L(0)
+    "\xc1\xf4\xb4\xb3\x33\xee\x7e\x5d\x41\xaa\x7b\xe4\x5d\x78\xa4\x98\xd3\xc6\x3e\xd3\xa4\xbe\xe9\x36\xc3\xc1\x17\x81\xc3\x05\x1b\x61",
+    // "kCFTypeDictionaryKeyCallBacks" / M(Xor3) / S(228) / L(29)
+    "\x61\x49\x4c\x5e\x73\x7a\x6f\x4e\x63\x69\x7e\x63\x65\x64\x6b\x78\x73\x41\x6f\x73\x49\x6b\x66\x66\x48\x6b\x69\x61\x79\x0a\x88\x2e\xd5\xc6\xa9\xd9\x99\xd4",
+    // "" / M(None) / S(0) / L(0)
+    "\xa2\xa1\xc3\x63\x94\xab\xe8\xce\xd2\x80\x76\xa8\x5b\xa5\x1f\x13\x97\x1e\xeb\xfd\x81\xcb\x8c\x0e\xcc\x5d\xbc\x59\x22\x51\x06\xde",
+    // "PKCS7_get0_signers" / M(Xor1) / S(207) / L(18)
+    "\x9f\x84\x8c\x9c\xf8\x90\xa8\xaa\xbb\xff\x90\xbc\xa6\xa8\xa1\xaa\xbd\xbc\xcf",
+    // "SecKeychainSearchCreateFromAttributes" / M(Rot) / S(92) / L(37)
+    "\xaf\xc1\xbf\xa7\xc1\xd5\xbf\xc4\xbd\xc5\xca\xaf\xc1\xbd\xce\xbf\xc4\x9f\xce\xc1\xbd\xd0\xc1\xa2\xce\xcb\xc9\x9d\xd0\xd0\xce\xc5\xbe\xd1\xd0\xc1\xcf\x5c",
+    // "" / M(None) / S(0) / L(0)
+    "\x75\xe1\x2e\xda\x44\xe6\x46\x32\x85\xc8\xf5\x9f\x29\xda\x92\x09\xbf\x7a\x99\x97\x49\x2b\x36\xaf\xc6\x7b\x8d\x26\x28\xaf\x04\x64",
+    // "BIO_free" / M(Rot) / S(21) / L(8)
+    "\x57\x5e\x64\x74\x7b\x87\x7a\x7a\x15\xcb\x27\x22\x98\xf2\x64\x89",
+    // "CC_SHA1_Init" / M(Xor4) / S(178) / L(12)
+    "\x63\x63\x7f\x73\x68\x61\x11\x7f\x69\x4e\x49\x54\x20\x3c\xfa\x8b",
+    // "CFBundleGetMainBundle" / M(Rot) / S(172) / L(21)
+    "\xef\xf2\xee\x21\x1a\x10\x18\x11\xf3\x11\x20\xf9\x0d\x15\x1a\xee\x21\x1a\x10\x18\x11\xac",
+    // "CFBundleCopyBundleURL" / M(Xor3) / S(237) / L(21)
+    "\x40\x45\x41\x76\x6d\x67\x6f\x66\x40\x6c\x73\x7a\x41\x76\x6d\x67\x6f\x66\x56\x51\x4f\x03",
+    // "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" / M(Rot) / S(92) / L(32)
+    "\xd5\xd5\xd5\xd5\x83\x89\x83\xa9\xa9\x83\x89\x83\xc0\xc0\x83\xb0\x83\xa4\xa4\x83\x96\x83\xc9\xc9\x83\x96\x83\xcf\xcf\x83\xb6\x83\x5c",
+    // "CFEqual" / M(Xor1) / S(108) / L(7)
+    "\x2f\x2a\x29\x1d\x19\x0d\x00\x6c\xf5\xdd\xb7\x39\x33\xad\xdd\x57",
+    // "" / M(None) / S(0) / L(0)
+    "\x51\x10\xbf\xc6\xdc\x30\xd7\xa5\xbe\x27\x3b\x92\x24\x11\xfb\x61\xaa\x00\x26\x09\xd5\x1c\x3f\x43\x73\x56\x43\x0d\x24\xb9\x14\x20",
+    // "CFDictionarySetValue" / M(Xor2) / S(212) / L(20)
+    "\x82\x87\x85\xa8\xa2\xb5\xa8\xae\xaf\xa0\xb3\xb8\x92\xa4\xb5\x97\xa0\xad\xb4\xa4\xc1",
+    // "CFURLCreateFromFileSystemRepresentation" / M(Xor1) / S(69) / L(39)
+    "\x06\x03\x10\x17\x09\x06\x37\x20\x24\x31\x20\x03\x37\x2a\x28\x03\x2c\x29\x20\x16\x3c\x36\x31\x20\x28\x17\x20\x35\x37\x20\x36\x20\x2b\x31\x24\x31\x2c\x2a\x2b\x45\xc5\xf6\xcb\x1a\xbe\x00\xd1\x89",
+    // "SHA1" / M(Rot) / S(101) / L(4)
+    "\xb8\xad\xa6\x96\x65\xe5\xaf\xed\xde\x4f\x8d\x23\xb3\x6e\x8d\x4e",
+    // "sha1" / M(Xor2) / S(222) / L(4)
+    "\xbd\xa6\xaf\xff\xce\xbd\xc0\x0b\x2e\xd1\x10\x2d\xd8\x10\x23\x57",
+    // "CFDateFormatterSetFormat" / M(Xor4) / S(251) / L(24)
+    "\x18\x1d\x1f\x3a\x2f\x3e\x1d\x34\x29\x36\x3a\x2f\x2f\x3e\x29\x08\x3e\x2f\x1d\x34\x29\x36\x3a\x2f\x5b\x73\xe7\x0c\x02\x18\xfe\xbc\xe9",
+    // "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" / M(Rot) / S(209) / L(66)
+    "\x00\x24\x4a\x44\x45\x36\x3e\x00\x1d\x3a\x33\x43\x32\x43\x4a\x00\x17\x43\x32\x3e\x36\x48\x40\x43\x3c\x44\x00\x14\x40\x43\x36\x17\x40\x46\x3f\x35\x32\x45\x3a\x40\x3f\xff\x37\x43\x32\x3e\x36\x48\x40\x43\x3c\x00\x14\x40\x43\x36\x17\x40\x46\x3f\x35\x32\x45\x3a\x40\x3f\xd1",
+    // "" / M(None) / S(0) / L(0)
+    "\x7c\xb8\x64\xfb\x88\x30\x92\x53\x55\x00\xa7\x0b\xcb\xfa\x7e\x58\x39\x10\xf0\x7d\x07\xe5\xa3\x66\x57\x0d\xcd\x31\xf3\x36\x84\xf5",
+    // "kSecReturnRef" / M(Xor2) / S(144) / L(13)
+    "\xeb\xd3\xe5\xe3\xd2\xe5\xf4\xf5\xf2\xee\xd2\xe5\xe6\x80\x01\x66",
+    // "CFDataAppendBytes" / M(Xor1) / S(146) / L(17)
+    "\xd1\xd4\xd6\xf3\xe6\xf3\xd3\xe2\xe2\xf7\xfc\xf6\xd0\xeb\xe6\xf7\xe1\x92",
+    // "%02X" / M(Xor4) / S(10) / L(4)
+    "\x85\x90\x92\xf8\xa0\xc8\xae\x85\xa9\x50\xdf\x72\xb9\x70\x27\x33",
+    // "IOBSDNameMatching" / M(Xor1) / S(182) / L(17)
+    "\xff\xf9\xf4\xe5\xf2\xf8\xd7\xdb\xd3\xfb\xd7\xc2\xd5\xde\xdf\xd8\xd1\xb6",
+    // "kCFTypeArrayCallBacks" / M(Xor4) / S(93) / L(21)
+    "\x95\xbd\xb8\xaa\x87\x8e\x9b\xbf\x8c\x8c\x9f\x87\xbd\x9f\x92\x92\xbc\x9f\x9d\x95\x8d\xfe",
+    // "CFBundleGetIdentifier" / M(Xor1) / S(18) / L(21)
+    "\x51\x54\x50\x67\x7c\x76\x7e\x77\x55\x77\x66\x5b\x76\x77\x7c\x66\x7b\x74\x7b\x77\x60\x12",
+    // "Contents" / M(Rot) / S(147) / L(8)
+    "\xd6\x02\x01\x07\xf8\x01\x07\x06\x93\x4f\x66\xb4\xb8\xca\x75\xfe",
+    // "/usr/lib/libobjc.dylib" / M(Xor1) / S(127) / L(22)
+    "\x50\x0a\x0c\x0d\x50\x13\x16\x1d\x50\x13\x16\x1d\x10\x1d\x15\x1c\x51\x1b\x06\x13\x16\x1d\x7f",
+    // "" / M(None) / S(0) / L(0)
+    "\x82\xc6\x4e\x65\x4a\x94\x60\x96\x80\x8f\x2e\x16\x05\x74\x11\x66\xb6\xcd\xe5\xdb\x75\x51\xb3\x1e\x3c\x0e\x77\xd7\x51\xf1\x35\x6e",
+    // "BIO_new" / M(Rot) / S(17) / L(7)
+    "\x53\x5a\x60\x70\x7f\x76\x88\x11\x85\xf2\x0f\x84\x19\x3c\xa4\x48",
+    // "CFURLCreateWithFileSystemPathRelativeToBase" / M(Xor2) / S(212) / L(43)
+    "\xa3\xa6\xb5\xb2\xac\xa3\x92\x85\x81\x94\x85\xb7\x89\x94\x88\xa6\x89\x8c\x85\xb3\x99\x93\x94\x85\x8d\xb0\x81\x94\x88\xb2\x85\x8c\x81\x94\x89\x96\x85\xb4\x8f\xa2\x81\x93\x85\xe0\x07\x63\x51\xd4\x4d\xdb\xb9\xf2",
+    // "" / M(None) / S(0) / L(0)
+    "\x98\x0e\xb3\x2c\xf6\xcb\x27\x22\x98\xf2\x64\x89\xbd\x64\x7e\x0d\x42\x0e\x86\xb7\x3b\xbc\xe4\x06\x88\x1e\x54\x1c\x29\xfd\xd8\x66",
+    // "kCFBundleIdentifierKey" / M(Xor3) / S(202) / L(22)
+    "\x8a\xa2\xa7\xa3\x94\x8f\x85\x8d\x84\xa8\x85\x84\x8f\x95\x88\x87\x88\x84\x93\xaa\x84\x98\xe1",
+    // "61:1e:5b:66:2c:59:3a:08:ff:58:d1:4a:e2:24:52:d1:98:df:6c:60" / M(Xor1) / S(36) / L(59)
+    "\x12\x15\x1e\x15\x41\x1e\x11\x46\x1e\x12\x12\x1e\x16\x47\x1e\x11\x1d\x1e\x17\x45\x1e\x14\x1c\x1e\x42\x42\x1e\x11\x1c\x1e\x40\x15\x1e\x10\x45\x1e\x41\x16\x1e\x16\x10\x1e\x11\x16\x1e\x40\x15\x1e\x1d\x1c\x1e\x40\x42\x1e\x12\x47\x1e\x12\x14\x24\x5d\x46\x47\x8d\x1e\xca\x15\x9f",
+    // "CFAbsoluteTimeGetCurrent" / M(Xor1) / S(223) / L(24)
+    "\x9c\x99\x9e\xbd\xac\xb0\xb3\xaa\xab\xba\x8b\xb6\xb2\xba\x98\xba\xab\x9c\xaa\xad\xad\xba\xb1\xab\xdf\xec\x2a\x04\xf3\x5d\xd8\x01\x4c",
+    // "611e5b662c593a08ff58d14ae22452d198df6c60" / M(Rot) / S(8) / L(40)
+    "\x3e\x39\x39\x6d\x3d\x6a\x3e\x3e\x3a\x6b\x3d\x41\x3b\x69\x38\x40\x6e\x6e\x3d\x40\x6c\x39\x3c\x69\x6d\x3a\x3a\x3c\x3d\x3a\x6c\x39\x41\x40\x6c\x6e\x3e\x6b\x3e\x38\x08\x73\x61\x28\x18\xb3\xb3\x05\x3e",
+    // "CFDateFormatterSetFormat" / M(Xor3) / S(103) / L(24)
+    "\xcb\xce\xcc\xe9\xfc\xed\xce\xe7\xfa\xe5\xe9\xfc\xfc\xed\xfa\xdb\xed\xfc\xce\xe7\xfa\xe5\xe9\xfc\x88\xab\xfe\x29\xac\xec\x1c\xfe\x45",
+    // "" / M(None) / S(0) / L(0)
+    "\x90\x89\xfa\xb6\x47\x36\x3a\x61\x34\xbc\x8b\x7d\x63\x80\x7a\xc6\x05\xed\x01\x94\x37\x45\x71\xde\x0b\x40\xd9\xdc\x8f\xcc\x49\xfc",
+    // "CFArrayCreateMutable" / M(Xor4) / S(20) / L(20)
+    "\xe7\xe2\xe5\xd6\xd6\xc5\xdd\xe7\xd6\xc1\xc5\xd0\xc1\xe9\xd1\xd0\xc5\xc6\xc8\xc1\xa4",
+    // "BIO_new" / M(Xor4) / S(195) / L(7)
+    "\x72\x79\x7f\x6f\x5e\x55\x47\x30\x05\x39\x70\x9d\x4e\x82\xd4\x95",
+    // "CFBundleShortVersionString" / M(Xor4) / S(217) / L(26)
+    "\xe8\xed\xe9\xde\xc5\xcf\xc7\xce\xf8\xc3\xc4\xd9\xdf\xfd\xce\xd9\xd8\xc2\xc4\xc5\xf8\xdf\xd9\xc2\xc5\xcc\xab\x9c\x5f\xf8\xf0\xa2\x71\xa3\xd1",
+    // "CC_SHA1_Final" / M(Xor4) / S(76) / L(13)
+    "\x83\x83\x9f\x93\x88\x81\xf1\x9f\x86\xa9\xae\xa1\xac\xc0\x55\x9f",
+    // "2.0" / M(Xor1) / S(136) / L(3)
+    "\xba\xa6\xb8\x88\xad\x15\x60\xa5\x7a\xfb\xe2\xa7\x47\x0c\xd1\xa8",
+    // "611E5B662C593A08FF58D14AE22452D198DF6C60" / M(Xor1) / S(15) / L(40)
+    "\x39\x3e\x3e\x4a\x3a\x4d\x39\x39\x3d\x4c\x3a\x36\x3c\x4e\x3f\x37\x49\x49\x3a\x37\x4b\x3e\x3b\x4e\x4a\x3d\x3d\x3b\x3a\x3d\x4b\x3e\x36\x37\x4b\x49\x39\x4c\x39\x3f\x0f\xdf\x18\xf8\x8b\xd8\xf8\xf3\x59",
+    // "%02X" / M(Rot) / S(98) / L(4)
+    "\x87\x92\x94\xba\x62\x72\x17\xe4\xa1\xed\x34\x58\x7d\xf5\xc7\xec",
+    // "CFReadStreamOpen" / M(Xor3) / S(113) / L(16)
+    "\xc1\xc4\xd0\xe7\xe3\xe6\xd1\xf6\xf0\xe7\xe3\xef\xcd\xf2\xe7\xec\x82",
+    // "/System/Library/Frameworks/AppKit.framework/AppKit" / M(Xor2) / S(139) / L(50)
+    "\x97\xeb\xc1\xcb\xcc\xdd\xd5\x97\xf4\xd1\xda\xca\xd9\xca\xc1\x97\xfe\xca\xd9\xd5\xdd\xcf\xd7\xca\xd3\xcb\x97\xf9\xc8\xc8\xf3\xd1\xcc\x96\xde\xca\xd9\xd5\xdd\xcf\xd7\xca\xd3\x97\xf9\xc8\xc8\xf3\xd1\xcc\xb8",
+    // "CFDateCompare" / M(Xor1) / S(238) / L(13)
+    "\xad\xa8\xaa\x8f\x9a\x8b\xad\x81\x83\x9e\x8f\x9c\x8b\xee\xfb\x8c",
+    // "sk_free" / M(Xor3) / S(60) / L(7)
+    "\x3f\x27\x13\x2a\x3e\x29\x29\x4c\xea\x87\x10\xea\xcd\xa3\x4a\x55",
+    // "CC_SHA1_Final" / M(Xor4) / S(241) / L(13)
+    "\x53\x53\x4f\x43\x58\x51\x21\x4f\x56\x79\x7e\x71\x7c\x10\x36\x96",
+    // "kSecMatchSubjectContains" / M(Xor2) / S(231) / L(24)
+    "\xad\x95\xa3\xa5\x8b\xa7\xb2\xa5\xae\x95\xb3\xa4\xac\xa3\xa5\xb2\x85\xa9\xa8\xb2\xa7\xaf\xa8\xb5\xc6\x5d\x5c\xd9\x3a\x92\x6b\xff\xad",
+    // "IOMACAddress" / M(Xor2) / S(187) / L(12)
+    "\xe2\xe4\xe6\xea\xe8\xea\xcf\xcf\xd9\xce\xd8\xd8\xab\x06\xdc\x1f",
+    // "" / M(None) / S(0) / L(0)
+    "\xdb\xcb\x3c\x65\x4a\x2f\xfe\x39\x0a\xd9\xee\xea\xfe\xa1\x75\x03\x5e\xb0\x56\x15\xdb\xec\x20\x01\x2e\xb6\x0a\xd8\xd1\x37\xa4\xdd",
+    // "ASN1_get_object" / M(Xor3) / S(152) / L(15)
+    "\xe9\xfb\xe6\x99\xf7\xcf\xcd\xdc\xf7\xc7\xca\xc2\xcd\xcb\xdc\xa8",
+    // "SecKeychainSearchCreateFromAttributes" / M(Rot) / S(223) / L(37)
+    "\x32\x44\x42\x2a\x44\x58\x42\x47\x40\x48\x4d\x32\x44\x40\x51\x42\x47\x22\x51\x44\x40\x53\x44\x25\x51\x4e\x4c\x20\x53\x53\x51\x48\x41\x54\x53\x44\x52\xdf",
+    // "CFTimeZoneCreateWithTimeIntervalFromGMT" / M(Xor3) / S(13) / L(39)
+    "\x7e\x7b\x69\x54\x50\x58\x67\x52\x53\x58\x7e\x4f\x58\x5c\x49\x58\x6a\x54\x49\x55\x69\x54\x50\x58\x74\x53\x49\x58\x4f\x4b\x5c\x51\x7b\x4f\x52\x50\x7a\x70\x69\x3d\x67\xef\xfb\x07\x18\x1b\x6e\xe0",
+    // "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" / M(Xor4) / S(33) / L(32)
+    "\x38\x38\x38\x38\x66\x6c\x66\x0c\x0c\x66\x6c\x66\x25\x25\x66\x15\x66\x09\x09\x66\x7b\x66\x2c\x2c\x66\x7b\x66\x32\x32\x66\x1b\x66\x41",
+    // "dlopen" / M(Xor1) / S(247) / L(6)
+    "\x93\x9b\x98\x87\x92\x99\xf7\xbf\xb4\x9c\x89\x2b\xe9\x8b\x73\xbf",
+    // "CFDictionarySetValue" / M(Xor3) / S(35) / L(20)
+    "\x7b\x7e\x7c\x51\x5b\x4c\x51\x57\x56\x59\x4a\x41\x6b\x5d\x4c\x6e\x59\x54\x4d\x5d\x38",
+    // "" / M(None) / S(0) / L(0)
+    "\x4a\x1c\x14\xcd\xb3\x7c\xe7\xfc\x8d\x38\x4b\x4e\x70\x33\x36\x96\xad\x4c\x83\xc3\xdb\x97\xad\xba\x68\xf7\x8f\x3c\xf8\x3c\xfa\x8b",
+    // "CFDictionaryCreateMutable" / M(Xor3) / S(254) / L(25)
+    "\x63\x66\x64\x49\x43\x54\x49\x4f\x4e\x41\x52\x59\x63\x52\x45\x41\x54\x45\x6d\x55\x54\x41\x42\x4c\x45\x20\x7b\xa7\x58\x5d\x60\x83\x6d\xcc",
+    // "X509_get_ext_by_OBJ" / M(Xor3) / S(86) / L(19)
+    "\x32\x5f\x5a\x53\x35\x0d\x0f\x1e\x35\x0f\x12\x1e\x35\x08\x13\x35\x25\x28\x20\x6a",
+    // "sel_registerName" / M(Xor1) / S(110) / L(16)
+    "\x1d\x0b\x02\x31\x1c\x0b\x09\x07\x1d\x1a\x0b\x1c\x20\x0f\x03\x0b\x6e",
+    // "" / M(None) / S(0) / L(0)
+    "\xed\x0e\x52\x7f\x66\x19\x5c\x4a\x72\x6b\x5f\x7b\x09\x75\x1e\xea\x11\x00\x2f\x22\x8d\x02\x8e\x9e\x53\xf7\xf3\xc6\x35\x05\x3e\xd1",
+    // "NSApplicationMain" / M(Xor3) / S(111) / L(17)
+    "\xcf\xd2\xc0\xf1\xf1\xed\xe8\xe2\xe0\xf5\xe8\xee\xef\xcc\xe0\xe8\xef\x81",
+    // "CC_SHA1_Init" / M(Rot) / S(13) / L(12)
+    "\x50\x50\x6c\x60\x55\x4e\x3e\x6c\x56\x7b\x76\x81\x0d\x27\x64\xac",
+    // "CFURLCreateFromFileSystemRepresentation" / M(Xor4) / S(60) / L(39)
+    "\x03\x06\x15\x12\x0c\x03\x32\x25\x21\x34\x25\x06\x32\x2f\x2d\x06\x29\x2c\x25\x13\x39\x33\x34\x25\x2d\x12\x25\x30\x32\x25\x33\x25\x2e\x34\x21\x34\x29\x2f\x2e\x40\xc2\x8a\x18\x7e\x3a\x66\xae\xf6",
+    // "" / M(None) / S(0) / L(0)
+    "\xa5\x9e\x24\x3c\x08\x3f\x35\x0f\x16\x39\x81\xc7\xae\x49\x56\xce\xc0\x23\x3b\xf3\x06\x78\x26\xc7\xea\x5f\x5f\x3b\x04\xa5\xb8\x02",
+    // "CFDictionaryAddValue" / M(Rot) / S(154) / L(20)
+    "\xdd\xe0\xde\x03\xfd\x0e\x03\x09\x08\xfb\x0c\x13\xdb\xfe\xfe\xf0\xfb\x06\x0f\xff\x9a",
+    // "_MASReceipt" / M(Xor4) / S(114) / L(11)
+    "\x7f\x6d\x61\x73\x72\x45\x43\x45\x49\x50\x54\x20\xc8\xc2\x43\x9c",
+    // "CFRelease" / M(Xor3) / S(82) / L(9)
+    "\x21\x24\x30\x07\x0e\x07\x03\x11\x07\x62\x8a\xf4\x86\xbb\x15\x97",
+    // "kSecMatchSearchList" / M(Rot) / S(126) / L(19)
+    "\xe9\xd1\xe3\xe1\xcb\xdf\xf2\xe1\xe6\xd1\xe3\xdf\xf0\xe1\xe6\xca\xe7\xf1\xf2\x7e",
+    // "" / M(None) / S(0) / L(0)
+    "\x0c\xf9\xc4\xfc\x55\xde\x55\x52\x9e\x27\xed\x33\x90\xc8\x6f\xed\xe2\x5a\x9e\x68\x57\x29\xa2\xc2\x9c\x01\x7c\xff\x9c\xe2\x5f\xb3",
+    // "SKReceiptRefreshRequest" / M(Xor2) / S(122) / L(23)
+    "\x09\x11\x08\x3f\x39\x3f\x33\x2a\x2e\x08\x3f\x3c\x28\x3f\x29\x32\x08\x3f\x2b\x2f\x3f\x29\x2e\x5a\xee\xb1\xd6\xab\x75\x89\x4a\xaa",
+    // "/System/Library/Frameworks/Security.framework/Security" / M(Xor3) / S(238) / L(54)
+    "\x0a\x76\x5c\x56\x51\x40\x48\x0a\x69\x4c\x47\x57\x44\x57\x5c\x0a\x63\x57\x44\x48\x40\x52\x4a\x57\x4e\x56\x0a\x76\x40\x46\x50\x57\x4c\x51\x5c\x0b\x43\x57\x44\x48\x40\x52\x4a\x57\x4e\x0a\x76\x40\x46\x50\x57\x4c\x51\x5c\x25",
+    // "kSecClassCertificate" / M(Xor3) / S(150) / L(20)
+    "\xc0\xf8\xce\xc8\xe8\xc7\xca\xd8\xd8\xe8\xce\xd9\xdf\xc2\xcd\xc2\xc8\xca\xdf\xce\xab",
+    // "X509_get_ext_by_OBJ" / M(Xor3) / S(116) / L(19)
+    "\xd0\xbd\xb8\xb1\xd7\xef\xed\xfc\xd7\xed\xf0\xfc\xd7\xea\xf1\xd7\xc7\xca\xc2\x88",
+    // "CFReadStreamRead" / M(Xor4) / S(141) / L(16)
+    "\x1e\x1b\x0f\x38\x3c\x39\x0e\x29\x2f\x38\x3c\x30\x0f\x38\x3c\x39\x5d",
+    // "d2i_PKCS7_bio" / M(Xor4) / S(249) / L(13)
+    "\xf4\xa2\xf9\xcf\xc0\xdb\xd3\xc3\xa7\xcf\xf2\xf9\xff\x90\xfe\x76",
+    // "611e5b662c593a08ff58d14ae22452d198df6c60" / M(Xor2) / S(151) / L(40)
+    "\x90\x97\x97\xc3\x93\xc4\x90\x90\x94\xc5\x93\x9f\x95\xc7\x96\x9e\xc0\xc0\x93\x9e\xc2\x97\x92\xc7\xc3\x94\x94\x92\x93\x94\xc2\x97\x9f\x9e\xc2\xc0\x90\xc5\x90\x96\xa6\xf0\xca\x01\x45\xea\x05\x56\x30",
+    // "X509_get_ext_by_OBJ" / M(Xor1) / S(82) / L(19)
+    "\x0a\x67\x62\x6b\x0d\x35\x37\x26\x0d\x37\x2a\x26\x0d\x30\x2b\x0d\x1d\x10\x18\x52",
+    // "CFBundleVersion" / M(Xor2) / S(253) / L(15)
+    "\xae\xab\xaf\x98\x83\x89\x81\x88\xbb\x88\x9f\x9e\x84\x82\x83\xed",
+    // "SecKeychainSearchCreateFromAttributes" / M(Xor3) / S(222) / L(37)
+    "\x57\x61\x67\x4f\x61\x7d\x67\x6c\x65\x6d\x6a\x57\x61\x65\x76\x67\x6c\x47\x76\x61\x65\x70\x61\x42\x76\x6b\x69\x45\x70\x70\x76\x6d\x66\x71\x70\x61\x77\x04",
+    // "CFBundleIdentifier" / M(Xor4) / S(43) / L(18)
+    "\x72\x77\x73\x44\x5f\x55\x5d\x54\x78\x55\x54\x5f\x45\x58\x57\x58\x54\x43\x31",
+    // "/System/Library/Frameworks/Security.framework/Security" / M(Xor1) / S(68) / L(54)
+    "\x6b\x17\x3d\x37\x30\x21\x29\x6b\x08\x2d\x26\x36\x25\x36\x3d\x6b\x02\x36\x25\x29\x21\x33\x2b\x36\x2f\x37\x6b\x17\x21\x27\x31\x36\x2d\x30\x3d\x6a\x22\x36\x25\x29\x21\x33\x2b\x36\x2f\x6b\x17\x21\x27\x31\x36\x2d\x30\x3d\x44",
+    // "BIO_new" / M(Xor2) / S(242) / L(7)
+    "\xa0\xab\xad\xbd\x8c\x87\x95\xe2\x3b\xbc\xe4\x06\x88\x1e\x54\x1c",
+    // "CFDataCreate" / M(Rot) / S(103) / L(12)
+    "\xaa\xad\xab\xc8\xdb\xc8\xaa\xd9\xcc\xc8\xdb\xcc\x67\xf6\x32\xf7",
+    // "" / M(None) / S(0) / L(0)
+    "\xbb\xb0\x82\xa1\xae\x58\x95\x1e\xc6\xbf\x94\x01\x3e\x71\x1f\xe9\xe7\x78\xde\xbb\x49\xa3\x50\x7f\x4f\x06\x6b\x1c\xf8\xc1\x1b\xed",
+    // "CFStringCompare" / M(Xor2) / S(66) / L(15)
+    "\x11\x14\x01\x26\x20\x3b\x3c\x35\x11\x3d\x3f\x22\x33\x20\x37\x52",
+    // "objc_msgSend" / M(Xor1) / S(116) / L(12)
+    "\x1b\x16\x1e\x17\x2b\x19\x07\x13\x27\x11\x1a\x10\x74\x75\x41\xb3",
+    // "" / M(None) / S(0) / L(0)
+    "\xb5\x97\xec\x42\xda\x06\x9d\xfc\xe1\x88\x24\xf2\x59\xd1\x10\x84\x3c\xf2\x25\x07\xd3\xe8\xe5\x68\x83\x60\x2c\x9c\x60\xfc\x58\x2f",
+    // "d2i_PKCS7_bio" / M(Xor2) / S(115) / L(13)
+    "\x07\x51\x0a\x3c\x33\x28\x20\x30\x54\x3c\x01\x0a\x0c\x63\x2a\xdb",
+    // "" / M(None) / S(0) / L(0)
+    "\x74\xfe\x11\xae\x37\x47\xaa\x4d\x4f\x69\xd4\x44\x4c\x7e\xa5\x1c\x2f\xb1\x57\x91\xa6\x90\xce\x56\x61\x15\xd8\x90\x42\xbc\x98\x70",
+    // "CC_SHA1_Update" / M(Xor3) / S(234) / L(14)
+    "\xb9\xb9\xa5\xa9\xb2\xbb\xcb\xa5\xaf\x8a\x9e\x9b\x8e\x9f\xfa\xb3",
+    // "CFDictionaryCreateMutable" / M(Rot) / S(180) / L(25)
+    "\xf7\xfa\xf8\x1d\x17\x28\x1d\x23\x22\x15\x26\x2d\xf7\x26\x19\x15\x28\x19\x01\x29\x28\x15\x16\x20\x19\xb4\x7b\xca\xdd\xe3\x33\xad\xb9\x55",
+    // "61:1E:5B:66:2C:59:3A:08:FF:58:D1:4A:E2:24:52:D1:98:DF:6C:60" / M(Xor2) / S(142) / L(59)
+    "\xfc\xfb\xf0\xfb\x8f\xf0\xff\x88\xf0\xfc\xfc\xf0\xf8\x89\xf0\xff\xf3\xf0\xf9\x8b\xf0\xfa\xf2\xf0\x8c\x8c\xf0\xff\xf2\xf0\x8e\xfb\xf0\xfe\x8b\xf0\x8f\xf8\xf0\xf8\xfe\xf0\xff\xf8\xf0\x8e\xfb\xf0\xf3\xf2\xf0\x8e\x8c\xf0\xfc\x89\xf0\xfc\xfa\xca\x08\x63\x79\x76\x02\x51\x52\x25",
+    // "CFURLCreateWithFileSystemPathRelativeToBase" / M(Xor2) / S(133) / L(43)
+    "\xf2\xf7\xe4\xe3\xfd\xf2\xc3\xd4\xd0\xc5\xd4\xe6\xd8\xc5\xd9\xf7\xd8\xdd\xd4\xe2\xc8\xc2\xc5\xd4\xdc\xe1\xd0\xc5\xd9\xe3\xd4\xdd\xd0\xc5\xd8\xc7\xd4\xe5\xde\xf3\xd0\xc2\xd4\xb1\xe0\x4a\xd3\x86\x23\x2f\x5f\xc8",
+    // "" / M(None) / S(0) / L(0)
+    "\x69\xcb\xcc\x5b\xfa\x6b\x83\x97\x50\xed\x16\x63\x32\x83\x27\xb8\x6f\x8b\x38\x1d\x35\x82\x16\xfd\x6a\xe6\x53\x01\x3a\xb9\x9f\x1e",
+    // "" / M(None) / S(0) / L(0)
+    "\x22\x0b\x57\x06\xc2\xae\xb4\xfe\x01\x67\xd2\x5a\x17\x39\x1d\xaf\xc2\x80\xbc\x31\xac\x84\x51\xd7\x89\x62\x19\x58\xf6\x0f\x15\x92",
+    // "IORegistryEntryGetParentEntry" / M(Xor3) / S(86) / L(29)
+    "\x35\x33\x2e\x19\x1b\x15\x0f\x08\x0e\x05\x39\x12\x08\x0e\x05\x3b\x19\x08\x2c\x1d\x0e\x19\x12\x08\x39\x12\x08\x0e\x05\x7c\xad\x07\x11\x35\x7c\xd9\xee\xf3",
+    // "dlsym" / M(Xor3) / S(109) / L(5)
+    "\x19\x11\x0e\x04\x10\x7d\xa6\xe5\xe0\xc9\xdd\xe3\x28\x51\x8a\x12",
+    // "ASN1_INTEGER_free" / M(Rot) / S(171) / L(17)
+    "\xec\xfe\xf9\xdc\x0a\xf4\xf9\xff\xf0\xf2\xf0\xfd\x0a\x11\x1d\x10\x10\xab",
+    // "" / M(None) / S(0) / L(0)
+    "\xb3\xbc\x05\x66\xab\x55\x32\x14\x46\x74\x20\xf4\xb7\x57\x50\x64\x08\x1f\xdc\x27\xb3\x32\xa0\xae\x83\x9f\x18\x85\xf8\x69\x40\xa3",
+    // "CFBundleUnloadExecutable" / M(Xor1) / S(209) / L(24)
+    "\x92\x97\x93\xa4\xbf\xb5\xbd\xb4\x84\xbf\xbd\xbe\xb0\xb5\x94\xa9\xb4\xb2\xa4\xa5\xb0\xb3\xbd\xb4\xd1\x3e\x18\x58\x9a\x5c\x37\x15\xf6",
+    // "" / M(None) / S(0) / L(0)
+    "\x70\xef\x3e\xfa\xdc\x78\xcc\x3c\x76\x8d\xb4\xec\xe8\x08\x5c\x7d\x93\x7a\xe0\x4d\x5f\xcc\x47\x73\x17\xed\xad\xc4\x83\xf6\x32\xf7",
+    // "strncmp" / M(Xor4) / S(167) / L(7)
+    "\x03\x04\x02\x1e\x13\x1d\x00\x70\xbe\x1c\xb6\xa5\x16\xa3\x0c\x82",
+    // "" / M(None) / S(0) / L(0)
+    "\x93\xcc\x27\x01\x61\x1f\x6a\xf7\x81\x90\x83\x46\x64\xea\x39\x68\xf6\xeb\x44\x5d\x26\xfb\xde\x7e\x9b\xf5\x76\x6a\xd8\x94\xd2\xdf",
+    // "ASN1_OBJECT_free" / M(Xor3) / S(34) / L(16)
+    "\x72\x60\x7d\x02\x6c\x7c\x71\x79\x76\x70\x67\x6c\x55\x41\x56\x56\x33",
+    // "CFReadStreamOpen" / M(Xor2) / S(121) / L(16)
+    "\x2b\x2e\x3a\x0d\x09\x0c\x3b\x1c\x1a\x0d\x09\x05\x27\x18\x0d\x06\x68",
+    // "ASN1_OBJECT_free" / M(Xor1) / S(138) / L(16)
+    "\xcb\xd9\xc4\xbb\xd5\xc5\xc8\xc0\xcf\xc9\xde\xd5\xec\xf8\xef\xef\x8a",
+    // "kSecMatchSubjectContains" / M(Rot) / S(129) / L(24)
+    "\xec\xd4\xe6\xe4\xce\xe2\xf5\xe4\xe9\xd4\xf6\xe3\xeb\xe6\xe4\xf5\xc4\xf0\xef\xf5\xe2\xea\xef\xf4\x81\x26\x41\x0c\x2a\x4d\x9e\x04\xf7",
+    // "SecKeychainSearchCopyNext" / M(Xor2) / S(71) / L(25)
+    "\x36\x00\x06\x2e\x00\x1c\x06\x0d\x04\x0c\x0b\x36\x00\x04\x17\x06\x0d\x26\x0a\x15\x1c\x2b\x00\x1d\x11\x65\xf0\x10\x0d\xe8\xef\x2c\xa8\x98",
+    // "" / M(None) / S(0) / L(0)
+    "\xc3\xe9\x7a\x32\x0e\x62\x95\x7f\xca\x70\x89\x9b\x8b\x6c\x74\xc6\x15\x57\x22\x68\x4c\x38\xbb\x16\x6f\xae\xae\xf8\x25\x21\x65\x82",
+    // "SecItemCopyMatching" / M(Xor4) / S(43) / L(19)
+    "\x0f\x39\x3f\x15\x28\x39\x31\x1f\x33\x2c\x25\x11\x3d\x28\x3f\x34\x35\x32\x3b\x5c",
+    // "kSecMatchLimitAll" / M(Xor4) / S(218) / L(17)
+    "\x3f\x07\x31\x37\x19\x35\x20\x37\x3c\x18\x3d\x39\x3d\x20\x15\x38\x38\x54",
+    // "" / M(None) / S(0) / L(0)
+    "\xd4\x4a\xc5\x7f\xef\xc9\x54\xcd\xd6\xa2\x5b\x1a\x1b\x95\xdf\xbb\x1b\xa7\x53\x23\x51\xb3\x70\x4a\x0a\x91\x18\xb8\x6e\x64\x32\xc2",
+    // "CFBundleCopyBundleURL" / M(Xor2) / S(154) / L(21)
+    "\xcf\xca\xce\xf9\xe2\xe8\xe0\xe9\xcf\xe3\xfc\xf5\xce\xf9\xe2\xe8\xe0\xe9\xd9\xde\xc0\x8c",
+    // "CFArrayCreateMutable" / M(Xor3) / S(41) / L(20)
+    "\x7d\x78\x7f\x4c\x4c\x5f\x47\x7d\x4c\x5b\x5f\x4a\x5b\x73\x4b\x4a\x5f\x5c\x52\x5b\x3e",
+    // "" / M(None) / S(0) / L(0)
+    "\xec\xda\x90\x12\xb7\x65\xd0\x1a\xbf\x2b\xfe\xa6\xe0\x00\xf5\x5f\xaa\x24\xd8\xb3\xc9\xb6\xcd\x31\x22\x88\x04\x17\x3d\xd2\x10\x15",
+    // "CC_SHA1" / M(Xor4) / S(186) / L(7)
+    "\xe3\xe3\xff\xf3\xe8\xe1\x91\xa0\x7c\xf3\x76\x84\x56\x59\xa5\x7b",
+    // "" / M(None) / S(0) / L(0)
+    "\xe6\xd4\xd7\x09\xea\xf5\x23\xac\x7b\x25\xbb\x49\x1c\xa6\xab\x4c\x02\x48\x6c\x8c\x49\x59\x2b\x2a\xc6\xde\xbd\x73\x82\x8f\x85\xde",
+    // "." / M(Xor4) / S(21) / L(1)
+    "\x7e\x50\x82\x75\x50\xc6\x57\xc6\xe5\xd6\x0f\x7d\xd3\xb7\x3e\x56",
+    // "IORegistryEntryCreateCFProperty" / M(Xor3) / S(19) / L(31)
+    "\x7a\x7c\x61\x56\x54\x5a\x40\x47\x41\x4a\x76\x5d\x47\x41\x4a\x70\x41\x56\x52\x47\x56\x70\x75\x63\x41\x5c\x43\x56\x41\x47\x4a\x33",
+    // "ASN1_INTEGER_get" / M(Xor4) / S(157) / L(16)
+    "\x2c\x3e\x23\x5c\x32\x24\x23\x39\x28\x2a\x28\x3f\x32\x0a\x08\x19\x6d",
+    // "61:1e:5b:66:2c:59:3a:08:ff:58:d1:4a:e2:24:52:d1:98:df:6c:60" / M(Rot) / S(252) / L(59)
+    "\x32\x2d\x36\x2d\x61\x36\x31\x5e\x36\x32\x32\x36\x2e\x5f\x36\x31\x35\x36\x2f\x5d\x36\x2c\x34\x36\x62\x62\x36\x31\x34\x36\x60\x2d\x36\x30\x5d\x36\x61\x2e\x36\x2e\x30\x36\x31\x2e\x36\x60\x2d\x36\x35\x34\x36\x60\x62\x36\x32\x5f\x36\x32\x2c\xfc\x84\x97\x8e\xac\xcf\xc3\x2d\x1b",
+    // "" / M(None) / S(0) / L(0)
+    "\xec\xa1\x10\x8e\x87\x9f\xa6\x57\x37\x58\x05\x19\x89\x68\xd4\x19\xae\xe6\xed\xdc\x73\x8b\xd3\x35\x92\x51\xea\x97\x27\x15\xf0\x4c",
+    // "CFBundleCopyBundleURL" / M(Rot) / S(125) / L(21)
+    "\xc0\xc3\xbf\xf2\xeb\xe1\xe9\xe2\xc0\xec\xed\xf6\xbf\xf2\xeb\xe1\xe9\xe2\xd2\xcf\xc9\x7d",
+    // "" / M(None) / S(0) / L(0)
+    "\x11\xa7\xef\x87\x7a\x6d\xb5\xee\x7f\x2d\xac\x63\xe1\x8b\xbf\xf5\xa7\xa7\xe7\x10\xf7\x78\x8e\x60\x06\xa6\x06\x9f\xff\x2d\xb1\x40",
+    // "" / M(None) / S(0) / L(0)
+    "\xe3\x19\xa5\xce\x8f\x6c\xcd\x4d\x7e\x2e\xb0\x41\x9e\x45\xbf\xb9\xb9\xed\x78\x8b\xf5\x0a\xc7\x39\x8d\xaa\xac\xa9\x33\x2e\xc2\xda",
+    // "/System/Library/Frameworks/Security.framework/Security" / M(Xor4) / S(76) / L(54)
+    "\x7b\x07\x2d\x27\x20\x31\x39\x7b\x18\x3d\x36\x26\x35\x26\x2d\x7b\x12\x26\x35\x39\x31\x23\x3b\x26\x3f\x27\x7b\x07\x31\x37\x21\x26\x3d\x20\x2d\x7a\x32\x26\x35\x39\x31\x23\x3b\x26\x3f\x7b\x07\x31\x37\x21\x26\x3d\x20\x2d\x54",
+    // "" / M(None) / S(0) / L(0)
+    "\xcb\x8f\xa4\xa4\x69\x20\xae\x4d\xdc\xd2\xbf\x2e\xf4\x40\x32\x0d\x78\xbd\xa5\xb8\xb0\x7d\xc2\x63\x4e\x44\x8f\xd3\x82\x0a\x2c\xf7",
+    // "" / M(None) / S(0) / L(0)
+    "\x7f\x70\x76\x59\x56\x0a\x78\xdd\x86\x6c\x03\x19\xfd\xf8\x96\xe1\xee\xfd\x0e\x5a\x42\x4e\xc7\x21\x94\x45\x53\xbb\x3d\x3b\x39\x4f",
+    // "CFReadStreamClose" / M(Xor1) / S(57) / L(17)
+    "\x7a\x7f\x6b\x5c\x58\x5d\x6a\x4d\x4b\x5c\x58\x54\x7a\x55\x56\x4a\x5c\x39",
+    // "CFDateFormatterCreateDateFromString" / M(Xor3) / S(52) / L(35)
+    "\x1b\x1e\x1c\x39\x2c\x3d\x1e\x37\x2a\x35\x39\x2c\x2c\x3d\x2a\x1b\x2a\x3d\x39\x2c\x3d\x1c\x39\x2c\x3d\x1e\x2a\x37\x35\x0b\x2c\x2a\x31\x36\x3f\x58",
+    // "CFStringCreateWithBytes" / M(Rot) / S(249) / L(23)
+    "\x3c\x3f\x4c\x6d\x6b\x62\x67\x60\x3c\x6b\x5e\x5a\x6d\x5e\x50\x62\x6d\x61\x3b\x72\x6d\x5e\x6c\xf9\x7b\x17\xc8\xaf\x84\xd7\xb0\xb9",
+    // "CFArrayGetCount" / M(Xor3) / S(193) / L(15)
+    "\x92\x97\x90\xa3\xa3\xb0\xa8\x96\xb4\xa5\x92\xbe\xa4\xbf\xa5\xd1",
+    // "CFBundleUnloadExecutable" / M(Xor2) / S(164) / L(24)
+    "\xc6\xc3\xc7\xf0\xeb\xe1\xe9\xe0\xd0\xeb\xe9\xea\xe4\xe1\xc0\xfd\xe0\xe6\xf0\xf1\xe4\xe7\xe9\xe0\x85\x1f\xdc\x27\xb3\x32\xa0\xae\x85",
+    // "BIO_free" / M(Xor3) / S(216) / L(8)
+    "\xaa\xa1\xa7\xb7\x8e\x9a\x8d\x8d\xe8\xe5\xe2\xa8\xcb\xac\x4f\x7c",
+    // "%02x:" / M(Xor4) / S(18) / L(5)
+    "\x05\x10\x12\x58\x1a\x20\xd3\xde\xd8\x13\xee\xd4\x7f\xda\xad\x99",
+    // "setDelegate:" / M(Xor3) / S(155) / L(12)
+    "\xd8\xce\xdf\xef\xce\xc7\xce\xcc\xca\xdf\xce\x91\xab\x2c\xb6\xe6",
+    // "kCFDateFormatterTimeZone" / M(Xor4) / S(69) / L(24)
+    "\x8e\xa6\xa3\xa1\x84\x91\x80\xa3\x8a\x97\x88\x84\x91\x91\x80\x97\xb1\x8c\x88\x80\xbf\x8a\x8b\x80\xe5\x3d\xec\x6d\x4d\xa4\x87\xb3\x77",
+    // "CFReadStreamClose" / M(Rot) / S(173) / L(17)
+    "\xf0\xf3\xff\x12\x0e\x11\x00\x21\x1f\x12\x0e\x1a\xf0\x19\x1c\x20\x12\xad",
+    // "" / M(None) / S(0) / L(0)
+    "\xfe\x55\x5f\xbe\xec\x5a\xb2\xb5\x14\x93\xc2\x68\xf0\x8a\x91\x37\xb9\xb4\x86\xf0\x42\xb1\x99\x89\xba\x20\x8e\xc7\x09\x00\x0c\xf4",
+    // "CFURLCreateCopyAppendingPathComponent" / M(Xor1) / S(162) / L(37)
+    "\xe1\xe4\xf7\xf0\xee\xe1\xd0\xc7\xc3\xd6\xc7\xe1\xcd\xd2\xdb\xe3\xd2\xd2\xc7\xcc\xc6\xcb\xcc\xc5\xf2\xc3\xd6\xca\xe1\xcd\xcf\xd2\xcd\xcc\xc7\xcc\xd6\xa2",
+    // "OpenSSL_add_all_digests" / M(Xor4) / S(175) / L(23)
+    "\xaf\x90\x85\x8e\xb3\xb3\xac\xbf\x81\x84\x84\xbf\x81\x8c\x8c\xbf\x84\x89\x87\x85\x93\x94\x93\xe0\xe7\x8e\x61\xed\x88\x9f\x9a\x83",
+    // "" / M(None) / S(0) / L(0)
+    "\x31\x0a\x80\x0c\x90\xbd\xa5\x66\x6f\x7f\x85\xad\xb8\xfc\xbf\x8c\xd0\xe6\xd4\xc6\x92\x41\xcf\xeb\x9a\x89\x7d\x57\x74\x5c\xdb\xf2",
+    // "alloc" / M(Xor1) / S(246) / L(5)
+    "\x97\x9a\x9a\x99\x95\xf6\xc8\xa7\x72\xbd\x93\x64\xea\x56\xbf\x11",
+    // "sk_num" / M(Xor2) / S(56) / L(6)
+    "\x5b\x43\x77\x46\x5d\x45\x28\x41\xaa\x0f\x35\x2e\xa3\x3f\x4a\x33",
+    // "dlopen" / M(Xor4) / S(4) / L(6)
+    "\x24\x2c\x2f\x30\x25\x2e\x40\x7e\xa6\xa0\x0f\xc5\x3b\x19\x88\x07",
+    // "X509_digest" / M(Xor4) / S(17) / L(11)
+    "\x48\x25\x20\x29\x4f\x74\x79\x77\x75\x63\x64\x10\xb3\x93\x44\x96",
+    // "Contents/_MASReceipt/receipt" / M(Rot) / S(170) / L(28)
+    "\xed\x19\x18\x1e\x0f\x18\x1e\x1d\xd9\x09\xf7\xeb\xfd\xfc\x0f\x0d\x0f\x13\x1a\x1e\xd9\x1c\x0f\x0d\x0f\x13\x1a\x1e\xaa\x5e\x71\x48\xca\x12\x5d\x31\xb9",
+    // "setjmp" / M(Xor1) / S(154) / L(6)
+    "\xe9\xff\xee\xf0\xf7\xea\x9a\x74\xf3\xf9\xf8\x0c\x38\x50\xe8\x17",
+    // "Apple Root CA" / M(Xor1) / S(177) / L(13)
+    "\xf0\xc1\xc1\xdd\xd4\x91\xe3\xde\xde\xc5\x91\xf2\xf0\xb1\xed\x17",
+    // "/System/Library/Frameworks/IOKit.framework/IOKit" / M(Xor4) / S(185) / L(48)
+    "\x46\x3a\x10\x1a\x1d\x0c\x04\x46\x25\x00\x0b\x1b\x08\x1b\x10\x46\x2f\x1b\x08\x04\x0c\x1e\x06\x1b\x02\x1a\x46\x20\x26\x22\x00\x1d\x47\x0f\x1b\x08\x04\x0c\x1e\x06\x1b\x02\x46\x20\x26\x22\x00\x1d\x69",
+    // "Contents/_MASReceipt/receipt" / M(Xor3) / S(89) / L(28)
+    "\x3d\x11\x10\x0a\x1b\x10\x0a\x0d\x51\x21\x33\x3f\x2d\x2c\x1b\x1d\x1b\x17\x0e\x0a\x51\x0c\x1b\x1d\x1b\x17\x0e\x0a\x7e\x50\xfe\x82\x07\x7c\x2e\x17\xea",
+    // "" / M(None) / S(0) / L(0)
+    "\x6f\x90\xdb\xaa\x67\x3b\xbf\xab\xe6\x5c\xd7\x1f\xf9\x24\x19\x31\xb2\xff\x38\x67\x25\xb5\xb1\x5e\xce\x0d\x8d\xbb\x51\x4d\xe8\xf0",
+    // "" / M(None) / S(0) / L(0)
+    "\x80\x12\x5b\x41\xbd\xba\xf7\x87\xe4\x3c\xf0\xf1\x75\x0a\x03\x96\xca\x82\x8b\xab\x8e\x92\x25\x75\x24\x79\x09\x28\x9b\xdd\x81\x28",
+    // "/System/Library/Frameworks/IOKit.framework/IOKit" / M(Xor1) / S(36) / L(48)
+    "\x0b\x77\x5d\x57\x50\x41\x49\x0b\x68\x4d\x46\x56\x45\x56\x5d\x0b\x62\x56\x45\x49\x41\x53\x4b\x56\x4f\x57\x0b\x6d\x6b\x6f\x4d\x50\x0a\x42\x56\x45\x49\x41\x53\x4b\x56\x4f\x0b\x6d\x6b\x6f\x4d\x50\x24",
+    // "" / M(None) / S(0) / L(0)
+    "\xcd\x3f\x42\x01\x4c\xf0\x07\x69\x32\x72\x81\x71\x28\x9b\x71\x10\x5d\xba\x26\xf5\xcb\x56\x1c\x75\xb7\x55\xc7\x0a\x05\x5d\xe1\xae",
+    // "d2i_X509_bio" / M(Xor4) / S(54) / L(12)
+    "\x04\x52\x09\x3f\x38\x55\x50\x59\x3f\x02\x09\x0f\x60\xb3\x64\x0c",
+    // "glob" / M(Xor3) / S(5) / L(4)
+    "\x72\x79\x7a\x77\x15\xb5\x67\xd6\x73\x6a\x64\x64\xa1\xad\xcd\x00",
+    // "" / M(None) / S(0) / L(0)
+    "\xaa\x53\x0a\x6e\x0c\x0c\xe2\xa2\xa2\x52\x39\xf0\x00\x65\x2e\xc8\xc9\x4e\x52\xd8\x6c\x71\x69\x1d\x4b\x17\xb8\x29\xdb\x5b\xc8\xce",
+    // "RTLD_MAIN_ONLY" / M(Xor2) / S(142) / L(14)
+    "\xcc\xca\xd2\xda\xc1\xd3\xdf\xd7\xd0\xc1\xd1\xd0\xd2\xc7\x9e\x56",
+    // "" / M(None) / S(0) / L(0)
+    "\x7b\x17\xc8\xaf\x84\xd7\xb0\xb9\x76\x01\x3b\xd2\x78\x07\xcc\x03\x6b\x65\xd5\xda\x5f\x5b\x45\x93\xba\x7f\x5b\x79\x8f\x55\x57\x9d",
+    // "" / M(None) / S(0) / L(0)
+    "\x01\x4b\x13\xe3\x2c\x42\xe3\x54\x80\x30\x68\xa1\xc3\x5a\x6a\x93\x37\xb3\xe0\x1e\x27\x90\x61\x2f\x30\xbd\x50\x48\x78\xf2\x11\x03",
+    // "CC_SHA1" / M(Xor3) / S(84) / L(7)
+    "\x27\x27\x3b\x37\x2c\x25\x55\x64\x2e\xb6\x0a\xd8\xd1\x37\xa4\xdd",
+    // "CFURLCreateWithFileSystemPathRelativeToBase" / M(Xor3) / S(239) / L(43)
+    "\x60\x65\x76\x71\x6f\x60\x51\x46\x42\x57\x46\x74\x4a\x57\x4b\x65\x4a\x4f\x46\x70\x5a\x50\x57\x46\x4e\x73\x42\x57\x4b\x71\x46\x4f\x42\x57\x4a\x55\x46\x77\x4c\x61\x42\x50\x46\x23\x2c\x4d\x9c\x63\x0e\x76\x7c\x92",
+    // "CFDataCreate" / M(Rot) / S(60) / L(12)
+    "\x7f\x82\x80\x9d\xb0\x9d\x7f\xae\xa1\x9d\xb0\xa1\x3c\x4c\x01\x24",
+    // "IOIteratorNext" / M(Xor1) / S(51) / L(14)
+    "\x7a\x7c\x7a\x47\x56\x41\x52\x47\x5c\x41\x7d\x56\x4b\x47\x33\xbf",
+    // "2.0" / M(Xor3) / S(1) / L(3)
+    "\x23\x3f\x21\x11\x25\x87\x42\xa9\x74\x5b\x35\x93\x2a\x1f\x2b\x8d",
+    // "longjmp" / M(Xor3) / S(33) / L(7)
+    "\x5d\x5e\x5f\x56\x5b\x5c\x41\x31\x7e\x06\x5e\x2d\x80\xda\x2d\x18",
+    // "" / M(None) / S(0) / L(0)
+    "\x2f\x38\x5a\xc6\x7a\x9e\x2b\x78\x4b\x43\x26\x41\x30\xaf\x49\x6b\x19\x44\xe6\xb1\x6f\x4d\x26\x91\xb7\x8e\x68\xe0\xb9\x50\xea\x2c",
+    // "61:1E:5B:66:2C:59:3A:08:FF:58:D1:4A:E2:24:52:D1:98:DF:6C:60" / M(Xor1) / S(136) / L(59)
+    "\xbe\xb9\xb2\xb9\xcd\xb2\xbd\xca\xb2\xbe\xbe\xb2\xba\xcb\xb2\xbd\xb1\xb2\xbb\xc9\xb2\xb8\xb0\xb2\xce\xce\xb2\xbd\xb0\xb2\xcc\xb9\xb2\xbc\xc9\xb2\xcd\xba\xb2\xba\xbc\xb2\xbd\xba\xb2\xcc\xb9\xb2\xb1\xb0\xb2\xcc\xce\xb2\xbe\xcb\xb2\xbe\xb8\x88\x78\x32\x4e\x27\x2e\x3c\x37\x37",
+    // "ASN1_get_object" / M(Xor1) / S(23) / L(15)
+    "\x56\x44\x59\x26\x48\x70\x72\x63\x48\x78\x75\x7d\x72\x74\x63\x17",
+    // "sel_registerName" / M(Xor3) / S(38) / L(16)
+    "\x44\x52\x5b\x68\x45\x52\x50\x5e\x44\x43\x52\x45\x79\x56\x5a\x52\x37",
+    // "" / M(None) / S(0) / L(0)
+    "\x7f\x05\x3b\xeb\x87\xcf\x54\x51\x8b\xb8\xe4\x4d\x0f\x06\xe2\xfd\x4e\x55\x97\x79\xa1\x45\x8d\x7e\x67\xef\xfb\x07\x18\x1b\x6e\xe0",
+    // "" / M(None) / S(0) / L(0)
+    "\xcd\x0b\x43\x05\x90\x6a\xad\x98\xcb\xa6\xef\xe0\x84\x2c\x4a\x18\x93\x19\x65\x74\xcd\x51\xec\x33\x00\x0f\x06\xa2\x63\xe1\xcb\xe1",
+    // "." / M(Rot) / S(44) / L(1)
+    "\x5a\x2c\xf7\xc5\x3a\x00\xf7\x70\x4a\x85\x48\x5d\x90\x1e\x9b\x60",
+    // "sha1" / M(Rot) / S(244) / L(4)
+    "\x67\x5c\x55\x25\xf4\x0e\x22\x24\x99\x33\x31\x0a\x26\x8e\x13\xe8",
+    // "" / M(None) / S(0) / L(0)
+    "\x75\xbe\xf8\xd5\x04\x52\x0e\x5d\xe3\xf1\xd2\xb2\x27\x79\x88\xec\x83\x24\xc6\x38\x74\x93\x7f\x6b\xc3\xa3\xbf\x53\x61\xad\xd8\xee",
+    // "%02X:" / M(Rot) / S(216) / L(5)
+    "\xfd\x08\x0a\x30\x12\xd8\xa0\x89\x71\x67\xa1\x68\x8c\x67\x52\xf2",
+    // "Contents/_MASReceipt" / M(Xor2) / S(172) / L(20)
+    "\xfa\xd6\xd7\xcd\xdc\xd7\xcd\xca\x96\xe6\xf4\xf8\xea\xeb\xdc\xda\xdc\xd0\xc9\xcd\xb9",
+    // "" / M(None) / S(0) / L(0)
+    "\xfc\x52\xdf\xda\xd9\x68\x93\xc8\xca\xc9\xfc\x3a\xf4\x29\xbc\xc6\xc5\xf6\xcb\x1a\xbe\x00\xd1\x89\x04\x67\x28\xae\xe8\xbf\x0a\x11",
+    // "SHA1" / M(Rot) / S(112) / L(4)
+    "\xc3\xb8\xb1\xa1\x70\xbc\x0c\x2a\xf2\xea\x6e\x2e\xe6\x4b\x18\x16",
+    // "OBJ_txt2obj" / M(Xor2) / S(115) / L(11)
+    "\x2c\x21\x29\x3c\x17\x1b\x17\x51\x0c\x01\x09\x63\x0f\xd9\xf4\xa0",
+    // "OBJ_txt2obj" / M(Xor2) / S(3) / L(11)
+    "\x5c\x51\x59\x4c\x67\x6b\x67\x21\x7c\x71\x79\x13\x72\x56\x43\xb6",
+    // "CFBundleShortVersionString" / M(Xor1) / S(37) / L(26)
+    "\x66\x63\x67\x50\x4b\x41\x49\x40\x76\x4d\x4a\x57\x51\x73\x40\x57\x56\x4c\x4a\x4b\x76\x51\x57\x4c\x4b\x42\x25\x74\x71\xc4\x31\x34\xd5\x5f\x1c",
+    // "" / M(None) / S(0) / L(0)
+    "\x7f\xd1\xf2\x06\x23\xc3\xee\xdf\x69\x99\x7b\x97\x8b\x98\xaa\x6f\xc1\x44\xa0\xab\x1a\xb3\x69\x96\x5e\xd6\xb1\x26\x87\x74\x58\xbe",
+    // "" / M(None) / S(0) / L(0)
+    "\x77\x5d\xed\x02\xe0\x4a\xd3\x86\x23\x2f\x5f\xc8\x63\xe2\xb8\x0f\x1c\x74\xf7\xfa\x91\x4a\x47\x74\x64\x77\xfe\x76\x05\x78\x19\x0f",
+    // "" / M(None) / S(0) / L(0)
+    "\x37\x65\x0a\x00\x41\x93\xae\x3d\x69\x69\x7a\x73\x52\x2d\xcf\x74\x54\x3f\x37\xbf\xb4\x9c\x89\x2b\xe9\x8b\x73\xbf\xad\x52\xc9\xff",
+    // "IOServiceGetMatchingServices" / M(Xor2) / S(255) / L(28)
+    "\x93\x95\x89\xbf\xa8\xac\xb3\xb9\xbf\x9d\xbf\xae\x97\xbb\xae\xb9\xb2\xb3\xb4\xbd\x89\xbf\xa8\xac\xb3\xb9\xbf\xa9\xda\xda\x15\xe2\x56\x6b\xf0\xa6\xa0",
+    // "NSApplicationMain" / M(Xor2) / S(235) / L(17)
+    "\xb7\xaa\xb8\x89\x89\x95\x90\x9a\x98\x8d\x90\x96\x97\xb4\x98\x90\x97\xf9",
+    // "SHA1_Final" / M(Xor2) / S(245) / L(10)
+    "\xb6\xad\xa4\xd4\xba\xa3\x8c\x8b\x84\x89\xe5\xeb\x1f\xc3\x0d\x11",
+    // "EVP_get_digestbyname" / M(Xor3) / S(61) / L(20)
+    "\x17\x04\x02\x0d\x35\x37\x26\x0d\x36\x3b\x35\x37\x21\x26\x30\x2b\x3c\x33\x3f\x37\x52",
+    // "" / M(None) / S(0) / L(0)
+    "\xbf\x18\x4f\xb0\x37\x85\xf3\x44\x4c\xf3\xb0\x99\x0a\xa3\x68\x85\xf0\xd4\x03\x5e\x2e\x7e\x71\x72\xb2\xe2\x45\xff\x41\xf8\xc8\x75",
+    // "IOBSDNameMatching" / M(Xor2) / S(98) / L(17)
+    "\x39\x3f\x32\x23\x34\x3e\x11\x1d\x15\x3d\x11\x04\x13\x18\x19\x1e\x17\x70",
+    // "" / M(None) / S(0) / L(0)
+    "\x85\x1a\x39\xdc\x85\xee\xd3\x10\xdf\x95\x7a\x15\xc4\xc7\x97\x25\x2b\x6c\x32\xb0\x50\xc8\x2b\xc6\x39\xb7\xca\xf9\xcb\x6e\x56\x0e",
+    // "sk_value" / M(Xor2) / S(50) / L(8)
+    "\x51\x49\x7d\x54\x43\x4e\x57\x47\x22\x4f\x5b\xb4\xdd\x37\x7d\xa0",
+    // "ASN1_get_object" / M(Xor2) / S(249) / L(15)
+    "\xa8\xba\xa7\xd8\xb6\x8e\x8c\x9d\xb6\x86\x8b\x83\x8c\x8a\x9d\xe9",
+    // "en0" / M(Xor1) / S(27) / L(3)
+    "\x7e\x75\x2b\x1b\xd9\xa7\xfc\xa5\x9c\xc9\x9e\x4f\x23\x94\xc5\xfc",
+    // "IOMasterPort" / M(Xor4) / S(89) / L(12)
+    "\xd9\xdf\xdd\xf1\xe3\xe4\xf5\xe2\xc0\xff\xe2\xe4\x90\x0e\xf0\x96",
+    // "ASN1_INTEGER_get" / M(Xor3) / S(133) / L(16)
+    "\xd7\xc5\xd8\xa7\xc9\xdf\xd8\xc2\xd3\xd1\xd3\xc4\xc9\xf1\xf3\xe2\x96",
+    // "sel_registerName" / M(Rot) / S(82) / L(16)
+    "\xc5\xb7\xbe\xb1\xc4\xb7\xb9\xbb\xc5\xc6\xb7\xc4\xa0\xb3\xbf\xb7\x52",
+    // "glob" / M(Xor1) / S(250) / L(4)
+    "\x9d\x96\x95\x98\xfa\xaa\x23\x40\x13\x88\x9b\xa6\xb0\x8e\x88\xe3",
+    // "" / M(None) / S(0) / L(0)
+    "\x99\x7e\x6f\x22\xbc\xd3\x02\x54\xdc\xe1\x2e\xcf\xdf\xcb\x4a\xc7\xd4\x8b\x16\x67\x8a\xfe\x34\x26\x60\xcb\xc8\x8b\xcd\xa2\x88\x3d",
+    // "X509_free" / M(Rot) / S(82) / L(9)
+    "\xaa\x87\x82\x8b\xb1\xb8\xc4\xb7\xb7\x52\x6f\x3c\xbe\xa4\xf9\x4b",
+    // "d2i_PKCS7_bio" / M(Xor1) / S(35) / L(13)
+    "\x47\x11\x4a\x7c\x73\x68\x60\x70\x14\x7c\x41\x4a\x4c\x23\x07\x99",
+    // "sk_value" / M(Xor2) / S(208) / L(8)
+    "\xb3\xab\x9f\xb6\xa1\xac\xb5\xa5\xc0\x71\xc1\xc0\xdd\xbc\xdc\x50",
+    // "CFBundleIdentifier" / M(Rot) / S(95) / L(18)
+    "\xa2\xa5\xa1\xd4\xcd\xc3\xcb\xc4\xa8\xc3\xc4\xcd\xd3\xc8\xc5\xc8\xc4\xd1\x5f",
+    // "_MASReceipt/receipt" / M(Xor4) / S(210) / L(19)
+    "\x37\x25\x29\x3b\x3a\x0d\x0b\x0d\x01\x18\x1c\x47\x1a\x0d\x0b\x0d\x01\x18\x1c\x68",
+    // "CFDictionarySetValue" / M(Xor3) / S(17) / L(20)
+    "\x65\x60\x62\x4f\x45\x52\x4f\x49\x48\x47\x54\x5f\x75\x43\x52\x70\x47\x4a\x53\x43\x26",
+    // "" / M(None) / S(0) / L(0)
+    "\x15\xbe\x4a\xf7\xd9\xba\x72\x9e\x53\x94\x35\xbd\x47\xe6\x8b\x04\x39\x49\x17\x96\x0e\x3a\xf8\x88\x60\xb0\xe7\x64\x8e\x75\xda\xc4",
+    // "%02x" / M(Rot) / S(84) / L(4)
+    "\x79\x84\x86\xcc\x54\x2e\xe6\x8e\x44\x63\x55\xaa\xf9\xaf\x8f\x64",
+    // "kSecMatchLimit" / M(Xor1) / S(197) / L(14)
+    "\xae\x96\xa0\xa6\x88\xa4\xb1\xa6\xad\x89\xac\xa8\xac\xb1\xc5\x97",
+    // "kCFBundleIdentifierKey" / M(Xor2) / S(22) / L(22)
+    "\x6a\x42\x47\x43\x74\x6f\x65\x6d\x64\x48\x65\x64\x6f\x75\x68\x67\x68\x64\x73\x4a\x64\x78\x01",
+    // "CFURLCreateCopyAppendingPathComponent" / M(Xor2) / S(59) / L(37)
+    "\x5e\x5b\x48\x4f\x51\x5e\x6f\x78\x7c\x69\x78\x5e\x72\x6d\x64\x5c\x6d\x6d\x78\x73\x79\x74\x73\x7a\x4d\x7c\x69\x75\x5e\x72\x70\x6d\x72\x73\x78\x73\x69\x1d",
+    // "kCFTypeDictionaryValueCallBacks" / M(Rot) / S(23) / L(31)
+    "\x82\x5a\x5d\x6b\x90\x87\x7c\x5b\x80\x7a\x8b\x80\x86\x85\x78\x89\x90\x6d\x78\x83\x8c\x7c\x5a\x78\x83\x83\x59\x78\x7a\x82\x8a\x17",
+    // "CFDateFormatterSetProperty" / M(Rot) / S(46) / L(26)
+    "\x71\x74\x72\x8f\xa2\x93\x74\x9d\xa0\x9b\x8f\xa2\xa2\x93\xa0\x81\x93\xa2\x7e\xa0\x9d\x9e\x93\xa0\xa2\xa7\x2e\xd1\x27\x3f\xe5\xb5\xbc\x5c\x8c",
+    // "CFArrayGetValueAtIndex" / M(Xor3) / S(162) / L(22)
+    "\xfa\xff\xf8\xcb\xcb\xd8\xc0\xfe\xdc\xcd\xef\xd8\xd5\xcc\xdc\xf8\xcd\xf0\xd7\xdd\xdc\xc1\xb9",
+    // "PKCS7_free" / M(Rot) / S(129) / L(10)
+    "\xd1\xcc\xc4\xd4\xb8\xe0\xe7\xf3\xe6\xe6\x81\x00\xc7\x5b\x19\x64",
+    // "" / M(None) / S(0) / L(0)
+    "\x44\x70\x27\x35\xd7\xec\x8f\x21\x69\x2c\xb8\x34\x4e\x24\xa3\xef\xc3\xc6\x54\x16\x2f\x16\x8c\xaa\x00\x4a\xe3\x59\x55\xb0\x4d\x7a",
+    // "CFBundleGetMainBundle" / M(Xor2) / S(195) / L(21)
+    "\x96\x93\x97\xa0\xbb\xb1\xb9\xb0\x92\xb0\xa1\x98\xb4\xbc\xbb\x97\xa0\xbb\xb1\xb9\xb0\xd5",
+    // "CC_SHA1" / M(Xor3) / S(206) / L(7)
+    "\x9d\x9d\x81\x8d\x96\x9f\xef\xde\x72\x23\x34\x74\x38\x18\x13\xa3",
+    // "kCFDateFormatterTimeZone" / M(Xor2) / S(145) / L(24)
+    "\xdb\xf3\xf6\xf4\xd1\xc4\xd5\xf6\xdf\xc2\xdd\xd1\xc4\xc4\xd5\xc2\xe4\xd9\xdd\xd5\xea\xdf\xde\xd5\xb0\x7d\x9d\x0c\x17\xe9\x69\x94\xe2",
+    // "" / M(None) / S(0) / L(0)
+    "\x54\x6c\x91\x85\x22\x0c\xa7\x69\x42\x8d\x8e\xbf\x83\xf1\x44\x5c\xd9\x3a\x74\x24\xe4\x7c\xfc\xb5\xea\x89\x06\x49\xc6\x74\xf3\x39",
+    // "CFDataGetBytePtr" / M(Rot) / S(169) / L(16)
+    "\xec\xef\xed\x0a\x1d\x0a\xf0\x0e\x1d\xeb\x22\x1d\x0e\xf9\x1d\x1b\xa9",
+    // "CFDataGetBytePtr" / M(Rot) / S(217) / L(16)
+    "\x1c\x1f\x1d\x3a\x4d\x3a\x20\x3e\x4d\x1b\x52\x4d\x3e\x29\x4d\x4b\xd9",
+    // "" / M(None) / S(0) / L(0)
+    "\x4e\x0a\xfc\x5b\x77\xeb\x4a\xe2\xba\x99\xeb\xbf\x5a\x35\xbb\x66\x1b\xaa\x8e\x73\x79\x56\x7d\xb0\x74\xc4\xce\xd1\xb9\x57\x58\xd4",
+    // "" / M(None) / S(0) / L(0)
+    "\xb0\xd9\x0d\xe3\xcf\xb5\x2b\x11\x17\x65\x9e\x64\xf1\xc7\xf0\x47\xb0\x53\xbe\x82\xfd\x56\xcf\x58\xa2\x7b\x5b\xf4\xb9\x3c\x9f\x76",
+    // "" / M(None) / S(0) / L(0)
+    "\x86\x07\xef\x56\x2d\x6d\xf7\xef\x16\xa0\xe6\xf1\xce\x50\x16\x99\x5a\x21\x2d\xbc\x18\xbe\x45\xc4\x4b\x0a\x4d\xe6\x33\xfb\x8d\x05",
+    // "" / M(None) / S(0) / L(0)
+    "\xbe\x51\x99\xce\x4b\x7b\x3a\x55\x45\xb5\xa5\xf3\x72\xc8\xec\x68\x2f\xae\x0c\x66\x1b\xd8\xcd\xb5\xea\x0a\x81\x31\x84\x43\x57\xa0",
+    // "" / M(None) / S(0) / L(0)
+    "\x6b\x3a\xa5\x94\x2d\x7e\x23\x8b\x79\x1c\xaf\x21\x5b\xcd\x1c\x0f\x5b\x21\x11\xe6\x7c\x8f\x96\x48\x97\xbe\x13\x9a\xc0\xe6\x7c\xf6",
+    // "IOIteratorNext" / M(Xor4) / S(61) / L(14)
+    "\x99\x9f\x99\xa4\xb5\xa2\xb1\xa4\xbf\xa2\x9e\xb5\xa8\xa4\xd0\xe6",
+    // "CFDateFormatterSetFormat" / M(Rot) / S(227) / L(24)
+    "\x26\x29\x27\x44\x57\x48\x29\x52\x55\x50\x44\x57\x57\x48\x55\x36\x48\x57\x29\x52\x55\x50\x44\x57\xe3\x68\xd4\x19\xae\xe6\xed\xdc\x35",
+    // "kSecMatchLimitAll" / M(Xor3) / S(6) / L(17)
+    "\x73\x4b\x7d\x7b\x55\x79\x6c\x7b\x70\x54\x71\x75\x71\x6c\x59\x74\x74\x18",
+    // "" / M(None) / S(0) / L(0)
+    "\x8c\x39\x5b\x59\xc6\x7e\xa1\xda\xe3\x07\x30\xdc\xbd\xaa\xdf\x35\xf7\xed\x35\xc2\x01\x71\xe6\x55\x96\xf0\x72\x4c\xeb\xdc\x67\x26",
+    // "BIO_s_mem" / M(Xor2) / S(88) / L(9)
+    "\x0a\x01\x07\x17\x3b\x17\x25\x2d\x25\x48\x0f\xe6\x58\x36\xc3\xd0",
+    // "EVP_DigestInit" / M(Xor1) / S(6) / L(14)
+    "\x43\x50\x56\x59\x42\x6f\x61\x63\x75\x72\x4f\x68\x6f\x72\x06\xbc",
+    // "exit" / M(Xor3) / S(139) / L(4)
+    "\xfe\xe3\xf2\xef\x9b\xe6\x8b\x04\x39\x49\x17\x96\x0e\x3a\xf8\x88",
+    // "CFTimeZoneCreateWithTimeIntervalFromGMT" / M(Rot) / S(13) / L(39)
+    "\x50\x53\x61\x76\x7a\x72\x67\x7c\x7b\x72\x50\x7f\x72\x6e\x81\x72\x64\x76\x81\x75\x61\x76\x7a\x72\x56\x7b\x81\x72\x7f\x83\x6e\x79\x53\x7f\x7c\x7a\x54\x5a\x61\x0d\x80\x5c\x09\xe6\xfe\xc1\xe8\xcd",
+    // "/System/Library/Frameworks/AppKit.framework/AppKit" / M(Xor2) / S(224) / L(50)
+    "\xfc\x80\xaa\xa0\xa7\xb6\xbe\xfc\x9f\xba\xb1\xa1\xb2\xa1\xaa\xfc\x95\xa1\xb2\xbe\xb6\xa4\xbc\xa1\xb8\xa0\xfc\x92\xa3\xa3\x98\xba\xa7\xfd\xb5\xa1\xb2\xbe\xb6\xa4\xbc\xa1\xb8\xfc\x92\xa3\xa3\x98\xba\xa7\xd3",
+    // "X509_digest" / M(Xor1) / S(150) / L(11)
+    "\xce\xa3\xa6\xaf\xc9\xf2\xff\xf1\xf3\xe5\xe2\x96\xa1\x09\x3b\x50",
+    // "kCFTypeDictionaryValueCallBacks" / M(Xor3) / S(45) / L(31)
+    "\x26\x0e\x0b\x19\x34\x3d\x28\x09\x24\x2e\x39\x24\x22\x23\x2c\x3f\x34\x1b\x2c\x21\x38\x28\x0e\x2c\x21\x21\x0f\x2c\x2e\x26\x3e\x4d",
+    // "X509_STORE_free" / M(Xor4) / S(8) / L(15)
+    "\xd8\xb5\xb0\xb9\xdf\xd3\xd4\xcf\xd2\xc5\xdf\xe6\xf2\xe5\xe5\x80",
+    // "61:1e:5b:66:2c:59:3a:08:ff:58:d1:4a:e2:24:52:d1:98:df:6c:60" / M(Rot) / S(93) / L(59)
+    "\x93\x8e\x97\x8e\xc2\x97\x92\xbf\x97\x93\x93\x97\x8f\xc0\x97\x92\x96\x97\x90\xbe\x97\x8d\x95\x97\xc3\xc3\x97\x92\x95\x97\xc1\x8e\x97\x91\xbe\x97\xc2\x8f\x97\x8f\x91\x97\x92\x8f\x97\xc1\x8e\x97\x96\x95\x97\xc1\xc3\x97\x93\xc0\x97\x93\x8d\x5d\xec\xec\xaa\x70\x78\x38\xa9\x1b",
+    // "" / M(None) / S(0) / L(0)
+    "\x03\x54\x9b\x61\x9e\x08\x22\xb1\x14\x21\x90\x0a\xe7\x7d\x9d\x0c\x17\xe9\x69\x94\x6a\xa0\x2e\xe2\xeb\x41\x05\x99\x06\xa8\xb8\xb7",
+    // "dlopen" / M(Xor3) / S(66) / L(6)
+    "\x36\x3e\x3d\x22\x37\x3c\x52\x43\xa7\xc2\xb4\x51\x39\xe5\x4b\x59",
+    // "" / M(None) / S(0) / L(0)
+    "\x98\x4d\x5b\x40\x3d\x77\x14\xcc\xe8\xab\x14\x83\xbe\xc1\x7f\x8e\x8b\xd6\xf8\x23\x92\x96\x02\x9d\xa9\x52\x60\x49\xfd\xaf\xfe\x5d",
+    // "" / M(None) / S(0) / L(0)
+    "\x57\x96\xd2\x7d\xef\xf5\x9f\x46\x75\xa9\x42\x4f\x17\x92\x88\x2e\xd5\xc6\xa9\xd9\x81\x60\xd4\x99\x42\xac\x99\xc1\x92\xfd\x95\xb5",
+    // "CFDateCompare" / M(Rot) / S(129) / L(13)
+    "\xc4\xc7\xc5\xe2\xf5\xe6\xc4\xf0\xee\xf1\xe2\xf3\xe6\x81\xed\x40",
+    // "X509_STORE_add_cert" / M(Rot) / S(91) / L(19)
+    "\xb3\x90\x8b\x94\xba\xae\xaf\xaa\xad\xa0\xba\xbc\xbf\xbf\xba\xbe\xc0\xcd\xcf\x5b",
+    // "Contents" / M(Xor4) / S(108) / L(8)
+    "\x83\xaf\xae\xb4\xa5\xae\xb4\xb3\xc0\x80\x08\xba\x4f\x56\x8a\x75",
+    // "CFDateFormatterCreate" / M(Xor4) / S(241) / L(21)
+    "\xf5\xf0\xf2\xd7\xc2\xd3\xf0\xd9\xc4\xdb\xd7\xc2\xc2\xd3\xc4\xf5\xc4\xd3\xd7\xc2\xd3\xb6",
+    // "SecCertificateCopyData" / M(Xor4) / S(62) / L(22)
+    "\xc1\xf7\xf1\xd1\xf7\xe0\xe6\xfb\xf4\xfb\xf1\xf3\xe6\xf7\xd1\xfd\xe2\xeb\xd6\xf3\xe6\xf3\x92",
+    // "EVP_MD_CTX_init" / M(Xor2) / S(206) / L(15)
+    "\x9b\x88\x8e\x81\x93\x9a\x81\x9d\x8a\x86\x81\xb7\xb0\xb7\xaa\xde",
+    // "" / M(None) / S(0) / L(0)
+    "\x0e\xa7\x37\x0e\xe3\xe1\xc0\x8c\x97\xbc\x1c\xe5\x14\xe4\xe5\xb4\x92\xb9\x9b\xdb\xc4\x59\x5f\x49\x13\x6c\x19\x1f\x8e\xa9\x9b\x0e",
+    // "kSecMatchSubjectContains" / M(Xor3) / S(109) / L(24)
+    "\xe5\xdd\xeb\xed\xc3\xef\xfa\xed\xe6\xdd\xfb\xec\xe4\xeb\xed\xfa\xcd\xe1\xe0\xfa\xef\xe7\xe0\xfd\x8e\xda\x72\x4c\x55\x83\x11\x4c\x07",
+    // "CFArrayGetValueAtIndex" / M(Rot) / S(100) / L(22)
+    "\xa7\xaa\xa5\xd6\xd6\xc5\xdd\xab\xc9\xd8\xba\xc5\xd0\xd9\xc9\xa5\xd8\xad\xd2\xc8\xc9\xdc\x64",
+    // "IOObjectRelease" / M(Rot) / S(55) / L(15)
+    "\x80\x86\x86\x99\xa1\x9c\x9a\xab\x89\x9c\xa3\x9c\x98\xaa\x9c\x37",
+    // "" / M(None) / S(0) / L(0)
+    "\xa4\x2d\x55\x98\x6c\x5b\xb1\x88\xe4\x14\x75\x8d\xb9\x79\xf4\x44\x71\x4f\x02\xe2\x29\x81\xbb\xc2\x17\xb8\xa2\xcc\x94\x4d\xc3\xe3",
+    // "" / M(None) / S(0) / L(0)
+    "\x2d\x57\x45\x60\x85\x3b\xab\x23\x96\xe1\xc4\x1b\xa0\x42\x81\x97\xf4\xa1\x85\x4d\xed\x0c\xfb\xa2\xd2\xce\x14\x41\x3c\x54\xd8\xdf",
+    // "alloc" / M(Xor3) / S(181) / L(5)
+    "\xa4\xa9\xa9\xaa\xa6\xc5\x60\x07\x7c\xe6\x25\xdc\x86\x12\xfa\x27",
+    // "X509_free" / M(Xor2) / S(156) / L(9)
+    "\xd4\xb9\xbc\xb5\xd3\xea\xfe\xe9\xe9\x8c\xcb\x6a\xae\x1e\xfd\x25",
+    // "611E5B662C593A08FF58D14AE22452D198DF6C60" / M(Xor4) / S(129) / L(40)
+    "\x87\x80\x80\xf4\x84\xf3\x87\x87\x83\xf2\x84\x88\x82\xf0\x81\x89\xf7\xf7\x84\x89\xf5\x80\x85\xf0\xf4\x83\x83\x85\x84\x83\xf5\x80\x88\x89\xf5\xf7\x87\xf2\x87\x81\xb1\xc3\xf7\x3b\x64\x96\x89\x28\xa2",
+    // "longjmp" / M(Rot) / S(235) / L(7)
+    "\x57\x5a\x59\x52\x55\x58\x5b\xeb\x3c\x85\x1e\xab\xd7\x6f\x05\x67",
+    // "611E5B662C593A08FF58D14AE22452D198DF6C60" / M(Xor2) / S(41) / L(40)
+    "\x2e\x29\x29\x5d\x2d\x5a\x2e\x2e\x2a\x5b\x2d\x21\x2b\x59\x28\x20\x5e\x5e\x2d\x20\x5c\x29\x2c\x59\x5d\x2a\x2a\x2c\x2d\x2a\x5c\x29\x21\x20\x5c\x5e\x2e\x5b\x2e\x28\x18\xc4\xcc\x8f\x84\xc3\xa2\x99\x44",
+    // "init" / M(Xor2) / S(41) / L(4)
+    "\x50\x57\x50\x4d\x39\x60\x33\xe3\x30\x4b\x37\x01\xae\x9d\xa3\xb2",
+    // "kSecClass" / M(Rot) / S(249) / L(9)
+    "\x64\x4c\x5e\x5c\x3c\x65\x5a\x6c\x6c\xf9\x9e\x20\x78\x21\x32\x3d",
+    // "BIO_s_mem" / M(Xor1) / S(156) / L(9)
+    "\xde\xd5\xd3\xc3\xef\xc3\xf1\xf9\xf1\x9c\x3a\x61\x34\xbc\x8b\x7d",
+    // "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" / M(Xor2) / S(87) / L(66)
+    "\x3b\x47\x6d\x67\x60\x71\x79\x3b\x58\x7d\x76\x66\x75\x66\x6d\x3b\x52\x66\x75\x79\x71\x63\x7b\x66\x7f\x67\x3b\x57\x7b\x66\x71\x52\x7b\x61\x7a\x70\x75\x60\x7d\x7b\x7a\x3a\x72\x66\x75\x79\x71\x63\x7b\x66\x7f\x3b\x57\x7b\x66\x71\x52\x7b\x61\x7a\x70\x75\x60\x7d\x7b\x7a\x14",
+    // "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" / M(Xor3) / S(170) / L(32)
+    "\xb2\xb2\xb2\xb2\xec\xe6\xec\x86\x86\xec\xe6\xec\xaf\xaf\xec\x9f\xec\x83\x83\xec\xf1\xec\xa6\xa6\xec\xf1\xec\xb8\xb8\xec\x91\xec\xcb",
+    // "1.2.840.113635.100.6.11.1" / M(Rot) / S(50) / L(25)
+    "\x63\x60\x64\x60\x6a\x66\x62\x60\x63\x63\x65\x68\x65\x67\x60\x63\x62\x62\x60\x68\x60\x63\x63\x60\x63\x32\xb2\x4c\x16\x3d\x9b\x6c\xfc\x45",
+    // "CFArrayGetCount" / M(Xor4) / S(183) / L(15)
+    "\x33\x36\x31\x02\x02\x11\x09\x37\x15\x04\x33\x1f\x05\x1e\x04\x70",
+    // "" / M(None) / S(0) / L(0)
+    "\xf1\xe0\x1d\x1f\xbf\xf0\xc3\xd2\x91\x8e\xec\xb7\xc4\x84\x8c\x04\x36\x53\x76\x31\x92\x41\x53\x8c\x49\x8e\xca\x8c\xd8\x42\x54\xc8",
+    // "%02X" / M(Xor4) / S(46) / L(4)
+    "\xc5\xd0\xd2\xb8\xe0\x91\x2d\x52\xad\xf9\x5e\xe4\xa7\xaf\xae\xe7",
+    // "" / M(None) / S(0) / L(0)
+    "\xeb\x11\x17\xd1\x79\x32\x59\x11\x43\xda\x47\x2d\x4a\xe6\x64\xe7\xe6\x26\x41\x0c\x2a\x4d\x9e\x04\xad\x34\x79\xf7\x11\xca\x10\xb3",
+    // "SecKeychainOpen" / M(Xor2) / S(116) / L(15)
+    "\x37\x01\x07\x2f\x01\x1d\x07\x0c\x05\x0d\x0a\x2b\x14\x01\x0a\x64",
+    // "" / M(None) / S(0) / L(0)
+    "\x4e\x1f\x39\xc1\x78\x34\xab\x82\xd0\x46\x01\x66\x13\xf8\x1f\xce\x96\x03\xf1\x9a\x7e\x06\x5e\x2d\x80\xda\x2d\x18\x7a\xcf\xf9\xd8",
+    // "CFEqual" / M(Xor4) / S(38) / L(7)
+    "\x23\x26\x25\x11\x15\x01\x0c\x60\xa5\x1d\xfb\x0a\x71\x15\x13\x8d",
+    // "" / M(None) / S(0) / L(0)
+    "\x36\x16\x0e\xac\xfe\x2a\xc6\xb9\x3d\xef\x96\x8e\x38\x80\x10\x14\x5a\x63\x91\xdd\x01\xda\x99\xd5\xa4\x2a\x72\xe9\xbb\x64\x01\x8a",
+    // "" / M(None) / S(0) / L(0)
+    "\x05\xed\x7c\x94\x48\x5e\x8a\xff\x86\x0a\x96\x1a\x65\xa1\x54\x17\xdb\x8b\x6d\xce\x20\x86\xc0\x8c\xcb\xd6\x53\xcb\xb5\x27\x61\xa4",
+    // "" / M(None) / S(0) / L(0)
+    "\x01\xd0\xb8\x99\x5b\x55\x96\x37\xb2\x2b\xcf\x60\x2c\x91\x32\x5e\x94\x9a\x3d\x8e\x29\x81\x92\xe5\xc8\xfa\xae\xd6\x2d\x57\xe6\x38",
+    // "" / M(None) / S(0) / L(0)
+    "\x25\xfa\x36\xf3\x24\xbe\x17\x67\xea\xe1\x9c\xfb\xa2\xf8\xf7\xb7\x45\xf9\xa2\xb9\x99\x27\xf8\x3a\x5e\x64\xcf\x8a\x48\x57\xb9\x43",
+    // "CFStringGetFileSystemRepresentation" / M(Rot) / S(88) / L(35)
+    "\x9b\x9e\xab\xcc\xca\xc1\xc6\xbf\x9f\xbd\xcc\x9e\xc1\xc4\xbd\xab\xd1\xcb\xcc\xbd\xc5\xaa\xbd\xc8\xca\xbd\xcb\xbd\xc6\xcc\xb9\xcc\xc1\xc7\xc6\x58",
+    // "_MASReceipt" / M(Xor4) / S(72) / L(11)
+    "\xdf\xcd\xc1\xd3\xd2\xe5\xe3\xe5\xe9\xf0\xf4\x80\xfe\x37\xcd\x16",
+    // "CFStringCreateWithCString" / M(Xor4) / S(126) / L(25)
+    "\xff\xfa\xef\xc8\xce\xd5\xd2\xdb\xff\xce\xd9\xdd\xc8\xd9\xeb\xd5\xc8\xd4\xff\xef\xc8\xce\xd5\xd2\xdb\xbc\xea\xfc\xf4\xcd\x2c\x91\x43\x11",
+    // "1.2.840.113635.100.6.11.1" / M(Xor2) / S(85) / L(25)
+    "\x46\x59\x45\x59\x4f\x43\x47\x59\x46\x46\x44\x41\x44\x42\x59\x46\x47\x47\x59\x41\x59\x46\x46\x59\x46\x77\x18\x07\x27\x69\xb8\x7e\x3a\x3f",
+    // "" / M(None) / S(0) / L(0)
+    "\xf5\x7b\x96\xfd\xb5\xcd\xad\xe6\x69\xd5\x89\x69\xa4\x04\x4a\xf0\x13\x36\x70\x5b\xbb\xda\x61\x64\xc9\x88\x85\x31\xc5\x05\xee\x01",
+    // "OpenSSL_add_all_digests" / M(Xor2) / S(7) / L(23)
+    "\x68\x57\x42\x49\x74\x74\x6b\x78\x46\x43\x43\x78\x46\x4b\x4b\x78\x43\x4e\x40\x42\x54\x53\x54\x27\x56\x57\x0e\x1e\x03\xfa\xec\xe5",
+    // "" / M(None) / S(0) / L(0)
+    "\xf0\x19\xb9\x8b\x76\xca\x2c\x34\xe1\x07\xa8\x2e\xf7\xd1\xd3\xbd\x52\x00\x2a\xac\xc9\xb0\xdd\xee\xe8\x83\xd4\xeb\x39\x7b\x1a\x04",
+    // "CFDictionaryCreateMutable" / M(Rot) / S(122) / L(25)
+    "\xbd\xc0\xbe\xe3\xdd\xee\xe3\xe9\xe8\xdb\xec\xf3\xbd\xec\xdf\xdb\xee\xdf\xc7\xef\xee\xdb\xdc\xe6\xdf\x7a\x32\x0d\x78\xbd\xa5\xb8\x63\xc2",
+    // "2.0" / M(Xor1) / S(217) / L(3)
+    "\xeb\xf7\xe9\xd9\x7e\x7a\x63\x2e\xfb\xf5\x64\x76\x75\x18\x95\x3b",
+    // "kSecMatchLimit" / M(Xor2) / S(27) / L(14)
+    "\x60\x58\x6e\x68\x46\x6a\x7f\x68\x63\x47\x62\x66\x62\x7f\x0b\xb2",
+    // "CFDataAppendBytes" / M(Xor2) / S(80) / L(17)
+    "\x01\x04\x06\x23\x36\x23\x03\x32\x32\x27\x2c\x26\x00\x3b\x36\x27\x31\x42",
+    // "CFDataAppendBytes" / M(Xor1) / S(21) / L(17)
+    "\x56\x53\x51\x74\x61\x74\x54\x65\x65\x70\x7b\x71\x57\x6c\x61\x70\x66\x15",
+    // "SHA1_Update" / M(Xor3) / S(140) / L(11)
+    "\xcf\xd4\xdd\xad\xc3\xc9\xec\xf8\xfd\xe8\xf9\x9c\x51\xb8\x22\x84",
+    // "%02x:" / M(Xor4) / S(180) / L(5)
+    "\x65\x70\x72\x38\x7a\x40\xf4\x02\x2b\x50\xb9\x77\x9a\x46\x1a\x0a",
+    // "CFNumberCreate" / M(Xor3) / S(61) / L(14)
+    "\x0e\x0b\x03\x38\x20\x2f\x28\x3f\x0e\x3f\x28\x2c\x39\x28\x4d\x73",
+    // "" / M(None) / S(0) / L(0)
+    "\x2b\xe9\x3e\x03\xb2\xfa\x52\x7c\x2c\x73\xd5\xae\x50\xcf\xa5\xa8\x9f\x79\x28\x53\xa7\x24\x57\xd6\x3d\xb6\x6b\xc3\xd5\xda\xcb\xa1",
+    // "kCFTypeArrayCallBacks" / M(Rot) / S(206) / L(21)
+    "\x39\x11\x14\x22\x47\x3e\x33\x0f\x40\x40\x2f\x47\x11\x2f\x3a\x3a\x10\x2f\x31\x39\x41\xce",
+    // "CFURLCreateFromFileSystemRepresentation" / M(Rot) / S(248) / L(39)
+    "\x3b\x3e\x4d\x4a\x44\x3b\x6a\x5d\x59\x6c\x5d\x3e\x6a\x67\x65\x3e\x61\x64\x5d\x4b\x71\x6b\x6c\x5d\x65\x4a\x5d\x68\x6a\x5d\x6b\x5d\x66\x6c\x59\x6c\x61\x67\x66\xf8\xaa\x2a\xb4\xbb\x68\xc0\xf7\x11",
+    // "" / M(None) / S(0) / L(0)
+    "\x5d\xf0\x32\x8e\xdc\x84\x65\xf4\xc4\xd2\x4e\xf0\x40\xcd\x4b\xd2\x51\x78\x2e\xa8\x48\x8c\x24\x79\xe5\xf8\x9f\x7d\xea\xd7\x70\x51",
+    // "CFDictionaryGetValue" / M(Rot) / S(156) / L(20)
+    "\xdf\xe2\xe0\x05\xff\x10\x05\x0b\x0a\xfd\x0e\x15\xe3\x01\x10\xf2\xfd\x08\x11\x01\x9c",
+    // "EVP_DigestInit" / M(Xor2) / S(73) / L(14)
+    "\x1c\x0f\x09\x06\x1d\x30\x3e\x3c\x2a\x2d\x10\x37\x30\x2d\x59\x15",
+    // "kSecReturnRef" / M(Xor2) / S(62) / L(13)
+    "\x45\x7d\x4b\x4d\x7c\x4b\x5a\x5b\x5c\x40\x7c\x4b\x48\x2e\xa0\x1c",
+    // "EVP_MD_CTX_init" / M(Rot) / S(38) / L(15)
+    "\x6b\x7c\x76\x85\x73\x6a\x85\x69\x7a\x7e\x85\x8f\x94\x8f\x9a\x26",
+    // "X509_STORE_new" / M(Xor4) / S(145) / L(14)
+    "\x48\x25\x20\x29\x4f\x43\x44\x5f\x42\x55\x4f\x7e\x75\x67\x10\x06",
+    // "RTLD_MAIN_ONLY" / M(Xor4) / S(9) / L(14)
+    "\xc2\xc4\xdc\xd4\xcf\xdd\xd1\xd9\xde\xcf\xdf\xde\xdc\xc9\x90\x94",
+    // "" / M(None) / S(0) / L(0)
+    "\x80\xd8\xae\x8d\xcf\xfb\x34\xf7\x6b\x05\x32\xfb\x3b\xa4\xbe\x81\x7c\x9b\x75\x7a\x76\x48\x65\x3e\xae\xcd\xf2\xbd\x1f\x40\x17\x49",
+    // "CFBundleVersion" / M(Xor1) / S(136) / L(15)
+    "\xcb\xce\xca\xfd\xe6\xec\xe4\xed\xde\xed\xfa\xfb\xe1\xe7\xe6\x88",
+    // "globfree" / M(Xor4) / S(201) / L(8)
+    "\xf7\xfc\xff\xf2\xf6\xe2\xf5\xf5\x90\xba\x24\xc4\x94\x49\xa2\x05",
+    // "" / M(None) / S(0) / L(0)
+    "\x50\x4e\x3f\x09\x85\x56\x41\x89\x3a\x77\x55\xd1\xf1\xc0\x01\xda\xf6\xbe\x90\x32\x9d\x40\xc7\x02\x9d\x5c\xaf\x7d\x7a\x40\x10\x7d",
+    // "%02x:" / M(Xor2) / S(210) / L(5)
+    "\xe7\xf2\xf0\xba\xf8\xc2\xc3\x0f\xbc\x28\x0e\xca\xdb\x6e\x0c\xbc",
+    // "SHA1_Init" / M(Xor4) / S(59) / L(9)
+    "\xe3\xf8\xf1\x81\xef\xf9\xde\xd9\xc4\xb0\xf1\x91\x79\x60\x28\xd7",
+    // "IOBSDNameMatching" / M(Xor4) / S(83) / L(17)
+    "\x9f\x99\x94\x85\x92\x98\xb7\xbb\xb3\x9b\xb7\xa2\xb5\xbe\xbf\xb8\xb1\xd6",
+    // "EVP_DigestInit" / M(Xor4) / S(233) / L(14)
+    "\xd5\xc6\xc0\xcf\xd4\xf9\xf7\xf5\xe3\xe4\xd9\xfe\xf9\xe4\x90\xd6",
+    // "CFBundleGetValueForInfoDictionaryKey" / M(Xor3) / S(152) / L(36)
+    "\xfe\xfb\xff\xc8\xd3\xd9\xd1\xd8\xfa\xd8\xc9\xeb\xdc\xd1\xc8\xd8\xfb\xd2\xcf\xf4\xd3\xdb\xd2\xf9\xd4\xde\xc9\xd4\xd2\xd3\xdc\xcf\xc4\xf6\xd8\xc4\xbd",
+    // "kSecMatchLimit" / M(Xor2) / S(242) / L(14)
+    "\x89\xb1\x87\x81\xaf\x83\x96\x81\x8a\xae\x8b\x8f\x8b\x96\xe2\x8d",
+    // "CFDateCompare" / M(Rot) / S(186) / L(13)
+    "\xfd\x00\xfe\x1b\x2e\x1f\xfd\x29\x27\x2a\x1b\x2c\x1f\xba\x54\xcd",
+    // "PKCS7_free" / M(Xor1) / S(105) / L(10)
+    "\x39\x22\x2a\x3a\x5e\x36\x0f\x1b\x0c\x0c\x69\x58\xe2\x1e\x28\x24",
+    // "SHA1_Final" / M(Xor4) / S(108) / L(10)
+    "\x93\x88\x81\xf1\x9f\x86\xa9\xae\xa1\xac\xc0\xa4\x4b\x46\x0f\x25",
+    // "IOObjectRelease" / M(Xor1) / S(206) / L(15)
+    "\x87\x81\x81\xac\xa4\xab\xad\xba\x9c\xab\xa2\xab\xaf\xbd\xab\xce",
+    // "CFURLCreateCopyAppendingPathComponent" / M(Rot) / S(156) / L(37)
+    "\xdf\xe2\xf1\xee\xe8\xdf\x0e\x01\xfd\x10\x01\xdf\x0b\x0c\x15\xdd\x0c\x0c\x01\x0a\x00\x05\x0a\x03\xec\xfd\x10\x04\xdf\x0b\x09\x0c\x0b\x0a\x01\x0a\x10\x9c",
+    // "CC_SHA1_Final" / M(Xor3) / S(113) / L(13)
+    "\xc2\xc2\xde\xd2\xc9\xc0\xb0\xde\xc7\xe8\xef\xe0\xed\x81\x3e\x82",
+    // "" / M(None) / S(0) / L(0)
+    "\x9e\x94\x73\x5c\xd8\xa6\xd1\x80\x77\x8d\xf0\x3c\xd1\x81\xc8\xf8\xc3\xbe\x38\xaf\xf1\xe7\xfc\x1b\xc8\x5b\x61\x79\x5b\x1a\x15\x6d",
+    // "X509_NAME_get_text_by_NID" / M(Xor2) / S(123) / L(25)
+    "\x01\x6c\x69\x60\x06\x17\x18\x14\x1c\x06\x3e\x3c\x2d\x06\x2d\x3c\x21\x2d\x06\x3b\x20\x06\x17\x10\x1d\x59\x23\x3b\x68\xdd\x6d\x00\x1c\x8c",
+    // "" / M(None) / S(0) / L(0)
+    "\x97\xf6\x19\x09\x1f\x07\x25\x2c\x42\x6b\x75\x74\xf3\xf9\xf8\x0c\x38\x50\xe8\x17\x38\x70\x19\x2a\x62\x96\x10\xb2\xf0\x5f\xbd\xef",
+    // "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" / M(Xor4) / S(67) / L(66)
+    "\xa6\xda\xf0\xfa\xfd\xec\xe4\xa6\xc5\xe0\xeb\xfb\xe8\xfb\xf0\xa6\xcf\xfb\xe8\xe4\xec\xfe\xe6\xfb\xe2\xfa\xa6\xca\xe6\xfb\xec\xcf\xe6\xfc\xe7\xed\xe8\xfd\xe0\xe6\xe7\xa7\xef\xfb\xe8\xe4\xec\xfe\xe6\xfb\xe2\xa6\xca\xe6\xfb\xec\xcf\xe6\xfc\xe7\xed\xe8\xfd\xe0\xe6\xe7\x89",
+    // "CFStringCompare" / M(Xor4) / S(129) / L(15)
+    "\x53\x56\x43\x64\x62\x79\x7e\x77\x53\x7f\x7d\x60\x71\x62\x75\x10",
+    // "X509_NAME_get_text_by_NID" / M(Xor4) / S(160) / L(25)
+    "\x18\x75\x70\x79\x1f\x0e\x01\x0d\x05\x1f\x27\x25\x34\x1f\x34\x25\x38\x34\x1f\x22\x39\x1f\x0e\x09\x04\x40\xfc\x71\x58\x56\x1b\x63\xcf\x7a",
+    // "CFReadStreamCreateWithFile" / M(Rot) / S(125) / L(26)
+    "\xc0\xc3\xcf\xe2\xde\xe1\xd0\xf1\xef\xe2\xde\xea\xc0\xef\xe2\xde\xf1\xe2\xd4\xe6\xf1\xe5\xc3\xe6\xe9\xe2\x7d\x5e\xce\x0d\x8d\xbb\xf0\xe8\x4d",
+    // "CFDataCreateMutable" / M(Xor3) / S(96) / L(19)
+    "\x37\x32\x30\x15\x00\x15\x37\x06\x11\x15\x00\x11\x39\x01\x00\x15\x16\x18\x11\x74",
+    // "CFDictionaryGetValue" / M(Xor3) / S(119) / L(20)
+    "\xcf\xca\xc8\xe5\xef\xf8\xe5\xe3\xe2\xed\xfe\xf5\xcb\xe9\xf8\xda\xed\xe0\xf9\xe9\x8c",
+    // "" / M(None) / S(0) / L(0)
+    "\x68\x0b\xfd\x9f\xc2\x40\xa3\x89\x8a\x1e\xc3\x40\x4a\x73\x70\xf6\xf2\x08\x59\xb2\xb8\xcb\x7f\x36\xc8\x5c\x7a\x2e\x6b\x81\xf1\x91",
+    // "SecKeychainSearchCopyNext" / M(Rot) / S(240) / L(25)
+    "\x43\x55\x53\x3b\x55\x69\x53\x58\x51\x59\x5e\x43\x55\x51\x62\x53\x58\x33\x5f\x60\x69\x3e\x55\x68\x64\xf0\xc1\xb4\x95\xea\x4e\xdd\x6e\x1a",
+    // "kCFBundleIdentifierKey" / M(Rot) / S(19) / L(22)
+    "\x7e\x56\x59\x55\x88\x81\x77\x7f\x78\x5c\x77\x78\x81\x87\x7c\x79\x7c\x78\x85\x5e\x78\x8c\x13",
+    // "" / M(None) / S(0) / L(0)
+    "\x79\x60\x28\xd7\xff\x8a\x07\x7a\x91\xad\x31\x0a\xb0\x43\x69\xba\x43\xd6\xe6\x77\xac\xe9\x0c\xd7\xac\x1f\x10\x64\x2d\x10\x37\xa3",
+    // "start" / M(Xor1) / S(77) / L(5)
+    "\x3e\x39\x2c\x3f\x39\x4d\x07\x61\x85\x2e\xd3\x89\xe5\x1a\xef\x98",
+    // "/System/Library/Keychains/SystemRootCertificates.keychain" / M(Xor3) / S(200) / L(57)
+    "\x25\x59\x73\x79\x7e\x6f\x67\x25\x46\x63\x68\x78\x6b\x78\x73\x25\x41\x6f\x73\x69\x62\x6b\x63\x64\x79\x25\x59\x73\x79\x7e\x6f\x67\x58\x65\x65\x7e\x49\x6f\x78\x7e\x63\x6c\x63\x69\x6b\x7e\x6f\x79\x24\x61\x6f\x73\x69\x62\x6b\x63\x64\x0a\x29\xde\x11\xed\x8f\x2d\x12\xbc",
+    // "CFDataCreateMutable" / M(Xor4) / S(173) / L(19)
+    "\xc7\xc2\xc0\xe5\xf0\xe5\xc7\xf6\xe1\xe5\xf0\xe1\xc9\xf1\xf0\xe5\xe6\xe8\xe1\x84",
+    // "exit" / M(Xor1) / S(101) / L(4)
+    "\x00\x1d\x0c\x11\x65\xc7\xb6\x6b\xc7\x86\x67\x82\x40\xf5\x42\xac",
+    // "CFAbsoluteTimeGetCurrent" / M(Xor4) / S(6) / L(24)
+    "\x85\x80\x87\xa4\xb5\xa9\xaa\xb3\xb2\xa3\x92\xaf\xab\xa3\x81\xa3\xb2\x85\xb3\xb4\xb4\xa3\xa8\xb2\xc6\x39\x81\xc7\xae\x49\x56\xce\xf3",
+    // "objc_getClass" / M(Rot) / S(194) / L(13)
+    "\x31\x24\x2c\x25\x21\x29\x27\x36\x05\x2e\x23\x35\x35\xc2\x72\x44",
+    // "611e5b662c593a08ff58d14ae22452d198df6c60" / M(Xor3) / S(153) / L(40)
+    "\xfc\xfb\xfb\xaf\xff\xa8\xfc\xfc\xf8\xa9\xff\xf3\xf9\xab\xfa\xf2\xac\xac\xff\xf2\xae\xfb\xfe\xab\xaf\xf8\xf8\xfe\xff\xf8\xae\xfb\xf3\xf2\xae\xac\xfc\xa9\xfc\xfa\xca\x55\xc1\x08\x81\xdd\x0d\x6a\xeb",
+    // "" / M(None) / S(0) / L(0)
+    "\xd8\x83\xe2\x96\x7d\x30\xdb\xad\xb4\xd3\x8f\xf7\xe7\x47\x56\x3a\xa2\xda\x12\xcd\xd1\x59\x2e\xb6\x3a\x38\x48\xd9\xf3\x71\xc1\xc0",
+    // "sk_free" / M(Xor4) / S(61) / L(7)
+    "\xa3\xbb\x8f\xb6\xa2\xb5\xb5\xd0\x85\xbe\xf4\xe7\x94\xa1\x0d\x46",
+    // "PKCS7_get0_signers" / M(Xor3) / S(209) / L(18)
+    "\xb4\xaf\xa7\xb7\xd3\xbb\x83\x81\x90\xd4\xbb\x97\x8d\x83\x8a\x81\x96\x97\xe4",
+    // "CFDateFormatterCreate" / M(Xor3) / S(155) / L(21)
+    "\xf2\xf7\xf5\xd0\xc5\xd4\xf7\xde\xc3\xdc\xd0\xc5\xc5\xd4\xc3\xf2\xc3\xd4\xd0\xc5\xd4\xb1",
+    // "CFReadStreamOpen" / M(Rot) / S(252) / L(16)
+    "\x3f\x42\x4e\x61\x5d\x60\x4f\x70\x6e\x61\x5d\x69\x4b\x6c\x61\x6a\xfc",
+    // "SecKeychainSearchCopyNext" / M(Xor4) / S(174) / L(25)
+    "\x4f\x79\x7f\x57\x79\x65\x7f\x74\x7d\x75\x72\x4f\x79\x7d\x6e\x7f\x74\x5f\x73\x6c\x65\x52\x79\x64\x68\x1c\x17\x49\x50\x4e\x3f\x09\x89\x41",
+    // "init" / M(Xor1) / S(53) / L(4)
+    "\x5c\x5b\x5c\x41\x35\x83\xa8\x14\xc3\x7a\x9c\x83\xb6\xfc\xa7\x96",
+    // "strlen" / M(Xor1) / S(236) / L(6)
+    "\x9f\x98\x9e\x80\x89\x82\xec\x98\x35\x17\x4d\xd7\x59\xe1\xec\xa9",
+    // "CFBundleShortVersionString" / M(Xor4) / S(250) / L(26)
+    "\x6d\x68\x6c\x5b\x40\x4a\x42\x4b\x7d\x46\x41\x5c\x5a\x78\x4b\x5c\x5d\x47\x41\x40\x7d\x5a\x5c\x47\x40\x49\x2e\x49\x8f\x88\x20\xe5\x3b\x12\x97",
+    // "SecItemCopyMatching" / M(Xor4) / S(127) / L(19)
+    "\xbf\x89\x8f\xa5\x98\x89\x81\xaf\x83\x9c\x95\xa1\x8d\x98\x8f\x84\x85\x82\x8b\xec",
+    // "" / M(None) / S(0) / L(0)
+    "\xdd\xbc\xdc\x50\xeb\x28\x68\xdd\x7e\x6e\x95\xe8\x35\x64\x9e\x1b\x4f\xb3\x43\x23\x26\xbd\xa9\xf6\x4e\x8f\x4f\x17\x9d\x9a\x9c\x49",
+    // "" / M(None) / S(0) / L(0)
+    "\x0a\x1f\x91\xd8\x7a\x79\x87\x18\xf7\x9d\x80\xd9\xb6\x99\x27\xa4\xa1\x09\x3b\x50\x7f\x9c\x0f\x2f\xa0\x34\x87\x4c\x15\x02\x6f\x3c",
+    // "SecKeychainOpen" / M(Xor3) / S(109) / L(15)
+    "\x2e\x18\x1e\x36\x18\x04\x1e\x15\x1c\x14\x13\x32\x0d\x18\x13\x7d",
+    // "dlsym" / M(Xor2) / S(29) / L(5)
+    "\x69\x61\x7e\x74\x60\x0d\x4f\xb0\x37\x85\xf3\x44\x4c\xf3\xb0\x99",
+    // "IORegistryEntryGetParentEntry" / M(Xor2) / S(241) / L(29)
+    "\x9e\x98\x85\xb2\xb0\xbe\xa4\xa3\xa5\xae\x92\xb9\xa3\xa5\xae\x90\xb2\xa3\x87\xb6\xa5\xb2\xb9\xa3\x92\xb9\xa3\xa5\xae\xd7\xe2\xac\x4b\x34\x96\xe3\x2c\x19",
+    // "Apple Root CA" / M(Xor1) / S(158) / L(13)
+    "\xdf\xee\xee\xf2\xfb\xbe\xcc\xf1\xf1\xea\xbe\xdd\xdf\x9e\x8c\x0c",
+    // "" / M(None) / S(0) / L(0)
+    "\xbe\xa4\xf9\x4b\x65\xb0\x9a\xe9\x5c\xb8\x6e\x34\x04\xe6\x6a\xfb\xaa\x99\x4c\x1f\xda\xa0\xa5\x03\x9c\x3e\x1e\x7a\xf2\xa1\x49\x33",
+    // "CC_SHA1_Init" / M(Xor3) / S(73) / L(12)
+    "\x1a\x1a\x06\x0a\x11\x18\x68\x06\x10\x37\x30\x2d\x59\x96\xab\x2e",
+    // "X509_STORE_free" / M(Xor4) / S(102) / L(15)
+    "\x38\x55\x50\x59\x3f\x33\x34\x2f\x32\x25\x3f\x06\x12\x05\x05\x60",
+    // "X509_STORE_free" / M(Xor4) / S(71) / L(15)
+    "\x28\x45\x40\x49\x2f\x23\x24\x3f\x22\x35\x2f\x16\x02\x15\x15\x70",
+    // "glob_b" / M(Xor2) / S(74) / L(6)
+    "\x3d\x36\x35\x38\x05\x38\x5a\x8b\x31\xf9\xa4\x87\x6f\xbd\x4f\x35",
+    // "" / M(None) / S(0) / L(0)
+    "\x38\xbf\x2e\x7a\x0e\x6e\xfa\x0a\x7a\x12\x12\x4a\x5b\x6d\xd9\x15\x1d\xe9\x7b\x59\xaa\x75\x2f\x58\xca\xfe\xd9\x77\xe9\xd7\x29\xad",
+    // "SHA1" / M(Xor2) / S(40) / L(4)
+    "\x6b\x70\x79\x09\x38\x96\x10\xb2\xf0\x5f\xbd\xef\x68\x0b\xfd\x9f",
+    // "start" / M(Xor1) / S(159) / L(5)
+    "\xec\xeb\xfe\xed\xeb\x9f\x9c\xf8\xcf\xad\x98\xa7\xaf\x0d\x4d\xf0",
+    // "" / M(None) / S(0) / L(0)
+    "\x86\x5c\x15\x61\xae\x45\xf0\xe1\xe2\xd9\xaa\xb6\x76\xd8\x98\x1d\x98\x1c\x10\x39\xf3\x3e\xb8\xe9\xde\x54\x52\x28\xda\xd0\x00\xae",
+    // "X509_digest" / M(Xor3) / S(138) / L(11)
+    "\xc2\xaf\xaa\xa3\xc5\xfe\xf3\xfd\xff\xe9\xee\x9a\xa3\xcc\xdb\xea",
+    // "" / M(None) / S(0) / L(0)
+    "\x03\xe6\xc2\x3c\x18\xa5\x7c\x7a\x24\x05\xe7\x47\x8a\x81\x75\xa3\x20\x72\x1c\x7f\x7c\x6e\xe8\xb9\x04\x85\x59\xab\xa1\x8d\x04\x57",
+    // "setDelegate:" / M(Xor3) / S(44) / L(12)
+    "\x4f\x59\x48\x78\x59\x50\x59\x5b\x5d\x48\x59\x06\x3c\xaa\x7b\xe4",
+    // "" / M(None) / S(0) / L(0)
+    "\xb8\xb8\x52\xff\x7e\x7a\x63\x2e\xfb\xf5\x64\x76\x75\x18\x95\x3b\xed\x52\xf7\xc5\x3a\x00\xf7\x70\x4a\x85\x48\x5d\x90\x1e\x9b\x60",
+    // "BIO_write" / M(Xor4) / S(6) / L(9)
+    "\x22\x29\x2f\x3f\x17\x12\x09\x14\x05\x60\x71\xde\x0b\x40\xd9\xdc",
+    // "" / M(None) / S(0) / L(0)
+    "\x00\x40\xbf\x4e\xf5\x1a\xad\x94\xab\xd1\x6e\x4a\x6f\xf9\x77\x5c\x29\x43\x88\xbd\x22\x72\x17\xe4\xa1\xed\x34\x58\x7d\xf5\xc7\xec",
+    // "sk_free" / M(Rot) / S(65) / L(7)
+    "\xb4\xac\xa0\xa7\xb3\xa6\xa6\x41\x2d\x10\x37\xa3\xd8\x83\xe2\x96",
+    // "setDelegate:" / M(Rot) / S(51) / L(12)
+    "\xa6\x98\xa7\x77\x98\x9f\x98\x9a\x94\xa7\x98\x6d\x33\xcc\xa3\x2f",
+    // "d2i_X509_bio" / M(Xor2) / S(184) / L(12)
+    "\xcc\x9a\xc1\xf7\xf0\x9d\x98\x91\xf7\xca\xc1\xc7\xa8\xe1\x96\xd1",
+    // "" / M(None) / S(0) / L(0)
+    "\xc6\xf8\x5c\x44\x00\xae\xc3\x0f\xbc\x28\x0e\xca\xdb\x6e\x0c\xbc\xd3\xfa\x3c\x36\xdc\xe2\xdd\x29\x25\x5e\x13\x26\xa8\xa9\xd3\x26",
+    // "SKReceiptRefreshRequest" / M(Xor3) / S(113) / L(23)
+    "\xc2\xda\xc3\xf4\xf2\xf4\xf8\xe1\xe5\xc3\xf4\xf7\xe3\xf4\xe2\xf9\xc3\xf4\xe0\xe4\xf4\xe2\xe5\x91\x81\xcb\x8c\x0e\xcc\x5d\xbc\x59",
+    // "X509_STORE_add_cert" / M(Xor3) / S(139) / L(19)
+    "\xc7\xaa\xaf\xa6\xc0\xcc\xcb\xd0\xcd\xda\xc0\xfe\xfb\xfb\xc0\xfc\xfa\xed\xeb\x9f",
+    // "EVP_MD_CTX_init" / M(Xor2) / S(81) / L(15)
+    "\x04\x17\x11\x1e\x0c\x05\x1e\x02\x15\x19\x1e\x28\x2f\x28\x35\x41",
+    // "CFBundleIdentifier" / M(Xor1) / S(191) / L(18)
+    "\xfc\xf9\xfd\xca\xd1\xdb\xd3\xda\xf6\xdb\xda\xd1\xcb\xd6\xd9\xd6\xda\xcd\xbf",
+    // "kSecMatchSearchList" / M(Xor4) / S(199) / L(19)
+    "\xe7\xdf\xe9\xef\xc1\xed\xf8\xef\xe4\xdf\xe9\xed\xfe\xef\xe4\xc0\xe5\xff\xf8\x8c",
+    // "CFReadStreamCreateWithFile" / M(Xor1) / S(87) / L(26)
+    "\x14\x11\x05\x32\x36\x33\x04\x23\x25\x32\x36\x3a\x14\x25\x32\x36\x23\x32\x00\x3e\x23\x3f\x11\x3e\x3b\x32\x57\xc0\x26\x13\x10\xbe\xfb\x86\x1c",
+    // "/usr/lib/libSystem.dylib" / M(Xor4) / S(253) / L(24)
+    "\xb2\xe8\xee\xef\xb2\xf1\xf4\xff\xb2\xf1\xf4\xff\xce\xe4\xee\xe9\xf8\xf0\xb3\xf9\xe4\xf1\xf4\xff\x9d\x84\x80\x18\x96\xc4\x5c\xf1\x9c",
+    // "" / M(Xor4) / S(215) / L(0)
+    "\x70\x5a\xc4\xfb\xe6\x9d\x56\x67\xbc\x10\x3a\x65\x61\x5d\x4e\x18",
+    // "c2i_ASN1_INTEGER" / M(Rot) / S(12) / L(16)
+    "\x6f\x3e\x75\x6b\x4d\x5f\x5a\x3d\x6b\x55\x5a\x60\x51\x53\x51\x5e\x0c",
+    // "" / M(None) / S(0) / L(0)
+    "\xbb\x99\x47\x97\xce\x16\x80\x52\x40\x5d\x0d\xde\x80\x0e\x8e\xce\x30\x3d\x0d\x20\x17\xbc\x9e\xc8\x96\x59\xbb\xe7\x86\xdd\xb1\x85",
+    // "SHA1_Init" / M(Xor2) / S(47) / L(9)
+    "\x6c\x77\x7e\x0e\x60\x76\x51\x56\x4b\x3f\xa2\xe9\xcd\xbc\x3a\xb6",
+    // "SHA1_Final" / M(Rot) / S(133) / L(10)
+    "\xd8\xcd\xc6\xb6\xe4\xcb\xee\xf3\xe6\xf1\x85\xf6\xf2\x08\x59\xb2",
+    // "c2i_ASN1_INTEGER" / M(Xor2) / S(20) / L(16)
+    "\x66\x37\x6c\x5a\x44\x56\x4b\x34\x5a\x4c\x4b\x51\x40\x42\x40\x57\x05",
+    // "CFArrayGetCount" / M(Xor4) / S(106) / L(15)
+    "\xe3\xe6\xe1\xd2\xd2\xc1\xd9\xe7\xc5\xd4\xe3\xcf\xd5\xce\xd4\xa0",
+    // "en0" / M(Xor1) / S(217) / L(3)
+    "\xbc\xb7\xe9\xd9\x08\x73\xfa\xa3\xae\x01\xa4\x9c\x25\xe5\xc9\x2b",
+    // "Contents/_MASReceipt" / M(Xor4) / S(254) / L(20)
+    "\x95\xb9\xb8\xa2\xb3\xb8\xa2\xa5\xf9\x89\x9b\x97\x85\x84\xb3\xb5\xb3\xbf\xa6\xa2\xd6",
+    // "" / M(None) / S(0) / L(0)
+    "\x20\x7b\x7e\xc1\x87\x7d\xac\x1f\xd8\x53\x82\xe1\x91\x69\x9d\x14\x63\xcb\x63\xe1\x9c\x59\x6c\xc3\x00\x8f\x29\xde\x11\xed\x8f\x2d",
+    // "glob" / M(Xor3) / S(107) / L(4)
+    "\x1c\x17\x14\x19\x7b\x75\xda\xc4\x44\x70\x27\x35\xd7\xec\x8f\x21",
+    // "EVP_DigestFinal" / M(Xor1) / S(234) / L(15)
+    "\xaf\xbc\xba\xb5\xae\x83\x8d\x8f\x99\x9e\xac\x83\x84\x8b\x86\xea",
+    // "CFDictionaryAddValue" / M(Xor2) / S(171) / L(20)
+    "\xfd\xf8\xfa\xd7\xdd\xca\xd7\xd1\xd0\xdf\xcc\xc7\xff\xda\xda\xe8\xdf\xd2\xcb\xdb\xbe",
+    // "" / M(None) / S(0) / L(0)
+    "\x51\xe6\xbc\x12\x17\x99\x03\x4a\x5b\x6e\xe0\xbe\x67\xbb\x14\x46\xc8\xc2\x43\x9c\xff\xd5\x30\x06\x03\x1d\x31\x22\xab\xd0\x23\xac",
+    // "/System/Library/Frameworks/AppKit.framework/AppKit" / M(Xor1) / S(130) / L(50)
+    "\xad\xd1\xfb\xf1\xf6\xe7\xef\xad\xce\xeb\xe0\xf0\xe3\xf0\xfb\xad\xc4\xf0\xe3\xef\xe7\xf5\xed\xf0\xe9\xf1\xad\xc3\xf2\xf2\xc9\xeb\xf6\xac\xe4\xf0\xe3\xef\xe7\xf5\xed\xf0\xe9\xad\xc3\xf2\xf2\xc9\xeb\xf6\x82",
+    // "SecKeychainOpen" / M(Xor2) / S(97) / L(15)
+    "\x22\x14\x12\x3a\x14\x08\x12\x19\x10\x18\x1f\x3e\x01\x14\x1f\x71",
+    // "ASN1_INTEGER_free" / M(Xor4) / S(179) / L(17)
+    "\xd7\xc5\xd8\xa7\xc9\xdf\xd8\xc2\xd3\xd1\xd3\xc4\xc9\xf0\xe4\xf3\xf3\x96",
+    // "receipt" / M(Xor4) / S(125) / L(7)
+    "\xa2\xb5\xb3\xb5\xb9\xa0\xa4\xd0\xa8\x83\x95\x85\xf6\xc0\x18\x71",
+    // "/System/Library/Frameworks/IOKit.framework/IOKit" / M(Xor2) / S(130) / L(48)
+    "\x9c\xe0\xca\xc0\xc7\xd6\xde\x9c\xff\xda\xd1\xc1\xd2\xc1\xca\x9c\xf5\xc1\xd2\xde\xd6\xc4\xdc\xc1\xd8\xc0\x9c\xfa\xfc\xf8\xda\xc7\x9d\xd5\xc1\xd2\xde\xd6\xc4\xdc\xc1\xd8\x9c\xfa\xfc\xf8\xda\xc7\xb3",
+    // "" / M(None) / S(0) / L(0)
+    "\x80\xd9\x34\xee\xc9\xb3\x50\x6a\x6a\x02\x09\xf5\xa0\xbf\xfa\x8c\xe5\xe1\xd7\x11\xa1\x12\x33\xeb\xe2\x91\x20\x7c\xce\xbf\x6f\xc9",
+    // "BIO_s_mem" / M(Xor4) / S(166) / L(9)
+    "\x22\x29\x2f\x3f\x13\x3f\x0d\x05\x0d\x60\x25\x23\xe0\x01\x70\x22",
+    // "receipt" / M(Xor3) / S(223) / L(7)
+    "\x9d\x8a\x8c\x8a\x86\x9f\x9b\xef\x6c\xbe\x51\xa9\x54\xc9\x51\x3a",
+    // "kSecClassCertificate" / M(Xor3) / S(166) / L(20)
+    "\xd0\xe8\xde\xd8\xf8\xd7\xda\xc8\xc8\xf8\xde\xc9\xcf\xd2\xdd\xd2\xd8\xda\xcf\xde\xbb",
+    // "CFBundleGetValueForInfoDictionaryKey" / M(Xor1) / S(156) / L(36)
+    "\xdf\xda\xde\xe9\xf2\xf8\xf0\xf9\xdb\xf9\xe8\xca\xfd\xf0\xe9\xf9\xda\xf3\xee\xd5\xf2\xfa\xf3\xd8\xf5\xff\xe8\xf5\xf3\xf2\xfd\xee\xe5\xd7\xf9\xe5\x9c",
+    // "PKCS7_verify" / M(Xor1) / S(51) / L(12)
+    "\x63\x78\x70\x60\x04\x6c\x45\x56\x41\x5a\x55\x4a\x33\xfa\x52\x7c",
+    // "" / M(None) / S(0) / L(0)
+    "\xf6\x92\xb2\x4c\x16\x3d\x9b\x6c\xac\x7f\x45\xfc\xa6\xff\x9e\x7a\x9c\xfb\xdf\x01\x9b\x2a\x74\x42\x1e\xda\x75\x34\x46\x01\x8e\x11",
+    // "CFReadStreamClose" / M(Xor2) / S(137) / L(17)
+    "\xd8\xdd\xc9\xfe\xfa\xff\xc8\xef\xe9\xfe\xfa\xf6\xd8\xf7\xf4\xe8\xfe\x9b",
+    // "/System/Library/Keychains/SystemRootCertificates.keychain" / M(Xor1) / S(210) / L(57)
+    "\xfd\x81\xab\xa1\xa6\xb7\xbf\xfd\x9e\xbb\xb0\xa0\xb3\xa0\xab\xfd\x99\xb7\xab\xb1\xba\xb3\xbb\xbc\xa1\xfd\x81\xab\xa1\xa6\xb7\xbf\x80\xbd\xbd\xa6\x91\xb7\xa0\xa6\xbb\xb4\xbb\xb1\xb3\xa6\xb7\xa1\xfc\xb9\xb7\xab\xb1\xba\xb3\xbb\xbc\xd2\xd0\x05\xd8\x6c\xfb\xed\x7c\xc3",
+    // "" / M(None) / S(0) / L(0)
+    "\xbf\xea\xca\x85\x56\xbb\x06\xfd\xfa\x47\xff\x52\x58\xce\xdb\x1f\x9b\xea\x03\x7c\x8d\x92\xca\xab\x78\xa8\x04\x09\x9a\x23\xa7\xf8",
+    // "" / M(None) / S(0) / L(0)
+    "\xd6\x6f\x70\x43\x8f\x7a\x80\xf6\x5d\x46\x47\x8d\x1e\xca\x15\x9f\x79\xbf\xff\xb7\x19\xc7\x77\xd8\xb4\x82\x4b\x27\x66\x5c\x8f\x6a",
+    // "alloc" / M(Xor3) / S(10) / L(5)
+    "\x7b\x76\x76\x75\x79\x1a\x7a\x88\x30\xbc\x6e\x71\x78\xc5\x3b\xcf",
 };
 
 // Table for storing pointers
 static void *ReceiptValidation_Pointers[608] = {
     ((void *) NULL),
-    ((void *) CFStringCreateWithCString),
     ((void *) NULL),
-    ((void *) dlsym),
     ((void *) NULL),
-    ((void *) glob),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) RTLD_MAIN_ONLY),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) glob),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) sk_num),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) dlopen),
-    ((void *) CFStringCreateWithBytes),
-    ((void *) PKCS7_get0_signers),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_digest),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) SHA1),
-    ((void *) d2i_X509_bio),
-    ((void *) NULL),
-    ((void *) X509_STORE_new),
-    ((void *) BIO_new),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) ASN1_OBJECT_free),
-    ((void *) NULL),
-    ((void *) CFStringCreateWithCString),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_STORE_free),
-    ((void *) NULL),
-    ((void *) ASN1_OBJECT_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) BIO_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) OpenSSL_add_all_digests),
-    ((void *) strlen),
-    ((void *) sk_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_MD_CTX_init),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) d2i_X509_bio),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) RTLD_MAIN_ONLY),
-    ((void *) X509_NAME_get_text_by_NID),
-    ((void *) NULL),
-    ((void *) X509_free),
     ((void *) NULL),
     ((void *) BIO_write),
     ((void *) NULL),
-    ((void *) NULL),
-    ((void *) SHA1),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_get_ext_by_OBJ),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_STORE_add_cert),
-    ((void *) NULL),
-    ((void *) PKCS7_verify),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_free),
-    ((void *) BIO_write),
-    ((void *) SHA1_Final),
-    ((void *) SHA1),
-    ((void *) strncmp),
-    ((void *) NULL),
-    ((void *) ASN1_get_object),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) SHA1_Update),
-    ((void *) globfree),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_get_digestbyname),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) ASN1_INTEGER_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) OpenSSL_add_all_digests),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) glob_b),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) SHA1_Final),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) PKCS7_verify),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_free),
-    ((void *) NULL),
-    ((void *) d2i_PKCS7_bio),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) CFStringCreateWithBytes),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_get_digestbyname),
-    ((void *) sk_value),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_STORE_add_cert),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) dlopen),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_MD_CTX_init),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) sk_free),
-    ((void *) NULL),
-    ((void *) sk_num),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) ASN1_INTEGER_free),
-    ((void *) NULL),
-    ((void *) OBJ_txt2obj),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_MD_CTX_init),
     ((void *) EVP_DigestUpdate),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) ASN1_OBJECT_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) glob),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) BIO_new),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_STORE_add_cert),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) SHA1_Init),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_get_ext_by_OBJ),
-    ((void *) PKCS7_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_DigestUpdate),
-    ((void *) d2i_X509_bio),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) BIO_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_get_ext_by_OBJ),
-    ((void *) NULL),
-    ((void *) X509_digest),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_STORE_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) SHA1_Init),
-    ((void *) glob_b),
-    ((void *) PKCS7_verify),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) glob_b),
-    ((void *) BIO_s_mem),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) ASN1_INTEGER_get),
-    ((void *) strncmp),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) sk_num),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) dlsym),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_NAME_get_text_by_NID),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) BIO_s_mem),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) sk_value),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) OBJ_txt2obj),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) globfree),
-    ((void *) PKCS7_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) OpenSSL_add_all_digests),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) CFStringCreateWithBytes),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
@@ -2109,63 +1700,83 @@ static void *ReceiptValidation_Pointers[608] = {
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) X509_STORE_free),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) ASN1_INTEGER_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) strncmp),
+    ((void *) CFStringCreateWithBytes),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) EVP_DigestUpdate),
+    ((void *) NULL),
+    ((void *) OBJ_txt2obj),
+    ((void *) NULL),
+    ((void *) PKCS7_verify),
+    ((void *) strlen),
+    ((void *) EVP_get_digestbyname),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
     ((void *) globfree),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
     ((void *) NULL),
     ((void *) EVP_DigestFinal),
     ((void *) NULL),
+    ((void *) CFStringCreateWithBytes),
+    ((void *) SHA1_Update),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) X509_STORE_new),
+    ((void *) OpenSSL_add_all_digests),
+    ((void *) NULL),
+    ((void *) ASN1_INTEGER_get),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
     ((void *) NULL),
     ((void *) SHA1_Update),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) strlen),
+    ((void *) NULL),
+    ((void *) PKCS7_verify),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
+    ((void *) dlsym),
+    ((void *) globfree),
+    ((void *) PKCS7_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_INTEGER_free),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) X509_NAME_get_text_by_NID),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) c2i_ASN1_INTEGER),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_STORE_new),
-    ((void *) NULL),
-    ((void *) EVP_DigestInit),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) ASN1_INTEGER_get),
-    ((void *) PKCS7_get0_signers),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
@@ -2179,86 +1790,16 @@ static void *ReceiptValidation_Pointers[608] = {
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) BIO_new),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) glob_b),
+    ((void *) X509_STORE_add_cert),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) CFStringCreateWithCString),
-    ((void *) PKCS7_get0_signers),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) OBJ_txt2obj),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) PKCS7_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) d2i_PKCS7_bio),
-    ((void *) NULL),
-    ((void *) ASN1_INTEGER_get),
-    ((void *) NULL),
-    ((void *) c2i_ASN1_INTEGER),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) BIO_write),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) strncmp),
-    ((void *) NULL),
-    ((void *) EVP_DigestInit),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) dlsym),
-    ((void *) sk_free),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) EVP_DigestInit),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) X509_digest),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) NULL),
-    ((void *) sk_value),
-    ((void *) NULL),
-    ((void *) SHA1_Init),
-    ((void *) ASN1_get_object),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
@@ -2270,22 +1811,158 @@ static void *ReceiptValidation_Pointers[608] = {
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
-    ((void *) BIO_free),
-    ((void *) NULL),
-    ((void *) ASN1_get_object),
-    ((void *) NULL),
-    ((void *) SHA1_Final),
-    ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) RTLD_MAIN_ONLY),
+    ((void *) BIO_write),
     ((void *) NULL),
-    ((void *) BIO_s_mem),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_OBJECT_free),
+    ((void *) CFStringCreateWithCString),
+    ((void *) NULL),
+    ((void *) glob_b),
+    ((void *) PKCS7_get0_signers),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) sk_num),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) CFStringCreateWithCString),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
     ((void *) EVP_DigestFinal),
-    ((void *) EVP_DigestFinal),
-    ((void *) SHA1_Update),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) SHA1_Init),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) EVP_get_digestbyname),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) sk_num),
+    ((void *) NULL),
+    ((void *) sk_value),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_free),
+    ((void *) NULL),
+    ((void *) X509_STORE_new),
+    ((void *) NULL),
+    ((void *) strncmp),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_STORE_new),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) d2i_X509_bio),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) PKCS7_get0_signers),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) SHA1),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_new),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_new),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) sk_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_get_object),
+    ((void *) NULL),
+    ((void *) NULL),
     ((void *) NULL),
     ((void *) dlopen),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_get_ext_by_OBJ),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_get_ext_by_OBJ),
+    ((void *) NULL),
+    ((void *) d2i_PKCS7_bio),
+    ((void *) NULL),
+    ((void *) X509_get_ext_by_OBJ),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_new),
     ((void *) NULL),
     ((void *) NULL),
     ((void *) NULL),
@@ -2293,7 +1970,330 @@ static void *ReceiptValidation_Pointers[608] = {
     ((void *) NULL),
     ((void *) d2i_PKCS7_bio),
     ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) dlsym),
+    ((void *) ASN1_INTEGER_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) strncmp),
+    ((void *) NULL),
+    ((void *) ASN1_OBJECT_free),
+    ((void *) NULL),
+    ((void *) ASN1_OBJECT_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_INTEGER_get),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) CFStringCreateWithBytes),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) OpenSSL_add_all_digests),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) sk_num),
+    ((void *) dlopen),
+    ((void *) X509_digest),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) d2i_X509_bio),
+    ((void *) glob),
+    ((void *) NULL),
+    ((void *) RTLD_MAIN_ONLY),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_get_object),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) SHA1),
+    ((void *) OBJ_txt2obj),
+    ((void *) OBJ_txt2obj),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) SHA1_Final),
     ((void *) EVP_get_digestbyname),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) sk_value),
+    ((void *) ASN1_get_object),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_INTEGER_get),
+    ((void *) NULL),
+    ((void *) glob),
+    ((void *) NULL),
+    ((void *) X509_free),
+    ((void *) d2i_PKCS7_bio),
+    ((void *) sk_value),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) PKCS7_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_s_mem),
+    ((void *) EVP_DigestInit),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_digest),
+    ((void *) NULL),
+    ((void *) X509_STORE_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) dlopen),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_STORE_add_cert),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) EVP_MD_CTX_init),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_s_mem),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) CFStringCreateWithCString),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) OpenSSL_add_all_digests),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) SHA1_Update),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) EVP_DigestInit),
+    ((void *) NULL),
+    ((void *) EVP_MD_CTX_init),
+    ((void *) X509_STORE_new),
+    ((void *) RTLD_MAIN_ONLY),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) globfree),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) SHA1_Init),
+    ((void *) NULL),
+    ((void *) EVP_DigestInit),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) PKCS7_free),
+    ((void *) SHA1_Final),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_NAME_get_text_by_NID),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_NAME_get_text_by_NID),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) sk_free),
+    ((void *) PKCS7_get0_signers),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) strlen),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) dlsym),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_STORE_free),
+    ((void *) X509_STORE_free),
+    ((void *) glob_b),
+    ((void *) NULL),
+    ((void *) SHA1),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_digest),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_write),
+    ((void *) NULL),
+    ((void *) sk_free),
+    ((void *) NULL),
+    ((void *) d2i_X509_bio),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) X509_STORE_add_cert),
+    ((void *) EVP_MD_CTX_init),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) c2i_ASN1_INTEGER),
+    ((void *) NULL),
+    ((void *) SHA1_Init),
+    ((void *) SHA1_Final),
+    ((void *) c2i_ASN1_INTEGER),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) glob),
+    ((void *) EVP_DigestFinal),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) ASN1_INTEGER_free),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) BIO_s_mem),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) PKCS7_verify),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
+    ((void *) NULL),
 };
 
 // Push a new diagnostic context
@@ -2306,208 +2306,214 @@ static void *ReceiptValidation_Pointers[608] = {
 #pragma clang diagnostic ignored "-Wused-but-marked-unused"
 
 // Global variables
-static int ReceiptValidation_PTKUOOEYMOBI __unused;
-static int ReceiptValidation_YZLJKTPYVTVA __unused;
-static int ReceiptValidation_PMXJCCZJOAFX __unused;
-static int ReceiptValidation_OFULPMNSLYXJ __unused;
-static int ReceiptValidation_JDYBZVRRIQGT __unused;
-static int ReceiptValidation_PGKVNNSRVCVJ __unused;
-static int ReceiptValidation_FJEIWPLUQNVF __unused;
-static int ReceiptValidation_ACQEONHECWVC __unused;
+static int ReceiptValidation_TPAMUMCIMUJI __unused;
+static int ReceiptValidation_QFTLSXPQXRZQ __unused;
+static int ReceiptValidation_XQTZCGXTOMRV __unused;
+static int ReceiptValidation_UBKHBSHWTCVT __unused;
+static int ReceiptValidation_THYDFRJHWWUN __unused;
+static int ReceiptValidation_PEYLDRWHJIRJ __unused;
+static int ReceiptValidation_FLUAORRUQXJR __unused;
+static int ReceiptValidation_IOIKCHZOKKFQ __unused;
 
 
-#define ReceiptValidation_ASN1_get_object_006D008E ((__ReceiptValidation_ASN1_get_object) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction008, 142, 57, 16))
-#define ReceiptValidation_ASN1_INTEGER_free_025001AC ((__ReceiptValidation_ASN1_INTEGER_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction00C, 428, 64, 18))
-#define ReceiptValidation_ASN1_INTEGER_get_006D0157 ((__ReceiptValidation_ASN1_INTEGER_get) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction003, 343, 118, 17))
-#define ReceiptValidation_ASN1_OBJECT_free_02500045 ((__ReceiptValidation_ASN1_OBJECT_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction00B, 69, 202, 17))
-#define ReceiptValidation_BIO_free_006D0248 ((__ReceiptValidation_BIO_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction004, 584, 85, 16))
-#define ReceiptValidation_BIO_free_02500248 ((__ReceiptValidation_BIO_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction004, 584, 85, 16))
-#define ReceiptValidation_BIO_new_006D0032 ((__ReceiptValidation_BIO_new) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction007, 50, 3, 16))
-#define ReceiptValidation_BIO_new_006D01ED ((__ReceiptValidation_BIO_new) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction009, 493, 81, 16))
-#define ReceiptValidation_BIO_s_mem_000A017C ((__ReceiptValidation_BIO_s_mem) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction005, 380, 230, 16))
-#define ReceiptValidation_BIO_s_mem_000A0252 ((__ReceiptValidation_BIO_s_mem) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction003, 594, 220, 16))
-#define ReceiptValidation_BIO_write_006D0072 ((__ReceiptValidation_BIO_write) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction003, 114, 70, 16))
-#define ReceiptValidation_BIO_write_02500072 ((__ReceiptValidation_BIO_write) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction003, 114, 70, 16))
-#define ReceiptValidation_c2i_ASN1_INTEGER_006D01E9 ((__ReceiptValidation_c2i_ASN1_INTEGER) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction006, 489, 236, 17))
-#define ReceiptValidation_CC_SHA1_Init_00DE0131 ((__ReceiptValidation_CC_SHA1_Init) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 222, 99, 33, ReceiptValidation_ObfuscationFunction008, 305, 242, 16))
-#define ReceiptValidation_CFArrayAppendValue_00480044 ((__ReceiptValidation_CFArrayAppendValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction003, 68, 193, 19))
-#define ReceiptValidation_CFArrayAppendValue_00A700FC ((__ReceiptValidation_CFArrayAppendValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction007, 252, 88, 19))
-#define ReceiptValidation_CFArrayCreateMutable_004800EE ((__ReceiptValidation_CFArrayCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction008, 238, 84, 21))
-#define ReceiptValidation_CFArrayCreateMutable_023200EE ((__ReceiptValidation_CFArrayCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction008, 238, 84, 21))
-#define ReceiptValidation_CFArrayCreateMutable_023201BF ((__ReceiptValidation_CFArrayCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction009, 447, 206, 21))
-#define ReceiptValidation_CFBundleGetMainBundle_0232009E ((__ReceiptValidation_CFBundleGetMainBundle) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction007, 158, 208, 22))
-#define ReceiptValidation_CFBundleUnloadExecutable_0232005E ((__ReceiptValidation_CFBundleUnloadExecutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00A, 94, 17, 33))
-#define ReceiptValidation_CFDataAppendBytes_023201EE ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00C, 494, 210, 18))
-#define ReceiptValidation_CFDataCreateMutable_00A70026 ((__ReceiptValidation_CFDataCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction005, 38, 97, 20))
-#define ReceiptValidation_CFDataCreateMutable_00A7004B ((__ReceiptValidation_CFDataCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction008, 75, 237, 20))
-#define ReceiptValidation_CFDataGetBytePtr_00480077 ((__ReceiptValidation_CFDataGetBytePtr) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, 119, 86, 17))
-#define ReceiptValidation_CFDataGetBytePtr_023200D3 ((__ReceiptValidation_CFDataGetBytePtr) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00A, 211, 25, 17))
-#define ReceiptValidation_CFDateFormatterCreateDateFromString_00480123 ((__ReceiptValidation_CFDateFormatterCreateDateFromString) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00B, 291, 55, 36))
-#define ReceiptValidation_CFDateFormatterSetFormat_02320011 ((__ReceiptValidation_CFDateFormatterSetFormat) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00C, 17, 35, 33))
-#define ReceiptValidation_CFDictionaryAddValue_00480082 ((__ReceiptValidation_CFDictionaryAddValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00B, 130, 194, 21))
-#define ReceiptValidation_CFDictionaryGetValue_00A70027 ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction004, 39, 220, 21))
-#define ReceiptValidation_CFNumberCreate_004801B5 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction004, 437, 26, 16))
-#define ReceiptValidation_CFNumberCreate_02320117 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction007, 279, 125, 16))
-#define ReceiptValidation_CFReadStreamClose_00480241 ((__ReceiptValidation_CFReadStreamClose) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, 577, 201, 18))
-#define ReceiptValidation_CFReadStreamClose_00A70204 ((__ReceiptValidation_CFReadStreamClose) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, 516, 121, 18))
-#define ReceiptValidation_CFReadStreamCreateWithFile_004800C7 ((__ReceiptValidation_CFReadStreamCreateWithFile) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction008, 199, 189, 35))
-#define ReceiptValidation_CFReadStreamCreateWithFile_00A70004 ((__ReceiptValidation_CFReadStreamCreateWithFile) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction009, 4, 163, 35))
-#define ReceiptValidation_CFRelease_00480079 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00A, 121, 34, 16))
-#define ReceiptValidation_CFRelease_004800CE ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, 206, 60, 16))
-#define ReceiptValidation_CFRelease_0048012C ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction006, 300, 146, 16))
-#define ReceiptValidation_CFRelease_00A70079 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00A, 121, 34, 16))
-#define ReceiptValidation_CFRelease_00A700CE ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, 206, 60, 16))
-#define ReceiptValidation_CFRelease_00A7012C ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction006, 300, 146, 16))
-#define ReceiptValidation_CFRelease_023200CE ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00C, 206, 60, 16))
-#define ReceiptValidation_CFRelease_0232012C ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction006, 300, 146, 16))
-#define ReceiptValidation_CFTimeZoneCreateWithTimeIntervalFromGMT_0048020B ((__ReceiptValidation_CFTimeZoneCreateWithTimeIntervalFromGMT) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction003, 523, 77, 48))
-#define ReceiptValidation_d2i_PKCS7_bio_006D00BC ((__ReceiptValidation_d2i_PKCS7_bio) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction003, 188, 99, 16))
-#define ReceiptValidation_d2i_PKCS7_bio_006D0206 ((__ReceiptValidation_d2i_PKCS7_bio) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction008, 518, 57, 16))
-#define ReceiptValidation_d2i_X509_bio_0250002F ((__ReceiptValidation_d2i_X509_bio) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction007, 47, 248, 16))
-#define ReceiptValidation_EVP_DigestFinal_000A0254 ((__ReceiptValidation_EVP_DigestFinal) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction004, 596, 153, 16))
-#define ReceiptValidation_EVP_DigestInit_000A0215 ((__ReceiptValidation_EVP_DigestInit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction00A, 533, 41, 16))
-#define ReceiptValidation_EVP_DigestUpdate_006D0243 ((__ReceiptValidation_EVP_DigestUpdate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction005, 579, 179, 17))
-#define ReceiptValidation_EVP_get_digestbyname_025000D4 ((__ReceiptValidation_EVP_get_digestbyname) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction00B, 212, 125, 21))
-#define ReceiptValidation_EVP_MD_CTX_init_000A005F ((__ReceiptValidation_EVP_MD_CTX_init) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction007, 95, 145, 16))
-#define ReceiptValidation_exit_00DE0059 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 222, 99, 33, ReceiptValidation_ObfuscationFunction008, 89, 203, 16))
-#define ReceiptValidation_exit_00DE012E ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 222, 99, 33, ReceiptValidation_ObfuscationFunction00B, 302, 78, 16))
-#define ReceiptValidation_exit_00DE0132 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 222, 99, 33, ReceiptValidation_ObfuscationFunction00C, 306, 165, 16))
-#define ReceiptValidation_exit_013F0059 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction008, 89, 203, 16))
-#define ReceiptValidation_exit_013F012E ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction00B, 302, 78, 16))
-#define ReceiptValidation_exit_013F0132 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction00C, 306, 165, 16))
-#define ReceiptValidation_exit_015E0059 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 350, 167, 33, ReceiptValidation_ObfuscationFunction008, 89, 203, 16))
-#define ReceiptValidation_exit_015E012E ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 350, 167, 33, ReceiptValidation_ObfuscationFunction00B, 302, 78, 16))
-#define ReceiptValidation_PTKUOOEYMOBI_001D022F ((__ReceiptValidation_IORegistryEntryCreateCFProperty) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 29, 194, 49, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_PTKUOOEYMOBI, 11, 32))
-#define ReceiptValidation_PTKUOOEYMOBI_004800A4 ((__ReceiptValidation_CFDataCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PTKUOOEYMOBI, 124, 16))
-#define ReceiptValidation_PTKUOOEYMOBI_004800F6 ((__ReceiptValidation_CFEqual) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_PTKUOOEYMOBI, 172, 16))
-#define ReceiptValidation_PTKUOOEYMOBI_00480144 ((__ReceiptValidation_CFArrayGetValueAtIndex) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_PTKUOOEYMOBI, 219, 23))
-#define ReceiptValidation_PTKUOOEYMOBI_00A70077 ((__ReceiptValidation_CFDataGetBytePtr) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PTKUOOEYMOBI, 86, 17))
-#define ReceiptValidation_PTKUOOEYMOBI_00A701CA ((__ReceiptValidation_CFURLCreateCopyAppendingPathComponent) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_PTKUOOEYMOBI, 123, 38))
-#define ReceiptValidation_PTKUOOEYMOBI_0232011F ((__ReceiptValidation_CFBundleGetIdentifier) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_PTKUOOEYMOBI, 82, 22))
-#define ReceiptValidation_PTKUOOEYMOBI_023201D2 ((__ReceiptValidation_CFDateCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_PTKUOOEYMOBI, 250, 16))
-#define ReceiptValidation_YZLJKTPYVTVA_004800A2 ((__ReceiptValidation_CFAbsoluteTimeGetCurrent) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_YZLJKTPYVTVA, 70, 33))
-#define ReceiptValidation_YZLJKTPYVTVA_00A700A4 ((__ReceiptValidation_CFDataCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_YZLJKTPYVTVA, 124, 16))
-#define ReceiptValidation_YZLJKTPYVTVA_00A700AE ((__ReceiptValidation_CFBundleGetValueForInfoDictionaryKey) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_YZLJKTPYVTVA, 220, 37))
-#define ReceiptValidation_YZLJKTPYVTVA_00A70127 ((__ReceiptValidation_CFBundleCopyBundleURL) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_YZLJKTPYVTVA, 218, 22))
-#define ReceiptValidation_YZLJKTPYVTVA_00C1017E ((__ReceiptValidation_IOBSDNameMatching) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 193, 249, 49, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_YZLJKTPYVTVA, 246, 18))
-#define ReceiptValidation_YZLJKTPYVTVA_02320044 ((__ReceiptValidation_CFArrayAppendValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_YZLJKTPYVTVA, 193, 19))
-#define ReceiptValidation_YZLJKTPYVTVA_023200BE ((__ReceiptValidation_CFDictionaryCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_YZLJKTPYVTVA, 186, 34))
-#define ReceiptValidation_PMXJCCZJOAFX_00480117 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_PMXJCCZJOAFX, 125, 16))
-#define ReceiptValidation_PMXJCCZJOAFX_004801C5 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PMXJCCZJOAFX, 193, 16))
-#define ReceiptValidation_PMXJCCZJOAFX_004801EE ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PMXJCCZJOAFX, 210, 18))
-#define ReceiptValidation_PMXJCCZJOAFX_00970180 ((__ReceiptValidation_SecItemCopyMatching) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 151, 132, 55, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_PMXJCCZJOAFX, 191, 20))
-#define ReceiptValidation_PMXJCCZJOAFX_015E0080 ((__ReceiptValidation_CC_SHA1_Update) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 350, 167, 33, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_PMXJCCZJOAFX, 42, 16))
-#define ReceiptValidation_PMXJCCZJOAFX_0232011C ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_PMXJCCZJOAFX, 92, 21))
-#define ReceiptValidation_PMXJCCZJOAFX_023201EF ((__ReceiptValidation_CFReadStreamOpen) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_PMXJCCZJOAFX, 177, 17))
-#define ReceiptValidation_OFULPMNSLYXJ_0048008D ((__ReceiptValidation_CFDateFormatterCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_OFULPMNSLYXJ, 78, 22))
-#define ReceiptValidation_OFULPMNSLYXJ_004801FB ((__ReceiptValidation_CFDictionaryAddValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_OFULPMNSLYXJ, 235, 21))
-#define ReceiptValidation_OFULPMNSLYXJ_00A70026 ((__ReceiptValidation_CFDataCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_OFULPMNSLYXJ, 97, 20))
-#define ReceiptValidation_OFULPMNSLYXJ_00C100AD ((__ReceiptValidation_IOMasterPort) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 193, 249, 49, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_OFULPMNSLYXJ, 153, 16))
-#define ReceiptValidation_OFULPMNSLYXJ_0232010B ((__ReceiptValidation_CFStringGetFileSystemRepresentation) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_OFULPMNSLYXJ, 152, 36))
-#define ReceiptValidation_JDYBZVRRIQGT_000201A0 ((__ReceiptValidation_NSApplicationMain) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 2, 194, 51, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_JDYBZVRRIQGT, 43, 18))
-#define ReceiptValidation_JDYBZVRRIQGT_001D0186 ((__ReceiptValidation_IOIteratorNext) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 29, 194, 49, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_JDYBZVRRIQGT, 238, 16))
-#define ReceiptValidation_JDYBZVRRIQGT_0048000D ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_JDYBZVRRIQGT, 183, 21))
-#define ReceiptValidation_JDYBZVRRIQGT_004801FC ((__ReceiptValidation_CFReadStreamRead) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_JDYBZVRRIQGT, 205, 17))
-#define ReceiptValidation_JDYBZVRRIQGT_00970159 ((__ReceiptValidation_SecCertificateCopyData) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 151, 132, 55, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_JDYBZVRRIQGT, 37, 23))
-#define ReceiptValidation_JDYBZVRRIQGT_00A7000D ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_JDYBZVRRIQGT, 183, 21))
-#define ReceiptValidation_JDYBZVRRIQGT_023200C2 ((__ReceiptValidation_CFDataGetLength) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_JDYBZVRRIQGT, 175, 16))
-#define ReceiptValidation_PGKVNNSRVCVJ_004800F8 ((__ReceiptValidation_CFDataGetLength) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_PGKVNNSRVCVJ, 195, 16))
-#define ReceiptValidation_PGKVNNSRVCVJ_004801C5 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PGKVNNSRVCVJ, 193, 16))
-#define ReceiptValidation_PGKVNNSRVCVJ_00B600AA ((__ReceiptValidation_IORegistryEntryGetParentEntry) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 182, 100, 49, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PGKVNNSRVCVJ, 173, 38))
-#define ReceiptValidation_PGKVNNSRVCVJ_01300046 ((__ReceiptValidation_SecKeychainOpen) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_PGKVNNSRVCVJ, 180, 16))
-#define ReceiptValidation_PGKVNNSRVCVJ_013F00D9 ((__ReceiptValidation_CC_SHA1_Final) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_PGKVNNSRVCVJ, 140, 16))
-#define ReceiptValidation_PGKVNNSRVCVJ_02320052 ((__ReceiptValidation_CFURLCreateWithFileSystemPathRelativeToBase) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_PGKVNNSRVCVJ, 20, 52))
-#define ReceiptValidation_PGKVNNSRVCVJ_02320098 ((__ReceiptValidation_CFDictionarySetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_PGKVNNSRVCVJ, 81, 21))
-#define ReceiptValidation_PGKVNNSRVCVJ_02320219 ((__ReceiptValidation_CFDateCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_PGKVNNSRVCVJ, 98, 16))
-#define ReceiptValidation_FJEIWPLUQNVF_0048011C ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_FJEIWPLUQNVF, 92, 21))
-#define ReceiptValidation_FJEIWPLUQNVF_00A70117 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_FJEIWPLUQNVF, 125, 16))
-#define ReceiptValidation_FJEIWPLUQNVF_00A70120 ((__ReceiptValidation_CFBundleGetValueForInfoDictionaryKey) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_FJEIWPLUQNVF, 136, 37))
-#define ReceiptValidation_FJEIWPLUQNVF_00A7015F ((__ReceiptValidation_CFDataGetLength) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_FJEIWPLUQNVF, 7, 16))
-#define ReceiptValidation_FJEIWPLUQNVF_00A701C5 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_FJEIWPLUQNVF, 193, 16))
-#define ReceiptValidation_FJEIWPLUQNVF_00C101F3 ((__ReceiptValidation_IOServiceGetMatchingServices) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 193, 249, 49, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_FJEIWPLUQNVF, 63, 37))
-#define ReceiptValidation_FJEIWPLUQNVF_0232015D ((__ReceiptValidation_CFDateFormatterSetProperty) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_FJEIWPLUQNVF, 98, 35))
-#define ReceiptValidation_FJEIWPLUQNVF_02320203 ((__ReceiptValidation_CFURLCreateFromFileSystemRepresentation) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_FJEIWPLUQNVF, 124, 48))
-#define ReceiptValidation_FJEIWPLUQNVF_0251006F ((__ReceiptValidation_SecKeychainSearchCreateFromAttributes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_FJEIWPLUQNVF, 30, 38))
-#define ReceiptValidation_ACQEONHECWVC_004800BF ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_ACQEONHECWVC, 20, 16))
-#define ReceiptValidation_ACQEONHECWVC_0048013D ((__ReceiptValidation_CFDictionaryCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_ACQEONHECWVC, 62, 34))
-#define ReceiptValidation_ACQEONHECWVC_004801EE ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_ACQEONHECWVC, 210, 18))
-#define ReceiptValidation_ACQEONHECWVC_00A701D9 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_ACQEONHECWVC, 130, 16))
-#define ReceiptValidation_ACQEONHECWVC_013F0178 ((__ReceiptValidation_CC_SHA1) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_ACQEONHECWVC, 250, 16))
-#define ReceiptValidation_ACQEONHECWVC_023200EF ((__ReceiptValidation_CFArrayGetCount) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_ACQEONHECWVC, 1, 16))
-#define ReceiptValidation_IOObjectRelease_00C10211 ((__ReceiptValidation_IOObjectRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 193, 249, 49, ReceiptValidation_ObfuscationFunction00C, 529, 14, 16))
-#define ReceiptValidation_kCFBundleIdentifierKey_00A70073 ((__ReceiptValidation_kCFBundleIdentifierKey) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00A, 115, 83, 23))
-#define ReceiptValidation_kCFDateFormatterTimeZone_0232005B ((__ReceiptValidation_kCFDateFormatterTimeZone) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00A, 91, 209, 33))
-#define ReceiptValidation_kCFTypeArrayCallBacks_00A700F4 ((__ReceiptValidation_kCFTypeArrayCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00C, 244, 157, 22))
-#define ReceiptValidation_kCFTypeArrayCallBacks_023200F4 ((__ReceiptValidation_kCFTypeArrayCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00C, 244, 157, 22))
-#define ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00480042 ((__ReceiptValidation_kCFTypeDictionaryKeyCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction003, 66, 36, 38))
-#define ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00A70030 ((__ReceiptValidation_kCFTypeDictionaryKeyCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00B, 48, 101, 38))
-#define ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00A700DB ((__ReceiptValidation_kCFTypeDictionaryKeyCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 167, 151, 67, ReceiptValidation_ObfuscationFunction00A, 219, 139, 38))
-#define ReceiptValidation_kCFTypeDictionaryValueCallBacks_0048006C ((__ReceiptValidation_kCFTypeDictionaryValueCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 72, 131, 67, ReceiptValidation_ObfuscationFunction006, 108, 87, 32))
-#define ReceiptValidation_kCFTypeDictionaryValueCallBacks_0232022D ((__ReceiptValidation_kCFTypeDictionaryValueCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00B, 557, 44, 32))
-#define ReceiptValidation_kCFTypeDictionaryValueCallBacks_02320258 ((__ReceiptValidation_kCFTypeDictionaryValueCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 562, 17, 67, ReceiptValidation_ObfuscationFunction00C, 600, 109, 32))
-#define ReceiptValidation_kSecClass_01300028 ((__ReceiptValidation_kSecClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction00A, 40, 64, 16))
-#define ReceiptValidation_kSecClass_01300067 ((__ReceiptValidation_kSecClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction00C, 103, 57, 16))
-#define ReceiptValidation_kSecClassCertificate_01300000 ((__ReceiptValidation_kSecClassCertificate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction003, 0, 229, 21))
-#define ReceiptValidation_kSecClassCertificate_0130002B ((__ReceiptValidation_kSecClassCertificate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction00B, 43, 214, 21))
-#define ReceiptValidation_kSecMatchLimit_013001CF ((__ReceiptValidation_kSecMatchLimit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction008, 463, 5, 16))
-#define ReceiptValidation_kSecMatchLimit_025101CF ((__ReceiptValidation_kSecMatchLimit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction008, 463, 5, 16))
-#define ReceiptValidation_kSecMatchLimitAll_009700A5 ((__ReceiptValidation_kSecMatchLimitAll) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 151, 132, 55, ReceiptValidation_ObfuscationFunction009, 165, 70, 18))
-#define ReceiptValidation_kSecMatchLimitAll_009701F0 ((__ReceiptValidation_kSecMatchLimitAll) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 151, 132, 55, ReceiptValidation_ObfuscationFunction004, 496, 252, 18))
-#define ReceiptValidation_kSecMatchSearchList_0251009A ((__ReceiptValidation_kSecMatchSearchList) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction009, 154, 7, 20))
-#define ReceiptValidation_kSecMatchSearchList_02510192 ((__ReceiptValidation_kSecMatchSearchList) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction004, 402, 190, 20))
-#define ReceiptValidation_kSecMatchSubjectContains_01300061 ((__ReceiptValidation_kSecMatchSubjectContains) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction007, 97, 39, 33))
-#define ReceiptValidation_kSecMatchSubjectContains_0251004D ((__ReceiptValidation_kSecMatchSubjectContains) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction00A, 77, 193, 33))
-#define ReceiptValidation_kSecReturnRef_01300199 ((__ReceiptValidation_kSecReturnRef) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 304, 46, 55, ReceiptValidation_ObfuscationFunction004, 409, 83, 16))
-#define ReceiptValidation_kSecReturnRef_025101B7 ((__ReceiptValidation_kSecReturnRef) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction005, 439, 126, 16))
-#define ReceiptValidation_longjmp_00DE0014 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 222, 99, 33, ReceiptValidation_ObfuscationFunction004, 20, 43, 16))
-#define ReceiptValidation_longjmp_013F0014 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction004, 20, 43, 16))
-#define ReceiptValidation_longjmp_013F0174 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction005, 372, 229, 16))
-#define ReceiptValidation_longjmp_013F01A4 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 319, 61, 33, ReceiptValidation_ObfuscationFunction007, 420, 97, 16))
-#define ReceiptValidation_longjmp_015E0014 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 350, 167, 33, ReceiptValidation_ObfuscationFunction004, 20, 43, 16))
-#define ReceiptValidation_longjmp_015E0174 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 350, 167, 33, ReceiptValidation_ObfuscationFunction005, 372, 229, 16))
-#define ReceiptValidation_OBJ_txt2obj_025000F9 ((__ReceiptValidation_OBJ_txt2obj) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction007, 249, 65, 16))
-#define ReceiptValidation_objc_getClass_01C4002D ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 452, 208, 23, ReceiptValidation_ObfuscationFunction00C, 45, 161, 16))
-#define ReceiptValidation_objc_getClass_0212002D ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 530, 174, 23, ReceiptValidation_ObfuscationFunction00C, 45, 161, 16))
-#define ReceiptValidation_objc_getClass_02120033 ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 530, 174, 23, ReceiptValidation_ObfuscationFunction009, 51, 206, 16))
-#define ReceiptValidation_objc_getClass_0221002D ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction00C, 45, 161, 16))
-#define ReceiptValidation_objc_getClass_02210033 ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction009, 51, 206, 16))
-#define ReceiptValidation_objc_getClass_022101FE ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction00C, 510, 2, 16))
-#define ReceiptValidation_objc_msgSend_01C40090 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 452, 208, 23, ReceiptValidation_ObfuscationFunction008, 144, 180, 16))
-#define ReceiptValidation_objc_msgSend_01C4022B ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 452, 208, 23, ReceiptValidation_ObfuscationFunction009, 555, 29, 16))
-#define ReceiptValidation_objc_msgSend_02120090 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 530, 174, 23, ReceiptValidation_ObfuscationFunction008, 144, 180, 16))
-#define ReceiptValidation_objc_msgSend_0221005D ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction00C, 93, 80, 16))
-#define ReceiptValidation_objc_msgSend_02210090 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction008, 144, 180, 16))
-#define ReceiptValidation_objc_msgSend_0221022B ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction009, 555, 29, 16))
-#define ReceiptValidation_OpenSSL_add_all_digests_006D0055 ((__ReceiptValidation_OpenSSL_add_all_digests) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction00C, 85, 71, 32))
-#define ReceiptValidation_OpenSSL_add_all_digests_02500191 ((__ReceiptValidation_OpenSSL_add_all_digests) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction004, 401, 163, 32))
-#define ReceiptValidation_PKCS7_free_000A0202 ((__ReceiptValidation_PKCS7_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction009, 514, 204, 16))
-#define ReceiptValidation_PKCS7_free_02500189 ((__ReceiptValidation_PKCS7_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction004, 393, 193, 16))
-#define ReceiptValidation_PKCS7_get0_signers_000A01D8 ((__ReceiptValidation_PKCS7_get0_signers) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction00A, 472, 15, 19))
-#define ReceiptValidation_PKCS7_verify_000A014D ((__ReceiptValidation_PKCS7_verify) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction00A, 333, 115, 16))
-#define ReceiptValidation_SecKeychainSearchCopyNext_0097023A ((__ReceiptValidation_SecKeychainSearchCopyNext) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 151, 132, 55, ReceiptValidation_ObfuscationFunction004, 570, 135, 34))
-#define ReceiptValidation_SecKeychainSearchCopyNext_0251023A ((__ReceiptValidation_SecKeychainSearchCopyNext) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 593, 140, 55, ReceiptValidation_ObfuscationFunction004, 570, 135, 34))
-#define ReceiptValidation_sel_registerName_01C40216 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 452, 208, 23, ReceiptValidation_ObfuscationFunction006, 534, 174, 17))
-#define ReceiptValidation_sel_registerName_01C40256 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 452, 208, 23, ReceiptValidation_ObfuscationFunction00B, 598, 146, 17))
-#define ReceiptValidation_sel_registerName_0212009F ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 530, 174, 23, ReceiptValidation_ObfuscationFunction003, 159, 102, 17))
-#define ReceiptValidation_sel_registerName_02120216 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 530, 174, 23, ReceiptValidation_ObfuscationFunction006, 534, 174, 17))
-#define ReceiptValidation_sel_registerName_0221009F ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction003, 159, 102, 17))
-#define ReceiptValidation_sel_registerName_02210216 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction006, 534, 174, 17))
-#define ReceiptValidation_sel_registerName_02210256 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 545, 191, 23, ReceiptValidation_ObfuscationFunction00B, 598, 146, 17))
-#define ReceiptValidation_setjmp_00DE01A6 ((__ReceiptValidation_setjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction009, 222, 99, 33, ReceiptValidation_ObfuscationFunction007, 422, 218, 16))
-#define ReceiptValidation_SHA1_000A008B ((__ReceiptValidation_SHA1) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction009, 139, 176, 16))
-#define ReceiptValidation_SHA1_Final_000A024C ((__ReceiptValidation_SHA1_Final) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction008, 588, 53, 16))
-#define ReceiptValidation_SHA1_Init_0250011D ((__ReceiptValidation_SHA1_Init) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction00A, 285, 111, 16))
-#define ReceiptValidation_SHA1_Update_02500093 ((__ReceiptValidation_SHA1_Update) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction008, 147, 51, 16))
-#define ReceiptValidation_sk_free_006D00F1 ((__ReceiptValidation_sk_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction00A, 241, 124, 16))
-#define ReceiptValidation_sk_num_025000F3 ((__ReceiptValidation_sk_num) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction008, 243, 94, 16))
-#define ReceiptValidation_sk_value_000A00D5 ((__ReceiptValidation_sk_value) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction00B, 213, 34, 16))
-#define ReceiptValidation_X509_digest_006D0136 ((__ReceiptValidation_X509_digest) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction003, 310, 81, 16))
-#define ReceiptValidation_X509_free_006D0088 ((__ReceiptValidation_X509_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction006, 136, 220, 16))
-#define ReceiptValidation_X509_get_ext_by_OBJ_000A0124 ((__ReceiptValidation_X509_get_ext_by_OBJ) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction00C, 292, 150, 20))
-#define ReceiptValidation_X509_NAME_get_text_by_NID_000A01C2 ((__ReceiptValidation_X509_NAME_get_text_by_NID) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction006, 450, 224, 34))
-#define ReceiptValidation_X509_STORE_add_cert_006D0116 ((__ReceiptValidation_X509_STORE_add_cert) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 109, 196, 16, ReceiptValidation_ObfuscationFunction003, 278, 155, 20))
-#define ReceiptValidation_X509_STORE_free_025001A7 ((__ReceiptValidation_X509_STORE_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 592, 73, 16, ReceiptValidation_ObfuscationFunction00C, 423, 166, 16))
-#define ReceiptValidation_X509_STORE_new_000A01B4 ((__ReceiptValidation_X509_STORE_new) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 10, 206, 16, ReceiptValidation_ObfuscationFunction007, 436, 136, 16))
+#define ReceiptValidation_ASN1_get_object_01F20185 ((__ReceiptValidation_ASN1_get_object) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction008, 389, 249, 16))
+#define ReceiptValidation_ASN1_INTEGER_free_01610124 ((__ReceiptValidation_ASN1_INTEGER_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction003, 292, 171, 18))
+#define ReceiptValidation_ASN1_INTEGER_get_0161013A ((__ReceiptValidation_ASN1_INTEGER_get) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction00C, 314, 157, 17))
+#define ReceiptValidation_ASN1_OBJECT_free_007F0084 ((__ReceiptValidation_ASN1_OBJECT_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction009, 132, 198, 17))
+#define ReceiptValidation_BIO_free_01F200C5 ((__ReceiptValidation_BIO_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction003, 197, 21, 16))
+#define ReceiptValidation_BIO_free_01F20148 ((__ReceiptValidation_BIO_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction00A, 328, 216, 16))
+#define ReceiptValidation_BIO_new_007F00E6 ((__ReceiptValidation_BIO_new) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction00B, 230, 195, 16))
+#define ReceiptValidation_BIO_new_01F200DC ((__ReceiptValidation_BIO_new) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction004, 220, 17, 16))
+#define ReceiptValidation_BIO_s_mem_007F0255 ((__ReceiptValidation_BIO_s_mem) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction00B, 597, 166, 16))
+#define ReceiptValidation_BIO_s_mem_016101AB ((__ReceiptValidation_BIO_s_mem) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction007, 427, 88, 16))
+#define ReceiptValidation_BIO_write_01610080 ((__ReceiptValidation_BIO_write) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction003, 128, 145, 16))
+#define ReceiptValidation_BIO_write_01610234 ((__ReceiptValidation_BIO_write) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction00C, 564, 6, 16))
+#define ReceiptValidation_c2i_ASN1_INTEGER_007F0242 ((__ReceiptValidation_c2i_ASN1_INTEGER) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction003, 578, 12, 17))
+#define ReceiptValidation_CC_SHA1_00420164 ((__ReceiptValidation_CC_SHA1) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction009, 356, 84, 16))
+#define ReceiptValidation_CC_SHA1_Update_024000A1 ((__ReceiptValidation_CC_SHA1_Update) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 576, 253, 33, ReceiptValidation_ObfuscationFunction00C, 161, 83, 16))
+#define ReceiptValidation_CFArrayAppendValue_02060012 ((__ReceiptValidation_CFArrayAppendValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00C, 18, 24, 19))
+#define ReceiptValidation_CFArrayCreateMutable_0206009E ((__ReceiptValidation_CFArrayCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction007, 158, 142, 21))
+#define ReceiptValidation_CFArrayGetValueAtIndex_00D10199 ((__ReceiptValidation_CFArrayGetValueAtIndex) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00A, 409, 162, 23))
+#define ReceiptValidation_CFArrayGetValueAtIndex_01CC002F ((__ReceiptValidation_CFArrayGetValueAtIndex) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00A, 47, 155, 23))
+#define ReceiptValidation_CFBundleGetMainBundle_020600C7 ((__ReceiptValidation_CFBundleGetMainBundle) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction004, 199, 172, 22))
+#define ReceiptValidation_CFBundleUnloadExecutable_01CC00BA ((__ReceiptValidation_CFBundleUnloadExecutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction008, 186, 177, 33))
+#define ReceiptValidation_CFDataAppendBytes_00D101E4 ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction008, 484, 80, 18))
+#define ReceiptValidation_CFDataAppendBytes_01CC01E4 ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction008, 484, 80, 18))
+#define ReceiptValidation_CFDataAppendBytes_020600D4 ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction005, 212, 146, 18))
+#define ReceiptValidation_CFDataCreate_02060002 ((__ReceiptValidation_CFDataCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction009, 2, 233, 16))
+#define ReceiptValidation_CFDataCreateMutable_00D100B1 ((__ReceiptValidation_CFDataCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction004, 177, 33, 20))
+#define ReceiptValidation_CFDateFormatterCreateDateFromString_02060144 ((__ReceiptValidation_CFDateFormatterCreateDateFromString) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00A, 324, 52, 36))
+#define ReceiptValidation_CFDateFormatterSetProperty_00D1004E ((__ReceiptValidation_CFDateFormatterSetProperty) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction008, 78, 203, 35))
+#define ReceiptValidation_CFDictionaryAddValue_02060103 ((__ReceiptValidation_CFDictionaryAddValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction003, 259, 154, 21))
+#define ReceiptValidation_CFDictionaryGetValue_00D10008 ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction008, 8, 28, 21))
+#define ReceiptValidation_CFDictionarySetValue_01CC00CC ((__ReceiptValidation_CFDictionarySetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction008, 204, 212, 21))
+#define ReceiptValidation_CFNumberCreate_00D10069 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction004, 105, 218, 16))
+#define ReceiptValidation_CFReadStreamCreateWithFile_00D1008F ((__ReceiptValidation_CFReadStreamCreateWithFile) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00C, 143, 99, 35))
+#define ReceiptValidation_CFReadStreamCreateWithFile_0206023F ((__ReceiptValidation_CFReadStreamCreateWithFile) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction006, 575, 87, 35))
+#define ReceiptValidation_CFReadStreamOpen_00D1012B ((__ReceiptValidation_CFReadStreamOpen) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction007, 299, 121, 17))
+#define ReceiptValidation_CFReadStreamOpen_01CC021B ((__ReceiptValidation_CFReadStreamOpen) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction003, 539, 252, 17))
+#define ReceiptValidation_CFRelease_00D10007 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00B, 7, 252, 16))
+#define ReceiptValidation_CFRelease_00D10026 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction007, 38, 226, 16))
+#define ReceiptValidation_CFRelease_00D10105 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction009, 261, 82, 16))
+#define ReceiptValidation_CFRelease_01CC0007 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00B, 7, 252, 16))
+#define ReceiptValidation_CFRelease_01CC0026 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction007, 38, 226, 16))
+#define ReceiptValidation_CFRelease_01CC0105 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction009, 261, 82, 16))
+#define ReceiptValidation_CFRelease_02060026 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction007, 38, 226, 16))
+#define ReceiptValidation_CFRelease_02060105 ((__ReceiptValidation_CFRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction009, 261, 82, 16))
+#define ReceiptValidation_d2i_PKCS7_bio_007F011A ((__ReceiptValidation_d2i_PKCS7_bio) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction008, 282, 115, 16))
+#define ReceiptValidation_d2i_PKCS7_bio_01F2018D ((__ReceiptValidation_d2i_PKCS7_bio) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction005, 397, 35, 16))
+#define ReceiptValidation_d2i_X509_bio_01F20238 ((__ReceiptValidation_d2i_X509_bio) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction007, 568, 184, 16))
+#define ReceiptValidation_EVP_DigestFinal_01F20033 ((__ReceiptValidation_EVP_DigestFinal) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction00A, 51, 89, 16))
+#define ReceiptValidation_EVP_DigestInit_01F201EE ((__ReceiptValidation_EVP_DigestInit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction008, 494, 73, 16))
+#define ReceiptValidation_EVP_DigestUpdate_007F001E ((__ReceiptValidation_EVP_DigestUpdate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction005, 30, 115, 17))
+#define ReceiptValidation_EVP_get_digestbyname_01610180 ((__ReceiptValidation_EVP_get_digestbyname) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction00A, 384, 61, 21))
+#define ReceiptValidation_EVP_MD_CTX_init_007F023C ((__ReceiptValidation_EVP_MD_CTX_init) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction008, 572, 81, 16))
+#define ReceiptValidation_exit_00150082 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction00B, 130, 14, 16))
+#define ReceiptValidation_exit_001501AD ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction009, 429, 139, 16))
+#define ReceiptValidation_exit_00150213 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction006, 531, 101, 16))
+#define ReceiptValidation_exit_00420082 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction00B, 130, 14, 16))
+#define ReceiptValidation_exit_004201AD ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction009, 429, 139, 16))
+#define ReceiptValidation_exit_00420213 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction006, 531, 101, 16))
+#define ReceiptValidation_exit_02400082 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 576, 253, 33, ReceiptValidation_ObfuscationFunction00B, 130, 14, 16))
+#define ReceiptValidation_exit_02400213 ((__ReceiptValidation_exit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 576, 253, 33, ReceiptValidation_ObfuscationFunction006, 531, 101, 16))
+#define ReceiptValidation_TPAMUMCIMUJI_00D100DD ((__ReceiptValidation_CFURLCreateWithFileSystemPathRelativeToBase) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_TPAMUMCIMUJI, 212, 52))
+#define ReceiptValidation_TPAMUMCIMUJI_01130250 ((__ReceiptValidation_SecKeychainOpen) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_TPAMUMCIMUJI, 97, 16))
+#define ReceiptValidation_TPAMUMCIMUJI_01CC0017 ((__ReceiptValidation_CFDataGetLength) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_TPAMUMCIMUJI, 131, 16))
+#define ReceiptValidation_TPAMUMCIMUJI_01CC00B8 ((__ReceiptValidation_CFDataGetLength) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_TPAMUMCIMUJI, 199, 16))
+#define ReceiptValidation_TPAMUMCIMUJI_01CC0258 ((__ReceiptValidation_CFBundleGetValueForInfoDictionaryKey) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_TPAMUMCIMUJI, 156, 37))
+#define ReceiptValidation_TPAMUMCIMUJI_02060117 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_TPAMUMCIMUJI, 66, 16))
+#define ReceiptValidation_TPAMUMCIMUJI_02060207 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_TPAMUMCIMUJI, 129, 16))
+#define ReceiptValidation_TPAMUMCIMUJI_0206021A ((__ReceiptValidation_CFDateFormatterCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_TPAMUMCIMUJI, 155, 22))
+#define ReceiptValidation_TPAMUMCIMUJI_02530187 ((__ReceiptValidation_IOMasterPort) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 595, 130, 49, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_TPAMUMCIMUJI, 89, 16))
+#define ReceiptValidation_QFTLSXPQXRZQ_00D10247 ((__ReceiptValidation_CFArrayGetCount) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_QFTLSXPQXRZQ, 106, 16))
+#define ReceiptValidation_QFTLSXPQXRZQ_015C0122 ((__ReceiptValidation_IORegistryEntryGetParentEntry) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 348, 36, 49, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_QFTLSXPQXRZQ, 86, 38))
+#define ReceiptValidation_QFTLSXPQXRZQ_01CC020A ((__ReceiptValidation_CFDataCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_QFTLSXPQXRZQ, 96, 20))
+#define ReceiptValidation_QFTLSXPQXRZQ_01CC020B ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_QFTLSXPQXRZQ, 119, 21))
+#define ReceiptValidation_QFTLSXPQXRZQ_02060065 ((__ReceiptValidation_CFStringGetFileSystemRepresentation) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_QFTLSXPQXRZQ, 227, 36))
+#define ReceiptValidation_QFTLSXPQXRZQ_020601E5 ((__ReceiptValidation_CFDataAppendBytes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_QFTLSXPQXRZQ, 21, 18))
+#define ReceiptValidation_XQTZCGXTOMRV_00D10008 ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction008, ReceiptValidation_XQTZCGXTOMRV, 28, 21))
+#define ReceiptValidation_XQTZCGXTOMRV_00D100CD ((__ReceiptValidation_CFURLCreateFromFileSystemRepresentation) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_XQTZCGXTOMRV, 69, 48))
+#define ReceiptValidation_XQTZCGXTOMRV_00D100FB ((__ReceiptValidation_CFDictionaryCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_XQTZCGXTOMRV, 254, 34))
+#define ReceiptValidation_XQTZCGXTOMRV_01CC00D8 ((__ReceiptValidation_CFBundleGetIdentifier) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_XQTZCGXTOMRV, 18, 22))
+#define ReceiptValidation_XQTZCGXTOMRV_01CC0115 ((__ReceiptValidation_CFDataCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_XQTZCGXTOMRV, 103, 16))
+#define ReceiptValidation_XQTZCGXTOMRV_025301F9 ((__ReceiptValidation_IOBSDNameMatching) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 595, 130, 49, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_XQTZCGXTOMRV, 83, 18))
+#define ReceiptValidation_UBKHBSHWTCVT_00D100FB ((__ReceiptValidation_CFDictionaryCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_UBKHBSHWTCVT, 254, 34))
+#define ReceiptValidation_UBKHBSHWTCVT_01CC00E5 ((__ReceiptValidation_CFArrayCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_UBKHBSHWTCVT, 20, 21))
+#define ReceiptValidation_UBKHBSHWTCVT_01CC0117 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_UBKHBSHWTCVT, 66, 16))
+#define ReceiptValidation_UBKHBSHWTCVT_01CC014E ((__ReceiptValidation_CFURLCreateCopyAppendingPathComponent) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_UBKHBSHWTCVT, 162, 38))
+#define ReceiptValidation_UBKHBSHWTCVT_0206006C ((__ReceiptValidation_CFDateCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_UBKHBSHWTCVT, 39, 16))
+#define ReceiptValidation_UBKHBSHWTCVT_02060083 ((__ReceiptValidation_CFDataGetBytePtr) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_UBKHBSHWTCVT, 22, 17))
+#define ReceiptValidation_THYDFRJHWWUN_0109021C ((__ReceiptValidation_SecKeychainSearchCopyNext) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_THYDFRJHWWUN, 174, 34))
+#define ReceiptValidation_THYDFRJHWWUN_015C0167 ((__ReceiptValidation_IOIteratorNext) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 348, 36, 49, ReceiptValidation_ObfuscationFunction005, ReceiptValidation_THYDFRJHWWUN, 51, 16))
+#define ReceiptValidation_THYDFRJHWWUN_01CC0076 ((__ReceiptValidation_CFAbsoluteTimeGetCurrent) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_THYDFRJHWWUN, 91, 33))
+#define ReceiptValidation_THYDFRJHWWUN_020601A0 ((__ReceiptValidation_CFDataGetBytePtr) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_THYDFRJHWWUN, 169, 17))
+#define ReceiptValidation_THYDFRJHWWUN_0206020B ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_THYDFRJHWWUN, 119, 21))
+#define ReceiptValidation_THYDFRJHWWUN_0206025B ((__ReceiptValidation_CFReadStreamClose) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_THYDFRJHWWUN, 137, 18))
+#define ReceiptValidation_THYDFRJHWWUN_02400202 ((__ReceiptValidation_CC_SHA1_Final) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 576, 253, 33, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_THYDFRJHWWUN, 113, 16))
+#define ReceiptValidation_PEYLDRWHJIRJ_00D101D5 ((__ReceiptValidation_CFEqual) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_PEYLDRWHJIRJ, 38, 16))
+#define ReceiptValidation_PEYLDRWHJIRJ_00D10212 ((__ReceiptValidation_CFDataCreateMutable) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_PEYLDRWHJIRJ, 173, 20))
+#define ReceiptValidation_PEYLDRWHJIRJ_01AF017E ((__ReceiptValidation_NSApplicationMain) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 431, 224, 51, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_PEYLDRWHJIRJ, 235, 18))
+#define ReceiptValidation_PEYLDRWHJIRJ_02060012 ((__ReceiptValidation_CFArrayAppendValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00C, ReceiptValidation_PEYLDRWHJIRJ, 24, 19))
+#define ReceiptValidation_PEYLDRWHJIRJ_02060069 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_PEYLDRWHJIRJ, 218, 16))
+#define ReceiptValidation_PEYLDRWHJIRJ_020600B8 ((__ReceiptValidation_CFDataGetLength) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_PEYLDRWHJIRJ, 199, 16))
+#define ReceiptValidation_PEYLDRWHJIRJ_020601B8 ((__ReceiptValidation_CFDateCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_PEYLDRWHJIRJ, 129, 16))
+#define ReceiptValidation_PEYLDRWHJIRJ_025300AD ((__ReceiptValidation_IORegistryEntryCreateCFProperty) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 595, 130, 49, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_PEYLDRWHJIRJ, 144, 32))
+#define ReceiptValidation_FLUAORRUQXJR_00420100 ((__ReceiptValidation_CC_SHA1_Init) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_FLUAORRUQXJR, 13, 16))
+#define ReceiptValidation_FLUAORRUQXJR_00D100BE ((__ReceiptValidation_CFReadStreamRead) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_FLUAORRUQXJR, 86, 17))
+#define ReceiptValidation_FLUAORRUQXJR_00D100F6 ((__ReceiptValidation_CFTimeZoneCreateWithTimeIntervalFromGMT) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_FLUAORRUQXJR, 13, 48))
+#define ReceiptValidation_FLUAORRUQXJR_00D10117 ((__ReceiptValidation_CFStringCompare) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_FLUAORRUQXJR, 66, 16))
+#define ReceiptValidation_FLUAORRUQXJR_0113004F ((__ReceiptValidation_SecCertificateCopyData) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_FLUAORRUQXJR, 254, 23))
+#define ReceiptValidation_FLUAORRUQXJR_0158003D ((__ReceiptValidation_IOServiceGetMatchingServices) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00B, 344, 185, 49, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_FLUAORRUQXJR, 165, 37))
+#define ReceiptValidation_FLUAORRUQXJR_02060038 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_FLUAORRUQXJR, 212, 16))
+#define ReceiptValidation_FLUAORRUQXJR_020601A1 ((__ReceiptValidation_CFDataGetBytePtr) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_FLUAORRUQXJR, 217, 17))
+#define ReceiptValidation_FLUAORRUQXJR_02060258 ((__ReceiptValidation_CFBundleGetValueForInfoDictionaryKey) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction006, ReceiptValidation_FLUAORRUQXJR, 156, 37))
+#define ReceiptValidation_IOIKCHZOKKFQ_01CC024D ((__ReceiptValidation_CFDictionaryAddValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction007, ReceiptValidation_IOIKCHZOKKFQ, 171, 21))
+#define ReceiptValidation_IOIKCHZOKKFQ_02060069 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction004, ReceiptValidation_IOIKCHZOKKFQ, 218, 16))
+#define ReceiptValidation_IOIKCHZOKKFQ_020600D0 ((__ReceiptValidation_CFDateFormatterSetFormat) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00B, ReceiptValidation_IOIKCHZOKKFQ, 251, 33))
+#define ReceiptValidation_IOIKCHZOKKFQ_0206013D ((__ReceiptValidation_CFBundleCopyBundleURL) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction003, ReceiptValidation_IOIKCHZOKKFQ, 125, 22))
+#define ReceiptValidation_IOIKCHZOKKFQ_020601E8 ((__ReceiptValidation_CFNumberCreate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction009, ReceiptValidation_IOIKCHZOKKFQ, 61, 16))
+#define ReceiptValidation_IOIKCHZOKKFQ_0206020B ((__ReceiptValidation_CFDictionaryGetValue) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction00A, ReceiptValidation_IOIKCHZOKKFQ, 119, 21))
+#define ReceiptValidation_IOObjectRelease_025301C1 ((__ReceiptValidation_IOObjectRelease) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 595, 130, 49, ReceiptValidation_ObfuscationFunction003, 449, 55, 16))
+#define ReceiptValidation_kCFBundleIdentifierKey_02060195 ((__ReceiptValidation_kCFBundleIdentifierKey) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction008, 405, 22, 23))
+#define ReceiptValidation_kCFDateFormatterTimeZone_00D1019E ((__ReceiptValidation_kCFDateFormatterTimeZone) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction008, 414, 145, 33))
+#define ReceiptValidation_kCFTypeArrayCallBacks_00D101EA ((__ReceiptValidation_kCFTypeArrayCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction003, 490, 206, 22))
+#define ReceiptValidation_kCFTypeArrayCallBacks_01CC01EA ((__ReceiptValidation_kCFTypeArrayCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction003, 490, 206, 22))
+#define ReceiptValidation_kCFTypeArrayCallBacks_020601EA ((__ReceiptValidation_kCFTypeArrayCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction003, 490, 206, 22))
+#define ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00D10092 ((__ReceiptValidation_kCFTypeDictionaryKeyCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction005, 146, 37, 38))
+#define ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00D100AB ((__ReceiptValidation_kCFTypeDictionaryKeyCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction00C, 171, 75, 38))
+#define ReceiptValidation_kCFTypeDictionaryKeyCallBacks_02060092 ((__ReceiptValidation_kCFTypeDictionaryKeyCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 518, 67, 67, ReceiptValidation_ObfuscationFunction005, 146, 37, 38))
+#define ReceiptValidation_kCFTypeDictionaryValueCallBacks_00D10021 ((__ReceiptValidation_kCFTypeDictionaryValueCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 209, 209, 67, ReceiptValidation_ObfuscationFunction008, 33, 236, 32))
+#define ReceiptValidation_kCFTypeDictionaryValueCallBacks_01CC0197 ((__ReceiptValidation_kCFTypeDictionaryValueCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction003, 407, 23, 32))
+#define ReceiptValidation_kCFTypeDictionaryValueCallBacks_01CC01B1 ((__ReceiptValidation_kCFTypeDictionaryValueCallBacks) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction008, 460, 87, 67, ReceiptValidation_ObfuscationFunction00A, 433, 45, 32))
+#define ReceiptValidation_kSecClass_01130063 ((__ReceiptValidation_kSecClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction00B, 99, 21, 16))
+#define ReceiptValidation_kSecClass_011301CA ((__ReceiptValidation_kSecClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction003, 458, 249, 16))
+#define ReceiptValidation_kSecClassCertificate_01090032 ((__ReceiptValidation_kSecClassCertificate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction004, 50, 165, 21))
+#define ReceiptValidation_kSecClassCertificate_0140010A ((__ReceiptValidation_kSecClassCertificate) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 320, 76, 55, ReceiptValidation_ObfuscationFunction00A, 266, 150, 21))
+#define ReceiptValidation_kSecMatchLimit_010901E3 ((__ReceiptValidation_kSecMatchLimit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction007, 483, 27, 16))
+#define ReceiptValidation_kSecMatchLimit_010901FC ((__ReceiptValidation_kSecMatchLimit) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction008, 508, 242, 16))
+#define ReceiptValidation_kSecMatchLimitAll_010901A9 ((__ReceiptValidation_kSecMatchLimitAll) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction009, 425, 6, 18))
+#define ReceiptValidation_kSecMatchLimitAll_01400131 ((__ReceiptValidation_kSecMatchLimitAll) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 320, 76, 55, ReceiptValidation_ObfuscationFunction00C, 305, 218, 18))
+#define ReceiptValidation_kSecMatchSearchList_01130067 ((__ReceiptValidation_kSecMatchSearchList) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction004, 103, 30, 20))
+#define ReceiptValidation_kSecMatchSearchList_01130106 ((__ReceiptValidation_kSecMatchSearchList) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction003, 262, 126, 20))
+#define ReceiptValidation_kSecMatchSubjectContains_0109012D ((__ReceiptValidation_kSecMatchSubjectContains) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction004, 301, 129, 33))
+#define ReceiptValidation_kSecMatchSubjectContains_010901BF ((__ReceiptValidation_kSecMatchSubjectContains) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction00A, 447, 109, 33))
+#define ReceiptValidation_kSecReturnRef_0109005D ((__ReceiptValidation_kSecReturnRef) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 265, 238, 55, ReceiptValidation_ObfuscationFunction00B, 93, 19, 16))
+#define ReceiptValidation_kSecReturnRef_014000D3 ((__ReceiptValidation_kSecReturnRef) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 320, 76, 55, ReceiptValidation_ObfuscationFunction007, 211, 144, 16))
+#define ReceiptValidation_longjmp_001500BD ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction004, 189, 165, 16))
+#define ReceiptValidation_longjmp_00150169 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction00A, 361, 33, 16))
+#define ReceiptValidation_longjmp_001501C7 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction004, 455, 235, 16))
+#define ReceiptValidation_longjmp_004200BD ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction004, 189, 165, 16))
+#define ReceiptValidation_longjmp_00420169 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction003, 66, 35, 33, ReceiptValidation_ObfuscationFunction00A, 361, 33, 16))
+#define ReceiptValidation_longjmp_02400169 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 576, 253, 33, ReceiptValidation_ObfuscationFunction00A, 361, 33, 16))
+#define ReceiptValidation_longjmp_024001C7 ((__ReceiptValidation_longjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 576, 253, 33, ReceiptValidation_ObfuscationFunction004, 455, 235, 16))
+#define ReceiptValidation_OBJ_txt2obj_01610177 ((__ReceiptValidation_OBJ_txt2obj) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction008, 375, 115, 16))
+#define ReceiptValidation_objc_getClass_0072007C ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction008, 124, 142, 16))
+#define ReceiptValidation_objc_getClass_00720215 ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction004, 533, 194, 16))
+#define ReceiptValidation_objc_getClass_009A007C ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction008, 124, 142, 16))
+#define ReceiptValidation_objc_getClass_009A0215 ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction004, 533, 194, 16))
+#define ReceiptValidation_objc_getClass_00DA0053 ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction00A, 83, 97, 16))
+#define ReceiptValidation_objc_getClass_00DA007C ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction008, 124, 142, 16))
+#define ReceiptValidation_objc_getClass_00DA0215 ((__ReceiptValidation_objc_getClass) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction004, 533, 194, 16))
+#define ReceiptValidation_objc_msgSend_0072001B ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction00A, 27, 221, 16))
+#define ReceiptValidation_objc_msgSend_00720075 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction005, 117, 16, 16))
+#define ReceiptValidation_objc_msgSend_00720118 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction005, 280, 116, 16))
+#define ReceiptValidation_objc_msgSend_009A001B ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction00A, 27, 221, 16))
+#define ReceiptValidation_objc_msgSend_009A0075 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction005, 117, 16, 16))
+#define ReceiptValidation_objc_msgSend_009A0118 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction005, 280, 116, 16))
+#define ReceiptValidation_objc_msgSend_00DA001B ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction00A, 27, 221, 16))
+#define ReceiptValidation_objc_msgSend_00DA0075 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction005, 117, 16, 16))
+#define ReceiptValidation_objc_msgSend_00DA0118 ((__ReceiptValidation_objc_msgSend) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction005, 280, 116, 16))
+#define ReceiptValidation_OpenSSL_add_all_digests_007F003A ((__ReceiptValidation_OpenSSL_add_all_digests) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction006, 58, 99, 32))
+#define ReceiptValidation_OpenSSL_add_all_digests_01F201DF ((__ReceiptValidation_OpenSSL_add_all_digests) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction007, 479, 7, 32))
+#define ReceiptValidation_PKCS7_free_016101FE ((__ReceiptValidation_PKCS7_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction005, 510, 105, 16))
+#define ReceiptValidation_PKCS7_free_01F2019A ((__ReceiptValidation_PKCS7_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction003, 410, 129, 16))
+#define ReceiptValidation_PKCS7_get0_signers_007F0088 ((__ReceiptValidation_PKCS7_get0_signers) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction00B, 136, 1, 19))
+#define ReceiptValidation_PKCS7_verify_007F0049 ((__ReceiptValidation_PKCS7_verify) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction004, 73, 140, 16))
+#define ReceiptValidation_SecItemCopyMatching_01400028 ((__ReceiptValidation_SecItemCopyMatching) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 320, 76, 55, ReceiptValidation_ObfuscationFunction005, 40, 110, 20))
+#define ReceiptValidation_SecKeychainSearchCreateFromAttributes_011300F5 ((__ReceiptValidation_SecKeychainSearchCreateFromAttributes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 275, 68, 55, ReceiptValidation_ObfuscationFunction004, 245, 223, 38))
+#define ReceiptValidation_SecKeychainSearchCreateFromAttributes_014000F5 ((__ReceiptValidation_SecKeychainSearchCreateFromAttributes) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 320, 76, 55, ReceiptValidation_ObfuscationFunction004, 245, 223, 38))
+#define ReceiptValidation_sel_registerName_007200FD ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction006, 253, 110, 17))
+#define ReceiptValidation_sel_registerName_0072016D ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction00A, 365, 38, 17))
+#define ReceiptValidation_sel_registerName_00720189 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00A, 114, 144, 23, ReceiptValidation_ObfuscationFunction004, 393, 82, 17))
+#define ReceiptValidation_sel_registerName_009A00FD ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction006, 253, 110, 17))
+#define ReceiptValidation_sel_registerName_009A016D ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction00A, 365, 38, 17))
+#define ReceiptValidation_sel_registerName_009A0189 ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 154, 110, 23, ReceiptValidation_ObfuscationFunction004, 393, 82, 17))
+#define ReceiptValidation_sel_registerName_00DA00FD ((__ReceiptValidation_sel_registerName) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction006, 218, 127, 23, ReceiptValidation_ObfuscationFunction006, 253, 110, 17))
+#define ReceiptValidation_setjmp_0015006D ((__ReceiptValidation_setjmp) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction004, 21, 103, 33, ReceiptValidation_ObfuscationFunction006, 109, 51, 16))
+#define ReceiptValidation_SHA1_016100CE ((__ReceiptValidation_SHA1) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction003, 206, 101, 16))
+#define ReceiptValidation_SHA1_Final_016101FF ((__ReceiptValidation_SHA1_Final) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction00B, 511, 108, 16))
+#define ReceiptValidation_SHA1_Init_01F20097 ((__ReceiptValidation_SHA1_Init) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction009, 151, 139, 16))
+#define ReceiptValidation_SHA1_Update_007F0036 ((__ReceiptValidation_SHA1_Update) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction00B, 54, 194, 16))
+#define ReceiptValidation_sk_free_01610236 ((__ReceiptValidation_sk_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction003, 566, 65, 16))
+#define ReceiptValidation_sk_num_01F2008B ((__ReceiptValidation_sk_num) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction003, 139, 173, 16))
+#define ReceiptValidation_sk_value_016100A5 ((__ReceiptValidation_sk_value) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction008, 165, 226, 16))
+#define ReceiptValidation_X509_digest_01F20154 ((__ReceiptValidation_X509_digest) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction00C, 340, 17, 16))
+#define ReceiptValidation_X509_free_016100AA ((__ReceiptValidation_X509_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction009, 170, 4, 16))
+#define ReceiptValidation_X509_get_ext_by_OBJ_007F00FC ((__ReceiptValidation_X509_get_ext_by_OBJ) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction005, 127, 132, 16, ReceiptValidation_ObfuscationFunction00A, 252, 86, 20))
+#define ReceiptValidation_X509_NAME_get_text_by_NID_01F20208 ((__ReceiptValidation_X509_NAME_get_text_by_NID) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction00B, 520, 160, 34))
+#define ReceiptValidation_X509_STORE_add_cert_016101B9 ((__ReceiptValidation_X509_STORE_add_cert) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction007, 353, 142, 16, ReceiptValidation_ObfuscationFunction004, 441, 91, 20))
+#define ReceiptValidation_X509_STORE_free_01F2022A ((__ReceiptValidation_X509_STORE_free) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction00C, 554, 71, 16))
+#define ReceiptValidation_X509_STORE_new_01F200AC ((__ReceiptValidation_X509_STORE_new) ReceiptValidation_LookupFunction015(ReceiptValidation_ObfuscationFunction00C, 498, 9, 16, ReceiptValidation_ObfuscationFunction005, 172, 127, 16))
 
 
 // CodeBlock ObfuscationFunction / M(Rot)
@@ -2521,7 +2527,7 @@ __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunctio
     char *ReceiptValidation_tmp2 = ReceiptValidation_tmp1;
     ReceiptValidation_ObfuscationFunction003(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
     while(*ReceiptValidation_tmp2) { ReceiptValidation_tmp2++; }
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[412])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[325])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
     return ReceiptValidation_str1;
 }
 
@@ -2535,7 +2541,7 @@ inline static void ReceiptValidation_ObfuscationFunction004(const char *ReceiptV
 __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunction004CF(const char *ReceiptValidation_p1, int ReceiptValidation_p3, int ReceiptValidation_p4) {
     char ReceiptValidation_tmp1[608];
     ReceiptValidation_ObfuscationFunction004(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[1])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[133])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
     return ReceiptValidation_str1;
 }
 
@@ -2551,7 +2557,7 @@ __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunctio
     char *ReceiptValidation_tmp2 = ReceiptValidation_tmp1;
     ReceiptValidation_ObfuscationFunction005(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
     while(*ReceiptValidation_tmp2) { ReceiptValidation_tmp2++; }
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[197])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[25])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
     return ReceiptValidation_str1;
 }
 
@@ -2565,7 +2571,7 @@ inline static void ReceiptValidation_ObfuscationFunction006(const char *ReceiptV
 __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunction006CF(const char *ReceiptValidation_p1, int ReceiptValidation_p3, int ReceiptValidation_p4) {
     char ReceiptValidation_tmp1[608];
     ReceiptValidation_ObfuscationFunction006(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[1])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[476])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
     return ReceiptValidation_str1;
 }
 
@@ -2581,7 +2587,7 @@ __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunctio
     char *ReceiptValidation_tmp2 = ReceiptValidation_tmp1;
     ReceiptValidation_ObfuscationFunction007(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
     while(*ReceiptValidation_tmp2) { ReceiptValidation_tmp2++; }
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[197])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[53])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
     return ReceiptValidation_str1;
 }
 
@@ -2595,7 +2601,7 @@ inline static void ReceiptValidation_ObfuscationFunction008(const char *ReceiptV
 __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunction008CF(const char *ReceiptValidation_p1, int ReceiptValidation_p3, int ReceiptValidation_p4) {
     char ReceiptValidation_tmp1[608];
     ReceiptValidation_ObfuscationFunction008(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[57])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[133])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
     return ReceiptValidation_str1;
 }
 
@@ -2611,7 +2617,7 @@ __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunctio
     char *ReceiptValidation_tmp2 = ReceiptValidation_tmp1;
     ReceiptValidation_ObfuscationFunction009(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
     while(*ReceiptValidation_tmp2) { ReceiptValidation_tmp2++; }
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[197])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[25])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
     return ReceiptValidation_str1;
 }
 
@@ -2625,7 +2631,7 @@ inline static void ReceiptValidation_ObfuscationFunction00A(const char *ReceiptV
 __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunction00ACF(const char *ReceiptValidation_p1, int ReceiptValidation_p3, int ReceiptValidation_p4) {
     char ReceiptValidation_tmp1[608];
     ReceiptValidation_ObfuscationFunction00A(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[57])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[133])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
     return ReceiptValidation_str1;
 }
 
@@ -2641,7 +2647,7 @@ __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunctio
     char *ReceiptValidation_tmp2 = ReceiptValidation_tmp1;
     ReceiptValidation_ObfuscationFunction00B(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
     while(*ReceiptValidation_tmp2) { ReceiptValidation_tmp2++; }
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[412])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[25])(NULL, (const UInt8 *) ReceiptValidation_tmp1, (CFIndex) (ReceiptValidation_tmp2 - ReceiptValidation_tmp1), kCFStringEncodingUTF8, false);
     return ReceiptValidation_str1;
 }
 
@@ -2655,7 +2661,7 @@ inline static void ReceiptValidation_ObfuscationFunction00C(const char *ReceiptV
 __RETURN_RETAINED inline static CFStringRef ReceiptValidation_ObfuscationFunction00CCF(const char *ReceiptValidation_p1, int ReceiptValidation_p3, int ReceiptValidation_p4) {
     char ReceiptValidation_tmp1[608];
     ReceiptValidation_ObfuscationFunction00C(ReceiptValidation_p1, ReceiptValidation_tmp1, ReceiptValidation_p3, ReceiptValidation_p4);
-    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[1])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
+    CFStringRef ReceiptValidation_str1 = ((__ReceiptValidation_CFStringCreateWithCString) ReceiptValidation_Pointers[142])(NULL, ReceiptValidation_tmp1, kCFStringEncodingUTF8);
     return ReceiptValidation_str1;
 }
 
@@ -2666,12 +2672,12 @@ inline static void *ReceiptValidation_LookupFunction015(ReceiptValidation_decryp
     // Load the library if needed
     if (ReceiptValidation_Pointers[ReceiptValidation_index1] == NULL) {
         ReceiptValidation_func1(ReceiptValidation_Strings[ReceiptValidation_index1], ReceiptValidation_tmp1, ReceiptValidation_val1, ReceiptValidation_len1);
-        ReceiptValidation_Pointers[ReceiptValidation_index1] = ((__ReceiptValidation_dlopen) ReceiptValidation_Pointers[33])(ReceiptValidation_tmp1, RTLD_NOW | RTLD_FIRST);
+        ReceiptValidation_Pointers[ReceiptValidation_index1] = ((__ReceiptValidation_dlopen) ReceiptValidation_Pointers[248])(ReceiptValidation_tmp1, RTLD_NOW | RTLD_FIRST);
     }
     // Load the function if needed
     if (ReceiptValidation_Pointers[ReceiptValidation_index2] == NULL) {
         ReceiptValidation_func2(ReceiptValidation_Strings[ReceiptValidation_index2], ReceiptValidation_tmp2, ReceiptValidation_val2, ReceiptValidation_len2);
-        ReceiptValidation_Pointers[ReceiptValidation_index2] = ((__ReceiptValidation_dlsym) ReceiptValidation_Pointers[539])(ReceiptValidation_Pointers[ReceiptValidation_index1], ReceiptValidation_tmp2);
+        ReceiptValidation_Pointers[ReceiptValidation_index2] = ((__ReceiptValidation_dlsym) ReceiptValidation_Pointers[291])(ReceiptValidation_Pointers[ReceiptValidation_index1], ReceiptValidation_tmp2);
     }
     return ReceiptValidation_Pointers[ReceiptValidation_index2];
 }
@@ -2681,49 +2687,51 @@ inline static void *ReceiptValidation_LookupFunction015(ReceiptValidation_decryp
 
 // CodeBlock GetMainBundle
 #ifdef DEBUG
-inline static void ReceiptValidation_GetMainBundle016(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_GetMainBundle017(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Retrieving main bundle");
     // Retrieve the main bundle
-    ReceiptValidation_ctx->main_bundle = ReceiptValidation_CFBundleGetMainBundle_0232009E();
-    if (!ReceiptValidation_ctx->main_bundle) {
+    CFBundleRef ReceiptValidation_bundle = ReceiptValidation_CFBundleGetMainBundle_020600C7();
+    if (!ReceiptValidation_bundle) {
         // Dead code
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->main_bundle);
-        ReceiptValidation_CFBundleUnloadExecutable_0232005E((CFBundleRef) ReceiptValidation_ctx->main_bundle);
+        ReceiptValidation_CFRelease_02060026(ReceiptValidation_bundle);
+        ReceiptValidation_CFBundleUnloadExecutable_01CC00BA((CFBundleRef) ReceiptValidation_bundle);
     }
+    ReceiptValidation_ctx->main_bundle = (CFBundleRef) ReceiptValidation_bundle;
     // Global variables computation
-    // Set to 458
-    ReceiptValidation_PTKUOOEYMOBI = 458;
-    // Set to 295
-    ReceiptValidation_YZLJKTPYVTVA = 295;
-    // Set to 495
-    ReceiptValidation_PMXJCCZJOAFX = 495;
-    // Set to 267
-    ReceiptValidation_OFULPMNSLYXJ = 267;
-    // Set to 508
-    ReceiptValidation_JDYBZVRRIQGT = 508;
-    // Set to 82
-    ReceiptValidation_PGKVNNSRVCVJ = 82;
-    // Set to 515
-    ReceiptValidation_FJEIWPLUQNVF = 515;
-    // Set to 494
-    ReceiptValidation_ACQEONHECWVC = 494;
+    // Set to 221
+    ReceiptValidation_TPAMUMCIMUJI = 221;
+    // Set to 101
+    ReceiptValidation_QFTLSXPQXRZQ = 101;
+    // Set to 205
+    ReceiptValidation_XQTZCGXTOMRV = 205;
+    // Set to 334
+    ReceiptValidation_UBKHBSHWTCVT = 334;
+    // Set to 603
+    ReceiptValidation_THYDFRJHWWUN = 603;
+    // Set to 530
+    ReceiptValidation_PEYLDRWHJIRJ = 530;
+    // Set to 190
+    ReceiptValidation_FLUAORRUQXJR = 190;
+    // Set to 317
+    ReceiptValidation_IOIKCHZOKKFQ = 317;
 }
 #else
-#define ReceiptValidation_GetMainBundle016(ReceiptValidation_ctx) { \
+#define ReceiptValidation_GetMainBundle017(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Retrieving main bundle"); \
-    ReceiptValidation_ctx->main_bundle = ReceiptValidation_CFBundleGetMainBundle_0232009E(); \
-    if (!ReceiptValidation_ctx->main_bundle) { \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->main_bundle); \
-        ReceiptValidation_CFBundleUnloadExecutable_0232005E((CFBundleRef) ReceiptValidation_ctx->main_bundle); \
+    CFBundleRef ReceiptValidation_bundle = ReceiptValidation_CFBundleGetMainBundle_020600C7(); \
+    if (!ReceiptValidation_bundle) { \
+        ReceiptValidation_CFRelease_02060026(ReceiptValidation_bundle); \
+        ReceiptValidation_CFBundleUnloadExecutable_01CC00BA((CFBundleRef) ReceiptValidation_bundle); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI = 458; \
-    ReceiptValidation_YZLJKTPYVTVA = 295; \
-    ReceiptValidation_PMXJCCZJOAFX = 495; \
-    ReceiptValidation_OFULPMNSLYXJ = 267; \
-    ReceiptValidation_JDYBZVRRIQGT = 508; \
-    ReceiptValidation_PGKVNNSRVCVJ = 82; \
-    ReceiptValidation_FJEIWPLUQNVF = 515; \
-    ReceiptValidation_ACQEONHECWVC = 494; \
+    ReceiptValidation_ctx->main_bundle = (CFBundleRef) ReceiptValidation_bundle; \
+    ReceiptValidation_TPAMUMCIMUJI = 221; \
+    ReceiptValidation_QFTLSXPQXRZQ = 101; \
+    ReceiptValidation_XQTZCGXTOMRV = 205; \
+    ReceiptValidation_UBKHBSHWTCVT = 334; \
+    ReceiptValidation_THYDFRJHWWUN = 603; \
+    ReceiptValidation_PEYLDRWHJIRJ = 530; \
+    ReceiptValidation_FLUAORRUQXJR = 190; \
+    ReceiptValidation_IOIKCHZOKKFQ = 317; \
 }
 #endif
 
@@ -2731,114 +2739,126 @@ inline static void ReceiptValidation_GetMainBundle016(ReceiptValidation_Checking
 // CodeBlock LoadReceipt
 #ifndef RECEIGEN_EXTERNAL_RECEIPT
 #ifdef DEBUG
-inline static void ReceiptValidation_LoadReceipt025(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_LoadReceipt03A(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     CFStringRef ReceiptValidation_str1;
     CFURLRef ReceiptValidation_url1, ReceiptValidation_url2;
     CFReadStreamRef ReceiptValidation_stream;
     CFMutableDataRef ReceiptValidation_data;
     CFIndex ReceiptValidation_count;
     uint8_t ReceiptValidation_buffer[608];
-    volatile int ReceiptValidation_code = 80; ReceiptValidation_code -= 37; ReceiptValidation_code *= 4; ReceiptValidation_code += 1; 
+    volatile int ReceiptValidation_code = 8; ReceiptValidation_code -= 1; ReceiptValidation_code *= 23; ReceiptValidation_code += 12; 
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading receipt");
     // Compute the path to the receipt
-    ReceiptValidation_url1 = ReceiptValidation_YZLJKTPYVTVA_00A70127((CFBundleRef) ReceiptValidation_ctx->main_bundle);
-    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction006CF((ReceiptValidation_Strings[135]), 234, 37);
-    ReceiptValidation_url2 = ReceiptValidation_PGKVNNSRVCVJ_02320052(NULL, ReceiptValidation_str1, kCFURLPOSIXPathStyle, false, ReceiptValidation_url1);
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_str1);
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url1);
+    ReceiptValidation_url1 = ReceiptValidation_IOIKCHZOKKFQ_0206013D((CFBundleRef) ReceiptValidation_ctx->main_bundle);
+    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00BCF((ReceiptValidation_Strings[62]), 241, 16);
+    ReceiptValidation_url2 = ReceiptValidation_UBKHBSHWTCVT_01CC014E(NULL, ReceiptValidation_url1, ReceiptValidation_str1, true);
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1);
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url1);
+    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00ACF((ReceiptValidation_Strings[37]), 190, 20);
+    ReceiptValidation_url1 = ReceiptValidation_UBKHBSHWTCVT_01CC014E(NULL, ReceiptValidation_url2, ReceiptValidation_str1, true);
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1);
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url2);
+    ReceiptValidation_url2 = ReceiptValidation_url1;
+    ReceiptValidation_url1 = NULL;
     // Create a stream from the receipt file
-    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_00A70004(kCFAllocatorDefault, ReceiptValidation_url2);
-    if (ReceiptValidation_stream == NULL || !ReceiptValidation_PMXJCCZJOAFX_023201EF(ReceiptValidation_stream)) {
+    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_00D1008F(kCFAllocatorDefault, ReceiptValidation_url2);
+    if (ReceiptValidation_stream == NULL || !ReceiptValidation_CFReadStreamOpen_00D1012B(ReceiptValidation_stream)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Error while opening receipt");
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_015E012E(ReceiptValidation_code);
+        ReceiptValidation_exit_02400082(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url1);
-        ReceiptValidation_CFRelease_00A70079(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url1);
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail;
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url1);
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1);
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail;
     }
     // Create the data object that will contains receipt data
-    ReceiptValidation_data = ReceiptValidation_CFDataCreateMutable_00A7004B(kCFAllocatorDefault, 0);
+    ReceiptValidation_data = ReceiptValidation_PEYLDRWHJIRJ_00D10212(kCFAllocatorDefault, 0);
     // Read the receipt by chunks
     do {
-        ReceiptValidation_count = ReceiptValidation_JDYBZVRRIQGT_004801FC(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608);
+        ReceiptValidation_count = ReceiptValidation_FLUAORRUQXJR_00D100BE(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608);
         if (ReceiptValidation_count > 0) {
-            ReceiptValidation_ACQEONHECWVC_004801EE(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count);
+            ReceiptValidation_CFDataAppendBytes_020600D4(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count);
         }
     } while (ReceiptValidation_count > 0);
     // Close the stream
-    ReceiptValidation_CFReadStreamClose_00480241(ReceiptValidation_stream);
-    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_ctx->receipt_data);
+    ReceiptValidation_THYDFRJHWWUN_0206025B(ReceiptValidation_stream);
+    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_00D10026(ReceiptValidation_ctx->receipt_data);
     ReceiptValidation_ctx->receipt_data = ReceiptValidation_data;
     // Global variables computation
-    // From 458 to 559
-    ReceiptValidation_PTKUOOEYMOBI -= 272; ReceiptValidation_PTKUOOEYMOBI *= 3; ReceiptValidation_PTKUOOEYMOBI += 1; 
-    // From 295 to 382
-    ReceiptValidation_YZLJKTPYVTVA -= 168; ReceiptValidation_YZLJKTPYVTVA *= 3; ReceiptValidation_YZLJKTPYVTVA += 1; 
-    // Set to 173
-    ReceiptValidation_OFULPMNSLYXJ = 173;
-    // From 508 to 390
-    ReceiptValidation_JDYBZVRRIQGT += 272; ReceiptValidation_JDYBZVRRIQGT /= 2; 
-    // From 82 to 170
-    ReceiptValidation_PGKVNNSRVCVJ -= 40; ReceiptValidation_PGKVNNSRVCVJ *= 4; ReceiptValidation_PGKVNNSRVCVJ += 2; 
-    // From 515 to 499
-    ReceiptValidation_FJEIWPLUQNVF += 483; ReceiptValidation_FJEIWPLUQNVF /= 2; 
-ReceiptValidation_LoadReceipt025_ReceiptValidation_bail:
-    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_stream);    
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url2);
+    // From 221 to 391
+    ReceiptValidation_TPAMUMCIMUJI -= 91; ReceiptValidation_TPAMUMCIMUJI *= 3; ReceiptValidation_TPAMUMCIMUJI += 1; 
+    // From 101 to 290
+    ReceiptValidation_QFTLSXPQXRZQ -= 29; ReceiptValidation_QFTLSXPQXRZQ *= 4; ReceiptValidation_QFTLSXPQXRZQ += 2; 
+    // From 205 to 505
+    ReceiptValidation_XQTZCGXTOMRV -= 79; ReceiptValidation_XQTZCGXTOMRV *= 4; ReceiptValidation_XQTZCGXTOMRV += 1; 
+    // From 603 to 359
+    ReceiptValidation_THYDFRJHWWUN += 474; ReceiptValidation_THYDFRJHWWUN /= 3; 
+    // From 530 to 173
+    ReceiptValidation_PEYLDRWHJIRJ += 335; ReceiptValidation_PEYLDRWHJIRJ /= 5; 
+    // From 190 to 61
+    ReceiptValidation_FLUAORRUQXJR += 115; ReceiptValidation_FLUAORRUQXJR /= 5; 
+ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail:
+    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_00D10026(ReceiptValidation_stream);    
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url2);
 }
 #else
-#define ReceiptValidation_LoadReceipt025(ReceiptValidation_ctx) { \
+#define ReceiptValidation_LoadReceipt03A(ReceiptValidation_ctx) { \
     CFStringRef ReceiptValidation_str1; \
     CFURLRef ReceiptValidation_url1, ReceiptValidation_url2; \
     CFReadStreamRef ReceiptValidation_stream; \
     CFMutableDataRef ReceiptValidation_data; \
     CFIndex ReceiptValidation_count; \
     uint8_t ReceiptValidation_buffer[608]; \
-    volatile int ReceiptValidation_code = 80; ReceiptValidation_code -= 37; ReceiptValidation_code *= 4; ReceiptValidation_code += 1;  \
+    volatile int ReceiptValidation_code = 8; ReceiptValidation_code -= 1; ReceiptValidation_code *= 23; ReceiptValidation_code += 12;  \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading receipt"); \
-    ReceiptValidation_url1 = ReceiptValidation_YZLJKTPYVTVA_00A70127((CFBundleRef) ReceiptValidation_ctx->main_bundle); \
-    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction006CF((ReceiptValidation_Strings[135]), 234, 37); \
-    ReceiptValidation_url2 = ReceiptValidation_PGKVNNSRVCVJ_02320052(NULL, ReceiptValidation_str1, kCFURLPOSIXPathStyle, false, ReceiptValidation_url1); \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_str1); \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url1); \
-    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_00A70004(kCFAllocatorDefault, ReceiptValidation_url2); \
-    if (ReceiptValidation_stream == NULL || !ReceiptValidation_PMXJCCZJOAFX_023201EF(ReceiptValidation_stream)) { \
+    ReceiptValidation_url1 = ReceiptValidation_IOIKCHZOKKFQ_0206013D((CFBundleRef) ReceiptValidation_ctx->main_bundle); \
+    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00BCF((ReceiptValidation_Strings[62]), 241, 16); \
+    ReceiptValidation_url2 = ReceiptValidation_UBKHBSHWTCVT_01CC014E(NULL, ReceiptValidation_url1, ReceiptValidation_str1, true); \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1); \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url1); \
+    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00ACF((ReceiptValidation_Strings[37]), 190, 20); \
+    ReceiptValidation_url1 = ReceiptValidation_UBKHBSHWTCVT_01CC014E(NULL, ReceiptValidation_url2, ReceiptValidation_str1, true); \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1); \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url2); \
+    ReceiptValidation_url2 = ReceiptValidation_url1; \
+    ReceiptValidation_url1 = NULL; \
+    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_00D1008F(kCFAllocatorDefault, ReceiptValidation_url2); \
+    if (ReceiptValidation_stream == NULL || !ReceiptValidation_CFReadStreamOpen_00D1012B(ReceiptValidation_stream)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Error while opening receipt"); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_015E012E(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url1); \
-        ReceiptValidation_CFRelease_00A70079(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url1); \
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail; \
+        ReceiptValidation_exit_02400082(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url1); \
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1); \
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_data = ReceiptValidation_CFDataCreateMutable_00A7004B(kCFAllocatorDefault, 0); \
+    ReceiptValidation_data = ReceiptValidation_PEYLDRWHJIRJ_00D10212(kCFAllocatorDefault, 0); \
     do { \
-        ReceiptValidation_count = ReceiptValidation_JDYBZVRRIQGT_004801FC(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608); \
+        ReceiptValidation_count = ReceiptValidation_FLUAORRUQXJR_00D100BE(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608); \
         if (ReceiptValidation_count > 0) { \
-            ReceiptValidation_ACQEONHECWVC_004801EE(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count); \
+            ReceiptValidation_CFDataAppendBytes_020600D4(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count); \
         } \
     } while (ReceiptValidation_count > 0); \
-    ReceiptValidation_CFReadStreamClose_00480241(ReceiptValidation_stream); \
-    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_ctx->receipt_data); \
+    ReceiptValidation_THYDFRJHWWUN_0206025B(ReceiptValidation_stream); \
+    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_00D10026(ReceiptValidation_ctx->receipt_data); \
     ReceiptValidation_ctx->receipt_data = ReceiptValidation_data; \
-    ReceiptValidation_PTKUOOEYMOBI -= 272; ReceiptValidation_PTKUOOEYMOBI *= 3; ReceiptValidation_PTKUOOEYMOBI += 1;  \
-    ReceiptValidation_YZLJKTPYVTVA -= 168; ReceiptValidation_YZLJKTPYVTVA *= 3; ReceiptValidation_YZLJKTPYVTVA += 1;  \
-    ReceiptValidation_OFULPMNSLYXJ = 173; \
-    ReceiptValidation_JDYBZVRRIQGT += 272; ReceiptValidation_JDYBZVRRIQGT /= 2;  \
-    ReceiptValidation_PGKVNNSRVCVJ -= 40; ReceiptValidation_PGKVNNSRVCVJ *= 4; ReceiptValidation_PGKVNNSRVCVJ += 2;  \
-    ReceiptValidation_FJEIWPLUQNVF += 483; ReceiptValidation_FJEIWPLUQNVF /= 2;  \
-ReceiptValidation_LoadReceipt025_ReceiptValidation_bail: \
-    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_stream);     \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_url2); \
+    ReceiptValidation_TPAMUMCIMUJI -= 91; ReceiptValidation_TPAMUMCIMUJI *= 3; ReceiptValidation_TPAMUMCIMUJI += 1;  \
+    ReceiptValidation_QFTLSXPQXRZQ -= 29; ReceiptValidation_QFTLSXPQXRZQ *= 4; ReceiptValidation_QFTLSXPQXRZQ += 2;  \
+    ReceiptValidation_XQTZCGXTOMRV -= 79; ReceiptValidation_XQTZCGXTOMRV *= 4; ReceiptValidation_XQTZCGXTOMRV += 1;  \
+    ReceiptValidation_THYDFRJHWWUN += 474; ReceiptValidation_THYDFRJHWWUN /= 3;  \
+    ReceiptValidation_PEYLDRWHJIRJ += 335; ReceiptValidation_PEYLDRWHJIRJ /= 5;  \
+    ReceiptValidation_FLUAORRUQXJR += 115; ReceiptValidation_FLUAORRUQXJR /= 5;  \
+ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail: \
+    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_00D10026(ReceiptValidation_stream);     \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_url2); \
 }
 #endif
 #endif
 
 #ifdef RECEIGEN_EXTERNAL_RECEIPT
 #ifdef DEBUG
-inline static void ReceiptValidation_LoadReceipt025(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_LoadReceipt03A(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     CFStringRef ReceiptValidation_str1;
     CFURLRef ReceiptValidation_url1 = NULL;
     CFReadStreamRef ReceiptValidation_stream = NULL;
@@ -2849,82 +2869,79 @@ inline static void ReceiptValidation_LoadReceipt025(ReceiptValidation_CheckingCo
     int ReceiptValidation_status;
     glob_t ReceiptValidation_glob_buffer;
     char *ReceiptValidation_expanded_path;
-    volatile int ReceiptValidation_code = 114; ReceiptValidation_code -= 57; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
-    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00BCF((ReceiptValidation_Strings[525]), 44, 16);
+    volatile int ReceiptValidation_code = 138; ReceiptValidation_code -= 81; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction005CF((ReceiptValidation_Strings[55]), 236, 16);
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading external receipt at '%s'", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()));
     // Compute the path to the receipt
-    if (!ReceiptValidation_OFULPMNSLYXJ_0232010B(ReceiptValidation_str1, ReceiptValidation_path, PATH_MAX)) {
+    if (!ReceiptValidation_QFTLSXPQXRZQ_02060065(ReceiptValidation_str1, ReceiptValidation_path, PATH_MAX)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Cannot convert receipt path");
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE0059(ReceiptValidation_code);
+        ReceiptValidation_exit_00420213(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1);
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail;
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail;
     }
-    ReceiptValidation_status = ((__ReceiptValidation_glob_b) ReceiptValidation_Pointers[332])(ReceiptValidation_path, GLOB_TILDE | GLOB_ERR, NULL, &ReceiptValidation_glob_buffer);
+    ReceiptValidation_status = ((__ReceiptValidation_glob) ReceiptValidation_Pointers[394])(ReceiptValidation_path, GLOB_TILDE | GLOB_ERR, NULL, &ReceiptValidation_glob_buffer);
     if (ReceiptValidation_status != 0 || ReceiptValidation_glob_buffer.gl_pathc != 1) {
-        ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[148])(&ReceiptValidation_glob_buffer);
+        ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[501])(&ReceiptValidation_glob_buffer);
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Error while globbing receipt path");
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE0059(ReceiptValidation_code);
+        ReceiptValidation_exit_00420213(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail;
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1);
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1);
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail;
     }
     // Get the globbed path
     ReceiptValidation_expanded_path = ReceiptValidation_glob_buffer.gl_pathv[0];
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt path resolved to '%s'", ReceiptValidation_expanded_path);
-    ReceiptValidation_url1 = ReceiptValidation_FJEIWPLUQNVF_02320203(kCFAllocatorDefault, (const UInt8 *) ReceiptValidation_expanded_path, (CFIndex) ((__ReceiptValidation_strlen) ReceiptValidation_Pointers[86])(ReceiptValidation_expanded_path), false);
-    ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[148])(&ReceiptValidation_glob_buffer);
+    ReceiptValidation_url1 = ReceiptValidation_XQTZCGXTOMRV_00D100CD(kCFAllocatorDefault, (const UInt8 *) ReceiptValidation_expanded_path, (CFIndex) ((__ReceiptValidation_strlen) ReceiptValidation_Pointers[35])(ReceiptValidation_expanded_path), false);
+    ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[501])(&ReceiptValidation_glob_buffer);
     // Create a stream from the receipt file
-    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_004800C7(kCFAllocatorDefault, ReceiptValidation_url1);
-    if (ReceiptValidation_stream == NULL || !ReceiptValidation_PMXJCCZJOAFX_023201EF(ReceiptValidation_stream)) {
+    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_0206023F(kCFAllocatorDefault, ReceiptValidation_url1);
+    if (ReceiptValidation_stream == NULL || !ReceiptValidation_CFReadStreamOpen_01CC021B(ReceiptValidation_stream)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Error while opening receipt");
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE0059(ReceiptValidation_code);
+        ReceiptValidation_exit_00420213(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1);
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail;
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1);
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1);
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail;
     }
     // Create the data object that will contains receipt data
-    ReceiptValidation_data = ReceiptValidation_CFDataCreateMutable_00A7004B(kCFAllocatorDefault, 0);
+    ReceiptValidation_data = ReceiptValidation_PEYLDRWHJIRJ_00D10212(kCFAllocatorDefault, 0);
     // Read the receipt by chunks
     do {
-        ReceiptValidation_count = ReceiptValidation_JDYBZVRRIQGT_004801FC(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608);
+        ReceiptValidation_count = ReceiptValidation_FLUAORRUQXJR_00D100BE(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608);
         if (ReceiptValidation_count > 0) {
-            ReceiptValidation_ACQEONHECWVC_004801EE(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count);
+            ReceiptValidation_CFDataAppendBytes_00D101E4(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count);
         }
     } while (ReceiptValidation_count > 0);
     // Close the stream
-    ReceiptValidation_CFReadStreamClose_00A70204(ReceiptValidation_stream);
-    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->receipt_data);
+    ReceiptValidation_THYDFRJHWWUN_0206025B(ReceiptValidation_stream);
+    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_ctx->receipt_data);
     ReceiptValidation_ctx->receipt_data = ReceiptValidation_data;
     // Global variables computation
-    // From 458 to 559
-    ReceiptValidation_PTKUOOEYMOBI -= 272; ReceiptValidation_PTKUOOEYMOBI *= 3; ReceiptValidation_PTKUOOEYMOBI += 1; 
-    // From 295 to 382
-    ReceiptValidation_YZLJKTPYVTVA -= 168; ReceiptValidation_YZLJKTPYVTVA *= 3; ReceiptValidation_YZLJKTPYVTVA += 1; 
-    // Set to 173
-    ReceiptValidation_OFULPMNSLYXJ = 173;
-    // From 508 to 390
-    ReceiptValidation_JDYBZVRRIQGT += 272; ReceiptValidation_JDYBZVRRIQGT /= 2; 
-    // From 82 to 170
-    ReceiptValidation_PGKVNNSRVCVJ -= 40; ReceiptValidation_PGKVNNSRVCVJ *= 4; ReceiptValidation_PGKVNNSRVCVJ += 2; 
-    // From 515 to 499
-    ReceiptValidation_FJEIWPLUQNVF += 483; ReceiptValidation_FJEIWPLUQNVF /= 2; 
-ReceiptValidation_LoadReceipt025_ReceiptValidation_bail:
-    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_stream);    
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-    if (ReceiptValidation_url1) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1);
+    // From 221 to 391
+    ReceiptValidation_TPAMUMCIMUJI -= 91; ReceiptValidation_TPAMUMCIMUJI *= 3; ReceiptValidation_TPAMUMCIMUJI += 1; 
+    // From 101 to 290
+    ReceiptValidation_QFTLSXPQXRZQ -= 29; ReceiptValidation_QFTLSXPQXRZQ *= 4; ReceiptValidation_QFTLSXPQXRZQ += 2; 
+    // From 205 to 505
+    ReceiptValidation_XQTZCGXTOMRV -= 79; ReceiptValidation_XQTZCGXTOMRV *= 4; ReceiptValidation_XQTZCGXTOMRV += 1; 
+    // From 603 to 359
+    ReceiptValidation_THYDFRJHWWUN += 474; ReceiptValidation_THYDFRJHWWUN /= 3; 
+    // From 530 to 173
+    ReceiptValidation_PEYLDRWHJIRJ += 335; ReceiptValidation_PEYLDRWHJIRJ /= 5; 
+    // From 190 to 61
+    ReceiptValidation_FLUAORRUQXJR += 115; ReceiptValidation_FLUAORRUQXJR /= 5; 
+ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail:
+    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_stream);    
+    ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1);
+    if (ReceiptValidation_url1) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1);
 }
 #else
-#define ReceiptValidation_LoadReceipt025(ReceiptValidation_ctx) { \
+#define ReceiptValidation_LoadReceipt03A(ReceiptValidation_ctx) { \
     CFStringRef ReceiptValidation_str1; \
     CFURLRef ReceiptValidation_url1 = NULL; \
     CFReadStreamRef ReceiptValidation_stream = NULL; \
@@ -2935,63 +2952,60 @@ ReceiptValidation_LoadReceipt025_ReceiptValidation_bail:
     int ReceiptValidation_status; \
     glob_t ReceiptValidation_glob_buffer; \
     char *ReceiptValidation_expanded_path; \
-    volatile int ReceiptValidation_code = 114; ReceiptValidation_code -= 57; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
-    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00BCF((ReceiptValidation_Strings[525]), 44, 16); \
+    volatile int ReceiptValidation_code = 138; ReceiptValidation_code -= 81; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction005CF((ReceiptValidation_Strings[55]), 236, 16); \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading external receipt at '%s'", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding())); \
-    if (!ReceiptValidation_OFULPMNSLYXJ_0232010B(ReceiptValidation_str1, ReceiptValidation_path, PATH_MAX)) { \
+    if (!ReceiptValidation_QFTLSXPQXRZQ_02060065(ReceiptValidation_str1, ReceiptValidation_path, PATH_MAX)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Cannot convert receipt path"); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE0059(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1); \
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00420213(ReceiptValidation_code); \
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_status = ((__ReceiptValidation_glob_b) ReceiptValidation_Pointers[332])(ReceiptValidation_path, GLOB_TILDE | GLOB_ERR, NULL, &ReceiptValidation_glob_buffer); \
+    ReceiptValidation_status = ((__ReceiptValidation_glob) ReceiptValidation_Pointers[394])(ReceiptValidation_path, GLOB_TILDE | GLOB_ERR, NULL, &ReceiptValidation_glob_buffer); \
     if (ReceiptValidation_status != 0 || ReceiptValidation_glob_buffer.gl_pathc != 1) { \
-        ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[148])(&ReceiptValidation_glob_buffer); \
+        ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[501])(&ReceiptValidation_glob_buffer); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Error while globbing receipt path"); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE0059(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00420213(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1); \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1); \
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail; \
     } \
     ReceiptValidation_expanded_path = ReceiptValidation_glob_buffer.gl_pathv[0]; \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt path resolved to '%s'", ReceiptValidation_expanded_path); \
-    ReceiptValidation_url1 = ReceiptValidation_FJEIWPLUQNVF_02320203(kCFAllocatorDefault, (const UInt8 *) ReceiptValidation_expanded_path, (CFIndex) ((__ReceiptValidation_strlen) ReceiptValidation_Pointers[86])(ReceiptValidation_expanded_path), false); \
-    ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[148])(&ReceiptValidation_glob_buffer); \
-    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_004800C7(kCFAllocatorDefault, ReceiptValidation_url1); \
-    if (ReceiptValidation_stream == NULL || !ReceiptValidation_PMXJCCZJOAFX_023201EF(ReceiptValidation_stream)) { \
+    ReceiptValidation_url1 = ReceiptValidation_XQTZCGXTOMRV_00D100CD(kCFAllocatorDefault, (const UInt8 *) ReceiptValidation_expanded_path, (CFIndex) ((__ReceiptValidation_strlen) ReceiptValidation_Pointers[35])(ReceiptValidation_expanded_path), false); \
+    ((__ReceiptValidation_globfree) ReceiptValidation_Pointers[501])(&ReceiptValidation_glob_buffer); \
+    ReceiptValidation_stream = ReceiptValidation_CFReadStreamCreateWithFile_0206023F(kCFAllocatorDefault, ReceiptValidation_url1); \
+    if (ReceiptValidation_stream == NULL || !ReceiptValidation_CFReadStreamOpen_01CC021B(ReceiptValidation_stream)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Error while opening receipt"); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE0059(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1); \
-        goto ReceiptValidation_LoadReceipt025_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00420213(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1); \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1); \
+        goto ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_data = ReceiptValidation_CFDataCreateMutable_00A7004B(kCFAllocatorDefault, 0); \
+    ReceiptValidation_data = ReceiptValidation_PEYLDRWHJIRJ_00D10212(kCFAllocatorDefault, 0); \
     do { \
-        ReceiptValidation_count = ReceiptValidation_JDYBZVRRIQGT_004801FC(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608); \
+        ReceiptValidation_count = ReceiptValidation_FLUAORRUQXJR_00D100BE(ReceiptValidation_stream, &ReceiptValidation_buffer[0], 608); \
         if (ReceiptValidation_count > 0) { \
-            ReceiptValidation_ACQEONHECWVC_004801EE(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count); \
+            ReceiptValidation_CFDataAppendBytes_00D101E4(ReceiptValidation_data, ReceiptValidation_buffer, ReceiptValidation_count); \
         } \
     } while (ReceiptValidation_count > 0); \
-    ReceiptValidation_CFReadStreamClose_00A70204(ReceiptValidation_stream); \
-    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->receipt_data); \
+    ReceiptValidation_THYDFRJHWWUN_0206025B(ReceiptValidation_stream); \
+    if (ReceiptValidation_ctx->receipt_data) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_ctx->receipt_data); \
     ReceiptValidation_ctx->receipt_data = ReceiptValidation_data; \
-    ReceiptValidation_PTKUOOEYMOBI -= 272; ReceiptValidation_PTKUOOEYMOBI *= 3; ReceiptValidation_PTKUOOEYMOBI += 1;  \
-    ReceiptValidation_YZLJKTPYVTVA -= 168; ReceiptValidation_YZLJKTPYVTVA *= 3; ReceiptValidation_YZLJKTPYVTVA += 1;  \
-    ReceiptValidation_OFULPMNSLYXJ = 173; \
-    ReceiptValidation_JDYBZVRRIQGT += 272; ReceiptValidation_JDYBZVRRIQGT /= 2;  \
-    ReceiptValidation_PGKVNNSRVCVJ -= 40; ReceiptValidation_PGKVNNSRVCVJ *= 4; ReceiptValidation_PGKVNNSRVCVJ += 2;  \
-    ReceiptValidation_FJEIWPLUQNVF += 483; ReceiptValidation_FJEIWPLUQNVF /= 2;  \
-ReceiptValidation_LoadReceipt025_ReceiptValidation_bail: \
-    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_stream);     \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-    if (ReceiptValidation_url1) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_url1); \
+    ReceiptValidation_TPAMUMCIMUJI -= 91; ReceiptValidation_TPAMUMCIMUJI *= 3; ReceiptValidation_TPAMUMCIMUJI += 1;  \
+    ReceiptValidation_QFTLSXPQXRZQ -= 29; ReceiptValidation_QFTLSXPQXRZQ *= 4; ReceiptValidation_QFTLSXPQXRZQ += 2;  \
+    ReceiptValidation_XQTZCGXTOMRV -= 79; ReceiptValidation_XQTZCGXTOMRV *= 4; ReceiptValidation_XQTZCGXTOMRV += 1;  \
+    ReceiptValidation_THYDFRJHWWUN += 474; ReceiptValidation_THYDFRJHWWUN /= 3;  \
+    ReceiptValidation_PEYLDRWHJIRJ += 335; ReceiptValidation_PEYLDRWHJIRJ /= 5;  \
+    ReceiptValidation_FLUAORRUQXJR += 115; ReceiptValidation_FLUAORRUQXJR /= 5;  \
+ReceiptValidation_LoadReceipt03A_ReceiptValidation_bail: \
+    if (ReceiptValidation_stream) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_stream);     \
+    ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_str1); \
+    if (ReceiptValidation_url1) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_url1); \
 }
 #endif
 #endif
@@ -2999,7 +3013,7 @@ ReceiptValidation_LoadReceipt025_ReceiptValidation_bail: \
 
 // CodeBlock GetGUID
 #ifdef DEBUG
-inline static void ReceiptValidation_GetGUID049(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_GetGUID045(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     kern_return_t ReceiptValidation_kernResult;
     mach_port_t ReceiptValidation_master_port;
     CFMutableDictionaryRef ReceiptValidation_matching_dict = NULL;
@@ -3007,71 +3021,71 @@ inline static void ReceiptValidation_GetGUID049(ReceiptValidation_CheckingContex
     io_object_t ReceiptValidation_service, ReceiptValidation_parent_service;
     char *ReceiptValidation_str1;
     CFStringRef ReceiptValidation_str2;
-    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[221]), 173, 16); 
+    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00ACF((ReceiptValidation_Strings[104]), 2, 16); 
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Getting MAC address");
     // Open a MACH port
-    ReceiptValidation_kernResult = ReceiptValidation_OFULPMNSLYXJ_00C100AD(MACH_PORT_NULL, &ReceiptValidation_master_port);
+    ReceiptValidation_kernResult = ReceiptValidation_TPAMUMCIMUJI_02530187(MACH_PORT_NULL, &ReceiptValidation_master_port);
     if (ReceiptValidation_kernResult != KERN_SUCCESS) {
         // Dead code
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2);
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict);
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2);
-        goto ReceiptValidation_GetGUID049_ReceiptValidation_bail;
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict);
+        goto ReceiptValidation_GetGUID045_ReceiptValidation_bail;
     }
     // Create a search for primary interface
     char ReceiptValidation_str1_[608];
-    ReceiptValidation_ObfuscationFunction00C((ReceiptValidation_Strings[354]), ReceiptValidation_str1_, 202, 16);
+    ReceiptValidation_ObfuscationFunction005((ReceiptValidation_Strings[584]), ReceiptValidation_str1_, 217, 16);
     ReceiptValidation_str1 = ReceiptValidation_str1_;
-    ReceiptValidation_matching_dict = ReceiptValidation_YZLJKTPYVTVA_00C1017E(ReceiptValidation_master_port, 0, ReceiptValidation_str1);
+    ReceiptValidation_matching_dict = ReceiptValidation_XQTZCGXTOMRV_025301F9(ReceiptValidation_master_port, 0, ReceiptValidation_str1);
     if (!ReceiptValidation_matching_dict) {
         // Dead code
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict);
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2);
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict);
-        goto ReceiptValidation_GetGUID049_ReceiptValidation_bail;
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict);
+        goto ReceiptValidation_GetGUID045_ReceiptValidation_bail;
     }
     // Perform the search
-    ReceiptValidation_kernResult = ReceiptValidation_FJEIWPLUQNVF_00C101F3(ReceiptValidation_master_port, ReceiptValidation_matching_dict, &ReceiptValidation_iterator);
+    ReceiptValidation_kernResult = ReceiptValidation_FLUAORRUQXJR_0158003D(ReceiptValidation_master_port, ReceiptValidation_matching_dict, &ReceiptValidation_iterator);
     if (ReceiptValidation_kernResult != KERN_SUCCESS) {
         // Dead code
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict);
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2);
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict);
-        goto ReceiptValidation_GetGUID049_ReceiptValidation_bail;
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict);
+        goto ReceiptValidation_GetGUID045_ReceiptValidation_bail;
     }
     // Iterate over the result
-    while((ReceiptValidation_service = ReceiptValidation_JDYBZVRRIQGT_001D0186(ReceiptValidation_iterator)) != 0) {
-        ReceiptValidation_kernResult = ReceiptValidation_PGKVNNSRVCVJ_00B600AA(ReceiptValidation_service, kIOServicePlane, &ReceiptValidation_parent_service);
+    while((ReceiptValidation_service = ReceiptValidation_THYDFRJHWWUN_015C0167(ReceiptValidation_iterator)) != 0) {
+        ReceiptValidation_kernResult = ReceiptValidation_QFTLSXPQXRZQ_015C0122(ReceiptValidation_service, kIOServicePlane, &ReceiptValidation_parent_service);
         if (ReceiptValidation_kernResult == KERN_SUCCESS) {
-            if (ReceiptValidation_ctx->guid_data) ReceiptValidation_CFRelease_0232012C(ReceiptValidation_ctx->guid_data);
-            ReceiptValidation_ctx->guid_data = (CFDataRef) ReceiptValidation_PTKUOOEYMOBI_001D022F(ReceiptValidation_parent_service, ReceiptValidation_str2, NULL, 0);
-            ReceiptValidation_IOObjectRelease_00C10211(ReceiptValidation_parent_service);
+            if (ReceiptValidation_ctx->guid_data) ReceiptValidation_CFRelease_00D10105(ReceiptValidation_ctx->guid_data);
+            ReceiptValidation_ctx->guid_data = (CFDataRef) ReceiptValidation_PEYLDRWHJIRJ_025300AD(ReceiptValidation_parent_service, ReceiptValidation_str2, NULL, 0);
+            ReceiptValidation_IOObjectRelease_025301C1(ReceiptValidation_parent_service);
         }
-        ReceiptValidation_IOObjectRelease_00C10211(ReceiptValidation_iterator);
-        ReceiptValidation_IOObjectRelease_00C10211(ReceiptValidation_service);
+        ReceiptValidation_IOObjectRelease_025301C1(ReceiptValidation_iterator);
+        ReceiptValidation_IOObjectRelease_025301C1(ReceiptValidation_service);
     }
     // Global variables computation
-    // From 559 to 324
-    ReceiptValidation_PTKUOOEYMOBI += 413; ReceiptValidation_PTKUOOEYMOBI /= 3; 
-    // From 382 to 190
-    ReceiptValidation_YZLJKTPYVTVA += 378; ReceiptValidation_YZLJKTPYVTVA /= 4; 
-    // Set to 384
-    ReceiptValidation_PMXJCCZJOAFX = 384;
-    // From 173 to 507
-    ReceiptValidation_OFULPMNSLYXJ -= 47; ReceiptValidation_OFULPMNSLYXJ *= 4; ReceiptValidation_OFULPMNSLYXJ += 3; 
-    // From 390 to 345
-    ReceiptValidation_JDYBZVRRIQGT += 300; ReceiptValidation_JDYBZVRRIQGT /= 2; 
-    // From 170 to 70
-    ReceiptValidation_PGKVNNSRVCVJ += 110; ReceiptValidation_PGKVNNSRVCVJ /= 4; 
-    // From 499 to 111
-    ReceiptValidation_FJEIWPLUQNVF += 167; ReceiptValidation_FJEIWPLUQNVF /= 6; 
-    // From 494 to 239
-    ReceiptValidation_ACQEONHECWVC += 462; ReceiptValidation_ACQEONHECWVC /= 4; 
-ReceiptValidation_GetGUID049_ReceiptValidation_bail:
-    ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2);
+    // From 391 to 592
+    ReceiptValidation_TPAMUMCIMUJI -= 194; ReceiptValidation_TPAMUMCIMUJI *= 3; ReceiptValidation_TPAMUMCIMUJI += 1; 
+    // From 290 to 583
+    ReceiptValidation_QFTLSXPQXRZQ -= 145; ReceiptValidation_QFTLSXPQXRZQ *= 4; ReceiptValidation_QFTLSXPQXRZQ += 3; 
+    // From 505 to 251
+    ReceiptValidation_XQTZCGXTOMRV += 499; ReceiptValidation_XQTZCGXTOMRV /= 4; 
+    // From 334 to 229
+    ReceiptValidation_UBKHBSHWTCVT += 124; ReceiptValidation_UBKHBSHWTCVT /= 2; 
+    // From 359 to 540
+    ReceiptValidation_THYDFRJHWWUN -= 179; ReceiptValidation_THYDFRJHWWUN *= 3; 
+    // From 173 to 18
+    ReceiptValidation_PEYLDRWHJIRJ += 25; ReceiptValidation_PEYLDRWHJIRJ /= 11; 
+    // From 61 to 79
+    ReceiptValidation_FLUAORRUQXJR -= 35; ReceiptValidation_FLUAORRUQXJR *= 3; ReceiptValidation_FLUAORRUQXJR += 1; 
+    // From 317 to 589
+    ReceiptValidation_IOIKCHZOKKFQ -= 121; ReceiptValidation_IOIKCHZOKKFQ *= 3; ReceiptValidation_IOIKCHZOKKFQ += 1; 
+ReceiptValidation_GetGUID045_ReceiptValidation_bail:
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2);
 }
 #else
-#define ReceiptValidation_GetGUID049(ReceiptValidation_ctx) { \
+#define ReceiptValidation_GetGUID045(ReceiptValidation_ctx) { \
     kern_return_t ReceiptValidation_kernResult; \
     mach_port_t ReceiptValidation_master_port; \
     CFMutableDictionaryRef ReceiptValidation_matching_dict = NULL; \
@@ -3079,52 +3093,52 @@ ReceiptValidation_GetGUID049_ReceiptValidation_bail:
     io_object_t ReceiptValidation_service, ReceiptValidation_parent_service; \
     char *ReceiptValidation_str1; \
     CFStringRef ReceiptValidation_str2; \
-    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[221]), 173, 16);  \
+    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00ACF((ReceiptValidation_Strings[104]), 2, 16);  \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Getting MAC address"); \
-    ReceiptValidation_kernResult = ReceiptValidation_OFULPMNSLYXJ_00C100AD(MACH_PORT_NULL, &ReceiptValidation_master_port); \
+    ReceiptValidation_kernResult = ReceiptValidation_TPAMUMCIMUJI_02530187(MACH_PORT_NULL, &ReceiptValidation_master_port); \
     if (ReceiptValidation_kernResult != KERN_SUCCESS) { \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2); \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict); \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2); \
-        goto ReceiptValidation_GetGUID049_ReceiptValidation_bail; \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict); \
+        goto ReceiptValidation_GetGUID045_ReceiptValidation_bail; \
     } \
     char ReceiptValidation_str1_[608]; \
-    ReceiptValidation_ObfuscationFunction00C((ReceiptValidation_Strings[354]), ReceiptValidation_str1_, 202, 16); \
+    ReceiptValidation_ObfuscationFunction005((ReceiptValidation_Strings[584]), ReceiptValidation_str1_, 217, 16); \
     ReceiptValidation_str1 = ReceiptValidation_str1_; \
-    ReceiptValidation_matching_dict = ReceiptValidation_YZLJKTPYVTVA_00C1017E(ReceiptValidation_master_port, 0, ReceiptValidation_str1); \
+    ReceiptValidation_matching_dict = ReceiptValidation_XQTZCGXTOMRV_025301F9(ReceiptValidation_master_port, 0, ReceiptValidation_str1); \
     if (!ReceiptValidation_matching_dict) { \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict); \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2); \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict); \
-        goto ReceiptValidation_GetGUID049_ReceiptValidation_bail; \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict); \
+        goto ReceiptValidation_GetGUID045_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_kernResult = ReceiptValidation_FJEIWPLUQNVF_00C101F3(ReceiptValidation_master_port, ReceiptValidation_matching_dict, &ReceiptValidation_iterator); \
+    ReceiptValidation_kernResult = ReceiptValidation_FLUAORRUQXJR_0158003D(ReceiptValidation_master_port, ReceiptValidation_matching_dict, &ReceiptValidation_iterator); \
     if (ReceiptValidation_kernResult != KERN_SUCCESS) { \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict); \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2); \
-        ReceiptValidation_CFRelease_0232012C(ReceiptValidation_matching_dict); \
-        goto ReceiptValidation_GetGUID049_ReceiptValidation_bail; \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_matching_dict); \
+        goto ReceiptValidation_GetGUID045_ReceiptValidation_bail; \
     } \
-    while((ReceiptValidation_service = ReceiptValidation_JDYBZVRRIQGT_001D0186(ReceiptValidation_iterator)) != 0) { \
-        ReceiptValidation_kernResult = ReceiptValidation_PGKVNNSRVCVJ_00B600AA(ReceiptValidation_service, kIOServicePlane, &ReceiptValidation_parent_service); \
+    while((ReceiptValidation_service = ReceiptValidation_THYDFRJHWWUN_015C0167(ReceiptValidation_iterator)) != 0) { \
+        ReceiptValidation_kernResult = ReceiptValidation_QFTLSXPQXRZQ_015C0122(ReceiptValidation_service, kIOServicePlane, &ReceiptValidation_parent_service); \
         if (ReceiptValidation_kernResult == KERN_SUCCESS) { \
-            if (ReceiptValidation_ctx->guid_data) ReceiptValidation_CFRelease_0232012C(ReceiptValidation_ctx->guid_data); \
-            ReceiptValidation_ctx->guid_data = (CFDataRef) ReceiptValidation_PTKUOOEYMOBI_001D022F(ReceiptValidation_parent_service, ReceiptValidation_str2, NULL, 0); \
-            ReceiptValidation_IOObjectRelease_00C10211(ReceiptValidation_parent_service); \
+            if (ReceiptValidation_ctx->guid_data) ReceiptValidation_CFRelease_00D10105(ReceiptValidation_ctx->guid_data); \
+            ReceiptValidation_ctx->guid_data = (CFDataRef) ReceiptValidation_PEYLDRWHJIRJ_025300AD(ReceiptValidation_parent_service, ReceiptValidation_str2, NULL, 0); \
+            ReceiptValidation_IOObjectRelease_025301C1(ReceiptValidation_parent_service); \
         } \
-        ReceiptValidation_IOObjectRelease_00C10211(ReceiptValidation_iterator); \
-        ReceiptValidation_IOObjectRelease_00C10211(ReceiptValidation_service); \
+        ReceiptValidation_IOObjectRelease_025301C1(ReceiptValidation_iterator); \
+        ReceiptValidation_IOObjectRelease_025301C1(ReceiptValidation_service); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI += 413; ReceiptValidation_PTKUOOEYMOBI /= 3;  \
-    ReceiptValidation_YZLJKTPYVTVA += 378; ReceiptValidation_YZLJKTPYVTVA /= 4;  \
-    ReceiptValidation_PMXJCCZJOAFX = 384; \
-    ReceiptValidation_OFULPMNSLYXJ -= 47; ReceiptValidation_OFULPMNSLYXJ *= 4; ReceiptValidation_OFULPMNSLYXJ += 3;  \
-    ReceiptValidation_JDYBZVRRIQGT += 300; ReceiptValidation_JDYBZVRRIQGT /= 2;  \
-    ReceiptValidation_PGKVNNSRVCVJ += 110; ReceiptValidation_PGKVNNSRVCVJ /= 4;  \
-    ReceiptValidation_FJEIWPLUQNVF += 167; ReceiptValidation_FJEIWPLUQNVF /= 6;  \
-    ReceiptValidation_ACQEONHECWVC += 462; ReceiptValidation_ACQEONHECWVC /= 4;  \
-ReceiptValidation_GetGUID049_ReceiptValidation_bail: \
-    ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str2); \
+    ReceiptValidation_TPAMUMCIMUJI -= 194; ReceiptValidation_TPAMUMCIMUJI *= 3; ReceiptValidation_TPAMUMCIMUJI += 1;  \
+    ReceiptValidation_QFTLSXPQXRZQ -= 145; ReceiptValidation_QFTLSXPQXRZQ *= 4; ReceiptValidation_QFTLSXPQXRZQ += 3;  \
+    ReceiptValidation_XQTZCGXTOMRV += 499; ReceiptValidation_XQTZCGXTOMRV /= 4;  \
+    ReceiptValidation_UBKHBSHWTCVT += 124; ReceiptValidation_UBKHBSHWTCVT /= 2;  \
+    ReceiptValidation_THYDFRJHWWUN -= 179; ReceiptValidation_THYDFRJHWWUN *= 3;  \
+    ReceiptValidation_PEYLDRWHJIRJ += 25; ReceiptValidation_PEYLDRWHJIRJ /= 11;  \
+    ReceiptValidation_FLUAORRUQXJR -= 35; ReceiptValidation_FLUAORRUQXJR *= 3; ReceiptValidation_FLUAORRUQXJR += 1;  \
+    ReceiptValidation_IOIKCHZOKKFQ -= 121; ReceiptValidation_IOIKCHZOKKFQ *= 3; ReceiptValidation_IOIKCHZOKKFQ += 1;  \
+ReceiptValidation_GetGUID045_ReceiptValidation_bail: \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2); \
 }
 #endif
 
@@ -3132,7 +3146,7 @@ ReceiptValidation_GetGUID049_ReceiptValidation_bail: \
 // CodeBlock GetRootCA
 #if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_6
 #ifdef DEBUG
-inline static void ReceiptValidation_GetRootCA051(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_GetRootCA052(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     OSStatus ReceiptValidation_status;
     SecKeychainRef ReceiptValidation_keychain = NULL;
     CFTypeRef ReceiptValidation_searchList = NULL;
@@ -3149,63 +3163,66 @@ inline static void ReceiptValidation_GetRootCA051(ReceiptValidation_CheckingCont
     volatile int ReceiptValidation_code = 56; ReceiptValidation_code -= 22; ReceiptValidation_code *= 5; ReceiptValidation_code += 3; 
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading Apple Root CA");
     char ReceiptValidation_str1_[608];
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[322]), ReceiptValidation_str1_, 18, 66);
+    ReceiptValidation_ObfuscationFunction005((ReceiptValidation_Strings[604]), ReceiptValidation_str1_, 210, 66);
     ReceiptValidation_str1 = ReceiptValidation_str1_;
-    ReceiptValidation_status = ReceiptValidation_PGKVNNSRVCVJ_01300046(ReceiptValidation_str1, &ReceiptValidation_keychain);
+    ReceiptValidation_status = ReceiptValidation_TPAMUMCIMUJI_01130250(ReceiptValidation_str1, &ReceiptValidation_keychain);
     if (ReceiptValidation_status != errSecSuccess) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_015E012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
         // Dead code
         // TODO
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail;
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail;
     }
     // Create a search list within the system Keychain
-    ReceiptValidation_searchList = ReceiptValidation_CFArrayCreateMutable_023200EE(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_00A700F4);
-    ReceiptValidation_CFArrayAppendValue_00480044((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain);
+    ReceiptValidation_searchList = ReceiptValidation_UBKHBSHWTCVT_01CC00E5(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_00D101EA);
+    ReceiptValidation_PEYLDRWHJIRJ_02060012((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain);
     // Create the criteria dictionary to find the Apple Root CA certificate
-    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[84]), 241, 16);
-    ReceiptValidation_searchKeys[0] = *ReceiptValidation_kSecClass_01300067;
-    ReceiptValidation_searchValues[0] = *ReceiptValidation_kSecClassCertificate_01300000;
-    ReceiptValidation_searchKeys[1] = *ReceiptValidation_kSecMatchSearchList_0251009A;
+    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction006CF((ReceiptValidation_Strings[343]), 177, 16);
+    ReceiptValidation_searchKeys[0] = *ReceiptValidation_kSecClass_011301CA;
+    ReceiptValidation_searchValues[0] = *ReceiptValidation_kSecClassCertificate_0140010A;
+    ReceiptValidation_searchKeys[1] = *ReceiptValidation_kSecMatchSearchList_01130106;
     ReceiptValidation_searchValues[1] = ReceiptValidation_searchList;
-    ReceiptValidation_searchKeys[2] = *ReceiptValidation_kSecMatchSubjectContains_0251004D;
+    ReceiptValidation_searchKeys[2] = *ReceiptValidation_kSecMatchSubjectContains_010901BF;
     ReceiptValidation_searchValues[2] = ReceiptValidation_str2;
-    ReceiptValidation_searchKeys[3] = *ReceiptValidation_kSecMatchLimit_025101CF;
-    ReceiptValidation_searchValues[3] = *ReceiptValidation_kSecMatchLimitAll_009701F0;
-    ReceiptValidation_searchKeys[4] = *ReceiptValidation_kSecReturnRef_01300199;
+    ReceiptValidation_searchKeys[3] = *ReceiptValidation_kSecMatchLimit_010901FC;
+    ReceiptValidation_searchValues[3] = *ReceiptValidation_kSecMatchLimitAll_01400131;
+    ReceiptValidation_searchKeys[4] = *ReceiptValidation_kSecReturnRef_014000D3;
     ReceiptValidation_searchValues[4] = kCFBooleanTrue;
-    ReceiptValidation_searchDict = CFDictionaryCreate(kCFAllocatorDefault, ReceiptValidation_searchKeys, ReceiptValidation_searchValues, ReceiptValidation_count2, NULL, NULL);
+    ReceiptValidation_searchDict = ReceiptValidation_XQTZCGXTOMRV_00D100FB(kCFAllocatorDefault, ReceiptValidation_count2, ReceiptValidation_kCFTypeDictionaryKeyCallBacks_02060092, ReceiptValidation_kCFTypeDictionaryValueCallBacks_01CC0197);
+    while(ReceiptValidation_count2-- > 0) {
+        ReceiptValidation_IOIKCHZOKKFQ_01CC024D((CFMutableDictionaryRef) ReceiptValidation_searchDict, ReceiptValidation_searchKeys[ReceiptValidation_count2], ReceiptValidation_searchValues[ReceiptValidation_count2]);
+    }
     // Perform the actual search
-    ReceiptValidation_status = ReceiptValidation_PMXJCCZJOAFX_00970180(ReceiptValidation_searchDict, &ReceiptValidation_results);
+    ReceiptValidation_status = ReceiptValidation_SecItemCopyMatching_01400028(ReceiptValidation_searchDict, &ReceiptValidation_results);
     if (ReceiptValidation_status != errSecSuccess) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_015E012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
         // Dead code
         // TODO
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail;
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail;
     }
     // Iterate over the results and copy the certificate data
-    for(ReceiptValidation_idx = 0; ReceiptValidation_idx < ReceiptValidation_ACQEONHECWVC_023200EF((CFArrayRef) ReceiptValidation_results); ReceiptValidation_idx++) {
-        ReceiptValidation_certificate = (SecCertificateRef) ReceiptValidation_PTKUOOEYMOBI_00480144((CFArrayRef) ReceiptValidation_results, ReceiptValidation_idx);
-        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->ca_data);
-        ReceiptValidation_ctx->ca_data = ReceiptValidation_JDYBZVRRIQGT_00970159(ReceiptValidation_certificate);
+    for(ReceiptValidation_idx = 0; ReceiptValidation_idx < ReceiptValidation_QFTLSXPQXRZQ_00D10247((CFArrayRef) ReceiptValidation_results); ReceiptValidation_idx++) {
+        ReceiptValidation_certificate = (SecCertificateRef) ReceiptValidation_CFArrayGetValueAtIndex_00D10199((CFArrayRef) ReceiptValidation_results, ReceiptValidation_idx);
+        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_02060026(ReceiptValidation_ctx->ca_data);
+        ReceiptValidation_ctx->ca_data = ReceiptValidation_FLUAORRUQXJR_0113004F(ReceiptValidation_certificate);
     }
     // Global variables computation
-    // From 324 to 287
-    ReceiptValidation_PTKUOOEYMOBI += 250; ReceiptValidation_PTKUOOEYMOBI /= 2; 
-    // From 190 to 174
-    ReceiptValidation_YZLJKTPYVTVA += 158; ReceiptValidation_YZLJKTPYVTVA /= 2; 
-    // From 239 to 473
-    ReceiptValidation_ACQEONHECWVC -= 82; ReceiptValidation_ACQEONHECWVC *= 3; ReceiptValidation_ACQEONHECWVC += 2; 
-ReceiptValidation_GetRootCA051_ReceiptValidation_bail:
-    if (ReceiptValidation_str2) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2);
-    if (ReceiptValidation_results) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_results);
-    if (ReceiptValidation_searchDict) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_searchDict);
-    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_searchList);
-    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_keychain);
+    // From 592 to 279
+    ReceiptValidation_TPAMUMCIMUJI += 524; ReceiptValidation_TPAMUMCIMUJI /= 4; 
+    // From 251 to 216
+    ReceiptValidation_XQTZCGXTOMRV += 181; ReceiptValidation_XQTZCGXTOMRV /= 2; 
+    // From 79 to 600
+    ReceiptValidation_FLUAORRUQXJR -= 13; ReceiptValidation_FLUAORRUQXJR *= 9; ReceiptValidation_FLUAORRUQXJR += 6; 
+ReceiptValidation_GetRootCA052_ReceiptValidation_bail:
+    if (ReceiptValidation_str2) ReceiptValidation_CFRelease_02060026(ReceiptValidation_str2);
+    if (ReceiptValidation_results) ReceiptValidation_CFRelease_02060026(ReceiptValidation_results);
+    if (ReceiptValidation_searchDict) ReceiptValidation_CFRelease_02060026(ReceiptValidation_searchDict);
+    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_02060026(ReceiptValidation_searchList);
+    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_02060026(ReceiptValidation_keychain);
 }
 #else
-#define ReceiptValidation_GetRootCA051(ReceiptValidation_ctx) { \
+#define ReceiptValidation_GetRootCA052(ReceiptValidation_ctx) { \
     OSStatus ReceiptValidation_status; \
     SecKeychainRef ReceiptValidation_keychain = NULL; \
     CFTypeRef ReceiptValidation_searchList = NULL; \
@@ -3222,55 +3239,58 @@ ReceiptValidation_GetRootCA051_ReceiptValidation_bail:
     volatile int ReceiptValidation_code = 56; ReceiptValidation_code -= 22; ReceiptValidation_code *= 5; ReceiptValidation_code += 3;  \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading Apple Root CA"); \
     char ReceiptValidation_str1_[608]; \
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[322]), ReceiptValidation_str1_, 18, 66); \
+    ReceiptValidation_ObfuscationFunction005((ReceiptValidation_Strings[604]), ReceiptValidation_str1_, 210, 66); \
     ReceiptValidation_str1 = ReceiptValidation_str1_; \
-    ReceiptValidation_status = ReceiptValidation_PGKVNNSRVCVJ_01300046(ReceiptValidation_str1, &ReceiptValidation_keychain); \
+    ReceiptValidation_status = ReceiptValidation_TPAMUMCIMUJI_01130250(ReceiptValidation_str1, &ReceiptValidation_keychain); \
     if (ReceiptValidation_status != errSecSuccess) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_015E012E(ReceiptValidation_code); \
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_searchList = ReceiptValidation_CFArrayCreateMutable_023200EE(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_00A700F4); \
-    ReceiptValidation_CFArrayAppendValue_00480044((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain); \
-    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[84]), 241, 16); \
-    ReceiptValidation_searchKeys[0] = *ReceiptValidation_kSecClass_01300067; \
-    ReceiptValidation_searchValues[0] = *ReceiptValidation_kSecClassCertificate_01300000; \
-    ReceiptValidation_searchKeys[1] = *ReceiptValidation_kSecMatchSearchList_0251009A; \
+    ReceiptValidation_searchList = ReceiptValidation_UBKHBSHWTCVT_01CC00E5(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_00D101EA); \
+    ReceiptValidation_PEYLDRWHJIRJ_02060012((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain); \
+    ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction006CF((ReceiptValidation_Strings[343]), 177, 16); \
+    ReceiptValidation_searchKeys[0] = *ReceiptValidation_kSecClass_011301CA; \
+    ReceiptValidation_searchValues[0] = *ReceiptValidation_kSecClassCertificate_0140010A; \
+    ReceiptValidation_searchKeys[1] = *ReceiptValidation_kSecMatchSearchList_01130106; \
     ReceiptValidation_searchValues[1] = ReceiptValidation_searchList; \
-    ReceiptValidation_searchKeys[2] = *ReceiptValidation_kSecMatchSubjectContains_0251004D; \
+    ReceiptValidation_searchKeys[2] = *ReceiptValidation_kSecMatchSubjectContains_010901BF; \
     ReceiptValidation_searchValues[2] = ReceiptValidation_str2; \
-    ReceiptValidation_searchKeys[3] = *ReceiptValidation_kSecMatchLimit_025101CF; \
-    ReceiptValidation_searchValues[3] = *ReceiptValidation_kSecMatchLimitAll_009701F0; \
-    ReceiptValidation_searchKeys[4] = *ReceiptValidation_kSecReturnRef_01300199; \
+    ReceiptValidation_searchKeys[3] = *ReceiptValidation_kSecMatchLimit_010901FC; \
+    ReceiptValidation_searchValues[3] = *ReceiptValidation_kSecMatchLimitAll_01400131; \
+    ReceiptValidation_searchKeys[4] = *ReceiptValidation_kSecReturnRef_014000D3; \
     ReceiptValidation_searchValues[4] = kCFBooleanTrue; \
-    ReceiptValidation_searchDict = CFDictionaryCreate(kCFAllocatorDefault, ReceiptValidation_searchKeys, ReceiptValidation_searchValues, ReceiptValidation_count2, NULL, NULL); \
-    ReceiptValidation_status = ReceiptValidation_PMXJCCZJOAFX_00970180(ReceiptValidation_searchDict, &ReceiptValidation_results); \
+    ReceiptValidation_searchDict = ReceiptValidation_XQTZCGXTOMRV_00D100FB(kCFAllocatorDefault, ReceiptValidation_count2, ReceiptValidation_kCFTypeDictionaryKeyCallBacks_02060092, ReceiptValidation_kCFTypeDictionaryValueCallBacks_01CC0197); \
+    while(ReceiptValidation_count2-- > 0) { \
+        ReceiptValidation_IOIKCHZOKKFQ_01CC024D((CFMutableDictionaryRef) ReceiptValidation_searchDict, ReceiptValidation_searchKeys[ReceiptValidation_count2], ReceiptValidation_searchValues[ReceiptValidation_count2]); \
+    } \
+    ReceiptValidation_status = ReceiptValidation_SecItemCopyMatching_01400028(ReceiptValidation_searchDict, &ReceiptValidation_results); \
     if (ReceiptValidation_status != errSecSuccess) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_015E012E(ReceiptValidation_code); \
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail; \
     } \
-    for(ReceiptValidation_idx = 0; ReceiptValidation_idx < ReceiptValidation_ACQEONHECWVC_023200EF((CFArrayRef) ReceiptValidation_results); ReceiptValidation_idx++) { \
-        ReceiptValidation_certificate = (SecCertificateRef) ReceiptValidation_PTKUOOEYMOBI_00480144((CFArrayRef) ReceiptValidation_results, ReceiptValidation_idx); \
-        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->ca_data); \
-        ReceiptValidation_ctx->ca_data = ReceiptValidation_JDYBZVRRIQGT_00970159(ReceiptValidation_certificate); \
+    for(ReceiptValidation_idx = 0; ReceiptValidation_idx < ReceiptValidation_QFTLSXPQXRZQ_00D10247((CFArrayRef) ReceiptValidation_results); ReceiptValidation_idx++) { \
+        ReceiptValidation_certificate = (SecCertificateRef) ReceiptValidation_CFArrayGetValueAtIndex_00D10199((CFArrayRef) ReceiptValidation_results, ReceiptValidation_idx); \
+        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_02060026(ReceiptValidation_ctx->ca_data); \
+        ReceiptValidation_ctx->ca_data = ReceiptValidation_FLUAORRUQXJR_0113004F(ReceiptValidation_certificate); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI += 250; ReceiptValidation_PTKUOOEYMOBI /= 2;  \
-    ReceiptValidation_YZLJKTPYVTVA += 158; ReceiptValidation_YZLJKTPYVTVA /= 2;  \
-    ReceiptValidation_ACQEONHECWVC -= 82; ReceiptValidation_ACQEONHECWVC *= 3; ReceiptValidation_ACQEONHECWVC += 2;  \
-ReceiptValidation_GetRootCA051_ReceiptValidation_bail: \
-    if (ReceiptValidation_str2) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2); \
-    if (ReceiptValidation_results) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_results); \
-    if (ReceiptValidation_searchDict) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_searchDict); \
-    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_searchList); \
-    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_keychain); \
+    ReceiptValidation_TPAMUMCIMUJI += 524; ReceiptValidation_TPAMUMCIMUJI /= 4;  \
+    ReceiptValidation_XQTZCGXTOMRV += 181; ReceiptValidation_XQTZCGXTOMRV /= 2;  \
+    ReceiptValidation_FLUAORRUQXJR -= 13; ReceiptValidation_FLUAORRUQXJR *= 9; ReceiptValidation_FLUAORRUQXJR += 6;  \
+ReceiptValidation_GetRootCA052_ReceiptValidation_bail: \
+    if (ReceiptValidation_str2) ReceiptValidation_CFRelease_02060026(ReceiptValidation_str2); \
+    if (ReceiptValidation_results) ReceiptValidation_CFRelease_02060026(ReceiptValidation_results); \
+    if (ReceiptValidation_searchDict) ReceiptValidation_CFRelease_02060026(ReceiptValidation_searchDict); \
+    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_02060026(ReceiptValidation_searchList); \
+    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_02060026(ReceiptValidation_keychain); \
 }
 #endif
 #endif
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED == MAC_OS_X_VERSION_10_6
 #ifdef DEBUG
-inline static void ReceiptValidation_GetRootCA051(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_GetRootCA052(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     OSStatus ReceiptValidation_status;
     SecKeychainRef ReceiptValidation_keychain = NULL;
     CFTypeRef ReceiptValidation_searchList = NULL;
@@ -3281,58 +3301,58 @@ inline static void ReceiptValidation_GetRootCA051(ReceiptValidation_CheckingCont
     SecKeychainItemRef ReceiptValidation_itemRef = nil;
     volatile CFIndex ReceiptValidation_count1 = 1; ReceiptValidation_count1 /= 1; 
     volatile CFIndex ReceiptValidation_count2 = 4; ReceiptValidation_count2 -= 3; ReceiptValidation_count2 *= 3; ReceiptValidation_count2 += 2; 
-    volatile CFIndex ReceiptValidation_count3 = 11; ReceiptValidation_count3 -= 7; ReceiptValidation_count3 *= 3; ReceiptValidation_count3 += 1; 
-    volatile int ReceiptValidation_code = 91; ReceiptValidation_code -= 34; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    volatile CFIndex ReceiptValidation_count3 = 3; ReceiptValidation_count3 -= 1; ReceiptValidation_count3 *= 6; ReceiptValidation_count3 += 1; 
+    volatile int ReceiptValidation_code = 151; ReceiptValidation_code -= 94; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading Apple Root CA");
     char ReceiptValidation_str1_[608];
-    ReceiptValidation_ObfuscationFunction00C((ReceiptValidation_Strings[427]), ReceiptValidation_str1_, 126, 66);
+    ReceiptValidation_ObfuscationFunction005((ReceiptValidation_Strings[604]), ReceiptValidation_str1_, 210, 66);
     ReceiptValidation_str1 = ReceiptValidation_str1_;
-    ReceiptValidation_status = ReceiptValidation_PGKVNNSRVCVJ_01300046(ReceiptValidation_str1, &ReceiptValidation_keychain);
+    ReceiptValidation_status = ReceiptValidation_TPAMUMCIMUJI_01130250(ReceiptValidation_str1, &ReceiptValidation_keychain);
     if (ReceiptValidation_status != errSecSuccess) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150213(ReceiptValidation_code);
         // Dead code
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail;
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail;
     }
     // Create a search list within the system Keychain
-    ReceiptValidation_searchList = ReceiptValidation_CFArrayCreateMutable_023201BF(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_00A700F4);
-    ReceiptValidation_CFArrayAppendValue_00A700FC((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain);
+    ReceiptValidation_searchList = ReceiptValidation_UBKHBSHWTCVT_01CC00E5(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_01CC01EA);
+    ReceiptValidation_PEYLDRWHJIRJ_02060012((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain);
     // Create the criteria dictionary to find the Apple Root CA certificate
     char ReceiptValidation_str2_[608];
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[18]), ReceiptValidation_str2_, 222, 16);
+    ReceiptValidation_ObfuscationFunction006((ReceiptValidation_Strings[550]), ReceiptValidation_str2_, 158, 16);
     ReceiptValidation_str2 = ReceiptValidation_str2_;
     ReceiptValidation_attributeList.count = 1;
     ReceiptValidation_attributeList.attr  = &ReceiptValidation_attribute;
     ReceiptValidation_attribute.tag = kSecLabelItemAttr;
     ReceiptValidation_attribute.data = ReceiptValidation_str2;
     ReceiptValidation_attribute.length = (UInt32) ReceiptValidation_count3;
-    ReceiptValidation_status = ReceiptValidation_FJEIWPLUQNVF_0251006F(ReceiptValidation_searchList, kSecCertificateItemClass, &ReceiptValidation_attributeList, &ReceiptValidation_searchRef);
+    ReceiptValidation_status = ReceiptValidation_SecKeychainSearchCreateFromAttributes_011300F5(ReceiptValidation_searchList, kSecCertificateItemClass, &ReceiptValidation_attributeList, &ReceiptValidation_searchRef);
     if (ReceiptValidation_status != errSecSuccess) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150213(ReceiptValidation_code);
         // Dead code
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail;
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail;
     }
     // Iterate over the results and copy the certificate data
-    while(ReceiptValidation_SecKeychainSearchCopyNext_0251023A(ReceiptValidation_searchRef, &ReceiptValidation_itemRef) == noErr) {
-        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_ctx->ca_data);
-        ReceiptValidation_ctx->ca_data = ReceiptValidation_JDYBZVRRIQGT_00970159((SecCertificateRef) ReceiptValidation_itemRef);
+    while(ReceiptValidation_THYDFRJHWWUN_0109021C(ReceiptValidation_searchRef, &ReceiptValidation_itemRef) == noErr) {
+        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_ctx->ca_data);
+        ReceiptValidation_ctx->ca_data = ReceiptValidation_FLUAORRUQXJR_0113004F((SecCertificateRef) ReceiptValidation_itemRef);
     }
     // Global variables computation
-    // From 324 to 287
-    ReceiptValidation_PTKUOOEYMOBI += 250; ReceiptValidation_PTKUOOEYMOBI /= 2; 
-    // From 190 to 174
-    ReceiptValidation_YZLJKTPYVTVA += 158; ReceiptValidation_YZLJKTPYVTVA /= 2; 
-    // From 239 to 473
-    ReceiptValidation_ACQEONHECWVC -= 82; ReceiptValidation_ACQEONHECWVC *= 3; ReceiptValidation_ACQEONHECWVC += 2; 
-ReceiptValidation_GetRootCA051_ReceiptValidation_bail:
-    if (ReceiptValidation_itemRef) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_itemRef);
-    if (ReceiptValidation_searchRef) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_searchRef);
-    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_searchList);
-    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_keychain);
+    // From 592 to 279
+    ReceiptValidation_TPAMUMCIMUJI += 524; ReceiptValidation_TPAMUMCIMUJI /= 4; 
+    // From 251 to 216
+    ReceiptValidation_XQTZCGXTOMRV += 181; ReceiptValidation_XQTZCGXTOMRV /= 2; 
+    // From 79 to 600
+    ReceiptValidation_FLUAORRUQXJR -= 13; ReceiptValidation_FLUAORRUQXJR *= 9; ReceiptValidation_FLUAORRUQXJR += 6; 
+ReceiptValidation_GetRootCA052_ReceiptValidation_bail:
+    if (ReceiptValidation_itemRef) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_itemRef);
+    if (ReceiptValidation_searchRef) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_searchRef);
+    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_searchList);
+    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_keychain);
 }
 #else
-#define ReceiptValidation_GetRootCA051(ReceiptValidation_ctx) { \
+#define ReceiptValidation_GetRootCA052(ReceiptValidation_ctx) { \
     OSStatus ReceiptValidation_status; \
     SecKeychainRef ReceiptValidation_keychain = NULL; \
     CFTypeRef ReceiptValidation_searchList = NULL; \
@@ -3343,46 +3363,46 @@ ReceiptValidation_GetRootCA051_ReceiptValidation_bail:
     SecKeychainItemRef ReceiptValidation_itemRef = nil; \
     volatile CFIndex ReceiptValidation_count1 = 1; ReceiptValidation_count1 /= 1;  \
     volatile CFIndex ReceiptValidation_count2 = 4; ReceiptValidation_count2 -= 3; ReceiptValidation_count2 *= 3; ReceiptValidation_count2 += 2;  \
-    volatile CFIndex ReceiptValidation_count3 = 11; ReceiptValidation_count3 -= 7; ReceiptValidation_count3 *= 3; ReceiptValidation_count3 += 1;  \
-    volatile int ReceiptValidation_code = 91; ReceiptValidation_code -= 34; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    volatile CFIndex ReceiptValidation_count3 = 3; ReceiptValidation_count3 -= 1; ReceiptValidation_count3 *= 6; ReceiptValidation_count3 += 1;  \
+    volatile int ReceiptValidation_code = 151; ReceiptValidation_code -= 94; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Loading Apple Root CA"); \
     char ReceiptValidation_str1_[608]; \
-    ReceiptValidation_ObfuscationFunction00C((ReceiptValidation_Strings[427]), ReceiptValidation_str1_, 126, 66); \
+    ReceiptValidation_ObfuscationFunction005((ReceiptValidation_Strings[604]), ReceiptValidation_str1_, 210, 66); \
     ReceiptValidation_str1 = ReceiptValidation_str1_; \
-    ReceiptValidation_status = ReceiptValidation_PGKVNNSRVCVJ_01300046(ReceiptValidation_str1, &ReceiptValidation_keychain); \
+    ReceiptValidation_status = ReceiptValidation_TPAMUMCIMUJI_01130250(ReceiptValidation_str1, &ReceiptValidation_keychain); \
     if (ReceiptValidation_status != errSecSuccess) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150213(ReceiptValidation_code); \
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_searchList = ReceiptValidation_CFArrayCreateMutable_023201BF(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_00A700F4); \
-    ReceiptValidation_CFArrayAppendValue_00A700FC((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain); \
+    ReceiptValidation_searchList = ReceiptValidation_UBKHBSHWTCVT_01CC00E5(kCFAllocatorDefault, ReceiptValidation_count1, ReceiptValidation_kCFTypeArrayCallBacks_01CC01EA); \
+    ReceiptValidation_PEYLDRWHJIRJ_02060012((CFMutableArrayRef) ReceiptValidation_searchList, ReceiptValidation_keychain); \
     char ReceiptValidation_str2_[608]; \
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[18]), ReceiptValidation_str2_, 222, 16); \
+    ReceiptValidation_ObfuscationFunction006((ReceiptValidation_Strings[550]), ReceiptValidation_str2_, 158, 16); \
     ReceiptValidation_str2 = ReceiptValidation_str2_; \
     ReceiptValidation_attributeList.count = 1; \
     ReceiptValidation_attributeList.attr  = &ReceiptValidation_attribute; \
     ReceiptValidation_attribute.tag = kSecLabelItemAttr; \
     ReceiptValidation_attribute.data = ReceiptValidation_str2; \
     ReceiptValidation_attribute.length = (UInt32) ReceiptValidation_count3; \
-    ReceiptValidation_status = ReceiptValidation_FJEIWPLUQNVF_0251006F(ReceiptValidation_searchList, kSecCertificateItemClass, &ReceiptValidation_attributeList, &ReceiptValidation_searchRef); \
+    ReceiptValidation_status = ReceiptValidation_SecKeychainSearchCreateFromAttributes_011300F5(ReceiptValidation_searchList, kSecCertificateItemClass, &ReceiptValidation_attributeList, &ReceiptValidation_searchRef); \
     if (ReceiptValidation_status != errSecSuccess) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-        goto ReceiptValidation_GetRootCA051_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150213(ReceiptValidation_code); \
+        goto ReceiptValidation_GetRootCA052_ReceiptValidation_bail; \
     } \
-    while(ReceiptValidation_SecKeychainSearchCopyNext_0251023A(ReceiptValidation_searchRef, &ReceiptValidation_itemRef) == noErr) { \
-        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_ctx->ca_data); \
-        ReceiptValidation_ctx->ca_data = ReceiptValidation_JDYBZVRRIQGT_00970159((SecCertificateRef) ReceiptValidation_itemRef); \
+    while(ReceiptValidation_THYDFRJHWWUN_0109021C(ReceiptValidation_searchRef, &ReceiptValidation_itemRef) == noErr) { \
+        if (ReceiptValidation_ctx->ca_data) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_ctx->ca_data); \
+        ReceiptValidation_ctx->ca_data = ReceiptValidation_FLUAORRUQXJR_0113004F((SecCertificateRef) ReceiptValidation_itemRef); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI += 250; ReceiptValidation_PTKUOOEYMOBI /= 2;  \
-    ReceiptValidation_YZLJKTPYVTVA += 158; ReceiptValidation_YZLJKTPYVTVA /= 2;  \
-    ReceiptValidation_ACQEONHECWVC -= 82; ReceiptValidation_ACQEONHECWVC *= 3; ReceiptValidation_ACQEONHECWVC += 2;  \
-ReceiptValidation_GetRootCA051_ReceiptValidation_bail: \
-    if (ReceiptValidation_itemRef) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_itemRef); \
-    if (ReceiptValidation_searchRef) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_searchRef); \
-    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_searchList); \
-    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_00A70079(ReceiptValidation_keychain); \
+    ReceiptValidation_TPAMUMCIMUJI += 524; ReceiptValidation_TPAMUMCIMUJI /= 4;  \
+    ReceiptValidation_XQTZCGXTOMRV += 181; ReceiptValidation_XQTZCGXTOMRV /= 2;  \
+    ReceiptValidation_FLUAORRUQXJR -= 13; ReceiptValidation_FLUAORRUQXJR *= 9; ReceiptValidation_FLUAORRUQXJR += 6;  \
+ReceiptValidation_GetRootCA052_ReceiptValidation_bail: \
+    if (ReceiptValidation_itemRef) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_itemRef); \
+    if (ReceiptValidation_searchRef) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_searchRef); \
+    if (ReceiptValidation_searchList) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_searchList); \
+    if (ReceiptValidation_keychain) ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_keychain); \
 }
 #endif
 #endif
@@ -3390,121 +3410,117 @@ ReceiptValidation_GetRootCA051_ReceiptValidation_bail: \
 
 // CodeBlock CheckBundleIdentifier
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckBundleIdentifier05D(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckBundleIdentifier05C(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     CFStringRef ReceiptValidation_str1 = @obfuscateCF@("");
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking bundle identifier");
-    CFStringRef ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction006CF((ReceiptValidation_Strings[335]), 159, 19);
-    volatile int ReceiptValidation_code = 37; ReceiptValidation_code -= 9; ReceiptValidation_code *= 6; ReceiptValidation_code += 5; 
-    CFStringRef ReceiptValidation_str3 = (CFStringRef) ReceiptValidation_YZLJKTPYVTVA_00A700AE((CFBundleRef) ReceiptValidation_ctx->main_bundle, ReceiptValidation_str2);
-    if (ReceiptValidation_ACQEONHECWVC_00A701D9(ReceiptValidation_str1, ReceiptValidation_str3, 0) != kCFCompareEqualTo) {
-        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Bundle identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str3, CFStringGetSystemEncoding()));
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_FLUAORRUQXJR_02060258((CFBundleRef) ReceiptValidation_ctx->main_bundle, *ReceiptValidation_kCFBundleIdentifierKey_02060195);
+    if (ReceiptValidation_TPAMUMCIMUJI_02060117(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
+        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Bundle identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding()));
+        volatile int ReceiptValidation_code = 9; ReceiptValidation_code -= 1; ReceiptValidation_code *= 21; ReceiptValidation_code += 5; 
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
+        ReceiptValidation_exit_02400213(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str1);
     }
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2);
     // Global variables computation
-    // From 384 to 453
-    ReceiptValidation_PMXJCCZJOAFX -= 233; ReceiptValidation_PMXJCCZJOAFX *= 3; 
-    // From 111 to 288
-    ReceiptValidation_FJEIWPLUQNVF -= 39; ReceiptValidation_FJEIWPLUQNVF *= 4; 
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
+    // From 279 to 600
+    ReceiptValidation_TPAMUMCIMUJI -= 129; ReceiptValidation_TPAMUMCIMUJI *= 4; 
+    // Set to 279
+    ReceiptValidation_UBKHBSHWTCVT = 279;
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str1);
 }
 #else
-#define ReceiptValidation_CheckBundleIdentifier05D(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckBundleIdentifier05C(ReceiptValidation_ctx) { \
     CFStringRef ReceiptValidation_str1 = @obfuscateCF@(""); \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking bundle identifier"); \
-    CFStringRef ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction006CF((ReceiptValidation_Strings[335]), 159, 19); \
-    volatile int ReceiptValidation_code = 37; ReceiptValidation_code -= 9; ReceiptValidation_code *= 6; ReceiptValidation_code += 5;  \
-    CFStringRef ReceiptValidation_str3 = (CFStringRef) ReceiptValidation_YZLJKTPYVTVA_00A700AE((CFBundleRef) ReceiptValidation_ctx->main_bundle, ReceiptValidation_str2); \
-    if (ReceiptValidation_ACQEONHECWVC_00A701D9(ReceiptValidation_str1, ReceiptValidation_str3, 0) != kCFCompareEqualTo) { \
-        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Bundle identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str3, CFStringGetSystemEncoding())); \
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_FLUAORRUQXJR_02060258((CFBundleRef) ReceiptValidation_ctx->main_bundle, *ReceiptValidation_kCFBundleIdentifierKey_02060195); \
+    if (ReceiptValidation_TPAMUMCIMUJI_02060117(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
+        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Bundle identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding())); \
+        volatile int ReceiptValidation_code = 9; ReceiptValidation_code -= 1; ReceiptValidation_code *= 21; ReceiptValidation_code += 5;  \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
+        ReceiptValidation_exit_02400213(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str2); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str1); \
     } \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2); \
-    ReceiptValidation_PMXJCCZJOAFX -= 233; ReceiptValidation_PMXJCCZJOAFX *= 3;  \
-    ReceiptValidation_FJEIWPLUQNVF -= 39; ReceiptValidation_FJEIWPLUQNVF *= 4;  \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
+    ReceiptValidation_TPAMUMCIMUJI -= 129; ReceiptValidation_TPAMUMCIMUJI *= 4;  \
+    ReceiptValidation_UBKHBSHWTCVT = 279; \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_str1); \
 }
 #endif
 
 
 // CodeBlock CheckBundleVersion
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckBundleVersion060(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckBundleVersion061(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking bundle version");
-    volatile int ReceiptValidation_code = 162; ReceiptValidation_code -= 105; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
-    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction009CF((ReceiptValidation_Strings[410]), 25, 16);
-    CFStringRef ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction008CF((ReceiptValidation_Strings[90]), 25, 35);
-    CFStringRef ReceiptValidation_str3 = (CFStringRef) ReceiptValidation_FJEIWPLUQNVF_00A70120((CFBundleRef) ReceiptValidation_ctx->main_bundle, ReceiptValidation_str2);
-    if (ReceiptValidation_PMXJCCZJOAFX_004801C5(ReceiptValidation_str1, ReceiptValidation_str3, 0) != kCFCompareEqualTo) {
+    volatile int ReceiptValidation_code = 170; ReceiptValidation_code -= 113; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction005CF((ReceiptValidation_Strings[233]), 136, 16);
+    CFStringRef ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[543]), 250, 35);
+    CFStringRef ReceiptValidation_str3 = (CFStringRef) ReceiptValidation_TPAMUMCIMUJI_01CC0258((CFBundleRef) ReceiptValidation_ctx->main_bundle, ReceiptValidation_str2);
+    if (ReceiptValidation_UBKHBSHWTCVT_01CC0117(ReceiptValidation_str1, ReceiptValidation_str3, 0) != kCFCompareEqualTo) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Bundle version mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str3, CFStringGetSystemEncoding()));
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2);
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str2);
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str2);
     }
     // Global variables computation
-    // From 287 to 164
-    ReceiptValidation_PTKUOOEYMOBI += 205; ReceiptValidation_PTKUOOEYMOBI /= 3; 
-    // From 174 to 68
-    ReceiptValidation_YZLJKTPYVTVA += 98; ReceiptValidation_YZLJKTPYVTVA /= 4; 
-    // From 453 to 494
-    ReceiptValidation_PMXJCCZJOAFX -= 289; ReceiptValidation_PMXJCCZJOAFX *= 3; ReceiptValidation_PMXJCCZJOAFX += 2; 
-    // From 507 to 141
-    ReceiptValidation_OFULPMNSLYXJ += 198; ReceiptValidation_OFULPMNSLYXJ /= 5; 
-    // From 345 to 194
-    ReceiptValidation_JDYBZVRRIQGT += 237; ReceiptValidation_JDYBZVRRIQGT /= 3; 
-    // From 70 to 152
-    ReceiptValidation_PGKVNNSRVCVJ -= 32; ReceiptValidation_PGKVNNSRVCVJ *= 4; 
-    // From 288 to 349
-    ReceiptValidation_FJEIWPLUQNVF -= 172; ReceiptValidation_FJEIWPLUQNVF *= 3; ReceiptValidation_FJEIWPLUQNVF += 1; 
-    // Set to 317
-    ReceiptValidation_ACQEONHECWVC = 317;
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2);
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1);
+    // From 600 to 538
+    ReceiptValidation_TPAMUMCIMUJI += 476; ReceiptValidation_TPAMUMCIMUJI /= 2; 
+    // From 583 to 522
+    ReceiptValidation_QFTLSXPQXRZQ += 461; ReceiptValidation_QFTLSXPQXRZQ /= 2; 
+    // From 216 to 8
+    ReceiptValidation_XQTZCGXTOMRV += 16; ReceiptValidation_XQTZCGXTOMRV /= 29; 
+    // From 279 to 251
+    ReceiptValidation_UBKHBSHWTCVT += 223; ReceiptValidation_UBKHBSHWTCVT /= 2; 
+    // From 540 to 416
+    ReceiptValidation_THYDFRJHWWUN += 292; ReceiptValidation_THYDFRJHWWUN /= 2; 
+    // From 18 to 184
+    ReceiptValidation_PEYLDRWHJIRJ -= 3; ReceiptValidation_PEYLDRWHJIRJ *= 12; ReceiptValidation_PEYLDRWHJIRJ += 4; 
+    // Set to 246
+    ReceiptValidation_FLUAORRUQXJR = 246;
+    // From 589 to 208
+    ReceiptValidation_IOIKCHZOKKFQ += 243; ReceiptValidation_IOIKCHZOKKFQ /= 4; 
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str2);
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1);
 }
 #else
-#define ReceiptValidation_CheckBundleVersion060(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckBundleVersion061(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking bundle version"); \
-    volatile int ReceiptValidation_code = 162; ReceiptValidation_code -= 105; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
-    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction009CF((ReceiptValidation_Strings[410]), 25, 16); \
-    CFStringRef ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction008CF((ReceiptValidation_Strings[90]), 25, 35); \
-    CFStringRef ReceiptValidation_str3 = (CFStringRef) ReceiptValidation_FJEIWPLUQNVF_00A70120((CFBundleRef) ReceiptValidation_ctx->main_bundle, ReceiptValidation_str2); \
-    if (ReceiptValidation_PMXJCCZJOAFX_004801C5(ReceiptValidation_str1, ReceiptValidation_str3, 0) != kCFCompareEqualTo) { \
+    volatile int ReceiptValidation_code = 170; ReceiptValidation_code -= 113; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction005CF((ReceiptValidation_Strings[233]), 136, 16); \
+    CFStringRef ReceiptValidation_str2 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[543]), 250, 35); \
+    CFStringRef ReceiptValidation_str3 = (CFStringRef) ReceiptValidation_TPAMUMCIMUJI_01CC0258((CFBundleRef) ReceiptValidation_ctx->main_bundle, ReceiptValidation_str2); \
+    if (ReceiptValidation_UBKHBSHWTCVT_01CC0117(ReceiptValidation_str1, ReceiptValidation_str3, 0) != kCFCompareEqualTo) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Bundle version mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str3, CFStringGetSystemEncoding())); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2); \
-        ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str2); \
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str2); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI += 205; ReceiptValidation_PTKUOOEYMOBI /= 3;  \
-    ReceiptValidation_YZLJKTPYVTVA += 98; ReceiptValidation_YZLJKTPYVTVA /= 4;  \
-    ReceiptValidation_PMXJCCZJOAFX -= 289; ReceiptValidation_PMXJCCZJOAFX *= 3; ReceiptValidation_PMXJCCZJOAFX += 2;  \
-    ReceiptValidation_OFULPMNSLYXJ += 198; ReceiptValidation_OFULPMNSLYXJ /= 5;  \
-    ReceiptValidation_JDYBZVRRIQGT += 237; ReceiptValidation_JDYBZVRRIQGT /= 3;  \
-    ReceiptValidation_PGKVNNSRVCVJ -= 32; ReceiptValidation_PGKVNNSRVCVJ *= 4;  \
-    ReceiptValidation_FJEIWPLUQNVF -= 172; ReceiptValidation_FJEIWPLUQNVF *= 3; ReceiptValidation_FJEIWPLUQNVF += 1;  \
-    ReceiptValidation_ACQEONHECWVC = 317; \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str2); \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_str1); \
+    ReceiptValidation_TPAMUMCIMUJI += 476; ReceiptValidation_TPAMUMCIMUJI /= 2;  \
+    ReceiptValidation_QFTLSXPQXRZQ += 461; ReceiptValidation_QFTLSXPQXRZQ /= 2;  \
+    ReceiptValidation_XQTZCGXTOMRV += 16; ReceiptValidation_XQTZCGXTOMRV /= 29;  \
+    ReceiptValidation_UBKHBSHWTCVT += 223; ReceiptValidation_UBKHBSHWTCVT /= 2;  \
+    ReceiptValidation_THYDFRJHWWUN += 292; ReceiptValidation_THYDFRJHWWUN /= 2;  \
+    ReceiptValidation_PEYLDRWHJIRJ -= 3; ReceiptValidation_PEYLDRWHJIRJ *= 12; ReceiptValidation_PEYLDRWHJIRJ += 4;  \
+    ReceiptValidation_FLUAORRUQXJR = 246; \
+    ReceiptValidation_IOIKCHZOKKFQ += 243; ReceiptValidation_IOIKCHZOKKFQ /= 4;  \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str2); \
+    ReceiptValidation_CFRelease_00D10026(ReceiptValidation_str1); \
 }
 #endif
 
 
 // CodeBlock GetReceiptInformation
 #ifdef DEBUG
-inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_GetReceiptInformation064(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     ReceiptValidation_ParsingContext ReceiptValidation_receipt_context;
     ReceiptValidation_ParsingContext *ReceiptValidation_current_context;
     CFNumberRef ReceiptValidation_key;
@@ -3525,7 +3541,7 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
     int ReceiptValidation_str_type;
     long ReceiptValidation_str_length;
     const unsigned char *ReceiptValidation_str_ptr;
-    volatile int ReceiptValidation_code = 115; ReceiptValidation_code -= 58; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    volatile int ReceiptValidation_code = 79; ReceiptValidation_code -= 36; ReceiptValidation_code *= 4; ReceiptValidation_code += 1; 
     ReceiptValidation_ParsingContext ReceiptValidation_inapp_context;
     long ReceiptValidation_number;
     int ReceiptValidation_num_type;
@@ -3533,38 +3549,38 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
     const unsigned char *ReceiptValidation_num_ptr;
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt");
     // Put the receipt data into a memory buffer
-    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_006D01ED(ReceiptValidation_BIO_s_mem_000A017C());
-    ReceiptValidation_BIO_write_006D0072(ReceiptValidation_bio_p7, (void *) ReceiptValidation_CFDataGetBytePtr_023200D3((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_JDYBZVRRIQGT_023200C2((CFDataRef) ReceiptValidation_ctx->receipt_data));
-    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_006D00BC(ReceiptValidation_bio_p7, NULL);
+    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_01F200DC(ReceiptValidation_BIO_s_mem_016101AB());
+    ReceiptValidation_BIO_write_01610234(ReceiptValidation_bio_p7, (void *) ReceiptValidation_THYDFRJHWWUN_020601A0((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_PEYLDRWHJIRJ_020600B8((CFDataRef) ReceiptValidation_ctx->receipt_data));
+    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_007F011A(ReceiptValidation_bio_p7, NULL);
     if (!ReceiptValidation_pkcs7) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
         // Dead code
         ReceiptValidation_ctx->receipt_data = NULL;
-        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
     }
     if (!PKCS7_type_is_signed(ReceiptValidation_pkcs7)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
         // Dead code
         ReceiptValidation_ctx->receipt_data = NULL;
-        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
     }
     if (!PKCS7_type_is_data(ReceiptValidation_pkcs7->d.sign->contents)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
         // Dead code
         ReceiptValidation_ctx->receipt_data = NULL;
-        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
     }
     // Create a formatter to parse ISO-3339 dates
-    ReceiptValidation_formatter = ReceiptValidation_OFULPMNSLYXJ_0048008D(NULL, NULL, kCFDateFormatterNoStyle, kCFDateFormatterNoStyle);
-    ReceiptValidation_value1 = ReceiptValidation_ObfuscationFunction00BCF((ReceiptValidation_Strings[541]), 97, 33);
-    ReceiptValidation_CFDateFormatterSetFormat_02320011(ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value1);
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value1);
-    ReceiptValidation_tz = ReceiptValidation_CFTimeZoneCreateWithTimeIntervalFromGMT_0048020B(NULL, 0.0);
-    ReceiptValidation_FJEIWPLUQNVF_0232015D(ReceiptValidation_formatter, *ReceiptValidation_kCFDateFormatterTimeZone_0232005B, ReceiptValidation_tz);
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_tz);
+    ReceiptValidation_formatter = ReceiptValidation_TPAMUMCIMUJI_0206021A(NULL, NULL, kCFDateFormatterNoStyle, kCFDateFormatterNoStyle);
+    ReceiptValidation_value1 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[247]), 33, 33);
+    ReceiptValidation_IOIKCHZOKKFQ_020600D0(ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value1);
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value1);
+    ReceiptValidation_tz = ReceiptValidation_FLUAORRUQXJR_00D100F6(NULL, 0.0);
+    ReceiptValidation_CFDateFormatterSetProperty_00D1004E(ReceiptValidation_formatter, *ReceiptValidation_kCFDateFormatterTimeZone_00D1019E, ReceiptValidation_tz);
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_tz);
     // Initial context
     ReceiptValidation_contentReceiptValidation_content = ReceiptValidation_pkcs7->d.sign->contents->d.data;
     ReceiptValidation_receipt_context.ptr = ReceiptValidation_contentReceiptValidation_content->data;
@@ -3575,56 +3591,56 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
     while(ReceiptValidation_current_context->ptr < ReceiptValidation_current_context->end) {
         if (!ReceiptValidation_current_context->dictionary) {
             // Create the target dictionary
-            ReceiptValidation_current_context->dictionary = ReceiptValidation_ACQEONHECWVC_0048013D(kCFAllocatorDefault, (CFIndex) 608, ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00A700DB, ReceiptValidation_kCFTypeDictionaryValueCallBacks_02320258);
+            ReceiptValidation_current_context->dictionary = ReceiptValidation_UBKHBSHWTCVT_00D100FB(kCFAllocatorDefault, (CFIndex) 608, ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00D100AB, ReceiptValidation_kCFTypeDictionaryValueCallBacks_01CC01B1);
             // Decode payload from ASN.1
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
             if (ReceiptValidation_type != V_ASN1_SET) {
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
             }
         }
         // Iterate over attributes
         while(ReceiptValidation_current_context->ptr < ReceiptValidation_current_context->end) {
             // Parse attribute sequence
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
             if (ReceiptValidation_type != V_ASN1_SEQUENCE) {
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
             }
             ReceiptValidation_seq_end = ReceiptValidation_current_context->ptr + ReceiptValidation_length;
             ReceiptValidation_attr_type = 0;
             ReceiptValidation_attr_version = 0;
             // Parse the attribute type
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
             if (ReceiptValidation_type != V_ASN1_INTEGER) {
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
             }
-            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_006D01E9(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length);
-            ReceiptValidation_attr_type = ReceiptValidation_ASN1_INTEGER_get_006D0157(ReceiptValidation_value);
-            ReceiptValidation_ASN1_INTEGER_free_025001AC(ReceiptValidation_value);
+            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_007F0242(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length);
+            ReceiptValidation_attr_type = ReceiptValidation_ASN1_INTEGER_get_0161013A(ReceiptValidation_value);
+            ReceiptValidation_ASN1_INTEGER_free_01610124(ReceiptValidation_value);
             // Parse the attribute version
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
             if (ReceiptValidation_type != V_ASN1_INTEGER) {
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
             }
-            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_006D01E9(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length);
-            ReceiptValidation_attr_version = ReceiptValidation_ASN1_INTEGER_get_006D0157(ReceiptValidation_value);
-            ReceiptValidation_ASN1_INTEGER_free_025001AC(ReceiptValidation_value);
+            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_007F0242(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length);
+            ReceiptValidation_attr_version = ReceiptValidation_ASN1_INTEGER_get_0161013A(ReceiptValidation_value);
+            ReceiptValidation_ASN1_INTEGER_free_01610124(ReceiptValidation_value);
             // Check the attribute value
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr);
             if (ReceiptValidation_type != V_ASN1_OCTET_STRING) {
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
             }
-            ReceiptValidation_key1 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 1));
-            ReceiptValidation_key2 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 1) + 1);
+            ReceiptValidation_key1 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 2));
+            ReceiptValidation_key2 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 2) + 1);
             ReceiptValidation_value1 = NULL;
             ReceiptValidation_value2 = NULL;
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt - Found attribute %s%ld", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type);
@@ -3640,14 +3656,14 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
                     ReceiptValidation_str_type = 0;
                     ReceiptValidation_str_length = 0;
                     ReceiptValidation_str_ptr = ReceiptValidation_current_context->ptr;
-                    ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr);
+                    ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr);
                     if (ReceiptValidation_str_type != V_ASN1_UTF8STRING) {
                         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
                     }
-                    ReceiptValidation_value1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[412])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingUTF8, false);
-                    ReceiptValidation_value2 = ReceiptValidation_PTKUOOEYMOBI_004800A4(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length);
+                    ReceiptValidation_value1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[325])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingUTF8, false);
+                    ReceiptValidation_value2 = ReceiptValidation_CFDataCreate_02060002(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length);
                     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => %s", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, CFStringGetCStringPtr((CFStringRef) ReceiptValidation_value1, CFStringGetSystemEncoding()));
                     break;
                 }
@@ -3661,14 +3677,14 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
                     ReceiptValidation_str_type = 0;
                     ReceiptValidation_str_length = 0;
                     ReceiptValidation_str_ptr = ReceiptValidation_current_context->ptr;
-                    ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr);
+                    ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr);
                     if (ReceiptValidation_str_type != V_ASN1_IA5STRING) {
                         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
                     }
-                    ReceiptValidation_value2 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[412])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingASCII, false);
-                    ReceiptValidation_value1 = ReceiptValidation_CFDateFormatterCreateDateFromString_00480123(NULL, ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value2, NULL);
+                    ReceiptValidation_value2 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[325])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingASCII, false);
+                    ReceiptValidation_value1 = ReceiptValidation_CFDateFormatterCreateDateFromString_02060144(NULL, ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value2, NULL);
                     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => %s", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, CFStringGetCStringPtr((CFStringRef) ReceiptValidation_value2, CFStringGetSystemEncoding()));
                     break;
                 }
@@ -3679,16 +3695,16 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
                     ReceiptValidation_num_type = 0;
                     ReceiptValidation_num_length = 0;
                     ReceiptValidation_num_ptr = ReceiptValidation_current_context->ptr;
-                    ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_num_ptr, &ReceiptValidation_num_length, &ReceiptValidation_num_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_num_ptr);
+                    ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_num_ptr, &ReceiptValidation_num_length, &ReceiptValidation_num_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_num_ptr);
                     if (ReceiptValidation_num_type != V_ASN1_INTEGER) {
                         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-                        ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-                        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail;
+                        ReceiptValidation_exit_004201AD(ReceiptValidation_code);
+                        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail;
                     }
-                    ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_006D01E9(NULL, &ReceiptValidation_num_ptr, ReceiptValidation_num_length);
-                    ReceiptValidation_number = ReceiptValidation_ASN1_INTEGER_get_006D0157(ReceiptValidation_value);
-                    ReceiptValidation_ASN1_INTEGER_free_025001AC(ReceiptValidation_value);
-                    ReceiptValidation_value1 = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberLongType, &ReceiptValidation_number);
+                    ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_007F0242(NULL, &ReceiptValidation_num_ptr, ReceiptValidation_num_length);
+                    ReceiptValidation_number = ReceiptValidation_ASN1_INTEGER_get_0161013A(ReceiptValidation_value);
+                    ReceiptValidation_ASN1_INTEGER_free_01610124(ReceiptValidation_value);
+                    ReceiptValidation_value1 = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberLongType, &ReceiptValidation_number);
                     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => %ld", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, ReceiptValidation_number);
                     break;
                 }
@@ -3696,8 +3712,8 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
                 case ReceiptValidation_ReceiptAttributeTypeOpaqueValue:
                 case ReceiptValidation_ReceiptAttributeTypeHash:
                 {
-                    ReceiptValidation_value1 = ReceiptValidation_PTKUOOEYMOBI_004800A4(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length);
-                    __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => [%lu bytes]", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, ReceiptValidation_JDYBZVRRIQGT_023200C2((CFDataRef) ReceiptValidation_value1));
+                    ReceiptValidation_value1 = ReceiptValidation_CFDataCreate_02060002(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length);
+                    __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => [%lu bytes]", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, ReceiptValidation_PEYLDRWHJIRJ_020600B8((CFDataRef) ReceiptValidation_value1));
                     break;
                 }
                     // Attributes encoded as ASN.1 SET
@@ -3709,27 +3725,27 @@ inline static void ReceiptValidation_GetReceiptInformation063(ReceiptValidation_
                     ReceiptValidation_inapp_context.dictionary = NULL;
                     ReceiptValidation_inapp_context.parent = ReceiptValidation_current_context;
                     ReceiptValidation_current_context = &ReceiptValidation_inapp_context;
-                    goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_key;
+                    goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_key;
                 }
                 default:
                     break;
             }
             if (ReceiptValidation_value1) {
-                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberIntType, &ReceiptValidation_key1);
-                ReceiptValidation_CFDictionaryAddValue_00480082((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value1);
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_key);
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value1);
+                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberIntType, &ReceiptValidation_key1);
+                ReceiptValidation_CFDictionaryAddValue_02060103((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value1);
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value1);
             }
             if (ReceiptValidation_value2) {
-                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberIntType, &ReceiptValidation_key2);
-                ReceiptValidation_CFDictionaryAddValue_00480082((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value2);
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_key);
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value2);
+                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberIntType, &ReceiptValidation_key2);
+                ReceiptValidation_CFDictionaryAddValue_02060103((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value2);
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value2);
             }
             // Move past the attribute
             ReceiptValidation_current_context->ptr += ReceiptValidation_length;
         }
-ReceiptValidation_GetReceiptInformation063_ReceiptValidation_key:
+ReceiptValidation_GetReceiptInformation064_ReceiptValidation_key:
         // If the current context is a new one, continue parsing
         if (!ReceiptValidation_current_context->dictionary) {
             continue;
@@ -3738,36 +3754,36 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_key:
         if (ReceiptValidation_current_context->parent) {
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt - Add an InApp purchase");
             ReceiptValidation_key1 = ReceiptValidation_StoreReceiptAttributeTypeInAppPurchase;
-            ReceiptValidation_key = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberIntType, &ReceiptValidation_key1);
-            ReceiptValidation_value1 = ReceiptValidation_CFDictionaryGetValue_00A70027((CFDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key);
+            ReceiptValidation_key = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberIntType, &ReceiptValidation_key1);
+            ReceiptValidation_value1 = ReceiptValidation_XQTZCGXTOMRV_00D10008((CFDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key);
             if (!ReceiptValidation_value1) {
-                ReceiptValidation_value1 = ReceiptValidation_CFArrayCreateMutable_004800EE(kCFAllocatorDefault, 0, ReceiptValidation_kCFTypeArrayCallBacks_023200F4);
-                ReceiptValidation_PGKVNNSRVCVJ_02320098((CFMutableDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key, ReceiptValidation_value1);
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value1);
+                ReceiptValidation_value1 = ReceiptValidation_CFArrayCreateMutable_0206009E(kCFAllocatorDefault, 0, ReceiptValidation_kCFTypeArrayCallBacks_020601EA);
+                ReceiptValidation_CFDictionarySetValue_01CC00CC((CFMutableDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key, ReceiptValidation_value1);
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value1);
             }
-            ReceiptValidation_YZLJKTPYVTVA_02320044((CFMutableArrayRef) ReceiptValidation_value1, ReceiptValidation_current_context->dictionary);
-            ReceiptValidation_CFRelease_004800CE(ReceiptValidation_current_context->dictionary);
-            ReceiptValidation_CFRelease_004800CE(ReceiptValidation_key);
+            ReceiptValidation_CFArrayAppendValue_02060012((CFMutableArrayRef) ReceiptValidation_value1, ReceiptValidation_current_context->dictionary);
+            ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_current_context->dictionary);
+            ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
             // Switch to parent context
             ReceiptValidation_current_context = ReceiptValidation_current_context->parent;
             // Move past the child context
             ReceiptValidation_current_context->ptr = ReceiptValidation_inapp_context.end;
         }
     }
-    if (ReceiptValidation_ctx->receipt_dict) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->receipt_dict);
+    if (ReceiptValidation_ctx->receipt_dict) ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_ctx->receipt_dict);
     ReceiptValidation_ctx->receipt_dict = ReceiptValidation_receipt_context.dictionary;
     // Global variables computation
-    // From 164 to 119
-    ReceiptValidation_PTKUOOEYMOBI += 74; ReceiptValidation_PTKUOOEYMOBI /= 2; 
-    // Set to 248
-    ReceiptValidation_PGKVNNSRVCVJ = 248;
-ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
-    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_02500189(ReceiptValidation_pkcs7);
-    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_02500248(ReceiptValidation_bio_p7);
-    if (ReceiptValidation_formatter) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_formatter);
+    // From 538 to 184
+    ReceiptValidation_TPAMUMCIMUJI += 198; ReceiptValidation_TPAMUMCIMUJI /= 4; 
+    // From 246 to 417
+    ReceiptValidation_FLUAORRUQXJR -= 107; ReceiptValidation_FLUAORRUQXJR *= 3; 
+ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail:
+    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_01F2019A(ReceiptValidation_pkcs7);
+    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_01F20148(ReceiptValidation_bio_p7);
+    if (ReceiptValidation_formatter) ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_formatter);
 }
 #else
-#define ReceiptValidation_GetReceiptInformation063(ReceiptValidation_ctx) { \
+#define ReceiptValidation_GetReceiptInformation064(ReceiptValidation_ctx) { \
     ReceiptValidation_ParsingContext ReceiptValidation_receipt_context; \
     ReceiptValidation_ParsingContext *ReceiptValidation_current_context; \
     CFNumberRef ReceiptValidation_key; \
@@ -3788,41 +3804,41 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
     int ReceiptValidation_str_type; \
     long ReceiptValidation_str_length; \
     const unsigned char *ReceiptValidation_str_ptr; \
-    volatile int ReceiptValidation_code = 115; ReceiptValidation_code -= 58; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    volatile int ReceiptValidation_code = 79; ReceiptValidation_code -= 36; ReceiptValidation_code *= 4; ReceiptValidation_code += 1;  \
     ReceiptValidation_ParsingContext ReceiptValidation_inapp_context; \
     long ReceiptValidation_number; \
     int ReceiptValidation_num_type; \
     long ReceiptValidation_num_length; \
     const unsigned char *ReceiptValidation_num_ptr; \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt"); \
-    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_006D01ED(ReceiptValidation_BIO_s_mem_000A017C()); \
-    ReceiptValidation_BIO_write_006D0072(ReceiptValidation_bio_p7, (void *) ReceiptValidation_CFDataGetBytePtr_023200D3((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_JDYBZVRRIQGT_023200C2((CFDataRef) ReceiptValidation_ctx->receipt_data)); \
-    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_006D00BC(ReceiptValidation_bio_p7, NULL); \
+    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_01F200DC(ReceiptValidation_BIO_s_mem_016101AB()); \
+    ReceiptValidation_BIO_write_01610234(ReceiptValidation_bio_p7, (void *) ReceiptValidation_THYDFRJHWWUN_020601A0((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_PEYLDRWHJIRJ_020600B8((CFDataRef) ReceiptValidation_ctx->receipt_data)); \
+    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_007F011A(ReceiptValidation_bio_p7, NULL); \
     if (!ReceiptValidation_pkcs7) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
         ReceiptValidation_ctx->receipt_data = NULL; \
-        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
     } \
     if (!PKCS7_type_is_signed(ReceiptValidation_pkcs7)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
         ReceiptValidation_ctx->receipt_data = NULL; \
-        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
     } \
     if (!PKCS7_type_is_data(ReceiptValidation_pkcs7->d.sign->contents)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
+        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
         ReceiptValidation_ctx->receipt_data = NULL; \
-        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_formatter = ReceiptValidation_OFULPMNSLYXJ_0048008D(NULL, NULL, kCFDateFormatterNoStyle, kCFDateFormatterNoStyle); \
-    ReceiptValidation_value1 = ReceiptValidation_ObfuscationFunction00BCF((ReceiptValidation_Strings[541]), 97, 33); \
-    ReceiptValidation_CFDateFormatterSetFormat_02320011(ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value1); \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value1); \
-    ReceiptValidation_tz = ReceiptValidation_CFTimeZoneCreateWithTimeIntervalFromGMT_0048020B(NULL, 0.0); \
-    ReceiptValidation_FJEIWPLUQNVF_0232015D(ReceiptValidation_formatter, *ReceiptValidation_kCFDateFormatterTimeZone_0232005B, ReceiptValidation_tz); \
-    ReceiptValidation_CFRelease_004800CE(ReceiptValidation_tz); \
+    ReceiptValidation_formatter = ReceiptValidation_TPAMUMCIMUJI_0206021A(NULL, NULL, kCFDateFormatterNoStyle, kCFDateFormatterNoStyle); \
+    ReceiptValidation_value1 = ReceiptValidation_ObfuscationFunction00CCF((ReceiptValidation_Strings[247]), 33, 33); \
+    ReceiptValidation_IOIKCHZOKKFQ_020600D0(ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value1); \
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value1); \
+    ReceiptValidation_tz = ReceiptValidation_FLUAORRUQXJR_00D100F6(NULL, 0.0); \
+    ReceiptValidation_CFDateFormatterSetProperty_00D1004E(ReceiptValidation_formatter, *ReceiptValidation_kCFDateFormatterTimeZone_00D1019E, ReceiptValidation_tz); \
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_tz); \
     ReceiptValidation_contentReceiptValidation_content = ReceiptValidation_pkcs7->d.sign->contents->d.data; \
     ReceiptValidation_receipt_context.ptr = ReceiptValidation_contentReceiptValidation_content->data; \
     ReceiptValidation_receipt_context.end = ReceiptValidation_receipt_context.ptr + ReceiptValidation_contentReceiptValidation_content->length; \
@@ -3831,50 +3847,50 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
     ReceiptValidation_current_context = &ReceiptValidation_receipt_context; \
     while(ReceiptValidation_current_context->ptr < ReceiptValidation_current_context->end) { \
         if (!ReceiptValidation_current_context->dictionary) { \
-            ReceiptValidation_current_context->dictionary = ReceiptValidation_ACQEONHECWVC_0048013D(kCFAllocatorDefault, (CFIndex) 608, ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00A700DB, ReceiptValidation_kCFTypeDictionaryValueCallBacks_02320258); \
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
+            ReceiptValidation_current_context->dictionary = ReceiptValidation_UBKHBSHWTCVT_00D100FB(kCFAllocatorDefault, (CFIndex) 608, ReceiptValidation_kCFTypeDictionaryKeyCallBacks_00D100AB, ReceiptValidation_kCFTypeDictionaryValueCallBacks_01CC01B1); \
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
             if (ReceiptValidation_type != V_ASN1_SET) { \
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
             } \
         } \
         while(ReceiptValidation_current_context->ptr < ReceiptValidation_current_context->end) { \
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
             if (ReceiptValidation_type != V_ASN1_SEQUENCE) { \
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
             } \
             ReceiptValidation_seq_end = ReceiptValidation_current_context->ptr + ReceiptValidation_length; \
             ReceiptValidation_attr_type = 0; \
             ReceiptValidation_attr_version = 0; \
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
             if (ReceiptValidation_type != V_ASN1_INTEGER) { \
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
             } \
-            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_006D01E9(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length); \
-            ReceiptValidation_attr_type = ReceiptValidation_ASN1_INTEGER_get_006D0157(ReceiptValidation_value); \
-            ReceiptValidation_ASN1_INTEGER_free_025001AC(ReceiptValidation_value); \
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
+            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_007F0242(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length); \
+            ReceiptValidation_attr_type = ReceiptValidation_ASN1_INTEGER_get_0161013A(ReceiptValidation_value); \
+            ReceiptValidation_ASN1_INTEGER_free_01610124(ReceiptValidation_value); \
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
             if (ReceiptValidation_type != V_ASN1_INTEGER) { \
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
             } \
-            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_006D01E9(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length); \
-            ReceiptValidation_attr_version = ReceiptValidation_ASN1_INTEGER_get_006D0157(ReceiptValidation_value); \
-            ReceiptValidation_ASN1_INTEGER_free_025001AC(ReceiptValidation_value); \
-            ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
+            ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_007F0242(NULL, &ReceiptValidation_current_context->ptr, ReceiptValidation_length); \
+            ReceiptValidation_attr_version = ReceiptValidation_ASN1_INTEGER_get_0161013A(ReceiptValidation_value); \
+            ReceiptValidation_ASN1_INTEGER_free_01610124(ReceiptValidation_value); \
+            ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_current_context->ptr, &ReceiptValidation_length, &ReceiptValidation_type, &ReceiptValidation_xclass, ReceiptValidation_current_context->end - ReceiptValidation_current_context->ptr); \
             if (ReceiptValidation_type != V_ASN1_OCTET_STRING) { \
                 __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
             } \
-            ReceiptValidation_key1 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 1)); \
-            ReceiptValidation_key2 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 1) + 1); \
+            ReceiptValidation_key1 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 2)); \
+            ReceiptValidation_key2 = (ReceiptValidation_ReceiptAttributeType) (ReceiptValidation_StoreNone + (ReceiptValidation_attr_type << 2) + 1); \
             ReceiptValidation_value1 = NULL; \
             ReceiptValidation_value2 = NULL; \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt - Found attribute %s%ld", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type); \
@@ -3889,14 +3905,14 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
                     ReceiptValidation_str_type = 0; \
                     ReceiptValidation_str_length = 0; \
                     ReceiptValidation_str_ptr = ReceiptValidation_current_context->ptr; \
-                    ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr); \
+                    ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr); \
                     if (ReceiptValidation_str_type != V_ASN1_UTF8STRING) { \
                         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
                     } \
-                    ReceiptValidation_value1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[412])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingUTF8, false); \
-                    ReceiptValidation_value2 = ReceiptValidation_PTKUOOEYMOBI_004800A4(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length); \
+                    ReceiptValidation_value1 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[325])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingUTF8, false); \
+                    ReceiptValidation_value2 = ReceiptValidation_CFDataCreate_02060002(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length); \
                     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => %s", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, CFStringGetCStringPtr((CFStringRef) ReceiptValidation_value1, CFStringGetSystemEncoding())); \
                     break; \
                 } \
@@ -3909,14 +3925,14 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
                     ReceiptValidation_str_type = 0; \
                     ReceiptValidation_str_length = 0; \
                     ReceiptValidation_str_ptr = ReceiptValidation_current_context->ptr; \
-                    ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr); \
+                    ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_str_ptr, &ReceiptValidation_str_length, &ReceiptValidation_str_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_str_ptr); \
                     if (ReceiptValidation_str_type != V_ASN1_IA5STRING) { \
                         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
                     } \
-                    ReceiptValidation_value2 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[412])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingASCII, false); \
-                    ReceiptValidation_value1 = ReceiptValidation_CFDateFormatterCreateDateFromString_00480123(NULL, ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value2, NULL); \
+                    ReceiptValidation_value2 = ((__ReceiptValidation_CFStringCreateWithBytes) ReceiptValidation_Pointers[325])(NULL, (const UInt8 *) ReceiptValidation_str_ptr, (CFIndex) ReceiptValidation_str_length, kCFStringEncodingASCII, false); \
+                    ReceiptValidation_value1 = ReceiptValidation_CFDateFormatterCreateDateFromString_02060144(NULL, ReceiptValidation_formatter, (CFStringRef) ReceiptValidation_value2, NULL); \
                     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => %s", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, CFStringGetCStringPtr((CFStringRef) ReceiptValidation_value2, CFStringGetSystemEncoding())); \
                     break; \
                 } \
@@ -3926,24 +3942,24 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
                     ReceiptValidation_num_type = 0; \
                     ReceiptValidation_num_length = 0; \
                     ReceiptValidation_num_ptr = ReceiptValidation_current_context->ptr; \
-                    ReceiptValidation_ASN1_get_object_006D008E(&ReceiptValidation_num_ptr, &ReceiptValidation_num_length, &ReceiptValidation_num_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_num_ptr); \
+                    ReceiptValidation_ASN1_get_object_01F20185(&ReceiptValidation_num_ptr, &ReceiptValidation_num_length, &ReceiptValidation_num_type, &ReceiptValidation_xclass, ReceiptValidation_seq_end - ReceiptValidation_num_ptr); \
                     if (ReceiptValidation_num_type != V_ASN1_INTEGER) { \
                         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-                        ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-                        goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail; \
+                        ReceiptValidation_exit_004201AD(ReceiptValidation_code); \
+                        goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail; \
                     } \
-                    ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_006D01E9(NULL, &ReceiptValidation_num_ptr, ReceiptValidation_num_length); \
-                    ReceiptValidation_number = ReceiptValidation_ASN1_INTEGER_get_006D0157(ReceiptValidation_value); \
-                    ReceiptValidation_ASN1_INTEGER_free_025001AC(ReceiptValidation_value); \
-                    ReceiptValidation_value1 = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberLongType, &ReceiptValidation_number); \
+                    ReceiptValidation_value = ReceiptValidation_c2i_ASN1_INTEGER_007F0242(NULL, &ReceiptValidation_num_ptr, ReceiptValidation_num_length); \
+                    ReceiptValidation_number = ReceiptValidation_ASN1_INTEGER_get_0161013A(ReceiptValidation_value); \
+                    ReceiptValidation_ASN1_INTEGER_free_01610124(ReceiptValidation_value); \
+                    ReceiptValidation_value1 = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberLongType, &ReceiptValidation_number); \
                     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => %ld", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, ReceiptValidation_number); \
                     break; \
                 } \
                 case ReceiptValidation_ReceiptAttributeTypeOpaqueValue: \
                 case ReceiptValidation_ReceiptAttributeTypeHash: \
                 { \
-                    ReceiptValidation_value1 = ReceiptValidation_PTKUOOEYMOBI_004800A4(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length); \
-                    __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => [%lu bytes]", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, ReceiptValidation_JDYBZVRRIQGT_023200C2((CFDataRef) ReceiptValidation_value1)); \
+                    ReceiptValidation_value1 = ReceiptValidation_CFDataCreate_02060002(NULL, (const UInt8 *) ReceiptValidation_current_context->ptr, (CFIndex) ReceiptValidation_length); \
+                    __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt -       attribute %s%ld => [%lu bytes]", ReceiptValidation_current_context->parent ? "--- " : "- ", ReceiptValidation_attr_type, ReceiptValidation_PEYLDRWHJIRJ_020600B8((CFDataRef) ReceiptValidation_value1)); \
                     break; \
                 } \
                 case ReceiptValidation_ReceiptAttributeTypeInAppPurchase: \
@@ -3953,61 +3969,61 @@ ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail:
                     ReceiptValidation_inapp_context.dictionary = NULL; \
                     ReceiptValidation_inapp_context.parent = ReceiptValidation_current_context; \
                     ReceiptValidation_current_context = &ReceiptValidation_inapp_context; \
-                    goto ReceiptValidation_GetReceiptInformation063_ReceiptValidation_key; \
+                    goto ReceiptValidation_GetReceiptInformation064_ReceiptValidation_key; \
                 } \
                 default: \
                     break; \
             } \
             if (ReceiptValidation_value1) { \
-                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberIntType, &ReceiptValidation_key1); \
-                ReceiptValidation_CFDictionaryAddValue_00480082((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value1); \
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_key); \
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value1); \
+                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberIntType, &ReceiptValidation_key1); \
+                ReceiptValidation_CFDictionaryAddValue_02060103((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value1); \
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value1); \
             } \
             if (ReceiptValidation_value2) { \
-                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberIntType, &ReceiptValidation_key2); \
-                ReceiptValidation_CFDictionaryAddValue_00480082((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value2); \
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_key); \
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value2); \
+                ReceiptValidation_key = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberIntType, &ReceiptValidation_key2); \
+                ReceiptValidation_CFDictionaryAddValue_02060103((CFMutableDictionaryRef) ReceiptValidation_current_context->dictionary, ReceiptValidation_key, ReceiptValidation_value2); \
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value2); \
             } \
             ReceiptValidation_current_context->ptr += ReceiptValidation_length; \
         } \
-ReceiptValidation_GetReceiptInformation063_ReceiptValidation_key: \
+ReceiptValidation_GetReceiptInformation064_ReceiptValidation_key: \
         if (!ReceiptValidation_current_context->dictionary) { \
             continue; \
         } \
         if (ReceiptValidation_current_context->parent) { \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Parsing receipt - Add an InApp purchase"); \
             ReceiptValidation_key1 = ReceiptValidation_StoreReceiptAttributeTypeInAppPurchase; \
-            ReceiptValidation_key = ReceiptValidation_CFNumberCreate_02320117(NULL, kCFNumberIntType, &ReceiptValidation_key1); \
-            ReceiptValidation_value1 = ReceiptValidation_CFDictionaryGetValue_00A70027((CFDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key); \
+            ReceiptValidation_key = ReceiptValidation_CFNumberCreate_00D10069(NULL, kCFNumberIntType, &ReceiptValidation_key1); \
+            ReceiptValidation_value1 = ReceiptValidation_XQTZCGXTOMRV_00D10008((CFDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key); \
             if (!ReceiptValidation_value1) { \
-                ReceiptValidation_value1 = ReceiptValidation_CFArrayCreateMutable_004800EE(kCFAllocatorDefault, 0, ReceiptValidation_kCFTypeArrayCallBacks_023200F4); \
-                ReceiptValidation_PGKVNNSRVCVJ_02320098((CFMutableDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key, ReceiptValidation_value1); \
-                ReceiptValidation_CFRelease_004800CE(ReceiptValidation_value1); \
+                ReceiptValidation_value1 = ReceiptValidation_CFArrayCreateMutable_0206009E(kCFAllocatorDefault, 0, ReceiptValidation_kCFTypeArrayCallBacks_020601EA); \
+                ReceiptValidation_CFDictionarySetValue_01CC00CC((CFMutableDictionaryRef) ReceiptValidation_current_context->parent->dictionary, ReceiptValidation_key, ReceiptValidation_value1); \
+                ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_value1); \
             } \
-            ReceiptValidation_YZLJKTPYVTVA_02320044((CFMutableArrayRef) ReceiptValidation_value1, ReceiptValidation_current_context->dictionary); \
-            ReceiptValidation_CFRelease_004800CE(ReceiptValidation_current_context->dictionary); \
-            ReceiptValidation_CFRelease_004800CE(ReceiptValidation_key); \
+            ReceiptValidation_CFArrayAppendValue_02060012((CFMutableArrayRef) ReceiptValidation_value1, ReceiptValidation_current_context->dictionary); \
+            ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_current_context->dictionary); \
+            ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
             ReceiptValidation_current_context = ReceiptValidation_current_context->parent; \
             ReceiptValidation_current_context->ptr = ReceiptValidation_inapp_context.end; \
         } \
     } \
-    if (ReceiptValidation_ctx->receipt_dict) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_ctx->receipt_dict); \
+    if (ReceiptValidation_ctx->receipt_dict) ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_ctx->receipt_dict); \
     ReceiptValidation_ctx->receipt_dict = ReceiptValidation_receipt_context.dictionary; \
-    ReceiptValidation_PTKUOOEYMOBI += 74; ReceiptValidation_PTKUOOEYMOBI /= 2;  \
-    ReceiptValidation_PGKVNNSRVCVJ = 248; \
-ReceiptValidation_GetReceiptInformation063_ReceiptValidation_bail: \
-    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_02500189(ReceiptValidation_pkcs7); \
-    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_02500248(ReceiptValidation_bio_p7); \
-    if (ReceiptValidation_formatter) ReceiptValidation_CFRelease_004800CE(ReceiptValidation_formatter); \
+    ReceiptValidation_TPAMUMCIMUJI += 198; ReceiptValidation_TPAMUMCIMUJI /= 4;  \
+    ReceiptValidation_FLUAORRUQXJR -= 107; ReceiptValidation_FLUAORRUQXJR *= 3;  \
+ReceiptValidation_GetReceiptInformation064_ReceiptValidation_bail: \
+    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_01F2019A(ReceiptValidation_pkcs7); \
+    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_01F20148(ReceiptValidation_bio_p7); \
+    if (ReceiptValidation_formatter) ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_formatter); \
 }
 #endif
 
 
 // CodeBlock CheckReceiptSignature
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptSignature06B(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptSignature078(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     BIO *ReceiptValidation_bio_p7 = NULL;
     PKCS7 *ReceiptValidation_pkcs7 = NULL;
     STACK_OF(X509) *ReceiptValidation_certificates = NULL;
@@ -4016,7 +4032,6 @@ inline static void ReceiptValidation_CheckReceiptSignature06B(ReceiptValidation_
     unsigned int ReceiptValidation_index2;
     ASN1_OBJECT *ReceiptValidation_oid = NULL;
     char *ReceiptValidation_str1;
-    char *ReceiptValidation_str2;
     char *ReceiptValidation_str3;
     char *ReceiptValidation_str4;
     char *ReceiptValidation_str5;
@@ -4024,148 +4039,133 @@ inline static void ReceiptValidation_CheckReceiptSignature06B(ReceiptValidation_
     BIO *ReceiptValidation_bio_apple = NULL;
     X509 *ReceiptValidation_apple = NULL;
     X509_STORE *ReceiptValidation_store = NULL;
-    volatile int ReceiptValidation_code = 165; ReceiptValidation_code -= 108; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    volatile int ReceiptValidation_code = 101; ReceiptValidation_code -= 44; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt signature");
     // Put the receipt data into a memory buffer
-    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_006D0032(ReceiptValidation_BIO_s_mem_000A0252());
-    ReceiptValidation_BIO_write_02500072(ReceiptValidation_bio_p7, (void *) ReceiptValidation_PTKUOOEYMOBI_00A70077((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_PGKVNNSRVCVJ_004800F8((CFDataRef) ReceiptValidation_ctx->receipt_data));
-    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_006D0206(ReceiptValidation_bio_p7, NULL);
+    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_007F00E6(ReceiptValidation_BIO_s_mem_007F0255());
+    ReceiptValidation_BIO_write_01610080(ReceiptValidation_bio_p7, (void *) ReceiptValidation_FLUAORRUQXJR_020601A1((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_TPAMUMCIMUJI_01CC00B8((CFDataRef) ReceiptValidation_ctx->receipt_data));
+    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_01F2018D(ReceiptValidation_bio_p7, NULL);
     if (!ReceiptValidation_pkcs7) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
         ReceiptValidation_ctx->receipt_dict = NULL;
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
     }
     if (!PKCS7_type_is_signed(ReceiptValidation_pkcs7)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
         ReceiptValidation_ctx->receipt_dict = NULL;
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
     }
     if (!PKCS7_type_is_data(ReceiptValidation_pkcs7->d.sign->contents)) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
         ReceiptValidation_ctx->receipt_dict = NULL;
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
     }
-    ReceiptValidation_OpenSSL_add_all_digests_006D0055();
+    ReceiptValidation_OpenSSL_add_all_digests_007F003A();
     // If the Apple Root CA certificate has been loaded, then check the receipt against it.
     if (ReceiptValidation_ctx->ca_data) {
-        ReceiptValidation_bio_apple = ReceiptValidation_BIO_new_006D0032(ReceiptValidation_BIO_s_mem_000A0252());
-        ReceiptValidation_BIO_write_02500072(ReceiptValidation_bio_apple, (void *) ReceiptValidation_PTKUOOEYMOBI_00A70077((CFDataRef) ReceiptValidation_ctx->ca_data), (int) ReceiptValidation_PGKVNNSRVCVJ_004800F8((CFDataRef) ReceiptValidation_ctx->ca_data));
-        ReceiptValidation_apple = ReceiptValidation_d2i_X509_bio_0250002F(ReceiptValidation_bio_apple, NULL);
+        ReceiptValidation_bio_apple = ReceiptValidation_BIO_new_007F00E6(ReceiptValidation_BIO_s_mem_007F0255());
+        ReceiptValidation_BIO_write_01610080(ReceiptValidation_bio_apple, (void *) ReceiptValidation_FLUAORRUQXJR_020601A1((CFDataRef) ReceiptValidation_ctx->ca_data), (int) ReceiptValidation_TPAMUMCIMUJI_01CC00B8((CFDataRef) ReceiptValidation_ctx->ca_data));
+        ReceiptValidation_apple = ReceiptValidation_d2i_X509_bio_01F20238(ReceiptValidation_bio_apple, NULL);
         if (!ReceiptValidation_apple) {
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+            ReceiptValidation_exit_00150082(ReceiptValidation_code);
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
         }
-        ReceiptValidation_store = ReceiptValidation_X509_STORE_new_000A01B4();
-        ReceiptValidation_X509_STORE_add_cert_006D0116(ReceiptValidation_store, ReceiptValidation_apple);
+        ReceiptValidation_store = ReceiptValidation_X509_STORE_new_01F200AC();
+        ReceiptValidation_X509_STORE_add_cert_016101B9(ReceiptValidation_store, ReceiptValidation_apple);
         // Check that the PKCS7_verify function is not tampered with
-        ReceiptValidation_verify = ReceiptValidation_PKCS7_verify_000A014D(NULL, NULL, ReceiptValidation_store, NULL, NULL, 0) * 3188;
-        if (ReceiptValidation_verify == 3188) {
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
-        }
         // Check that the PKCS7 content is signed by the Apple Root CA certificate
-        ReceiptValidation_verify = ReceiptValidation_PKCS7_verify_000A014D(ReceiptValidation_pkcs7, NULL, ReceiptValidation_store, NULL, NULL, 0) * 3188;
-        if (ReceiptValidation_verify != 3188) {
+        ReceiptValidation_verify = ReceiptValidation_PKCS7_verify_007F0049(ReceiptValidation_pkcs7, NULL, ReceiptValidation_store, NULL, NULL, 0) * 35;
+        if (ReceiptValidation_verify != 35) {
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+            ReceiptValidation_exit_00150082(ReceiptValidation_code);
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
         }
     }
     // Extract the certificates from the receipt.
     // One of them must be the Apple Root CA certificate with the correct fingerprint.
     ReceiptValidation_verify = 0;
     ReceiptValidation_certificates = ReceiptValidation_pkcs7->d.sign->cert;
-    ReceiptValidation_count = ReceiptValidation_sk_num_025000F3((const _STACK *) ReceiptValidation_certificates);
+    ReceiptValidation_count = ReceiptValidation_sk_num_01F2008B((const _STACK *) ReceiptValidation_certificates);
     for(ReceiptValidation_index1 = 0; ReceiptValidation_index1 < ReceiptValidation_count; ReceiptValidation_index1++) {
-        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_000A00D5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1);
+        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_016100A5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1);
         char ReceiptValidation_common_name[608];
         // Check that the X509_NAME_get_text_by_NID function is not tampered with
-        ReceiptValidation_status = ReceiptValidation_X509_NAME_get_text_by_NID_000A01C2(NULL, NID_commonName, NULL, 0);
-        if (ReceiptValidation_status > 0) {
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
-        }
         // Retrieve the common name
-        ReceiptValidation_status = ReceiptValidation_X509_NAME_get_text_by_NID_000A01C2(ReceiptValidation_certificate->cert_info->subject, NID_commonName, ReceiptValidation_common_name, 608);
+        ReceiptValidation_status = ReceiptValidation_X509_NAME_get_text_by_NID_01F20208(ReceiptValidation_certificate->cert_info->subject, NID_commonName, ReceiptValidation_common_name, 608);
         if (ReceiptValidation_status <= 0) {
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+            ReceiptValidation_exit_00150082(ReceiptValidation_code);
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
         }
-        volatile unsigned int ReceiptValidation_digest_length = 1; ReceiptValidation_digest_length -= 1; ReceiptValidation_digest_length *= 22; ReceiptValidation_digest_length += 20; 
-        char ReceiptValidation_str2_[608];
-        ReceiptValidation_ObfuscationFunction007((ReceiptValidation_Strings[36]), ReceiptValidation_str2_, 30, 16);
-        ReceiptValidation_str2 = ReceiptValidation_str2_;
-        const EVP_MD *ReceiptValidation_digester = ReceiptValidation_EVP_get_digestbyname_025000D4(ReceiptValidation_str2);
+        volatile unsigned int ReceiptValidation_digest_length = 19; ReceiptValidation_digest_length -= 13; ReceiptValidation_digest_length *= 3; ReceiptValidation_digest_length += 2; 
+        const EVP_MD *ReceiptValidation_digester = EVP_sha1();
         unsigned char ReceiptValidation_digest[EVP_MAX_MD_SIZE];
         unsigned int ReceiptValidation_len = 0;
         // Check that the X509_digest function is not tampered with
-        ReceiptValidation_status = ReceiptValidation_X509_digest_006D0136(NULL, NULL, ReceiptValidation_digest, &ReceiptValidation_len) * 3188;
-        if (ReceiptValidation_status == 3188 || ReceiptValidation_len > 0) {
+        ReceiptValidation_status = ReceiptValidation_X509_digest_01F20154(NULL, NULL, ReceiptValidation_digest, &ReceiptValidation_len) * 35;
+        if (ReceiptValidation_status == 35 || ReceiptValidation_len > 0) {
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+            ReceiptValidation_exit_00150082(ReceiptValidation_code);
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
         }
-        ReceiptValidation_status = ReceiptValidation_X509_digest_006D0136(ReceiptValidation_certificate, ReceiptValidation_digester, ReceiptValidation_digest, &ReceiptValidation_len) * 3188;
-        if (ReceiptValidation_status != 3188 || ReceiptValidation_len != ReceiptValidation_digest_length) {
+        ReceiptValidation_status = ReceiptValidation_X509_digest_01F20154(ReceiptValidation_certificate, ReceiptValidation_digester, ReceiptValidation_digest, &ReceiptValidation_len) * 35;
+        if (ReceiptValidation_status != 35 || ReceiptValidation_len != ReceiptValidation_digest_length) {
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+            ReceiptValidation_exit_00150082(ReceiptValidation_code);
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
         }
         char ReceiptValidation_fingerprint[608];
-        volatile unsigned int ReceiptValidation_increment = 1; ReceiptValidation_increment -= 1; ReceiptValidation_increment *= 5; ReceiptValidation_increment += 3; 
+        volatile unsigned int ReceiptValidation_increment = 1; ReceiptValidation_increment -= 1; ReceiptValidation_increment *= 4; ReceiptValidation_increment += 2; 
         for(ReceiptValidation_index2 = 0; ReceiptValidation_index2 < ReceiptValidation_digest_length; ReceiptValidation_index2++) {
-            snprintf(&ReceiptValidation_fingerprint[ReceiptValidation_index2 * ReceiptValidation_increment], ReceiptValidation_increment + 1, "%02X:", ReceiptValidation_digest[ReceiptValidation_index2]);
+            snprintf(&ReceiptValidation_fingerprint[ReceiptValidation_index2 * ReceiptValidation_increment], ReceiptValidation_increment + 1, "%02x", ReceiptValidation_digest[ReceiptValidation_index2]);
         }
         char ReceiptValidation_str3_[608];
-        ReceiptValidation_ObfuscationFunction00A((ReceiptValidation_Strings[583]), ReceiptValidation_str3_, 11, 68);
+        ReceiptValidation_ObfuscationFunction003((ReceiptValidation_Strings[226]), ReceiptValidation_str3_, 8, 49);
         ReceiptValidation_str3 = ReceiptValidation_str3_;
         // Check the common name and the fingerprint
         char ReceiptValidation_str1_[608];
-        ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[18]), ReceiptValidation_str1_, 222, 16);
+        ReceiptValidation_ObfuscationFunction00B((ReceiptValidation_Strings[45]), ReceiptValidation_str1_, 122, 16);
         ReceiptValidation_str1 = ReceiptValidation_str1_;
-        volatile size_t ReceiptValidation_num = 3; ReceiptValidation_num -= 1; ReceiptValidation_num *= 6; ReceiptValidation_num += 1; 
-        if (((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[344])(ReceiptValidation_common_name, ReceiptValidation_str1, ReceiptValidation_num) == 0 && ((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[344])(ReceiptValidation_fingerprint, ReceiptValidation_str3, ReceiptValidation_digest_length * ReceiptValidation_increment - 1) == 0) {
-            ReceiptValidation_verify = 3188;
+        volatile size_t ReceiptValidation_num = 9; ReceiptValidation_num -= 5; ReceiptValidation_num *= 3; ReceiptValidation_num += 1; 
+        if (((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[24])(ReceiptValidation_common_name, ReceiptValidation_str1, ReceiptValidation_num) == 0 && ((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[24])(ReceiptValidation_fingerprint, ReceiptValidation_str3, ReceiptValidation_digest_length * ReceiptValidation_increment - 1) == 0) {
+            ReceiptValidation_verify = 35;
             break;
         }
     }
     // Check that the last selected certificate is right one.
-    if (ReceiptValidation_certificate == NULL || ReceiptValidation_verify != 3188) {
+    if (ReceiptValidation_certificate == NULL || ReceiptValidation_verify != 35) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
     }
     // Check that the X509_get_ext_by_OBJ function is not tampered with
     char ReceiptValidation_str4_[608];
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[426]), ReceiptValidation_str4_, 201, 34);
+    ReceiptValidation_ObfuscationFunction007((ReceiptValidation_Strings[477]), ReceiptValidation_str4_, 85, 34);
     ReceiptValidation_str4 = ReceiptValidation_str4_;
-    ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_025000F9(ReceiptValidation_str4, 0);
-    ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_000A0124(ReceiptValidation_certificate, ReceiptValidation_oid, 0);
-    ReceiptValidation_ASN1_OBJECT_free_02500045(ReceiptValidation_oid);
+    ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_01610177(ReceiptValidation_str4, 0);
+    ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_007F00FC(ReceiptValidation_certificate, ReceiptValidation_oid, 0);
+    ReceiptValidation_ASN1_OBJECT_free_007F0084(ReceiptValidation_oid);
     if (ReceiptValidation_verify >= 0) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
     }
     // Extract the signer certificate from the receipt
     // The certificate must have the extension OID "1.2.840.113635.100.6.11.1"
     char ReceiptValidation_str5_[608];
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[426]), ReceiptValidation_str5_, 201, 34);
+    ReceiptValidation_ObfuscationFunction007((ReceiptValidation_Strings[477]), ReceiptValidation_str5_, 85, 34);
     ReceiptValidation_str5 = ReceiptValidation_str5_;
-    ReceiptValidation_certificates = ReceiptValidation_PKCS7_get0_signers_000A01D8(ReceiptValidation_pkcs7, NULL, 0);
-    ReceiptValidation_count = ReceiptValidation_sk_num_025000F3((const _STACK *) ReceiptValidation_certificates);
+    ReceiptValidation_certificates = ReceiptValidation_PKCS7_get0_signers_007F0088(ReceiptValidation_pkcs7, NULL, 0);
+    ReceiptValidation_count = ReceiptValidation_sk_num_01F2008B((const _STACK *) ReceiptValidation_certificates);
     for(ReceiptValidation_index1 = 0; ReceiptValidation_index1 < ReceiptValidation_count; ReceiptValidation_index1++) {
-        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_000A00D5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1);
-        ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_025000F9(ReceiptValidation_str5, 0);
-        ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_000A0124(ReceiptValidation_certificate, ReceiptValidation_oid, 0);
-        ReceiptValidation_ASN1_OBJECT_free_02500045(ReceiptValidation_oid);
+        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_016100A5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1);
+        ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_01610177(ReceiptValidation_str5, 0);
+        ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_007F00FC(ReceiptValidation_certificate, ReceiptValidation_oid, 0);
+        ReceiptValidation_ASN1_OBJECT_free_007F0084(ReceiptValidation_oid);
         if (ReceiptValidation_verify == -1) {
             sk_X509_free (ReceiptValidation_certificates);
             ReceiptValidation_certificates = NULL;
@@ -4176,26 +4176,26 @@ inline static void ReceiptValidation_CheckReceiptSignature06B(ReceiptValidation_
     }
     if (ReceiptValidation_certificate == NULL || ReceiptValidation_verify < 0) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code);
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail;
+        ReceiptValidation_exit_00150082(ReceiptValidation_code);
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail;
     }
     // Global variables computation
-    // From 194 to 13
-    ReceiptValidation_JDYBZVRRIQGT += 14; ReceiptValidation_JDYBZVRRIQGT /= 16; 
-    // From 248 to 453
-    ReceiptValidation_PGKVNNSRVCVJ -= 97; ReceiptValidation_PGKVNNSRVCVJ *= 3; 
-    // From 349 to 279
-    ReceiptValidation_FJEIWPLUQNVF += 209; ReceiptValidation_FJEIWPLUQNVF /= 2; 
-ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail:
-    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_006D0248(ReceiptValidation_bio_p7);
-    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_000A0202(ReceiptValidation_pkcs7);
+    // From 416 to 523
+    ReceiptValidation_THYDFRJHWWUN -= 242; ReceiptValidation_THYDFRJHWWUN *= 3; ReceiptValidation_THYDFRJHWWUN += 1; 
+    // From 184 to 105
+    ReceiptValidation_PEYLDRWHJIRJ += 131; ReceiptValidation_PEYLDRWHJIRJ /= 3; 
+    // From 417 to 279
+    ReceiptValidation_FLUAORRUQXJR += 141; ReceiptValidation_FLUAORRUQXJR /= 2; 
+ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail:
+    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_01F200C5(ReceiptValidation_bio_p7);
+    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_016101FE(ReceiptValidation_pkcs7);
     if (ReceiptValidation_certificates) sk_X509_free (ReceiptValidation_certificates);
-    if (ReceiptValidation_apple) ReceiptValidation_X509_free_006D0088(ReceiptValidation_apple);
-    if (ReceiptValidation_bio_apple) ReceiptValidation_BIO_free_006D0248(ReceiptValidation_bio_apple);
-    if (ReceiptValidation_store) ReceiptValidation_X509_STORE_free_025001A7(ReceiptValidation_store);
+    if (ReceiptValidation_apple) ReceiptValidation_X509_free_016100AA(ReceiptValidation_apple);
+    if (ReceiptValidation_bio_apple) ReceiptValidation_BIO_free_01F200C5(ReceiptValidation_bio_apple);
+    if (ReceiptValidation_store) ReceiptValidation_X509_STORE_free_01F2022A(ReceiptValidation_store);
 }
 #else
-#define ReceiptValidation_CheckReceiptSignature06B(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptSignature078(ReceiptValidation_ctx) { \
     BIO *ReceiptValidation_bio_p7 = NULL; \
     PKCS7 *ReceiptValidation_pkcs7 = NULL; \
     STACK_OF(X509) *ReceiptValidation_certificates = NULL; \
@@ -4204,7 +4204,6 @@ ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail:
     unsigned int ReceiptValidation_index2; \
     ASN1_OBJECT *ReceiptValidation_oid = NULL; \
     char *ReceiptValidation_str1; \
-    char *ReceiptValidation_str2; \
     char *ReceiptValidation_str3; \
     char *ReceiptValidation_str4; \
     char *ReceiptValidation_str5; \
@@ -4212,134 +4211,119 @@ ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail:
     BIO *ReceiptValidation_bio_apple = NULL; \
     X509 *ReceiptValidation_apple = NULL; \
     X509_STORE *ReceiptValidation_store = NULL; \
-    volatile int ReceiptValidation_code = 165; ReceiptValidation_code -= 108; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    volatile int ReceiptValidation_code = 101; ReceiptValidation_code -= 44; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt signature"); \
-    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_006D0032(ReceiptValidation_BIO_s_mem_000A0252()); \
-    ReceiptValidation_BIO_write_02500072(ReceiptValidation_bio_p7, (void *) ReceiptValidation_PTKUOOEYMOBI_00A70077((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_PGKVNNSRVCVJ_004800F8((CFDataRef) ReceiptValidation_ctx->receipt_data)); \
-    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_006D0206(ReceiptValidation_bio_p7, NULL); \
+    ReceiptValidation_bio_p7 = ReceiptValidation_BIO_new_007F00E6(ReceiptValidation_BIO_s_mem_007F0255()); \
+    ReceiptValidation_BIO_write_01610080(ReceiptValidation_bio_p7, (void *) ReceiptValidation_FLUAORRUQXJR_020601A1((CFDataRef) ReceiptValidation_ctx->receipt_data), (int) ReceiptValidation_TPAMUMCIMUJI_01CC00B8((CFDataRef) ReceiptValidation_ctx->receipt_data)); \
+    ReceiptValidation_pkcs7 = ReceiptValidation_d2i_PKCS7_bio_01F2018D(ReceiptValidation_bio_p7, NULL); \
     if (!ReceiptValidation_pkcs7) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
         ReceiptValidation_ctx->receipt_dict = NULL; \
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
     } \
     if (!PKCS7_type_is_signed(ReceiptValidation_pkcs7)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
         ReceiptValidation_ctx->receipt_dict = NULL; \
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
     } \
     if (!PKCS7_type_is_data(ReceiptValidation_pkcs7->d.sign->contents)) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
         ReceiptValidation_ctx->receipt_dict = NULL; \
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_OpenSSL_add_all_digests_006D0055(); \
+    ReceiptValidation_OpenSSL_add_all_digests_007F003A(); \
     if (ReceiptValidation_ctx->ca_data) { \
-        ReceiptValidation_bio_apple = ReceiptValidation_BIO_new_006D0032(ReceiptValidation_BIO_s_mem_000A0252()); \
-        ReceiptValidation_BIO_write_02500072(ReceiptValidation_bio_apple, (void *) ReceiptValidation_PTKUOOEYMOBI_00A70077((CFDataRef) ReceiptValidation_ctx->ca_data), (int) ReceiptValidation_PGKVNNSRVCVJ_004800F8((CFDataRef) ReceiptValidation_ctx->ca_data)); \
-        ReceiptValidation_apple = ReceiptValidation_d2i_X509_bio_0250002F(ReceiptValidation_bio_apple, NULL); \
+        ReceiptValidation_bio_apple = ReceiptValidation_BIO_new_007F00E6(ReceiptValidation_BIO_s_mem_007F0255()); \
+        ReceiptValidation_BIO_write_01610080(ReceiptValidation_bio_apple, (void *) ReceiptValidation_FLUAORRUQXJR_020601A1((CFDataRef) ReceiptValidation_ctx->ca_data), (int) ReceiptValidation_TPAMUMCIMUJI_01CC00B8((CFDataRef) ReceiptValidation_ctx->ca_data)); \
+        ReceiptValidation_apple = ReceiptValidation_d2i_X509_bio_01F20238(ReceiptValidation_bio_apple, NULL); \
         if (!ReceiptValidation_apple) { \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+            ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
         } \
-        ReceiptValidation_store = ReceiptValidation_X509_STORE_new_000A01B4(); \
-        ReceiptValidation_X509_STORE_add_cert_006D0116(ReceiptValidation_store, ReceiptValidation_apple); \
-        ReceiptValidation_verify = ReceiptValidation_PKCS7_verify_000A014D(NULL, NULL, ReceiptValidation_store, NULL, NULL, 0) * 3188; \
-        if (ReceiptValidation_verify == 3188) { \
+        ReceiptValidation_store = ReceiptValidation_X509_STORE_new_01F200AC(); \
+        ReceiptValidation_X509_STORE_add_cert_016101B9(ReceiptValidation_store, ReceiptValidation_apple); \
+        ReceiptValidation_verify = ReceiptValidation_PKCS7_verify_007F0049(ReceiptValidation_pkcs7, NULL, ReceiptValidation_store, NULL, NULL, 0) * 35; \
+        if (ReceiptValidation_verify != 35) { \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
-        } \
-        ReceiptValidation_verify = ReceiptValidation_PKCS7_verify_000A014D(ReceiptValidation_pkcs7, NULL, ReceiptValidation_store, NULL, NULL, 0) * 3188; \
-        if (ReceiptValidation_verify != 3188) { \
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+            ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
         } \
     } \
     ReceiptValidation_verify = 0; \
     ReceiptValidation_certificates = ReceiptValidation_pkcs7->d.sign->cert; \
-    ReceiptValidation_count = ReceiptValidation_sk_num_025000F3((const _STACK *) ReceiptValidation_certificates); \
+    ReceiptValidation_count = ReceiptValidation_sk_num_01F2008B((const _STACK *) ReceiptValidation_certificates); \
     for(ReceiptValidation_index1 = 0; ReceiptValidation_index1 < ReceiptValidation_count; ReceiptValidation_index1++) { \
-        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_000A00D5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1); \
+        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_016100A5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1); \
         char ReceiptValidation_common_name[608]; \
-        ReceiptValidation_status = ReceiptValidation_X509_NAME_get_text_by_NID_000A01C2(NULL, NID_commonName, NULL, 0); \
-        if (ReceiptValidation_status > 0) { \
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
-        } \
-        ReceiptValidation_status = ReceiptValidation_X509_NAME_get_text_by_NID_000A01C2(ReceiptValidation_certificate->cert_info->subject, NID_commonName, ReceiptValidation_common_name, 608); \
+        ReceiptValidation_status = ReceiptValidation_X509_NAME_get_text_by_NID_01F20208(ReceiptValidation_certificate->cert_info->subject, NID_commonName, ReceiptValidation_common_name, 608); \
         if (ReceiptValidation_status <= 0) { \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+            ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
         } \
-        volatile unsigned int ReceiptValidation_digest_length = 1; ReceiptValidation_digest_length -= 1; ReceiptValidation_digest_length *= 22; ReceiptValidation_digest_length += 20;  \
-        char ReceiptValidation_str2_[608]; \
-        ReceiptValidation_ObfuscationFunction007((ReceiptValidation_Strings[36]), ReceiptValidation_str2_, 30, 16); \
-        ReceiptValidation_str2 = ReceiptValidation_str2_; \
-        const EVP_MD *ReceiptValidation_digester = ReceiptValidation_EVP_get_digestbyname_025000D4(ReceiptValidation_str2); \
+        volatile unsigned int ReceiptValidation_digest_length = 19; ReceiptValidation_digest_length -= 13; ReceiptValidation_digest_length *= 3; ReceiptValidation_digest_length += 2;  \
+        const EVP_MD *ReceiptValidation_digester = EVP_sha1(); \
         unsigned char ReceiptValidation_digest[EVP_MAX_MD_SIZE]; \
         unsigned int ReceiptValidation_len = 0; \
-        ReceiptValidation_status = ReceiptValidation_X509_digest_006D0136(NULL, NULL, ReceiptValidation_digest, &ReceiptValidation_len) * 3188; \
-        if (ReceiptValidation_status == 3188 || ReceiptValidation_len > 0) { \
+        ReceiptValidation_status = ReceiptValidation_X509_digest_01F20154(NULL, NULL, ReceiptValidation_digest, &ReceiptValidation_len) * 35; \
+        if (ReceiptValidation_status == 35 || ReceiptValidation_len > 0) { \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+            ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
         } \
-        ReceiptValidation_status = ReceiptValidation_X509_digest_006D0136(ReceiptValidation_certificate, ReceiptValidation_digester, ReceiptValidation_digest, &ReceiptValidation_len) * 3188; \
-        if (ReceiptValidation_status != 3188 || ReceiptValidation_len != ReceiptValidation_digest_length) { \
+        ReceiptValidation_status = ReceiptValidation_X509_digest_01F20154(ReceiptValidation_certificate, ReceiptValidation_digester, ReceiptValidation_digest, &ReceiptValidation_len) * 35; \
+        if (ReceiptValidation_status != 35 || ReceiptValidation_len != ReceiptValidation_digest_length) { \
             __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-            goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+            ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+            goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
         } \
         char ReceiptValidation_fingerprint[608]; \
-        volatile unsigned int ReceiptValidation_increment = 1; ReceiptValidation_increment -= 1; ReceiptValidation_increment *= 5; ReceiptValidation_increment += 3;  \
+        volatile unsigned int ReceiptValidation_increment = 1; ReceiptValidation_increment -= 1; ReceiptValidation_increment *= 4; ReceiptValidation_increment += 2;  \
         for(ReceiptValidation_index2 = 0; ReceiptValidation_index2 < ReceiptValidation_digest_length; ReceiptValidation_index2++) { \
-            snprintf(&ReceiptValidation_fingerprint[ReceiptValidation_index2 * ReceiptValidation_increment], ReceiptValidation_increment + 1, "%02X:", ReceiptValidation_digest[ReceiptValidation_index2]); \
+            snprintf(&ReceiptValidation_fingerprint[ReceiptValidation_index2 * ReceiptValidation_increment], ReceiptValidation_increment + 1, "%02x", ReceiptValidation_digest[ReceiptValidation_index2]); \
         } \
         char ReceiptValidation_str3_[608]; \
-        ReceiptValidation_ObfuscationFunction00A((ReceiptValidation_Strings[583]), ReceiptValidation_str3_, 11, 68); \
+        ReceiptValidation_ObfuscationFunction003((ReceiptValidation_Strings[226]), ReceiptValidation_str3_, 8, 49); \
         ReceiptValidation_str3 = ReceiptValidation_str3_; \
         char ReceiptValidation_str1_[608]; \
-        ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[18]), ReceiptValidation_str1_, 222, 16); \
+        ReceiptValidation_ObfuscationFunction00B((ReceiptValidation_Strings[45]), ReceiptValidation_str1_, 122, 16); \
         ReceiptValidation_str1 = ReceiptValidation_str1_; \
-        volatile size_t ReceiptValidation_num = 3; ReceiptValidation_num -= 1; ReceiptValidation_num *= 6; ReceiptValidation_num += 1;  \
-        if (((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[344])(ReceiptValidation_common_name, ReceiptValidation_str1, ReceiptValidation_num) == 0 && ((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[344])(ReceiptValidation_fingerprint, ReceiptValidation_str3, ReceiptValidation_digest_length * ReceiptValidation_increment - 1) == 0) { \
-            ReceiptValidation_verify = 3188; \
+        volatile size_t ReceiptValidation_num = 9; ReceiptValidation_num -= 5; ReceiptValidation_num *= 3; ReceiptValidation_num += 1;  \
+        if (((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[24])(ReceiptValidation_common_name, ReceiptValidation_str1, ReceiptValidation_num) == 0 && ((__ReceiptValidation_strncmp) ReceiptValidation_Pointers[24])(ReceiptValidation_fingerprint, ReceiptValidation_str3, ReceiptValidation_digest_length * ReceiptValidation_increment - 1) == 0) { \
+            ReceiptValidation_verify = 35; \
             break; \
         } \
     } \
-    if (ReceiptValidation_certificate == NULL || ReceiptValidation_verify != 3188) { \
+    if (ReceiptValidation_certificate == NULL || ReceiptValidation_verify != 35) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
     } \
     char ReceiptValidation_str4_[608]; \
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[426]), ReceiptValidation_str4_, 201, 34); \
+    ReceiptValidation_ObfuscationFunction007((ReceiptValidation_Strings[477]), ReceiptValidation_str4_, 85, 34); \
     ReceiptValidation_str4 = ReceiptValidation_str4_; \
-    ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_025000F9(ReceiptValidation_str4, 0); \
-    ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_000A0124(ReceiptValidation_certificate, ReceiptValidation_oid, 0); \
-    ReceiptValidation_ASN1_OBJECT_free_02500045(ReceiptValidation_oid); \
+    ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_01610177(ReceiptValidation_str4, 0); \
+    ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_007F00FC(ReceiptValidation_certificate, ReceiptValidation_oid, 0); \
+    ReceiptValidation_ASN1_OBJECT_free_007F0084(ReceiptValidation_oid); \
     if (ReceiptValidation_verify >= 0) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
     } \
     char ReceiptValidation_str5_[608]; \
-    ReceiptValidation_ObfuscationFunction009((ReceiptValidation_Strings[426]), ReceiptValidation_str5_, 201, 34); \
+    ReceiptValidation_ObfuscationFunction007((ReceiptValidation_Strings[477]), ReceiptValidation_str5_, 85, 34); \
     ReceiptValidation_str5 = ReceiptValidation_str5_; \
-    ReceiptValidation_certificates = ReceiptValidation_PKCS7_get0_signers_000A01D8(ReceiptValidation_pkcs7, NULL, 0); \
-    ReceiptValidation_count = ReceiptValidation_sk_num_025000F3((const _STACK *) ReceiptValidation_certificates); \
+    ReceiptValidation_certificates = ReceiptValidation_PKCS7_get0_signers_007F0088(ReceiptValidation_pkcs7, NULL, 0); \
+    ReceiptValidation_count = ReceiptValidation_sk_num_01F2008B((const _STACK *) ReceiptValidation_certificates); \
     for(ReceiptValidation_index1 = 0; ReceiptValidation_index1 < ReceiptValidation_count; ReceiptValidation_index1++) { \
-        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_000A00D5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1); \
-        ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_025000F9(ReceiptValidation_str5, 0); \
-        ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_000A0124(ReceiptValidation_certificate, ReceiptValidation_oid, 0); \
-        ReceiptValidation_ASN1_OBJECT_free_02500045(ReceiptValidation_oid); \
+        ReceiptValidation_certificate = (X509 *) ReceiptValidation_sk_value_016100A5((const _STACK *) ReceiptValidation_certificates, ReceiptValidation_index1); \
+        ReceiptValidation_oid = ReceiptValidation_OBJ_txt2obj_01610177(ReceiptValidation_str5, 0); \
+        ReceiptValidation_verify = ReceiptValidation_X509_get_ext_by_OBJ_007F00FC(ReceiptValidation_certificate, ReceiptValidation_oid, 0); \
+        ReceiptValidation_ASN1_OBJECT_free_007F0084(ReceiptValidation_oid); \
         if (ReceiptValidation_verify == -1) { \
             sk_X509_free (ReceiptValidation_certificates); \
             ReceiptValidation_certificates = NULL; \
@@ -4350,19 +4334,19 @@ ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail:
     } \
     if (ReceiptValidation_certificate == NULL || ReceiptValidation_verify < 0) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F012E(ReceiptValidation_code); \
-        goto ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail; \
+        ReceiptValidation_exit_00150082(ReceiptValidation_code); \
+        goto ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_JDYBZVRRIQGT += 14; ReceiptValidation_JDYBZVRRIQGT /= 16;  \
-    ReceiptValidation_PGKVNNSRVCVJ -= 97; ReceiptValidation_PGKVNNSRVCVJ *= 3;  \
-    ReceiptValidation_FJEIWPLUQNVF += 209; ReceiptValidation_FJEIWPLUQNVF /= 2;  \
-ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail: \
-    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_006D0248(ReceiptValidation_bio_p7); \
-    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_000A0202(ReceiptValidation_pkcs7); \
+    ReceiptValidation_THYDFRJHWWUN -= 242; ReceiptValidation_THYDFRJHWWUN *= 3; ReceiptValidation_THYDFRJHWWUN += 1;  \
+    ReceiptValidation_PEYLDRWHJIRJ += 131; ReceiptValidation_PEYLDRWHJIRJ /= 3;  \
+    ReceiptValidation_FLUAORRUQXJR += 141; ReceiptValidation_FLUAORRUQXJR /= 2;  \
+ReceiptValidation_CheckReceiptSignature078_ReceiptValidation_bail: \
+    if (ReceiptValidation_bio_p7) ReceiptValidation_BIO_free_01F200C5(ReceiptValidation_bio_p7); \
+    if (ReceiptValidation_pkcs7) ReceiptValidation_PKCS7_free_016101FE(ReceiptValidation_pkcs7); \
     if (ReceiptValidation_certificates) sk_X509_free (ReceiptValidation_certificates); \
-    if (ReceiptValidation_apple) ReceiptValidation_X509_free_006D0088(ReceiptValidation_apple); \
-    if (ReceiptValidation_bio_apple) ReceiptValidation_BIO_free_006D0248(ReceiptValidation_bio_apple); \
-    if (ReceiptValidation_store) ReceiptValidation_X509_STORE_free_025001A7(ReceiptValidation_store); \
+    if (ReceiptValidation_apple) ReceiptValidation_X509_free_016100AA(ReceiptValidation_apple); \
+    if (ReceiptValidation_bio_apple) ReceiptValidation_BIO_free_01F200C5(ReceiptValidation_bio_apple); \
+    if (ReceiptValidation_store) ReceiptValidation_X509_STORE_free_01F2022A(ReceiptValidation_store); \
 }
 #endif
 
@@ -4370,95 +4354,95 @@ ReceiptValidation_CheckReceiptSignature06B_ReceiptValidation_bail: \
 // CodeBlock CheckReceiptIdentifier
 #ifndef RECEIGEN_LOOSE_IDENTIFIER_CHECK
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptIdentifier07E(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptIdentifier07F(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt identifier");
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleId;
+    volatile int ReceiptValidation_code = 143; ReceiptValidation_code -= 86; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
     CFStringRef ReceiptValidation_str1 = @obfuscateCF@("");
-    volatile int ReceiptValidation_code = 149; ReceiptValidation_code -= 92; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_FJEIWPLUQNVF_00A70117(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_JDYBZVRRIQGT_0048000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_00480079(ReceiptValidation_key);
-    if (ReceiptValidation_PGKVNNSRVCVJ_004801C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_PEYLDRWHJIRJ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_THYDFRJHWWUN_0206020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+    if (ReceiptValidation_FLUAORRUQXJR_00D10117(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding()));
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_013F0059(ReceiptValidation_code);
+        ReceiptValidation_exit_001501AD(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_key);
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_key);
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_str1);
     }
     // Global variables computation
-    // From 494 to 284
-    ReceiptValidation_PMXJCCZJOAFX += 358; ReceiptValidation_PMXJCCZJOAFX /= 3; 
-    // Set to 453
-    ReceiptValidation_FJEIWPLUQNVF = 453;
-    // From 317 to 191
-    ReceiptValidation_ACQEONHECWVC += 256; ReceiptValidation_ACQEONHECWVC /= 3; 
-    ReceiptValidation_CFRelease_00480079(ReceiptValidation_str1);
+    // Set to 519
+    ReceiptValidation_TPAMUMCIMUJI = 519;
+    // From 522 to 523
+    ReceiptValidation_QFTLSXPQXRZQ -= 348; ReceiptValidation_QFTLSXPQXRZQ *= 3; ReceiptValidation_QFTLSXPQXRZQ += 1; 
+    // Set to 105
+    ReceiptValidation_IOIKCHZOKKFQ = 105;
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_str1);
 }
 #else
-#define ReceiptValidation_CheckReceiptIdentifier07E(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptIdentifier07F(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt identifier"); \
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleId; \
+    volatile int ReceiptValidation_code = 143; ReceiptValidation_code -= 86; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
     CFStringRef ReceiptValidation_str1 = @obfuscateCF@(""); \
-    volatile int ReceiptValidation_code = 149; ReceiptValidation_code -= 92; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_FJEIWPLUQNVF_00A70117(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_JDYBZVRRIQGT_0048000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_00480079(ReceiptValidation_key); \
-    if (ReceiptValidation_PGKVNNSRVCVJ_004801C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_PEYLDRWHJIRJ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_THYDFRJHWWUN_0206020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+    if (ReceiptValidation_FLUAORRUQXJR_00D10117(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding())); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_013F0059(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_key); \
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_key); \
-        ReceiptValidation_CFRelease_00480079(ReceiptValidation_str1); \
+        ReceiptValidation_exit_001501AD(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_str1); \
     } \
-    ReceiptValidation_PMXJCCZJOAFX += 358; ReceiptValidation_PMXJCCZJOAFX /= 3;  \
-    ReceiptValidation_FJEIWPLUQNVF = 453; \
-    ReceiptValidation_ACQEONHECWVC += 256; ReceiptValidation_ACQEONHECWVC /= 3;  \
-    ReceiptValidation_CFRelease_00480079(ReceiptValidation_str1); \
+    ReceiptValidation_TPAMUMCIMUJI = 519; \
+    ReceiptValidation_QFTLSXPQXRZQ -= 348; ReceiptValidation_QFTLSXPQXRZQ *= 3; ReceiptValidation_QFTLSXPQXRZQ += 1;  \
+    ReceiptValidation_IOIKCHZOKKFQ = 105; \
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_str1); \
 }
 #endif
 #endif
 
 #ifdef RECEIGEN_LOOSE_IDENTIFIER_CHECK
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptIdentifier07E(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptIdentifier07F(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt identifier loosely");
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleId;
     CFStringRef ReceiptValidation_str1 = @obfuscateCF@("");
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_FJEIWPLUQNVF_00A70117(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_JDYBZVRRIQGT_0048000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_0232012C(ReceiptValidation_key);
-    if (ReceiptValidation_PGKVNNSRVCVJ_004801C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_PEYLDRWHJIRJ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_THYDFRJHWWUN_0206020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key);
+    if (ReceiptValidation_FLUAORRUQXJR_00D10117(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding()));
     }
     // Global variables computation
-    // From 494 to 284
-    ReceiptValidation_PMXJCCZJOAFX += 358; ReceiptValidation_PMXJCCZJOAFX /= 3; 
-    // Set to 453
-    ReceiptValidation_FJEIWPLUQNVF = 453;
-    // From 317 to 191
-    ReceiptValidation_ACQEONHECWVC += 256; ReceiptValidation_ACQEONHECWVC /= 3; 
-    ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str1);
+    // Set to 519
+    ReceiptValidation_TPAMUMCIMUJI = 519;
+    // From 522 to 523
+    ReceiptValidation_QFTLSXPQXRZQ -= 348; ReceiptValidation_QFTLSXPQXRZQ *= 3; ReceiptValidation_QFTLSXPQXRZQ += 1; 
+    // Set to 105
+    ReceiptValidation_IOIKCHZOKKFQ = 105;
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1);
 }
 #else
-#define ReceiptValidation_CheckReceiptIdentifier07E(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptIdentifier07F(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt identifier loosely"); \
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleId; \
     CFStringRef ReceiptValidation_str1 = @obfuscateCF@(""); \
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_FJEIWPLUQNVF_00A70117(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_JDYBZVRRIQGT_0048000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_0232012C(ReceiptValidation_key); \
-    if (ReceiptValidation_PGKVNNSRVCVJ_004801C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_PEYLDRWHJIRJ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_THYDFRJHWWUN_0206020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key); \
+    if (ReceiptValidation_FLUAORRUQXJR_00D10117(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt identifier mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding())); \
     } \
-    ReceiptValidation_PMXJCCZJOAFX += 358; ReceiptValidation_PMXJCCZJOAFX /= 3;  \
-    ReceiptValidation_FJEIWPLUQNVF = 453; \
-    ReceiptValidation_ACQEONHECWVC += 256; ReceiptValidation_ACQEONHECWVC /= 3;  \
-    ReceiptValidation_CFRelease_0232012C(ReceiptValidation_str1); \
+    ReceiptValidation_TPAMUMCIMUJI = 519; \
+    ReceiptValidation_QFTLSXPQXRZQ -= 348; ReceiptValidation_QFTLSXPQXRZQ *= 3; ReceiptValidation_QFTLSXPQXRZQ += 1;  \
+    ReceiptValidation_IOIKCHZOKKFQ = 105; \
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1); \
 }
 #endif
 #endif
@@ -4467,125 +4451,125 @@ inline static void ReceiptValidation_CheckReceiptIdentifier07E(ReceiptValidation
 // CodeBlock CheckReceiptVersion
 #ifndef RECEIGEN_LOOSE_VERSION_CHECK
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptVersion081(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptVersion080(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt version");
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleVersion;
-    volatile int ReceiptValidation_code = 126; ReceiptValidation_code -= 69; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
-    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction009CF((ReceiptValidation_Strings[410]), 25, 16);
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_ACQEONHECWVC_004800BF(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_PMXJCCZJOAFX_0232011C((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_0048012C(ReceiptValidation_key);
-    if (ReceiptValidation_FJEIWPLUQNVF_00A701C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
+    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00ACF((ReceiptValidation_Strings[360]), 1, 16);
+    volatile int ReceiptValidation_code = 149; ReceiptValidation_code -= 92; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_QFTLSXPQXRZQ_01CC020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key);
+    if (ReceiptValidation_TPAMUMCIMUJI_02060207(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt version mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding()));
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_015E0059(ReceiptValidation_code);
+        ReceiptValidation_exit_00420213(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_key);
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_str1);
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_key);
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key);
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1);
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key);
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1);
     }
     // Global variables computation
-    // From 119 to 246
-    ReceiptValidation_PTKUOOEYMOBI -= 58; ReceiptValidation_PTKUOOEYMOBI *= 4; ReceiptValidation_PTKUOOEYMOBI += 2; 
-    // Set to 164
-    ReceiptValidation_YZLJKTPYVTVA = 164;
-    // From 284 to 128
-    ReceiptValidation_PMXJCCZJOAFX += 228; ReceiptValidation_PMXJCCZJOAFX /= 4; 
-    // From 141 to 38
-    ReceiptValidation_OFULPMNSLYXJ += 49; ReceiptValidation_OFULPMNSLYXJ /= 5; 
-    // Set to 13
-    ReceiptValidation_JDYBZVRRIQGT = 13;
-    // From 453 to 217
-    ReceiptValidation_PGKVNNSRVCVJ += 415; ReceiptValidation_PGKVNNSRVCVJ /= 4; 
-    // From 453 to 351
-    ReceiptValidation_FJEIWPLUQNVF += 249; ReceiptValidation_FJEIWPLUQNVF /= 2; 
-    // Set to 376
-    ReceiptValidation_ACQEONHECWVC = 376;
-    ReceiptValidation_CFRelease_0048012C(ReceiptValidation_str1);
+    // From 519 to 23
+    ReceiptValidation_TPAMUMCIMUJI += 33; ReceiptValidation_TPAMUMCIMUJI /= 24; 
+    // From 523 to 485
+    ReceiptValidation_QFTLSXPQXRZQ += 447; ReceiptValidation_QFTLSXPQXRZQ /= 2; 
+    // From 8 to 277
+    ReceiptValidation_XQTZCGXTOMRV -= 1; ReceiptValidation_XQTZCGXTOMRV *= 36; ReceiptValidation_XQTZCGXTOMRV += 25; 
+    // From 251 to 131
+    ReceiptValidation_UBKHBSHWTCVT += 142; ReceiptValidation_UBKHBSHWTCVT /= 3; 
+    // From 523 to 514
+    ReceiptValidation_THYDFRJHWWUN += 505; ReceiptValidation_THYDFRJHWWUN /= 2; 
+    // From 105 to 469
+    ReceiptValidation_PEYLDRWHJIRJ -= 27; ReceiptValidation_PEYLDRWHJIRJ *= 6; ReceiptValidation_PEYLDRWHJIRJ += 1; 
+    // From 279 to 256
+    ReceiptValidation_FLUAORRUQXJR += 233; ReceiptValidation_FLUAORRUQXJR /= 2; 
+    // From 105 to 488
+    ReceiptValidation_IOIKCHZOKKFQ -= 24; ReceiptValidation_IOIKCHZOKKFQ *= 6; ReceiptValidation_IOIKCHZOKKFQ += 2; 
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1);
 }
 #else
-#define ReceiptValidation_CheckReceiptVersion081(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptVersion080(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt version"); \
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleVersion; \
-    volatile int ReceiptValidation_code = 126; ReceiptValidation_code -= 69; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
-    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction009CF((ReceiptValidation_Strings[410]), 25, 16); \
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_ACQEONHECWVC_004800BF(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_PMXJCCZJOAFX_0232011C((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_0048012C(ReceiptValidation_key); \
-    if (ReceiptValidation_FJEIWPLUQNVF_00A701C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
+    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction00ACF((ReceiptValidation_Strings[360]), 1, 16); \
+    volatile int ReceiptValidation_code = 149; ReceiptValidation_code -= 92; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_QFTLSXPQXRZQ_01CC020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key); \
+    if (ReceiptValidation_TPAMUMCIMUJI_02060207(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt version mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding())); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_015E0059(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_key); \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_str1); \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_key); \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_str1); \
+        ReceiptValidation_exit_00420213(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key); \
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1); \
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_key); \
+        ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI -= 58; ReceiptValidation_PTKUOOEYMOBI *= 4; ReceiptValidation_PTKUOOEYMOBI += 2;  \
-    ReceiptValidation_YZLJKTPYVTVA = 164; \
-    ReceiptValidation_PMXJCCZJOAFX += 228; ReceiptValidation_PMXJCCZJOAFX /= 4;  \
-    ReceiptValidation_OFULPMNSLYXJ += 49; ReceiptValidation_OFULPMNSLYXJ /= 5;  \
-    ReceiptValidation_JDYBZVRRIQGT = 13; \
-    ReceiptValidation_PGKVNNSRVCVJ += 415; ReceiptValidation_PGKVNNSRVCVJ /= 4;  \
-    ReceiptValidation_FJEIWPLUQNVF += 249; ReceiptValidation_FJEIWPLUQNVF /= 2;  \
-    ReceiptValidation_ACQEONHECWVC = 376; \
-    ReceiptValidation_CFRelease_0048012C(ReceiptValidation_str1); \
+    ReceiptValidation_TPAMUMCIMUJI += 33; ReceiptValidation_TPAMUMCIMUJI /= 24;  \
+    ReceiptValidation_QFTLSXPQXRZQ += 447; ReceiptValidation_QFTLSXPQXRZQ /= 2;  \
+    ReceiptValidation_XQTZCGXTOMRV -= 1; ReceiptValidation_XQTZCGXTOMRV *= 36; ReceiptValidation_XQTZCGXTOMRV += 25;  \
+    ReceiptValidation_UBKHBSHWTCVT += 142; ReceiptValidation_UBKHBSHWTCVT /= 3;  \
+    ReceiptValidation_THYDFRJHWWUN += 505; ReceiptValidation_THYDFRJHWWUN /= 2;  \
+    ReceiptValidation_PEYLDRWHJIRJ -= 27; ReceiptValidation_PEYLDRWHJIRJ *= 6; ReceiptValidation_PEYLDRWHJIRJ += 1;  \
+    ReceiptValidation_FLUAORRUQXJR += 233; ReceiptValidation_FLUAORRUQXJR /= 2;  \
+    ReceiptValidation_IOIKCHZOKKFQ -= 24; ReceiptValidation_IOIKCHZOKKFQ *= 6; ReceiptValidation_IOIKCHZOKKFQ += 2;  \
+    ReceiptValidation_CFRelease_00D10007(ReceiptValidation_str1); \
 }
 #endif
 #endif
 
 #ifdef RECEIGEN_LOOSE_VERSION_CHECK
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptVersion081(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptVersion080(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt version loosely");
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleVersion;
-    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction007CF((ReceiptValidation_Strings[214]), 65, 16);
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_ACQEONHECWVC_004800BF(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_PMXJCCZJOAFX_0232011C((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_00A7012C(ReceiptValidation_key);
-    if (ReceiptValidation_FJEIWPLUQNVF_00A701C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
+    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction005CF((ReceiptValidation_Strings[233]), 136, 16);
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_QFTLSXPQXRZQ_01CC020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_02060105(ReceiptValidation_key);
+    if (ReceiptValidation_TPAMUMCIMUJI_02060207(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt version mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding()));
     }
     // Global variables computation
-    // From 119 to 246
-    ReceiptValidation_PTKUOOEYMOBI -= 58; ReceiptValidation_PTKUOOEYMOBI *= 4; ReceiptValidation_PTKUOOEYMOBI += 2; 
-    // Set to 164
-    ReceiptValidation_YZLJKTPYVTVA = 164;
-    // From 284 to 128
-    ReceiptValidation_PMXJCCZJOAFX += 228; ReceiptValidation_PMXJCCZJOAFX /= 4; 
-    // From 141 to 38
-    ReceiptValidation_OFULPMNSLYXJ += 49; ReceiptValidation_OFULPMNSLYXJ /= 5; 
-    // Set to 13
-    ReceiptValidation_JDYBZVRRIQGT = 13;
-    // From 453 to 217
-    ReceiptValidation_PGKVNNSRVCVJ += 415; ReceiptValidation_PGKVNNSRVCVJ /= 4; 
-    // From 453 to 351
-    ReceiptValidation_FJEIWPLUQNVF += 249; ReceiptValidation_FJEIWPLUQNVF /= 2; 
-    // Set to 376
-    ReceiptValidation_ACQEONHECWVC = 376;
-    ReceiptValidation_CFRelease_00A7012C(ReceiptValidation_str1);
+    // From 519 to 23
+    ReceiptValidation_TPAMUMCIMUJI += 33; ReceiptValidation_TPAMUMCIMUJI /= 24; 
+    // From 523 to 485
+    ReceiptValidation_QFTLSXPQXRZQ += 447; ReceiptValidation_QFTLSXPQXRZQ /= 2; 
+    // From 8 to 277
+    ReceiptValidation_XQTZCGXTOMRV -= 1; ReceiptValidation_XQTZCGXTOMRV *= 36; ReceiptValidation_XQTZCGXTOMRV += 25; 
+    // From 251 to 131
+    ReceiptValidation_UBKHBSHWTCVT += 142; ReceiptValidation_UBKHBSHWTCVT /= 3; 
+    // From 523 to 514
+    ReceiptValidation_THYDFRJHWWUN += 505; ReceiptValidation_THYDFRJHWWUN /= 2; 
+    // From 105 to 469
+    ReceiptValidation_PEYLDRWHJIRJ -= 27; ReceiptValidation_PEYLDRWHJIRJ *= 6; ReceiptValidation_PEYLDRWHJIRJ += 1; 
+    // From 279 to 256
+    ReceiptValidation_FLUAORRUQXJR += 233; ReceiptValidation_FLUAORRUQXJR /= 2; 
+    // From 105 to 488
+    ReceiptValidation_IOIKCHZOKKFQ -= 24; ReceiptValidation_IOIKCHZOKKFQ *= 6; ReceiptValidation_IOIKCHZOKKFQ += 2; 
+    ReceiptValidation_CFRelease_02060105(ReceiptValidation_str1);
 }
 #else
-#define ReceiptValidation_CheckReceiptVersion081(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptVersion080(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt version loosely"); \
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleVersion; \
-    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction007CF((ReceiptValidation_Strings[214]), 65, 16); \
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_ACQEONHECWVC_004800BF(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_PMXJCCZJOAFX_0232011C((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_00A7012C(ReceiptValidation_key); \
-    if (ReceiptValidation_FJEIWPLUQNVF_00A701C5(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
+    CFStringRef ReceiptValidation_str1 = ReceiptValidation_ObfuscationFunction005CF((ReceiptValidation_Strings[233]), 136, 16); \
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_02060069(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    CFStringRef ReceiptValidation_str2 = (CFStringRef) ReceiptValidation_QFTLSXPQXRZQ_01CC020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_02060105(ReceiptValidation_key); \
+    if (ReceiptValidation_TPAMUMCIMUJI_02060207(ReceiptValidation_str1, ReceiptValidation_str2, 0) != kCFCompareEqualTo) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt version mismatch (expecting '%s' but actual value is '%s')", CFStringGetCStringPtr(ReceiptValidation_str1, CFStringGetSystemEncoding()), CFStringGetCStringPtr(ReceiptValidation_str2, CFStringGetSystemEncoding())); \
     } \
-    ReceiptValidation_PTKUOOEYMOBI -= 58; ReceiptValidation_PTKUOOEYMOBI *= 4; ReceiptValidation_PTKUOOEYMOBI += 2;  \
-    ReceiptValidation_YZLJKTPYVTVA = 164; \
-    ReceiptValidation_PMXJCCZJOAFX += 228; ReceiptValidation_PMXJCCZJOAFX /= 4;  \
-    ReceiptValidation_OFULPMNSLYXJ += 49; ReceiptValidation_OFULPMNSLYXJ /= 5;  \
-    ReceiptValidation_JDYBZVRRIQGT = 13; \
-    ReceiptValidation_PGKVNNSRVCVJ += 415; ReceiptValidation_PGKVNNSRVCVJ /= 4;  \
-    ReceiptValidation_FJEIWPLUQNVF += 249; ReceiptValidation_FJEIWPLUQNVF /= 2;  \
-    ReceiptValidation_ACQEONHECWVC = 376; \
-    ReceiptValidation_CFRelease_00A7012C(ReceiptValidation_str1); \
+    ReceiptValidation_TPAMUMCIMUJI += 33; ReceiptValidation_TPAMUMCIMUJI /= 24;  \
+    ReceiptValidation_QFTLSXPQXRZQ += 447; ReceiptValidation_QFTLSXPQXRZQ /= 2;  \
+    ReceiptValidation_XQTZCGXTOMRV -= 1; ReceiptValidation_XQTZCGXTOMRV *= 36; ReceiptValidation_XQTZCGXTOMRV += 25;  \
+    ReceiptValidation_UBKHBSHWTCVT += 142; ReceiptValidation_UBKHBSHWTCVT /= 3;  \
+    ReceiptValidation_THYDFRJHWWUN += 505; ReceiptValidation_THYDFRJHWWUN /= 2;  \
+    ReceiptValidation_PEYLDRWHJIRJ -= 27; ReceiptValidation_PEYLDRWHJIRJ *= 6; ReceiptValidation_PEYLDRWHJIRJ += 1;  \
+    ReceiptValidation_FLUAORRUQXJR += 233; ReceiptValidation_FLUAORRUQXJR /= 2;  \
+    ReceiptValidation_IOIKCHZOKKFQ -= 24; ReceiptValidation_IOIKCHZOKKFQ *= 6; ReceiptValidation_IOIKCHZOKKFQ += 2;  \
+    ReceiptValidation_CFRelease_02060105(ReceiptValidation_str1); \
 }
 #endif
 #endif
@@ -4593,176 +4577,184 @@ inline static void ReceiptValidation_CheckReceiptVersion081(ReceiptValidation_Ch
 
 // CodeBlock CheckReceiptHash
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptHash096(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptHash08B(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     CFDataRef ReceiptValidation_data1, ReceiptValidation_data2, ReceiptValidation_data3;
     CFMutableDataRef ReceiptValidation_data4;
     unsigned char ReceiptValidation_digest[608];
-    volatile int ReceiptValidation_counter = 1; ReceiptValidation_counter -= 1; ReceiptValidation_counter *= 22; ReceiptValidation_counter += 20; 
+    volatile int ReceiptValidation_counter = 7; ReceiptValidation_counter -= 2; ReceiptValidation_counter *= 4; 
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value;
     CFNumberRef ReceiptValidation_key;
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt hash");
     ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeOpaqueValue;
-    ReceiptValidation_key = ReceiptValidation_CFNumberCreate_004801B5(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    ReceiptValidation_data1 = (CFDataRef) ReceiptValidation_JDYBZVRRIQGT_00A7000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_key);
+    ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_020601E8(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    ReceiptValidation_data1 = (CFDataRef) ReceiptValidation_CFDictionaryGetValue_00D10008((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_key);
     ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleIdData;
-    ReceiptValidation_key = ReceiptValidation_CFNumberCreate_004801B5(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    ReceiptValidation_data2 = (CFDataRef) ReceiptValidation_JDYBZVRRIQGT_00A7000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_key);
+    ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_020601E8(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    ReceiptValidation_data2 = (CFDataRef) ReceiptValidation_CFDictionaryGetValue_00D10008((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_key);
     ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeHash;
-    ReceiptValidation_key = ReceiptValidation_CFNumberCreate_004801B5(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    ReceiptValidation_data3 = (CFDataRef) ReceiptValidation_JDYBZVRRIQGT_00A7000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_key);
-    ReceiptValidation_data4 = ReceiptValidation_OFULPMNSLYXJ_00A70026(NULL, ReceiptValidation_FJEIWPLUQNVF_00A7015F((CFDataRef) ReceiptValidation_ctx->guid_data) + ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data1) + ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data2));
-    ReceiptValidation_CFDataAppendBytes_023201EE(ReceiptValidation_data4, ReceiptValidation_CFDataGetBytePtr_00480077((CFDataRef) ReceiptValidation_ctx->guid_data), ReceiptValidation_FJEIWPLUQNVF_00A7015F((CFDataRef) ReceiptValidation_ctx->guid_data));
-    ReceiptValidation_CFDataAppendBytes_023201EE(ReceiptValidation_data4, ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data1), ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data1));
-    ReceiptValidation_CFDataAppendBytes_023201EE(ReceiptValidation_data4, ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data2), ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data2));
-    ReceiptValidation_ACQEONHECWVC_013F0178(ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data4), (CC_LONG) ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data4), ReceiptValidation_digest);
-    ReceiptValidation_OpenSSL_add_all_digests_02500191();
+    ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_020601E8(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    ReceiptValidation_data3 = (CFDataRef) ReceiptValidation_CFDictionaryGetValue_00D10008((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_key);
+    ReceiptValidation_data4 = ReceiptValidation_CFDataCreateMutable_00D100B1(NULL, 0);
+    ReceiptValidation_QFTLSXPQXRZQ_020601E5(ReceiptValidation_data4, ReceiptValidation_UBKHBSHWTCVT_02060083((CFDataRef) ReceiptValidation_ctx->guid_data), ReceiptValidation_TPAMUMCIMUJI_01CC0017((CFDataRef) ReceiptValidation_ctx->guid_data));
+    ReceiptValidation_QFTLSXPQXRZQ_020601E5(ReceiptValidation_data4, ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data1), ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data1));
+    ReceiptValidation_QFTLSXPQXRZQ_020601E5(ReceiptValidation_data4, ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data2), ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data2));
+    CC_SHA1_CTX ReceiptValidation_hashctx1;
+    ReceiptValidation_FLUAORRUQXJR_00420100(&ReceiptValidation_hashctx1);
+    ReceiptValidation_CC_SHA1_Update_024000A1(&ReceiptValidation_hashctx1, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083((CFDataRef) ReceiptValidation_ctx->guid_data), (CC_LONG) ReceiptValidation_TPAMUMCIMUJI_01CC0017((CFDataRef) ReceiptValidation_ctx->guid_data));
+    ReceiptValidation_CC_SHA1_Update_024000A1(&ReceiptValidation_hashctx1, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data1), (CC_LONG) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data1));
+    ReceiptValidation_CC_SHA1_Update_024000A1(&ReceiptValidation_hashctx1, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data2), (CC_LONG) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data2));
+    ReceiptValidation_THYDFRJHWWUN_02400202(ReceiptValidation_digest, &ReceiptValidation_hashctx1);
+    ReceiptValidation_OpenSSL_add_all_digests_01F201DF();
     EVP_MD_CTX ReceiptValidation_hashctx2;
-    ReceiptValidation_EVP_MD_CTX_init_000A005F(&ReceiptValidation_hashctx2);
+    ReceiptValidation_EVP_MD_CTX_init_007F023C(&ReceiptValidation_hashctx2);
     const EVP_MD *ReceiptValidation_digester = EVP_sha1();
-    ReceiptValidation_EVP_DigestInit_000A0215(&ReceiptValidation_hashctx2, ReceiptValidation_digester);
-    ReceiptValidation_EVP_DigestUpdate_006D0243(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_CFDataGetBytePtr_00480077((CFDataRef) ReceiptValidation_ctx->guid_data), (size_t) ReceiptValidation_FJEIWPLUQNVF_00A7015F((CFDataRef) ReceiptValidation_ctx->guid_data));
-    ReceiptValidation_EVP_DigestUpdate_006D0243(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data1), (size_t) ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data1));
-    ReceiptValidation_EVP_DigestUpdate_006D0243(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data2), (size_t) ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data2));
-    ReceiptValidation_EVP_DigestFinal_000A0254(&ReceiptValidation_hashctx2, ReceiptValidation_digest, NULL);
-    volatile int ReceiptValidation_code = 90; ReceiptValidation_code -= 33; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
-    const unsigned char *ReceiptValidation_ptr1 = ReceiptValidation_digest;
-    const unsigned char *ReceiptValidation_ptr2 = ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data3);
-    while(--ReceiptValidation_counter >= 0) {
-        if ((*ReceiptValidation_ptr1++) != (*ReceiptValidation_ptr2++)) {
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt hash is invalid");
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data4);
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-            ReceiptValidation_exit_00DE012E(ReceiptValidation_code);
-            // Dead code
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data1);
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data2);
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data4);
-            goto ReceiptValidation_CheckReceiptHash096_ReceiptValidation_bail;
-        }
+    ReceiptValidation_EVP_DigestInit_01F201EE(&ReceiptValidation_hashctx2, ReceiptValidation_digester);
+    ReceiptValidation_EVP_DigestUpdate_007F001E(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083((CFDataRef) ReceiptValidation_ctx->guid_data), (size_t) ReceiptValidation_TPAMUMCIMUJI_01CC0017((CFDataRef) ReceiptValidation_ctx->guid_data));
+    ReceiptValidation_EVP_DigestUpdate_007F001E(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data1), (size_t) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data1));
+    ReceiptValidation_EVP_DigestUpdate_007F001E(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data2), (size_t) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data2));
+    ReceiptValidation_EVP_DigestFinal_01F20033(&ReceiptValidation_hashctx2, ReceiptValidation_digest, NULL);
+    CFDataRef ReceiptValidation_data5 = ReceiptValidation_XQTZCGXTOMRV_01CC0115(NULL, (const UInt8 *) ReceiptValidation_digest, ReceiptValidation_counter);
+    if (!ReceiptValidation_PEYLDRWHJIRJ_00D101D5(ReceiptValidation_data3, ReceiptValidation_data5)) {
+        volatile int ReceiptValidation_code = 53; ReceiptValidation_code -= 19; ReceiptValidation_code *= 5; ReceiptValidation_code += 3; 
+        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt hash is invalid");
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data5);
+        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
+        ReceiptValidation_exit_00420213(ReceiptValidation_code);
+        // Dead code
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data1);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data2);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data4);
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data5);
+        goto ReceiptValidation_CheckReceiptHash08B_ReceiptValidation_bail;
     }
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data5);
     // Global variables computation
-    // From 246 to 466
-    ReceiptValidation_PTKUOOEYMOBI -= 91; ReceiptValidation_PTKUOOEYMOBI *= 3; ReceiptValidation_PTKUOOEYMOBI += 1; 
-    // Set to 162
-    ReceiptValidation_YZLJKTPYVTVA = 162;
-    // From 128 to 279
-    ReceiptValidation_PMXJCCZJOAFX -= 59; ReceiptValidation_PMXJCCZJOAFX *= 4; ReceiptValidation_PMXJCCZJOAFX += 3; 
-    // From 217 to 537
-    ReceiptValidation_PGKVNNSRVCVJ -= 83; ReceiptValidation_PGKVNNSRVCVJ *= 4; ReceiptValidation_PGKVNNSRVCVJ += 1; 
-    // From 351 to 284
-    ReceiptValidation_FJEIWPLUQNVF += 217; ReceiptValidation_FJEIWPLUQNVF /= 2; 
-ReceiptValidation_CheckReceiptHash096_ReceiptValidation_bail:
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data4);
+    // From 131 to 108
+    ReceiptValidation_UBKHBSHWTCVT += 85; ReceiptValidation_UBKHBSHWTCVT /= 2; 
+    // From 514 to 118
+    ReceiptValidation_THYDFRJHWWUN += 194; ReceiptValidation_THYDFRJHWWUN /= 6; 
+    // From 469 to 440
+    ReceiptValidation_PEYLDRWHJIRJ += 411; ReceiptValidation_PEYLDRWHJIRJ /= 2; 
+    // Set to 56
+    ReceiptValidation_FLUAORRUQXJR = 56;
+    // From 488 to 523
+    ReceiptValidation_IOIKCHZOKKFQ -= 314; ReceiptValidation_IOIKCHZOKKFQ *= 3; ReceiptValidation_IOIKCHZOKKFQ += 1; 
+ReceiptValidation_CheckReceiptHash08B_ReceiptValidation_bail:
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data4);
 }
 #else
-#define ReceiptValidation_CheckReceiptHash096(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptHash08B(ReceiptValidation_ctx) { \
     CFDataRef ReceiptValidation_data1, ReceiptValidation_data2, ReceiptValidation_data3; \
     CFMutableDataRef ReceiptValidation_data4; \
     unsigned char ReceiptValidation_digest[608]; \
-    volatile int ReceiptValidation_counter = 1; ReceiptValidation_counter -= 1; ReceiptValidation_counter *= 22; ReceiptValidation_counter += 20;  \
+    volatile int ReceiptValidation_counter = 7; ReceiptValidation_counter -= 2; ReceiptValidation_counter *= 4;  \
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value; \
     CFNumberRef ReceiptValidation_key; \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt hash"); \
     ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeOpaqueValue; \
-    ReceiptValidation_key = ReceiptValidation_CFNumberCreate_004801B5(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    ReceiptValidation_data1 = (CFDataRef) ReceiptValidation_JDYBZVRRIQGT_00A7000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_key); \
+    ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_020601E8(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    ReceiptValidation_data1 = (CFDataRef) ReceiptValidation_CFDictionaryGetValue_00D10008((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_key); \
     ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeBundleIdData; \
-    ReceiptValidation_key = ReceiptValidation_CFNumberCreate_004801B5(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    ReceiptValidation_data2 = (CFDataRef) ReceiptValidation_JDYBZVRRIQGT_00A7000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_key); \
+    ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_020601E8(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    ReceiptValidation_data2 = (CFDataRef) ReceiptValidation_CFDictionaryGetValue_00D10008((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_key); \
     ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeHash; \
-    ReceiptValidation_key = ReceiptValidation_CFNumberCreate_004801B5(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    ReceiptValidation_data3 = (CFDataRef) ReceiptValidation_JDYBZVRRIQGT_00A7000D((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_key); \
-    ReceiptValidation_data4 = ReceiptValidation_OFULPMNSLYXJ_00A70026(NULL, ReceiptValidation_FJEIWPLUQNVF_00A7015F((CFDataRef) ReceiptValidation_ctx->guid_data) + ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data1) + ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data2)); \
-    ReceiptValidation_CFDataAppendBytes_023201EE(ReceiptValidation_data4, ReceiptValidation_CFDataGetBytePtr_00480077((CFDataRef) ReceiptValidation_ctx->guid_data), ReceiptValidation_FJEIWPLUQNVF_00A7015F((CFDataRef) ReceiptValidation_ctx->guid_data)); \
-    ReceiptValidation_CFDataAppendBytes_023201EE(ReceiptValidation_data4, ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data1), ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data1)); \
-    ReceiptValidation_CFDataAppendBytes_023201EE(ReceiptValidation_data4, ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data2), ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data2)); \
-    ReceiptValidation_ACQEONHECWVC_013F0178(ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data4), (CC_LONG) ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data4), ReceiptValidation_digest); \
-    ReceiptValidation_OpenSSL_add_all_digests_02500191(); \
+    ReceiptValidation_key = ReceiptValidation_IOIKCHZOKKFQ_020601E8(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    ReceiptValidation_data3 = (CFDataRef) ReceiptValidation_CFDictionaryGetValue_00D10008((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_key); \
+    ReceiptValidation_data4 = ReceiptValidation_CFDataCreateMutable_00D100B1(NULL, 0); \
+    ReceiptValidation_QFTLSXPQXRZQ_020601E5(ReceiptValidation_data4, ReceiptValidation_UBKHBSHWTCVT_02060083((CFDataRef) ReceiptValidation_ctx->guid_data), ReceiptValidation_TPAMUMCIMUJI_01CC0017((CFDataRef) ReceiptValidation_ctx->guid_data)); \
+    ReceiptValidation_QFTLSXPQXRZQ_020601E5(ReceiptValidation_data4, ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data1), ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data1)); \
+    ReceiptValidation_QFTLSXPQXRZQ_020601E5(ReceiptValidation_data4, ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data2), ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data2)); \
+    CC_SHA1_CTX ReceiptValidation_hashctx1; \
+    ReceiptValidation_FLUAORRUQXJR_00420100(&ReceiptValidation_hashctx1); \
+    ReceiptValidation_CC_SHA1_Update_024000A1(&ReceiptValidation_hashctx1, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083((CFDataRef) ReceiptValidation_ctx->guid_data), (CC_LONG) ReceiptValidation_TPAMUMCIMUJI_01CC0017((CFDataRef) ReceiptValidation_ctx->guid_data)); \
+    ReceiptValidation_CC_SHA1_Update_024000A1(&ReceiptValidation_hashctx1, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data1), (CC_LONG) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data1)); \
+    ReceiptValidation_CC_SHA1_Update_024000A1(&ReceiptValidation_hashctx1, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data2), (CC_LONG) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data2)); \
+    ReceiptValidation_THYDFRJHWWUN_02400202(ReceiptValidation_digest, &ReceiptValidation_hashctx1); \
+    ReceiptValidation_OpenSSL_add_all_digests_01F201DF(); \
     EVP_MD_CTX ReceiptValidation_hashctx2; \
-    ReceiptValidation_EVP_MD_CTX_init_000A005F(&ReceiptValidation_hashctx2); \
+    ReceiptValidation_EVP_MD_CTX_init_007F023C(&ReceiptValidation_hashctx2); \
     const EVP_MD *ReceiptValidation_digester = EVP_sha1(); \
-    ReceiptValidation_EVP_DigestInit_000A0215(&ReceiptValidation_hashctx2, ReceiptValidation_digester); \
-    ReceiptValidation_EVP_DigestUpdate_006D0243(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_CFDataGetBytePtr_00480077((CFDataRef) ReceiptValidation_ctx->guid_data), (size_t) ReceiptValidation_FJEIWPLUQNVF_00A7015F((CFDataRef) ReceiptValidation_ctx->guid_data)); \
-    ReceiptValidation_EVP_DigestUpdate_006D0243(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data1), (size_t) ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data1)); \
-    ReceiptValidation_EVP_DigestUpdate_006D0243(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data2), (size_t) ReceiptValidation_FJEIWPLUQNVF_00A7015F(ReceiptValidation_data2)); \
-    ReceiptValidation_EVP_DigestFinal_000A0254(&ReceiptValidation_hashctx2, ReceiptValidation_digest, NULL); \
-    volatile int ReceiptValidation_code = 90; ReceiptValidation_code -= 33; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
-    const unsigned char *ReceiptValidation_ptr1 = ReceiptValidation_digest; \
-    const unsigned char *ReceiptValidation_ptr2 = ReceiptValidation_CFDataGetBytePtr_00480077(ReceiptValidation_data3); \
-    while(--ReceiptValidation_counter >= 0) { \
-        if ((*ReceiptValidation_ptr1++) != (*ReceiptValidation_ptr2++)) { \
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt hash is invalid"); \
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data4); \
-            __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-            ReceiptValidation_exit_00DE012E(ReceiptValidation_code); \
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data1); \
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data2); \
-            ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data4); \
-            goto ReceiptValidation_CheckReceiptHash096_ReceiptValidation_bail; \
-        } \
+    ReceiptValidation_EVP_DigestInit_01F201EE(&ReceiptValidation_hashctx2, ReceiptValidation_digester); \
+    ReceiptValidation_EVP_DigestUpdate_007F001E(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083((CFDataRef) ReceiptValidation_ctx->guid_data), (size_t) ReceiptValidation_TPAMUMCIMUJI_01CC0017((CFDataRef) ReceiptValidation_ctx->guid_data)); \
+    ReceiptValidation_EVP_DigestUpdate_007F001E(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data1), (size_t) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data1)); \
+    ReceiptValidation_EVP_DigestUpdate_007F001E(&ReceiptValidation_hashctx2, (const void *) ReceiptValidation_UBKHBSHWTCVT_02060083(ReceiptValidation_data2), (size_t) ReceiptValidation_TPAMUMCIMUJI_01CC0017(ReceiptValidation_data2)); \
+    ReceiptValidation_EVP_DigestFinal_01F20033(&ReceiptValidation_hashctx2, ReceiptValidation_digest, NULL); \
+    CFDataRef ReceiptValidation_data5 = ReceiptValidation_XQTZCGXTOMRV_01CC0115(NULL, (const UInt8 *) ReceiptValidation_digest, ReceiptValidation_counter); \
+    if (!ReceiptValidation_PEYLDRWHJIRJ_00D101D5(ReceiptValidation_data3, ReceiptValidation_data5)) { \
+        volatile int ReceiptValidation_code = 53; ReceiptValidation_code -= 19; ReceiptValidation_code *= 5; ReceiptValidation_code += 3;  \
+        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt hash is invalid"); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data5); \
+        __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
+        ReceiptValidation_exit_00420213(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data1); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data2); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data4); \
+        ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data5); \
+        goto ReceiptValidation_CheckReceiptHash08B_ReceiptValidation_bail; \
     } \
-    ReceiptValidation_PTKUOOEYMOBI -= 91; ReceiptValidation_PTKUOOEYMOBI *= 3; ReceiptValidation_PTKUOOEYMOBI += 1;  \
-    ReceiptValidation_YZLJKTPYVTVA = 162; \
-    ReceiptValidation_PMXJCCZJOAFX -= 59; ReceiptValidation_PMXJCCZJOAFX *= 4; ReceiptValidation_PMXJCCZJOAFX += 3;  \
-    ReceiptValidation_PGKVNNSRVCVJ -= 83; ReceiptValidation_PGKVNNSRVCVJ *= 4; ReceiptValidation_PGKVNNSRVCVJ += 1;  \
-    ReceiptValidation_FJEIWPLUQNVF += 217; ReceiptValidation_FJEIWPLUQNVF /= 2;  \
-ReceiptValidation_CheckReceiptHash096_ReceiptValidation_bail: \
-    ReceiptValidation_CFRelease_00A70079(ReceiptValidation_data4); \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data5); \
+    ReceiptValidation_UBKHBSHWTCVT += 85; ReceiptValidation_UBKHBSHWTCVT /= 2;  \
+    ReceiptValidation_THYDFRJHWWUN += 194; ReceiptValidation_THYDFRJHWWUN /= 6;  \
+    ReceiptValidation_PEYLDRWHJIRJ += 411; ReceiptValidation_PEYLDRWHJIRJ /= 2;  \
+    ReceiptValidation_FLUAORRUQXJR = 56; \
+    ReceiptValidation_IOIKCHZOKKFQ -= 314; ReceiptValidation_IOIKCHZOKKFQ *= 3; ReceiptValidation_IOIKCHZOKKFQ += 1;  \
+ReceiptValidation_CheckReceiptHash08B_ReceiptValidation_bail: \
+    ReceiptValidation_CFRelease_00D10105(ReceiptValidation_data4); \
 }
 #endif
 
 
 // CodeBlock CheckReceiptExpirationDate
 #ifdef DEBUG
-inline static void ReceiptValidation_CheckReceiptExpirationDate0A7(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CheckReceiptExpirationDate0A6(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt expiration date");
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeExpirationDate;
-    volatile int ReceiptValidation_code = 157; ReceiptValidation_code -= 100; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
-    CFDateRef ReceiptValidation_date1 = ReceiptValidation_PGKVNNSRVCVJ_02320219(NULL, ReceiptValidation_YZLJKTPYVTVA_004800A2());
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_PMXJCCZJOAFX_00480117(NULL, kCFNumberIntType, &ReceiptValidation_value);
-    CFDateRef ReceiptValidation_date2 = (CFDateRef) ReceiptValidation_FJEIWPLUQNVF_0048011C((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
-    ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_key);
-    if (ReceiptValidation_date2 && ReceiptValidation_PTKUOOEYMOBI_023201D2(ReceiptValidation_date1, ReceiptValidation_date2, 0) == kCFCompareGreaterThan) {
+    CFDateRef ReceiptValidation_date1 = ReceiptValidation_UBKHBSHWTCVT_0206006C(NULL, ReceiptValidation_THYDFRJHWWUN_01CC0076());
+    volatile int ReceiptValidation_code = 90; ReceiptValidation_code -= 33; ReceiptValidation_code *= 3; ReceiptValidation_code += 2; 
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_FLUAORRUQXJR_02060038(NULL, kCFNumberIntType, &ReceiptValidation_value);
+    CFDateRef ReceiptValidation_date2 = (CFDateRef) ReceiptValidation_IOIKCHZOKKFQ_0206020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key);
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+    if (ReceiptValidation_date2 && ReceiptValidation_PEYLDRWHJIRJ_020601B8(ReceiptValidation_date1, ReceiptValidation_date2, 0) == kCFCompareGreaterThan) {
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt has expired");
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173...");
-        ReceiptValidation_exit_00DE0132(ReceiptValidation_code);
+        ReceiptValidation_exit_00150213(ReceiptValidation_code);
         // Dead code
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_key);
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_date1);
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_key);
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_date1);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_date1);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key);
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_date1);
     }
     // Global variables computation
-    // From 13 to 416
-    ReceiptValidation_JDYBZVRRIQGT -= 1; ReceiptValidation_JDYBZVRRIQGT *= 34; ReceiptValidation_JDYBZVRRIQGT += 8; 
-    ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_date1);
+    // From 440 to 382
+    ReceiptValidation_PEYLDRWHJIRJ += 324; ReceiptValidation_PEYLDRWHJIRJ /= 2; 
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_date1);
 }
 #else
-#define ReceiptValidation_CheckReceiptExpirationDate0A7(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CheckReceiptExpirationDate0A6(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Checking receipt expiration date"); \
     ReceiptValidation_ReceiptAttributeType ReceiptValidation_value = ReceiptValidation_StoreReceiptAttributeTypeExpirationDate; \
-    volatile int ReceiptValidation_code = 157; ReceiptValidation_code -= 100; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
-    CFDateRef ReceiptValidation_date1 = ReceiptValidation_PGKVNNSRVCVJ_02320219(NULL, ReceiptValidation_YZLJKTPYVTVA_004800A2()); \
-    CFNumberRef ReceiptValidation_key = ReceiptValidation_PMXJCCZJOAFX_00480117(NULL, kCFNumberIntType, &ReceiptValidation_value); \
-    CFDateRef ReceiptValidation_date2 = (CFDateRef) ReceiptValidation_FJEIWPLUQNVF_0048011C((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
-    ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_key); \
-    if (ReceiptValidation_date2 && ReceiptValidation_PTKUOOEYMOBI_023201D2(ReceiptValidation_date1, ReceiptValidation_date2, 0) == kCFCompareGreaterThan) { \
+    CFDateRef ReceiptValidation_date1 = ReceiptValidation_UBKHBSHWTCVT_0206006C(NULL, ReceiptValidation_THYDFRJHWWUN_01CC0076()); \
+    volatile int ReceiptValidation_code = 90; ReceiptValidation_code -= 33; ReceiptValidation_code *= 3; ReceiptValidation_code += 2;  \
+    CFNumberRef ReceiptValidation_key = ReceiptValidation_FLUAORRUQXJR_02060038(NULL, kCFNumberIntType, &ReceiptValidation_value); \
+    CFDateRef ReceiptValidation_date2 = (CFDateRef) ReceiptValidation_IOIKCHZOKKFQ_0206020B((CFDictionaryRef) ReceiptValidation_ctx->receipt_dict, ReceiptValidation_key); \
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+    if (ReceiptValidation_date2 && ReceiptValidation_PEYLDRWHJIRJ_020601B8(ReceiptValidation_date1, ReceiptValidation_date2, 0) == kCFCompareGreaterThan) { \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Receipt has expired"); \
         __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Exiting with code 173..."); \
-        ReceiptValidation_exit_00DE0132(ReceiptValidation_code); \
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_key); \
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_date1); \
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_key); \
-        ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_date1); \
+        ReceiptValidation_exit_00150213(ReceiptValidation_code); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_date1); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_key); \
+        ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_date1); \
     } \
-    ReceiptValidation_JDYBZVRRIQGT -= 1; ReceiptValidation_JDYBZVRRIQGT *= 34; ReceiptValidation_JDYBZVRRIQGT += 8;  \
-    ReceiptValidation_CFRelease_00A700CE(ReceiptValidation_date1); \
+    ReceiptValidation_PEYLDRWHJIRJ += 324; ReceiptValidation_PEYLDRWHJIRJ /= 2;  \
+    ReceiptValidation_CFRelease_01CC0105(ReceiptValidation_date1); \
 }
 #endif
 
@@ -4771,58 +4763,60 @@ inline static void ReceiptValidation_CheckReceiptExpirationDate0A7(ReceiptValida
 #ifdef RUNNER
     #define RUNNER_SIGNATURE int(*_RUNNER_)(int argc, const char *argv[])
     typedef RUNNER_SIGNATURE;
-    static uintptr_t RUNNER_ = ((uintptr_t)RUNNER - 416);
+    static uintptr_t RUNNER_ = ((uintptr_t)RUNNER - 382);
 #endif
 
 inline static void ReceiptValidation_AppRunner0A8(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Running applicaition");
 #ifdef RUNNER
-    ((_RUNNER_)(RUNNER_ + (uintptr_t)ReceiptValidation_JDYBZVRRIQGT))((int) ReceiptValidation_ctx->argc, ReceiptValidation_ctx->argv);
+    ((_RUNNER_)(RUNNER_ + (uintptr_t)ReceiptValidation_PEYLDRWHJIRJ))((int) ReceiptValidation_ctx->argc, ReceiptValidation_ctx->argv);
 #else
-    ReceiptValidation_JDYBZVRRIQGT_000201A0((int) ReceiptValidation_ctx->argc, ReceiptValidation_ctx->argv);
+    ReceiptValidation_PEYLDRWHJIRJ_01AF017E((int) ReceiptValidation_ctx->argc, ReceiptValidation_ctx->argv);
 #endif
 }
 
 
 // CodeBlock CleanUp
 #ifdef DEBUG
-inline static void ReceiptValidation_CleanUp0AB(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
+inline static void ReceiptValidation_CleanUp0AC(ReceiptValidation_CheckingContext *ReceiptValidation_ctx) {
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Cleaning up");
-    if (ReceiptValidation_ctx->receipt_data) {
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->receipt_data);
-        ReceiptValidation_ctx->receipt_data = NULL;
+    CFTypeRef ReceiptValidation_references[4] = { ReceiptValidation_ctx->receipt_data, ReceiptValidation_ctx->guid_data, ReceiptValidation_ctx->receipt_dict, ReceiptValidation_ctx->ca_data };
+    if (ReceiptValidation_references[0]) {
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[0]);
+        ReceiptValidation_references[0] = NULL;
     }
-    if (ReceiptValidation_ctx->guid_data) {
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->guid_data);
-        ReceiptValidation_ctx->guid_data = NULL;
+    if (ReceiptValidation_references[1]) {
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[1]);
+        ReceiptValidation_references[1] = NULL;
     }
-    if (ReceiptValidation_ctx->receipt_dict) {
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->receipt_dict);
-        ReceiptValidation_ctx->receipt_dict = NULL;
+    if (ReceiptValidation_references[2]) {
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[2]);
+        ReceiptValidation_references[2] = NULL;
     }
-    if (ReceiptValidation_ctx->ca_data) {
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->ca_data);
-        ReceiptValidation_ctx->ca_data = NULL;
+    if (ReceiptValidation_references[3]) {
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[3]);
+        ReceiptValidation_references[3] = NULL;
     }
 }
 #else
-#define ReceiptValidation_CleanUp0AB(ReceiptValidation_ctx) { \
+#define ReceiptValidation_CleanUp0AC(ReceiptValidation_ctx) { \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Cleaning up"); \
-    if (ReceiptValidation_ctx->receipt_data) { \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->receipt_data); \
-        ReceiptValidation_ctx->receipt_data = NULL; \
+    CFTypeRef ReceiptValidation_references[4] = { ReceiptValidation_ctx->receipt_data, ReceiptValidation_ctx->guid_data, ReceiptValidation_ctx->receipt_dict, ReceiptValidation_ctx->ca_data }; \
+    if (ReceiptValidation_references[0]) { \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[0]); \
+        ReceiptValidation_references[0] = NULL; \
     } \
-    if (ReceiptValidation_ctx->guid_data) { \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->guid_data); \
-        ReceiptValidation_ctx->guid_data = NULL; \
+    if (ReceiptValidation_references[1]) { \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[1]); \
+        ReceiptValidation_references[1] = NULL; \
     } \
-    if (ReceiptValidation_ctx->receipt_dict) { \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->receipt_dict); \
-        ReceiptValidation_ctx->receipt_dict = NULL; \
+    if (ReceiptValidation_references[2]) { \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[2]); \
+        ReceiptValidation_references[2] = NULL; \
     } \
-    if (ReceiptValidation_ctx->ca_data) { \
-        ReceiptValidation_CFRelease_0048012C(ReceiptValidation_ctx->ca_data); \
-        ReceiptValidation_ctx->ca_data = NULL; \
+    if (ReceiptValidation_references[3]) { \
+        ReceiptValidation_CFRelease_01CC0026(ReceiptValidation_references[3]); \
+        ReceiptValidation_references[3] = NULL; \
     } \
 }
 #endif
@@ -4837,25 +4831,56 @@ _Pragma("clang diagnostic push")
 _Pragma("clang diagnostic ignored \"-Wused-but-marked-unused\"")
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Entry point");
     // Create contexts
-    ReceiptValidation_CheckingContext ReceiptValidation_ctx1 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL };
+    ReceiptValidation_CheckingContext ReceiptValidation_ctx1 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
     // Arguments for running the application
     ReceiptValidation_ctx1.argc = _argc;
     ReceiptValidation_ctx1.argv = (const char **) _argv;
-    // Call each step
-    ReceiptValidation_GetMainBundle016((&ReceiptValidation_ctx1));
-    ReceiptValidation_LoadReceipt025((&ReceiptValidation_ctx1));
-    ReceiptValidation_GetGUID049((&ReceiptValidation_ctx1));
-    ReceiptValidation_GetRootCA051((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckBundleIdentifier05D((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckBundleVersion060((&ReceiptValidation_ctx1));
-    ReceiptValidation_GetReceiptInformation063((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckReceiptSignature06B((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckReceiptIdentifier07E((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckReceiptVersion081((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckReceiptHash096((&ReceiptValidation_ctx1));
-    ReceiptValidation_CheckReceiptExpirationDate0A7((&ReceiptValidation_ctx1));
+    // Jump to first step
+    goto ReceiptValidation_ReceiptValidation_label00;
+ReceiptValidation_ReceiptValidation_label01:
+    ReceiptValidation_LoadReceipt03A((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label02;
+ReceiptValidation_ReceiptValidation_label09:
+    ReceiptValidation_CheckReceiptVersion080((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label0A;
+ReceiptValidation_ReceiptValidation_label07:
+    ReceiptValidation_CheckReceiptSignature078((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label08;
+ReceiptValidation_ReceiptValidation_label08:
+    ReceiptValidation_CheckReceiptIdentifier07F((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label09;
+ReceiptValidation_ReceiptValidation_label0A:
+    ReceiptValidation_CheckReceiptHash08B((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label0B;
+ReceiptValidation_ReceiptValidation_label0D:
+    ReceiptValidation_CleanUp0AC((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label0E;
+ReceiptValidation_ReceiptValidation_label04:
+    ReceiptValidation_CheckBundleIdentifier05C((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label05;
+ReceiptValidation_ReceiptValidation_label03:
+    ReceiptValidation_GetRootCA052((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label04;
+ReceiptValidation_ReceiptValidation_label00:
+    ReceiptValidation_GetMainBundle017((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label01;
+ReceiptValidation_ReceiptValidation_label02:
+    ReceiptValidation_GetGUID045((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label03;
+ReceiptValidation_ReceiptValidation_label06:
+    ReceiptValidation_GetReceiptInformation064((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label07;
+ReceiptValidation_ReceiptValidation_label0C:
     ReceiptValidation_AppRunner0A8((&ReceiptValidation_ctx1));
-    ReceiptValidation_CleanUp0AB((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label0D;
+ReceiptValidation_ReceiptValidation_label0B:
+    ReceiptValidation_CheckReceiptExpirationDate0A6((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label0C;
+ReceiptValidation_ReceiptValidation_label05:
+    ReceiptValidation_CheckBundleVersion061((&ReceiptValidation_ctx1));
+    goto ReceiptValidation_ReceiptValidation_label06;
+ReceiptValidation_ReceiptValidation_label0E:
+    while(false);
     return 0;
 _Pragma("clang diagnostic pop")
 }
@@ -4864,23 +4889,54 @@ _Pragma("clang diagnostic pop")
 _Pragma("clang diagnostic push") \
 _Pragma("clang diagnostic ignored \"-Wused-but-marked-unused\"") \
     __ReceiptValidation_RECEIPT_LOG("ReceiptValidation - Entry point"); \
-    ReceiptValidation_CheckingContext ReceiptValidation_ctx1 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL }; \
+    ReceiptValidation_CheckingContext ReceiptValidation_ctx1 = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL }; \
     ReceiptValidation_ctx1.argc = _argc; \
     ReceiptValidation_ctx1.argv = (const char **) _argv; \
-    ReceiptValidation_GetMainBundle016((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_LoadReceipt025((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_GetGUID049((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_GetRootCA051((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckBundleIdentifier05D((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckBundleVersion060((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_GetReceiptInformation063((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckReceiptSignature06B((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckReceiptIdentifier07E((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckReceiptVersion081((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckReceiptHash096((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CheckReceiptExpirationDate0A7((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label00; \
+ReceiptValidation_ReceiptValidation_label01: \
+    ReceiptValidation_LoadReceipt03A((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label02; \
+ReceiptValidation_ReceiptValidation_label09: \
+    ReceiptValidation_CheckReceiptVersion080((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label0A; \
+ReceiptValidation_ReceiptValidation_label07: \
+    ReceiptValidation_CheckReceiptSignature078((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label08; \
+ReceiptValidation_ReceiptValidation_label08: \
+    ReceiptValidation_CheckReceiptIdentifier07F((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label09; \
+ReceiptValidation_ReceiptValidation_label0A: \
+    ReceiptValidation_CheckReceiptHash08B((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label0B; \
+ReceiptValidation_ReceiptValidation_label0D: \
+    ReceiptValidation_CleanUp0AC((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label0E; \
+ReceiptValidation_ReceiptValidation_label04: \
+    ReceiptValidation_CheckBundleIdentifier05C((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label05; \
+ReceiptValidation_ReceiptValidation_label03: \
+    ReceiptValidation_GetRootCA052((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label04; \
+ReceiptValidation_ReceiptValidation_label00: \
+    ReceiptValidation_GetMainBundle017((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label01; \
+ReceiptValidation_ReceiptValidation_label02: \
+    ReceiptValidation_GetGUID045((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label03; \
+ReceiptValidation_ReceiptValidation_label06: \
+    ReceiptValidation_GetReceiptInformation064((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label07; \
+ReceiptValidation_ReceiptValidation_label0C: \
     ReceiptValidation_AppRunner0A8((&ReceiptValidation_ctx1)); \
-    ReceiptValidation_CleanUp0AB((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label0D; \
+ReceiptValidation_ReceiptValidation_label0B: \
+    ReceiptValidation_CheckReceiptExpirationDate0A6((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label0C; \
+ReceiptValidation_ReceiptValidation_label05: \
+    ReceiptValidation_CheckBundleVersion061((&ReceiptValidation_ctx1)); \
+    goto ReceiptValidation_ReceiptValidation_label06; \
+ReceiptValidation_ReceiptValidation_label0E: \
+    while(false); \
     0; \
 _Pragma("clang diagnostic pop") \
 })
