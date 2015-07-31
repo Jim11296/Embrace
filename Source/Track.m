@@ -42,6 +42,26 @@ static NSString * const sCommentsKey      = @"comments";
 static NSString * const sEnergyLevelKey   = @"energyLevel";
 static NSString * const sGenreKey         = @"genre";
 
+
+static const char *sGenreList[128] = {
+    NULL,
+    "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop", "Jazz", "Metal",
+    "New Age", "Oldies", "Other", "Pop", "R&B", "Rap", "Reggae", "Rock", "Techno", "Industrial",
+    "Alternative", "Ska", "Death Metal", "Pranks", "Soundtrack", "Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk",
+    "Fusion", "Trance", "Classical", "Instrumental", "Acid", "House", "Game", "Sound Clip", "Gospel", "Noise",
+    "AlternRock", "Bass", "Soul", "Punk", "Space", "Meditative", "Instrumental Pop", "Instrumental Rock", "Ethnic", "Gothic",
+    "Darkwave", "Techno-Industrial", "Electronic", "Pop-Folk", "Eurodance", "Dream", "Southern Rock", "Comedy", "Cult", "Gangsta",
+    "Top 40", "Christian Rap", "Pop/Funk", "Jungle", "Native American", "Cabaret", "New Wave", "Psychadelic", "Rave", "Showtunes",
+    "Trailer", "Lo-Fi", "Tribal", "Acid Punk", "Acid Jazz", "Polka", "Retro", "Musical", "Rock & Roll", "Hard Rock",
+    "Folk", "Folk/Rock", "National Folk", "Swing", "Fast Fusion", "Bebob", "Latin", "Revival", "Celtic", "Bluegrass",
+    "Avantgarde", "Gothic Rock", "Progressive Rock", "Psychedelic Rock", "Symphonic Rock", "Slow Rock", "Big Band", "Chorus", "Easy Listening", "Acoustic",
+    "Humour", "Speech", "Chanson", "Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass", "Primus", "Porn Groove",
+    "Satire", "Slow Jam", "Club", "Tango", "Samba", "Folklore", "Ballad", "Power Ballad", "Rhythmic Soul", "Freestyle",
+    "Duet", "Punk Rock", "Drum Solo", "A Capella", "Euro-House", "Dance Hall",
+    NULL
+};
+
+
 @interface Track ()
 @property (nonatomic) NSUUID *UUID;
 @property (nonatomic) NSString *title;
@@ -700,9 +720,28 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     }
 
     void (^parseMetadataItem)(AVMetadataItem *, NSMutableDictionary *) = ^(AVMetadataItem *item, NSMutableDictionary *dictionary) {
-
         id commonKey = [item commonKey];
         id key       = [item key];
+
+        FourCharCode key4cc = 0;
+        if ([key isKindOfClass:[NSString class]] && [key length] == 4) {
+            NSData *keyData = [key dataUsingEncoding:NSASCIIStringEncoding];
+            
+            if ([keyData length] == 4) {
+                key4cc = OSSwapBigToHostInt32(*(UInt32 *)[keyData bytes]);
+            }
+
+        } else if ([key isKindOfClass:[NSNumber class]]) {
+            key4cc = [key unsignedIntValue];
+        }
+        
+        // iTunes stores normalization info in 'COMM'
+        BOOL isAppleNormalizationTag = NO;
+        if (key4cc == 'COMM') {
+            if ([[[item extraAttributes] objectForKey:@"info"] isEqual:@"iTunNORM"]) {
+                isAppleNormalizationTag = YES;
+            }
+        }
 
         NSNumber *numberValue = [item numberValue];
         NSString *stringValue = [item stringValue];
@@ -717,6 +756,20 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             stringValue = [dictionaryValue objectForKey:@"text"];
         }
         
+        if (!numberValue) {
+            if ([value isKindOfClass:[NSData class]]) {
+                NSData *data = (NSData *)value;
+                
+                if ([data length] == 4) {
+                    numberValue = @( OSSwapBigToHostInt32(*(UInt32 *)[data bytes]) );
+                } else if ([data length] == 2) {
+                    numberValue = @( OSSwapBigToHostInt16(*(UInt16 *)[data bytes]) );
+                } else if ([data length] == 1) {
+                    numberValue = @(                      *(UInt8  *)[data bytes]  );
+                }
+            }
+        }
+        
         if ([commonKey isEqual:@"artist"] || [key isEqual:@"artist"]) {
             [dictionary setObject:[item stringValue] forKey:sArtistKey];
 
@@ -729,9 +782,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
             [dictionary setObject:numberValue forKey:sEnergyLevelKey];
 
-        } else if ([key isEqual:@((UInt32) 'COMM')  ] ||
-                   [key isEqual:@((UInt32) '\00COM')] ||
-                   [key isEqual:@(-1453101708)])
+        } else if ((key4cc == 'COMM' && !isAppleNormalizationTag) ||
+                   (key4cc == '\00COM') ||
+                   (key4cc == '\251cmt'))
         {
             if (dictionaryValue) {
                 NSString *identifier = [dictionaryValue objectForKey:@"identifier"];
@@ -749,40 +802,47 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 [dictionary setObject:stringValue forKey:sCommentsKey];
             }
             
-        } else if ([key isEqual:@((UInt32) 'TKEY')] && stringValue) { // Initial key as ID3v2.3 TKEY tag
+        } else if ((key4cc == 'TKEY') && stringValue) { // Initial key as ID3v2.3 TKEY tag
             [dictionary setObject:stringValue forKey:sInitialKeyKey];
 
-        } else if ([key isEqual:@((UInt32) '\00TKE')] && stringValue) { // Initial key as ID3v2.2 TKE tag
+        } else if ((key4cc == '\00TKE') && stringValue) { // Initial key as ID3v2.2 TKE tag
             [dictionary setObject:stringValue forKey:sInitialKeyKey];
 
-        } else if ([key isEqual:@((UInt32) 'tmpo')] && numberValue) { // Tempo key, 'tmpo'
+        } else if ((key4cc == 'tmpo') && numberValue) { // Tempo key, 'tmpo'
             [dictionary setObject:numberValue forKey:sBPMKey];
 
-        } else if ([key isEqual:@((UInt32) 'TBPM')] && numberValue) { // Tempo as ID3v2.3 TBPM tag
+        } else if ((key4cc == 'TBPM') && numberValue) { // Tempo as ID3v2.3 TBPM tag
             [dictionary setObject:numberValue forKey:sBPMKey];
 
-        } else if ([key isEqual:@((UInt32) '\00TBP')] && numberValue) { // Tempo as ID3v2.2 TBP tag
+        } else if ((key4cc == '\00TBP') && numberValue) { // Tempo as ID3v2.2 TBP tag
             [dictionary setObject:numberValue forKey:sBPMKey];
 
-        } else if ([key isEqual:@(-1452838288)] && stringValue) { // Grouping, '?grp'
+        } else if ((key4cc == '\251grp') && stringValue) { // Grouping, '?grp'
             [dictionary setObject:stringValue forKey:sGroupingKey];
 
-        } else if ([key isEqual:@((UInt32) 'TIT1')] && stringValue) { // Grouping as ID3v2.3 TIT1 tag
+        } else if ((key4cc == 'TIT1') && stringValue) { // Grouping as ID3v2.3 TIT1 tag
             [dictionary setObject:stringValue forKey:sGroupingKey];
 
-        } else if ([key isEqual:@((UInt32) '\00TT1')] && stringValue) { // Grouping as ID3v2.2 TT1 tag
+        } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
             [dictionary setObject:stringValue forKey:sGroupingKey];
 
-        } else if ([key isEqual:@(-1452841618)] && stringValue) { // Genre, '?gen'
+        } else if (key4cc == 'gnre') { // Genre, 'gnre' - Use sGenreList lookup
+            NSInteger i = [numberValue integerValue];
+            if (i > 0 && i < 127) {
+                const char *genre = sGenreList[i];
+                if (genre) [dictionary setObject:@(sGenreList[i]) forKey:sGenreKey];
+            }
+
+        } else if ((key4cc == '\251gen') && stringValue) { // Genre, '?gen'
             [dictionary setObject:stringValue forKey:sGenreKey];
 
-        } else if ([key isEqual:@((UInt32) 'TCON')] && stringValue) { // Genre, 'TCON'
+        } else if ((key4cc == 'TCON') && stringValue) { // Genre, 'TCON'
             [dictionary setObject:stringValue forKey:sGenreKey];
 
-        } else if ([key isEqual:@((UInt32) '\00TCO')] && stringValue) { // Genre, 'TCO'
+        } else if ((key4cc == '\00TCO') && stringValue) { // Genre, 'TCO'
             [dictionary setObject:stringValue forKey:sGenreKey];
 
-        } else if ([key isEqual:@((UInt32) 'TXXX')] || [key isEqual:@((UInt32) '\00TXX')]) { // Read TXXX / TXX
+        } else if ((key4cc == 'TXXX') || (key4cc == '\00TXX')) { // Read TXXX / TXX
             if ([[dictionaryValue objectForKey:@"identifier"] isEqualToString:@"EnergyLevel"]) {
                 [dictionary setObject:@( [stringValue integerValue] ) forKey:sEnergyLevelKey];
             }
@@ -792,10 +852,11 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             NSString *debugStringValue = [item stringValue];
             if ([debugStringValue length] > 256) stringValue = @"(data)";
 
-            NSLog(@"common: %@ %@, key: %@ %@, value: %@",
+            NSLog(@"common: %@ %@, key: %@ %@, value: %@, stringValue: %@",
                 commonKey, GetStringForFourCharCodeObject(commonKey),
                 key, GetStringForFourCharCodeObject(key),
-                [item value]
+                [item value],
+                stringValue
             );
 #endif
         }
