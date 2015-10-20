@@ -35,17 +35,16 @@
 
 - (BOOL) _runAlert
 {
-    NSString *messageText     = NSLocalizedString(@"Embrace encountered a critical error.", nil);
-    NSString *informativeText = NSLocalizedString(@"Your current song will continue to play, but you must reopen the app to play other songs or access other features.", nil);
-    NSString *defaultButton   = NSLocalizedString(@"Reopen", nil);
-    NSString *alternateButton = NSLocalizedString(@"Quit", nil);
-
     [NSApp activateIgnoringOtherApps:YES];
 
-    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:alternateButton otherButton:nil informativeTextWithFormat:@"%@", informativeText];
-    [alert setAlertStyle:NSCriticalAlertStyle];
+    NSAlert *alert = [[NSAlert alloc] init];
 
-    return [alert runModal] == NSOKButton;
+    [alert setMessageText:    NSLocalizedString(@"Embrace encountered a critical error.", nil)];
+    [alert setInformativeText:NSLocalizedString(@"Your current song will continue to play, but you must reopen the app to play other songs or access other features.", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Reopen",  nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Quit", nil)];
+        
+    return [alert runModal] == NSAlertFirstButtonReturn;
 }
 
 
@@ -71,7 +70,7 @@
 
         if (restart && bundleURL) {
             NSError *error = nil;
-            [[NSWorkspace sharedWorkspace] launchApplicationAtURL:bundleURL options:NSWorkspaceLaunchNewInstance configuration:nil error:&error];
+            [[NSWorkspace sharedWorkspace] launchApplicationAtURL:bundleURL options:NSWorkspaceLaunchNewInstance configuration:@{ } error:&error];
         }
 
         [NSApp terminate:self];
