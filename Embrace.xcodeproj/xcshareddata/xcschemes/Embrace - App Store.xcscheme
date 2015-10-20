@@ -110,7 +110,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "which rchook &amp;&amp; rchook xcode-app-archive-post-action -s &quot;3rd Party Mac Developer Application: Ricci Adams (XXXXXXXXXX)&quot; -z &quot;$HOME/Desktop/Embrace&quot;">
+               scriptText = "which rchook &amp;&amp; rchook xcode-app-archive-post-action -z &quot;$HOME/Desktop/Embrace&quot;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
