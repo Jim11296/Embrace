@@ -231,9 +231,9 @@
 
     if (targetField && (targetField != oldTargetField)) {
         _endTimeConstraints = @[
-            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeLeading  relatedBy:NSLayoutRelationEqual toItem:targetField attribute:NSLayoutAttributeLeading  multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0]
+            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:targetField attribute:NSLayoutAttributeWidth    multiplier:1.0 constant:0.0]
         ];
         
         [[targetField superview] addSubview:_endTimeField positioned:NSWindowAbove relativeTo:targetField];

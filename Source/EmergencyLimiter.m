@@ -53,21 +53,20 @@ inline static void sApplyEnvelope(
     NSInteger toIndex)
 {
     NSInteger bufferCount = bufferList->mNumberBuffers;
-    
 
-    for (NSInteger i = 0; i < bufferCount; i++) {
-        AudioBuffer buffer = bufferList->mBuffers[i];
+    for (NSInteger b = 0; b < bufferCount; b++) {
+        AudioBuffer buffer = bufferList->mBuffers[b];
         
         float *samples = (float *)buffer.mData;
         NSInteger sampleCount = buffer.mDataByteSize / sizeof(float);
-    
     
         // If toIndex is specified, apply linear ramp from fromMultiplier to toMultiplier
         if (toIndex) {
             if (toIndex > sampleCount) toIndex = sampleCount;
         
-            float step  = -(fromMultiplier - toMultiplier) / (float)toIndex;
-            vDSP_vrampmul(samples, 1, &fromMultiplier, &step, samples, 1, toIndex);
+            for (NSInteger s = 0; s < toIndex; s++) {
+                samples[s] *= lerp(fromMultiplier, toMultiplier, (s / (float)toIndex));
+            }
         }
 
         if ((sampleCount - toIndex) > 0) {
@@ -85,47 +84,25 @@ inline static void sGetMax(UInt32 frameCount, AudioBufferList *bufferList, float
     NSInteger bufferCount = bufferList->mNumberBuffers;
 
     for (NSInteger i = 0; i < bufferCount; i++) {
-        AudioBuffer buffer = bufferList->mBuffers[i];
-        
-        float *samples = (float *)buffer.mData;
-        NSInteger sampleCount = buffer.mDataByteSize / sizeof(float);
+        AudioBuffer buffer  = bufferList->mBuffers[i];
+        float      *samples = (float *)buffer.mData;
 
-        float channelMax;
-        vDSP_maxv(samples, 1, &channelMax, sampleCount);
+        float bufferMax;
+        vDSP_Length bufferMaxIndex;
+        vDSP_maxvi(samples, 1, &bufferMax, &bufferMaxIndex, frameCount);
 
-        float channelMin;
-        vDSP_maxv(samples, 1, &channelMin, sampleCount);
+        float bufferMin;
+        vDSP_Length bufferMinIndex;
+        vDSP_minvi(samples, 1, &bufferMin, &bufferMinIndex, frameCount);
 
-        if (-channelMin > channelMax) {
-            channelMax = -channelMin;
+        if (-bufferMin > bufferMax) {
+            bufferMax = -bufferMin;
+            bufferMaxIndex = bufferMinIndex;
         }
         
-        if (channelMax > max) {
-            max = channelMax;
-        }
-    }
-    
-    if (max > sPeakValue) {
-        for (NSInteger i = 0; i < bufferCount; i++) {
-            AudioBuffer buffer = bufferList->mBuffers[i];
-
-            NSInteger channelIndex = 0;
-            
-            float *samples = (float *)buffer.mData;
-            NSInteger sampleCount = buffer.mDataByteSize / sizeof(float);
-            
-            for (NSInteger s = 0; s < sampleCount; s++) {
-                float sample = samples[s];
-
-                if ((sample > sPeakValue) || (sample < -sPeakValue)) {
-                    channelIndex = s;
-                    break;
-                }
-            }
-            
-            if (channelIndex < maxIndex) {
-                maxIndex = channelIndex;
-            }
+        if (bufferMax > max) {
+            max = bufferMax;
+            maxIndex = bufferMaxIndex;
         }
     }
     

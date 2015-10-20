@@ -119,6 +119,8 @@
 		55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABED18B08569006B6FBB /* MainIconView.m */; };
 		55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABF718B21C31006B6FBB /* Localizable.strings */; };
+		55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F81FD21B846E3300E03B5B /* IssuesController.m */; };
+		55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F81FD41B846EE800E03B5B /* IssuesWindow.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -375,6 +377,9 @@
 		55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmergencyLimiter.h; path = Source/EmergencyLimiter.h; sourceTree = "<group>"; };
 		55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmergencyLimiter.m; path = Source/EmergencyLimiter.m; sourceTree = "<group>"; };
 		55F7ABF818B21C31006B6FBB /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		55F81FD11B846E3300E03B5B /* IssuesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssuesController.h; path = Source/IssuesController.h; sourceTree = SOURCE_ROOT; };
+		55F81FD21B846E3300E03B5B /* IssuesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssuesController.m; path = Source/IssuesController.m; sourceTree = SOURCE_ROOT; };
+		55F81FD41B846EE800E03B5B /* IssuesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IssuesWindow.xib; path = Resources/IssuesWindow.xib; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -602,6 +607,8 @@
 				55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */,
 				55102B491B537C2500308F55 /* EditSystemEffectController.h */,
 				55102B4A1B537C2500308F55 /* EditSystemEffectController.m */,
+				55F81FD11B846E3300E03B5B /* IssuesController.h */,
+				55F81FD21B846E3300E03B5B /* IssuesController.m */,
 				552C9E4A1883888E0041C160 /* PreferencesController.h */,
 				552C9E4B1883888E0041C160 /* PreferencesController.m */,
 				553DE141189F107100A355D1 /* ViewTrackController.h */,
@@ -628,6 +635,7 @@
 				55A0B167188F447100866F04 /* CurrentTrackWindow.xib */,
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
+				55F81FD41B846EE800E03B5B /* IssuesWindow.xib */,
 				55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */,
 				556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */,
 				55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */,
@@ -967,6 +975,7 @@
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
 				55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */,
+				55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */,
 				55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1064,6 +1073,7 @@
 				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
 				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,
+				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
 				55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
 				55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */,
@@ -1209,7 +1219,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Debug";
@@ -1237,7 +1246,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Profile";
@@ -1265,7 +1273,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Release";
@@ -1301,7 +1308,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Debug;
@@ -1314,7 +1320,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Profile;
@@ -1333,7 +1338,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Release;
@@ -1353,7 +1357,6 @@
 					"$(inherited)",
 					<redacted>,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Submission;

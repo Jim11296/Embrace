@@ -643,6 +643,9 @@ static NSString * const sModifiedAtKey = @"modified-at";
 
 - (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
+    [_tableView updateInsertionPointWorkaround:NO];
+    [_tableView updateSelectedColorWorkaround:NO];
+
     return [self acceptDrop:info row:row dropOperation:dropOperation];
 }
 
