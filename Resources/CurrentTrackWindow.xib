@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="101000" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6246"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CurrentTrackController">
@@ -22,17 +22,24 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="520" height="68"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="320" height="48"/>
             <view key="contentView" wantsLayer="YES" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="520" height="68"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <visualEffectView blendingMode="behindWindow" material="appearanceBased" state="active" id="HzN-7t-NZn">
+                    <visualEffectView blendingMode="behindWindow" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="HzN-7t-NZn">
                         <rect key="frame" x="0.0" y="0.0" width="520" height="68"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                     </visualEffectView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="HzN-7t-NZn" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="Cfo-Xi-8CN"/>
+                    <constraint firstItem="HzN-7t-NZn" firstAttribute="top" secondItem="2" secondAttribute="top" id="Mlc-HQ-xOe"/>
+                    <constraint firstAttribute="bottom" secondItem="HzN-7t-NZn" secondAttribute="bottom" id="O5h-bb-Orx"/>
+                    <constraint firstAttribute="trailing" secondItem="HzN-7t-NZn" secondAttribute="trailing" id="Pfc-SJ-6Tx"/>
+                </constraints>
+                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="Kcg-ZB-cRF"/>
@@ -44,35 +51,41 @@
             <rect key="frame" x="0.0" y="0.0" width="520" height="54"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <customView id="3Er-jp-xjF" customClass="WaveformView">
-                    <rect key="frame" x="76" y="2" width="368" height="50"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="3Er-jp-xjF" customClass="WaveformView">
+                    <rect key="frame" x="96" y="2" width="328" height="50"/>
+                    <animations/>
                 </customView>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="AO9-lc-SHt" customClass="CenteredTextField">
-                    <rect key="frame" x="0.0" y="7" width="80" height="38"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="Rb8-yq-6q3" customClass="CenteredTextFieldCell">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AO9-lc-SHt" customClass="CenteredTextField">
+                    <rect key="frame" x="-2" y="13" width="100" height="29"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="mLw-Lt-7El"/>
+                    </constraints>
+                    <animations/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="XX:00" id="Rb8-yq-6q3" customClass="CenteredTextFieldCell">
                         <font key="font" metaFont="system" size="24"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </textFieldCell>
                     <connections>
                         <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="zJb-AW-ANB"/>
                     </connections>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="vU8-Lz-QA3" customClass="CenteredTextField">
-                    <rect key="frame" x="74" y="7" width="372" height="38"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vU8-Lz-QA3" customClass="CenteredTextField">
+                    <rect key="frame" x="166" y="13" width="188" height="29"/>
+                    <animations/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="No Track Playing" id="cci-Yv-j4d" customClass="CenteredTextFieldCell">
                         <font key="font" metaFont="system" size="24"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="MXh-dj-c92" customClass="CenteredTextField">
-                    <rect key="frame" x="442" y="7" width="80" height="38"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="vRK-Xm-K7r" customClass="CenteredTextFieldCell">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MXh-dj-c92" customClass="CenteredTextField">
+                    <rect key="frame" x="422" y="13" width="100" height="29"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="fcb-q2-7Ks"/>
+                    </constraints>
+                    <animations/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="XX:00" id="vRK-Xm-K7r" customClass="CenteredTextFieldCell">
                         <font key="font" metaFont="system" size="24"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -82,6 +95,19 @@
                     </connections>
                 </textField>
             </subviews>
+            <constraints>
+                <constraint firstItem="MXh-dj-c92" firstAttribute="leading" secondItem="3Er-jp-xjF" secondAttribute="trailing" id="59a-mN-Hw6"/>
+                <constraint firstItem="3Er-jp-xjF" firstAttribute="top" secondItem="Mjy-qK-rWI" secondAttribute="top" constant="2" id="77P-oc-YUz"/>
+                <constraint firstItem="MXh-dj-c92" firstAttribute="centerY" secondItem="Mjy-qK-rWI" secondAttribute="centerY" id="AuC-1t-lXd"/>
+                <constraint firstAttribute="trailing" secondItem="MXh-dj-c92" secondAttribute="trailing" id="Cb6-Ka-OVH"/>
+                <constraint firstItem="AO9-lc-SHt" firstAttribute="centerY" secondItem="Mjy-qK-rWI" secondAttribute="centerY" id="FC7-zI-lPn"/>
+                <constraint firstItem="vU8-Lz-QA3" firstAttribute="centerX" secondItem="Mjy-qK-rWI" secondAttribute="centerX" id="IBE-vn-JUZ"/>
+                <constraint firstAttribute="bottom" secondItem="3Er-jp-xjF" secondAttribute="bottom" constant="2" id="UBo-dd-H9C"/>
+                <constraint firstItem="AO9-lc-SHt" firstAttribute="leading" secondItem="Mjy-qK-rWI" secondAttribute="leading" id="WHq-KJ-fdu"/>
+                <constraint firstItem="3Er-jp-xjF" firstAttribute="leading" secondItem="AO9-lc-SHt" secondAttribute="trailing" id="amT-7D-yKp"/>
+                <constraint firstItem="vU8-Lz-QA3" firstAttribute="centerY" secondItem="Mjy-qK-rWI" secondAttribute="centerY" id="mDZ-aq-wYd"/>
+            </constraints>
+            <animations/>
             <connections>
                 <outlet property="menu" destination="mJ2-Qb-Tfh" id="Pck-dE-aC8"/>
             </connections>

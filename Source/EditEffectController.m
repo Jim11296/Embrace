@@ -29,7 +29,9 @@
 
 - (void) dealloc
 {
-    [[self effect] removeObserver:self forKeyPath:@"bypass"];
+    @try {
+        [[self effect] removeObserver:self forKeyPath:@"bypass"];
+    } @finally { }
 }
 
 
