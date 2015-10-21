@@ -303,6 +303,14 @@ static void sSetCurrentTrackPinning(BOOL yn)
         [window setFrame:windowFrame display:NO];
     }
     
+    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
+        NSFont *font = [NSFont monospacedDigitSystemFontOfSize:24.0 weight:NSFontWeightLight];
+
+        [[self leftLabel]  setFont:font];
+        [[self rightLabel] setFont:font];
+        [[self noTrackLabel] setFont:[NSFont systemFontOfSize:24.0 weight:NSFontWeightLight]];
+    }
+
     Player *player = [Player sharedInstance];
     [self setPlayer:[Player sharedInstance]];
 

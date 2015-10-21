@@ -167,7 +167,7 @@
     [_endTimeField setEditable:NO];
     [_endTimeField setAlignment:NSRightTextAlignment];
     [_endTimeField setAlphaValue:0];
-    [_endTimeField setContentHuggingPriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_endTimeField setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_endTimeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_endTimeField setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_endTimeField setDrawsBackground:YES];
