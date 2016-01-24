@@ -30,6 +30,7 @@
 #import "TracksController.h"
 #import "TrialBottomView.h"
 #import "WhiteSlider.h"
+#import "BorderedView.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -140,14 +141,16 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     {
         NSScrollView *scrollView      = [self scrollView];
         BorderedView *bottomContainer = [self bottomContainer];
-    
 
         // Fix up the bottom here
         NSRect bottomFrame = [bottomContainer frame];
-        bottomFrame.size.height += 38;
         
+        NSRect borderedViewFrame = bottomFrame;
+        borderedViewFrame.origin.y = bottomFrame.size.height;
+        borderedViewFrame.size.height = 38;
+
         NSRect trialBottomViewFrame = bottomFrame;
-        trialBottomViewFrame.origin.y = 34;
+        trialBottomViewFrame.origin.y = 4;
         trialBottomViewFrame.size.height = 32;
         trialBottomViewFrame.size.width = 172;
         trialBottomViewFrame.origin.x = round((bottomFrame.size.width - 172) / 2);
@@ -157,12 +160,17 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
         scrollFrame.origin.y += 38;
         [[self scrollView] setFrame:scrollFrame];
         
-        [[self bottomContainer] setFrame:bottomFrame];
+        BorderedView *borderedView = [[BorderedView alloc] initWithFrame:borderedViewFrame];
+        [borderedView setBackgroundColor:[NSColor whiteColor]];
+        [borderedView setTopBorderColor:[NSColor colorWithCalibratedWhite:0 alpha:0.1]];
+
+        [borderedView setAutoresizingMask:NSViewWidthSizable|NSViewMaxYMargin];
+
+        [[[self bottomContainer] superview] addSubview:borderedView];
 
         TrialBottomView *bv = [[TrialBottomView alloc] initWithFrame:trialBottomViewFrame];
         [bv setAutoresizingMask:NSViewMinXMargin|NSViewMaxXMargin|NSViewHeightSizable];
-        [[self bottomContainer] addSubview:bv];
-
+        [borderedView addSubview:bv];
     }
 #endif
 
