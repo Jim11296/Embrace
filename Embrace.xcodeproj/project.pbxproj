@@ -333,7 +333,6 @@
 		55BE7739187CD05600BC0D29 /* BorderedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BorderedView.m; path = Source/BorderedView.m; sourceTree = SOURCE_ROOT; };
 		55C24E1318D7D7800057D45E /* StereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoField.h; path = Source/StereoField.h; sourceTree = "<group>"; };
 		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
-		55C5D57A18C94211000C95A4 /* ReceiptValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReceiptValidation.h; path = Source/ReceiptValidation.h; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
 		55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUParametricEQ.aupreset; path = Resources/AUParametricEQ.aupreset; sourceTree = SOURCE_ROOT; };
 		55CF2784187A23BD0042C92A /* iTunesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = SOURCE_ROOT; };
@@ -793,7 +792,6 @@
 		55DD53A518B9FC3E0084628D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				55C5D57A18C94211000C95A4 /* ReceiptValidation.h */,
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
 				554B733D18E402E1001E154E /* Log.h */,
@@ -861,7 +859,6 @@
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
 				55224BEC18A855E900407B46 /* rchook */,
-				55C5D57918C941CA000C95A4 /* Generate Receipt Validation */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
 				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
@@ -1010,21 +1007,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
-		};
-		55C5D57918C941CA000C95A4 /* Generate Receipt Validation */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Generate Receipt Validation";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "RECEIGEN=\"/Applications/Receigen.app/Contents/MacOS/Receigen\"\n\nINPUT=\"$INFOPLIST_FILE\"\nBUNDLE_ID=`/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \"$INPUT\"`\nBUNDLE_VERSION=`/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INPUT\"`\n\nEXPANDED_BUNDLE_ID=\"com.iccir.Embrace\"\nEXPANDED_BUNDLE_VERSION=`eval \"echo $BUNDLE_VERSION\"`\n\nHEADER=\"$PROJECT_DIR/Source/ReceiptValidation.h\"\n\necho \"Plist is for '$EXPANDED_BUNDLE_ID' '$EXPANDED_BUNDLE_VERSION'\"\n\nif [[ \"$BUNDLE_ID\" == *\"Trial\"* ]]; then\n    exit 0\nfi\n\n\n# Check if the generation is needed\nif [ -e \"$HEADER\" ]; then\n    SKIP=`egrep -q \"CFBundleIdentifier.+:.+$EXPANDED_BUNDLE_ID\" \"${HEADER}\" && \\\n          egrep -q \"CFBundleShortVersionString.+:.+$EXPANDED_BUNDLE_VERSION$\" \"${HEADER}\" && \\\n          echo \"YES\"`\nfi\n\nif [ \"x${SKIP}\" = \"x\" ]; then\n    \"$RECEIGEN\" --identifier \"$EXPANDED_BUNDLE_ID\" --version \"$EXPANDED_BUNDLE_VERSION\" --os osx --success runapplication --failure exitwith173 > \"${HEADER}\"\nfi\n";
-			showEnvVarsInLog = 0;
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
