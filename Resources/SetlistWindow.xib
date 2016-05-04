@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SetlistController">
             <connections>
+                <outlet property="autoGapField" destination="27g-A4-whb" id="1kz-97-faD"/>
                 <outlet property="autoGapSlider" destination="Cip-py-M5e" id="xyq-QJ-X6M"/>
                 <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
@@ -70,12 +71,19 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="vah-Dw-PDo"/>
-                <menuItem title="Pause After Playing" id="xZW-D5-hxQ">
+                <menuItem title="Stop After Playing" id="xZW-D5-hxQ">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="togglePauseAfterPlaying:" target="-2" id="8TP-WX-byn"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Ignore Auto Gap" id="zup-Jc-u5R">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleIgnoreAutoGap:" target="-2" id="788-HS-83w"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="YIs-Oy-9xy"/>
                 <menuItem title="Mark as Played" id="1TI-tf-jbO">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -219,30 +227,26 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
-                                        <rect key="frame" x="29" y="1" width="254" height="25"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="15" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
-                                        <connections>
-                                            <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
-                                        </connections>
-                                    </slider>
                                     <textField toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" alphaValue="0.5" id="27g-A4-whb">
-                                        <rect key="frame" x="272" y="3" width="42" height="18"/>
+                                        <rect key="frame" x="281" y="3" width="36" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="right" title="0:00" id="kXQ-cJ-H9c">
+                                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="center" title="0:00" id="kXQ-cJ-H9c">
                                             <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                         </textFieldCell>
                                         <connections>
-                                            <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="3C2-33-gaV">
-                                                <dictionary key="options">
-                                                    <string key="NSValueTransformerName">TimeStringValueTransformer</string>
-                                                </dictionary>
-                                            </binding>
+                                            <binding destination="-2" name="value" keyPath="self.autoGapTimeString" id="tqy-WQ-Uo9"/>
                                         </connections>
                                     </textField>
+                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
+                                        <rect key="frame" x="29" y="1" width="254" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="16" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="17" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
+                                        <connections>
+                                            <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
+                                        </connections>
+                                    </slider>
                                     <imageView toolTip="Adjust the silence between tracks" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.5" id="rx0-fs-t7a" customClass="NoDropImageView">
                                         <rect key="frame" x="8" y="8" width="15" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -288,12 +292,19 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="spf-KX-4rr"/>
-                <menuItem title="Pause After Playing" id="jQZ-f0-Bsy">
+                <menuItem title="Stop After Playing" id="jQZ-f0-Bsy">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="togglePauseAfterPlaying:" target="-2" id="hZh-eq-yDY"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Ignore Auto Gap" id="V7Q-KA-v7j">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleIgnoreAutoGap:" target="-2" id="vYT-oA-irF"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="x6g-eN-mAr"/>
                 <menuItem title="Mark as Played" id="tCd-XV-fUq">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>

@@ -542,6 +542,10 @@
         NSInteger yn = [[Preferences sharedInstance] shortensPlayedTracks];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
+    } else if (action == @selector(changeFloatsOnTop:)) {
+        NSInteger yn = [[Preferences sharedInstance] floatsOnTop];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
+
     } else if (action == @selector(revealEndTime:)) {
         return [_setlistController validateMenuItem:menuItem];
 
@@ -872,6 +876,17 @@
     }
 
     [_preferencesController showWindow:self];
+}
+
+
+- (IBAction) changeFloatsOnTop:(id)sender
+{
+    EmbraceLogMethod();
+    
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL floatsOnTop = [preferences floatsOnTop];
+   
+    [[Preferences sharedInstance] setFloatsOnTop:!floatsOnTop];
 }
 
 

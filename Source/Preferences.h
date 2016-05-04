@@ -57,6 +57,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) BOOL showsLabelDots;
 @property (nonatomic) BOOL showsLabelStripes;
 
+@property (nonatomic) BOOL floatsOnTop;
+
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 
 @property (nonatomic) AudioDevice *mainOutputAudioDevice;

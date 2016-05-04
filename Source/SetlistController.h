@@ -61,7 +61,8 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 
 - (void) showAlertForIssue:(PlayerIssue)issue;
 
-@property (nonatomic) NSTimeInterval minimumSilenceBetweenTracks;
+@property (nonatomic) NSInteger minimumSilenceBetweenTracks;
+@property (readonly) NSString *autoGapTimeString;
 
 @property (nonatomic, weak) Player *player;
 @property (nonatomic, strong, readonly) TracksController *tracksController;

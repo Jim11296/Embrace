@@ -10,6 +10,8 @@
 #import "Player.h"
 #import "EmbraceWindow.h"
 #import "WaveformView.h"
+#import "Preferences.h"
+
 
 typedef NS_ENUM(NSInteger, CurrentTrackAppearance) {
     CurrentTrackAppearanceWhite = 0,
@@ -99,6 +101,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 {
     return @"CurrentTrackWindow";
 }
+
 
 - (void) dealloc
 {
@@ -208,9 +211,10 @@ static void sSetCurrentTrackPinning(BOOL yn)
         [window setStyleMask:([window styleMask] | NSResizableWindowMask)];
         [window setMovable:YES];
         [window setMovableByWindowBackground:YES];
-        [window setLevel:NSNormalWindowLevel];
-
         [window setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+        
+        BOOL floatsOnTop = [[Preferences sharedInstance] floatsOnTop];
+        [window setLevel:(floatsOnTop ? NSFloatingWindowLevel : NSNormalWindowLevel)];
     }
 
     [[self waveformView] redisplay];
@@ -324,6 +328,9 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
     [[self window] setExcludedFromWindowsMenu:YES];
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+
     [self _updateAppearance];
 }
 
@@ -371,6 +378,12 @@ static void sSetCurrentTrackPinning(BOOL yn)
     sSetCurrentTrackPinning([sender state] == NSOffState);
     [self _updateAppearance];
     [self _updateWindowFrame];
+}
+
+
+- (void) _handlePreferencesDidChange:(NSNotification *)note
+{
+    [self _updateAppearance];
 }
 
 

@@ -74,9 +74,17 @@
         [shadow2 setShadowBlurRadius:1];
         [shadow2 set];
 
+        CGFloat startColor = (0xf0 / 255.0);
+        CGFloat endColor   = (0xff / 255.0);
+
+        if ([self isHighlighted]) {
+            startColor = (0xe0 / 255.0);
+            endColor   = (0xf0 / 255.0);
+        }
+
         NSGradient *g = [[NSGradient alloc] initWithColors:@[
-            [NSColor colorWithCalibratedWhite:(0xf1 / 255.0) alpha:1.0],
-            [NSColor colorWithCalibratedWhite:(0xfe / 255.0) alpha:1.0],
+            [NSColor colorWithCalibratedWhite:startColor alpha:1.0],
+            [NSColor colorWithCalibratedWhite:endColor alpha:1.0],
         ]];
 
         [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:knobRect] angle:-90];

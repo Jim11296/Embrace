@@ -1371,6 +1371,15 @@ static OSStatus sInputRenderCallback(
         [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
     }
     
+    if ([_currentTrack ignoresAutoGap]) {
+        padding = 0;
+    }
+    
+    // Padding should never be over 15.  If it is, "Auto Stop" is on.
+    if (padding >= 60) {
+        nextTrack = nil;
+    }
+    
     if (nextTrack) {
         if (_currentTrack) {
             for (id<PlayerListener> listener in _listeners) {
@@ -1426,6 +1435,7 @@ static OSStatus sInputRenderCallback(
 
     [_currentTrack setTrackStatus:TrackStatusPlayed];
     [_currentTrack setPausesAfterPlaying:NO];
+    [_currentTrack setIgnoresAutoGap:NO];
 
     [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
     
@@ -1464,6 +1474,7 @@ static OSStatus sInputRenderCallback(
 
         [_currentTrack setTrackStatus:TrackStatusPlayed];
         [_currentTrack setPausesAfterPlaying:NO];
+        [_currentTrack setIgnoresAutoGap:NO];
     }
 
     for (id<PlayerListener> listener in _listeners) {
@@ -1523,7 +1534,7 @@ static OSStatus sInputRenderCallback(
 
 - (BOOL) isAtBeginningOfSong
 {
-    return _timeElapsed < 2.0;
+    return _timeElapsed < 2.0 && ([_currentTrack playDuration] > 10.0);
 }
 
 

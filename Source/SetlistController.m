@@ -36,8 +36,8 @@
 static NSString * const sMinimumSilenceKey = @"minimum-silence";
 static NSString * const sSavedAtKey = @"saved-at";
 
-static NSTimeInterval sAutoGapMinimum = 0;
-static NSTimeInterval sAutoGapMaximum = 15.0;
+static NSInteger sAutoGapMinimum = 0;
+static NSInteger sAutoGapMaximum = 16;
 
 
 @interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate, EmbraceWindowListener>
@@ -70,6 +70,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 @property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
 @property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
+@property (nonatomic, weak)   IBOutlet NSTextField  *autoGapField;
 
 @end
 
@@ -169,9 +170,14 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     [self setPlayer:[Player sharedInstance]];
     [self _setupPlayer];
 
-
     [[self volumeSlider] setDragDelegate:self];
     [self _updateDragSongsView];
+
+    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
+        NSFont *font = [[self autoGapField] font];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        [[self autoGapField] setFont:font];
+    }
 
     [window setExcludedFromWindowsMenu:YES];
 
@@ -276,6 +282,40 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     BOOL         hogMode    = [preferences mainOutputUsesHogMode];
 
     [[Player sharedInstance] updateOutputDevice:device sampleRate:sampleRate frames:frames hogMode:hogMode];
+    
+    
+    NSWindow *window = [self window];
+    if ([preferences floatsOnTop]) {
+        [window setLevel:NSFloatingWindowLevel];
+        [window setCollectionBehavior:NSWindowCollectionBehaviorManaged|NSWindowCollectionBehaviorParticipatesInCycle];
+        
+    } else {
+        [window setLevel:NSNormalWindowLevel];
+        [window setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+    
+    }
+    
+
+/*
+
+    NSWindowCollectionBehaviorDefault = 0,
+    NSWindowCollectionBehaviorCanJoinAllSpaces = 1 << 0,
+    NSWindowCollectionBehaviorMoveToActiveSpace = 1 << 1,
+    
+    NSWindowCollectionBehaviorManaged NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 2,         // participates in spaces, exposé.  Default behavior if windowLevel == NSNormalWindowLevel
+    NSWindowCollectionBehaviorTransient NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 3,       // floats in spaces, hidden by exposé.  Default behavior if windowLevel != NSNormalWindowLevel
+    NSWindowCollectionBehaviorStationary NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 4,      // unaffected by exposé.  Stays visible and stationary, like desktop window
+
+    NSWindowCollectionBehaviorParticipatesInCycle NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 5,     // default behavior if windowLevel == NSNormalWindowLevel
+    NSWindowCollectionBehaviorIgnoresCycle NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 6,            // default behavior if windowLevel != NSNormalWindowLevel
+    
+    NSWindowCollectionBehaviorFullScreenPrimary NS_ENUM_AVAILABLE_MAC(10_7) = 1 << 7,       // the frontmost window with this collection behavior will be the fullscreen window.
+    NSWindowCollectionBehaviorFullScreenAuxiliary NS_ENUM_AVAILABLE_MAC(10_7) = 1 << 8,     // windows with this collection behavior can be shown with the fullscreen window.
+    
+     
+    NSWindowCollectionBehaviorFullScreenAllowsTiling NS_ENUM_AVAILABLE_MAC(10_11) = 1 << 11,       // This window can be a full screen tile window. It does not have to have FullScreenPrimary set.
+    NSWindowCollectionBehaviorFullScreenDisallowsTiling NS_ENUM_AVAILABLE_MAC(10_11) = 1 << 12      // This window can NOT be made a full screen tile window; it still may be allowed to be a regular FullScreenPrimary window.
+*/
 }
 
 
@@ -299,7 +339,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 - (void) _loadState
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSTimeInterval silence = [defaults doubleForKey:sMinimumSilenceKey];
+    NSInteger silence = [defaults integerForKey:sMinimumSilenceKey];
     [self setMinimumSilenceBetweenTracks:silence];
 }
 
@@ -787,7 +827,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 - (IBAction) increaseAutoGap:(id)sender
 {
     EmbraceLogMethod();
-    NSTimeInterval value = [self minimumSilenceBetweenTracks] + 1;
+    NSInteger value = [self minimumSilenceBetweenTracks] + 1;
     if (value > sAutoGapMaximum) value = sAutoGapMaximum;
     [self setMinimumSilenceBetweenTracks:value];
 }
@@ -796,7 +836,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 - (IBAction) decreaseAutoGap:(id)sender
 {
     EmbraceLogMethod();
-    NSTimeInterval value = [self minimumSilenceBetweenTracks] - 1;
+    NSInteger value = [self minimumSilenceBetweenTracks] - 1;
     if (value < sAutoGapMinimum) value = sAutoGapMinimum;
     [self setMinimumSilenceBetweenTracks:value];
 }
@@ -855,6 +895,14 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
+- (IBAction) toggleIgnoreAutoGap:(id)sender
+{
+    EmbraceLogMethod();
+    [[self tracksController] toggleIgnoreAutoGap:self];
+    [self _updatePlayButton];
+}
+
+
 - (IBAction) toggleMarkAsPlayed:(id)sender
 {
     EmbraceLogMethod();
@@ -896,6 +944,7 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     if (action == @selector(delete:) ||
         action == @selector(toggleMarkAsPlayed:) ||
         action == @selector(togglePauseAfterPlaying:) ||
+        action == @selector(toggleIgnoreAutoGap:) ||
         action == @selector(revealEndTime:))
     {
         return [[self tracksController] validateMenuItem:menuItem];
@@ -1142,9 +1191,12 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
     Track *trackToPlay = [[self tracksController] firstQueuedTrack];
     NSTimeInterval padding = 0;
     
-    NSTimeInterval minimumSilence =  [self minimumSilenceBetweenTracks];
-    
-    if (currentTrack && trackToPlay) {
+    NSInteger minimumSilence = [self minimumSilenceBetweenTracks];
+   
+    if ((minimumSilence == sAutoGapMaximum) && currentTrack) {
+        padding = HUGE_VAL;
+
+    } else if (currentTrack && trackToPlay) {
         NSTimeInterval totalSilence = [currentTrack silenceAtEnd] + [trackToPlay silenceAtStart];
         padding = minimumSilence - totalSilence;
         if (padding < 0) padding = 0;
@@ -1171,12 +1223,29 @@ static NSTimeInterval sAutoGapMaximum = 15.0;
 }
 
 
-- (void) setMinimumSilenceBetweenTracks:(NSTimeInterval)minimumSilenceBetweenTracks
+- (void) setMinimumSilenceBetweenTracks:(NSInteger)minimumSilenceBetweenTracks
 {
     if (_minimumSilenceBetweenTracks != minimumSilenceBetweenTracks) {
+        [self willChangeValueForKey:@"autoGapTimeString"];
+
         _minimumSilenceBetweenTracks = minimumSilenceBetweenTracks;
-        [[NSUserDefaults standardUserDefaults] setDouble:minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
+
+        [[NSUserDefaults standardUserDefaults] setInteger:minimumSilenceBetweenTracks forKey:sMinimumSilenceKey];
         [self _calculateStartAndEndTimes];
+
+        [self didChangeValueForKey:@"autoGapTimeString"];
+    }
+}
+
+
+- (NSString *) autoGapTimeString
+{
+    if (_minimumSilenceBetweenTracks == sAutoGapMinimum) {
+        return NSLocalizedString(@"Off", nil);
+    } else if (_minimumSilenceBetweenTracks == sAutoGapMaximum) {
+        return NSLocalizedString(@"Stop", nil);
+    } else {
+        return GetStringForTime(_minimumSilenceBetweenTracks);
     }
 }
 

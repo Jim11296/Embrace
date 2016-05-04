@@ -59,6 +59,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 // Read/Write
 @property (nonatomic) TrackStatus trackStatus;
 @property (nonatomic) BOOL pausesAfterPlaying;
+@property (nonatomic) BOOL ignoresAutoGap;
 
 @property (nonatomic) NSTimeInterval estimatedEndTime;
 @property (nonatomic) TrackError trackError;
@@ -68,8 +69,11 @@ typedef NS_ENUM(NSInteger, TrackError) {
 
 // Metadata
 @property (nonatomic, readonly) NSString *title;
+@property (nonatomic, readonly) NSString *album;
+@property (nonatomic, readonly) NSString *albumArtist;
 @property (nonatomic, readonly) NSString *artist;
 @property (nonatomic, readonly) NSString *comments;
+@property (nonatomic, readonly) NSString *composer;
 @property (nonatomic, readonly) NSString *grouping;
 @property (nonatomic, readonly) NSString *genre;
 @property (nonatomic, readonly) NSString *initialKey;
@@ -81,6 +85,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSInteger databaseID;
 @property (nonatomic, readonly) Tonality tonality;
 @property (nonatomic, readonly) NSInteger energyLevel;
+@property (nonatomic, readonly) NSInteger year;
 
 @property (nonatomic, readonly) double  trackLoudness;
 @property (nonatomic, readonly) double  trackPeak;

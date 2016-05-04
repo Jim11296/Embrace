@@ -104,12 +104,20 @@
             	<cocoa key="scriptingCurrentTrack"/>
             </property>
 
+			<property name="current index" access="r" code="curi" type="integer" description="the index of the currently playing track">
+            	<cocoa key="scriptingCurrentIndex"/>
+            </property>
+
 			<property name="elapsed time" access="r" code="elps" type="real" description="the elapsed time in seconds.  Negative when Auto Gap is active.">
             	<cocoa key="scriptingElapsedTime"/>
             </property>
 
 			<property name="remaining time" access="r" code="rems" type="real" description="the remaining time in seconds">
             	<cocoa key="scriptingRemainingTime"/>
+            </property>
+
+			<property name="album" access="r" code="albm" type="integer" description="the album name of the track">
+				<cocoa key="scriptingAlbum"/>
             </property>
         </class>
 
@@ -128,12 +136,28 @@
 		<class name="track" code="trck" description="An track in the set list.">
 			<cocoa class="Track"/>
 
+			<property name="aggregate" access="r" code="aggr" type="text" description="a tab-delimited string containing ( title, artist, album, genre, comments, album artist, composer, grouping ).  Additional fields may be added in future versions, order of existing fields will not change.">
+				<cocoa key="scriptingAggregate"/>
+            </property>
+
+			<property name="album" access="r" code="albm" type="text" description="the album name of the track">
+				<cocoa key="scriptingAlbum"/>
+            </property>
+
+			<property name="album artist" access="r" code="alba" type="text" description="the album artist of the track">
+				<cocoa key="scriptingAlbumArtist"/>
+            </property>
+
 			<property name="artist" access="r" code="arti" type="text" description="the artist/source of the track">
 				<cocoa key="scriptingArtist"/>
             </property>
 
 			<property name="comment" access="r" code="comm" type="text" description="freeform notes about the track">
 				<cocoa key="scriptingComment"/>
+            </property>
+
+			<property name="composer" access="r" code="comp" type="text" description="the composer of the track">
+				<cocoa key="scriptingComposer"/>
             </property>
 
 			<property name="database ID" access="r" code="dbid" type="integer" description="the iTunes database ID of the track, if available">
@@ -168,9 +192,14 @@
 				<cocoa key="scriptingTitle"/>
             </property>
 
-			<property name="track status" access="r" code="stat" type="trackStatus" description="the title of the track">
+			<property name="track status" access="r" code="stat" type="trackStatus" description="the status of the track">
 				<cocoa key="scriptingTrackStatus"/>
             </property>
+
+			<property name="year" access="r" code="year" type="integer" description="the year the track was recorded/released">
+				<cocoa key="scriptingYear"/>
+            </property>
+
 		</class>
 	</suite>
 </dictionary>
