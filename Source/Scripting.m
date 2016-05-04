@@ -35,6 +35,22 @@
 }
 
 
+- (NSNumber *) scriptingCurrentIndex
+{
+    Track *currentTrack = [[Player sharedInstance] currentTrack];
+    if (!currentTrack) return @(0);
+
+    NSArray *tracks = [[[GetAppDelegate() setlistController] tracksController] tracks];
+    NSUInteger index = [tracks indexOfObject:currentTrack];
+    
+    if (index == NSNotFound) {
+        return @(0);
+    } else {
+        return @(index + 1);
+    }
+}
+
+
 - (NSNumber *) scriptingElapsedTime
 {
     Player *player = [Player sharedInstance];
@@ -47,6 +63,7 @@
     Player *player = [Player sharedInstance];
     return [player isPlaying] ? @([player timeRemaining]) : @0;
 }
+
 
 @end
 
@@ -70,6 +87,31 @@
 }
 
 
+- (NSString *) scriptingAggregate
+{
+    NSString *(^getSanitizedString)(NSString *) = ^(NSString *inString) {
+        if (!inString) return @"";
+
+        if ([inString rangeOfString:@"\t"].location != NSNotFound) {
+            return [inString stringByReplacingOccurrencesOfString:@"\t" withString:@"  "];
+        } else {
+            return inString;
+        }
+    };
+
+    return [NSString stringWithFormat:@"%@\t%@\t%@\t%@\t%@\t%@\t%@\t%@",
+        getSanitizedString( [self title]       ),
+        getSanitizedString( [self artist]      ),
+        getSanitizedString( [self album]       ),
+        getSanitizedString( [self genre]       ),
+        getSanitizedString( [self comments]    ),
+        getSanitizedString( [self albumArtist] ),
+        getSanitizedString( [self composer]    ),
+        getSanitizedString( [self grouping]    )
+    ];
+}
+
+
 - (NSNumber *) scriptingTrackStatus
 {
     return @([self trackStatus]);
@@ -82,6 +124,18 @@
 }
 
 
+- (NSString *) scriptingAlbumArtist
+{
+    return [self albumArtist];
+}
+
+
+- (NSString *) scriptingAlbum
+{
+    return [self album];
+}
+
+
 - (NSString *) scriptingArtist
 {
     return [self artist];
@@ -91,6 +145,12 @@
 - (NSString *) scriptingComment
 {
     return [self comments];
+}
+
+
+- (NSString *) scriptingComposer
+{
+    return [self composer];
 }
 
 
@@ -133,6 +193,12 @@
 - (NSString *) scriptingKeySignature
 {
     return GetTraditionalStringForTonality([self tonality]);
+}
+
+
+- (NSNumber *) scriptingYear
+{
+    return @([self year]);
 }
 
 

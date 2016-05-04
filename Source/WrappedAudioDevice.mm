@@ -414,7 +414,7 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
             UInt32 minimum, maximum;
             _device->GetIOBufferSizeRange(minimum, maximum);
             
-            for (NSNumber *n in @[ @512, @1024, @2048, @4096, @6144, @8192 ]) {
+            for (NSNumber *n in @[ @32, @64, @128, @256, @512, @1024, @2048, @4096, @6144, @8192 ]) {
                 NSInteger i = [n integerValue];
 
                 if (minimum <= i  && i <= maximum) {

@@ -94,6 +94,9 @@ static NSString * const sModifiedAtKey = @"modified-at";
         
     } else if (action == @selector(togglePauseAfterPlaying:)) {
         return [self _validateTogglePauseAfterPlayingWithMenuItem:menuItem];
+ 
+    } else if (action == @selector(toggleIgnoreAutoGap:)) {
+        return [self _validateToggleIgnoreAutoGapWithMenuItem:menuItem];
     
     } else if (action == @selector(revealEndTime:)) {
         return [self canRevealEndTime];
@@ -753,6 +756,18 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
+- (void) toggleIgnoreAutoGap:(id)sender
+{
+    EmbraceLogMethod();
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            [track setIgnoresAutoGap:![track ignoresAutoGap]];
+        }
+    }
+}
+
+
 - (BOOL) _validateTogglePauseAfterPlayingWithMenuItem:(NSMenuItem *)menuItem
 {
     NSArray *selectedTracks = [self selectedTracks];
@@ -768,6 +783,36 @@ static NSString * const sModifiedAtKey = @"modified-at";
         BOOL pausesAfterPlaying = (canPause && [track pausesAfterPlaying]);
         if ( pausesAfterPlaying) isOn  = YES;
         if (!pausesAfterPlaying) isOff = YES;
+    }
+    
+    if (isOff && isOn) {
+        [menuItem setState:NSMixedState];
+        isEnabled = NO;
+    } else if (isOn) {
+        [menuItem setState:NSOnState];
+    } else {
+        [menuItem setState:NSOffState];
+    }
+
+    return isEnabled;
+}
+
+
+- (BOOL) _validateToggleIgnoreAutoGapWithMenuItem:(NSMenuItem *)menuItem
+{
+    NSArray *selectedTracks = [self selectedTracks];
+    
+    BOOL isEnabled = YES;
+    BOOL isOn      = NO;
+    BOOL isOff     = NO;
+    
+    for (Track *track in selectedTracks) {
+        BOOL canIgnore = [track trackStatus] != TrackStatusPlayed;
+        if (!canIgnore) isEnabled = NO;
+
+        BOOL ignoresAutoGap = (canIgnore && [track ignoresAutoGap]);
+        if ( ignoresAutoGap) isOn  = YES;
+        if (!ignoresAutoGap) isOff = YES;
     }
     
     if (isOff && isOn) {

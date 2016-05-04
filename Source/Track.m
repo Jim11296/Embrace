@@ -17,30 +17,35 @@ NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPl
 
 #define DUMP_UNKNOWN_TAGS 0
 
-static NSString * const sTypeKey          = @"trackType";
-static NSString * const sStatusKey        = @"trackStatus";
-static NSString * const sLabelKey         = @"trackLabel";
-static NSString * const sTrackErrorKey    = @"trackError";
+static NSString * const sTypeKey           = @"trackType";
+static NSString * const sStatusKey         = @"trackStatus";
+static NSString * const sLabelKey          = @"trackLabel";
+static NSString * const sTrackErrorKey     = @"trackError";
 
-static NSString * const sBookmarkKey      = @"bookmark";
-static NSString * const sPausesKey        = @"pausesAfterPlaying";
-static NSString * const sTitleKey         = @"title";
-static NSString * const sArtistKey        = @"artist";
-static NSString * const sStartTimeKey     = @"startTime";
-static NSString * const sStopTimeKey      = @"stopTime";
-static NSString * const sDurationKey      = @"duration";
-static NSString * const sInitialKeyKey    = @"initialKey";
-static NSString * const sTonalityKey      = @"tonality";
-static NSString * const sTrackLoudnessKey = @"trackLoudness";
-static NSString * const sTrackPeakKey     = @"trackPeak";
-static NSString * const sOverviewDataKey  = @"overviewData";
-static NSString * const sOverviewRateKey  = @"overviewRate";
-static NSString * const sBPMKey           = @"beatsPerMinute";
-static NSString * const sDatabaseIDKey    = @"databaseID";
-static NSString * const sGroupingKey      = @"grouping";
-static NSString * const sCommentsKey      = @"comments";
-static NSString * const sEnergyLevelKey   = @"energyLevel";
-static NSString * const sGenreKey         = @"genre";
+static NSString * const sBookmarkKey       = @"bookmark";
+static NSString * const sPausesKey         = @"pausesAfterPlaying";
+static NSString * const sIgnoresAutoGapKey = @"ignoresAutoGap";
+static NSString * const sTitleKey          = @"title";
+static NSString * const sArtistKey         = @"artist";
+static NSString * const sAlbumKey          = @"album";
+static NSString * const sAlbumArtistKey    = @"albumArtist";
+static NSString * const sComposerKey       = @"composer";
+static NSString * const sStartTimeKey      = @"startTime";
+static NSString * const sStopTimeKey       = @"stopTime";
+static NSString * const sDurationKey       = @"duration";
+static NSString * const sInitialKeyKey     = @"initialKey";
+static NSString * const sTonalityKey       = @"tonality";
+static NSString * const sTrackLoudnessKey  = @"trackLoudness";
+static NSString * const sTrackPeakKey      = @"trackPeak";
+static NSString * const sOverviewDataKey   = @"overviewData";
+static NSString * const sOverviewRateKey   = @"overviewRate";
+static NSString * const sBPMKey            = @"beatsPerMinute";
+static NSString * const sDatabaseIDKey     = @"databaseID";
+static NSString * const sGroupingKey       = @"grouping";
+static NSString * const sCommentsKey       = @"comments";
+static NSString * const sEnergyLevelKey    = @"energyLevel";
+static NSString * const sGenreKey          = @"genre";
+static NSString * const sYearKey           = @"year";
 
 
 static const char *sGenreList[128] = {
@@ -351,29 +356,37 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     // This track is dead
     if (_cleared) return;
 
-    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
+    if (_album)          [state setObject:_album                forKey:sAlbumKey];
+    if (_albumArtist)    [state setObject:_albumArtist          forKey:sAlbumArtistKey];
     if (_artist)         [state setObject:_artist               forKey:sArtistKey];
-    if (_title)          [state setObject:_title                forKey:sTitleKey];
-    if (_comments)       [state setObject:_comments             forKey:sCommentsKey];
-    if (_grouping)       [state setObject:_grouping             forKey:sGroupingKey];
-    if (_genre)          [state setObject:_genre                forKey:sGenreKey];
-    if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
-    if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
-    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
-    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
-    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
     if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:sBPMKey];
-    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
-    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
+    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
+    if (_comments)       [state setObject:_comments             forKey:sCommentsKey];
+    if (_composer)       [state setObject:_composer             forKey:sComposerKey];
+    if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
+    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
+    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:sEnergyLevelKey];
+    if (_genre)          [state setObject:_genre                forKey:sGenreKey];
+    if (_grouping)       [state setObject:_grouping             forKey:sGroupingKey];
+    if (_initialKey)     [state setObject:  _initialKey         forKey:sInitialKeyKey];
     if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
     if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
+    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
+    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
+    if (_title)          [state setObject:_title                forKey:sTitleKey];
     if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
-    if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
-    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:sEnergyLevelKey];
-    if (_initialKey)     [state setObject:  _initialKey         forKey:sInitialKeyKey];
+    if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
+    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
+    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
+    if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
+    if (_year)           [state setObject:@(_year)              forKey:sYearKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
+    }
+
+    if (_ignoresAutoGap) {
+        [state setObject:@YES forKey:sIgnoresAutoGapKey];
     }
 }
 
@@ -770,11 +783,21 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             }
         }
         
-        if ([commonKey isEqual:@"artist"] || [key isEqual:@"artist"]) {
+        if (([commonKey isEqual:@"artist"] || [key isEqual:@"artist"]) && stringValue) {
             [dictionary setObject:[item stringValue] forKey:sArtistKey];
 
-        } else if ([commonKey isEqual:@"title"] || [key isEqual:@"title"]) {
+        } else if (([commonKey isEqual:@"title"] || [key isEqual:@"title"]) && stringValue) {
             [dictionary setObject:[item stringValue] forKey:sTitleKey];
+
+        } else if ([commonKey isEqual:@"albumName"] && stringValue) {
+            [dictionary setObject:[item stringValue] forKey:sAlbumKey];
+
+        } else if ([commonKey isEqual:@"creationDate"] && stringValue) {
+            NSInteger year = [stringValue integerValue];
+
+            if (year) {
+                [dictionary setObject:@(year) forKey:sYearKey];
+            }
 
         } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
             [dictionary setObject:[item stringValue] forKey:sInitialKeyKey];
@@ -801,6 +824,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             } else if (stringValue) {
                 [dictionary setObject:stringValue forKey:sCommentsKey];
             }
+
+        } else if ((key4cc == 'aART' || key4cc == 'TPE2' || key4cc == '\00TP2') && stringValue) { // Album Artist, 'soaa'
+            [dictionary setObject:stringValue forKey:sAlbumArtistKey];
+
+        } else if ((key4cc == 'aART') && stringValue) { // Album Artist, 'soaa'
+            [dictionary setObject:stringValue forKey:sAlbumArtistKey];
             
         } else if ((key4cc == 'TKEY') && stringValue) { // Initial key as ID3v2.3 TKEY tag
             [dictionary setObject:stringValue forKey:sInitialKeyKey];
@@ -825,6 +854,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
         } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
             [dictionary setObject:stringValue forKey:sGroupingKey];
+
+        } else if ((key4cc == '\251day') && numberValue) { // Grouping, '?grp'
+            [dictionary setObject:numberValue forKey:sYearKey];
+
+        } else if ((key4cc == '\251wrt') && stringValue) { // Composer, '?wrt'
+            [dictionary setObject:stringValue forKey:sComposerKey];
 
         } else if (key4cc == 'gnre') { // Genre, 'gnre' - Use sGenreList lookup
             NSInteger i = [numberValue integerValue];
@@ -976,6 +1011,27 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 {
     if (_pausesAfterPlaying != pausesAfterPlaying) {
         _pausesAfterPlaying = pausesAfterPlaying;
+        
+        if (pausesAfterPlaying) {
+            [self setIgnoresAutoGap:NO];
+        }
+        
+        _dirty = YES;
+        [self _saveStateImmediately:NO];
+    }
+}
+
+
+
+- (void) setIgnoresAutoGap:(BOOL)ignoresAutoGap
+{
+    if (_ignoresAutoGap != ignoresAutoGap) {
+        _ignoresAutoGap = ignoresAutoGap;
+        
+        if (ignoresAutoGap) {
+            [self setPausesAfterPlaying:NO];
+        }
+        
         _dirty = YES;
         [self _saveStateImmediately:NO];
     }

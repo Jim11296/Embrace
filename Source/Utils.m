@@ -263,7 +263,7 @@ extern NSString *GetStringForFourCharCodeObject(id object)
         return GetStringForFourCharCode((UInt32)[object longLongValue]);
         
     } else if ([object isKindOfClass:[NSNumber class]]) {
-        return GetStringForFourCharCode([object unsignedIntValue]);
+        return GetStringForFourCharCode([object intValue]);
 
     } else {
         return @"????";

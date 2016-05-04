@@ -20,7 +20,7 @@
     return NO;
 }
 
-- (id)transformedValue:(id)value
+- (id) transformedValue:(id)value
 {
     return GetStringForTime([value doubleValue]);
 }

@@ -315,6 +315,7 @@
         @"playDuration",
         @"estimatedEndTime",
         @"pausesAfterPlaying",
+        @"ignoresAutoGap",
         @"artist",
         @"tonality",
         @"comments",
@@ -589,10 +590,16 @@
     CGFloat bottomBorderHeight = -1;
     CGFloat topConstraintValue = 0;
 
-    if ([track pausesAfterPlaying] && ([track trackStatus] != TrackStatusPlayed)) {
-        bottomBorderColor = [NSColor redColor];
-        bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
-        bottomBorderHeight = 2;
+    if ([track trackStatus] != TrackStatusPlayed) {
+        if ([track pausesAfterPlaying]) {
+            bottomBorderColor = [NSColor redColor];
+            bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
+            bottomBorderHeight = 2;
+
+        } else if ([track ignoresAutoGap]) {
+            bottomBorderColor = GetRGBColor(0x00cc00, 1.0);
+            bottomBorderHeight = 2;
+        }
     }
 
 

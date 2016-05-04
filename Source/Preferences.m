@@ -23,6 +23,8 @@ static NSDictionary *sGetDefaultValues()
     sDefaultValues = @{
         @"numberOfLayoutLines":  @2,
         @"shortensPlayedTracks": @NO,
+    
+        @"floatsOnTop":          @NO,
 
         @"showsArtist":          @YES,
         @"showsBPM":             @YES,

@@ -28,6 +28,7 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (BOOL) canRevealEndTime;
 
 - (void) togglePauseAfterPlaying:(id)sender;
+- (void) toggleIgnoreAutoGap:(id)sender;
 - (void) toggleMarkAsPlayed:(id)sender;
 
 - (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
