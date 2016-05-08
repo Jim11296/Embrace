@@ -84,6 +84,11 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 @property (nonatomic, readonly) Float32 rightAveragePower;
 @property (nonatomic, readonly) Float32 leftPeakPower;
 @property (nonatomic, readonly) Float32 rightPeakPower;
+
+@property (nonatomic, readonly) Float32 dangerAverage;
+@property (nonatomic, readonly) Float32 dangerPeak;
+@property (nonatomic, readonly) NSTimeInterval lastOverloadTime;
+
 @property (nonatomic, readonly, getter=isLimiterActive) BOOL limiterActive;
 
 - (void) addListener:(id<PlayerListener>)listener;

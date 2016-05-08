@@ -9,6 +9,7 @@
                 <outlet property="autoGapField" destination="27g-A4-whb" id="1kz-97-faD"/>
                 <outlet property="autoGapSlider" destination="Cip-py-M5e" id="xyq-QJ-X6M"/>
                 <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
+                <outlet property="dangerMeter" destination="yvU-8G-5CX" id="Uvs-Zh-ps9"/>
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
                 <outlet property="gearLabelMenuItem" destination="pYs-4n-BUC" id="5rf-Xl-jpd"/>
@@ -170,6 +171,13 @@
                                 <connections>
                                     <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
                                     <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
+                                </connections>
+                            </customView>
+                            <customView id="yvU-8G-5CX" customClass="DangerMeter">
+                                <rect key="frame" x="271" y="55" width="42" height="11"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <outlet property="menu" destination="Kdj-dO-hkZ" id="53k-6Q-ubP"/>
                                 </connections>
                             </customView>
                         </subviews>
