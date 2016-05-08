@@ -18,6 +18,7 @@
 		55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */; };
 		55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */; };
 		55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B4A1B537C2500308F55 /* EditSystemEffectController.m */; };
+		5514B63A1CDD694700F238B7 /* DangerMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6391CDD694700F238B7 /* DangerMeter.m */; };
 		55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */; };
 		552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9DC218836D2D0041C160 /* AudioDevice.m */; };
 		552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C9E481883856A0041C160 /* PreferencesWindow.xib */; };
@@ -179,6 +180,8 @@
 		55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditGraphicEQEffectController.m; path = Source/EditGraphicEQEffectController.m; sourceTree = SOURCE_ROOT; };
 		55102B491B537C2500308F55 /* EditSystemEffectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditSystemEffectController.h; path = Source/EditSystemEffectController.h; sourceTree = SOURCE_ROOT; };
 		55102B4A1B537C2500308F55 /* EditSystemEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditSystemEffectController.m; path = Source/EditSystemEffectController.m; sourceTree = SOURCE_ROOT; };
+		5514B6381CDD694700F238B7 /* DangerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DangerMeter.h; path = Source/DangerMeter.h; sourceTree = SOURCE_ROOT; };
+		5514B6391CDD694700F238B7 /* DangerMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DangerMeter.m; path = Source/DangerMeter.m; sourceTree = SOURCE_ROOT; };
 		55224BE318A7880D00407B46 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = CoreAudio/PublicUtility/CAAutoDisposer.h; sourceTree = "<group>"; };
 		55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedAudioDevice.mm; path = Source/WrappedAudioDevice.mm; sourceTree = "<group>"; };
 		55224BE518A788DA00407B46 /* WrappedAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedAudioDevice.h; path = Source/WrappedAudioDevice.h; sourceTree = "<group>"; };
@@ -732,6 +735,8 @@
 				55717BF4187EA65400213213 /* Button.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
+				5514B6381CDD694700F238B7 /* DangerMeter.h */,
+				5514B6391CDD694700F238B7 /* DangerMeter.m */,
 				557ABAB41B68D48C006F69D9 /* DotView.h */,
 				557ABAB51B68D48C006F69D9 /* DotView.m */,
 				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
@@ -1064,6 +1069,7 @@
 				557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */,
 				553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */,
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
+				5514B63A1CDD694700F238B7 /* DangerMeter.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
 				556098141B47CABD008516C3 /* LabelMenuView.m in Sources */,

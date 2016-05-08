@@ -22,6 +22,7 @@
 #import "Button.h"
 #import "EmbraceWindow.h"
 #import "LabelMenuView.h"
+#import "DangerMeter.h"
 #import "LevelMeter.h"
 #import "PlayBar.h"
 #import "Preferences.h"
@@ -63,6 +64,7 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet NSTextField  *playRemainingField;
 @property (nonatomic, weak)   IBOutlet Button       *playButton;
 @property (nonatomic, weak)   IBOutlet Button       *gearButton;
+@property (nonatomic, weak)   IBOutlet DangerMeter  *dangerMeter;
 @property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
 
@@ -1068,6 +1070,7 @@ static NSInteger sAutoGapMaximum = 16;
     EmbraceLog(@"SetlistController", @"player:didUpdatePlaying:%ld", (long)playing);
 
     if (playing) {
+        [[self dangerMeter] setMetering:YES];
         [[self levelMeter] setMetering:YES];
         [[self playBar] setPlaying:YES];
         
@@ -1084,6 +1087,7 @@ static NSInteger sAutoGapMaximum = 16;
         [[self playBar] setPercentage:0];
         [[self playBar] setPlaying:NO];
 
+        [[self dangerMeter] setMetering:NO];
         [[self levelMeter] setMetering:NO];
     }
 
@@ -1157,6 +1161,9 @@ static NSInteger sAutoGapMaximum = 16;
     Float32 leftPeakPower     = [player leftPeakPower];
     Float32 rightPeakPower    = [player rightPeakPower];
     BOOL    limiterActive     = [player isLimiterActive];
+
+    Float32 dangerPeak        = [player dangerPeak];
+    NSTimeInterval lastOverloadTime = [player lastOverloadTime];
     
     NSTimeInterval duration = timeElapsed + timeRemaining;
     if (!duration) duration = 1;
@@ -1171,6 +1178,8 @@ static NSInteger sAutoGapMaximum = 16;
     }
 
     [[self playBar] setPercentage:percentage];
+
+    [[self dangerMeter] addDangerPeak:dangerPeak lastOverloadTime:lastOverloadTime];
 
     [[self levelMeter] setLeftAveragePower: leftAveragePower
                          rightAveragePower: rightAveragePower

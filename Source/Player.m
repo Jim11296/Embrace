@@ -370,6 +370,17 @@ typedef struct {
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel,     kAudioUnitScope_Output, 0, &_leftPeakPower);
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel + 1, kAudioUnitScope_Output, 0, &_rightPeakPower);
 
+    AUGraphGetCPULoad(_graph, &_dangerAverage);
+    
+    Float32 dangerPeak = 0;
+    AUGraphGetMaxCPULoad(_graph, &_dangerPeak);
+
+    if (dangerPeak) {
+        _dangerPeak = dangerPeak;
+    } else if (_dangerAverage == 0) {
+        _dangerPeak = 0;
+    }
+
     _limiterActive = EmergencyLimiterIsActive(_emergencyLimiter);
     
 #if CHECK_RENDER_ERRORS_ON_TICK
@@ -615,6 +626,8 @@ static OSStatus sDetectAudioDeviceChange(AudioObjectID inObjectID, UInt32 inNumb
 
 - (void) _handleAudioDeviceProcessorOverload
 {
+    _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
+
     NSLog(@"_handleAudioDeviceProcessorOverload");
 }
 

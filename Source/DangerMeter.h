@@ -1,0 +1,19 @@
+//
+//  LevelMeter.h
+//  Embrace
+//
+//  Created by Ricci Adams on 2014-01-11.
+//  Copyright (c) 2014 Ricci Adams. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+@class Player;
+
+@interface DangerMeter : NSView
+
+@property (nonatomic, getter=isMetering) BOOL metering;
+
+- (void) addDangerPeak:(Float32)dangerPeak lastOverloadTime:(NSTimeInterval)lastOverloadTime;
+
+@end
