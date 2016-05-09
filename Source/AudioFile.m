@@ -7,6 +7,9 @@
 //
 
 #import "AudioFile.h"
+#import "Log.h"
+#import "URLExtensions.h"
+
 #import <AVFoundation/AVFoundation.h>
 
 

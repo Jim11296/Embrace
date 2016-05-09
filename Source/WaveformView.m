@@ -7,7 +7,6 @@
 //
 
 #import "WaveformView.h"
-#import "TrackAnalyzer.h"
 #import "Track.h"
 
 #import <Accelerate/Accelerate.h>

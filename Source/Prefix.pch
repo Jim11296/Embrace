@@ -7,11 +7,11 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 
-    #import <AVFoundation/AVFoundation.h>
     #import <AudioUnit/AudioUnit.h>
     #import <AudioToolbox/AudioToolbox.h>
     #import <CoreAudio/CoreAudio.h>
     #import <CoreAudioKit/CoreAudioKit.h>
+    #import <QuartzCore/QuartzCore.h>
 
     #import "Utils.h"
     #import "Compatibility.h"
@@ -20,4 +20,5 @@
     #import "Application.h"
     #import "URLExtensions.h"
     #import "EmbraceWindow.h"
+    #import "Worker.h"
 #endif

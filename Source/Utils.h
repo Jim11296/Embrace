@@ -41,18 +41,6 @@ typedef NS_ENUM(NSInteger, Tonality) {
 };
 
 
-typedef NS_ENUM(NSInteger, TrackLabel) {
-    TrackLabelNone,
-    TrackLabelRed,
-    TrackLabelOrange,
-    TrackLabelYellow,
-    TrackLabelGreen,
-    TrackLabelBlue,
-    TrackLabelPurple,
-        
-    TrackLabelMultiple = NSNotFound
-};
-
 
 extern BOOL CheckError(OSStatus error, const char *operation);
 extern BOOL CheckErrorGroup(void (^block)());
@@ -71,12 +59,6 @@ extern NSString *GetTraditionalStringForTonality(Tonality tonality);
 extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality);
 
 extern NSColor *GetRGBColor(int rgb, CGFloat alpha);
-
-extern NSColor *GetInactiveHighlightColor(void);
-extern NSColor *GetActiveHighlightColor(void);
-
-extern NSColor *GetBorderColorForTrackLabel(TrackLabel trackLabel);
-extern NSColor *GetFillColorForTrackLabel(TrackLabel trackLabel);
 
 extern AppDelegate *GetAppDelegate(void);
 

@@ -115,7 +115,7 @@
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [GetRGBColor(0xababab, 1.0) set];
+    [GetRGBColor(0x0, 0.15) set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     

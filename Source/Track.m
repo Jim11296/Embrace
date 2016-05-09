@@ -8,7 +8,8 @@
 
 #import "Track.h"
 #import "iTunesManager.h"
-#import "TrackAnalyzer.h"
+#import "TrackKeys.h"
+#import "AppDelegate.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -18,53 +19,16 @@ NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPl
 #define DUMP_UNKNOWN_TAGS 0
 
 static NSString * const sTypeKey           = @"trackType";
-static NSString * const sStatusKey         = @"trackStatus";
+
 static NSString * const sLabelKey          = @"trackLabel";
+static NSString * const sPausesKey         = @"pausesAfterPlaying";
+static NSString * const sIgnoresAutoGapKey = @"ignoresAutoGap";
+
+static NSString * const sStatusKey         = @"trackStatus";
 static NSString * const sTrackErrorKey     = @"trackError";
 
 static NSString * const sBookmarkKey       = @"bookmark";
-static NSString * const sPausesKey         = @"pausesAfterPlaying";
-static NSString * const sIgnoresAutoGapKey = @"ignoresAutoGap";
-static NSString * const sTitleKey          = @"title";
-static NSString * const sArtistKey         = @"artist";
-static NSString * const sAlbumKey          = @"album";
-static NSString * const sAlbumArtistKey    = @"albumArtist";
-static NSString * const sComposerKey       = @"composer";
-static NSString * const sStartTimeKey      = @"startTime";
-static NSString * const sStopTimeKey       = @"stopTime";
-static NSString * const sDurationKey       = @"duration";
-static NSString * const sInitialKeyKey     = @"initialKey";
-static NSString * const sTonalityKey       = @"tonality";
-static NSString * const sTrackLoudnessKey  = @"trackLoudness";
-static NSString * const sTrackPeakKey      = @"trackPeak";
-static NSString * const sOverviewDataKey   = @"overviewData";
-static NSString * const sOverviewRateKey   = @"overviewRate";
-static NSString * const sBPMKey            = @"beatsPerMinute";
-static NSString * const sDatabaseIDKey     = @"databaseID";
-static NSString * const sGroupingKey       = @"grouping";
-static NSString * const sCommentsKey       = @"comments";
-static NSString * const sEnergyLevelKey    = @"energyLevel";
-static NSString * const sGenreKey          = @"genre";
-static NSString * const sYearKey           = @"year";
 
-
-static const char *sGenreList[128] = {
-    NULL,
-    "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop", "Jazz", "Metal",
-    "New Age", "Oldies", "Other", "Pop", "R&B", "Rap", "Reggae", "Rock", "Techno", "Industrial",
-    "Alternative", "Ska", "Death Metal", "Pranks", "Soundtrack", "Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk",
-    "Fusion", "Trance", "Classical", "Instrumental", "Acid", "House", "Game", "Sound Clip", "Gospel", "Noise",
-    "AlternRock", "Bass", "Soul", "Punk", "Space", "Meditative", "Instrumental Pop", "Instrumental Rock", "Ethnic", "Gothic",
-    "Darkwave", "Techno-Industrial", "Electronic", "Pop-Folk", "Eurodance", "Dream", "Southern Rock", "Comedy", "Cult", "Gangsta",
-    "Top 40", "Christian Rap", "Pop/Funk", "Jungle", "Native American", "Cabaret", "New Wave", "Psychadelic", "Rave", "Showtunes",
-    "Trailer", "Lo-Fi", "Tribal", "Acid Punk", "Acid Jazz", "Polka", "Retro", "Musical", "Rock & Roll", "Hard Rock",
-    "Folk", "Folk/Rock", "National Folk", "Swing", "Fast Fusion", "Bebob", "Latin", "Revival", "Celtic", "Bluegrass",
-    "Avantgarde", "Gothic Rock", "Progressive Rock", "Psychedelic Rock", "Symphonic Rock", "Slow Rock", "Big Band", "Chorus", "Easy Listening", "Acoustic",
-    "Humour", "Speech", "Chanson", "Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass", "Primus", "Porn Groove",
-    "Satire", "Slow Jam", "Club", "Tango", "Samba", "Folklore", "Ballad", "Power Ballad", "Rhythmic Soul", "Freestyle",
-    "Duet", "Punk Rock", "Drum Solo", "A Capella", "Euro-House", "Dance Hall",
-    NULL
-};
 
 
 @interface Track ()
@@ -204,7 +168,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         return nil;
     }
 
-    NSData *bookmark = [state objectForKey:sBookmarkKey];
+    NSData *bookmark = [state objectForKey:TrackKeyBookmark];
     Track  *track    = [[Track alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
 
     return track;
@@ -228,7 +192,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [self _invalidateSilence];
         
         [self _updateState:state initialLoad:YES];
-        [self _loadMetadataViaManagerWithFileURL:url];
+        [self _readMetadataViaManagerWithFileURL:url];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleApplicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
     }
@@ -255,16 +219,15 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (void) dealloc
 {
-    [self _clearTrackDataForAnalysis];
-
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self _requestWorkerCancel];
 }
 
 
 - (void) cancelLoad
 {
     [self setCancelled:YES];
-    [self _clearTrackDataForAnalysis];
+    [self _requestWorkerCancel];
 }
 
 
@@ -290,7 +253,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     NSMutableDictionary *state = [NSMutableDictionary dictionary];
     [self _writeStateToDictionary:state];
 
-    NSData *bookmark = [state objectForKey:sBookmarkKey];
+    NSData *bookmark = [state objectForKey:TrackKeyBookmark];
 
     Track *result = [[[self class] alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
     result->_dirty = YES;
@@ -324,9 +287,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         }
     }
 
-    NSData   *overviewData = [state objectForKey:sOverviewDataKey];
-    NSNumber *startTime    = [state objectForKey:sStartTimeKey];
-    NSNumber *stopTime     = [state objectForKey:sStopTimeKey];
+    NSData   *overviewData = [state objectForKey:TrackKeyOverviewData];
+    NSNumber *startTime    = [state objectForKey:TrackKeyStartTime];
+    NSNumber *stopTime     = [state objectForKey:TrackKeyStopTime];
     
     if (overviewData || startTime || stopTime) {
         [self _calculateSilence];
@@ -356,30 +319,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     // This track is dead
     if (_cleared) return;
 
-    if (_album)          [state setObject:_album                forKey:sAlbumKey];
-    if (_albumArtist)    [state setObject:_albumArtist          forKey:sAlbumArtistKey];
-    if (_artist)         [state setObject:_artist               forKey:sArtistKey];
-    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:sBPMKey];
-    if (_bookmark)       [state setObject:_bookmark             forKey:sBookmarkKey];
-    if (_comments)       [state setObject:_comments             forKey:sCommentsKey];
-    if (_composer)       [state setObject:_composer             forKey:sComposerKey];
-    if (_databaseID)     [state setObject:@(_databaseID)        forKey:sDatabaseIDKey];
-    if (_duration)       [state setObject:@(_duration)          forKey:sDurationKey];
-    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:sEnergyLevelKey];
-    if (_genre)          [state setObject:_genre                forKey:sGenreKey];
-    if (_grouping)       [state setObject:_grouping             forKey:sGroupingKey];
-    if (_initialKey)     [state setObject:  _initialKey         forKey:sInitialKeyKey];
-    if (_overviewData)   [state setObject:  _overviewData       forKey:sOverviewDataKey];
-    if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:sOverviewRateKey];
-    if (_startTime)      [state setObject:@(_startTime)         forKey:sStartTimeKey];
-    if (_stopTime)       [state setObject:@(_stopTime)          forKey:sStopTimeKey];
-    if (_title)          [state setObject:_title                forKey:sTitleKey];
-    if (_trackError)     [state setObject:@(_trackError)        forKey:sTrackErrorKey];
+    if (_trackError)     [state setObject:@(_trackError)        forKey:TrackKeyError];
     if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
-    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:sTrackLoudnessKey];
-    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:sTrackPeakKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
-    if (_year)           [state setObject:@(_year)              forKey:sYearKey];
 
     if (_pausesAfterPlaying) {
         [state setObject:@YES forKey:sPausesKey];
@@ -388,6 +330,29 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_ignoresAutoGap) {
         [state setObject:@YES forKey:sIgnoresAutoGapKey];
     }
+
+    if (_album)          [state setObject:_album                forKey:TrackKeyAlbum];
+    if (_albumArtist)    [state setObject:_albumArtist          forKey:TrackKeyAlbumArtist];
+    if (_artist)         [state setObject:_artist               forKey:TrackKeyArtist];
+    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:TrackKeyBPM];
+    if (_bookmark)       [state setObject:_bookmark             forKey:TrackKeyBookmark];
+    if (_comments)       [state setObject:_comments             forKey:TrackKeyComments];
+    if (_composer)       [state setObject:_composer             forKey:TrackKeyComposer];
+    if (_databaseID)     [state setObject:@(_databaseID)        forKey:TrackKeyDatabaseID];
+    if (_duration)       [state setObject:@(_duration)          forKey:TrackKeyDuration];
+    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:TrackKeyEnergyLevel];
+    if (_genre)          [state setObject:_genre                forKey:TrackKeyGenre];
+    if (_grouping)       [state setObject:_grouping             forKey:TrackKeyGrouping];
+    if (_initialKey)     [state setObject:  _initialKey         forKey:TrackKeyInitialKey];
+    if (_overviewData)   [state setObject:  _overviewData       forKey:TrackKeyOverviewData];
+    if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:TrackKeyOverviewRate];
+    if (_startTime)      [state setObject:@(_startTime)         forKey:TrackKeyStartTime];
+    if (_stopTime)       [state setObject:@(_stopTime)          forKey:TrackKeyStopTime];
+    if (_title)          [state setObject:_title                forKey:TrackKeyTitle];
+    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:TrackKeyTrackLoudness];
+    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:TrackKeyTrackPeak];
+    if (_year)           [state setObject:@(_year)              forKey:TrackKeyYear];
+
 }
 
 
@@ -445,11 +410,13 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     _internalURL = internalURL;
     _externalURL = externalURL;
 
-    [self _loadMetadataViaManagerWithFileURL:externalURL];
-    [self _loadMetadataViaAsset];
-    
-    [self _loadMetadataViaAnalysisIfNeeded];
-    
+    [self _readMetadataViaManagerWithFileURL:externalURL];
+    [self _requestWorkerCommand:WorkerTrackCommandReadMetadata];
+
+    if (!_overviewData) {
+        [self _requestWorkerCommand:WorkerTrackCommandReadLoudness];
+    }
+     
     if (_dirty) {
         [self _saveStateImmediately:YES];
     }
@@ -615,80 +582,40 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 }
 
 
-- (void) _clearTrackDataForAnalysis
+- (void) _requestWorkerCancel
 {
-    [_trackAnalyzer cancel];
-    _trackAnalyzer = nil;
-}
-
-
-- (void) _handleTrackAnalyzerDidAnalyze:(TrackAnalyzerResult *)result
-{
-    EmbraceLog(@"Track", @"%@ analysis result %@.  loudness: %g, peak: %g, error: %ld", self, result, [result loudness], [result peak], (long)[result error]);
-
-    if (_trackAnalyzer && result) {
-        NSMutableDictionary *state = [NSMutableDictionary dictionary];
-        
-        NSData *overviewData = [result overviewData];
-        if (overviewData) [state setObject:overviewData forKey:sOverviewDataKey];
-        
-        [state addEntriesFromDictionary:@{
-            sOverviewRateKey:  @([result overviewRate]),
-            sTrackLoudnessKey: @([result loudness]),
-            sTrackPeakKey:     @([result peak]),
-            sTrackErrorKey:    @([result error])
-        }];
-
-        [self _updateState:state initialLoad:NO];
-    }
-    
-    [self _clearTrackDataForAnalysis];
-}
-
-
-- (void) _analyzeImmediately:(BOOL)immediately
-{
-    [_trackAnalyzer cancel];
-    _trackAnalyzer = nil;
-
-    EmbraceLog(@"Track", @"%@ requesting analysis, immediately=%ld", self, (long)immediately);
-
-    TrackAnalyzer *trackAnalyzer = [[TrackAnalyzer alloc] init];
-    
-    id __weak weakSelf = self;
-    [trackAnalyzer analyzeFileAtURL:_internalURL immediately:immediately completion:^(TrackAnalyzerResult *result) {
-        [weakSelf _handleTrackAnalyzerDidAnalyze:result];
+    id<WorkerProtocol> worker = [GetAppDelegate() workerProxyWithErrorHandler:^(NSError *error) {
+        EmbraceLog(@"Track", @"Received error for worker cancel: %@", error);
     }];
 
-    _trackAnalyzer = trackAnalyzer;
+    [worker cancelUUID:[self UUID]];
 }
 
 
-- (void) _loadMetadataViaAnalysisIfNeeded
+- (void) _requestWorkerCommand:(WorkerTrackCommand)command
 {
-    if (_overviewData || _trackAnalyzer) {
-        return;
-    }
+    __weak id weakSelf = self;
+
+    NSUUID *UUID        = [self UUID];
+    NSURL  *internalURL = [self internalURL];
+    NSURL  *externalURL = [self externalURL];
+
+    EmbraceLog(@"Track", @"%@ requesting worker command %ld", self, (long)command);
+
+    id<WorkerProtocol> worker = [GetAppDelegate() workerProxyWithErrorHandler:^(NSError *error) {
+        EmbraceLog(@"Track", @"Received error for worker command %ld: %@", command, error);
+    }];
     
-    [self _analyzeImmediately:NO];
+    [worker performTrackCommand:command UUID:UUID internalURL:internalURL externalURL:externalURL reply: ^(NSDictionary *dictionary) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            EmbraceLog(@"Track", @"Received reply for worker command %ld: %@", command, dictionary);
+            [weakSelf _updateState:dictionary initialLoad:NO];
+        });
+    }];
 }
 
 
-- (void) _handleDidUpdateLibraryMetadata:(NSNotification *)note
-{
-    iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:[self externalURL]];
-    
-    NSTimeInterval startTime = [metadata startTime];
-    NSTimeInterval stopTime  = [metadata stopTime];
-    
-    EmbraceLog(@"Track", @"%@ updated startTime=%g, stopTime=%g with %@", self, startTime, stopTime, metadata);
-    
-    [self setStartTime:startTime];
-    [self setStopTime: stopTime];
-}
-
-
-- (void) _loadMetadataViaManagerWithFileURL:(NSURL *)fileURL
+- (void) _readMetadataViaManagerWithFileURL:(NSURL *)fileURL
 {
     if (!fileURL) {
         return;
@@ -726,228 +653,17 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 }
 
 
-- (void) _loadMetadataViaAsset
+- (void) _handleDidUpdateLibraryMetadata:(NSNotification *)note
 {
-    if (![self internalURL]) {
-        return;
-    }
-
-    void (^parseMetadataItem)(AVMetadataItem *, NSMutableDictionary *) = ^(AVMetadataItem *item, NSMutableDictionary *dictionary) {
-        id commonKey = [item commonKey];
-        id key       = [item key];
-
-        FourCharCode key4cc = 0;
-        if ([key isKindOfClass:[NSString class]] && [key length] == 4) {
-            NSData *keyData = [key dataUsingEncoding:NSASCIIStringEncoding];
-            
-            if ([keyData length] == 4) {
-                key4cc = OSSwapBigToHostInt32(*(UInt32 *)[keyData bytes]);
-            }
-
-        } else if ([key isKindOfClass:[NSNumber class]]) {
-            key4cc = [key unsignedIntValue];
-        }
-        
-        // iTunes stores normalization info in 'COMM'
-        BOOL isAppleNormalizationTag = NO;
-        if (key4cc == 'COMM') {
-            if ([[[item extraAttributes] objectForKey:@"info"] isEqual:@"iTunNORM"]) {
-                isAppleNormalizationTag = YES;
-            }
-        }
-
-        NSNumber *numberValue = [item numberValue];
-        NSString *stringValue = [item stringValue];
-        
-        id value = [item value];
-        NSDictionary *dictionaryValue = nil;
-        if ([value isKindOfClass:[NSDictionary class]]) {
-            dictionaryValue = (NSDictionary *)value;
-        }
-
-        if (!stringValue) {
-            stringValue = [dictionaryValue objectForKey:@"text"];
-        }
-        
-        if (!numberValue) {
-            if ([value isKindOfClass:[NSData class]]) {
-                NSData *data = (NSData *)value;
-                
-                if ([data length] == 4) {
-                    numberValue = @( OSSwapBigToHostInt32(*(UInt32 *)[data bytes]) );
-                } else if ([data length] == 2) {
-                    numberValue = @( OSSwapBigToHostInt16(*(UInt16 *)[data bytes]) );
-                } else if ([data length] == 1) {
-                    numberValue = @(                      *(UInt8  *)[data bytes]  );
-                }
-            }
-        }
-        
-        if (([commonKey isEqual:@"artist"] || [key isEqual:@"artist"]) && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:sArtistKey];
-
-        } else if (([commonKey isEqual:@"title"] || [key isEqual:@"title"]) && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:sTitleKey];
-
-        } else if ([commonKey isEqual:@"albumName"] && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:sAlbumKey];
-
-        } else if ([commonKey isEqual:@"creationDate"] && stringValue) {
-            NSInteger year = [stringValue integerValue];
-
-            if (year) {
-                [dictionary setObject:@(year) forKey:sYearKey];
-            }
-
-        } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:sInitialKeyKey];
-
-        } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
-            [dictionary setObject:numberValue forKey:sEnergyLevelKey];
-
-        } else if ((key4cc == 'COMM' && !isAppleNormalizationTag) ||
-                   (key4cc == '\00COM') ||
-                   (key4cc == '\251cmt'))
-        {
-            if (dictionaryValue) {
-                NSString *identifier = [dictionaryValue objectForKey:@"identifier"];
-                NSString *text       = [dictionaryValue objectForKey:@"text"];
-                
-                if ([identifier isEqualToString:@"iTunNORM"]) {
-                    return;
-                }
-
-                if (text) {
-                    [dictionary setObject:text forKey:sCommentsKey];
-                }
-
-            } else if (stringValue) {
-                [dictionary setObject:stringValue forKey:sCommentsKey];
-            }
-
-        } else if ((key4cc == 'aART' || key4cc == 'TPE2' || key4cc == '\00TP2') && stringValue) { // Album Artist, 'soaa'
-            [dictionary setObject:stringValue forKey:sAlbumArtistKey];
-
-        } else if ((key4cc == 'aART') && stringValue) { // Album Artist, 'soaa'
-            [dictionary setObject:stringValue forKey:sAlbumArtistKey];
-            
-        } else if ((key4cc == 'TKEY') && stringValue) { // Initial key as ID3v2.3 TKEY tag
-            [dictionary setObject:stringValue forKey:sInitialKeyKey];
-
-        } else if ((key4cc == '\00TKE') && stringValue) { // Initial key as ID3v2.2 TKE tag
-            [dictionary setObject:stringValue forKey:sInitialKeyKey];
-
-        } else if ((key4cc == 'tmpo') && numberValue) { // Tempo key, 'tmpo'
-            [dictionary setObject:numberValue forKey:sBPMKey];
-
-        } else if ((key4cc == 'TBPM') && numberValue) { // Tempo as ID3v2.3 TBPM tag
-            [dictionary setObject:numberValue forKey:sBPMKey];
-
-        } else if ((key4cc == '\00TBP') && numberValue) { // Tempo as ID3v2.2 TBP tag
-            [dictionary setObject:numberValue forKey:sBPMKey];
-
-        } else if ((key4cc == '\251grp') && stringValue) { // Grouping, '?grp'
-            [dictionary setObject:stringValue forKey:sGroupingKey];
-
-        } else if ((key4cc == 'TIT1') && stringValue) { // Grouping as ID3v2.3 TIT1 tag
-            [dictionary setObject:stringValue forKey:sGroupingKey];
-
-        } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
-            [dictionary setObject:stringValue forKey:sGroupingKey];
-
-        } else if ((key4cc == '\251day') && numberValue) { // Grouping, '?grp'
-            [dictionary setObject:numberValue forKey:sYearKey];
-
-        } else if ((key4cc == '\251wrt') && stringValue) { // Composer, '?wrt'
-            [dictionary setObject:stringValue forKey:sComposerKey];
-
-        } else if (key4cc == 'gnre') { // Genre, 'gnre' - Use sGenreList lookup
-            NSInteger i = [numberValue integerValue];
-            if (i > 0 && i < 127) {
-                const char *genre = sGenreList[i];
-                if (genre) [dictionary setObject:@(sGenreList[i]) forKey:sGenreKey];
-            }
-
-        } else if ((key4cc == '\251gen') && stringValue) { // Genre, '?gen'
-            [dictionary setObject:stringValue forKey:sGenreKey];
-
-        } else if ((key4cc == 'TCON') && stringValue) { // Genre, 'TCON'
-            [dictionary setObject:stringValue forKey:sGenreKey];
-
-        } else if ((key4cc == '\00TCO') && stringValue) { // Genre, 'TCO'
-            [dictionary setObject:stringValue forKey:sGenreKey];
-
-        } else if ((key4cc == 'TXXX') || (key4cc == '\00TXX')) { // Read TXXX / TXX
-            if ([[dictionaryValue objectForKey:@"identifier"] isEqualToString:@"EnergyLevel"]) {
-                [dictionary setObject:@( [stringValue integerValue] ) forKey:sEnergyLevelKey];
-            }
-
-        } else {
-#if DUMP_UNKNOWN_TAGS
-            NSString *debugStringValue = [item stringValue];
-            if ([debugStringValue length] > 256) stringValue = @"(data)";
-
-            NSLog(@"common: %@ %@, key: %@ %@, value: %@, stringValue: %@",
-                commonKey, GetStringForFourCharCodeObject(commonKey),
-                key, GetStringForFourCharCodeObject(key),
-                [item value],
-                stringValue
-            );
-#endif
-        }
-    };
-
-    static dispatch_queue_t sLoaderQueue = NULL;
+    iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:[self externalURL]];
     
-    static dispatch_once_t onceToken;
-
-    dispatch_once(&onceToken, ^{
-        sLoaderQueue = dispatch_queue_create("Track.load-avasset-metadata", NULL);
-    });
-
-    __weak id weakSelf = self;
-
-    NSString *fallbackTitle = [[[self externalURL] lastPathComponent] stringByDeletingPathExtension];
-
-    dispatch_async(sLoaderQueue, ^{ @autoreleasepool {
-        BOOL isCancelled = [weakSelf isCancelled];
-        if (isCancelled) {
-            return;
-        }
-
-        NSURL *fileURL = [weakSelf internalURL];
-        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
-
-        NSArray *commonMetadata = [asset commonMetadata];
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-
-        for (AVMetadataItem *item in commonMetadata) {
-            parseMetadataItem(item, dictionary);
-        }
-
-        if (![dictionary objectForKey:sTitleKey]) {
-            [dictionary setObject:fallbackTitle forKey:sTitleKey];
-        }
-
-
-        for (NSString *format in [asset availableMetadataFormats]) {
-            NSArray *metadata = [asset metadataForFormat:format];
-        
-            for (AVMetadataItem *item in metadata) {
-                parseMetadataItem(item, dictionary);
-            }
-        }
-
-        NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
-        [dictionary setObject:@(duration) forKey:sDurationKey];
+    NSTimeInterval startTime = [metadata startTime];
+    NSTimeInterval stopTime  = [metadata stopTime];
     
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf _updateState:dictionary initialLoad:NO];
-        });
-
-        [asset cancelLoading];
-        asset = nil;
-    }});
+    EmbraceLog(@"Track", @"%@ updated startTime=%g, stopTime=%g with %@", self, startTime, stopTime, metadata);
+    
+    [self setStartTime:startTime];
+    [self setStopTime: stopTime];
 }
 
 
@@ -965,11 +681,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (void) startPriorityAnalysis
 {
-    if ([_trackAnalyzer isAnalyzingImmediately]) {
-        return;
-    }
-
-    [self _analyzeImmediately:YES];
+    [self _requestWorkerCommand:WorkerTrackCommandReadLoudnessImmediate];
 }
 
 

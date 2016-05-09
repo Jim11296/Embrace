@@ -1,0 +1,3 @@
+#include "../Base.xcconfig"
+#include "../ConfigSubmission.xcconfig"
+#include "../TargetWorker.xcconfig"

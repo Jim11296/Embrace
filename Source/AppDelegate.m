@@ -95,8 +95,10 @@
     PLCrashReporter   *_crashReporter;
     CrashReportSender *_crashSender;
 
-    NSMutableArray         *_editEffectControllers;
-    NSMutableArray         *_viewTrackControllers;
+    NSMutableArray    *_editEffectControllers;
+    NSMutableArray    *_viewTrackControllers;
+    
+    NSXPCConnection   *_connectionToWorker;
 }
 
 
@@ -297,6 +299,21 @@
 
 
 #pragma mark - Public Methods
+
+- (id<WorkerProtocol>) workerProxyWithErrorHandler:(void (^)(NSError *error))handler
+{
+    if (!_connectionToWorker) {
+        NSXPCInterface *interface = [NSXPCInterface interfaceWithProtocol:@protocol(WorkerProtocol)];
+        
+        _connectionToWorker = [[NSXPCConnection alloc] initWithServiceName:@"com.iccir.Embrace.EmbraceWorker"];
+        [_connectionToWorker setRemoteObjectInterface:interface];
+        [_connectionToWorker resume];
+    }
+    
+    return [_connectionToWorker remoteObjectProxyWithErrorHandler:handler];
+}
+
+
 
 - (void) performPreferredPlaybackAction
 {
@@ -859,11 +876,7 @@
 - (IBAction) openSupportFolder:(id)sender
 {
     EmbraceLogMethod();
-
-    NSString *file = GetApplicationSupportDirectory();
-    file = [file stringByDeletingLastPathComponent];
-
-    [[NSWorkspace sharedWorkspace] openFile:file];
+    [[NSWorkspace sharedWorkspace] openFile:GetApplicationSupportDirectory()];
 }
 
 

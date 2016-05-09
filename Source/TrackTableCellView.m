@@ -19,6 +19,71 @@
 
 #define SLOW_ANIMATIONS 0
 
+
+
+
+static NSColor *sGetInactiveHighlightColor()
+{
+    return GetRGBColor(0xdcdcdc, 1.0);
+}
+
+
+static NSColor *sGetActiveHighlightColor()
+{
+    return GetRGBColor(0x0065dc, 1.0);
+}
+
+
+static NSColor *sGetBorderColorForTrackLabel(TrackLabel trackLabel)
+{
+    if (trackLabel == TrackLabelRed) {
+        return GetRGBColor(0xff4439, 1.0);
+        
+    } else if (trackLabel == TrackLabelOrange) {
+        return GetRGBColor(0xff9500, 1.0);
+
+    } else if (trackLabel == TrackLabelYellow) {
+        return GetRGBColor(0xffcc00, 1.0);
+
+    } else if (trackLabel == TrackLabelGreen) {
+        return GetRGBColor(0x63da38, 1.0);
+
+    } else if (trackLabel == TrackLabelBlue) {
+        return GetRGBColor(0x1badf8, 1.0);
+
+    } else if (trackLabel == TrackLabelPurple) {
+        return GetRGBColor(0xcc73e1, 1.0);
+    }
+    
+    return nil;
+}
+
+
+static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
+{
+    if (trackLabel == TrackLabelRed) {
+        return GetRGBColor(0xff6259, 1.0);
+        
+    } else if (trackLabel == TrackLabelOrange) {
+        return GetRGBColor(0xffaa33, 1.0);
+
+    } else if (trackLabel == TrackLabelYellow) {
+        return GetRGBColor(0xffd633, 1.0);
+
+    } else if (trackLabel == TrackLabelGreen) {
+        return GetRGBColor(0x82e15f, 1.0);
+
+    } else if (trackLabel == TrackLabelBlue) {
+        return GetRGBColor(0x48bdf9, 1.0);
+
+    } else if (trackLabel == TrackLabelPurple) {
+        return GetRGBColor(0xd68fe7, 1.0);
+    }
+    
+    return nil;
+}
+
+
 @interface TrackTableCellView () <ApplicationEventListener>
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderedViewTopConstraint;
@@ -567,9 +632,9 @@
     }
 
     if (showsDot) {
-        NSColor *borderColor = [self isSelected] ? [NSColor whiteColor] : GetBorderColorForTrackLabel(trackLabel);
+        NSColor *borderColor = [self isSelected] ? [NSColor whiteColor] : sGetBorderColorForTrackLabel(trackLabel);
 
-        [_dotView setFillColor:GetFillColorForTrackLabel(trackLabel)];
+        [_dotView setFillColor:sGetFillColorForTrackLabel(trackLabel)];
         [_dotView setBorderColor:borderColor];
     }
 
@@ -608,15 +673,15 @@
     [borderedView setBottomDashBackgroundColor:bottomDashBackgroundColor];
 
     TrackLabel trackLabel = [track trackLabel];
-    [[self stripeView] setFillColor:GetFillColorForTrackLabel(trackLabel)];
-    [[self stripeView] setBorderColor:GetBorderColorForTrackLabel(trackLabel)];
+    [[self stripeView] setFillColor:sGetFillColorForTrackLabel(trackLabel)];
+    [[self stripeView] setBorderColor:sGetBorderColorForTrackLabel(trackLabel)];
     [[self stripeView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
 
     if (_selected) {
         if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
-            [borderedView setBackgroundColor:GetActiveHighlightColor()];
+            [borderedView setBackgroundColor:sGetActiveHighlightColor()];
         } else {
-            [borderedView setBackgroundColor:GetInactiveHighlightColor()];
+            [borderedView setBackgroundColor:sGetInactiveHighlightColor()];
         }
         
         topConstraintValue = -2;
@@ -629,7 +694,7 @@
     [_endTimeField setBackgroundColor:[borderedView backgroundColor]];
 
     if (_drawsInsertionPointWorkaround) {
-        [borderedView setTopBorderColor:GetActiveHighlightColor()];
+        [borderedView setTopBorderColor:sGetActiveHighlightColor()];
         [borderedView setTopBorderHeight:2];
         topConstraintValue = 0;
 
