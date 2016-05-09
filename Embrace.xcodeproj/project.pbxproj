@@ -1559,6 +1559,7 @@
 				5514B6521CDEE64200F238B7 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Profile;
 		};
 		5559E63918DFD42600D61019 /* Build configuration list for PBXNativeTarget "CrashPad" */ = {
 			isa = XCConfigurationList;
