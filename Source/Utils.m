@@ -447,60 +447,6 @@ NSColor *GetRGBColor(int rgb, CGFloat alpha)
 }
 
 
-NSColor *GetInactiveHighlightColor() { return GetRGBColor(0xdcdcdc, 1.0); }
-NSColor *GetActiveHighlightColor()   { return GetRGBColor(0x0065dc, 1.0); }
-
-
-NSColor *GetBorderColorForTrackLabel(TrackLabel trackLabel)
-{
-    if (trackLabel == TrackLabelRed) {
-        return GetRGBColor(0xff4439, 1.0);
-        
-    } else if (trackLabel == TrackLabelOrange) {
-        return GetRGBColor(0xff9500, 1.0);
-
-    } else if (trackLabel == TrackLabelYellow) {
-        return GetRGBColor(0xffcc00, 1.0);
-
-    } else if (trackLabel == TrackLabelGreen) {
-        return GetRGBColor(0x63da38, 1.0);
-
-    } else if (trackLabel == TrackLabelBlue) {
-        return GetRGBColor(0x1badf8, 1.0);
-
-    } else if (trackLabel == TrackLabelPurple) {
-        return GetRGBColor(0xcc73e1, 1.0);
-    }
-    
-    return nil;
-}
-
-
-NSColor *GetFillColorForTrackLabel(TrackLabel trackLabel)
-{
-    if (trackLabel == TrackLabelRed) {
-        return GetRGBColor(0xff6259, 1.0);
-        
-    } else if (trackLabel == TrackLabelOrange) {
-        return GetRGBColor(0xffaa33, 1.0);
-
-    } else if (trackLabel == TrackLabelYellow) {
-        return GetRGBColor(0xffd633, 1.0);
-
-    } else if (trackLabel == TrackLabelGreen) {
-        return GetRGBColor(0x82e15f, 1.0);
-
-    } else if (trackLabel == TrackLabelBlue) {
-        return GetRGBColor(0x48bdf9, 1.0);
-
-    } else if (trackLabel == TrackLabelPurple) {
-        return GetRGBColor(0xd68fe7, 1.0);
-    }
-    
-    return nil;
-}
-
-
 extern AppDelegate *GetAppDelegate(void)
 {
     return (AppDelegate *)[NSApp delegate];

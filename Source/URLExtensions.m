@@ -7,6 +7,7 @@
 //
 
 #import "URLExtensions.h"
+#import "Log.h"
 #import <objc/objc-runtime.h>
 
 static NSMutableDictionary *sURLToKeyMap = nil;

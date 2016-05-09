@@ -8,10 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+
 @class EditEffectController, ViewTrackController, Effect;
 @class SetlistController, Track;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
+
+- (id<WorkerProtocol>) workerProxyWithErrorHandler:(void (^)(NSError *error))handler;
 
 - (void) performPreferredPlaybackAction;
 

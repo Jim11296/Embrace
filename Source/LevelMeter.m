@@ -15,7 +15,7 @@
 - (void) drawRect:(NSRect)dirtyRect
 {
     NSRect bounds = [self bounds];
-    CGFloat barHeight = 3;
+    CGFloat barHeight = 4;
 
     bounds = NSInsetRect(bounds, 1, 0);
 
@@ -67,15 +67,15 @@
             [NSGraphicsContext restoreGraphicsState];
         }
 
-        [GetRGBColor(0xc6c6c6, 1.0) set];
+        [GetRGBColor(0x0, 0.15) set];
         [[NSBezierPath bezierPathWithRect:rightRect] addClip];
         [roundedPath fill];
         
         [NSGraphicsContext restoreGraphicsState];
         
         if (_metering) {
-            rect.origin.x = peakX - 1;
-            rect.size.width = 3;
+            rect.origin.x = peakX - 2;
+            rect.size.width = 4;
         
             if (peakX < 1) {
                 [[NSColor clearColor] set];
@@ -95,7 +95,7 @@
     leftChannelBar.origin.y = round((bounds.size.height - leftChannelBar.size.height) / 2);
 
     NSRect rightChannelBar = leftChannelBar;
-    rightChannelBar.origin.y -= 4;
+    rightChannelBar.origin.y -= 6;
 
     NSRect leftLimiter = leftChannelBar;
     NSRect rightLimiter = rightChannelBar;
@@ -103,7 +103,7 @@
     leftChannelBar.size.width  -= 4;
     rightChannelBar.size.width -= 4;
     
-    leftLimiter.size.width = rightLimiter.size.width = 3;
+    leftLimiter.size.width = rightLimiter.size.width = 4;
     leftLimiter.origin.x   = rightLimiter.origin.x = CGRectGetMaxX(leftChannelBar) + 1;
 
     if (_metering) {

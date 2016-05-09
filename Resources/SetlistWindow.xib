@@ -118,7 +118,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
                             <customView appearanceType="aqua" id="9x2-yQ-Jbg" customClass="LevelMeter">
-                                <rect key="frame" x="57" y="36" width="210" height="16"/>
+                                <rect key="frame" x="57" y="37" width="210" height="16"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </customView>
                             <customView appearanceType="aqua" id="pkk-ZT-czS" customClass="PlayBar">
@@ -126,7 +126,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </customView>
                             <slider verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
-                                <rect key="frame" x="55" y="19" width="210" height="20"/>
+                                <rect key="frame" x="55" y="18" width="210" height="20"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
                                 <connections>
@@ -135,7 +135,7 @@
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
-                                <rect key="frame" x="269" y="7" width="46" height="14"/>
+                                <rect key="frame" x="269" y="6" width="46" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
                                     <font key="font" metaFont="smallSystem"/>
@@ -147,14 +147,14 @@
                                 </connections>
                             </textField>
                             <customView id="Twn-WM-C4J" customClass="Button">
-                                <rect key="frame" x="7" y="24" width="42" height="24"/>
+                                <rect key="frame" x="7" y="22" width="42" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
                                 </connections>
                             </customView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
-                                <rect key="frame" x="5" y="7" width="46" height="14"/>
+                                <rect key="frame" x="5" y="6" width="46" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
                                     <font key="font" metaFont="smallSystem"/>
@@ -166,7 +166,7 @@
                                 </connections>
                             </textField>
                             <customView id="4bi-5W-Bp7" customClass="Button">
-                                <rect key="frame" x="271" y="24" width="42" height="24"/>
+                                <rect key="frame" x="271" y="22" width="42" height="28"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
@@ -174,7 +174,7 @@
                                 </connections>
                             </customView>
                             <customView id="yvU-8G-5CX" customClass="DangerMeter">
-                                <rect key="frame" x="271" y="55" width="42" height="11"/>
+                                <rect key="frame" x="271" y="54" width="42" height="11"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <outlet property="menu" destination="Kdj-dO-hkZ" id="53k-6Q-ubP"/>

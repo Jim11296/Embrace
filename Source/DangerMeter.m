@@ -10,117 +10,172 @@
 #import "Player.h"
 
 
-static const CGFloat sOvalWidth   = 5;
-static const CGFloat sOvalSpacing = 1;
-
-
 @implementation DangerMeter {
     NSTimer *_timer;
     double _dangerLevel;
     double _decayedLevel;
-    CFAbsoluteTime _dangerTime;
+    double _overloadLevel;
+
+    NSTimeInterval _dangerTime;
+    NSTimeInterval _overloadTime;
 }
+
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
-    if (!_metering) return;
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
     NSRect bounds = [self bounds];
     bounds = NSInsetRect(bounds, 1, 0);
+
+    CGFloat barHeight = 4;
+
+    CGFloat level = _decayedLevel;
+
+    CGFloat colorLevel = (level * 2.0) - 1.0;
+    if (colorLevel < 0) colorLevel = 0;
+
+    CGFloat activeColor[] = {
+        ((0x70 / 255.f) * (1.0 - colorLevel)) + colorLevel,
+         (0x70 / 255.f) * (1.0 - colorLevel),
+         (0x70 / 255.f) * (1.0 - colorLevel),
+        1.0
+    };
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
     CGContextSetFillColorSpace(context, colorSpace);
 
-    const CGFloat totalWidth = (sOvalWidth * 5) + (sOvalSpacing * 4);
+    NSRect barRect = bounds;
+    barRect.size.height = barHeight;
+    barRect.origin.y = round((bounds.size.height - barRect.size.height) / 2);
 
-    NSRect firstRect = NSMakeRect(
-        bounds.origin.x + (bounds.size.width - totalWidth),
-        round((bounds.size.height - sOvalWidth) / 2),
-        sOvalWidth,
-        sOvalWidth
-    );
+    NSPoint boltPoint = NSMakePoint(1, barRect.origin.y + 7);
+    
+    barRect.size.width -= 6;
+    barRect.origin.x += 6;
+   
+    NSRect overloadRect = barRect;
+    
+    barRect.size.width -= 6;
+    
+    overloadRect.size.width =  4;
+    overloadRect.origin.x   = CGRectGetMaxX(barRect) + 2;
 
-    CGFloat dangerLevel = _decayedLevel;
+    // Draw bolt in activeColor
+    {
+        CGFloat x = boltPoint.x;
+        CGFloat y = boltPoint.y;
 
-    void (^drawOval)(CGFloat, NSInteger) = ^(CGFloat x, NSInteger ovalIndex) {
-        NSRect rect = firstRect;
-        rect.origin.x += x;
+        CGContextMoveToPoint(   context, x + 2, y     );
+        CGContextAddLineToPoint(context, x + 2, y - 4 );
+        CGContextAddLineToPoint(context, x + 4, y - 4 );
+        CGContextAddLineToPoint(context, x + 2, y - 10);
+        CGContextAddLineToPoint(context, x + 2, y - 6 );
+        CGContextAddLineToPoint(context, x,     y - 6 );
+        CGContextAddLineToPoint(context, x,     y - 6 );
+        CGContextClosePath(context);
 
-        CGFloat ovalLevel = (dangerLevel * 5) - ovalIndex;
-        if (ovalLevel < 0) ovalLevel = 0;
-        if (ovalLevel > 1) ovalLevel = 1;
+        if (_metering) {
+            CGContextSetFillColor(context, activeColor);
+        } else {
+            [GetRGBColor(0x000000, 0.15) set];
+        }
 
-        CGFloat inactiveColor[] = { (0xc6 / 255.f), (0xc6 / 255.f), (0xc6 / 255.f), 1.0 };
-        CGFloat activeColor[]   = { (0x70 / 255.f), (0x70 / 255.f), (0x70 / 255.f), 1.0 };
+        CGContextFillPath(context);
+    }
 
-        const CGFloat red[]  = { 1, 0, 0, 1 };
+    // Draw bar
+    {
+        NSRect leftRect, rightRect;
 
-        CGContextSaveGState(context);
+        if (_metering) {
+            CGFloat levelX = (level * barRect.size.width);
+            if (levelX < 0) levelX = 0;
 
-        CGContextAddEllipseInRect(context, rect);
-        CGContextClip(context);
+            NSDivideRect(barRect, &leftRect, &rightRect, levelX, NSMinXEdge);
+        } else {
+            rightRect = leftRect = barRect;
+        }
+
+        CGFloat radius = barRect.size.height > barRect.size.width ? barRect.size.width : barRect.size.height;
+        radius /= 2;
+
+        NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundedRect:barRect xRadius:radius yRadius:radius];
+
+        [NSGraphicsContext saveGraphicsState];
+
+        [GetRGBColor(0x000000, 0.15) set];
+        [[NSBezierPath bezierPathWithRect:rightRect] addClip];
+        [roundedPath fill];
+
+        [NSGraphicsContext restoreGraphicsState];
+
+        if (_metering) {
+            [NSGraphicsContext saveGraphicsState];
+
+            CGContextSetFillColor(context, activeColor);
+            [[NSBezierPath bezierPathWithRect:leftRect] addClip];
+            [roundedPath fill];
+
+            [NSGraphicsContext restoreGraphicsState];
+        }
+    }
         
-        CGContextAddRect(context, rect);
-        CGContextAddEllipseInRect(context, CGRectInset(rect, 1, 1));
-        CGContextSetFillColor(context, inactiveColor);
-        CGContextEOFillPath(context);
+    // Draw overload dot
+    {
+        CGContextSaveGState(context);
+    
+        CGContextAddEllipseInRect(context, overloadRect);
+        CGContextClip(context);
 
-        CGContextSetAlpha(context, ovalLevel);
-        CGContextSetFillColor(context, activeColor);
-        CGContextFillRect(context, rect);
-
-        CGContextSetAlpha(context, dangerLevel * ovalLevel);
-        CGContextSetFillColor(context, red);
-        CGContextFillRect(context, rect);
+        [GetRGBColor(0x000000, 0.15) set];
+        CGContextFillRect(context, overloadRect);
+        
+        if (_metering) {
+            [GetRGBColor(0xff0000, _overloadLevel) set];
+            CGContextFillRect(context, overloadRect);
+        }
 
         CGContextRestoreGState(context);
-    };
-    
-    CGFloat x = 0;
-    drawOval(x, 0);
+    }
 
-    x += (sOvalWidth + sOvalSpacing);
-    drawOval(x, 1);
-
-    x += (sOvalWidth + sOvalSpacing);
-    drawOval(x, 2);
-
-    x += (sOvalWidth + sOvalSpacing);
-    drawOval(x, 3);
-
-    x += (sOvalWidth + sOvalSpacing);
-    drawOval(x, 4);
+    CGColorSpaceRelease(colorSpace);
 }
 
 
 - (void) _recomputeDecayedLevel
 {
-    CFAbsoluteTime now     = CFAbsoluteTimeGetCurrent();
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval dangerElapsed   = (now - _dangerTime)   - 1;
+    NSTimeInterval overloadElapsed = (now - _overloadTime) - 5;
 
-    CFAbsoluteTime holdTime = ceil(_dangerLevel * 5);
-    CFAbsoluteTime elapsed = (now - _dangerTime) - holdTime;
+    double decayedLevel  = 0;
+    double overloadLevel = 0;
 
-    double decayedLevel = 0;
-
-    if (elapsed < 0) {
+    if (dangerElapsed < 0) {
         decayedLevel = _dangerLevel;
     } else {
-        // We hold for 1 second, and then decay 0.2 (1 oval) per second
-        double dangerDecay = elapsed * 0.2;
+        // We hold for 1 second, and then decay 0.2 per second
+        double dangerDecay = dangerElapsed * 0.2;
 
         decayedLevel = (_dangerLevel - dangerDecay);
         if (decayedLevel < 0) decayedLevel = 0;
     }
+
+    if (overloadElapsed < 0) {
+        overloadLevel = 1;
+    } else {
+        overloadLevel = 1 - (overloadElapsed * 0.2);
+    }
     
-    
-    if (decayedLevel != _decayedLevel) {
-        _decayedLevel = decayedLevel;
+    if ((decayedLevel != _decayedLevel) || (overloadLevel != _overloadLevel)) {
+        _decayedLevel  = decayedLevel;
+        _overloadLevel = overloadLevel;
         [self setNeedsDisplay:YES];
     }
     
-    if (_decayedLevel == 0) {
+    if (_decayedLevel == 0 && _overloadLevel == 0) {
         [_timer invalidate];
         _timer = nil;
 
@@ -132,16 +187,18 @@ static const CGFloat sOvalSpacing = 1;
 
 - (void) addDangerPeak:(Float32)dangerPeak lastOverloadTime:(NSTimeInterval)lastOverloadTime
 {
-    CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
-    CFAbsoluteTime dangerTime = now;
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    NSTimeInterval dangerTime = now;
     
-    double dangerLevel = dangerPeak - 0.2;
+    double dangerLevel = dangerPeak;
     if (dangerLevel < 0) dangerLevel = 0;
     
-    if ((lastOverloadTime - 5) > now) {
+    if ((now - lastOverloadTime) < 5) {
         dangerLevel = 1.0;
         dangerTime = lastOverloadTime;
     } 
+
+    _overloadTime = lastOverloadTime;
 
     if (dangerLevel > _decayedLevel) {
         _dangerLevel = dangerLevel;

@@ -7,7 +7,6 @@
 //
 
 #import "Log.h"
-#import "Utils.h"
 
 
 static NSFileHandle *sLogFileHandle = nil;
@@ -58,16 +57,13 @@ void EmbraceCleanupLogs(NSURL *directoryURL)
 }
 
 
-void EmbraceOpenLogFile()
+void EmbraceOpenLogFile(NSString *path)
 {
     if (sLogFileHandle) return;
 
     NSFileManager *manager = [NSFileManager defaultManager];
 
     NSError *error = nil;
-
-    NSString *path = GetApplicationSupportDirectory();
-    path = [path stringByAppendingPathComponent:@"Logs"];
 
     [manager createDirectoryAtURL:[NSURL fileURLWithPath:path] withIntermediateDirectories:YES attributes:nil error:&error];
 
@@ -90,9 +86,7 @@ void EmbraceOpenLogFile()
 
 void EmbraceLog(NSString *category, NSString *format, ...)
 {
-    if (!sLogFileHandle) {
-        EmbraceOpenLogFile();
-    }
+    if (!sLogFileHandle) return;
 
     va_list v;
 
