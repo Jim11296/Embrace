@@ -300,19 +300,33 @@
 
 #pragma mark - Public Methods
 
+- (void) _clearConnectionToWorker
+{
+    [_connectionToWorker setInvalidationHandler:nil];
+    _connectionToWorker = nil;
+}
+
+
 - (id<WorkerProtocol>) workerProxyWithErrorHandler:(void (^)(NSError *error))handler
 {
     if (!_connectionToWorker) {
+        __weak id weakSelf = self;
+
         NSXPCInterface *interface = [NSXPCInterface interfaceWithProtocol:@protocol(WorkerProtocol)];
         
-        _connectionToWorker = [[NSXPCConnection alloc] initWithServiceName:@"com.iccir.Embrace.EmbraceWorker"];
-        [_connectionToWorker setRemoteObjectInterface:interface];
+        NSXPCConnection *connection = [[NSXPCConnection alloc] initWithServiceName:@"com.iccir.Embrace.EmbraceWorker"];
+        [connection setRemoteObjectInterface:interface];
+
+        [connection setInvalidationHandler:^{
+            [weakSelf _clearConnectionToWorker];
+        }];
+            
+        _connectionToWorker = connection;
         [_connectionToWorker resume];
     }
     
     return [_connectionToWorker remoteObjectProxyWithErrorHandler:handler];
 }
-
 
 
 - (void) performPreferredPlaybackAction
