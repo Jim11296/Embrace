@@ -15,6 +15,7 @@
 #import "Effect.h"
 #import "Player.h"
 #import "AppDelegate.h"
+#import "ExportManager.h"
 #import "iTunesManager.h"
 #import "TrackTableCellView.h"
 #import "WaveformView.h"
@@ -346,47 +347,6 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (NSString *) _contentsAsString
-{
-    NSMutableArray *played = [NSMutableArray array];
-    NSMutableArray *queued = [NSMutableArray array];
-
-    for (Track *track in [[self tracksController] tracks]) {
-        NSMutableString *line = [NSMutableString string];
-
-        NSString *artist = [track artist];
-        if (artist) [line appendFormat:@"%@ %C ", artist, (unichar)0x2014];
-        
-        NSString *title = [track title];
-        if (!title) title = @"???";
-
-        [line appendFormat:@"%@", title];
-        
-        if ([track trackStatus] == TrackStatusQueued) {
-            [queued addObject:line];
-        } else {
-            [played addObject:line];
-        }
-    }
-    
-    NSString *result = @"";
-    NSString *playedString = [played count] ? [played componentsJoinedByString:@"\n"] : nil;
-    NSString *queuedString = [queued count] ? [queued componentsJoinedByString:@"\n"] : nil;
-
-    if (playedString && queuedString) {
-        result = [NSString stringWithFormat:@"%@\n\nUnplayed:\n%@", playedString, queuedString];
-
-    } else if (queuedString) {
-        result = queuedString;
-
-    } else if (playedString) {
-        result = playedString;
-    }
-    
-    return result;
-}
-
-
 - (void) _updateDragSongsView
 {
     BOOL hidden = [[[self tracksController] tracks] count] > 0;
@@ -605,8 +565,9 @@ static NSInteger sAutoGapMaximum = 16;
 - (void) copyToPasteboard:(NSPasteboard *)pasteboard
 {
     EmbraceLogMethod();
-
-    NSString *contents = [self _contentsAsString];
+    
+    NSArray  *tracks   = [[self tracksController] tracks];
+    NSString *contents = [[ExportManager sharedInstance] stringWithFormat:ExportManagerFormatPlainText tracks:tracks];
 
     NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:contents ofType:NSPasteboardTypeString];
 
@@ -615,21 +576,14 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) saveToFileAtURL:(NSURL *)url
+- (void) exportToFile
 {
-    EmbraceLog(@"SetlistController", @"-saveToFileAtURL:%@", url);
+    NSArray  *tracks = [[self tracksController] tracks];
+    NSInteger result = [[ExportManager sharedInstance] runModalWithTracks:tracks];
 
-    NSString *contents = [self _contentsAsString];
-
-    NSError *error = nil;
-    [contents writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
-
-    if (error) {
-        EmbraceLog(@"SetlistController", @"Error saving set list to %@, %@", url, error);
-        NSBeep();
+    if (result == NSFileHandlingPanelOKButton) {
+        [self _markAsSaved];
     }
-    
-    [self _markAsSaved];
 }
 
 
