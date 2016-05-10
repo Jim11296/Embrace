@@ -674,38 +674,7 @@
 - (IBAction) saveSetlist:(id)sender
 {
     EmbraceLogMethod();
-
-    NSSavePanel *savePanel = [NSSavePanel savePanel];
-
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterLongStyle];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    
-    NSString *dateString = [formatter stringFromDate:[NSDate date]];
-
-    NSString *suggestedNameFormat = NSLocalizedString(@"Embrace (%@)", nil);
-    NSString *suggestedName = [NSString stringWithFormat:suggestedNameFormat, dateString];
-    [savePanel setNameFieldStringValue:suggestedName];
-
-    [savePanel setTitle:NSLocalizedString(@"Save Set List", nil)];
-    [savePanel setAllowedFileTypes:@[ @"txt" ]];
-    
-    if (!LoadPanelState(savePanel, @"save-set-list-panel")) {
-        NSString *desktopPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) firstObject];
-        
-        if (desktopPath) {
-            [savePanel setDirectoryURL:[NSURL fileURLWithPath:desktopPath]];
-        }
-    }
-    
-    __weak id weakSetlistController = _setlistController;
-    
-    [savePanel beginWithCompletionHandler:^(NSInteger result) {
-        if (result == NSFileHandlingPanelOKButton) {
-            SavePanelState(savePanel, @"save-set-list-panel");
-            [weakSetlistController saveToFileAtURL:[savePanel URL]];
-        }
-    }];
+    [_setlistController exportToFile];
 }
 
 

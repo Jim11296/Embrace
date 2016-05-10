@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (void) openFileAtURL:(NSURL *)url;
 
 - (void) copyToPasteboard:(NSPasteboard *)pasteboard;
-- (void) saveToFileAtURL:(NSURL *)url;
+- (void) exportToFile;
 - (void) exportToPlaylist;
 
 - (IBAction) changeLabel:(id)sender;

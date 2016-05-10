@@ -114,6 +114,7 @@
 		55CF849118BF459600EF33F7 /* Scripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF849018BF459600EF33F7 /* Scripting.m */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
+		55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */; };
 		55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B01877885800E8FEC8 /* SetlistController.m */; };
 		55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */; };
 		55F3B7B61877908900E8FEC8 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B51877908900E8FEC8 /* Track.m */; };
@@ -389,6 +390,8 @@
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
 		55E0B34018CBFA6900B4087C /* NoDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoDropImageView.h; path = Source/NoDropImageView.h; sourceTree = SOURCE_ROOT; };
 		55E0B34118CBFA6900B4087C /* NoDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoDropImageView.m; path = Source/NoDropImageView.m; sourceTree = SOURCE_ROOT; };
+		55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportManager.m; path = Source/ExportManager.m; sourceTree = SOURCE_ROOT; };
+		55EE45A51CE1D1CA00ECDF13 /* ExportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportManager.h; path = Source/ExportManager.h; sourceTree = SOURCE_ROOT; };
 		55F3B7AF1877885800E8FEC8 /* SetlistController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistController.h; path = Source/SetlistController.h; sourceTree = SOURCE_ROOT; };
 		55F3B7B01877885800E8FEC8 /* SetlistController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistController.m; path = Source/SetlistController.m; sourceTree = SOURCE_ROOT; };
 		55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SetlistWindow.xib; path = Resources/SetlistWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -697,6 +700,8 @@
 				55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */,
 				55102B491B537C2500308F55 /* EditSystemEffectController.h */,
 				55102B4A1B537C2500308F55 /* EditSystemEffectController.m */,
+				55EE45A51CE1D1CA00ECDF13 /* ExportManager.h */,
+				55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */,
 				55F81FD11B846E3300E03B5B /* IssuesController.h */,
 				55F81FD21B846E3300E03B5B /* IssuesController.m */,
 				552C9E4A1883888E0041C160 /* PreferencesController.h */,
@@ -1206,6 +1211,7 @@
 				557ABAB61B68D48C006F69D9 /* DotView.m in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
+				55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
 				55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */,
