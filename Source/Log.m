@@ -8,6 +8,7 @@
 
 #import "Log.h"
 
+static NSString *sLogFileDirectory = nil;
 
 static NSFileHandle *sLogFileHandle = nil;
 static NSDateFormatter *sLogFileDateFormatter = nil;
@@ -57,7 +58,7 @@ void EmbraceCleanupLogs(NSURL *directoryURL)
 }
 
 
-void EmbraceOpenLogFile(NSString *path)
+void EmbraceLogSetDirectory(NSString *path)
 {
     if (sLogFileHandle) return;
 
@@ -68,6 +69,7 @@ void EmbraceOpenLogFile(NSString *path)
     [manager createDirectoryAtURL:[NSURL fileURLWithPath:path] withIntermediateDirectories:YES attributes:nil error:&error];
 
     EmbraceCleanupLogs([NSURL fileURLWithPath:path isDirectory:YES]);
+    sLogFileDirectory = [path copy];
 
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd 'at' HH'.'mm'.'ss'.log'"];
@@ -81,6 +83,12 @@ void EmbraceOpenLogFile(NSString *path)
     
     sLogFileHandle = [NSFileHandle fileHandleForWritingAtPath:path];
     [sLogFileHandle seekToEndOfFile];
+}
+
+
+NSString *EmbraceLogGetDirectory(void)
+{
+    return sLogFileDirectory;
 }
 
 
@@ -103,6 +111,8 @@ void EmbraceLog(NSString *category, NSString *format, ...)
 
     NSString *line = [NSString stringWithFormat:@"%@ [%@] %@\n", dateString, category, contents];
     [sLogFileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSLog(@"%@", line);
     
     va_end(v);
 }

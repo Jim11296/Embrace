@@ -339,6 +339,19 @@
 }
 
 
+- (NSString *) _senderUUIDString
+{
+    NSString *result = [[NSUserDefaults standardUserDefaults] objectForKey:@"CrashReportSenderUUID"];
+    
+    if (!result) {
+        result = [[NSUUID UUID] UUIDString];
+        [[NSUserDefaults standardUserDefaults] setObject:result forKey:@"CrashReportSenderUUID"];
+    }
+
+    return result;
+}
+
+
 - (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
     NSError *error = NULL;
@@ -363,13 +376,6 @@
         applicationVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
     }
 
-    NSString *installString = [[NSUserDefaults standardUserDefaults] objectForKey:@"CrashReportSenderUUID"];
-    
-    if (!installString) {
-        installString = [[NSUUID UUID] UUIDString];
-        [[NSUserDefaults standardUserDefaults] setObject:installString forKey:@"CrashReportSenderUUID"];
-    }
- 
     NSString *deviceModel = [[self class] deviceModel];
   
     for (NSString *crashFile in crashFiles) {
@@ -390,7 +396,7 @@
 
             NSString *crashLogString = [PLCrashReportTextFormatter stringValueForCrashReport:report withTextFormat:PLCrashReportTextFormatiOS];
 
-            NSString *crashReporterKey = [NSString stringWithFormat:@"CrashReporter Key:   %@", installString];
+            NSString *crashReporterKey = [NSString stringWithFormat:@"CrashReporter Key:   %@", [self _senderUUIDString]];
             crashLogString = [crashLogString stringByReplacingOccurrencesOfString:@"CrashReporter Key:   TODO" withString:crashReporterKey];
 
             crashLogString = [crashLogString stringByReplacingOccurrencesOfString:@"]]>" withString:@"]]" @"]]><![CDATA[" @">" options:NSLiteralSearch range:NSMakeRange(0,crashLogString.length)];
@@ -418,6 +424,50 @@
         [self _postXMLString:[NSString stringWithFormat:@"<crashes>%@</crashes>", crashes]];
     }
 }
+
+
+- (void) sendLogs
+{
+    [self sendLogsWithCompletionHandler:nil];
+}
+
+
+- (void) sendLogsWithCompletionHandler:(void (^)(BOOL))completionHandler
+{
+    NSURL   *logURL = [NSURL fileURLWithPath:EmbraceLogGetDirectory()];
+    NSError *error  = nil;
+
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] init];
+
+    [coordinator coordinateReadingItemAtURL:logURL options:NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL *newURL) {
+        static NSString * const sGUIDKey                = @"GUID";
+
+        static NSString * const sDeviceNameKey          = @"dn";
+        static NSString * const sDeviceModelKey         = @"dm";
+        static NSString * const sDeviceSystemNameKey    = @"dsn";
+        static NSString * const sDeviceSystemVersionKey = @"dsv";
+
+        static NSString * const sBundleNameKey          = @"bn";
+        static NSString * const sBundleIdentifierKey    = @"bi";
+        static NSString * const sBundleVersionKey       = @"bv";
+        static NSString * const sBundleBuildNumberKey   = @"bbn";
+
+        static NSString * const sFileNameKey            = @"fn";
+        static NSString * const sFileDataKey            = @"fd";
+
+        static NSString * const sUserTextKey            = @"ut";
+
+        static NSString * const sLogHistoryKey          = @"lh";
+        static NSString * const sScreenshotKey          = @"ss";
+        static NSString * const sDefaultsDataKey        = @"dd";
+
+    
+        NSLog(@"%@", newURL);
+    }];
+    
+    NSLog(@"%@", error);
+}
+
 
 
 - (BOOL) hasCrashReports

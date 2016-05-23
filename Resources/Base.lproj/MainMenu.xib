@@ -32,6 +32,12 @@
                             <menuItem isSeparatorItem="YES" hidden="YES" id="236">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Send Logs…" hidden="YES" id="Hnn-Gu-9Wp">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="sendLogs:" target="494" id="ecD-iI-YYl"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Open Support Folder" hidden="YES" id="Zbe-Fj-v6o">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -482,6 +488,7 @@ CA
                 <outlet property="debugMenuItem" destination="SIh-TN-z42" id="zFu-2M-2jM"/>
                 <outlet property="openSupportMenuItem" destination="Zbe-Fj-v6o" id="iB2-6X-UnM"/>
                 <outlet property="openSupportSeparator" destination="236" id="0zG-yK-6Kr"/>
+                <outlet property="sendLogsMenuItem" destination="Hnn-Gu-9Wp" id="89X-Ae-OlN"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>

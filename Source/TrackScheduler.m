@@ -249,7 +249,9 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             fillBufferList->mBuffers[i].mData = data;
         }
 
-        err = [_audioFile readFrames:&frameCount intoBufferList:fillBufferList];
+        if (frameCount > 0) {
+            err = [_audioFile readFrames:&frameCount intoBufferList:fillBufferList];
+        }
 
         // ExtAudioFileRead() is documented to return 0 when the end of the file is reached.
         //

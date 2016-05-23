@@ -78,6 +78,7 @@
 @property (nonatomic, weak) IBOutlet NSMenuItem *crashReportMenuItem;
 
 @property (nonatomic, weak) IBOutlet NSMenuItem *openSupportSeparator;
+@property (nonatomic, weak) IBOutlet NSMenuItem *sendLogsMenuItem;
 @property (nonatomic, weak) IBOutlet NSMenuItem *openSupportMenuItem;
 
 @end
@@ -596,6 +597,7 @@
     
         [[self openSupportSeparator] setHidden:!visible];
         [[self openSupportMenuItem]  setHidden:!visible];
+        [[self sendLogsMenuItem]     setHidden:!visible];
 
         return YES;
     }
@@ -853,6 +855,47 @@
             }
         }];
     }
+}
+
+
+- (IBAction) sendLogs:(id)sender
+{
+    EmbraceLogMethod();
+
+    NSAlert *(^makeAlertOne)() = ^{
+        NSAlert *alert = [[NSAlert alloc] init];
+        
+        [alert setMessageText:NSLocalizedString(@"Send Logs?", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Detailed logs containing your set lists and usage will be sent.", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Send", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+
+        return alert;
+    };
+
+    NSAlert *(^makeAlertTwo)() = ^{
+        NSAlert *alert = [[NSAlert alloc] init];
+
+        [alert setMessageText:NSLocalizedString(@"Logs Sent", nil)];
+        [alert setInformativeText:NSLocalizedString(@"Thank you for your logs.  If you have any additional information, please contact me.", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Contact", nil)];
+
+        return alert;
+    };
+    
+    BOOL okToSend = [makeAlertOne() runModal] == NSAlertFirstButtonReturn;
+
+    if (okToSend) {
+        [_crashSender sendLogsWithCompletionHandler:^(BOOL didSend) {
+            NSModalResponse response = [makeAlertTwo() runModal];
+            
+            if (response == NSAlertSecondButtonReturn) {
+                [self sendFeedback:nil];
+            }
+        }];
+    }
+
 }
 
 
