@@ -15,7 +15,7 @@ int main(int argc, const char * argv[])
     NSString *logPath = GetApplicationSupportDirectory();
     logPath = [logPath stringByAppendingPathComponent:@"Logs"];
 
-    EmbraceOpenLogFile(logPath);
+    EmbraceLogSetDirectory(logPath);
     EmbraceLog(@"Hello", @"Embrace launched at %@", [NSDate date]);
 
     return NSApplicationMain(argc,  (const char **) argv);

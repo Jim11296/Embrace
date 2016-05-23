@@ -297,28 +297,6 @@ static NSInteger sAutoGapMaximum = 16;
         [window setCollectionBehavior:NSWindowCollectionBehaviorDefault];
     
     }
-    
-
-/*
-
-    NSWindowCollectionBehaviorDefault = 0,
-    NSWindowCollectionBehaviorCanJoinAllSpaces = 1 << 0,
-    NSWindowCollectionBehaviorMoveToActiveSpace = 1 << 1,
-    
-    NSWindowCollectionBehaviorManaged NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 2,         // participates in spaces, exposé.  Default behavior if windowLevel == NSNormalWindowLevel
-    NSWindowCollectionBehaviorTransient NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 3,       // floats in spaces, hidden by exposé.  Default behavior if windowLevel != NSNormalWindowLevel
-    NSWindowCollectionBehaviorStationary NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 4,      // unaffected by exposé.  Stays visible and stationary, like desktop window
-
-    NSWindowCollectionBehaviorParticipatesInCycle NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 5,     // default behavior if windowLevel == NSNormalWindowLevel
-    NSWindowCollectionBehaviorIgnoresCycle NS_ENUM_AVAILABLE_MAC(10_6) = 1 << 6,            // default behavior if windowLevel != NSNormalWindowLevel
-    
-    NSWindowCollectionBehaviorFullScreenPrimary NS_ENUM_AVAILABLE_MAC(10_7) = 1 << 7,       // the frontmost window with this collection behavior will be the fullscreen window.
-    NSWindowCollectionBehaviorFullScreenAuxiliary NS_ENUM_AVAILABLE_MAC(10_7) = 1 << 8,     // windows with this collection behavior can be shown with the fullscreen window.
-    
-     
-    NSWindowCollectionBehaviorFullScreenAllowsTiling NS_ENUM_AVAILABLE_MAC(10_11) = 1 << 11,       // This window can be a full screen tile window. It does not have to have FullScreenPrimary set.
-    NSWindowCollectionBehaviorFullScreenDisallowsTiling NS_ENUM_AVAILABLE_MAC(10_11) = 1 << 12      // This window can NOT be made a full screen tile window; it still may be allowed to be a regular FullScreenPrimary window.
-*/
 }
 
 
