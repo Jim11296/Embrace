@@ -333,12 +333,6 @@
 }
 
 
-- (void) sendCrashReports
-{
-    [self sendCrashReportsWithCompletionHandler:nil];
-}
-
-
 - (NSString *) _senderUUIDString
 {
     NSString *result = [[NSUserDefaults standardUserDefaults] objectForKey:@"CrashReportSenderUUID"];
@@ -432,6 +426,57 @@
 }
 
 
+- (NSURLRequest *) _urlRequestWithSnapshot:(NSDictionary *)snapshot
+{
+    NSURL               *url     = [NSURL URLWithString:@"<redacted>"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60];
+    NSMutableData       *body    = [[NSMutableData alloc] init];
+
+    void (^encodeData)(NSData *) = ^(NSData *data) {
+        NSUInteger length = [data length];
+
+        if (length > INT32_MAX) {
+            UInt32 lengthAsInt = 0;
+            [body appendBytes:&lengthAsInt length:sizeof(UInt32)];
+
+        } else {
+            UInt32 lengthAsInt = (int)length;
+            lengthAsInt = htonl(lengthAsInt);
+            [body appendBytes:&lengthAsInt length:sizeof(UInt32)];
+
+            if (data) {
+                [body appendData:data];
+            }
+        }
+    };
+    
+    UInt8 version = 1;
+    [body appendBytes:&version length:sizeof(UInt8)];
+    
+    UInt8 sizeOfInt = sizeof(UInt32);
+    [body appendBytes:&sizeOfInt length:sizeof(UInt8)];
+
+    for (id key in snapshot) {
+        NSData *keyAsData = [key dataUsingEncoding:NSUTF8StringEncoding];
+        id      value     = [snapshot objectForKey:key];
+
+        if ([value isKindOfClass:[NSString class]]) {
+            value = [value dataUsingEncoding:NSUTF8StringEncoding];
+        }
+        
+        if ([value isKindOfClass:[NSData class]]) {
+            encodeData(keyAsData);
+            encodeData(value);
+        }
+    }
+
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:body];
+    
+    return request;
+}
+
+
 - (void) sendLogsWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
     NSURL   *logURL = [NSURL fileURLWithPath:EmbraceLogGetDirectory()];
@@ -440,32 +485,51 @@
     NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] init];
 
     [coordinator coordinateReadingItemAtURL:logURL options:NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL *newURL) {
-        static NSString * const sGUIDKey                = @"GUID";
+        NSBundle *bundle            = [NSBundle mainBundle];
 
-        static NSString * const sDeviceNameKey          = @"dn";
-        static NSString * const sDeviceModelKey         = @"dm";
-        static NSString * const sDeviceSystemNameKey    = @"dsn";
-        static NSString * const sDeviceSystemVersionKey = @"dsv";
+        NSString *deviceName        = [[NSHost currentHost] localizedName];
+        NSString *systemVersion     = [[NSProcessInfo processInfo] operatingSystemVersionString];
 
-        static NSString * const sBundleNameKey          = @"bn";
-        static NSString * const sBundleIdentifierKey    = @"bi";
-        static NSString * const sBundleVersionKey       = @"bv";
-        static NSString * const sBundleBuildNumberKey   = @"bbn";
+        NSString *bundleName        = [bundle objectForInfoDictionaryKey:(id)kCFBundleNameKey];
+        NSString *bundleIdentifier  = [bundle objectForInfoDictionaryKey:(id)kCFBundleIdentifierKey];
+        NSString *bundleVersion     = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        NSString *bundleBuildNumber = [bundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey];
 
-        static NSString * const sFileNameKey            = @"fn";
-        static NSString * const sFileDataKey            = @"fd";
+        NSData *fileData = [NSData dataWithContentsOfURL:newURL];
+        if (!fileData) return;
 
-        static NSString * const sUserTextKey            = @"ut";
+        NSURLRequest *request = [self _urlRequestWithSnapshot:@{
+            @"GUID":    [self _senderUUIDString],
 
-        static NSString * const sLogHistoryKey          = @"lh";
-        static NSString * const sScreenshotKey          = @"ss";
-        static NSString * const sDefaultsDataKey        = @"dd";
+            @"fn":      @"Logs.zip",
+            @"fd":      fileData,
 
+            @"dn":      deviceName        ?: @"",
+            @"dsv":     systemVersion     ?: @"",
+            @"bn":      bundleName        ?: @"",
+            @"bi":      bundleIdentifier  ?: @"",
+            @"bv":      bundleVersion     ?: @"",
+            @"bbn":     bundleBuildNumber ?: @"",
+        }];
     
-        NSLog(@"%@", newURL);
+        NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *result, NSURLResponse *response, NSError *error2) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSHTTPURLResponse *httpResponse = nil;
+
+                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                    httpResponse = (NSHTTPURLResponse *)response;
+                }
+
+                if ([httpResponse statusCode] != 200) {
+                    completionHandler(NO);
+                } else {
+                    completionHandler(YES);
+                }
+            });
+        }];
+    
+        [task resume];
     }];
-    
-    NSLog(@"%@", error);
 }
 
 

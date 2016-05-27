@@ -72,7 +72,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 
 // Read/Write
 @property (nonatomic) TrackStatus trackStatus;
-@property (nonatomic) BOOL pausesAfterPlaying;
+@property (nonatomic) BOOL stopsAfterPlaying;
 @property (nonatomic) BOOL ignoresAutoGap;
 
 @property (nonatomic) NSTimeInterval estimatedEndTime;

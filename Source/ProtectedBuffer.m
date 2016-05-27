@@ -25,7 +25,7 @@
     if ((self = [super init])) {
         _pageSize    = sysconf(_SC_PAGESIZE);
         _totalLength = capacity + (2 * _pageSize);
-        
+                
         if (vm_allocate(mach_task_self(), (vm_address_t *)&_totalBytes, _totalLength, VM_FLAGS_ANYWHERE) != 0) {
             self = nil;
             return nil;

@@ -83,7 +83,7 @@ static NSInteger sAutoGapMaximum = 16;
     double     _volumeBeforeKeyboard;
     double     _volumeBeforeAutoPause;
     BOOL       _didAutoPause;
-    BOOL       _confirmPause;
+    BOOL       _confirmStop;
     BOOL       _willCalculateStartAndEndTimes;
 }
 
@@ -180,6 +180,14 @@ static NSInteger sAutoGapMaximum = 16;
         NSFont *font = [[self autoGapField] font];
         font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
         [[self autoGapField] setFont:font];
+
+        font = [[self playOffsetField] font];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        [[self playOffsetField] setFont:font];
+
+        font = [[self playRemainingField] font];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        [[self playRemainingField] setFont:font];
     }
 
     [window setExcludedFromWindowsMenu:YES];
@@ -230,7 +238,7 @@ static NSInteger sAutoGapMaximum = 16;
     Button *playButton = [self playButton];
     
     if (action == PlaybackActionShowIssue) {
-        image = [NSImage imageNamed:@"IssueTemplate"];
+        image = [NSImage imageNamed:@"DeviceIssueTemplate"];
         alert = YES;
 
         PlayerIssue issue = [player issue];
@@ -243,9 +251,9 @@ static NSInteger sAutoGapMaximum = 16;
             tooltip = NSLocalizedString(@"The selected output device could not be configured", nil);
         }
 
-    } else if (action == PlaybackActionPause) {
-        image = _confirmPause ? [NSImage imageNamed:@"StopTemplate"] : [NSImage imageNamed:@"PauseTemplate"];
-        alert = _confirmPause;
+    } else if (action == PlaybackActionStop) {
+        image = _confirmStop ? [NSImage imageNamed:@"ConfirmTemplate"] : [NSImage imageNamed:@"StopTemplate"];
+        alert = _confirmStop;
         enabled = YES;
 
     } else {
@@ -268,7 +276,7 @@ static NSInteger sAutoGapMaximum = 16;
     [playButton setEnabled:enabled];
 
     if (enabled) {
-        [playButton setWiggling:((action == PlaybackActionPause) && _inVolumeDrag && isVolumeZero)];
+        [playButton setWiggling:((action == PlaybackActionStop) && _inVolumeDrag && isVolumeZero)];
     } else {
         [playButton setWiggling:NO];
     }
@@ -374,7 +382,7 @@ static NSInteger sAutoGapMaximum = 16;
         Player *player = [Player sharedInstance];
         BOOL isVolumeZero = [player volume] == 0;
 
-        if (action == PlaybackActionPause && !_inVolumeDrag && isVolumeZero) {
+        if (action == PlaybackActionStop && !_inVolumeDrag && isVolumeZero) {
             [playButton performOpenAnimationToImage:[NSImage imageNamed:@"ResumeTemplate"] enabled:YES];
             _volumeBeforeAutoPause = beforeVolume;
             _didAutoPause = YES;
@@ -382,7 +390,7 @@ static NSInteger sAutoGapMaximum = 16;
             [[Player sharedInstance] hardStop];
 
         } else if (action == PlaybackActionPlay && _didAutoPause && !isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"PauseTemplate"] enabled:NO];
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"StopTemplate"] enabled:NO];
             _didAutoPause = NO;
 
             [[Player sharedInstance] play];
@@ -393,14 +401,14 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) _clearConfirmPause
+- (void) _clearConfirmStop
 {
     EmbraceLogMethod();
 
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmPause) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmStop) object:nil];
 
-    _confirmPause = NO;
-    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"PauseTemplate"] alert:NO];
+    _confirmStop = NO;
+    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"StopTemplate"] alert:NO];
     [self _updatePlayButton];
 }
 
@@ -600,7 +608,7 @@ static NSInteger sAutoGapMaximum = 16;
         return PlaybackActionShowIssue;
     
     } else if ([player isPlaying]) {
-        return PlaybackActionPause;
+        return PlaybackActionStop;
 
     } else {
         return PlaybackActionPlay;
@@ -677,8 +685,8 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (void) handleNonSpaceKeyDown
 {
-    if (_confirmPause) {
-        [self _clearConfirmPause];
+    if (_confirmStop) {
+        [self _clearConfirmStop];
     }
 }
 
@@ -692,23 +700,21 @@ static NSInteger sAutoGapMaximum = 16;
 
     PlaybackAction action = [self preferredPlaybackAction];
 
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmPause) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmStop) object:nil];
 
     if (action == PlaybackActionShowIssue) {
         [self showAlertForIssue:[[Player sharedInstance] issue]];
 
-    } else if (action == PlaybackActionPause) {
-        BOOL isAtBeginningOfSong = [[Player sharedInstance] isAtBeginningOfSong];
-    
-        EmbraceLog(@"SetlistController", @"Performing PlaybackActionPause, _confirmPause is %ld", (long)_confirmPause);
+    } else if (action == PlaybackActionStop) {
+        EmbraceLog(@"SetlistController", @"Performing PlaybackActionStop, _confirmStop is %ld", (long)_confirmStop);
 
-        if (!_confirmPause && !isAtBeginningOfSong) {
-            _confirmPause = YES;
+        if (!_confirmStop) {
+            _confirmStop = YES;
 
-            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"StopTemplate"] alert:YES];
+            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"ConfirmTemplate"] alert:YES];
             
             [self _updatePlayButton];
-            [self performSelector:@selector(_clearConfirmPause) withObject:nil afterDelay:2];
+            [self performSelector:@selector(_clearConfirmStop) withObject:nil afterDelay:2];
 
         } else {
             NSEvent *currentEvent = [NSApp currentEvent];
@@ -723,7 +729,7 @@ static NSInteger sAutoGapMaximum = 16;
             }
         
             if (!isDoubleClick) {
-                _confirmPause = NO;
+                _confirmStop = NO;
                 [[Player sharedInstance] hardStop];
             }
         }
@@ -821,10 +827,10 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (IBAction) togglePauseAfterPlaying:(id)sender
+- (IBAction) toggleStopsAfterPlaying:(id)sender
 {
     EmbraceLogMethod();
-    [[self tracksController] togglePauseAfterPlaying:self];
+    [[self tracksController] toggleStopsAfterPlaying:self];
     [self _updatePlayButton];
 }
 
@@ -877,7 +883,7 @@ static NSInteger sAutoGapMaximum = 16;
 
     if (action == @selector(delete:) ||
         action == @selector(toggleMarkAsPlayed:) ||
-        action == @selector(togglePauseAfterPlaying:) ||
+        action == @selector(toggleStopsAfterPlaying:) ||
         action == @selector(toggleIgnoreAutoGap:) ||
         action == @selector(revealEndTime:))
     {

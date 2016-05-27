@@ -18,16 +18,13 @@ NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPl
 
 #define DUMP_UNKNOWN_TAGS 0
 
-static NSString * const sTypeKey           = @"trackType";
-
-static NSString * const sLabelKey          = @"trackLabel";
-static NSString * const sPausesKey         = @"pausesAfterPlaying";
-static NSString * const sIgnoresAutoGapKey = @"ignoresAutoGap";
-
-static NSString * const sStatusKey         = @"trackStatus";
-static NSString * const sTrackErrorKey     = @"trackError";
-
-static NSString * const sBookmarkKey       = @"bookmark";
+static NSString * const sTypeKey              = @"trackType";
+static NSString * const sLabelKey             = @"trackLabel";
+static NSString * const sStopsAfterPlayingKey = @"stopsAfterPlaying";
+static NSString * const sIgnoresAutoGapKey    = @"ignoresAutoGap";
+static NSString * const sStatusKey            = @"trackStatus";
+static NSString * const sTrackErrorKey        = @"trackError";
+static NSString * const sBookmarkKey          = @"bookmark";
 
 
 
@@ -194,6 +191,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [self _updateState:state initialLoad:YES];
         [self _readMetadataViaManagerWithFileURL:url];
         
+        EmbraceLog(@"Track", @"%@ is at memory address %p", self, self);
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleApplicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
     }
 
@@ -210,7 +209,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     }
 
     if ([friendlyString length]) {
-        return [NSString stringWithFormat:@"<%@: %p, \"%@\">", [self class], self, friendlyString];
+        return [NSString stringWithFormat:@"<%@: \"%@\">", [self class], friendlyString];
     } else {
         return [super description];
     }
@@ -323,8 +322,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
 
-    if (_pausesAfterPlaying) {
-        [state setObject:@YES forKey:sPausesKey];
+    if (_stopsAfterPlaying) {
+        [state setObject:@YES forKey:sStopsAfterPlayingKey];
     }
 
     if (_ignoresAutoGap) {
@@ -400,7 +399,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (void) _handleResolvedExternalURL:(NSURL *)externalURL internalURL:(NSURL *)internalURL bookmark:(NSData *)bookmark
 {
-    EmbraceLog(@"Track", @"%@ resolved %@ to bookmark %@, internalURL: %@", self, externalURL, bookmark, internalURL);
+    EmbraceLog(@"Track", @"%@ resolved %@ to bookmark, internalURL: %@", self, externalURL, internalURL);
 
     if (![_bookmark isEqual:bookmark]) {
         _bookmark = bookmark;
@@ -456,8 +455,11 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             }
 
             if (!bookmark) {
-                [self setTitle:[inURL lastPathComponent]];
-                [self setTrackError:TrackErrorOpenFailed];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setTitle:[inURL lastPathComponent]];
+                    [self setTrackError:TrackErrorOpenFailed];
+                });
+
                 return;
             }
 
@@ -472,7 +474,10 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                                                       error: &error];
 
             if (!externalURL) {
-                [self setTrackError:TrackErrorOpenFailed];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setTrackError:TrackErrorOpenFailed];
+                });
+
                 return;
             }
 
@@ -513,7 +518,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             EmbraceLog(@"Track", @"Resolving bookmark raised exception %@", e);
             externalURL = internalURL = nil;
 
-            [self setTrackError:TrackErrorOpenFailed];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self setTrackError:TrackErrorOpenFailed];
+            });
         }
     });
 }
@@ -608,7 +615,14 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     
     [worker performTrackCommand:command UUID:UUID internalURL:internalURL externalURL:externalURL reply: ^(NSDictionary *dictionary) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            EmbraceLog(@"Track", @"Received reply for worker command %ld: %@", command, dictionary);
+            if (command == WorkerTrackCommandReadMetadata) {
+                EmbraceLog(@"Track", @"%@ received metadata from worker: %@", self, dictionary);
+            } else if (command == WorkerTrackCommandReadLoudness) {
+                EmbraceLog(@"Track", @"%@ received loudness from worker", self);
+            } else if (command == WorkerTrackCommandReadLoudnessImmediate) {
+                EmbraceLog(@"Track", @"%@ received immediate loudness from worker", self);
+            }
+
             [weakSelf _updateState:dictionary initialLoad:NO];
         });
     }];
@@ -719,12 +733,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 }
 
 
-- (void) setPausesAfterPlaying:(BOOL)pausesAfterPlaying
+- (void) setStopsAfterPlaying:(BOOL)stopsAfterPlaying
 {
-    if (_pausesAfterPlaying != pausesAfterPlaying) {
-        _pausesAfterPlaying = pausesAfterPlaying;
+    if (_stopsAfterPlaying != stopsAfterPlaying) {
+        _stopsAfterPlaying = stopsAfterPlaying;
         
-        if (pausesAfterPlaying) {
+        if (stopsAfterPlaying) {
             [self setIgnoresAutoGap:NO];
         }
         
@@ -741,7 +755,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         _ignoresAutoGap = ignoresAutoGap;
         
         if (ignoresAutoGap) {
-            [self setPausesAfterPlaying:NO];
+            [self setStopsAfterPlaying:NO];
         }
         
         _dirty = YES;

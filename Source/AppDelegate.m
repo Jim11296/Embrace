@@ -51,7 +51,7 @@
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;
 - (IBAction) hardSkip:(id)sender;
-- (IBAction) hardPause:(id)sender;
+- (IBAction) hardStop:(id)sender;
 
 - (IBAction) increaseVolume:(id)sender;
 - (IBAction) decreaseVolume:(id)sender;
@@ -484,8 +484,8 @@
         if (playbackAction == PlaybackActionShowIssue) {
             title = NSLocalizedString(@"Show Issue", nil);
 
-        } else if (playbackAction == PlaybackActionPause) {
-            title = NSLocalizedString(@"Pause", nil);
+        } else if (playbackAction == PlaybackActionStop) {
+            title = NSLocalizedString(@"Stop", nil);
         }
 
         [menuItem setState:state];
@@ -516,7 +516,7 @@
 
         return ![[Player sharedInstance] isPlaying];
     
-    } else if (action == @selector(hardPause:)) {
+    } else if (action == @selector(hardStop:)) {
         return [[Player sharedInstance] isPlaying];
 
     } else if (action == @selector(hardSkip:)) {
@@ -765,9 +765,9 @@
 }
 
 
-- (IBAction) hardPause:(id)sender
+- (IBAction) hardStop:(id)sender
 {
-    EmbraceLog(@"AppDelegate", @"hardPause:  sender=%@, event=%@", sender, [NSApp currentEvent]);
+    EmbraceLog(@"AppDelegate", @"hardStop:  sender=%@, event=%@", sender, [NSApp currentEvent]);
     [[Player sharedInstance] hardStop];
 }
 

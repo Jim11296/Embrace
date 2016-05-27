@@ -656,7 +656,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     CGFloat topConstraintValue = 0;
 
     if ([track trackStatus] != TrackStatusPlayed) {
-        if ([track pausesAfterPlaying]) {
+        if ([track stopsAfterPlaying]) {
             bottomBorderColor = [NSColor redColor];
             bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
             bottomBorderHeight = 2;

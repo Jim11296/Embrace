@@ -72,12 +72,21 @@ static OSStatus sApplyEmergencyLimiter(
 @end
 
 
+//typedef NS_ENUM(NSInteger, RenderThreadCommand) {
+//    RenderThreadCommandNewInputUnit,
+    
+
+
 typedef struct {
+    volatile SInt64    inputID;
     volatile AudioUnit inputUnit;
-    volatile NSInteger stopRequested;
-    volatile NSInteger stopped;
+
+    volatile SInt64    nextInputID;
+    volatile AudioUnit nextInputUnit;
+
     volatile float     stereoLevel;
     volatile float     previousStereoLevel;
+
     volatile UInt64    sampleTime;
 } RenderUserInfo;
 
@@ -122,9 +131,7 @@ typedef struct {
     NSInteger    _reconnectGraph_failureCount;
     NSInteger    _setupAndStartPlayback_failureCount;
 
-    id<NSObject>    _processActivityToken;
-    IOPMAssertionID _systemPowerAssertionID;
-    IOPMAssertionID _displayPowerAssertionID;
+    id<NSObject> _processActivityToken;
     
     NSMutableDictionary *_effectToNodeMap;
     NSHashTable *_listeners;
@@ -407,7 +414,11 @@ typedef struct {
     if (timeStamp.mSampleTime < 0) {
         status = TrackStatusPreparing;
 
-        _timeElapsed   = GetDeltaInSecondsForHostTimes(GetCurrentHostTime(), _currentStartHostTime);
+        _timeElapsed = GetDeltaInSecondsForHostTimes(GetCurrentHostTime(), _currentStartHostTime);
+        if (_timeElapsed > 0) {
+            _timeElapsed = 0;
+        }
+
         _timeRemaining = [_currentTrack playDuration];
         
         roundedTimeElapsed = floor(_timeElapsed);
@@ -530,51 +541,16 @@ typedef struct {
 {
     [self _clearPowerAssertions];
 
-    NSProcessInfo *processInfo = [NSProcessInfo processInfo];
-    NSString *reason = @"Embrace is playing audio";
-    
-    if ([processInfo respondsToSelector:@selector(beginActivityWithOptions:reason:)]) {
-        NSActivityOptions options = NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityLatencyCritical;
-        _processActivityToken = [processInfo beginActivityWithOptions:options reason:reason];
-    
-    } else {
-        IOPMAssertionCreateWithName(
-            kIOPMAssertPreventUserIdleDisplaySleep,
-            kIOPMAssertionLevelOn,
-            (__bridge CFStringRef)reason,
-            &_displayPowerAssertionID
-        );
-
-        IOPMAssertionCreateWithName(
-            kIOPMAssertPreventUserIdleSystemSleep,
-            kIOPMAssertionLevelOn,
-            (__bridge CFStringRef)reason,
-            &_systemPowerAssertionID
-        );
-    }
+    NSActivityOptions options = NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityLatencyCritical;
+    _processActivityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:options reason:@"Embrace is playing audio"];
 }
 
 
 - (void) _clearPowerAssertions
 {
     if (_processActivityToken) {
-        NSProcessInfo *processInfo = [NSProcessInfo processInfo];
-        
-        if ([processInfo respondsToSelector:@selector(endActivity:)]) {
-            [processInfo endActivity:_processActivityToken];
-        }
-
+        [[NSProcessInfo processInfo] endActivity:_processActivityToken];
         _processActivityToken = nil;
-    }
-
-    if (_displayPowerAssertionID) {
-        IOPMAssertionRelease(_displayPowerAssertionID);
-        _displayPowerAssertionID = 0;
-    }
-
-    if (_systemPowerAssertionID) {
-        IOPMAssertionRelease(_systemPowerAssertionID);
-        _systemPowerAssertionID = 0;
     }
 }
 
@@ -677,46 +653,105 @@ static OSStatus sInputRenderCallback(
 {
     RenderUserInfo *userInfo = (RenderUserInfo *)inRefCon;
     
-    AudioUnit unit = userInfo->inputUnit;
+    AudioUnit unit  = userInfo->inputUnit;
+    OSStatus result = noErr;
     
-    AudioTimeStamp timestampToUse = {0};
-    timestampToUse.mSampleTime = userInfo->sampleTime;
-    timestampToUse.mHostTime   = inTimeStamp->mHostTime;
-    timestampToUse.mFlags      = kAudioTimeStampSampleTimeValid|kAudioTimeStampHostTimeValid;
+    BOOL willChangeUnits = (userInfo->nextInputID != userInfo->inputID);
 
-    OSStatus result = AudioUnitRender(unit, ioActionFlags, &timestampToUse, 0, inNumberFrames, ioData);
+    if (!unit) {
+        *ioActionFlags |= kAudioUnitRenderAction_OutputIsSilence;
 
-    userInfo->sampleTime += inNumberFrames;
+    } else {
+        AudioTimeStamp timestampToUse = {0};
+        timestampToUse.mSampleTime = userInfo->sampleTime;
+        timestampToUse.mHostTime   = GetCurrentHostTime();
+        timestampToUse.mFlags      = kAudioTimeStampSampleTimeValid|kAudioTimeStampHostTimeValid;
 
-//    if (rand() % 100 == 0) {
-//        NSLog(@"SLEEPING");
-//        usleep(500000);
-//    }
+        result = AudioUnitRender(unit, ioActionFlags, &timestampToUse, 0, inNumberFrames, ioData);
 
-    if (userInfo->stopRequested) {
-        for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
-            AudioBuffer buffer = ioData->mBuffers[i];
-            
-            float *frames = (float *)buffer.mData;
-            
-            float start = 1.0;
-            float step  = -(1.0 / (float)inNumberFrames);
-            vDSP_vrampmul(frames, 1, &start, &step, frames, 1, inNumberFrames);
+        userInfo->sampleTime += inNumberFrames;
+
+    //    if (rand() % 100 == 0) {
+    //        NSLog(@"SLEEPING");
+    //        usleep(500000);
+    //    }
+
+        // Process stereo field
+        {
+            BOOL canSkipStereoField = (userInfo->previousStereoLevel) == 1.0 && (userInfo->stereoLevel == 1.0);
+
+            if (!canSkipStereoField) {
+                ApplyStereoField(inNumberFrames, ioData, userInfo->previousStereoLevel, userInfo->stereoLevel);
+                userInfo->previousStereoLevel = userInfo->stereoLevel;
+            }
         }
 
-        userInfo->stopped = 1;
+        if (willChangeUnits) {
+            for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
+                AudioBuffer buffer = ioData->mBuffers[i];
+                
+                float *frames = (float *)buffer.mData;
+                
+                float start = 1.0;
+                float step  = -(1.0 / (float)inNumberFrames);
+                vDSP_vrampmul(frames, 1, &start, &step, frames, 1, inNumberFrames);
+            }
+        }
     }
 
-
-    BOOL canSkip = (userInfo->previousStereoLevel) == 1.0 && (userInfo->stereoLevel == 1.0);
-
-    // Process stereo field
-    if (!canSkip) {
-        ApplyStereoField(inNumberFrames, ioData, userInfo->previousStereoLevel, userInfo->stereoLevel);
+    if (willChangeUnits) {
+        userInfo->inputUnit = userInfo->nextInputUnit;
         userInfo->previousStereoLevel = userInfo->stereoLevel;
+        userInfo->sampleTime = 0;
+        OSMemoryBarrier();
+
+        userInfo->inputID = userInfo->nextInputID;
     }
 
     return result;
+}
+
+
+- (void) _sendInputUnitToRenderThread:(AudioUnit)audioUnit
+{
+    EmbraceLog(@"Player", @"Sending %p to render thread", audioUnit);
+
+    Boolean isRunning;
+    AUGraphIsRunning(_graph, &isRunning);
+
+    if (isRunning) {
+        _renderUserInfo.nextInputUnit = audioUnit;
+        OSMemoryBarrier();
+
+        OSAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+
+        NSInteger loopGuard = 0;
+        while (1) {
+            OSMemoryBarrier();
+
+            if (_renderUserInfo.inputID == _renderUserInfo.nextInputID) {
+                break;
+            }
+        
+            AUGraphIsRunning(_graph, &isRunning);
+            
+            if (!isRunning) return;
+
+            if (loopGuard >= 1000) {
+                EmbraceLog(@"Player", @"_sendInputUnitToRenderThread timed out");
+                break;
+            }
+
+            usleep(1000);
+            loopGuard++;
+        }
+    } else {
+        _renderUserInfo.inputUnit = NULL;
+        _renderUserInfo.nextInputUnit = audioUnit;
+        OSMemoryBarrier();
+
+        OSAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+    }
 }
 
 
@@ -844,12 +879,17 @@ static OSStatus sInputRenderCallback(
         _generatorNode = generatorNode;
         _generatorAudioUnit = generatorUnit;
 
+        [self _sendInputUnitToRenderThread:_converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit];
+
+
+/*
         _renderUserInfo.stopped = 0;
         _renderUserInfo.stopRequested = 0;
         _renderUserInfo.inputUnit = _converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit;
         _renderUserInfo.stereoLevel = _stereoLevel;
         _renderUserInfo.previousStereoLevel = _stereoLevel;
         _renderUserInfo.sampleTime = 0;
+*/
     });
     
     if (ok) {
@@ -1257,6 +1297,8 @@ static OSStatus sInputRenderCallback(
         return;
     }
 
+    [self _sendInputUnitToRenderThread:NULL];
+
     [_currentScheduler stopScheduling:_generatorAudioUnit];
     _currentScheduler = nil;
 
@@ -1380,7 +1422,7 @@ static OSStatus sInputRenderCallback(
     Track *nextTrack = nil;
     NSTimeInterval padding = 0;
 
-    if (![_currentTrack pausesAfterPlaying]) {
+    if (![_currentTrack stopsAfterPlaying]) {
         [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
     }
     
@@ -1432,7 +1474,6 @@ static OSStatus sInputRenderCallback(
         }
         
         [self _takePowerAssertions];
-        
     }
 }
 
@@ -1447,7 +1488,7 @@ static OSStatus sInputRenderCallback(
     NSTimeInterval padding = 0;
 
     [_currentTrack setTrackStatus:TrackStatusPlayed];
-    [_currentTrack setPausesAfterPlaying:NO];
+    [_currentTrack setStopsAfterPlaying:NO];
     [_currentTrack setIgnoresAutoGap:NO];
 
     [_trackProvider player:self getNextTrack:&nextTrack getPadding:&padding];
@@ -1477,16 +1518,19 @@ static OSStatus sInputRenderCallback(
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setupAndStartPlayback) object:nil];
     _setupAndStartPlayback_failureCount = 0;
 
-    if ([self isAtBeginningOfSong]) {
-        EmbraceLog(@"Player", @"Remarking %@ as queued due to _timeElapsed of %g", _currentTrack, _timeElapsed);
+    if ([_currentTrack trackStatus] == TrackStatusPreparing) {
+        EmbraceLog(@"Player", @"Remarking %@ as queued due to status of preparing", _currentTrack);
+        [_currentTrack setTrackStatus:TrackStatusQueued];
 
+    } else if ([self _shouldRemarkAsQueued]) {
+        EmbraceLog(@"Player", @"Remarking %@ as queued due to _timeElapsed of %g", _currentTrack, _timeElapsed);
         [_currentTrack setTrackStatus:TrackStatusQueued];
 
     } else {
         EmbraceLog(@"Player", @"Marking %@ as played", _currentTrack);
 
         [_currentTrack setTrackStatus:TrackStatusPlayed];
-        [_currentTrack setPausesAfterPlaying:NO];
+        [_currentTrack setStopsAfterPlaying:NO];
         [_currentTrack setIgnoresAutoGap:NO];
     }
 
@@ -1505,21 +1549,10 @@ static OSStatus sInputRenderCallback(
         AUGraphIsRunning(_graph, &isRunning),
         "AUGraphIsRunning"
     );
-    
-    if (isRunning) {
-        _renderUserInfo.stopRequested = 1;
-        
-        NSInteger loopGuard = 0;
-        while ((_renderUserInfo.stopped == 0) && (loopGuard < 1000)) {
-            usleep(1000);
-            loopGuard++;
-        }
-        
-        _renderUserInfo.stopRequested = 0;
-        _renderUserInfo.stopped = 0;
 
-//      To ensure the meter is actually cleared, let the graph run for 10 seconds
-        [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:10];
+    if (isRunning) {
+        [self _sendInputUnitToRenderThread:NULL];
+        [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:30];
     }
 
     [self _iterateGraphAudioUnits:^(AudioUnit unit) {
@@ -1545,9 +1578,17 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (BOOL) isAtBeginningOfSong
+- (BOOL) _shouldRemarkAsQueued
 {
-    return _timeElapsed < 2.0 && ([_currentTrack playDuration] > 10.0);
+    NSTimeInterval playDuration = [_currentTrack playDuration];
+
+    if (playDuration > 20.0) {
+        return _timeElapsed < 10.0;
+    } else if (playDuration > 10) {
+        return _timeElapsed < 2.0;
+    } else {
+        return NO;
+    }
 }
 
 

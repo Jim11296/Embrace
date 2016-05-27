@@ -27,7 +27,7 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (void) revealEndTime:(id)sender;
 - (BOOL) canRevealEndTime;
 
-- (void) togglePauseAfterPlaying:(id)sender;
+- (void) toggleStopsAfterPlaying:(id)sender;
 - (void) toggleIgnoreAutoGap:(id)sender;
 - (void) toggleMarkAsPlayed:(id)sender;
 

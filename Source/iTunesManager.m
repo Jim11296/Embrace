@@ -24,6 +24,12 @@ static NSString * const sLocationKey  = @"Location";
 
 @implementation iTunesLibraryMetadata
 
+- (NSString *) description
+{
+    return [NSString stringWithFormat:@"<%@: %p, %ld, \"%@\", %lg - %lg>", [self class], self, (long)[self trackID], [self location], [self startTime], [self stopTime]];
+}
+
+
 - (BOOL) isEqual:(id)otherObject
 {
     if (![otherObject isKindOfClass:[iTunesLibraryMetadata class]]) {
@@ -85,21 +91,47 @@ static NSString * const sLocationKey  = @"Location";
 }
 
 
++ (NSString *) _libraryXMLPath
+{
+    NSArray  *musicPaths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
+    NSString *musicPath  = [musicPaths firstObject];
+    
+    NSString *iTunesPath = [musicPath  stringByAppendingPathComponent:@"iTunes"];
+    NSString *xmlPathA   = [iTunesPath stringByAppendingPathComponent:@"iTunes Library.xml"];
+    NSString *xmlPathB   = [iTunesPath stringByAppendingPathComponent:@"iTunes Music Library.xml"];
+
+    BOOL existsA = [[NSFileManager defaultManager] fileExistsAtPath:xmlPathA];
+    BOOL existsB = [[NSFileManager defaultManager] fileExistsAtPath:xmlPathB];
+    
+    NSError *error;
+    NSDictionary *attributesA = [[NSFileManager defaultManager] attributesOfItemAtPath:xmlPathA error:&error];
+    NSDictionary *attributesB = [[NSFileManager defaultManager] attributesOfItemAtPath:xmlPathB error:&error];
+
+    NSDate *modificationDateA = [attributesA objectForKey:NSFileModificationDate];
+    NSDate *modificationDateB = [attributesB objectForKey:NSFileModificationDate];
+
+    if (existsA && existsB && modificationDateA && modificationDateB) {
+        if ([modificationDateA isGreaterThan:modificationDateB]) {
+            return xmlPathA;
+        } else {
+            return xmlPathB;
+        }
+        
+    } else if (existsA) {
+        return xmlPathA;
+    } else if (existsB) {
+        return xmlPathB;
+    }
+    
+    return nil;
+}
+
+
 - (id) init
 {
     if ((self = [super init])) {
-        NSArray  *musicPaths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
-        NSString *musicPath  = [musicPaths firstObject];
-        
-        NSString *iTunesPath             = [musicPath  stringByAppendingPathComponent:@"iTunes"];
-        NSString *iTunesLibraryPath      = [iTunesPath stringByAppendingPathComponent:@"iTunes Library.xml"];
-        NSString *iTunesMusicLibraryPath = [iTunesPath stringByAppendingPathComponent:@"iTunes Music Library.xml"];
-
-        if ([[NSFileManager defaultManager] fileExistsAtPath:iTunesLibraryPath]) {
-            _libraryURL = [NSURL fileURLWithPath:iTunesLibraryPath];
-        } else {
-            _libraryURL = [NSURL fileURLWithPath:iTunesMusicLibraryPath];
-        }
+        NSString *path = [iTunesManager _libraryXMLPath];
+        _libraryURL = path ? [NSURL fileURLWithPath:path] : nil;
 
         EmbraceLog(@"iTunesManager", @"_libraryURL is: %@", _libraryURL);
 
@@ -215,6 +247,8 @@ static NSString * const sLocationKey  = @"Location";
                     if ([location hasPrefix:@"file:"]) {
                         location = [[NSURL URLWithString:location] path];
                     }
+                    
+                    NSLog(@"%@: %@ - %@", location, startTimeNumber, stopTimeNumber);
 
                     iTunesLibraryMetadata *metadata = [[iTunesLibraryMetadata alloc] init];
 

@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "pause_template.png"
+      "filename" : "device_issue_template.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "pause_template@2x.png"
+      "filename" : "device_issue_template@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
