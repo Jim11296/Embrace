@@ -112,7 +112,9 @@ void EmbraceLog(NSString *category, NSString *format, ...)
     NSString *line = [NSString stringWithFormat:@"%@ [%@] %@\n", dateString, category, contents];
     [sLogFileHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
     
+#if DEBUG
     NSLog(@"%@", line);
+#endif
     
     va_end(v);
 }
