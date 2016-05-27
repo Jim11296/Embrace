@@ -27,13 +27,6 @@ typedef NS_ENUM(NSInteger, PlayerInterruptionReason) {
 };
 
 
-
-typedef NS_ENUM(NSInteger, PlayerStatus) {
-    PlayerStatusPaused = 0,
-    PlayerStatusPlaying
-};
-
-
 extern volatile NSInteger PlayerShouldUseCrashPad;
 
 @interface Player : NSObject
@@ -43,8 +36,6 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 - (void) play;
 - (void) hardSkip;
 - (void) hardStop;
-
-- (BOOL) isAtBeginningOfSong;
 
 @property (nonatomic) double volume;
 

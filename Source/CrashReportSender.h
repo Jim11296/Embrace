@@ -19,10 +19,7 @@
 
 - (void) extractPendingReportFromReporter:(PLCrashReporter *)reporter;
 
-- (void) sendCrashReports;
 - (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;
-
-- (void) sendLogs;
 - (void) sendLogsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;
 
 @property (nonatomic, readonly) BOOL hasCrashReports;

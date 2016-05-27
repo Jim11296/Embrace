@@ -161,10 +161,7 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSURL *externalURL)
             }
 
         } else if ((key4cc == 'aART' || key4cc == 'TPE2' || key4cc == '\00TP2') && stringValue) { // Album Artist, 'soaa'
-            [dictionary setObject:stringValue forKey:TrackKeyArtist];
-
-        } else if ((key4cc == 'aART') && stringValue) { // Album Artist, 'soaa'
-            [dictionary setObject:stringValue forKey:TrackKeyArtist];
+            [dictionary setObject:stringValue forKey:TrackKeyAlbumArtist];
             
         } else if ((key4cc == 'TKEY') && stringValue) { // Initial key as ID3v2.3 TKEY tag
             [dictionary setObject:stringValue forKey:TrackKeyInitialKey];

@@ -117,9 +117,12 @@
         NSMenuItem *itemToSelect = nil;
 
         for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
+            NSString *name = [device name];
+            if (!name) continue;
+
             NSMenuItem *item = [[NSMenuItem alloc] init];
 
-            [item setTitle:[device name]];
+            [item setTitle:name];
             [item setRepresentedObject:device];
             
             if (![device isConnected]) {

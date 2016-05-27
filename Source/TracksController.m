@@ -92,8 +92,8 @@ static NSString * const sModifiedAtKey = @"modified-at";
     } else if (action == @selector(toggleMarkAsPlayed:)) {
         return [self _validateToggleMarkAsPlayedWithMenuItem:menuItem];
         
-    } else if (action == @selector(togglePauseAfterPlaying:)) {
-        return [self _validateTogglePauseAfterPlayingWithMenuItem:menuItem];
+    } else if (action == @selector(toggleStopsAfterPlaying:)) {
+        return [self _validateToggleStopsAfterPlayingWithMenuItem:menuItem];
  
     } else if (action == @selector(toggleIgnoreAutoGap:)) {
         return [self _validateToggleIgnoreAutoGapWithMenuItem:menuItem];
@@ -744,13 +744,13 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
-- (void) togglePauseAfterPlaying:(id)sender
+- (void) toggleStopsAfterPlaying:(id)sender
 {
     EmbraceLogMethod();
 
     for (Track *track in [self selectedTracks]) {
         if ([track trackStatus] != TrackStatusPlayed) {
-            [track setPausesAfterPlaying:![track pausesAfterPlaying]];
+            [track setStopsAfterPlaying:![track stopsAfterPlaying]];
         }
     }
 }
@@ -768,7 +768,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
-- (BOOL) _validateTogglePauseAfterPlayingWithMenuItem:(NSMenuItem *)menuItem
+- (BOOL) _validateToggleStopsAfterPlayingWithMenuItem:(NSMenuItem *)menuItem
 {
     NSArray *selectedTracks = [self selectedTracks];
     
@@ -777,12 +777,12 @@ static NSString * const sModifiedAtKey = @"modified-at";
     BOOL isOff     = NO;
     
     for (Track *track in selectedTracks) {
-        BOOL canPause = [track trackStatus] != TrackStatusPlayed;
-        if (!canPause) isEnabled = NO;
+        BOOL canStop = [track trackStatus] != TrackStatusPlayed;
+        if (!canStop) isEnabled = NO;
 
-        BOOL pausesAfterPlaying = (canPause && [track pausesAfterPlaying]);
-        if ( pausesAfterPlaying) isOn  = YES;
-        if (!pausesAfterPlaying) isOff = YES;
+        BOOL stopsAfterPlaying = (canStop && [track stopsAfterPlaying]);
+        if ( stopsAfterPlaying) isOn  = YES;
+        if (!stopsAfterPlaying) isOff = YES;
     }
     
     if (isOff && isOn) {

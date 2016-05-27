@@ -14,7 +14,6 @@ NSString * const TrackKeyLabel          = @"trackLabel";
 NSString * const TrackKeyError          = @"trackError";
 
 NSString * const TrackKeyBookmark       = @"bookmark";
-NSString * const TrackKeyPauses         = @"pausesAfterPlaying";
 NSString * const TrackKeyIgnoresAutoGap = @"ignoresAutoGap";
 NSString * const TrackKeyTitle          = @"title";
 NSString * const TrackKeyArtist         = @"artist";

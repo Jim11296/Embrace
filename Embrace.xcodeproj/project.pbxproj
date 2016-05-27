@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 55016BD41CF454E0007A85AE /* HostStatistics.m */; };
 		550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5506802F1887711000441AAE /* TimeStringValueTransformer.m */; };
 		550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882718AC3C5B00CC7E3A /* rate_44.m4a */; };
 		550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882918AC3C5B00CC7E3A /* rate_88.m4a */; };
@@ -190,6 +191,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		55016BD31CF454E0007A85AE /* HostStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HostStatistics.h; path = Source/HostStatistics.h; sourceTree = "<group>"; };
+		55016BD41CF454E0007A85AE /* HostStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HostStatistics.m; path = Source/HostStatistics.m; sourceTree = "<group>"; };
 		5506802E1887711000441AAE /* TimeStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeStringValueTransformer.h; path = Source/TimeStringValueTransformer.h; sourceTree = SOURCE_ROOT; };
 		5506802F1887711000441AAE /* TimeStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimeStringValueTransformer.m; path = Source/TimeStringValueTransformer.m; sourceTree = SOURCE_ROOT; };
 		550D882718AC3C5B00CC7E3A /* rate_44.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_44.m4a; path = "Resources/Test Sounds/rate_44.m4a"; sourceTree = SOURCE_ROOT; };
@@ -796,6 +799,8 @@
 				55F3B7B51877908900E8FEC8 /* Track.m */,
 				552C9DC118836D2D0041C160 /* AudioDevice.h */,
 				552C9DC218836D2D0041C160 /* AudioDevice.m */,
+				55016BD31CF454E0007A85AE /* HostStatistics.h */,
+				55016BD41CF454E0007A85AE /* HostStatistics.m */,
 				552C9E4D1883EBA40041C160 /* Preferences.h */,
 				552C9E4E1883EBA40041C160 /* Preferences.m */,
 				5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */,
@@ -1177,6 +1182,7 @@
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
 				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
+				55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */,
 				55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */,
 				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,

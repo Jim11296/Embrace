@@ -17,7 +17,7 @@
 
 typedef NS_ENUM(NSInteger, PlaybackAction) {
     PlaybackActionPlay = 0,
-    PlaybackActionPause,
+    PlaybackActionStop,
     PlaybackActionShowIssue
 };
 
@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 
 - (IBAction) changeVolume:(id)sender;
 - (IBAction) delete:(id)sender;
-- (IBAction) togglePauseAfterPlaying:(id)sender;
+- (IBAction) toggleStopsAfterPlaying:(id)sender;
 - (IBAction) toggleMarkAsPlayed:(id)sender;
 - (IBAction) showGearMenu:(id)sender;
 
