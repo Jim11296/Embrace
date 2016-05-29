@@ -17,6 +17,7 @@
 #import "TrackScheduler.h"
 #import "EmergencyLimiter.h"
 #import "StereoField.h"
+#import "FastUtils.h"
 
 #import <pthread.h>
 #import <signal.h>
@@ -660,6 +661,7 @@ static OSStatus sInputRenderCallback(
 
     if (!unit) {
         *ioActionFlags |= kAudioUnitRenderAction_OutputIsSilence;
+        ApplySilenceToAudioBuffer(inNumberFrames, ioData);
 
     } else {
         AudioTimeStamp timestampToUse = {0};
@@ -687,15 +689,7 @@ static OSStatus sInputRenderCallback(
         }
 
         if (willChangeUnits) {
-            for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
-                AudioBuffer buffer = ioData->mBuffers[i];
-                
-                float *frames = (float *)buffer.mData;
-                
-                float start = 1.0;
-                float step  = -(1.0 / (float)inNumberFrames);
-                vDSP_vrampmul(frames, 1, &start, &step, frames, 1, inNumberFrames);
-            }
+            ApplyFadeToAudioBuffer(inNumberFrames, ioData, 1.0, 0.0);
         }
     }
 
@@ -880,16 +874,6 @@ static OSStatus sInputRenderCallback(
         _generatorAudioUnit = generatorUnit;
 
         [self _sendInputUnitToRenderThread:_converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit];
-
-
-/*
-        _renderUserInfo.stopped = 0;
-        _renderUserInfo.stopRequested = 0;
-        _renderUserInfo.inputUnit = _converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit;
-        _renderUserInfo.stereoLevel = _stereoLevel;
-        _renderUserInfo.previousStereoLevel = _stereoLevel;
-        _renderUserInfo.sampleTime = 0;
-*/
     });
     
     if (ok) {
