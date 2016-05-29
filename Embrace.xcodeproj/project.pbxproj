@@ -73,6 +73,7 @@
 		557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */; };
 		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
+		5583A5931CF91C5D00B8CC4D /* FastUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5921CF91C5D00B8CC4D /* FastUtils.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
 		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
@@ -310,6 +311,8 @@
 		557CF69018C1E14B0066D040 /* TracksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TracksController.m; path = Source/TracksController.m; sourceTree = SOURCE_ROOT; };
 		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = ../Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = ../Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
+		5583A5911CF91C5D00B8CC4D /* FastUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FastUtils.h; path = Source/FastUtils.h; sourceTree = "<group>"; };
+		5583A5921CF91C5D00B8CC4D /* FastUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FastUtils.m; path = Source/FastUtils.m; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
 		55873FDC18AA1E720081772A /* TrackScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackScheduler.h; path = Source/TrackScheduler.h; sourceTree = "<group>"; };
@@ -896,6 +899,8 @@
 				55F6C73019CEAA5B00B22793 /* Compatibility.m */,
 				55BC0B291878E4EF00D84481 /* Utils.h */,
 				55BC0B2A1878E4EF00D84481 /* Utils.m */,
+				5583A5911CF91C5D00B8CC4D /* FastUtils.h */,
+				5583A5921CF91C5D00B8CC4D /* FastUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1204,6 +1209,7 @@
 				5514B63A1CDD694700F238B7 /* DangerMeter.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
+				5583A5931CF91C5D00B8CC4D /* FastUtils.m in Sources */,
 				556098141B47CABD008516C3 /* LabelMenuView.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
