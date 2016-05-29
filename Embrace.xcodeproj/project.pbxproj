@@ -1534,7 +1534,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					<redacted>,
