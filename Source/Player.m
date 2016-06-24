@@ -89,6 +89,10 @@ typedef struct {
     volatile float     previousStereoLevel;
 
     volatile UInt64    sampleTime;
+    
+    // Worker Thread -> Main Thread
+    volatile SInt32    overloadCount;
+    volatile SInt32    nextOverloadCount;
 } RenderUserInfo;
 
 
@@ -357,6 +361,10 @@ typedef struct {
 
     TrackStatus status = TrackStatusPlaying;
 
+    if (!_currentScheduler) {
+        return;
+    }
+
     if (!CheckError(
         AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize),
         "AudioUnitGetProperty[ kAudioUnitProperty_CurrentPlayTime ]"
@@ -390,6 +398,14 @@ typedef struct {
     }
 
     _limiterActive = EmergencyLimiterIsActive(_emergencyLimiter);
+
+    if (_renderUserInfo.nextOverloadCount != _renderUserInfo.overloadCount) {
+        _renderUserInfo.overloadCount = _renderUserInfo.nextOverloadCount;
+        _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];    
+
+        EmbraceLog(@"Player", @"kAudioDeviceProcessorOverload detected");
+    }
+
     
 #if CHECK_RENDER_ERRORS_ON_TICK
     if (_converterAudioUnit) {
@@ -558,20 +574,25 @@ typedef struct {
 
 #pragma mark - Audio Device Notifications
 
-static OSStatus sDetectAudioDeviceChange(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
+
+static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
+{
+    // This is "usually sent from the AudioDevice's IO thread".  Hence, we cannot call dispatch_async()
+    RenderUserInfo *userInfo = (RenderUserInfo *)inClientData;
+    OSAtomicIncrement32(&userInfo->nextOverloadCount);
+
+    return noErr;
+}
+
+
+static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
 {
     Player *player = (__bridge Player *)inClientData;
 
     for (NSInteger i = 0; i < inNumberAddresses; i++) {
         AudioObjectPropertyAddress address = inAddresses[i];
 
-        if (address.mSelector == kAudioDeviceProcessorOverload) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                EmbraceLog(@"Player", @"kAudioDeviceProcessorOverload on audio device %ld", (long)inObjectID);
-                [player _handleAudioDeviceProcessorOverload];
-            });
-
-        } else if (address.mSelector == kAudioDevicePropertyIOStoppedAbnormally) {
+        if (address.mSelector == kAudioDevicePropertyIOStoppedAbnormally) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 EmbraceLog(@"Player", @"kAudioDevicePropertyIOStoppedAbnormally on audio device %ld", (long)inObjectID);
                 [player _handleAudioDeviceIOStoppedAbnormally];
@@ -598,14 +619,6 @@ static OSStatus sDetectAudioDeviceChange(AudioObjectID inObjectID, UInt32 inNumb
     }
 
     return noErr;
-}
-
-
-- (void) _handleAudioDeviceProcessorOverload
-{
-    _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
-
-    NSLog(@"_handleAudioDeviceProcessorOverload");
 }
 
 
@@ -673,10 +686,9 @@ static OSStatus sInputRenderCallback(
 
         userInfo->sampleTime += inNumberFrames;
 
-    //    if (rand() % 100 == 0) {
-    //        NSLog(@"SLEEPING");
-    //        usleep(500000);
-    //    }
+//        if (rand() % 100 == 0) {
+//            usleep(50000);
+//        }
 
         // Process stereo field
         {
@@ -1114,11 +1126,12 @@ static OSStatus sInputRenderCallback(
     // Remove old listeners
     //
     if (_listeningDeviceID) {
-        AudioObjectRemovePropertyListener(_listeningDeviceID, &overloadPropertyAddress,   sDetectAudioDeviceChange, (__bridge void *)self);
-        AudioObjectRemovePropertyListener(_listeningDeviceID, &ioStoppedPropertyAddress,  sDetectAudioDeviceChange, (__bridge void *)self);
-        AudioObjectRemovePropertyListener(_listeningDeviceID, &changedPropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
-        AudioObjectRemovePropertyListener(_listeningDeviceID, &sampleRatePropertyAddress, sDetectAudioDeviceChange, (__bridge void *)self);
-        AudioObjectRemovePropertyListener(_listeningDeviceID, &hogModePropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &overloadPropertyAddress, sHandleAudioDeviceOverload, &_renderUserInfo);
+
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+        AudioObjectRemovePropertyListener(_listeningDeviceID, &hogModePropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
     
         _listeningDeviceID = 0;
     }
@@ -1179,11 +1192,12 @@ static OSStatus sInputRenderCallback(
         // Register for new listeners
         //
         if (deviceID) {
-            AudioObjectAddPropertyListener(deviceID, &overloadPropertyAddress,   sDetectAudioDeviceChange, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &ioStoppedPropertyAddress,  sDetectAudioDeviceChange, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &changedPropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &sampleRatePropertyAddress, sDetectAudioDeviceChange, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &hogModePropertyAddress,    sDetectAudioDeviceChange, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &overloadPropertyAddress, sHandleAudioDeviceOverload, &_renderUserInfo);
+
+            AudioObjectAddPropertyListener(deviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+            AudioObjectAddPropertyListener(deviceID, &hogModePropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
 
             _listeningDeviceID = deviceID;
         }
@@ -1566,10 +1580,8 @@ static OSStatus sInputRenderCallback(
 {
     NSTimeInterval playDuration = [_currentTrack playDuration];
 
-    if (playDuration > 20.0) {
-        return _timeElapsed < 10.0;
-    } else if (playDuration > 10) {
-        return _timeElapsed < 2.0;
+    if (playDuration > 10.0) {
+        return _timeElapsed < 5.0;
     } else {
         return NO;
     }
