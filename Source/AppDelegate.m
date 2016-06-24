@@ -25,6 +25,7 @@
 #import "Track.h"
 #import "CrashPadClient.h"
 
+#import "IssueManager.h"
 #import "iTunesManager.h"
 #import "WrappedAudioDevice.h"
 
@@ -118,10 +119,29 @@
     // Load preferences
     [Preferences sharedInstance];
 
+    // Load issue manager
+    [IssueManager sharedInstance];
+
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
     
     [EffectType embrace_registerMappedEffects];
+//    
+//    
+//    // 
+//    [NSEvent addGlobalMonitorForEventsMatchingMask:(NSLeftMouseDraggedMask|NSLeftMouseUpMask) handler:^(NSEvent *event) {
+//        NSEventType eventType = [event type];
+//        
+//        if (eventType == NSLeftMouseDragged) {
+//            [event timestamp];
+//        } else if (eventType == NSLeftMouseUp) {
+//        
+//        }
+//        if ([event type])
+//        NSLog(@"%@", event);
+//    }];
+
+    
     
     PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeBSD symbolicationStrategy:PLCrashReporterSymbolicationStrategyAll];
     _crashReporter = [[PLCrashReporter alloc] initWithConfiguration:config];

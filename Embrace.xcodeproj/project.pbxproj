@@ -74,6 +74,7 @@
 		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5583A5931CF91C5D00B8CC4D /* FastUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5921CF91C5D00B8CC4D /* FastUtils.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
+		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
 		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
@@ -313,6 +314,8 @@
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = ../Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
 		5583A5911CF91C5D00B8CC4D /* FastUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FastUtils.h; path = Source/FastUtils.h; sourceTree = "<group>"; };
 		5583A5921CF91C5D00B8CC4D /* FastUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FastUtils.m; path = Source/FastUtils.m; sourceTree = "<group>"; };
+		5583A5961CFC0F1200B8CC4D /* IssueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueManager.h; path = Source/IssueManager.h; sourceTree = "<group>"; };
+		5583A5971CFC0F1200B8CC4D /* IssueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueManager.m; path = Source/IssueManager.m; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
 		55873FDC18AA1E720081772A /* TrackScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackScheduler.h; path = Source/TrackScheduler.h; sourceTree = "<group>"; };
@@ -792,18 +795,20 @@
 		55BC0B1C1878D7FA00D84481 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				552C9DC118836D2D0041C160 /* AudioDevice.h */,
+				552C9DC218836D2D0041C160 /* AudioDevice.m */,
 				55BC0B0B1877F35000D84481 /* EffectType.h */,
 				55BC0B0C1877F35000D84481 /* EffectType.m */,
 				55BC0B041877F19400D84481 /* Effect.h */,
 				55BC0B051877F19400D84481 /* Effect.m */,
 				55102B411B53564500308F55 /* EffectAdditions.h */,
 				55102B421B53564500308F55 /* EffectAdditions.m */,
-				55F3B7B41877908900E8FEC8 /* Track.h */,
-				55F3B7B51877908900E8FEC8 /* Track.m */,
-				552C9DC118836D2D0041C160 /* AudioDevice.h */,
-				552C9DC218836D2D0041C160 /* AudioDevice.m */,
 				55016BD31CF454E0007A85AE /* HostStatistics.h */,
 				55016BD41CF454E0007A85AE /* HostStatistics.m */,
+				5583A5961CFC0F1200B8CC4D /* IssueManager.h */,
+				5583A5971CFC0F1200B8CC4D /* IssueManager.m */,
+				55F3B7B41877908900E8FEC8 /* Track.h */,
+				55F3B7B51877908900E8FEC8 /* Track.m */,
 				552C9E4D1883EBA40041C160 /* Preferences.h */,
 				552C9E4E1883EBA40041C160 /* Preferences.m */,
 				5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */,
@@ -1183,6 +1188,7 @@
 				55717BF5187EA65400213213 /* Button.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
+				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
@@ -1553,7 +1559,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Ricci Adams (XXXXXXXXXX)";
+				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/iccir/Projects/Embrace/lib,

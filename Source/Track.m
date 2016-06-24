@@ -61,6 +61,7 @@ static NSString * const sBookmarkKey          = @"bookmark";
     NSMutableArray *_dirtyKeys;
     BOOL            _dirty;
     BOOL            _cleared;
+    BOOL            _priorityAnalysisRequested;
 }
 
 @dynamic playDuration, silenceAtStart, silenceAtEnd, tonality;
@@ -413,7 +414,11 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     [self _requestWorkerCommand:WorkerTrackCommandReadMetadata];
 
     if (!_overviewData) {
-        [self _requestWorkerCommand:WorkerTrackCommandReadLoudness];
+        if (_priorityAnalysisRequested) {
+            [self _requestWorkerCommand:WorkerTrackCommandReadLoudnessImmediate];
+        } else {
+            [self _requestWorkerCommand:WorkerTrackCommandReadLoudness];
+        }
     }
      
     if (_dirty) {
@@ -695,7 +700,13 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (void) startPriorityAnalysis
 {
-    [self _requestWorkerCommand:WorkerTrackCommandReadLoudnessImmediate];
+    if (!_priorityAnalysisRequested) {
+        _priorityAnalysisRequested = YES;
+        
+        if ([self internalURL]) {
+            [self _requestWorkerCommand:WorkerTrackCommandReadLoudnessImmediate];
+        }
+    }
 }
 
 
