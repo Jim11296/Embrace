@@ -83,11 +83,24 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSURL *externalURL)
             key4cc = [key unsignedIntValue];
         }
         
-        // iTunes stores normalization info in 'COMM'
-        BOOL isAppleNormalizationTag = NO;
+        // iTunes stores normalization info in 'COMM' as well as other metadata.
+        //
         if (key4cc == 'COMM') {
-            if ([[[item extraAttributes] objectForKey:@"info"] isEqual:@"iTunNORM"]) {
-                isAppleNormalizationTag = YES;
+            id extraInfo = [[item extraAttributes] objectForKey:@"info"];
+            
+            if ([extraInfo isKindOfClass:[NSString class]]) {
+                if ([extraInfo hasPrefix:@"iTunes_"]) {
+                    return;
+                
+                } else if ([extraInfo isEqual:@"iTunNORM"]) {
+                    return;
+                
+                } else if ([extraInfo isEqual:@"iTunPGAP"]) {
+                    return;
+
+                } else if ([extraInfo isEqual:@"iTunSMPB"]) {
+                    return;
+                }
             }
         }
 
@@ -140,7 +153,7 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSURL *externalURL)
         } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
             [dictionary setObject:numberValue forKey:TrackKeyEnergyLevel];
 
-        } else if ((key4cc == 'COMM' && !isAppleNormalizationTag) ||
+        } else if ((key4cc == 'COMM')   ||
                    (key4cc == '\00COM') ||
                    (key4cc == '\251cmt'))
         {
