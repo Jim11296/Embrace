@@ -126,11 +126,13 @@
     NSURL *url = [self _urlForPresetDirectory];
     [openPanel setDirectoryURL:url];
 
+    __weak id weakSelf = self;
     __weak id weakEffect = _effect;
 
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
             [weakEffect loadAudioPresetAtFileURL:[openPanel URL]];
+            [weakSelf reloadData];
         }
     }];
 }
@@ -167,6 +169,12 @@
 {
     BOOL bypass = [[self effect] bypass];
     [[self effect] setBypass:!bypass];
+}
+
+
+- (void) reloadData
+{
+    // Subclasses to override
 }
 
 

@@ -73,6 +73,12 @@
 }
 
 
+- (void) reloadData
+{
+    [_graphicEQView reloadData];
+}
+
+
 #pragma mark - Private Methods
 
 - (void) _handleWindowMainChanged:(NSNotification *)note
