@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (void) resetPlayedTracks;
 - (BOOL) shouldPromptForClear;
 
-- (void) openFileAtURL:(NSURL *)url;
+- (BOOL) addTracksWithURLs:(NSArray<NSURL *> *)urls;
 
 - (void) copyToPasteboard:(NSPasteboard *)pasteboard;
 - (void) exportToFile;

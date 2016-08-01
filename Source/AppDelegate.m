@@ -225,9 +225,8 @@
 
     NSURL *fileURL = [NSURL fileURLWithPath:filename];
 
-    if (IsAudioFileAtURL(fileURL)) {
-        [_setlistController openFileAtURL:fileURL];
-        return YES;
+    if (fileURL) {
+        return [_setlistController addTracksWithURLs:@[ fileURL ]];
     }
 
     return NO;
@@ -238,13 +237,14 @@
 {
     EmbraceLogMethod();
 
+    NSMutableArray *fileURLs = [NSMutableArray array];
+    
     for (NSString *filename in [filenames reverseObjectEnumerator]) {
         NSURL *fileURL = [NSURL fileURLWithPath:filename];
-
-        if (IsAudioFileAtURL(fileURL)) {
-            [_setlistController openFileAtURL:fileURL];
-        }
+        if (fileURL) [fileURLs addObject:fileURL];
     }
+
+    [_setlistController addTracksWithURLs:fileURLs];
 }
 
 
@@ -693,7 +693,11 @@
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
             SavePanelState(openPanel, @"open-file-panel");
-            [weakSetlistController openFileAtURL:[openPanel URL]];
+            
+            NSURL *url = [openPanel URL];
+            if (url) {
+                [weakSetlistController addTracksWithURLs:@[ url ]];
+            }
         }
     }];
 }

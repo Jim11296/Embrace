@@ -540,11 +540,10 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) openFileAtURL:(NSURL *)URL
+- (BOOL) addTracksWithURLs:(NSArray<NSURL *> *)urls
 {
-    EmbraceLog(@"SetlistController", @"-openFileAtURL: %@", URL);
-
-    [[self tracksController] addTrackAtURL:URL];
+    EmbraceLog(@"SetlistController", @"-addTracksWithURLs: %@", urls);
+    return [[self tracksController] addTracksWithURLs:urls];
 }
 
 

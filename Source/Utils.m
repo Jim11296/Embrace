@@ -210,6 +210,14 @@ BOOL IsAudioFileAtURL(NSURL *fileURL)
                 return YES;
             }
         }
+
+        if ([workspace type:type conformsToType:(__bridge NSString *)kUTTypeFolder]) {
+            return YES;
+        }
+
+        if ([workspace type:type conformsToType:(__bridge NSString *)kUTTypeM3UPlaylist]) {
+            return YES;
+        }
     }
 
     return NO;

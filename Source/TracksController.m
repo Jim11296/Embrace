@@ -15,7 +15,7 @@
 #import "Preferences.h"
 #import "TrackTableView.h"
 #import "iTunesManager.h"
-
+#import "ImportManager.h"
 
 #if TRIAL
 #define MAXIMUM_TRACK_COUNT_FOR_TRIAL 5
@@ -239,6 +239,47 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
+
+- (BOOL) _addTracksWithURLs:(NSArray<NSURL *> *)urls atIndex:(NSUInteger)index
+{
+    EmbraceLog(@"TracksController", @"Adding tracks at URLs: %@", urls);
+
+    NSArray *tracks = [[ImportManager sharedInstance] tracksWithURLs:urls];
+
+    EmbraceLog(@"TracksController", @"Adding tracks: %@", tracks);
+
+    if (![tracks count]) return NO;
+
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+
+    [[self tableView] beginUpdates];
+
+    for (Track *track in tracks) {
+        [_tracks insertObject:track atIndex:index];
+        [indexSet addIndex:index];
+        index++;
+    }
+
+    [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+
+    [[self tableView] endUpdates];
+    
+#if TRIAL
+    if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self _displayTrialAlert];
+        });
+    }
+#endif
+    
+    TrackTrialCheck(^{
+        [self _didModifyTracks];
+    });
+
+    return YES;
+}
+
+
 #if TRIAL
 
 - (void) _reallyDisplayTrialAlert
@@ -263,28 +304,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 #endif
-
-
-- (void) removeTrack:(Track *)track
-{
-    NSInteger index = [_tracks indexOfObject:track];
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-
-    if (index != NSNotFound) {
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track cancelLoad];
-            [indexSet addIndex:index];
-        }
-    }
-
-    [[self tableView] beginUpdates];
-
-    [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectNone];
-    [_tracks removeObjectsAtIndexes:indexSet];
-    [[self tableView] endUpdates];
-
-    [self _didModifyTracks];
-}
 
 
 #pragma mark - Table View Delegate
@@ -580,66 +599,22 @@ static NSString * const sModifiedAtKey = @"modified-at";
         return YES;
 
     } else if ([filenames count] >= 2) {
-        NSMutableArray    *tracks   = [NSMutableArray array];
-        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        NSMutableArray *fileURLs = [NSMutableArray array];
 
-        EmbraceLog(@"TracksController", @"Adding tracks: %@", filenames);
-        
         for (NSString *filename in filenames) {
-            NSURL *URL = [NSURL fileURLWithPath:filename];
-
-            Track *track = [Track trackWithFileURL:URL];
-            if (track) {
-                [tracks addObject:track];
-                [indexSet addIndex:row];
-                
-                row++;
-            }
+            NSURL *fileURL = [NSURL fileURLWithPath:filename];
+            if (fileURL) [fileURLs addObject:fileURL];
         }
-
-        [_tracks insertObjects:tracks atIndexes:indexSet];
-        [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-
-#if TRIAL
-        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self _displayTrialAlert];
-            });
-        }
-#endif
         
-        TrackTrialCheck(^{
-            [self _didModifyTracks];
-        });
-
-        return YES;
+        return [self _addTracksWithURLs:fileURLs atIndex:row];
 
     } else if (URLString) {
-        NSURL *URL = [NSURL URLWithString:URLString];
+        NSURL *fileURL = [NSURL URLWithString:URLString];
+        NSArray *fileURLs = fileURL ? @[ fileURL ] : nil;
 
-        EmbraceLog(@"TracksController", @"Adding track: %@", URL);
-
-        Track *track = [Track trackWithFileURL:URL];
-        if (track) {
-            [_tracks insertObject:track atIndex:row];
-            [[self tableView] insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:row] withAnimation:NSTableViewAnimationEffectFade];
-        }
-
-#if TRIAL
-        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self _displayTrialAlert];
-            });
-        }
-#endif
-
-        TrackTrialCheck(^{
-            [self _didModifyTracks];
-        });
-
-        return YES;
+        return [self _addTracksWithURLs:fileURLs atIndex:row];
     }
-    
+ 
     return NO;
 }
 
@@ -950,30 +925,10 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
-- (void) addTrackAtURL:(NSURL *)URL
+- (BOOL) addTracksWithURLs:(NSArray<NSURL *> *)fileURLs
 {
-    Track *track = [Track trackWithFileURL:URL];
-
-    if (track) {
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[_tracks count]];
-
-        [_tracks addObject:track];
-        [_tableView insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-
-#if TRIAL
-        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self _displayTrialAlert];
-            });
-
-            return;
-        }
-#endif
-
-        TrackTrialCheck(^{
-            [self _didModifyTracks];
-        });
-    }
+    NSUInteger index = [_tracks count];
+    return [self _addTracksWithURLs:fileURLs atIndex:index];
 }
 
 
