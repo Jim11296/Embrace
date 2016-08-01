@@ -15,7 +15,7 @@
 #import "Preferences.h"
 #import "TrackTableView.h"
 #import "iTunesManager.h"
-#import "ImportManager.h"
+
 
 #if TRIAL
 #define MAXIMUM_TRACK_COUNT_FOR_TRIAL 5
@@ -105,6 +105,184 @@ static NSString * const sModifiedAtKey = @"modified-at";
     return YES;
 }
 
+
+#pragma mark - Importing Tracks
+
+static NSString *sGetFileType(NSURL *url)
+{
+    NSString *typeIdentifier = nil;
+    NSError  *error = nil;
+    [url getResourceValue:&typeIdentifier forKey:NSURLTypeIdentifierKey error:&error];
+
+    return typeIdentifier;
+}
+
+
+static void sCollectURL(NSURL *inURL, NSMutableArray *results, NSInteger depth)
+{
+    static const NSInteger sMaxDepth = 5;
+
+    if (depth > sMaxDepth) {
+        return;
+    }
+    
+    NSString *type = sGetFileType(inURL);
+    if (!type) return;
+
+    if (UTTypeConformsTo((__bridge CFStringRef)type, kUTTypeM3UPlaylist)) {
+        if (depth < sMaxDepth) {
+            sCollectM3UPlaylistURL(inURL, results, depth + 1);
+        }
+
+    } else if (UTTypeConformsTo((__bridge CFStringRef)type, kUTTypeFolder)) {
+        if (depth < sMaxDepth) {
+            sCollectFolderURL(inURL, results, depth + 1);
+        }
+
+    } else if (UTTypeConformsTo((__bridge CFStringRef)type, kUTTypeAudiovisualContent) || (depth == 0)) {
+        [results addObject:inURL];
+    }
+}
+
+
+static void sCollectFolderURL(NSURL *inURL, NSMutableArray *results, NSInteger depth)
+{
+    NSDirectoryEnumerationOptions options =
+        NSDirectoryEnumerationSkipsSubdirectoryDescendants |
+        NSDirectoryEnumerationSkipsPackageDescendants |    
+        NSDirectoryEnumerationSkipsHiddenFiles;
+        
+    NSError *error = nil;
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:inURL includingPropertiesForKeys:@[ NSURLTypeIdentifierKey ] options:options error:&error];
+
+    for (NSURL *url in contents) {
+        sCollectURL(url, results, depth);
+    }
+}
+
+
+static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInteger depth)
+{
+    EmbraceLog(@"TrackController", @"Parsing M3U at: %@", inURL);
+
+    NSData *data = [NSData dataWithContentsOfURL:inURL];
+    if (!data) return;
+    
+    NSString *contents = nil;
+    if (!contents || [contents length] < 8) {
+        EmbraceLog(@"TrackController", @"Trying UTF-8 encoding");
+        contents = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+
+    if (!contents || [contents length] < 8) {
+        EmbraceLog(@"TrackController", @"Trying UTF-16 encoding");
+        contents = [[NSString alloc] initWithData:data encoding:NSUTF16StringEncoding];
+    }
+
+    if (!contents || [contents length] < 8) {
+        EmbraceLog(@"TrackController", @"Trying Latin-1 encoding");
+        contents = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
+    }
+    
+    NSURL *baseURL = [inURL URLByDeletingLastPathComponent];
+    
+    if ([contents length] >= 8) {
+        for (NSString *line in [contents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+            if ([line hasPrefix:@"#"]) {
+                continue;
+
+            } else if ([line hasPrefix:@"file:"]) {
+                NSURL *url = [NSURL URLWithString:line];
+                
+                if ([url isFileURL]) {
+                    sCollectURL(url, results, depth);
+                }
+                
+            } else {
+                NSString *trimmedPath = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                NSURL *url = [NSURL fileURLWithPath:trimmedPath relativeToURL:baseURL];
+                
+                if ([url isFileURL]) {
+                    sCollectURL(url, results, depth);
+                }
+            }
+        }
+    }
+}
+
+
+- (BOOL) _addTracksWithURLs:(NSArray<NSURL *> *)inURLs atIndex:(NSUInteger)index
+{
+    EmbraceLog(@"TracksController", @"Collecting tracks at URLs: %@", inURLs);
+
+    NSMutableArray *results = [NSMutableArray array];
+
+    for (NSURL *inURL in inURLs) {
+        sCollectURL(inURL, results, 0);
+    }
+
+    NSInteger resultsCount = [results count];
+
+    EmbraceLog(@"TracksController", @"Found %ld tracks", (long)resultsCount);
+
+    if (resultsCount > 0) {
+        BOOL okToAdd = YES;
+        
+        if (resultsCount > 100) {
+            NSAlert *alert = [[NSAlert alloc] init];
+
+            NSString *messageFormat = NSLocalizedString(@"Add %@ Tracks", nil);
+            NSString *numberString = [NSNumberFormatter localizedStringFromNumber:@(resultsCount) numberStyle:NSNumberFormatterDecimalStyle];
+
+            [alert setMessageText:[NSString stringWithFormat:messageFormat, numberString]];
+            [alert setInformativeText:NSLocalizedString(@"Do you really want to add these tracks to your Set List?", nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Add Tracks", nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+            
+            [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+            okToAdd = ([alert runModal] == NSAlertFirstButtonReturn);
+
+        } else {
+            EmbraceLog(@"TracksController", @"Found tracks: %@", results);
+        }
+        
+        if (okToAdd) {
+            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+
+            [[self tableView] beginUpdates];
+
+            for (NSURL *url in results) {
+                Track *track = [Track trackWithFileURL:url];
+                
+                if (track) {
+                    [_tracks insertObject:track atIndex:index];
+                    [indexSet addIndex:index];
+                    index++;
+                }
+            }
+
+            [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+
+            [[self tableView] endUpdates];
+            
+#if TRIAL
+            if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self _displayTrialAlert];
+                });
+            }
+#endif
+            
+            TrackTrialCheck(^{
+                [self _didModifyTracks];
+            });
+
+            return YES;
+        }
+    }
+
+    return NO;
+}
 
 
 #pragma mark - Private Methods
@@ -239,47 +417,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
 }
 
 
-
-- (BOOL) _addTracksWithURLs:(NSArray<NSURL *> *)urls atIndex:(NSUInteger)index
-{
-    EmbraceLog(@"TracksController", @"Adding tracks at URLs: %@", urls);
-
-    NSArray *tracks = [[ImportManager sharedInstance] tracksWithURLs:urls];
-
-    EmbraceLog(@"TracksController", @"Adding tracks: %@", tracks);
-
-    if (![tracks count]) return NO;
-
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-
-    [[self tableView] beginUpdates];
-
-    for (Track *track in tracks) {
-        [_tracks insertObject:track atIndex:index];
-        [indexSet addIndex:index];
-        index++;
-    }
-
-    [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-
-    [[self tableView] endUpdates];
-    
-#if TRIAL
-    if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self _displayTrialAlert];
-        });
-    }
-#endif
-    
-    TrackTrialCheck(^{
-        [self _didModifyTracks];
-    });
-
-    return YES;
-}
-
-
 #if TRIAL
 
 - (void) _reallyDisplayTrialAlert
@@ -385,7 +522,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
     const CGFloat kTwoLineHeight   = 39;
     const CGFloat kThreeLineHeight = 56;
     
-
     TrackTrialCheck(^{
         Preferences *preferences = [Preferences sharedInstance];
         NSInteger numberOfLines = [preferences numberOfLayoutLines];

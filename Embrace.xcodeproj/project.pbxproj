@@ -18,7 +18,6 @@
 		55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */; };
 		55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */; };
 		55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B4A1B537C2500308F55 /* EditSystemEffectController.m */; };
-		5511F47C1D4DF5D800C377BE /* ImportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5511F47B1D4DF5D800C377BE /* ImportManager.m */; };
 		5514B63A1CDD694700F238B7 /* DangerMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6391CDD694700F238B7 /* DangerMeter.m */; };
 		5514B6441CDEE64200F238B7 /* Worker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6431CDEE64200F238B7 /* Worker.m */; };
 		5514B64A1CDEE64200F238B7 /* EmbraceWorker.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -211,8 +210,6 @@
 		55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditGraphicEQEffectController.m; path = Source/EditGraphicEQEffectController.m; sourceTree = SOURCE_ROOT; };
 		55102B491B537C2500308F55 /* EditSystemEffectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditSystemEffectController.h; path = Source/EditSystemEffectController.h; sourceTree = SOURCE_ROOT; };
 		55102B4A1B537C2500308F55 /* EditSystemEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditSystemEffectController.m; path = Source/EditSystemEffectController.m; sourceTree = SOURCE_ROOT; };
-		5511F47A1D4DF5D800C377BE /* ImportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportManager.h; path = Source/ImportManager.h; sourceTree = SOURCE_ROOT; };
-		5511F47B1D4DF5D800C377BE /* ImportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImportManager.m; path = Source/ImportManager.m; sourceTree = SOURCE_ROOT; };
 		5514B6381CDD694700F238B7 /* DangerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DangerMeter.h; path = Source/DangerMeter.h; sourceTree = SOURCE_ROOT; };
 		5514B6391CDD694700F238B7 /* DangerMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DangerMeter.m; path = Source/DangerMeter.m; sourceTree = SOURCE_ROOT; };
 		5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = EmbraceWorker.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -700,8 +697,6 @@
 				55F7ABE818B04D91006B6FBB /* DebugController.m */,
 				5537D75D19CEBA7300DE8117 /* CurrentTrackController.h */,
 				5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */,
-				5511F47A1D4DF5D800C377BE /* ImportManager.h */,
-				5511F47B1D4DF5D800C377BE /* ImportManager.m */,
 				558513C518794A2600C268E3 /* EffectsController.h */,
 				558513C618794A2600C268E3 /* EffectsController.m */,
 				55CF27A8187AB2650042C92A /* EditEffectController.h */,
@@ -1254,7 +1249,6 @@
 				55102B431B53564500308F55 /* EffectAdditions.m in Sources */,
 				552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */,
 				55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */,
-				5511F47C1D4DF5D800C377BE /* ImportManager.m in Sources */,
 				557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */,
 				557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
