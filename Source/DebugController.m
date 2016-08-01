@@ -66,10 +66,7 @@
     }
 
     [[self _setlistController] clear];
-    
-    for (NSURL *url in fileURLs) {
-        [[self _setlistController] openFileAtURL:url];
-    }
+    [[self _setlistController] addTracksWithURLs:fileURLs];
 }
 
 

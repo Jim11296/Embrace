@@ -19,7 +19,8 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (Track *) firstQueuedTrack;
 - (NSArray *) selectedTracks;
 
-- (void) addTrackAtURL:(NSURL *)fileURL;
+- (BOOL) addTracksWithURLs:(NSArray<NSURL *> *)urls;
+
 - (void) removeAllTracks;
 - (void) deselectAllTracks;
 - (void) resetPlayedTracks;
