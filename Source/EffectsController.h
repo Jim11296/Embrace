@@ -14,6 +14,4 @@
 
 @property (nonatomic, strong) Player *player;
 
-- (void) reloadData;  // Reload UI from effect
-
 @end
