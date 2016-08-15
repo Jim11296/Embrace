@@ -41,8 +41,8 @@
 
 - (void) _setupButton
 {
-    _alertColor       = GetRGBColor(0xe5443b, 1.0);
-    _alertActiveColor = GetRGBColor(0xe00000, 1.0);
+    _alertColor       = GetRGBColor(0xff0000, 1.0);
+    _alertActiveColor = GetRGBColor(0xc00000, 1.0);
     _normalColor      = GetRGBColor(0x737373, 1.0);
     _activeColor      = GetRGBColor(0x4c4c4c, 1.0);
     _inactiveColor    = GetRGBColor(0xb2b2b2, 1.0);
@@ -151,6 +151,15 @@
 {
     if (_alert != alert) {
         _alert = alert;
+        [self _update:nil];
+    }
+}
+
+
+- (void) setAlertColor:(NSColor *)alertColor
+{
+    if (_alertColor != alertColor) {
+        _alertColor = alertColor;
         [self _update:nil];
     }
 }

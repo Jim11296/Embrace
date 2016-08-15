@@ -28,6 +28,7 @@
 #import "PlayBar.h"
 #import "Preferences.h"
 #import "ViewTrackController.h"
+#import "TipArrowFloater.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
 #import "TrialBottomView.h"
@@ -78,6 +79,8 @@ static NSInteger sAutoGapMaximum = 16;
 @end
 
 @implementation SetlistController {
+    TipArrowFloater *_volumeTooLowFloater;
+
     BOOL       _inVolumeDrag;
     
     double     _volumeBeforeKeyboard;
@@ -438,6 +441,7 @@ static NSInteger sAutoGapMaximum = 16;
     }
 
     [player setVolume:newVolume];
+    [_volumeTooLowFloater hide];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self _doAutoPauseIfNeededWithBeforeVolume:_volumeBeforeKeyboard];
@@ -731,6 +735,8 @@ static NSInteger sAutoGapMaximum = 16;
                 _confirmStop = NO;
                 [[Player sharedInstance] hardStop];
             }
+
+            [_volumeTooLowFloater hide];
         }
 
     } else {
@@ -744,6 +750,11 @@ static NSInteger sAutoGapMaximum = 16;
 
         } else {
             [[Player sharedInstance] play];
+        }
+
+        if ([[Player sharedInstance] volume] < 0.25) {
+            if (!_volumeTooLowFloater) _volumeTooLowFloater = [[TipArrowFloater alloc] init];
+            [_volumeTooLowFloater showWithView:_volumeSlider rect:[_volumeSlider knobRect]];
         }
     }
 }
@@ -937,6 +948,7 @@ static NSInteger sAutoGapMaximum = 16;
     if (slider == _volumeSlider) {
         _inVolumeDrag = YES;
         [self _updatePlayButton];
+        [_volumeTooLowFloater hide];
     }
 }
 
