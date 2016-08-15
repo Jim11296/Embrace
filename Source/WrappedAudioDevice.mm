@@ -406,6 +406,13 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 {
     NSMutableArray *frameSizes = [NSMutableArray array];
 
+    NSArray *allFrameSizes = @[
+#if DEBUG
+        @32, @64, @128, @256,
+#endif
+        @512, @1024, @2048, @4096, @6144, @8192
+    ];
+
     try {
         if (!_device->HasIOBufferSizeRange()) {
             [frameSizes addObject:@( _device->GetIOBufferSize() )];
@@ -414,7 +421,7 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
             UInt32 minimum, maximum;
             _device->GetIOBufferSizeRange(minimum, maximum);
             
-            for (NSNumber *n in @[ @32, @64, @128, @256, @512, @1024, @2048, @4096, @6144, @8192 ]) {
+            for (NSNumber *n in allFrameSizes) {
                 NSInteger i = [n integerValue];
 
                 if (minimum <= i  && i <= maximum) {

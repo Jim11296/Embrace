@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
@@ -24,13 +24,6 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="G0T-eR-fVJ" userLabel="Container">
                     <rect key="frame" x="0.0" y="0.0" width="312" height="60"/>
                     <subviews>
-                        <customView horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="NGb-9e-QcY" customClass="Button">
-                            <rect key="frame" x="289" y="22" width="16" height="16"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="16" id="SFV-Ya-ilx"/>
-                                <constraint firstAttribute="width" constant="16" id="aKY-7x-TMQ"/>
-                            </constraints>
-                        </customView>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="0mJ-te-wAf">
                             <rect key="frame" x="24" y="41" width="246" height="17"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Title" usesSingleLineMode="YES" id="7sP-hf-Z5h">
@@ -87,6 +80,13 @@
                             </constraints>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="o3E-8L-KKf"/>
                         </imageView>
+                        <customView horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="NGb-9e-QcY" customClass="Button">
+                            <rect key="frame" x="289" y="22" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="16" id="SFV-Ya-ilx"/>
+                                <constraint firstAttribute="width" constant="16" id="aKY-7x-TMQ"/>
+                            </constraints>
+                        </customView>
                     </subviews>
                     <constraints>
                         <constraint firstItem="KYa-Yb-9f5" firstAttribute="top" secondItem="0mJ-te-wAf" secondAttribute="bottom" constant="2" id="5sF-AG-aO0"/>

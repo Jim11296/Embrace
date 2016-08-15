@@ -29,6 +29,12 @@
 }
 
 
+- (NSRect) knobRect
+{
+    return [[self cell] knobRectFlipped:NO];
+}
+
+
 @end
 
 

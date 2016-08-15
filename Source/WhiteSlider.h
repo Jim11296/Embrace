@@ -15,6 +15,8 @@
 @property (nonatomic, weak) id<WhiteSliderDragDelegate> dragDelegate;
 @property (nonatomic) double doubleValueBeforeDrag;
 
+@property (readonly) NSRect knobRect;
+
 @end
 
 @interface WhiteSliderCell : NSSliderCell

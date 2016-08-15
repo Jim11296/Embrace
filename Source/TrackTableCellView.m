@@ -526,6 +526,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [self _updateFieldAlphas];
     }
 
+    [self _updateErrorButton];
     [self _updateSpeakerIcon];
     [self _adjustConstraintsForLineLayout];
 
@@ -534,6 +535,21 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
     } else {
         [NSLayoutConstraint deactivateConstraints:_errorButtonConstraints];
+    }
+}
+
+
+- (void) _updateErrorButton
+{
+    if ([self isSelected]) {
+        NSColor *textColor = [self _topTextColor];
+
+        [_errorButton setAlertColor:textColor];
+        [_errorButton setAlertActiveColor:textColor];
+
+    } else {
+        [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
+        [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
     }
 }
 
@@ -566,13 +582,13 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         _duplicateImageView = [[NoDropImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
         [_duplicateImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_duplicateImageView setImage:image];
-        [[_durationField superview] addSubview:_duplicateImageView];
+        [[_durationField superview] addSubview:_duplicateImageView positioned:NSWindowBelow relativeTo:nil];
 
         _duplicateTrailingConstraint = [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
         
         _duplicateConstraints = @[
             _duplicateTrailingConstraint,
-            [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0]
+            [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0]
         ];
 
         [NSLayoutConstraint activateConstraints:_duplicateConstraints];
@@ -591,7 +607,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         _dotView = [[DotView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
         [_dotView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
-        [[_durationField superview] addSubview:_dotView];
+        [[_durationField superview] addSubview:_dotView positioned:NSWindowBelow relativeTo:nil];
 
         _dotTrailingConstraint = [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
 
