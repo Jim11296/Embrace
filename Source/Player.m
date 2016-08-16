@@ -503,7 +503,7 @@ typedef struct {
         [listener playerDidTick:self];
     }
 
-    if (done) {
+    if (done && !_preventNextTrack) {
         [self playNextTrack];
     }
 }
@@ -1280,6 +1280,17 @@ static OSStatus sInputRenderCallback(
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
+    [self _sendInputUnitToRenderThread:NULL];
+
+    [_currentScheduler stopScheduling:_generatorAudioUnit];
+    _currentScheduler = nil;
+
+    if ([track isResolvingURLs]) {
+        EmbraceLog(@"Player", @"%@ isn't ready due to URL resolution", track);
+        [self performSelector:@selector(_setupAndStartPlayback) withObject:nil afterDelay:0.1];
+        return;
+    }
+
     if (![track didAnalyzeLoudness] && ![track trackError]) {
         EmbraceLog(@"Player", @"%@ isn't ready, calling startPriorityAnalysis", track);
 
@@ -1294,11 +1305,6 @@ static OSStatus sInputRenderCallback(
         [self hardStop];
         return;
     }
-
-    [self _sendInputUnitToRenderThread:NULL];
-
-    [_currentScheduler stopScheduling:_generatorAudioUnit];
-    _currentScheduler = nil;
 
     PlayerShouldUseCrashPad = 0;
 

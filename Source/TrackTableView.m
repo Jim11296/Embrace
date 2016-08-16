@@ -9,6 +9,7 @@
 #import "TrackTableView.h"
 #import "TrackTableCellView.h"
 
+
 NSString * const EmbraceLockedTrackPasteboardType = @"com.iccir.Embrace.Track.Locked";
 NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Queued";
 
@@ -51,9 +52,9 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
         }
     }
 
-
     return [super menuForEvent:theEvent];
 }
+
 
 - (void) updateSelectedColorWorkaround:(BOOL)yn
 {

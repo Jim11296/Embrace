@@ -214,12 +214,14 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender
 {
+    [[Player sharedInstance] setPreventNextTrack:YES];
     return NSDragOperationCopy;
 }
 
 
 - (BOOL) performDragOperation:(id <NSDraggingInfo>)sender
 {
+    [[Player sharedInstance] setPreventNextTrack:NO];
     return [[self tracksController] acceptDrop:sender row:-1 dropOperation:NSTableViewDropOn];
 }
 

@@ -582,6 +582,8 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 {
     NSPasteboard *pasteboard = [info draggingPasteboard];
 
+    [[Player sharedInstance] setPreventNextTrack:YES];
+
     BOOL isLockedTrack   =  ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
     BOOL isQueuedTrack   =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
     BOOL isExternalTrack = !isLockedTrack && !isQueuedTrack;
@@ -656,6 +658,8 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
     NSDragOperation dragOperation = [self tableView:_tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
     [_tableView updateInsertionPointWorkaround:NO];
+
+    [[Player sharedInstance] setPreventNextTrack:NO];
 
     NSPasteboard *pboard = [info draggingPasteboard];
 
