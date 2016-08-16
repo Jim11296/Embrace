@@ -24,5 +24,5 @@ extern NSString * const EmbraceQueuedTrackPasteboardType;
 
 
 @protocol TrackTableViewDelegate <NSTableViewDelegate>
-- (void) trackTableView:(TrackTableView *)tableView draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint;
+- (void) trackTableView:(TrackTableView *)tableView updateDragInside:(BOOL)dragInside;
 @end
