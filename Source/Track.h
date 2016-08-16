@@ -65,6 +65,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 
 - (Track *) duplicatedTrack;
 
+@property (nonatomic, readonly) BOOL isResolvingURLs;
 @property (nonatomic, readonly) NSURL *externalURL;
 @property (nonatomic, readonly) NSURL *internalURL;
 @property (nonatomic, readonly) NSUUID *UUID;

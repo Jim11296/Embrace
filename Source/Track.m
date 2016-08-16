@@ -185,6 +185,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if ((self = [super init])) {
         _UUID = UUID;
 
+        _isResolvingURLs = YES;
         [self _resolveExternalURL:url bookmark:bookmark];
         
         [self _invalidateSilence];
@@ -480,6 +481,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
             if (!externalURL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    _isResolvingURLs = NO;
                     [self setTrackError:TrackErrorOpenFailed];
                 });
 
@@ -516,6 +518,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             [externalURL embrace_stopAccessingResourceWithKey:@"resolve"];
 
             dispatch_async(dispatch_get_main_queue(), ^{
+                _isResolvingURLs = NO;
                 [self _handleResolvedExternalURL:externalURL internalURL:internalURL bookmark:bookmark];
             });
             
@@ -524,6 +527,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             externalURL = internalURL = nil;
 
             dispatch_async(dispatch_get_main_queue(), ^{
+                _isResolvingURLs = NO;
                 [self setTrackError:TrackErrorOpenFailed];
             });
         }
