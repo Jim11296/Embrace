@@ -764,9 +764,9 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
-- (void) trackTableView:(TrackTableView *)tableView updateDragInside:(BOOL)dragInside
+- (void) trackTableView:(TrackTableView *)tableView isModifyingViaDrag:(BOOL)isModifyingViaDrag
 {
-    [[Player sharedInstance] setPreventNextTrack:dragInside];
+    [[Player sharedInstance] setPreventNextTrack:isModifyingViaDrag];
 }
 
 

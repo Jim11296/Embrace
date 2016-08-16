@@ -20,9 +20,11 @@ extern NSString * const EmbraceQueuedTrackPasteboardType;
 - (void) willDrawInsertionPointAboveRow:(NSInteger)row;
 
 @property (nonatomic, readonly) NSInteger rowWithMouseInside;
+
 @end
 
 
 @protocol TrackTableViewDelegate <NSTableViewDelegate>
-- (void) trackTableView:(TrackTableView *)tableView updateDragInside:(BOOL)dragInside;
+@optional
+- (void) trackTableView:(TrackTableView *)tableView isModifyingViaDrag:(BOOL)isModifyingViaDrag;
 @end

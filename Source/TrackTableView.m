@@ -17,8 +17,11 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 @implementation TrackTableView {
     NSHashTable       *_cellsWithMouseInside;
     NSMutableIndexSet *_rowsNeedingUpdatedHeight;
+
     BOOL _dragInside;
+    BOOL _inLocalDrag;
 }
+
 
 - (void) viewDidMoveToWindow
 {
@@ -101,6 +104,17 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
+- (void) draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint
+{
+    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingSession:willBeginAtPoint:)]) {
+        [super draggingSession:session willBeginAtPoint:screenPoint];
+    }
+
+    _inLocalDrag = YES;
+    [self _updateDrag];
+}
+
+
 - (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
 {
     if (context == NSDraggingContextOutsideApplication) {
@@ -121,7 +135,8 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 {
     NSDragOperation result = [super draggingEntered:sender];
 
-    [self _updateDragInside:YES];
+    _dragInside = YES;
+    [self _updateDrag];
 
     return result;
 }
@@ -136,7 +151,8 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     [self updateSelectedColorWorkaround:NO];
     [self updateInsertionPointWorkaround:NO];
 
-    [self _updateDragInside:NO];
+    _dragInside = NO;
+    [self _updateDrag];
 }
 
 
@@ -146,7 +162,9 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
         [super draggingEnded:sender];
     }
     
-    [self _updateDragInside:NO];
+    _dragInside = NO;
+    _inLocalDrag = NO;
+    [self _updateDrag];
 }
 
 
@@ -159,7 +177,9 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     [self updateSelectedColorWorkaround:NO];
     [self updateInsertionPointWorkaround:NO];
 
-    [self _updateDragInside:NO];
+    _dragInside = NO;
+    _inLocalDrag = NO;
+    [self _updateDrag];
 }
 
 
@@ -185,16 +205,12 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
-- (void) _updateDragInside:(BOOL)dragInside
+- (void) _updateDrag
 {
-    if (_dragInside != dragInside) {
-        _dragInside = dragInside;
+    id delegate = [self delegate];
 
-        id delegate = [self delegate];
-
-        if ([delegate respondsToSelector:@selector(trackTableView:updateDragInside:)]) {
-            [delegate trackTableView:self updateDragInside:_dragInside];
-        }
+    if ([delegate respondsToSelector:@selector(trackTableView:isModifyingViaDrag:)]) {
+        [delegate trackTableView:self isModifyingViaDrag:(_inLocalDrag || _dragInside)];
     }
 }
 
