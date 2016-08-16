@@ -17,6 +17,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 @implementation TrackTableView {
     NSHashTable       *_cellsWithMouseInside;
     NSMutableIndexSet *_rowsNeedingUpdatedHeight;
+    BOOL _dragInside;
 }
 
 - (void) viewDidMoveToWindow
@@ -116,6 +117,16 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
+- (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender;
+{
+    NSDragOperation result = [super draggingEntered:sender];
+
+    [self _updateDragInside:YES];
+
+    return result;
+}
+
+
 - (void) draggingExited:(id <NSDraggingInfo>)sender
 {
     if ([[NSTableView class] instancesRespondToSelector:@selector(draggingExited:)]) {
@@ -124,6 +135,18 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 
     [self updateSelectedColorWorkaround:NO];
     [self updateInsertionPointWorkaround:NO];
+
+    [self _updateDragInside:NO];
+}
+
+
+- (void) draggingEnded:(nullable id <NSDraggingInfo>)sender
+{
+    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingEnded:)]) {
+        [super draggingEnded:sender];
+    }
+    
+    [self _updateDragInside:NO];
 }
 
 
@@ -135,6 +158,8 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 
     [self updateSelectedColorWorkaround:NO];
     [self updateInsertionPointWorkaround:NO];
+
+    [self _updateDragInside:NO];
 }
 
 
@@ -155,6 +180,20 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
         } else {
             [[NSCursor disappearingItemCursor] set];
             [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
+        }
+    }
+}
+
+
+- (void) _updateDragInside:(BOOL)dragInside
+{
+    if (_dragInside != dragInside) {
+        _dragInside = dragInside;
+
+        id delegate = [self delegate];
+
+        if ([delegate respondsToSelector:@selector(trackTableView:updateDragInside:)]) {
+            [delegate trackTableView:self updateDragInside:_dragInside];
         }
     }
 }

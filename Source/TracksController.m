@@ -553,7 +553,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 {
     [_tableView updateInsertionPointWorkaround:NO];
     [_tableView updateSelectedColorWorkaround:NO];
-    
+
     if (operation == NSDragOperationNone) {
         NSRect frame = [[[self tableView] window] frame];
 
@@ -581,8 +581,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 - (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
     NSPasteboard *pasteboard = [info draggingPasteboard];
-
-    [[Player sharedInstance] setPreventNextTrack:YES];
 
     BOOL isLockedTrack   =  ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
     BOOL isQueuedTrack   =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
@@ -658,8 +656,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
     NSDragOperation dragOperation = [self tableView:_tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
     [_tableView updateInsertionPointWorkaround:NO];
-
-    [[Player sharedInstance] setPreventNextTrack:NO];
 
     NSPasteboard *pboard = [info draggingPasteboard];
 
@@ -765,6 +761,12 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     [_tableView updateSelectedColorWorkaround:NO];
 
     return [self acceptDrop:info row:row dropOperation:dropOperation];
+}
+
+
+- (void) trackTableView:(TrackTableView *)tableView updateDragInside:(BOOL)dragInside
+{
+    [[Player sharedInstance] setPreventNextTrack:dragInside];
 }
 
 
