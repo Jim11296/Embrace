@@ -622,7 +622,13 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         EmbraceLog(@"Track", @"Received error for worker command %ld: %@", command, error);
     }];
     
-    [worker performTrackCommand:command UUID:UUID internalURL:internalURL externalURL:externalURL reply: ^(NSDictionary *dictionary) {
+    
+    NSError *error = nil;
+    NSData  *bookmarkData = [internalURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+
+    NSString *originalFilename = [externalURL lastPathComponent];
+    
+    [worker performTrackCommand:command UUID:UUID bookmarkData:bookmarkData originalFilename:originalFilename reply: ^(NSDictionary *dictionary) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (command == WorkerTrackCommandReadMetadata) {
                 EmbraceLog(@"Track", @"%@ received metadata from worker: %@", self, dictionary);

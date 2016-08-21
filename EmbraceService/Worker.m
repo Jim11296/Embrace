@@ -65,7 +65,7 @@ static const char *sGenreList[128] = {
 // This implements the example protocol. Replace the body of this class with the implementation of this service's protocol.
 
 
-static NSDictionary *sReadMetadata(NSURL *internalURL, NSURL *externalURL)
+static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilename)
 {
     void (^parseMetadataItem)(AVMetadataItem *, NSMutableDictionary *) = ^(AVMetadataItem *item, NSMutableDictionary *dictionary) {
         id commonKey = [item commonKey];
@@ -242,7 +242,7 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSURL *externalURL)
         }
     };
 
-    NSString *fallbackTitle = [[externalURL lastPathComponent] stringByDeletingPathExtension];
+    NSString *fallbackTitle = [originalFilename stringByDeletingPathExtension];
 
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:internalURL options:nil];
 
@@ -388,15 +388,28 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
 
 - (void) performTrackCommand: (WorkerTrackCommand) command
                         UUID: (NSUUID *) UUID
-                 internalURL: (NSURL *) internalURL
-                 externalURL: (NSURL *) externalURL
+                bookmarkData: (NSData *) bookmarkData
+            originalFilename: (NSString *) originalFilename
                        reply: (void (^)(NSDictionary *))reply
 {
+    NSError *error = nil;
+    NSURL *internalURL = [NSURL URLByResolvingBookmarkData: bookmarkData
+                                                   options: NSURLBookmarkResolutionWithoutUI
+                                             relativeToURL: nil
+                                       bookmarkDataIsStale: NULL
+                                                     error: &error];
+
+    if (error) NSLog(@"%@", error);
+
     if (command == WorkerTrackCommandReadMetadata) {
         dispatch_async(sMetadataQueue, ^{ @autoreleasepool {
+            [internalURL startAccessingSecurityScopedResource];
+        
             if (![sCancelledUUIDs containsObject:UUID]) {
-                reply(sReadMetadata(internalURL, externalURL));
+                reply(sReadMetadata(internalURL, originalFilename));
             }
+
+            [internalURL stopAccessingSecurityScopedResource];
         } });
 
     } else if (command == WorkerTrackCommandReadLoudness || command == WorkerTrackCommandReadLoudnessImmediate) {
@@ -404,6 +417,8 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
         dispatch_queue_t queue       = isImmediate ? sLoudnessImmediateQueue : sLoudnessBackgroundQueue;
 
         dispatch_async(queue, ^{ @autoreleasepool {
+            [internalURL startAccessingSecurityScopedResource];
+
             if (![sCancelledUUIDs containsObject:UUID] && ![sLoudnessUUIDs containsObject:UUID]) {
                 [sLoudnessUUIDs addObject:UUID];
 
@@ -413,6 +428,8 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
                     reply(dictionary);
                 });
             }
+
+            [internalURL stopAccessingSecurityScopedResource];
         } });
     }
 }

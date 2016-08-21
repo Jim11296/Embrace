@@ -404,6 +404,7 @@
 		55E0B34118CBFA6900B4087C /* NoDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoDropImageView.m; path = Source/NoDropImageView.m; sourceTree = SOURCE_ROOT; };
 		55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportManager.m; path = Source/ExportManager.m; sourceTree = SOURCE_ROOT; };
 		55EE45A51CE1D1CA00ECDF13 /* ExportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportManager.h; path = Source/ExportManager.h; sourceTree = SOURCE_ROOT; };
+		55EF15881D692DCC0021C9A7 /* Worker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Worker.entitlements; path = Resources/Worker.entitlements; sourceTree = "<group>"; };
 		55F3B7AF1877885800E8FEC8 /* SetlistController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistController.h; path = Source/SetlistController.h; sourceTree = SOURCE_ROOT; };
 		55F3B7B01877885800E8FEC8 /* SetlistController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistController.m; path = Source/SetlistController.m; sourceTree = SOURCE_ROOT; };
 		55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SetlistWindow.xib; path = Resources/SetlistWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -626,6 +627,7 @@
 				554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */,
 				55394ED01884C94F00474E20 /* Embrace.entitlements */,
 				55DD538C18B99A530084628D /* CrashPad.entitlements */,
+				55EF15881D692DCC0021C9A7 /* Worker.entitlements */,
 				55DD53A518B9FC3E0084628D /* Utils */,
 				552C9DC418836E480041C160 /* CoreAudio Public Utility */,
 				556ACE30187BB3F800AED4BC /* Wrapped C++ */,
