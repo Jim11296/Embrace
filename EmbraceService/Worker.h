@@ -22,8 +22,8 @@ typedef NS_ENUM(NSInteger, WorkerTrackCommand) {
 
 - (void) performTrackCommand: (WorkerTrackCommand) command
                         UUID: (NSUUID *) uuid
-                 internalURL: (NSURL *) internalURL
-                 externalURL: (NSURL *) externalURL
+                bookmarkData: (NSData *) bookmarkData
+            originalFilename: (NSString *) originalFilename
                        reply: (void (^)(NSDictionary *))reply;
 
 @end
