@@ -1128,6 +1128,8 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     for (Track *track in _tracks) {
         [track setTrackStatus:TrackStatusQueued];
     }
+
+    [self _didModifyTracks];
 }
 
 
