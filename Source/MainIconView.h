@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger,  MainIconAnimation) {
     MainIconAnimationTypeSubtlePopIn
 };
 
-@interface MainIconView : NSView
+@interface MainIconView : NSView <CALayerDelegate> 
 
 - (void) performAnimation:(MainIconAnimation)animation image:(NSImage *)image tintColor:(NSColor *)tintColor;
 
