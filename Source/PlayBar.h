@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface PlayBar : NSView
+@interface PlayBar : NSView <CALayerDelegate>
 
 @property (nonatomic) float percentage;
 @property (nonatomic, getter=isPlaying) BOOL playing;

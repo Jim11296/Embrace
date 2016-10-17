@@ -66,7 +66,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTableViewSelectionDidChange:) name:NSTableViewSelectionDidChangeNotification object:[self tableView]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
-    [[self tableView] registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType, EmbraceQueuedTrackPasteboardType, EmbraceLockedTrackPasteboardType ]];
+    [[self tableView] registerForDraggedTypes:@[ (__bridge NSString *)kUTTypeFileURL, NSURLPboardType, NSFilenamesPboardType, EmbraceQueuedTrackPasteboardType, EmbraceLockedTrackPasteboardType ]];
 #if DEBUG
     [[self tableView] setDoubleAction:@selector(viewClickedTrack:)];
 #endif
@@ -86,7 +86,10 @@ static NSString * const sModifiedAtKey = @"modified-at";
 {
     SEL action = [menuItem action];
 
-    if (action == @selector(delete:)) {
+    if (action == @selector(paste:)) {
+        return [[NSPasteboard generalPasteboard] canReadItemWithDataConformingToTypes:@[ (__bridge NSString *)kUTTypeFileURL, NSFilenamesPboardType ]];
+        
+    } else if (action == @selector(delete:)) {
         return [self _validateDeleteWithMenuItem:menuItem];
      
     } else if (action == @selector(toggleMarkAsPlayed:)) {
@@ -1030,6 +1033,33 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 
 #pragma mark - Public
+
+- (void) paste:(id)sender
+{
+    NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+
+    NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];
+    NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
+
+    if (filenames) {
+        NSMutableArray *fileURLs = [NSMutableArray array];
+
+        for (NSString *filename in filenames) {
+            NSURL *fileURL = [NSURL fileURLWithPath:filename];
+            if (fileURL) [fileURLs addObject:fileURL];
+        }
+
+        [self addTracksWithURLs:fileURLs];
+
+    } else if (URLString) {
+        NSURL *fileURL = [NSURL URLWithString:URLString];
+
+        if (fileURL) {
+            [self addTracksWithURLs:@[ fileURL ]];
+        }
+    }
+}
+
 
 - (void) saveState
 {

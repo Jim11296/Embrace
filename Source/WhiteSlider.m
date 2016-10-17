@@ -35,6 +35,12 @@
 }
 
 
+- (BOOL) acceptsFirstMouse:(nullable NSEvent *)event
+{
+    return NO;
+}
+
+
 @end
 
 
@@ -70,7 +76,12 @@
 
     [shadow set];
     
-    [[NSColor whiteColor] set];
+    if (isMainWindow) {
+        [[NSColor whiteColor] set];
+    } else {
+        [[NSColor colorWithWhite:0.965 alpha:1.0] set];
+    }
+
     [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
     
     if (isMainWindow) {
@@ -100,6 +111,8 @@
 
 - (void) drawBarInside:(NSRect)aRect flipped:(BOOL)flipped
 {
+    BOOL isMainWindow = [[[self controlView] window] isMainWindow];
+
     NSRect knobRect = [self knobRectFlipped:flipped];
     
     CGFloat midX = NSMidX(knobRect);
@@ -115,7 +128,12 @@
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
     
-    [GetRGBColor(0x686868, 1.0) set];
+    if (isMainWindow) {
+        [GetRGBColor(0x707070, 1.0) set];
+    } else {
+        [GetRGBColor(0xA0A0A0, 1.0) set];
+    }
+
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
     [roundedPath fill];
     

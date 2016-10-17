@@ -22,7 +22,6 @@ static NSMutableSet *sLoudnessUUIDs  = nil;
 
 
 static const char *sGenreList[128] = {
-    NULL,
     "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop", "Jazz", "Metal",
     "New Age", "Oldies", "Other", "Pop", "R&B", "Rap", "Reggae", "Rock", "Techno", "Industrial",
     "Alternative", "Ska", "Death Metal", "Pranks", "Soundtrack", "Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk",
@@ -209,12 +208,23 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilenam
         } else if (key4cc == 'gnre') { // Genre, 'gnre' - Use sGenreList lookup
             NSInteger i = [numberValue integerValue];
             if (i > 0 && i < 127) {
+                // 'gnre' uses the ID3v1 map, but increments it by one (1 for Blues instead of 0 for Blues)
+                i--;
+
                 const char *genre = sGenreList[i];
                 if (genre) [dictionary setObject:@(sGenreList[i]) forKey:TrackKeyGenre];
             }
 
         } else if ((key4cc == '\251gen') && stringValue) { // Genre, '?gen'
             [dictionary setObject:stringValue forKey:TrackKeyGenre];
+
+        } else if (((key4cc == 'TCON') || (key4cc == '\00TCO')) && numberValue) { // Genre, 'TCON'/'TCO' as ID3v1 known genre
+            NSInteger i = [numberValue integerValue];
+            
+            if (i >= 0 && i < 127) {
+                const char *genre = sGenreList[i];
+                if (genre) [dictionary setObject:@(sGenreList[i]) forKey:TrackKeyGenre];
+            }
 
         } else if ((key4cc == 'TCON') && stringValue) { // Genre, 'TCON'
             [dictionary setObject:stringValue forKey:TrackKeyGenre];

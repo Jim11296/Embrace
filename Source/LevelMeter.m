@@ -14,6 +14,8 @@
 
 - (void) drawRect:(NSRect)dirtyRect
 {
+    BOOL isMainWindow = [[self window] isMainWindow];
+
     NSRect bounds = [self bounds];
     CGFloat barHeight = 4;
 
@@ -60,7 +62,12 @@
         if (_metering) {
             [NSGraphicsContext saveGraphicsState];
 
-            [GetRGBColor(0x707070, 1.0) set];
+            if (isMainWindow) {
+                [GetRGBColor(0x707070, 1.0) set];
+            } else {
+                [GetRGBColor(0xA0A0A0, 1.0) set];
+            }
+
             [[NSBezierPath bezierPathWithRect:leftRect] addClip];
             [roundedPath fill];
 

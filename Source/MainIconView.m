@@ -24,14 +24,14 @@
         _mainLayer = [CALayer layer];
         _auxLayer  = [CALayer layer];
         
-        [_mainLayer    setMasksToBounds:NO];
-        [_auxLayer     setMasksToBounds:NO];
+        [_mainLayer setMasksToBounds:NO];
+        [_auxLayer  setMasksToBounds:NO];
 
-        [_mainLayer    setDelegate:self];
-        [_auxLayer     setDelegate:self];
+        [_mainLayer setDelegate:self];
+        [_auxLayer  setDelegate:self];
         
-        [_mainLayer    setContentsGravity:kCAGravityLeft];
-        [_auxLayer     setContentsGravity:kCAGravityLeft];
+        [_mainLayer setContentsGravity:kCAGravityLeft];
+        [_auxLayer  setContentsGravity:kCAGravityLeft];
         
         [_mainLayer setNeedsDisplayOnBoundsChange:YES];
         [_auxLayer  setNeedsDisplayOnBoundsChange:YES];

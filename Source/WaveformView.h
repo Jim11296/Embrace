@@ -10,7 +10,7 @@
 
 @class Track;
 
-@interface WaveformView : NSView
+@interface WaveformView : NSView <CALayerDelegate>
 
 - (void) redisplay;
 
