@@ -881,13 +881,19 @@
         return alert;
     };
 
-    NSAlert *(^makeAlertTwo)() = ^{
+    NSAlert *(^makeAlertTwo)(BOOL) = ^(BOOL didSend) {
         NSAlert *alert = [[NSAlert alloc] init];
 
-        [alert setMessageText:NSLocalizedString(@"Logs Sent", nil)];
-        [alert setInformativeText:NSLocalizedString(@"Thank you for your logs.  If you have any additional information, please contact me.", nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"Contact", nil)];
+        if (didSend) {
+            [alert setMessageText:NSLocalizedString(@"Logs Sent", nil)];
+            [alert setInformativeText:NSLocalizedString(@"Thank you for your logs.  If you have any additional information, please contact me.", nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Contact", nil)];
+        } else {
+            [alert setMessageText:NSLocalizedString(@"Error", nil)];
+            [alert setInformativeText:NSLocalizedString(@"Your logs could not be sent.  Please try again.", nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+        }
 
         return alert;
     };
@@ -896,7 +902,7 @@
 
     if (okToSend) {
         [_crashSender sendLogsWithCompletionHandler:^(BOOL didSend) {
-            NSModalResponse response = [makeAlertTwo() runModal];
+            NSModalResponse response = [makeAlertTwo(didSend) runModal];
             
             if (response == NSAlertSecondButtonReturn) {
                 [self sendFeedback:nil];

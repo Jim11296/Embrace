@@ -8,6 +8,7 @@
 
 #import "TipArrowFloater.h"
 
+
 @implementation TipArrowFloater {
     NSView *_arrowView;
 }

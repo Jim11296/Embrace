@@ -551,6 +551,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
+
 - (void) copyToPasteboard:(NSPasteboard *)pasteboard
 {
     EmbraceLogMethod();
@@ -799,6 +800,13 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
+- (IBAction) paste:(id)sender
+{
+    EmbraceLogMethod();
+    [[self tracksController] paste:sender];
+}
+
+
 - (IBAction) delete:(id)sender
 {
     EmbraceLogMethod();
@@ -891,7 +899,8 @@ static NSInteger sAutoGapMaximum = 16;
 {
     SEL action = [menuItem action];
 
-    if (action == @selector(delete:) ||
+    if (action == @selector(paste:)  ||
+        action == @selector(delete:) ||
         action == @selector(toggleMarkAsPlayed:) ||
         action == @selector(toggleStopsAfterPlaying:) ||
         action == @selector(toggleIgnoreAutoGap:) ||

@@ -16,6 +16,8 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 
 - (void) saveState;
 
+- (void) paste:(id)sender;
+
 - (Track *) firstQueuedTrack;
 - (NSArray *) selectedTracks;
 

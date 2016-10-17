@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TipArrowFloater : NSObject
+@interface TipArrowFloater : NSObject <CAAnimationDelegate>
 
 - (void) showWithView:(NSView *)view rect:(NSRect)rect;
 - (void) hide;
