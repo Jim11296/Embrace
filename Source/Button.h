@@ -24,7 +24,7 @@
 @property (nonatomic, strong) NSColor *alertColor;
 @property (nonatomic, strong) NSColor *alertActiveColor;
 
-@property (nonatomic, assign, getter=isWiggling) BOOL wiggling;
+@property (nonatomic, assign, getter=isOutlined) BOOL outlined;
 @property (nonatomic, assign, getter=isIconOnly) BOOL iconOnly;
 
 @end

@@ -81,11 +81,9 @@ static NSInteger sAutoGapMaximum = 16;
 @implementation SetlistController {
     TipArrowFloater *_volumeTooLowFloater;
 
-    BOOL       _inVolumeDrag;
-    
+    BOOL       _commandDown;
+    double     _volumeBeforeDrag;
     double     _volumeBeforeKeyboard;
-    double     _volumeBeforeAutoPause;
-    BOOL       _didAutoPause;
     BOOL       _confirmStop;
     BOOL       _willCalculateStartAndEndTimes;
 }
@@ -200,6 +198,31 @@ static NSInteger sAutoGapMaximum = 16;
     [self windowDidUpdateMain:nil];
 }
 
+
+- (void) flagsChanged:(NSEvent *)event
+{
+    [super flagsChanged:event];
+
+    BOOL commandDown = ([event modifierFlags] & NSCommandKeyMask) == NSCommandKeyMask;
+    
+    if (_commandDown != commandDown) {
+        if (commandDown) {
+            _volumeBeforeKeyboard = [[Player sharedInstance] volume];
+        } else {
+            double volumeBeforeKeyboard = _volumeBeforeKeyboard;
+            
+            if (volumeBeforeKeyboard) {
+                _volumeBeforeKeyboard = 0;
+                [self _updatePlayButton];
+                [self _doFadeStopIfNeededWithBeforeVolume:volumeBeforeKeyboard];
+            }
+        }
+
+        _commandDown = commandDown;
+    }
+}
+
+
 #if TRIAL
 
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector
@@ -231,12 +254,13 @@ static NSInteger sAutoGapMaximum = 16;
     PlaybackAction action  = [self preferredPlaybackAction];
     BOOL           enabled = [self isPreferredPlaybackActionEnabled];
     
-    Player   *player = [Player sharedInstance];
+    Player *player = [Player sharedInstance];
     BOOL isVolumeZero = ([player volume] == 0);
 
-    NSImage  *image   = nil;
-    NSString *tooltip = nil;
-    BOOL      alert   = NO;
+    NSImage  *image    = nil;
+    NSString *tooltip  = nil;
+    BOOL      alert    = NO;
+    BOOL      outlined = NO;
 
     Button *playButton = [self playButton];
     
@@ -255,16 +279,16 @@ static NSInteger sAutoGapMaximum = 16;
         }
 
     } else if (action == PlaybackActionStop) {
+        if ([player isPlaying] && isVolumeZero && (_volumeBeforeDrag || _volumeBeforeKeyboard)) {
+            outlined = YES;
+        }
+
         image = _confirmStop ? [NSImage imageNamed:@"ConfirmTemplate"] : [NSImage imageNamed:@"StopTemplate"];
         alert = _confirmStop;
         enabled = YES;
 
     } else {
-        if (_didAutoPause) {
-            image = [NSImage imageNamed:@"ResumeTemplate"];
-        } else {
-            image = [NSImage imageNamed:@"PlayTemplate"];
-        }
+        image = [NSImage imageNamed:@"PlayTemplate"];
 
         Track *next = [[self tracksController] firstQueuedTrack];
 
@@ -276,13 +300,8 @@ static NSInteger sAutoGapMaximum = 16;
     [playButton setAlert:alert];
     [playButton setImage:image];
     [playButton setToolTip:tooltip];
+    [playButton setOutlined:outlined];
     [playButton setEnabled:enabled];
-
-    if (enabled) {
-        [playButton setWiggling:((action == PlaybackActionStop) && _inVolumeDrag && isVolumeZero)];
-    } else {
-        [playButton setWiggling:NO];
-    }
 }
 
 
@@ -306,7 +325,6 @@ static NSInteger sAutoGapMaximum = 16;
     } else {
         [window setLevel:NSNormalWindowLevel];
         [window setCollectionBehavior:NSWindowCollectionBehaviorDefault];
-    
     }
 }
 
@@ -374,32 +392,23 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) _doAutoPauseIfNeededWithBeforeVolume:(double)beforeVolume
+- (void) _doFadeStopIfNeededWithBeforeVolume:(double)beforeVolume
 {
     EmbraceLogMethod();
 
     PlaybackAction action = [self preferredPlaybackAction];
     Button *playButton = [self playButton];
     
-    if ([playButton isEnabled]) {
+    if ([playButton isEnabled] && beforeVolume) {
         Player *player = [Player sharedInstance];
         BOOL isVolumeZero = [player volume] == 0;
 
-        if (action == PlaybackActionStop && !_inVolumeDrag && isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"ResumeTemplate"] enabled:YES];
-            _volumeBeforeAutoPause = beforeVolume;
-            _didAutoPause = YES;
-
+        if (action == PlaybackActionStop && isVolumeZero) {
+            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"PlayTemplate"] enabled:YES];
+            
+            [[Player sharedInstance] setVolume:beforeVolume];
             [[Player sharedInstance] hardStop];
-
-        } else if (action == PlaybackActionPlay && _didAutoPause && !isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"StopTemplate"] enabled:NO];
-            _didAutoPause = NO;
-
-            [[Player sharedInstance] play];
         }
-    } else {
-        _didAutoPause = NO;
     }
 }
 
@@ -416,12 +425,6 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) _clearVolumeBeforeKeyboard
-{
-    _volumeBeforeKeyboard = 0;
-}
-
-
 - (void) _increaseOrDecreaseVolumeByAmount:(CGFloat)amount
 {
     EmbraceLogMethod();
@@ -434,18 +437,8 @@ static NSInteger sAutoGapMaximum = 16;
     if (newVolume > 1.0) newVolume = 1.0;
     if (newVolume < 0.0) newVolume = 0.0;
 
-    if (_volumeBeforeKeyboard == 0) {
-        _volumeBeforeKeyboard = oldVolume;
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearVolumeBeforeKeyboard) object:nil];
-        [self performSelector:@selector(_clearVolumeBeforeKeyboard) withObject:nil afterDelay:10];
-    }
-
     [player setVolume:newVolume];
     [_volumeTooLowFloater hide];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self _doAutoPauseIfNeededWithBeforeVolume:_volumeBeforeKeyboard];
-    });
 }
 
 
@@ -741,17 +734,7 @@ static NSInteger sAutoGapMaximum = 16;
         }
 
     } else {
-        if (_didAutoPause) {
-            _didAutoPause = NO;
-
-            [[Player sharedInstance] play];
-            [[Player sharedInstance] setVolume:_volumeBeforeAutoPause];
-            
-            _volumeBeforeKeyboard = 0;
-
-        } else {
-            [[Player sharedInstance] play];
-        }
+        [[Player sharedInstance] play];
 
         if ([[Player sharedInstance] volume] < 0.25) {
             if (!_volumeTooLowFloater) _volumeTooLowFloater = [[TipArrowFloater alloc] init];
@@ -955,7 +938,8 @@ static NSInteger sAutoGapMaximum = 16;
 - (void) whiteSliderDidStartDrag:(WhiteSlider *)slider
 {
     if (slider == _volumeSlider) {
-        _inVolumeDrag = YES;
+        _volumeBeforeDrag = [slider doubleValue];
+
         [self _updatePlayButton];
         [_volumeTooLowFloater hide];
     }
@@ -965,12 +949,14 @@ static NSInteger sAutoGapMaximum = 16;
 - (void) whiteSliderDidEndDrag:(WhiteSlider *)slider
 {
     if (slider == _volumeSlider) {
-        _inVolumeDrag = NO;
-        [self _updatePlayButton];
-    }
+        CGFloat volumeBeforeDrag = _volumeBeforeDrag;
 
-    double beforeVolume = [[self volumeSlider] doubleValueBeforeDrag];
-    [self _doAutoPauseIfNeededWithBeforeVolume:beforeVolume];
+        if (volumeBeforeDrag) {
+            _volumeBeforeDrag = 0;
+            [self _updatePlayButton];
+            [self _doFadeStopIfNeededWithBeforeVolume:volumeBeforeDrag];
+        }
+    }
 }
 
 
