@@ -455,6 +455,41 @@ NSColor *GetRGBColor(int rgb, CGFloat alpha)
 }
 
 
+
+CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef))
+{
+    size_t width  = size.width * scale;
+    size_t height = size.height * scale;
+
+    CGImageRef      cgImage    = NULL;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+    if (colorSpace && width > 0 && height > 0) {
+        CGBitmapInfo bitmapInfo = 0 | (opaque ? kCGImageAlphaNoneSkipFirst : kCGImageAlphaPremultipliedFirst);
+        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, width * 4, colorSpace, bitmapInfo);
+    
+        if (context) {
+            CGContextTranslateCTM(context, 0, height);
+            CGContextScaleCTM(context, scale, -scale);
+
+            NSGraphicsContext *savedContext = [NSGraphicsContext currentContext];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
+
+            callback(context);
+            
+            [NSGraphicsContext setCurrentContext:savedContext];
+
+            cgImage = CGBitmapContextCreateImage(context);
+            CFRelease(context);
+        }
+    }
+
+    CGColorSpaceRelease(colorSpace);
+
+    return cgImage;
+}
+
+
 extern AppDelegate *GetAppDelegate(void)
 {
     return (AppDelegate *)[NSApp delegate];

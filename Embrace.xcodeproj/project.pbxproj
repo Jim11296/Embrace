@@ -130,7 +130,6 @@
 		55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD618AF1B41006B6FBB /* AUHipass.aupreset */; };
 		55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABE818B04D91006B6FBB /* DebugController.m */; };
 		55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */; };
-		55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABED18B08569006B6FBB /* MainIconView.m */; };
 		55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABF718B21C31006B6FBB /* Localizable.strings */; };
 		55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F81FD21B846E3300E03B5B /* IssuesController.m */; };
@@ -425,8 +424,6 @@
 		55F7ABE718B04D91006B6FBB /* DebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugController.h; path = Source/DebugController.h; sourceTree = SOURCE_ROOT; };
 		55F7ABE818B04D91006B6FBB /* DebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DebugController.m; path = Source/DebugController.m; sourceTree = SOURCE_ROOT; };
 		55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DebugWindow.xib; path = Resources/DebugWindow.xib; sourceTree = SOURCE_ROOT; };
-		55F7ABED18B08569006B6FBB /* MainIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainIconView.m; path = Source/MainIconView.m; sourceTree = SOURCE_ROOT; };
-		55F7ABEE18B08569006B6FBB /* MainIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainIconView.h; path = Source/MainIconView.h; sourceTree = SOURCE_ROOT; };
 		55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmergencyLimiter.h; path = Source/EmergencyLimiter.h; sourceTree = "<group>"; };
 		55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmergencyLimiter.m; path = Source/EmergencyLimiter.m; sourceTree = "<group>"; };
 		55F7ABF818B21C31006B6FBB /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
@@ -855,8 +852,6 @@
 				556098131B47CABD008516C3 /* LabelMenuView.m */,
 				55ADE93618824338008DC245 /* LevelMeter.h */,
 				55ADE93718824338008DC245 /* LevelMeter.m */,
-				55F7ABEE18B08569006B6FBB /* MainIconView.h */,
-				55F7ABED18B08569006B6FBB /* MainIconView.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
 				5506802F1887711000441AAE /* TimeStringValueTransformer.m */,
 				550D883618ACD5F800CC7E3A /* TrackTableView.h */,
@@ -1204,7 +1199,6 @@
 				55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */,
 				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
-				55F7ABEF18B08569006B6FBB /* MainIconView.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,

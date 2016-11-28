@@ -15,10 +15,7 @@
 - (void) mouseDown:(NSEvent *)theEvent
 {
     [_dragDelegate whiteSliderDidStartDrag:self];
-    
-    _doubleValueBeforeDrag = [self doubleValue];
     [super mouseDown:theEvent];
-    
     [_dragDelegate whiteSliderDidEndDrag:self];
 }
 
