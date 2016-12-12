@@ -56,8 +56,7 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 
 - (IBAction) changeLabel:(id)sender;
 
-- (IBAction) revealEndTime:(id)sender;
-- (BOOL) canRevealEndTime;
+- (IBAction) revealTime:(id)sender;
 
 - (void) showAlertForIssue:(PlayerIssue)issue;
 

@@ -62,24 +62,32 @@ void EmbraceLogSetDirectory(NSString *path)
 {
     if (sLogFileHandle) return;
 
-    NSFileManager *manager = [NSFileManager defaultManager];
-
     NSError *error = nil;
 
-    [manager createDirectoryAtURL:[NSURL fileURLWithPath:path] withIntermediateDirectories:YES attributes:nil error:&error];
+    [[NSFileManager defaultManager] createDirectoryAtURL:[NSURL fileURLWithPath:path] withIntermediateDirectories:YES attributes:nil error:&error];
 
     EmbraceCleanupLogs([NSURL fileURLWithPath:path isDirectory:YES]);
     sLogFileDirectory = [path copy];
+
+    EmbraceLogReopenLogFile();
+}
+
+
+void EmbraceLogReopenLogFile()
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
 
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd 'at' HH'.'mm'.'ss'.log'"];
 
     NSString *filename = [dateFormatter stringFromDate:[NSDate date]];
-    path = [path stringByAppendingPathComponent:filename];
+    NSString *path     = [sLogFileDirectory stringByAppendingPathComponent:filename];
 
     if (![manager fileExistsAtPath:path]) {
         [manager createFileAtPath:path contents:[NSData data] attributes:nil];
     }
+    
+    [sLogFileHandle closeFile];
     
     sLogFileHandle = [NSFileHandle fileHandleForWritingAtPath:path];
     [sLogFileHandle seekToEndOfFile];

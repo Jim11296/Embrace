@@ -16,6 +16,7 @@
 #import "TrackTableView.h"
 #import "StripeView.h"
 #import "DotView.h"
+#import "GradientView.h"
 
 #define SLOW_ANIMATIONS 0
 
@@ -119,8 +120,9 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     NSArray        *_observedKeyPaths;
     id              _observedObject;
 
-    NSTextField    *_endTimeField;
-    BOOL            _showsEndTime;
+    NSTextField    *_timeField;
+    GradientView   *_timeGradientView;
+    BOOL            _showsTime;
     
     NSArray        *_errorButtonConstraints;
     NSArray        *_endTimeConstraints;
@@ -135,8 +137,8 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     NSTrackingArea *_trackingArea;
     BOOL            _mouseInside;
-    BOOL            _endTimeRequested;
-    BOOL            _animatesEndTime;
+    BOOL            _timeRequested;
+    BOOL            _animatesTime;
     BOOL            _animatesSpeakerImage;
 }
 
@@ -163,7 +165,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
 - (void) application:(Application *)application flagsChanged:(NSEvent *)event
 {
-    [self _updateEndTimeVisibilityAnimated:NO];
+    [self _updateTimeVisibilityAnimated:NO];
 }
 
 
@@ -212,8 +214,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
 - (void) awakeFromNib
 {
-    [_endTimeField setFont:[[self lineTwoLeftField] font]];
-
     [_errorButton setImage:[NSImage imageNamed:@"TrackErrorTemplate"]];
     [_errorButton setIconOnly:YES];
     [_errorButton setAutoresizingMask:NSViewMinXMargin];
@@ -224,18 +224,21 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [_errorButton setInactiveColor:[self _bottomTextColor]];
     [_errorButton setAlert:YES];
 
-    _endTimeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
+    _timeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
 
-    [_endTimeField setBezeled:NO];
-    [_endTimeField setDrawsBackground:NO];
-    [_endTimeField setSelectable:NO];
-    [_endTimeField setEditable:NO];
-    [_endTimeField setAlignment:NSRightTextAlignment];
-    [_endTimeField setAlphaValue:0];
-    [_endTimeField setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [_endTimeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
-    [_endTimeField setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_endTimeField setDrawsBackground:YES];
+    [_timeField setBezeled:NO];
+    [_timeField setDrawsBackground:NO];
+    [_timeField setSelectable:NO];
+    [_timeField setEditable:NO];
+    [_timeField setAlignment:NSRightTextAlignment];
+    [_timeField setAlphaValue:0];
+    [_timeField setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_timeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_timeField setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_timeField setDrawsBackground:YES];
+
+    _timeGradientView = [[GradientView alloc] initWithFrame:NSZeroRect];
+    [_timeGradientView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
 #if 0
     [_titleField setBackgroundColor:[NSColor yellowColor]];
@@ -296,12 +299,19 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     if (targetField && (targetField != oldTargetField)) {
         _endTimeConstraints = @[
-            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_endTimeField attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:targetField attribute:NSLayoutAttributeWidth    multiplier:1.0 constant:0.0]
+            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:targetField attribute:NSLayoutAttributeWidth    multiplier:1.0 constant:0.0],
+
+            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeTop       multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeBottom   relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeBottom    multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeLeading   multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil        attribute:NSLayoutAttributeWidth     multiplier:1.0 constant:32.0]
         ];
         
-        [[targetField superview] addSubview:_endTimeField positioned:NSWindowAbove relativeTo:targetField];
+        [[targetField superview] addSubview:_timeField        positioned:NSWindowAbove relativeTo:targetField];
+        [[targetField superview] addSubview:_timeGradientView positioned:NSWindowAbove relativeTo:targetField];
+
         [NSLayoutConstraint activateConstraints:_endTimeConstraints];
     }
 }
@@ -312,7 +322,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [super mouseEntered:theEvent];
     _mouseInside = YES;
 
-    [self _updateEndTimeVisibilityAnimated:NO];
+    [self _updateTimeVisibilityAnimated:NO];
     [self _updateView];
     
     [[self _tableView] _trackTableViewCell:self mouseInside:YES];
@@ -324,7 +334,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [super mouseExited:theEvent];
     _mouseInside = NO;
 
-    [self _updateEndTimeVisibilityAnimated:NO];
+    [self _updateTimeVisibilityAnimated:NO];
     [self _updateView];
 
     [[self _tableView] _trackTableViewCell:self mouseInside:NO];
@@ -480,14 +490,14 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
-- (void) _unrequestEndTime
+- (void) _unrequestTime
 {
-    _endTimeRequested = NO;
-    [self _updateEndTimeVisibilityAnimated:YES];
+    _timeRequested = NO;
+    [self _updateTimeVisibilityAnimated:YES];
 }
 
 
-- (void) _updateEndTimeVisibilityAnimated:(BOOL)animated
+- (void) _updateTimeVisibilityAnimated:(BOOL)animated
 {
     NSUInteger modifierFlags = [NSEvent modifierFlags];
     
@@ -495,15 +505,11 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     
     BOOL isCommandKeyDown = (modifierFlags == NSAlternateKeyMask);
     
-    BOOL showsEndTime = ((isCommandKeyDown && _mouseInside) || _endTimeRequested);
+    BOOL showsTime = ((isCommandKeyDown && _mouseInside) || _timeRequested);
 
-    if ([[self track] trackStatus] == TrackStatusPlayed) {
-        showsEndTime = NO;
-    }
-
-    if (_showsEndTime != showsEndTime) {
-        _showsEndTime = showsEndTime;
-        _animatesEndTime = animated;
+    if (_showsTime != showsTime) {
+        _showsTime = showsTime;
+        _animatesTime = animated;
         [self _updateView];
     }
 }
@@ -693,22 +699,31 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [[self stripeView] setBorderColor:sGetBorderColorForTrackLabel(trackLabel)];
     [[self stripeView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
 
+    NSColor *backgroundColor = nil;
+
     if (_selected) {
         if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
-            [borderedView setBackgroundColor:sGetActiveHighlightColor()];
+            backgroundColor = sGetActiveHighlightColor();
         } else {
-            [borderedView setBackgroundColor:sGetInactiveHighlightColor()];
+            backgroundColor = sGetInactiveHighlightColor();
         }
         
         topConstraintValue = -2;
 
     } else {
-       [borderedView setBackgroundColor:[NSColor whiteColor]];
+       backgroundColor = [NSColor whiteColor];
     }
     
    
-    [_endTimeField setBackgroundColor:[borderedView backgroundColor]];
+    [_borderedView setBackgroundColor:backgroundColor];
+    [_timeField    setBackgroundColor:backgroundColor];
 
+    [_timeGradientView setGradient:[[NSGradient alloc] initWithColors:@[
+        [backgroundColor colorWithAlphaComponent:0],
+        [backgroundColor colorWithAlphaComponent:0.75],
+        backgroundColor 
+    ] ]];
+    
     if (_drawsInsertionPointWorkaround) {
         [borderedView setTopBorderColor:sGetActiveHighlightColor()];
         [borderedView setTopBorderHeight:2];
@@ -848,16 +863,36 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [[self lineThreeLeftField]  setStringValue:[left3  componentsJoinedByString:joiner]];
     [[self lineThreeRightField] setStringValue:[right3 componentsJoinedByString:joiner]];
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterNoStyle];
-    [formatter setTimeStyle:NSDateFormatterMediumStyle];
+    NSString *timeString = @"";
+    NSString *timeStringFormat;
+    NSDate   *date;
     
-    NSDate   *endTime       = [[self track] estimatedEndTimeDate];
-    NSString *endTimeString = [formatter stringFromDate:endTime];
+    if ([track trackStatus] == TrackStatusPlayed) {
+        date = [track playedTimeDate];
+        timeStringFormat = NSLocalizedString(@"Played at %@", nil);
+    } else {
+        date = [track estimatedEndTimeDate];
+        timeStringFormat = NSLocalizedString(@"Ends at %@", nil);
+    }
 
-    [_endTimeField setStringValue:endTimeString];
-    [_endTimeField setFont:[[self lineTwoLeftField] font]];
-    [_endTimeField setTextColor:[self _bottomTextColor]];
+    if (date) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterNoStyle];
+        [formatter setTimeStyle:NSDateFormatterMediumStyle];
+
+        timeString = [NSString stringWithFormat:timeStringFormat, [formatter stringFromDate:date]];
+    }
+
+    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
+        NSFont *font = [[self lineTwoLeftField] font];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        [_timeField setFont:font];
+    } else {
+        [_timeField setFont:[[self lineTwoLeftField] font]];
+    }
+        
+    [_timeField setStringValue:timeString];
+    [_timeField setTextColor:[self _bottomTextColor]];
     
     NSString *titleString = [track title];
     if (!titleString) titleString = @"";
@@ -925,28 +960,31 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [[self lineThreeRightField] setAlphaValue:1.0];
     }
 
-    CGFloat endTimeAlpha = _showsEndTime ? 1.0 : 0.0;
+    CGFloat endTimeAlpha = _showsTime ? 1.0 : 0.0;
     
-    if (_animatesEndTime) {
-        [[_endTimeField animator] setAlphaValue:endTimeAlpha];
+    if (_animatesTime) {
+        [[_timeField        animator] setAlphaValue:endTimeAlpha];
+        [[_timeGradientView animator] setAlphaValue:endTimeAlpha];
+
     } else {
-        [_endTimeField setAlphaValue:endTimeAlpha];
+        [_timeField        setAlphaValue:endTimeAlpha];
+        [_timeGradientView setAlphaValue:endTimeAlpha];
     }
 
-    [_endTimeField setContentCompressionResistancePriority:(_showsEndTime ? (NSLayoutPriorityDefaultHigh + 1) : 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
+    [_timeField setContentCompressionResistancePriority:(_showsTime ? (NSLayoutPriorityDefaultHigh + 1) : 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
 }
 
 
 
 #pragma mark - Public Methods
 
-- (void) revealEndTime
+- (void) revealTime
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_unrequestEndTime) object:nil];
-    [self performSelector:@selector(_unrequestEndTime) withObject:nil afterDelay:2];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_unrequestTime) object:nil];
+    [self performSelector:@selector(_unrequestTime) withObject:nil afterDelay:2];
 
-    _endTimeRequested = YES;
-    [self _updateEndTimeVisibilityAnimated:YES];
+    _timeRequested = YES;
+    [self _updateTimeVisibilityAnimated:YES];
 
 }
 

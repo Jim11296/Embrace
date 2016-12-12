@@ -15,5 +15,7 @@ extern void EmbraceLog(NSString *category, NSString *format, ...) NS_FORMAT_FUNC
 extern void EmbraceLogSetDirectory(NSString *logDirectory);
 extern NSString *EmbraceLogGetDirectory(void);
 
+extern void EmbraceLogReopenLogFile(void);
+
 extern void _EmbraceLogMethod(const char *f);
 #define EmbraceLogMethod() _EmbraceLogMethod(__PRETTY_FUNCTION__)

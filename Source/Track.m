@@ -25,7 +25,7 @@ static NSString * const sIgnoresAutoGapKey    = @"ignoresAutoGap";
 static NSString * const sStatusKey            = @"trackStatus";
 static NSString * const sTrackErrorKey        = @"trackError";
 static NSString * const sBookmarkKey          = @"bookmark";
-
+static NSString * const sPlayedTimeKey        = @"playedTime";
 
 
 @interface Track ()
@@ -57,6 +57,8 @@ static NSString * const sBookmarkKey          = @"bookmark";
     TrackAnalyzer  *_trackAnalyzer;
     NSTimeInterval  _silenceAtStart;
     NSTimeInterval  _silenceAtEnd;
+
+    NSTimeInterval  _startTimeInterval;
 
     NSMutableArray *_dirtyKeys;
     BOOL            _dirty;
@@ -274,8 +276,13 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     for (NSString *key in state) {
         id oldValue = [self valueForKey:key];
         id newValue = [state objectForKey:key];
-        
+
         if (![oldValue isEqual:newValue]) {
+            // Transform NSNumbers to NSDates for various keys
+            if ([@[ @"startDate" ] containsObject:key] && [newValue isKindOfClass:[NSNumber class]]) {
+                newValue = [NSDate dateWithTimeIntervalSinceReferenceDate:[newValue doubleValue]];
+            }
+
             [self setValue:newValue forKey:key];
             
             if (!_dirtyKeys) _dirtyKeys = [NSMutableArray array];
@@ -291,7 +298,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     NSData   *overviewData = [state objectForKey:TrackKeyOverviewData];
     NSNumber *startTime    = [state objectForKey:TrackKeyStartTime];
     NSNumber *stopTime     = [state objectForKey:TrackKeyStopTime];
-    
+
     if (overviewData || startTime || stopTime) {
         [self _calculateSilence];
     }
@@ -323,6 +330,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_trackError)     [state setObject:@(_trackError)        forKey:TrackKeyError];
     if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
+    if (_playedTime)     [state setObject:@(_playedTime)        forKey:sPlayedTimeKey];
 
     if (_stopsAfterPlaying) {
         [state setObject:@YES forKey:sStopsAfterPlayingKey];
@@ -722,6 +730,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 #pragma mark - Accessors
 
+- (NSDate *) playedTimeDate
+{
+    return _playedTime ? [NSDate dateWithTimeIntervalSinceReferenceDate:_playedTime] : nil;
+}
+
+
 - (NSDate *) estimatedEndTimeDate
 {
     NSTimeInterval endTime = _estimatedEndTime;
@@ -737,6 +751,17 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 - (void) setTrackStatus:(TrackStatus)trackStatus
 {
     if (_trackStatus != trackStatus) {
+        // Update played time for: (Queued -> Non-Queued) or (Preparing -> Playing)
+        if ((_trackStatus == TrackStatusQueued    && trackStatus != TrackStatusQueued) ||
+            (_trackStatus == TrackStatusPreparing && trackStatus == TrackStatusPlaying))
+        {
+            _playedTime = [NSDate timeIntervalSinceReferenceDate];
+
+        // Clear playedTime if we become re-queued
+        } else if (trackStatus == TrackStatusQueued) {
+            _playedTime = 0;
+        }
+    
         _trackStatus = trackStatus;
         _dirty = YES;
         [self _saveStateImmediately:YES];

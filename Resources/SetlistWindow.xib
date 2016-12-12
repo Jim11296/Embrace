@@ -62,7 +62,7 @@
                 <menuItem title="Reveal End Time" id="cKF-wa-D4g">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="revealEndTime:" target="-2" id="1Bi-cd-oRi"/>
+                        <action selector="revealTime:" target="-2" id="WWt-LX-bWI"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="jDA-mz-jpB"/>
@@ -192,7 +192,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
@@ -289,7 +289,7 @@
                 <menuItem title="Reveal End Time" id="T2h-tG-2sr">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="revealEndTime:" target="-2" id="xAy-VQ-AHG"/>
+                        <action selector="revealTime:" target="-2" id="A54-J4-t5c"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="PIy-28-1Ax"/>

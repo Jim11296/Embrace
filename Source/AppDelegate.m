@@ -48,7 +48,7 @@
 
 - (IBAction) changeViewAttributes:(id)sender;
 - (IBAction) changeKeySignatureDisplayMode:(id)sender;
-- (IBAction) revealEndTime:(id)sender;
+- (IBAction) revealTime:(id)sender;
 
 - (IBAction) performPreferredPlaybackAction:(id)sender;
 - (IBAction) hardSkip:(id)sender;
@@ -582,7 +582,7 @@
         NSInteger yn = [[Preferences sharedInstance] floatsOnTop];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
 
-    } else if (action == @selector(revealEndTime:)) {
+    } else if (action == @selector(revealTime:)) {
         return [_setlistController validateMenuItem:menuItem];
 
     } else if (action == @selector(sendCrashReports:)){
@@ -739,10 +739,10 @@
 }
 
 
-- (IBAction) exportSetlist:(id)sender   {  EmbraceLogMethod();  [_setlistController exportToPlaylist]; }
+- (IBAction) exportSetlist:(id)sender   {  EmbraceLogMethod();  [_setlistController exportToPlaylist];     }
 - (IBAction) increaseAutoGap:(id)sender {  EmbraceLogMethod();  [_setlistController increaseAutoGap:self]; }
 - (IBAction) decreaseAutoGap:(id)sender {  EmbraceLogMethod();  [_setlistController decreaseAutoGap:self]; }
-- (IBAction) revealEndTime:(id)sender   {  EmbraceLogMethod();  [_setlistController revealEndTime:self];     }
+- (IBAction) revealTime:(id)sender      {  EmbraceLogMethod();  [_setlistController revealTime:self];      }
 
 
 - (IBAction) performPreferredPlaybackAction:(id)sender

@@ -497,7 +497,7 @@ typedef struct {
 
     [self setPercentage:percentage];
 
-    [_currentTrack setTrackStatus: status];
+    [_currentTrack setTrackStatus:status];
 
     for (id<PlayerListener> listener in _listeners) {
         [listener playerDidTick:self];
