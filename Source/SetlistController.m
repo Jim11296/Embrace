@@ -501,6 +501,7 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (void) clear
 {
+    EmbraceLogReopenLogFile();
     EmbraceLog(@"SetlistController", @"-clear");
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:sSavedAtKey];
@@ -783,6 +784,13 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
+- (IBAction) copy:(id)sender
+{
+    EmbraceLogMethod();
+    [[self tracksController] copy:sender];
+}
+
+
 - (IBAction) paste:(id)sender
 {
     EmbraceLogMethod();
@@ -809,7 +817,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) revealEndTime:(id)sender
+- (void) revealTime:(id)sender
 {
     EmbraceLogMethod();
 
@@ -818,13 +826,7 @@ static NSInteger sAutoGapMaximum = 16;
 
     [self _calculateStartAndEndTimes];
 
-    [[self tracksController] revealEndTime:self];
-}
-
-
-- (BOOL) canRevealEndTime
-{
-    return [[self tracksController] canRevealEndTime];
+    [[self tracksController] revealTime:self];
 }
 
 
@@ -882,12 +884,13 @@ static NSInteger sAutoGapMaximum = 16;
 {
     SEL action = [menuItem action];
 
-    if (action == @selector(paste:)  ||
+    if (action == @selector(copy:)   ||
+        action == @selector(paste:)  ||
         action == @selector(delete:) ||
         action == @selector(toggleMarkAsPlayed:) ||
         action == @selector(toggleStopsAfterPlaying:) ||
         action == @selector(toggleIgnoreAutoGap:) ||
-        action == @selector(revealEndTime:))
+        action == @selector(revealTime:))
     {
         return [[self tracksController] validateMenuItem:menuItem];
     }

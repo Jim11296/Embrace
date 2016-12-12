@@ -48,6 +48,7 @@
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
+		554FCB9D1DFCF0E900DE697E /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 554FCB9C1DFCF0E900DE697E /* GradientView.m */; };
 		5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */; };
 		555A701B1890BCBF00305EC6 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 555A701A1890BCBF00305EC6 /* Application.m */; };
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
@@ -246,6 +247,8 @@
 		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = ../Source/Log.m; sourceTree = "<group>"; };
 		554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CrashReporter.xcodeproj; path = PLCrashReporter/CrashReporter.xcodeproj; sourceTree = "<group>"; };
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
+		554FCB9B1DFCF0E900DE697E /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GradientView.h; path = Source/GradientView.h; sourceTree = SOURCE_ROOT; };
+		554FCB9C1DFCF0E900DE697E /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GradientView.m; path = Source/GradientView.m; sourceTree = SOURCE_ROOT; };
 		5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProtectedBuffer.h; path = Source/ProtectedBuffer.h; sourceTree = "<group>"; };
 		5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProtectedBuffer.m; path = Source/ProtectedBuffer.m; sourceTree = "<group>"; };
 		5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CrashPad-Info.plist"; path = "Resources/CrashPad-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -846,6 +849,8 @@
 				55A708B018A715C1007BD7C0 /* DragSongsHereView.m */,
 				5595A7BA18793B9000A7B996 /* EmbraceWindow.h */,
 				5595A7BB18793B9000A7B996 /* EmbraceWindow.m */,
+				554FCB9B1DFCF0E900DE697E /* GradientView.h */,
+				554FCB9C1DFCF0E900DE697E /* GradientView.m */,
 				55698DA61B54ECBE00C9E200 /* GraphicEQView.h */,
 				55698DA71B54ECBE00C9E200 /* GraphicEQView.m */,
 				556098121B47CABD008516C3 /* LabelMenuView.h */,
@@ -1227,6 +1232,7 @@
 				550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */,
 				55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */,
 				55ADE93518815EA8008DC245 /* PlayBar.m in Sources */,
+				554FCB9D1DFCF0E900DE697E /* GradientView.m in Sources */,
 				5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */,
 				557ABAB61B68D48C006F69D9 /* DotView.m in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,

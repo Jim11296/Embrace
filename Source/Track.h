@@ -57,6 +57,11 @@ typedef NS_ENUM(NSInteger, TrackError) {
 - (void) clearAndCleanup;
 - (void) startPriorityAnalysis;
 
+// playedTime represents the absolute timestamp when a track moved from queued to not-queued
+- (NSDate *) playedTimeDate;
+@property (nonatomic, readonly) NSTimeInterval playedTime;
+
+
 // estimatedEndTime may either be a relative date (when not playing a track)
 // or an absolute date (when playing a track).  estimatedEndTimeDate returns
 // the correct value

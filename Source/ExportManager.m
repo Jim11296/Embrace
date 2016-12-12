@@ -40,7 +40,10 @@
     [formatter setDateStyle:NSDateFormatterLongStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     
-    NSString *dateString = [formatter stringFromDate:[NSDate date]];
+    NSDate *date = [[tracks firstObject] playedTimeDate];
+    if (!date) date = [NSDate date];
+    
+    NSString *dateString = [formatter stringFromDate:date];
 
     NSString *suggestedNameFormat = NSLocalizedString(@"Embrace (%@)", nil);
     NSString *suggestedName = [NSString stringWithFormat:suggestedNameFormat, dateString];

@@ -15,6 +15,7 @@
 #import "Preferences.h"
 #import "TrackTableView.h"
 #import "iTunesManager.h"
+#import "ExportManager.h"
 
 
 #if TRIAL
@@ -79,33 +80,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[self tableView] reloadData];
     
     _didInit = YES;
-}
-
-
-- (BOOL) validateMenuItem:(NSMenuItem *)menuItem
-{
-    SEL action = [menuItem action];
-
-    if (action == @selector(paste:)) {
-        return [[NSPasteboard generalPasteboard] canReadItemWithDataConformingToTypes:@[ (__bridge NSString *)kUTTypeFileURL, NSFilenamesPboardType ]];
-        
-    } else if (action == @selector(delete:)) {
-        return [self _validateDeleteWithMenuItem:menuItem];
-     
-    } else if (action == @selector(toggleMarkAsPlayed:)) {
-        return [self _validateToggleMarkAsPlayedWithMenuItem:menuItem];
-        
-    } else if (action == @selector(toggleStopsAfterPlaying:)) {
-        return [self _validateToggleStopsAfterPlayingWithMenuItem:menuItem];
- 
-    } else if (action == @selector(toggleIgnoreAutoGap:)) {
-        return [self _validateToggleIgnoreAutoGapWithMenuItem:menuItem];
-    
-    } else if (action == @selector(revealEndTime:)) {
-        return [self canRevealEndTime];
-    }
-    
-    return YES;
 }
 
 
@@ -773,117 +747,72 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
-#pragma mark - Selected Track Actions
+#pragma mark - Menu Item Validation
 
-- (void) delete:(id)sender
+- (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
-    NSIndexSet *indexSet = [[self tableView] selectedRowIndexes];
-    NSMutableIndexSet *indexSetToRemove = [NSMutableIndexSet indexSet];
+    SEL action = [menuItem action];
+
+    if (action == @selector(paste:)) {
+        return [[NSPasteboard generalPasteboard] canReadItemWithDataConformingToTypes:@[ (__bridge NSString *)kUTTypeFileURL, NSFilenamesPboardType ]];
+
+    } else if (action == @selector(copy:)) {
+        return [[self selectedTracks] count] > 0;
     
-    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
-        Track *track = [self trackAtIndex:index];
-        if (!track) return;
+    } else if (action == @selector(delete:)) {
+        return [self _validateDeleteWithMenuItem:menuItem];
 
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track cancelLoad];
-            [indexSetToRemove addIndex:index];
-        }
-    }];
+    } else if (action == @selector(toggleMarkAsPlayed:)) {
+        return [self _validateToggleMarkAsPlayedWithMenuItem:menuItem];
+        
+    } else if (action == @selector(toggleStopsAfterPlaying:)) {
+        return [self _validateToggleStopsAfterPlayingWithMenuItem:menuItem];
+ 
+    } else if (action == @selector(toggleIgnoreAutoGap:)) {
+        return [self _validateToggleIgnoreAutoGapWithMenuItem:menuItem];
     
-    [[self tableView] beginUpdates];
-
-    [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-    [_tracks removeObjectsAtIndexes:indexSet];
-
-    NSUInteger indexToSelect = [indexSet lastIndex];
-
-    if (indexToSelect >= [_tracks count]) {
-        indexToSelect--;
-    }
-
-    [[self tableView] selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect] byExtendingSelection:NO];
-
-    [[self tableView] endUpdates];
-
-    [self _didModifyTracks];
-}
-
-
-- (BOOL) _validateDeleteWithMenuItem:(NSMenuItem *)menuItem
-{
-    NSArray *selectedTracks = [self selectedTracks];
-    if ([selectedTracks count] == 0) {
-        return NO;
-    }
-
-    for (Track *track in selectedTracks) {
-        if ([track trackStatus] != TrackStatusQueued) {
-            return NO;
-        }
+    } else if (action == @selector(revealTime:)) {
+        return [self _validateRevealTimeWithMenuItem:menuItem];
     }
     
     return YES;
 }
 
 
-- (void) revealEndTime:(id)sender
+- (BOOL) _validateDeleteWithMenuItem:(NSMenuItem *)menuItem
 {
-    EmbraceLogMethod();
+    NSArray *selectedTracks = [self selectedTracks];
 
-    TrackTrialCheck(^{
-        for (Track *track in [self selectedTracks]) {
-            if ([track trackStatus] == TrackStatusPlayed) {
-                continue;
-            }
+    BOOL containsSomething = NO;
+    BOOL containsNonQueued = NO;
+    BOOL containsAllPlayed = NO;
 
-            NSInteger index = [_tracks indexOfObject:track];
+    if ([selectedTracks count]) {
+        containsAllPlayed = YES;
+        containsSomething = YES;
+
+        for (Track *track in selectedTracks) {
+            TrackStatus trackStatus = [track trackStatus];
             
-            if (index != NSNotFound) {
-                id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
-                
-                if ([view respondsToSelector:@selector(revealEndTime)]) {
-                    [view revealEndTime];
-                }
-            }
-        }
-    });
-}
-
-
-- (BOOL) canRevealEndTime
-{
-    EmbraceLogMethod();
-
-    for (Track *track in [self selectedTracks]) {
-        if ([track trackStatus] != TrackStatusPlayed) {
-            return YES;
+            containsNonQueued = containsNonQueued || (trackStatus != TrackStatusQueued);
+            containsAllPlayed = containsAllPlayed && (trackStatus == TrackStatusPlayed);
         }
     }
-    
-    return NO;
-}
 
+    NSString *deleteTitle  = NSLocalizedString(@"Delete", nil);
+    NSString *confirmTitle = NSLocalizedString(@"Delete\\U2026", nil);
 
-- (void) toggleStopsAfterPlaying:(id)sender
-{
-    EmbraceLogMethod();
+    if (containsAllPlayed) {
+        [menuItem setTitle:confirmTitle];
+        return YES;
 
-    for (Track *track in [self selectedTracks]) {
-        if ([track trackStatus] != TrackStatusPlayed) {
-            [track setStopsAfterPlaying:![track stopsAfterPlaying]];
-        }
-    }
-}
-
-
-- (void) toggleIgnoreAutoGap:(id)sender
-{
-    EmbraceLogMethod();
-
-    for (Track *track in [self selectedTracks]) {
-        if ([track trackStatus] != TrackStatusPlayed) {
-            [track setIgnoresAutoGap:![track ignoresAutoGap]];
-        }
+    } else if (containsNonQueued || !containsSomething) {
+        [menuItem setTitle:deleteTitle];
+        return NO;
+        
+    } else {
+        [menuItem setTitle:deleteTitle];
+        return YES;
     }
 }
 
@@ -948,44 +877,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
-- (void) toggleMarkAsPlayed:(id)sender
-{
-    // Be paranoid and double-check the validity
-    //
-    if (![self _validateToggleMarkAsPlayedWithMenuItem:nil]) {
-        return;
-    }
-
-    for (Track *track in [self selectedTracks]) {
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track setTrackStatus:TrackStatusPlayed];
-        } else if ([track trackStatus] == TrackStatusPlayed) {
-            [track setTrackStatus:TrackStatusQueued];
-        }
-    }
-    
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:0];
-
-        [[self tableView] beginUpdates];
-        [[self tableView] noteHeightOfRowsWithIndexesChanged:[[self tableView] selectedRowIndexes]];
-        [[self tableView] endUpdates];
-    } completionHandler:nil];
-}
-
-
-- (void) didFinishTrack:(Track *)finishedTrack
-{
-    NSInteger row = finishedTrack ? [_tracks indexOfObject:finishedTrack] : NSNotFound;
-
-    if (row != NSNotFound) {
-        [[self tableView] beginUpdates];
-        [[self tableView] noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
-        [[self tableView] endUpdates];
-    }
-}
-
-
 - (BOOL) _validateToggleMarkAsPlayedWithMenuItem:(NSMenuItem *)menuItem
 {
     BOOL isOn = NO;
@@ -1032,7 +923,192 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
+- (BOOL) _validateRevealTimeWithMenuItem:(NSMenuItem *)menuItem
+{
+    BOOL hasPlayedTime = NO;
+    BOOL hasEndTime    = NO;
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] == TrackStatusPlayed) {
+            hasPlayedTime = YES;
+        } else {
+            hasEndTime = YES;
+        }
+    }
+
+    NSString *title = NSLocalizedString(@"Reveal Time", nil);
+    if (hasPlayedTime && !hasEndTime) {
+        title = NSLocalizedString(@"Reveal Played Time", nil);
+    } else if (!hasPlayedTime && hasEndTime) {
+        title = NSLocalizedString(@"Reveal End Time", nil);
+    }
+    
+    [menuItem setTitle:title];
+
+    return [[self selectedTracks] count] > 0;
+}
+
+
+#pragma mark - Selected Track Actions
+
+- (void) delete:(id)sender
+{
+    BOOL needsPrompt = YES;
+    for (Track *track in [self selectedTracks]) {
+        needsPrompt = needsPrompt && ([track trackStatus] == TrackStatusPlayed);
+    }
+
+    if (needsPrompt) {
+        BOOL isSingular = [[self selectedTracks] count] == 1;
+
+        NSString *messageText = isSingular ?
+            NSLocalizedString(@"Delete Track",  nil) :
+            NSLocalizedString(@"Delete Tracks", nil) ;
+
+        NSString *infoText    = isSingular ? 
+            NSLocalizedString(@"Are you sure you want to delete this played track?",   nil) :
+            NSLocalizedString(@"Are you sure you want to delete these played tracks?", nil) ;
+
+        NSAlert *alert = [[NSAlert alloc] init];
+
+        [alert setMessageText:messageText];
+        [alert setInformativeText:infoText];
+        [alert addButtonWithTitle:NSLocalizedString(@"Delete",  nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+
+        if ([alert runModal] != NSAlertFirstButtonReturn) {
+            return;
+        }
+    }
+
+    NSIndexSet *indexSet = [[self tableView] selectedRowIndexes];
+    NSMutableIndexSet *indexSetToRemove = [NSMutableIndexSet indexSet];
+    
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+        Track *track = [self trackAtIndex:index];
+        if (!track) return;
+
+        if ([track trackStatus] == TrackStatusQueued) {
+            [track cancelLoad];
+            [indexSetToRemove addIndex:index];
+        }
+    }];
+    
+    [[self tableView] beginUpdates];
+
+    [[self tableView] removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+    [_tracks removeObjectsAtIndexes:indexSet];
+
+    NSUInteger indexToSelect = [indexSet lastIndex];
+
+    if (indexToSelect >= [_tracks count]) {
+        indexToSelect--;
+    }
+
+    [[self tableView] selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect] byExtendingSelection:NO];
+
+    [[self tableView] endUpdates];
+
+    [self _didModifyTracks];
+}
+
+
+- (void) revealTime:(id)sender
+{
+    EmbraceLogMethod();
+
+    TrackTrialCheck(^{
+        for (Track *track in [self selectedTracks]) {
+            NSInteger index = [_tracks indexOfObject:track];
+            
+            if (index != NSNotFound) {
+                id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
+                
+                if ([view respondsToSelector:@selector(revealTime)]) {
+                    [view revealTime];
+                }
+            }
+        }
+    });
+}
+
+
+- (void) toggleStopsAfterPlaying:(id)sender
+{
+    EmbraceLogMethod();
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            [track setStopsAfterPlaying:![track stopsAfterPlaying]];
+        }
+    }
+}
+
+
+- (void) toggleIgnoreAutoGap:(id)sender
+{
+    EmbraceLogMethod();
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] != TrackStatusPlayed) {
+            [track setIgnoresAutoGap:![track ignoresAutoGap]];
+        }
+    }
+}
+
+
+- (void) toggleMarkAsPlayed:(id)sender
+{
+    // Be paranoid and double-check the validity
+    //
+    if (![self _validateToggleMarkAsPlayedWithMenuItem:nil]) {
+        return;
+    }
+
+    for (Track *track in [self selectedTracks]) {
+        if ([track trackStatus] == TrackStatusQueued) {
+            [track setTrackStatus:TrackStatusPlayed];
+        } else if ([track trackStatus] == TrackStatusPlayed) {
+            [track setTrackStatus:TrackStatusQueued];
+        }
+    }
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [context setDuration:0];
+
+        [[self tableView] beginUpdates];
+        [[self tableView] noteHeightOfRowsWithIndexesChanged:[[self tableView] selectedRowIndexes]];
+        [[self tableView] endUpdates];
+    } completionHandler:nil];
+}
+
+
+- (void) didFinishTrack:(Track *)finishedTrack
+{
+    NSInteger row = finishedTrack ? [_tracks indexOfObject:finishedTrack] : NSNotFound;
+
+    if (row != NSNotFound) {
+        [[self tableView] beginUpdates];
+        [[self tableView] noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+        [[self tableView] endUpdates];
+    }
+}
+
+
 #pragma mark - Public
+
+- (void) copy:(id)sender
+{
+    NSArray  *tracks   = [self selectedTracks];
+    NSString *contents = [[ExportManager sharedInstance] stringWithFormat:ExportManagerFormatPlainText tracks:tracks];
+
+    NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:contents ofType:NSPasteboardTypeString];
+
+    NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+    [pasteboard clearContents];
+    [pasteboard writeObjects:[NSArray arrayWithObject:item]];
+}
+
 
 - (void) paste:(id)sender
 {

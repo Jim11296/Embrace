@@ -12,7 +12,7 @@
 
 @interface TrackTableCellView : NSTableCellView
 
-- (void) revealEndTime;
+- (void) revealTime;
 
 @property (nonatomic, readonly) Track *track;
 @property (nonatomic, assign, getter=isSelected) BOOL selected;

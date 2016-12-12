@@ -16,6 +16,7 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 
 - (void) saveState;
 
+- (void) copy:(id)sender;
 - (void) paste:(id)sender;
 
 - (Track *) firstQueuedTrack;
@@ -27,8 +28,7 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (void) deselectAllTracks;
 - (void) resetPlayedTracks;
 
-- (void) revealEndTime:(id)sender;
-- (BOOL) canRevealEndTime;
+- (void) revealTime:(id)sender;
 
 - (void) toggleStopsAfterPlaying:(id)sender;
 - (void) toggleIgnoreAutoGap:(id)sender;
