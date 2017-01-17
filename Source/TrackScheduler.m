@@ -28,6 +28,17 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 }
 
 
+static BOOL sIsBufferListMirrored(AudioBufferList *bufferList)
+{
+    if (bufferList && bufferList->mNumberBuffers == 2) {
+        if (memcmp(&bufferList->mBuffers[0], &bufferList->mBuffers[1], sizeof(AudioBuffer)) == 0) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 
 @implementation TrackScheduler {
     AudioFile *_audioFile;
@@ -108,7 +119,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         return NO;
     }
 
-    _clientFormat = GetPCMStreamBasicDescription(fileFormat.mSampleRate, _outputFormat.mChannelsPerFrame, NO);
+    _clientFormat = GetPCMStreamBasicDescription(fileFormat.mSampleRate, fileFormat.mChannelsPerFrame, NO);
 
     if (!CheckError(
         [_audioFile setClientDataFormat:&_clientFormat],
@@ -188,7 +199,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     UInt32 totalFrames = (UInt32)[self totalFrames];
     UInt32 totalBytes  = totalFrames * _clientFormat.mBytesPerFrame;
 
-    AudioBufferList *list = malloc(sizeof(AudioBufferList) * bufferCount);
+    AudioBufferList *list = malloc(sizeof(AudioBufferList) * MAX(bufferCount, 2));
 
     list->mNumberBuffers = bufferCount;
 
@@ -204,10 +215,28 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [protectedBuffers addObject:protectedBuffer];
     }
 
+    // Historically, we have encountered edge cases where Core Audio silently fails when 
+    // converting a mono file to stereo.  The most recent case was Torsten's mono AIFF file
+    // converting to all zeros in -[AudioFile readFrames:intoBufferList:]
+    //
+    // I also vaguely recall a situation where conversion failed in the AUGraph.
+    //
+    // Thus, we are going to fake it.  In the event of a mono file, fileFormat and _clientFormat
+    // will have the same sampling rate and channel count.  _slice will have an AudioBufferList 
+    // with two buffers pointing to the same memory location.
+    //
+    if (bufferCount == 1) {
+        list->mNumberBuffers = 2;
+
+        list->mBuffers[1].mNumberChannels = 1;
+        list->mBuffers[1].mDataByteSize = list->mBuffers[0].mDataByteSize;
+        list->mBuffers[1].mData         = list->mBuffers[0].mData;
+    }
+
     _slice = calloc(1, sizeof(ScheduledAudioSlice));
     _slice->mNumberFrames = (UInt32)totalFrames;
     _slice->mBufferList = list;
-    
+        
     _protectedBuffers = protectedBuffers;
 }
 
@@ -226,6 +255,10 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
     UInt32 bufferCount = slice->mBufferList->mNumberBuffers;
 
+    if (sIsBufferListMirrored(slice->mBufferList)) {
+        bufferCount = 1;
+    }
+    
     AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * bufferCount);
     fillBufferList->mNumberBuffers = (UInt32)bufferCount;
     
@@ -263,7 +296,6 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             [self setAudioFileError:[_audioFile audioFileError]];
             [self setRawError:err];
         }
-
    
         framesAvailable += frameCount;
         
