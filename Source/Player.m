@@ -110,12 +110,14 @@ typedef struct {
 
 	AUNode    _generatorNode;
     AUNode    _converterNode;
+    AUNode    _stereoNode;
 	AUNode    _limiterNode;
     AUNode    _mixerNode;
 	AUNode    _outputNode;
 
     AudioUnit _generatorAudioUnit;
     AudioUnit _converterAudioUnit;
+    AudioUnit _stereoAudioUnit;
     AudioUnit _limiterAudioUnit;
     AudioUnit _mixerAudioUnit;
     AudioUnit _outputAudioUnit;
@@ -826,10 +828,10 @@ static OSStatus sInputRenderCallback(
         
         UInt32 maxFrames = getPropertyUInt32(_outputAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
         
-        AudioStreamBasicDescription outputStream;
-        getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputStream);
+        AudioStreamBasicDescription outputFormat;
+        getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputFormat);
         
-        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack outputFormat:outputStream];
+        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack outputFormat:outputFormat];
         
         if (![_currentScheduler setup]) {
             EmbraceLog(@"Player", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
@@ -837,9 +839,15 @@ static OSStatus sInputRenderCallback(
             return;
         }
         
-        AudioStreamBasicDescription generatorFormat = [_currentScheduler clientFormat];
+        AudioStreamBasicDescription inputFormat = [_currentScheduler clientFormat];
+
+        setPropertyFloat64(generatorUnit, kAudioUnitProperty_SampleRate,   kAudioUnitScope_Output, inputFormat.mSampleRate);
+        setPropertyStream( generatorUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &inputFormat);
+        setPropertyUInt32( generatorUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
+
+        AudioUnit lastUnit = generatorUnit;
         
-        if (generatorFormat.mSampleRate != _outputSampleRate) {
+        if (inputFormat.mSampleRate != _outputSampleRate) {
             AudioComponentDescription converterCD = {0};
             converterCD.componentType = kAudioUnitType_FormatConverter;
             converterCD.componentSubType = kAudioUnitSubType_AUConverter;
@@ -852,40 +860,71 @@ static OSStatus sInputRenderCallback(
             AudioUnit converterUnit = 0;
             CheckError(AUGraphNodeInfo(_graph, converterNode,  NULL, &converterUnit),  "AUGraphNodeInfo[ Converter ]");
 
-
             UInt32 complexity = kAudioUnitSampleRateConverterComplexity_Mastering;
 
             setPropertyUInt32(converterUnit, kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity);
             setPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
 
-            setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  generatorFormat.mSampleRate);
+            setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  inputFormat.mSampleRate);
             setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, _outputSampleRate);
 
-            setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &generatorFormat);
-            setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputStream);
+            AudioStreamBasicDescription unitFormat = inputFormat;
+            unitFormat.mSampleRate = _outputSampleRate;
+
+            setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &inputFormat);
+            setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &unitFormat);
 
             CheckError(AudioUnitInitialize(converterUnit), "AudioUnitInitialize[ Converter ]");
 
             // maxFrames will be different when going through a SRC
-            maxFrames = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
+            UInt32 maxFramesForSRC = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
+            if (maxFramesForSRC != maxFrames) {
+                setPropertyUInt32( generatorUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFramesForSRC);
+            }
 
             _converterNode = converterNode;
             _converterAudioUnit = converterUnit;
+
+            inputFormat = unitFormat;
+
+            lastUnit = converterUnit;
         }
 
-        setPropertyUInt32( generatorUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
-        setPropertyFloat64(generatorUnit, kAudioUnitProperty_SampleRate,            kAudioUnitScope_Output, generatorFormat.mSampleRate);
-        setPropertyStream( generatorUnit, kAudioUnitProperty_StreamFormat,          kAudioUnitScope_Output, &generatorFormat);
+        if (inputFormat.mChannelsPerFrame != 2) {
+            AudioComponentDescription stereoCD = {0};
+            stereoCD.componentType = kAudioUnitType_Mixer;
+            stereoCD.componentSubType = kAudioUnitSubType_StereoMixer;
+            stereoCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+            stereoCD.componentFlags = kAudioComponentFlag_SandboxSafe;
+
+            AUNode stereoNode = 0;
+            CheckError(AUGraphAddNode(_graph, &stereoCD, &stereoNode), "AUGraphAddNode[ Stereo ]");
+
+            AudioUnit stereoUnit = 0;
+            CheckError(AUGraphNodeInfo(_graph, stereoNode, NULL, &stereoUnit),  "AUGraphNodeInfo[ Stereo ]");
+
+            setPropertyUInt32( stereoUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
+
+            setPropertyStream(stereoUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &inputFormat);
+            setPropertyStream(stereoUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputFormat);
+            
+            CheckError(AudioUnitInitialize(stereoUnit), "AudioUnitInitialize[ Stereo ]");
+
+            _stereoNode = stereoNode;
+            _stereoAudioUnit = stereoUnit;
+
+            lastUnit = stereoUnit;
+        }
 
         CheckError(
             AudioUnitInitialize(generatorUnit),
-            "AudioUnitInitialize[ Converter ]"
+            "AudioUnitInitialize[ Generator ]"
         );
 
         _generatorNode = generatorNode;
         _generatorAudioUnit = generatorUnit;
 
-        [self _sendInputUnitToRenderThread:_converterAudioUnit ? _converterAudioUnit : _generatorAudioUnit];
+        [self _sendInputUnitToRenderThread:lastUnit];
     });
     
     if (ok) {
@@ -906,6 +945,14 @@ static OSStatus sInputRenderCallback(
 
         _generatorAudioUnit = NULL;
         _generatorNode = 0;
+    }
+
+    if (_stereoAudioUnit) {
+        CheckError(AudioUnitUninitialize(_stereoAudioUnit), "AudioUnitUninitialize[ Stereo ]");
+        CheckError(AUGraphRemoveNode(_graph, _stereoNode), "AUGraphRemoveNode[ Stereo ]" );
+        
+        _stereoAudioUnit = NULL;
+        _stereoNode = 0;
     }
 
     if (_converterAudioUnit) {
@@ -981,6 +1028,7 @@ static OSStatus sInputRenderCallback(
 {
     if (_generatorNode) callback(_generatorNode);
     if (_converterNode) callback(_converterNode);
+    if (_stereoNode)    callback(_stereoNode);
     callback(_limiterNode);
     
     for (Effect *effect in _effects) {
