@@ -406,8 +406,8 @@ static NSInteger sAutoGapMaximum = 16;
         if (action == PlaybackActionStop && isVolumeZero) {
             [playButton performOpenAnimationToImage:[NSImage imageNamed:@"PlayTemplate"] enabled:YES];
             
-            [[Player sharedInstance] setVolume:beforeVolume];
             [[Player sharedInstance] hardStop];
+            [[Player sharedInstance] setVolume:beforeVolume];
         }
     }
 }
