@@ -199,7 +199,7 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilenam
         } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
             [dictionary setObject:stringValue forKey:TrackKeyGrouping];
 
-        } else if ((key4cc == '\251day') && numberValue) { // Grouping, '?grp'
+        } else if ((key4cc == '\251day') && numberValue) { // Grouping, '?day'
             [dictionary setObject:numberValue forKey:TrackKeyYear];
 
         } else if ((key4cc == '\251wrt') && stringValue) { // Composer, '?wrt'
