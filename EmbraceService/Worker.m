@@ -139,13 +139,6 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilenam
         } else if ([commonKey isEqual:@"albumName"] && stringValue) {
             [dictionary setObject:[item stringValue] forKey:TrackKeyAlbum];
 
-        } else if ([commonKey isEqual:@"creationDate"] && stringValue) {
-            NSInteger year = [stringValue integerValue];
-
-            if (year) {
-                [dictionary setObject:@(year) forKey:TrackKeyYear];
-            }
-
         } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
             [dictionary setObject:[item stringValue] forKey:TrackKeyInitialKey];
 
