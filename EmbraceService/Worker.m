@@ -63,6 +63,21 @@ static const char *sGenreList[128] = {
 
 // This implements the example protocol. Replace the body of this class with the implementation of this service's protocol.
 
+static NSInteger sGetYear(NSString *yearString)
+{
+    if (![yearString length]) return 0;
+
+    NSRegularExpression  *re     = [NSRegularExpression regularExpressionWithPattern:@"([0-9]{4})" options:NSRegularExpressionCaseInsensitive error:NULL];
+    NSTextCheckingResult *result = [re firstMatchInString:yearString options:0 range:NSMakeRange(0, [yearString length])];
+
+    if ([result numberOfRanges] > 1) {
+        NSRange captureRange = [result rangeAtIndex:1];
+        return [[yearString substringWithRange:captureRange] integerValue];
+    }
+    
+    return 0;
+}
+
 
 static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilename)
 {
@@ -192,8 +207,9 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilenam
         } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
             [dictionary setObject:stringValue forKey:TrackKeyGrouping];
 
-        } else if ((key4cc == '\251day') && numberValue) { // Grouping, '?day'
-            [dictionary setObject:numberValue forKey:TrackKeyYear];
+        } else if ((key4cc == '\251day' || key4cc == 'TYER' || key4cc == '\00TYE') && stringValue) { // Year, M4A '?day', MP3 'TYER'/'TYE'
+            NSInteger year = sGetYear(stringValue);
+            if (year) [dictionary setObject:@(year) forKey:TrackKeyYear];
 
         } else if ((key4cc == '\251wrt') && stringValue) { // Composer, '?wrt'
             [dictionary setObject:stringValue forKey:TrackKeyComposer];
@@ -219,10 +235,7 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilenam
                 if (genre) [dictionary setObject:@(sGenreList[i]) forKey:TrackKeyGenre];
             }
 
-        } else if ((key4cc == 'TCON') && stringValue) { // Genre, 'TCON'
-            [dictionary setObject:stringValue forKey:TrackKeyGenre];
-
-        } else if ((key4cc == '\00TCO') && stringValue) { // Genre, 'TCO'
+        } else if ((key4cc == 'TCON' || key4cc == '\00TCO') && stringValue) { // Genre, 'TCON'/'TCO'
             [dictionary setObject:stringValue forKey:TrackKeyGenre];
 
         } else if ((key4cc == 'TXXX') || (key4cc == '\00TXX')) { // Read TXXX / TXX
