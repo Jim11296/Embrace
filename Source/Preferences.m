@@ -37,6 +37,7 @@ static NSDictionary *sGetDefaultValues()
         @"showsPlayingStatus":   @YES,
         @"showsLabelDots":       @NO,
         @"showsLabelStripes":    @YES,
+        @"showsYear":            @NO,
 
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
@@ -187,8 +188,11 @@ static void sRegisterDefaults()
 
     } else if (attribute == TrackViewAttributeLabelStripes) {
         return @"showsLabelStripes";
+
+    } else if (attribute == TrackViewAttributeYear) {
+        return @"showsYear";
     }
-    
+
     return nil;
 }
 

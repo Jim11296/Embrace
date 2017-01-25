@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -208,7 +208,7 @@ CA
                                                 <action selector="changeNumberOfLayoutLines:" target="494" id="FEq-9u-Gxj"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="FFx-rN-abX"/>
+                                        <menuItem isSeparatorItem="YES" id="hSq-5p-VmY"/>
                                         <menuItem title="Shorten Played Tracks" id="JoZ-et-klf">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -219,74 +219,86 @@ CA
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="Ma8-PW-oNm"/>
-                            <menuItem title="Track Attributes" id="nyA-hj-AJk">
+                            <menuItem title="Track Attributes" id="z5s-fx-mtw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Track Attributes" id="IIo-eS-3Ci">
+                                <menu key="submenu" title="Track Attributes" id="Mhb-vo-4m5">
                                     <items>
-                                        <menuItem title="Artist" id="PD7-tz-H1U">
+                                        <menuItem title="Artist" id="75U-KG-cj1">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="fx0-4A-MAg"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="Qdt-Lx-Mf7"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Beats Per Minute" tag="1" id="Q5V-W9-hOn">
+                                        <menuItem title="Beats Per Minute" tag="1" id="FDp-Ao-5AM">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="jK9-Bc-dxG"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="qdF-83-ch6"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Color Label Dot" tag="11" id="PBW-RG-pBB">
+                                        <menuItem title="Color Label Dot" tag="11" id="6H8-GF-qWk">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="3xi-Yd-QWp"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="ZTo-If-eYq"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Color Label Stripe" tag="10" id="xKj-VM-5bN">
+                                        <menuItem title="Color Label Stripe" tag="10" id="Cnk-uv-AB8">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="Ubw-hG-qhY"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="Tio-qe-6vz"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Comments" tag="2" id="eGL-AW-03d">
+                                        <menuItem title="Comments" tag="2" id="24r-FK-VBp">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="1hB-nO-DDk"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="Ozp-OG-h01"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Duplicate Status" tag="8" id="UPI-ga-0d0">
+                                        <menuItem title="Duplicate Status" tag="8" id="RCG-7l-azD">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="h4D-Re-tZZ"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="Olj-36-HFh"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Energy Level" tag="6" id="TSJ-mZ-RTl">
+                                        <menuItem title="Energy Level" tag="6" id="FeH-9j-rcG">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="1Jh-gM-xga"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="MSc-xy-fM2"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Genre" tag="7" id="Wfz-qx-nBk">
+                                        <menuItem title="Genre" tag="7" id="mns-TR-dKT">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="UKD-ka-U1a"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="tKx-ZO-Ekm"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Grouping" tag="3" id="mtm-5y-OcB">
+                                        <menuItem title="Grouping" tag="3" id="bSz-ji-1ag">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="mr8-tU-KVj"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="OoW-bx-PBs"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Initial Key" tag="4" id="daF-32-6cq">
+                                        <menuItem title="Initial Key" tag="4" id="oes-CQ-9AB">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="TeA-OO-XNQ"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="0NY-sv-Yck"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Playing Status" tag="9" id="ufO-D6-hjz">
+                                        <menuItem title="Playing Status" tag="9" id="09a-ow-H54">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="changeViewAttributes:" target="494" id="ThG-3N-YBL"/>
+                                                <action selector="changeTrackAttributes:" target="494" id="jE3-6j-vro"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Title" tag="12" id="fBm-E9-J82">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeTrackAttributes:" target="494" id="KIu-aK-13l"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Year" tag="12" id="OVJ-14-Rlw">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeTrackAttributes:" target="494" id="g0P-pM-WRW"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -327,7 +339,7 @@ CA
                             <menuItem title="Enter Full Screen" id="DHU-Kd-9jv">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="toggleFullScreen:" target="-1" id="9Ih-tQ-q4d"/>
+                                    <action selector="toggleFullScreen:" target="-1" id="gnt-1O-hOg"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Float on Top" id="QMM-XM-yX3">
@@ -492,5 +504,11 @@ CA
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
+        <menuItem title="Artist" id="ZXW-o7-mdL">
+            <modifierMask key="keyEquivalentModifierMask"/>
+            <connections>
+                <action selector="changeTrackAttributes:" target="494" id="qaS-bw-QpJ"/>
+            </connections>
+        </menuItem>
     </objects>
 </document>

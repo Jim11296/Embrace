@@ -46,7 +46,6 @@
 - (IBAction) changeNumberOfLayoutLines:(id)sender;
 - (IBAction) changeShortensPlayedTracks:(id)sender;
 
-- (IBAction) changeViewAttributes:(id)sender;
 - (IBAction) changeKeySignatureDisplayMode:(id)sender;
 - (IBAction) revealTime:(id)sender;
 
@@ -550,7 +549,7 @@
             return NO;
         }
         
-    } else if (action == @selector(changeViewAttributes:)) {
+    } else if (action == @selector(changeTrackAttributes:)) {
         TrackViewAttribute viewAttribute = [menuItem tag];
         BOOL isEnabled = [[Preferences sharedInstance] numberOfLayoutLines] > 1;
         
@@ -559,6 +558,7 @@
         }
 
         BOOL yn = [[Preferences sharedInstance] isTrackViewAttributeSelected:viewAttribute];
+       
         if (!isEnabled) yn = NO;
 
         [menuItem setState:(yn ? NSOnState : NSOffState)];
@@ -718,7 +718,7 @@
 }
 
 
-- (IBAction) changeViewAttributes:(id)sender
+- (IBAction) changeTrackAttributes:(id)sender
 {
     EmbraceLogMethod();
 

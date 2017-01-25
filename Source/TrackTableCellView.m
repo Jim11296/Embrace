@@ -777,15 +777,19 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     BOOL showsKeySignature   = [preferences showsKeySignature];
     BOOL showsEnergyLevel    = [preferences showsEnergyLevel];
     BOOL showsGenre          = [preferences showsGenre];
+    BOOL showsYear           = [preferences showsYear];
 
     NSMutableArray *left2  = [NSMutableArray array];
     NSMutableArray *right2 = [NSMutableArray array];
     NSMutableArray *left3  = [NSMutableArray array];
     NSMutableArray *right3 = [NSMutableArray array];
 
-    NSString *artist = [track artist];
-    if (showsArtist && [artist length]) {
-        [left2 addObject:artist];
+    if (showsArtist) {
+        NSString *artist = [track artist];
+        
+        if ([artist length]) {
+            [left2 addObject:artist];
+        }
     }
 
     if (showsComments) {
@@ -846,9 +850,21 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         }
     }
 
-    NSMutableArray *arrayForGenre = left2;
+    NSInteger year = [track year];
+    if (showsYear && year) {
+        NSMutableArray *arrayForYear = left2;
+
+        if (numberOfLines == 3) {
+            arrayForYear = [left3 count] ? right3 : left3;
+        }
+        
+        [arrayForYear addObject:[NSString stringWithFormat:@"%ld", (long)year]];
+    }
+
     NSString *genre = [track genre];
     if (showsGenre && [genre length]) {
+        NSMutableArray *arrayForGenre = left2;
+
         if (numberOfLines == 3) {
             arrayForGenre = [left3 count] ? right3 : left3;
         }
