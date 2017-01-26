@@ -207,7 +207,7 @@ static NSDictionary *sReadMetadata(NSURL *internalURL, NSString *originalFilenam
         } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
             [dictionary setObject:stringValue forKey:TrackKeyGrouping];
 
-        } else if ((key4cc == '\251day' || key4cc == 'TYER' || key4cc == '\00TYE') && stringValue) { // Year, M4A '?day', MP3 'TYER'/'TYE'
+        } else if (((key4cc == '\251day') || (key4cc == 'TDRC') || (key4cc == 'TYER') || (key4cc == '\00TYE')) && stringValue) { // Year, M4A '?day', MP3 'TDRC'/'TYER'/'TYE'
             NSInteger year = sGetYear(stringValue);
             if (year) [dictionary setObject:@(year) forKey:TrackKeyYear];
 
