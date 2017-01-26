@@ -770,114 +770,132 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     NSInteger numberOfLines = [preferences numberOfLayoutLines];
 
-    BOOL showsArtist         = [preferences showsArtist];
-    BOOL showsBeatsPerMinute = [preferences showsBPM];
-    BOOL showsComments       = [preferences showsComments];
-    BOOL showsGrouping       = [preferences showsGrouping];
-    BOOL showsKeySignature   = [preferences showsKeySignature];
-    BOOL showsEnergyLevel    = [preferences showsEnergyLevel];
-    BOOL showsGenre          = [preferences showsGenre];
-    BOOL showsYear           = [preferences showsYear];
+    NSMutableArray *a_2L = [NSMutableArray array];
+    NSMutableArray *a_2R = [NSMutableArray array];
+    NSMutableArray *a_3L = [NSMutableArray array];
+    NSMutableArray *a_3R = [NSMutableArray array];
 
-    NSMutableArray *left2  = [NSMutableArray array];
-    NSMutableArray *right2 = [NSMutableArray array];
-    NSMutableArray *left3  = [NSMutableArray array];
-    NSMutableArray *right3 = [NSMutableArray array];
-
-    if (showsArtist) {
-        NSString *artist = [track artist];
+    NSMutableArray *(^sparsest)(NSArray<NSMutableArray *> *) = ^(NSArray<NSMutableArray *> *arrays) {
+        NSMutableArray *result = nil;
+        NSInteger minCount = NSIntegerMax;
         
-        if ([artist length]) {
-            [left2 addObject:artist];
-        }
-    }
+        for (NSMutableArray *array in arrays) {
+            NSInteger arrayCount = [array count];
 
-    if (showsComments) {
-        NSString *comments = [track comments];
-
-        if ([comments length]) {
-            if (numberOfLines == 2) {
-                [([left2 count] ? right2 : left2) addObject:comments];
-            } else {
-                [([left3 count] ? right3 : left3) addObject:comments];
+            if (arrayCount < minCount) {
+                result = array;
+                minCount = arrayCount;
             }
         }
-    }
 
-    if (showsGrouping) {
-        NSString *grouping = [track grouping];
+        return result;
+    };
 
-        if ([grouping length]) {
-            if (numberOfLines == 2) {
-                [([left2 count] ? right2 : left2) addObject:grouping];
-            } else {
-                [([left3 count] ? right3 : left3) addObject:grouping];
+    NSString *(^collectAttributes)(NSArray *) = ^(NSArray *attributes) {
+        NSMutableArray *strings = [NSMutableArray array];
+
+        for (NSNumber *attributeNumber in attributes) {
+            TrackViewAttribute attribute = [attributeNumber integerValue];
+            NSString *string = nil;
+
+            if (attribute == TrackViewAttributeArtist) {
+                string = [track artist];
+
+            } else if (attribute == TrackViewAttributeBeatsPerMinute) {
+                NSInteger bpm = [track beatsPerMinute];
+                if (bpm) string = [NSNumberFormatter localizedStringFromNumber:@(bpm) numberStyle:NSNumberFormatterDecimalStyle];
+
+            } else if (attribute == TrackViewAttributeComments) {
+                string = [track comments];
+
+            } else if (attribute == TrackViewAttributeEnergyLevel) {
+                NSInteger energyLevel = [track energyLevel];
+                if (energyLevel) string = [NSNumberFormatter localizedStringFromNumber:@(energyLevel) numberStyle:NSNumberFormatterDecimalStyle];
+        
+            } else if (attribute == TrackViewAttributeGenre) {
+                string = [track genre];
+
+            } else if (attribute == TrackViewAttributeGrouping) {
+                string = [track grouping];
+
+            } else if (attribute == TrackViewAttributeKeySignature) {
+                KeySignatureDisplayMode displayMode = [preferences keySignatureDisplayMode];
+        
+                if (displayMode == KeySignatureDisplayModeRaw) {
+                    string = [track initialKey];
+
+                } else if (displayMode == KeySignatureDisplayModeTraditional) {
+                    string = GetTraditionalStringForTonality([track tonality]);
+
+                } else if (displayMode == KeySignatureDisplayModeOpenKeyNotation) {
+                    string = GetOpenKeyNotationStringForTonality([track tonality]);
+                }
+
+            } else if (attribute == TrackViewAttributeYear) {
+                NSInteger year = [track year];
+                if (year) string = [NSString stringWithFormat:@"%ld", (long)year];
             }
+            
+            if (string) [strings addObject:string];
         }
+
+        NSString *joiner = NSLocalizedString(@" \\U2013 ", nil);
+        return [strings componentsJoinedByString:joiner];
+    };
+
+    if ([preferences showsArtist]) {
+        [a_2L addObject:@(TrackViewAttributeArtist)];
+    }
+
+    if ([preferences showsYear]) {
+        [a_2L addObject:@(TrackViewAttributeYear)];
+    }
+
+    if ([preferences showsBPM]) {
+        [a_2R addObject:@(TrackViewAttributeBeatsPerMinute)];
     }
     
-    NSInteger bpm = [track beatsPerMinute];
-    if (showsBeatsPerMinute && bpm) {
-        [right2 addObject:[NSNumberFormatter localizedStringFromNumber:@(bpm) numberStyle:NSNumberFormatterDecimalStyle]];
+    if ([preferences showsEnergyLevel]) {
+        [a_2R addObject:@(TrackViewAttributeEnergyLevel)];
     }
 
-    NSInteger energyLevel = [track energyLevel];
-    if (showsEnergyLevel && energyLevel) {
-        [right2 addObject:[NSNumberFormatter localizedStringFromNumber:@(energyLevel) numberStyle:NSNumberFormatterDecimalStyle]];
+    if ([preferences showsKeySignature]) {
+        [a_2R addObject:@(TrackViewAttributeKeySignature)];
     }
 
-    NSMutableArray *arrayForTonality = right2;
-    if (numberOfLines == 3 && (((int)showsComments + (int)showsGrouping) < 2)) {
-        arrayForTonality = right3;
+    if ([preferences showsComments]) {
+        [(numberOfLines == 3 ? a_3L : a_2R) addObject:@(TrackViewAttributeComments)];
     }
-    
-    if (showsKeySignature) {
-        KeySignatureDisplayMode displayMode = [preferences keySignatureDisplayMode];
-        NSString *keySignatureString = nil;
-        
-        if (displayMode == KeySignatureDisplayModeRaw) {
-            keySignatureString = [track initialKey];
 
-        } else if (displayMode == KeySignatureDisplayModeTraditional) {
-            keySignatureString = GetTraditionalStringForTonality([track tonality]);
+    if ([preferences showsGrouping]) {
+        NSMutableArray *array;
 
-        } else if (displayMode == KeySignatureDisplayModeOpenKeyNotation) {
-            keySignatureString = GetOpenKeyNotationStringForTonality([track tonality]);
+        if (numberOfLines == 2) {
+            array = sparsest(@[ a_2R, a_2L ]);
+        } else {
+            array = sparsest(@[ a_3R, a_3L, a_2R, a_2L ]);
         }
-        
-        if ([keySignatureString length]) {
-            [arrayForTonality addObject:keySignatureString];
-        }
+
+        [array addObject:@(TrackViewAttributeGrouping)];
     }
 
-    NSInteger year = [track year];
-    if (showsYear && year) {
-        NSMutableArray *arrayForYear = left2;
+    if ([preferences showsGenre]) {
+        NSMutableArray *array;
 
-        if (numberOfLines == 3) {
-            arrayForYear = [left3 count] ? right3 : left3;
+        if (numberOfLines == 2) {
+            array = sparsest(@[ a_2R, a_2L ]);
+        } else {
+            array = sparsest(@[ a_3L, a_3R, a_2R, a_2L ]);
         }
-        
-        [arrayForYear addObject:[NSString stringWithFormat:@"%ld", (long)year]];
+
+        [array addObject:@(TrackViewAttributeGenre)];
     }
 
-    NSString *genre = [track genre];
-    if (showsGenre && [genre length]) {
-        NSMutableArray *arrayForGenre = left2;
-
-        if (numberOfLines == 3) {
-            arrayForGenre = [left3 count] ? right3 : left3;
-        }
-        
-        [arrayForGenre addObject:genre];
-    }
-
-    NSString *joiner = NSLocalizedString(@" \\U2013 ", nil);
-    
-    [[self lineTwoLeftField]    setStringValue:[left2  componentsJoinedByString:joiner]];
-    [[self lineTwoRightField]   setStringValue:[right2 componentsJoinedByString:joiner]];
-    [[self lineThreeLeftField]  setStringValue:[left3  componentsJoinedByString:joiner]];
-    [[self lineThreeRightField] setStringValue:[right3 componentsJoinedByString:joiner]];
+  
+    [[self lineTwoLeftField]    setStringValue:collectAttributes(a_2L)];
+    [[self lineTwoRightField]   setStringValue:collectAttributes(a_2R)];
+    [[self lineThreeLeftField]  setStringValue:collectAttributes(a_3L)];
+    [[self lineThreeRightField] setStringValue:collectAttributes(a_3R)];
 
     NSString *timeString = @"";
     NSString *timeStringFormat;
