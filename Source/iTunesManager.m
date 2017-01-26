@@ -248,8 +248,6 @@ static NSString * const sLocationKey  = @"Location";
                         location = [[NSURL URLWithString:location] path];
                     }
                     
-                    NSLog(@"%@: %@ - %@", location, startTimeNumber, stopTimeNumber);
-
                     iTunesLibraryMetadata *metadata = [[iTunesLibraryMetadata alloc] init];
 
                     [metadata setTrackID:[key integerValue]];
