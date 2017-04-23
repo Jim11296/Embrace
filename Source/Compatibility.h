@@ -16,7 +16,7 @@ static inline NSString *EmbraceGetPrivateName(const UInt8 *obfuscatedSelName)
     return EmbraceCompatibilityLookup(0, obfuscatedSelName);
 }
 
-static inline void EmbraceSizzle(NSString *cls, NSString *originalSelName, NSString *altSelName)
+static inline void EmbraceSwizzle(NSString *cls, NSString *originalSelName, NSString *altSelName)
 {
     EmbraceCompatibilityLookup_(0, cls, originalSelName, altSelName);
 }
