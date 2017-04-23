@@ -140,7 +140,7 @@ void EmbraceCheckCompatibility()
         UInt8 a[] = { 229,237,226,242,225,227,229,223,227,239,237,240,225,244,233,226,233,236,233,244,249,176,186,0 };
     
         if ([[NSUserDefaults standardUserDefaults] boolForKey:EmbraceGetPrivateName(n)]) {
-            EmbraceSizzle(EmbraceGetPrivateName(c), EmbraceGetPrivateName(o), EmbraceGetPrivateName(a));
+            EmbraceSwizzle(EmbraceGetPrivateName(c), EmbraceGetPrivateName(o), EmbraceGetPrivateName(a));
         }
     }
     
@@ -159,7 +159,7 @@ void EmbraceCheckCompatibility()
         static UInt8 a[] = { 229,237,226,242,225,227,229,223,227,239,237,240,225,244,233,226,233,236,233,244,249,177,0 };
 
         if ([[NSUserDefaults standardUserDefaults] boolForKey:EmbraceGetPrivateName(n)]) {
-            EmbraceSizzle(EmbraceGetPrivateName(c), EmbraceGetPrivateName(o), EmbraceGetPrivateName(a));
+            EmbraceSwizzle(EmbraceGetPrivateName(c), EmbraceGetPrivateName(o), EmbraceGetPrivateName(a));
         }
     }
 }
