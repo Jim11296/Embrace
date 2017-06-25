@@ -48,11 +48,11 @@ static BOOL sIsBlacklistedComponent(AudioComponent component)
 + (NSArray *) allEffectTypes
 {
     static NSArray *sBuiltInEffectTypes = nil;
-
-    if (!sBuiltInEffectTypes) {
+    
+    void (^gather)(NSMutableArray *, OSType) = ^(NSMutableArray *array, OSType componentType) { 
         AudioComponentDescription description;
 
-        description.componentType = kAudioUnitType_Effect;
+        description.componentType = componentType;
         description.componentSubType = 0;
         description.componentManufacturer = 0;
         description.componentFlags = kAudioComponentFlag_SandboxSafe;
@@ -79,7 +79,16 @@ static BOOL sIsBlacklistedComponent(AudioComponent component)
             }
         } while (current != 0);
         
-        sBuiltInEffectTypes = types;
+        [array addObjectsFromArray:types];
+    };
+
+    if (!sBuiltInEffectTypes) {
+        NSMutableArray *array = [NSMutableArray array];
+
+        gather(array, kAudioUnitType_Effect);
+        gather(array, kAudioUnitType_MusicEffect);
+        
+        sBuiltInEffectTypes = array;
     }
     
     NSMutableArray *result = [NSMutableArray array];

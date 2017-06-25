@@ -11,19 +11,14 @@
 #import "EffectAdditions.h"
 #import "EffectType.h"
 #import "BorderedView.h"
+#import <objc/runtime.h>
 
 
 #import <AudioUnit/AUCocoaUIView.h>
 
 @interface EditSystemEffectController ()
 
-- (IBAction) switchView:(id)sender;
-
-
 @property (nonatomic, weak) IBOutlet NSToolbar *toolbar;
-
-@property (nonatomic, weak) IBOutlet NSScrollView *scrollView;
-@property (nonatomic, weak) IBOutlet NSView *containerView;
 
 @property (nonatomic, weak) IBOutlet NSToolbarItem *modeToolbarItem;
 @property (nonatomic, weak) IBOutlet NSSegmentedControl *modeControl;
@@ -47,28 +42,65 @@
 
 
 @implementation EditSystemEffectController {
-    NSInteger _index;
-    NSView   *_settingsView;
-    BOOL      _useGenericView;
-    
-    BorderedView *_backgroundView;
-}
-
-- (void) windowDidLoad
-{
-    [super windowDidLoad];
-
-    if (![[self effect] hasCustomView]) {
-       [[self modeToolbarItem] setEnabled:NO];
-    }
-
-    [self _updateViewForce:YES useGenericView:NO];
+    NSView *_effectView;
+    BOOL _inViewFrameCallback;
 }
 
 
 - (NSString *) windowNibName
 {
     return @"EditSystemEffectWindow";
+}
+
+
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+- (void) windowDidLoad
+{
+    [super windowDidLoad];
+
+    Effect *effect = [self effect];
+    if (!effect) return;
+
+    NSWindow *window = [self window];
+
+    NSRect contentLayoutRect = [window contentLayoutRect];
+        
+    _effectView = [self _customViewWithEffect:effect size:contentLayoutRect.size];
+
+    if (!_effectView) {
+        _effectView = [[AUGenericView alloc] initWithAudioUnit:[effect audioUnit] displayFlags:(AUViewPropertiesDisplayFlag|AUViewParametersDisplayFlag)];
+    }
+
+    NSRect effectViewFrame = [_effectView frame];
+
+    NSRect newWindowFrame = [window frame];
+    newWindowFrame.size.width  += (effectViewFrame.size.width  - contentLayoutRect.size.width);
+    newWindowFrame.size.height += (effectViewFrame.size.height - contentLayoutRect.size.height);
+
+    NSAutoresizingMaskOptions oldAutoresizingMask = [_effectView autoresizingMask];
+    
+    if ((oldAutoresizingMask & (NSViewWidthSizable|NSViewHeightSizable)) == 0) {
+        NSWindowStyleMask styleMask = [[self window] styleMask];
+        styleMask &= ~NSWindowStyleMaskResizable;
+        [window setStyleMask:styleMask];
+    }   
+    
+    [_effectView setAutoresizingMask:0];
+    [window setFrame:newWindowFrame display:NO animate:NO];
+
+    [_effectView setFrame:[[self window] contentLayoutRect]];
+    [_effectView setAutoresizingMask:oldAutoresizingMask];
+
+    [[[self window] contentView] addSubview:_effectView];
+
+    [self _tweakView:_effectView];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleViewFrameDidChange:) name:NSViewFrameDidChangeNotification object:_effectView];
 }
 
 
@@ -87,15 +119,21 @@
         // AUCompressionView
         static UInt8 c[] = { 193,213,195,239,237,240,242,229,243,243,233,239,238,214,233,229,247,0 };
 
-        EmbraceSizzle(EmbraceGetPrivateName(a), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
-        EmbraceSizzle(EmbraceGetPrivateName(b), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
-        EmbraceSizzle(EmbraceGetPrivateName(c), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
+        EmbraceSwizzle(EmbraceGetPrivateName(a), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
+        EmbraceSwizzle(EmbraceGetPrivateName(b), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
+        EmbraceSwizzle(EmbraceGetPrivateName(c), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
     });
 }
 
-- (void) _tweakView:(NSView *)view window:(NSWindow *)window
+
+- (void) _tweakView:(NSView *)view
 {
-    if ([view isKindOfClass:NSClassFromString(@"AppleAUCustomViewBase")]) {
+    Class AppleAUCustomViewBase   = NSClassFromString(@"AppleAUCustomViewBase");
+    Class CAAppleAUCustomViewBase = NSClassFromString(@"CAAppleAUCustomViewBase");
+
+    if ((  AppleAUCustomViewBase && [view isKindOfClass:  AppleAUCustomViewBase]) ||
+        (CAAppleAUCustomViewBase && [view isKindOfClass:CAAppleAUCustomViewBase]))
+    {
         for (NSView *subview in [view subviews]) {
             if ([subview isKindOfClass:[NSTextField class]]) {
                 if ([[(NSTextField *)subview font] pointSize] >= 16) {
@@ -122,11 +160,11 @@
 
     AudioUnitCocoaViewInfo *viewInfo = (AudioUnitCocoaViewInfo *)malloc(dataSize);
     AudioUnitGetProperty(unit, kAudioUnitProperty_CocoaUI, kAudioUnitScope_Global, 0, viewInfo, &dataSize);
-    
-    NSString *viewClassName = (__bridge NSString *)(viewInfo->mCocoaAUViewClass[0]);
-    NSString *bundlePath = CFBridgingRelease(CFURLCopyPath(viewInfo->mCocoaAUViewBundleLocation));
 
-    Class viewClass = [[NSBundle bundleWithPath:bundlePath] classNamed:viewClassName];
+    NSURL    *viewURL       = (__bridge NSURL    *)(viewInfo->mCocoaAUViewBundleLocation);
+    NSString *viewClassName = (__bridge NSString *)(viewInfo->mCocoaAUViewClass[0]);
+
+    Class viewClass = [[NSBundle bundleWithURL:viewURL] classNamed:viewClassName];
 
     NSView *result = nil;
     
@@ -149,6 +187,7 @@
 }
 
 
+
 - (void) _resizeWindowWithOldSize:(NSSize)oldSize newSize:(NSSize)newSize
 {
     CGFloat deltaW = newSize.width  - oldSize.width;
@@ -159,95 +198,25 @@
     windowFrame.size.height += deltaH;
     windowFrame.origin.y -= deltaH;
 
-    [_settingsView setAutoresizingMask:0];
+    [_effectView setAutoresizingMask:0];
     [[self window] setFrame:windowFrame display:NO animate:NO];
-    [_settingsView setFrame:[[self containerView] bounds]];
-    [_settingsView setAutoresizingMask:NSViewHeightSizable|NSViewWidthSizable];
-}
-
-
-- (void) _updateViewForce:(BOOL)force useGenericView:(BOOL)useGenericView
-{
-    if (force || (useGenericView != _useGenericView)) {
-        Effect *effect = [self effect];
-        NSRect frame = [[self containerView] bounds];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        [_settingsView removeFromSuperview];
-        _settingsView = nil;
-
-        NSView *view = nil;
-        if (effect) {
-            BOOL tryToTweakView = NO;
-
-            if (!view && !useGenericView) {
-                view = [self _customViewWithEffect:effect size:frame.size];
-                tryToTweakView = YES;
-            }
-            
-            if (!view) {
-                useGenericView = YES;
-                view = [[AUGenericView alloc] initWithAudioUnit:[effect audioUnit] displayFlags:(AUViewPropertiesDisplayFlag|AUViewParametersDisplayFlag)];
-            }
-
-            NSDisableScreenUpdates();
-
-            [view setAutoresizingMask:NSViewHeightSizable|NSViewWidthSizable];
-
-            NSRect actualFrame = [view bounds];
-            if (!NSEqualSizes(actualFrame.size, frame.size)) {
-                [self _resizeWindowWithOldSize:frame.size newSize:actualFrame.size];
-            }
-
-            [[self window] setContentMinSize:[[[self window] contentView] frame].size];
-
-            if (tryToTweakView) {
-                [self _tweakView:view window:[self window]];
-            }
-
-            [[self containerView] addSubview:view];
-            [[self window] displayIfNeeded];
-            
-            NSEnableScreenUpdates();
-        }
-
-        _settingsView = view;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleViewFrameDidChange:) name:NSViewFrameDidChangeNotification object:_settingsView];
-
-        _useGenericView = useGenericView;
-        [[self modeControl] setSelectedSegment:(_useGenericView ? 1 : 0)];
-    }
+    [_effectView setFrame:[[[self window] contentView] bounds]];
+    [_effectView setAutoresizingMask:NSViewHeightSizable|NSViewWidthSizable];
 }
 
 
 - (void) _handleViewFrameDidChange:(NSNotification *)note
 {
-    if (![[self window] inLiveResize]) {
-        NSRect containerBounds   = [[self containerView] bounds];
-        NSRect settingsViewFrame = [_settingsView frame];
+    if (!_inViewFrameCallback && ![[self window] inLiveResize]) {
+        _inViewFrameCallback = YES;
 
-        NSDisableScreenUpdates();
+        NSRect contentLayoutRect = [[self window] contentLayoutRect];
+        NSRect effectViewFrame   = [_effectView frame];
 
-        [self _resizeWindowWithOldSize:containerBounds.size newSize:settingsViewFrame.size];
-        [[self window] displayIfNeeded];
+        [self _resizeWindowWithOldSize:contentLayoutRect.size newSize:effectViewFrame.size];
 
-        NSEnableScreenUpdates();
+        _inViewFrameCallback = NO;
     }
 }
-
-
-#pragma mark - IBActions
-
-- (IBAction) switchView:(id)sender
-{
-    NSInteger index = [sender indexOfSelectedItem];
-    
-    if (index > 0) {
-        [self _updateViewForce:NO useGenericView:YES];
-    } else {
-        [self _updateViewForce:NO useGenericView:NO];
-    }
-}
-
 
 @end
