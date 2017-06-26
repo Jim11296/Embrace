@@ -8,6 +8,8 @@
 
 @interface SimpleProgressDot : NSView
 
+@property (nonatomic) NSBezierPath *path;
+
 @property (nonatomic) NSColor *inactiveColor;
 @property (nonatomic) NSColor *activeColor;
 @property (nonatomic) NSColor *tintColor;

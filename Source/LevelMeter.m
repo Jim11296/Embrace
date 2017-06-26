@@ -65,6 +65,8 @@
     [_rightPeakDot setActiveColor:[NSColor blackColor]];
     [_leftPeakDot  setPercentage:1.0];
     [_rightPeakDot setPercentage:1.0];
+    [_leftPeakDot  setHidden:YES];
+    [_rightPeakDot setHidden:YES];
 
     [_leftLimiterDot  setInactiveColor:GetRGBColor(0x0, 0.15)];
     [_rightLimiterDot setInactiveColor:GetRGBColor(0x0, 0.15)];
@@ -84,7 +86,7 @@
 
 - (void) layout
 {
-    [super layout];
+//  [super layout]; // Opt-out of Auto Layout
     
     NSRect bounds = [self bounds];
     CGFloat barHeight = 4;
@@ -208,6 +210,9 @@
         [_leftLimiterDot  setTintLevel:0];
         [_rightLimiterDot setTintLevel:0];
 
+        [_leftPeakDot  setHidden:!metering];
+        [_rightPeakDot setHidden:!metering];
+        
         [self setNeedsDisplay:YES];
     }
 }

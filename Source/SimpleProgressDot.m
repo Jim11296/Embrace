@@ -24,10 +24,21 @@
         fillColor = [fillColor blendedColorWithFraction:_tintLevel ofColor:_tintColor];
     }
     
+    NSBezierPath *path = _path ? _path : [NSBezierPath bezierPathWithOvalInRect:[self bounds]];
+
     [fillColor set];
-    [[NSBezierPath bezierPathWithOvalInRect:[self bounds]] fill];
+    [path fill];
+    
 }
 
+
+- (void) setPath:(NSBezierPath *)path
+{
+    if (_path != path) {
+        _path = path;
+        [self setNeedsDisplay:YES];
+    }
+}
 
 
 - (void) setInactiveColor:(NSColor *)inactiveColor
