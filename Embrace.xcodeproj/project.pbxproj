@@ -63,6 +63,8 @@
 		55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CC118B97ADB0059110C /* CrashPadClient.m */; };
 		55717BF5187EA65400213213 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* Button.m */; };
 		55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* WhiteSlider.m */; };
+		5572C17E1F00B743007BE284 /* SimpleProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SimpleProgressBar.m */; };
+		5572C1811F00BC2F007BE284 /* SimpleProgressDot.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */; };
 		557ABAB61B68D48C006F69D9 /* DotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557ABAB51B68D48C006F69D9 /* DotView.m */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
 		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
@@ -280,6 +282,10 @@
 		55717BF4187EA65400213213 /* Button.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Button.m; path = Source/Button.m; sourceTree = SOURCE_ROOT; };
 		55717BF6187EAB8C00213213 /* WhiteSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WhiteSlider.h; path = Source/WhiteSlider.h; sourceTree = SOURCE_ROOT; };
 		55717BF7187EAB8C00213213 /* WhiteSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WhiteSlider.m; path = Source/WhiteSlider.m; sourceTree = SOURCE_ROOT; };
+		5572C17C1F00B743007BE284 /* SimpleProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleProgressBar.h; path = Source/SimpleProgressBar.h; sourceTree = SOURCE_ROOT; };
+		5572C17D1F00B743007BE284 /* SimpleProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressBar.m; path = Source/SimpleProgressBar.m; sourceTree = SOURCE_ROOT; };
+		5572C17F1F00BC2F007BE284 /* SimpleProgressDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleProgressDot.h; path = Source/SimpleProgressDot.h; sourceTree = SOURCE_ROOT; };
+		5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressDot.m; path = Source/SimpleProgressDot.m; sourceTree = SOURCE_ROOT; };
 		557ABAB41B68D48C006F69D9 /* DotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DotView.h; path = Source/DotView.h; sourceTree = SOURCE_ROOT; };
 		557ABAB51B68D48C006F69D9 /* DotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DotView.m; path = Source/DotView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
@@ -870,6 +876,10 @@
 				55CF2799187A464B0042C92A /* TrackTableCellView.m */,
 				55ADE93318815EA8008DC245 /* PlayBar.h */,
 				55ADE93418815EA8008DC245 /* PlayBar.m */,
+				5572C17F1F00BC2F007BE284 /* SimpleProgressDot.h */,
+				5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */,
+				5572C17C1F00B743007BE284 /* SimpleProgressBar.h */,
+				5572C17D1F00B743007BE284 /* SimpleProgressBar.m */,
 				556098151B48B061008516C3 /* StripeView.h */,
 				556098161B48B061008516C3 /* StripeView.m */,
 				556ACE2D187B901400AED4BC /* WaveformView.h */,
@@ -1202,6 +1212,7 @@
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
+				5572C1811F00BC2F007BE284 /* SimpleProgressDot.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
@@ -1251,6 +1262,7 @@
 				55F3B7B61877908900E8FEC8 /* Track.m in Sources */,
 				558513C718794A2600C268E3 /* EffectsController.m in Sources */,
 				556ACE2F187B901400AED4BC /* WaveformView.m in Sources */,
+				5572C17E1F00B743007BE284 /* SimpleProgressBar.m in Sources */,
 				55ADE93818824338008DC245 /* LevelMeter.m in Sources */,
 				554B733F18E402E1001E154E /* Log.m in Sources */,
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,

@@ -1516,7 +1516,8 @@ static OSStatus sInputRenderCallback(
     [self playNextTrack];
     
     if (_currentTrack) {
-        _tickTimer = [NSTimer timerWithTimeInterval:(1/60.0) target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+        _tickTimer = [NSTimer timerWithTimeInterval:(1.0/30.0) target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+        [_tickTimer setTolerance:(1.0/60.0)];
 
         [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSRunLoopCommonModes];
         [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSEventTrackingRunLoopMode];
