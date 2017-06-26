@@ -7,128 +7,153 @@
 //
 
 #import "LevelMeter.h"
-#import "Player.h"
+#import "SimpleProgressDot.h"
+#import "SimpleProgressBar.h"
 
 
-@implementation LevelMeter
+@implementation LevelMeter {
+    SimpleProgressBar *_leftChannelBar;
+    SimpleProgressBar *_rightChannelBar;
+    SimpleProgressDot *_leftPeakDot;
+    SimpleProgressDot *_rightPeakDot;
+    SimpleProgressDot *_leftLimiterDot;
+    SimpleProgressDot *_rightLimiterDot;
+}
 
-- (void) drawRect:(NSRect)dirtyRect
+- (instancetype) initWithFrame:(NSRect)frameRect
 {
-    BOOL isMainWindow = [[self window] isMainWindow];
+    if ((self = [super initWithFrame:frameRect])) {
+        [self _setupLevelMeter];
+    }
+    
+    return self;
+}
 
+
+- (instancetype) initWithCoder:(NSCoder *)coder
+{
+    if ((self = [super initWithCoder:coder])) {
+        [self _setupLevelMeter];
+    }
+    
+    return self;
+}
+
+
+- (void) _setupLevelMeter
+{
+    [self setWantsLayer:YES];
+    [self setLayer:[CALayer layer]];
+    [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
+    [self setAutoresizesSubviews:NO];
+
+    _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
+
+    _leftChannelBar  = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
+    _rightChannelBar = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
+    
+    _leftPeakDot     = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+    _rightPeakDot    = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+
+    _leftLimiterDot  = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+    _rightLimiterDot = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+    
+    [_leftChannelBar  setInactiveColor:GetRGBColor(0x0, 0.15)];
+    [_rightChannelBar setInactiveColor:GetRGBColor(0x0, 0.15)];
+
+    [_leftPeakDot  setActiveColor:[NSColor blackColor]];
+    [_rightPeakDot setActiveColor:[NSColor blackColor]];
+    [_leftPeakDot  setPercentage:1.0];
+    [_rightPeakDot setPercentage:1.0];
+
+    [_leftLimiterDot  setInactiveColor:GetRGBColor(0x0, 0.15)];
+    [_rightLimiterDot setInactiveColor:GetRGBColor(0x0, 0.15)];
+    [_leftLimiterDot  setTintColor:[NSColor redColor]];
+    [_rightLimiterDot setTintColor:[NSColor redColor]];
+    
+    [self addSubview:_leftChannelBar];
+    [self addSubview:_rightChannelBar];
+
+    [self addSubview:_leftPeakDot];
+    [self addSubview:_rightPeakDot];
+
+    [self addSubview:_leftLimiterDot];
+    [self addSubview:_rightLimiterDot];
+}
+
+
+- (void) layout
+{
+    [super layout];
+    
     NSRect bounds = [self bounds];
     CGFloat barHeight = 4;
 
     bounds = NSInsetRect(bounds, 1, 0);
 
-    void (^drawLimiter)(NSRect) = ^(NSRect rect) {
-        NSBezierPath *roundedPath = [NSBezierPath bezierPathWithOvalInRect:rect];
-        
-        if (_limiterActive) {
-            [[NSColor redColor] set];
-        } else {
-            [GetRGBColor(0xc6c6c6, 1.0) set];
-        }
-        
-        [roundedPath fill];
-    };
+    NSRect leftChannelFrame = bounds;
+    leftChannelFrame.size.height = barHeight;
+    leftChannelFrame.origin.y = round((bounds.size.height - leftChannelFrame.size.height) / 2);
 
-    void (^drawMeter)(NSRect, float, float) = ^(NSRect rect, float average, float peak) {
-        if (average > 0) average = 0;
-        if (peak > 0)    peak = 0;
+    NSRect rightChannelFrame = leftChannelFrame;
+    rightChannelFrame.origin.y -= 6;
+
+    leftChannelFrame.size.width  -= 4;
+    rightChannelFrame.size.width -= 4;
+
+    NSRect leftLimiterFrame  = leftChannelFrame;
+    NSRect rightLimiterFrame = rightChannelFrame;
     
-        CGFloat averageX = (60 + average) * ( rect.size.width      / 60);
-        CGFloat peakX    = (60 + peak)    * ((rect.size.width - 2) / 60);
-        
-        if (averageX < 0) averageX = 0;
-        if (peakX    < 0) peakX = 0;
-        
+    leftLimiterFrame.size.width = rightLimiterFrame.size.width = 4;
+    leftLimiterFrame.origin.x   = rightLimiterFrame.origin.x = CGRectGetMaxX(leftChannelFrame) + 1;
+   
+    void (^layoutPeak)(NSView *, NSRect, Float32) = ^(NSView *peakDot, NSRect channelFrame, Float32 power) {
+        CGFloat peakX = (60 + power) * ((channelFrame.size.width - 2) / 60);
+        if (peakX < 0) peakX  = 0;
+
+        CGFloat alpha = 0;
+        if (peakX < 1) {
+            alpha = 0;
+        } else if (peakX < 10) {
+            alpha = peakX / 10.0;
+        } else {
+            alpha = 1.0;
+        }
+
         peakX += 1;
-        
-        NSRect leftRect, rightRect;
-        if (_metering) {
-            NSDivideRect(rect, &leftRect, &rightRect, averageX, NSMinXEdge);
-        } else {
-            rightRect = leftRect = rect;
-        }
 
-        CGFloat radius = rect.size.height > rect.size.width ? rect.size.width : rect.size.height;
-        radius /= 2;
+        NSRect dotFrame = channelFrame;
+        dotFrame.size.width = dotFrame.size.height = 4;
+        dotFrame.origin.x = round(peakX - 2);
 
-        NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:radius yRadius:radius];
-
-        [NSGraphicsContext saveGraphicsState];
-
-        if (_metering) {
-            [NSGraphicsContext saveGraphicsState];
-
-            if (isMainWindow) {
-                [GetRGBColor(0x707070, 1.0) set];
-            } else {
-                [GetRGBColor(0xA0A0A0, 1.0) set];
-            }
-
-            [[NSBezierPath bezierPathWithRect:leftRect] addClip];
-            [roundedPath fill];
-
-            [NSGraphicsContext restoreGraphicsState];
-        }
-
-        [GetRGBColor(0x0, 0.15) set];
-        [[NSBezierPath bezierPathWithRect:rightRect] addClip];
-        [roundedPath fill];
-        
-        [NSGraphicsContext restoreGraphicsState];
-        
-        if (_metering) {
-            rect.origin.x = peakX - 2;
-            rect.size.width = 4;
-        
-            if (peakX < 1) {
-                [[NSColor clearColor] set];
-            } else if (peakX < 10) {
-                [GetRGBColor(0x0, (peakX / 10.0)) set];
-            } else {
-                [GetRGBColor(0x0, 1.0) set];
-            }
-
-            [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
-        }
+        [peakDot setAlphaValue:alpha];
+        [peakDot setFrame:dotFrame];
     };
-	
-
-    NSRect leftChannelBar = bounds;
-    leftChannelBar.size.height = barHeight;
-    leftChannelBar.origin.y = round((bounds.size.height - leftChannelBar.size.height) / 2);
-
-    NSRect rightChannelBar = leftChannelBar;
-    rightChannelBar.origin.y -= 6;
-
-    NSRect leftLimiter = leftChannelBar;
-    NSRect rightLimiter = rightChannelBar;
     
-    leftChannelBar.size.width  -= 4;
-    rightChannelBar.size.width -= 4;
-    
-    leftLimiter.size.width = rightLimiter.size.width = 4;
-    leftLimiter.origin.x   = rightLimiter.origin.x = CGRectGetMaxX(leftChannelBar) + 1;
+    [_leftChannelBar  setFrame:leftChannelFrame];
+    [_rightChannelBar setFrame:rightChannelFrame];
 
-    if (_metering) {
-        drawMeter(leftChannelBar,  _leftAveragePower,  _leftPeakPower);
-        drawMeter(rightChannelBar, _rightAveragePower, _rightPeakPower);
-        
-        drawLimiter(leftLimiter);
-        drawLimiter(rightLimiter);
-        
-    } else {
-        drawMeter(leftChannelBar,  0, 0);
-        drawMeter(rightChannelBar, 0, 0);
+    [_leftLimiterDot  setFrame:leftLimiterFrame];
+    [_rightLimiterDot setFrame:rightLimiterFrame];
 
-        drawLimiter(leftLimiter);
-        drawLimiter(rightLimiter);
-    }
+    layoutPeak(_leftPeakDot,  leftChannelFrame,  _leftPeakPower);
+    layoutPeak(_rightPeakDot, rightChannelFrame, _rightPeakPower);
 }
 
+
+#pragma mark - Window Listener
+
+- (void) windowDidUpdateMain:(EmbraceWindow *)window
+{
+    BOOL     isMainWindow   = [[self window] isMainWindow];
+    NSColor *activeBarColor = isMainWindow ? GetRGBColor(0x707070, 1.0) : GetRGBColor(0xA0A0A0, 1.0);
+
+    [_leftChannelBar  setActiveColor:activeBarColor];
+    [_rightChannelBar setActiveColor:activeBarColor]; 
+}
+
+
+#pragma mark - Accessors
 
 - (void) setLeftAveragePower: (Float32) leftAveragePower
            rightAveragePower: (Float32) rightAveragePower
@@ -136,6 +161,11 @@
               rightPeakPower: (Float32) rightPeakPower
                limiterActive: (BOOL) limiterActive
 {
+    if (leftPeakPower     > 0) leftPeakPower     = 0;
+    if (rightPeakPower    > 0) rightPeakPower    = 0;
+    if (leftAveragePower  > 0) leftAveragePower  = 0;
+    if (rightAveragePower > 0) rightAveragePower = 0;
+
     if (_leftAveragePower  != leftAveragePower  ||
         _rightAveragePower != rightAveragePower ||
         _leftPeakPower     != leftPeakPower     ||
@@ -148,7 +178,19 @@
         _rightPeakPower    = rightPeakPower;
         _limiterActive     = limiterActive;
         
-        [self setNeedsDisplay:YES];
+        CGFloat leftPercent = (60.0 + leftAveragePower) / 60.0;
+        if (leftPercent < 0) leftPercent = 0;
+
+        CGFloat rightPercent = (60.0 + rightAveragePower) / 60.0;
+        if (rightPercent < 0) rightPercent = 0;
+        
+        [_leftChannelBar  setPercentage:leftPercent];
+        [_rightChannelBar setPercentage:rightPercent];
+    
+        [_leftLimiterDot  setTintLevel:(_limiterActive ? 1.0 : 0.0)];
+        [_rightLimiterDot setTintLevel:(_limiterActive ? 1.0 : 0.0)];
+        
+        [self setNeedsLayout:YES];
     }
 }
 
@@ -159,6 +201,13 @@
         _metering = metering;
         _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
         _limiterActive = NO;
+        
+        [_leftChannelBar  setPercentage:0];
+        [_rightChannelBar setPercentage:0];
+        
+        [_leftLimiterDot  setTintLevel:0];
+        [_rightLimiterDot setTintLevel:0];
+
         [self setNeedsDisplay:YES];
     }
 }

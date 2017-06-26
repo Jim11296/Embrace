@@ -123,7 +123,8 @@ static NSInteger sAutoGapMaximum = 16;
     [window setTitle:@""];
     [[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     [[window standardWindowButton:NSWindowZoomButton]        setHidden:YES];
-    
+
+    [window addListener:[self levelMeter]];
     [window addListener:[self gearButton]];
     [window addListener:[self playButton]];
     [window addListener:[self volumeSlider]];

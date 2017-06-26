@@ -10,7 +10,7 @@
 
 @class Player;
 
-@interface LevelMeter : NSView
+@interface LevelMeter : NSView <EmbraceWindowListener>
 
 @property (nonatomic, getter=isMetering) BOOL metering;
 
