@@ -124,6 +124,7 @@ static NSInteger sAutoGapMaximum = 16;
     [[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     [[window standardWindowButton:NSWindowZoomButton]        setHidden:YES];
 
+    [window addListener:[self dangerMeter]];
     [window addListener:[self levelMeter]];
     [window addListener:[self gearButton]];
     [window addListener:[self playButton]];

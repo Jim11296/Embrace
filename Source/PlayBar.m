@@ -13,6 +13,8 @@
     CALayer *_inactiveBar;
     CALayer *_activeBar;
     CALayer *_bottomBorder;
+    
+    CGFloat  _playheadX;
 }
 
 
@@ -40,6 +42,7 @@
         [self setWantsLayer:YES];
         [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
         [[self layer] setMasksToBounds:YES];
+        [self setAutoresizesSubviews:NO];
         
         [[self layer] addSublayer:_bottomBorder];
         [[self layer] addSublayer:_inactiveBar];
@@ -53,7 +56,7 @@
 
 - (void) layout
 {
-    [super layout];
+//  [super layout]; // Opt-out of Auto Layout
 
     NSRect bounds = [self bounds];
 
@@ -73,14 +76,12 @@
         playheadFrame.origin.y = -1;
     }
 
-    CGFloat midX = bounds.size.width * _percentage;
+    [self _updatePlayheadX];
     
     NSRect leftRect, rightRect;
-    NSDivideRect(barFrame, &leftRect, &rightRect, midX - barFrame.origin.x, NSMinXEdge);
+    NSDivideRect(barFrame, &leftRect, &rightRect, _playheadX - barFrame.origin.x, NSMinXEdge);
 
-    CGFloat scale = [[self window] backingScaleFactor];
-
-    playheadFrame.origin.x = round((bounds.size.width - 2) * _percentage * scale) / scale;
+    playheadFrame.origin.x   = _playheadX;
     playheadFrame.size.width = 2;
     
     [_activeBar    setFrame:leftRect];
@@ -90,12 +91,27 @@
 }
 
 
+
+- (void) _updatePlayheadX
+{
+    NSRect bounds = [self bounds];
+    CGFloat scale = [[self window] backingScaleFactor];
+    _playheadX = round((bounds.size.width - 2) * _percentage * scale) / scale;
+}
+
+
 - (void) setPercentage:(float)percentage
 {
     if (_percentage != percentage) {
         if (isnan(percentage)) percentage = 0;
         _percentage = percentage;
-        [self setNeedsLayout:YES];
+
+        CGFloat oldPlayheadX = _playheadX;
+        [self _updatePlayheadX];
+        
+        if (oldPlayheadX != _playheadX) {
+            [self setNeedsLayout:YES];
+        }
     }
 }
 

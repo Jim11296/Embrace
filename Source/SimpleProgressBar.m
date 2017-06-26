@@ -83,7 +83,7 @@
 
 - (void) layout
 {
-    [super layout];
+//  [super layout]; // Opt-out of Auto Layout
 
     NSRect bounds = [self bounds];
 

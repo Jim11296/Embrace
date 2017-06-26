@@ -9,6 +9,9 @@
 #import "DangerMeter.h"
 #import "Player.h"
 
+#import "SimpleProgressBar.h"
+#import "SimpleProgressDot.h"
+
 
 @implementation DangerMeter {
     NSTimer *_timer;
@@ -18,131 +21,107 @@
 
     NSTimeInterval _dangerTime;
     NSTimeInterval _overloadTime;
+
+    SimpleProgressDot *_boltDot;
+    SimpleProgressBar *_dangerBar;
+    SimpleProgressDot *_overloadDot;
 }
 
 
-- (void) drawRect:(NSRect)dirtyRect
-{
 
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+- (instancetype) initWithFrame:(NSRect)frameRect
+{
+    if ((self = [super initWithFrame:frameRect])) {
+        [self _setupDangerMeter];
+    }
+    
+    return self;
+}
+
+
+- (instancetype) initWithCoder:(NSCoder *)coder
+{
+    if ((self = [super initWithCoder:coder])) {
+        [self _setupDangerMeter];
+    }
+    
+    return self;
+}
+
+
+- (void) _setupDangerMeter
+{
+    [self setWantsLayer:YES];
+    [self setLayer:[CALayer layer]];
+    [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
+    [self setAutoresizesSubviews:NO];
+
+    NSColor *inactiveColor = GetRGBColor(0x000000, 0.15);
+    NSColor *tintColor     = GetRGBColor(0xff0000, 1.0);
+
+    NSBezierPath *boltPath = [NSBezierPath bezierPath];
+    [boltPath moveToPoint:NSMakePoint(2, 10)];
+    [boltPath lineToPoint:NSMakePoint(2, 6)];
+    [boltPath lineToPoint:NSMakePoint(4, 6)];
+    [boltPath lineToPoint:NSMakePoint(2, 0)];
+    [boltPath lineToPoint:NSMakePoint(2, 4)];
+    [boltPath lineToPoint:NSMakePoint(0, 4)];
+    [boltPath closePath];
+
+    _boltDot     = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+    _dangerBar   = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
+    _overloadDot = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+
+    [_boltDot     setInactiveColor:inactiveColor];
+    [_dangerBar   setInactiveColor:inactiveColor];
+    [_overloadDot setInactiveColor:inactiveColor];
+
+    [_boltDot     setTintColor:tintColor];
+    [_dangerBar   setTintColor:tintColor];
+    [_overloadDot setTintColor:tintColor];
+   
+    [_boltDot setPath:boltPath];
+    
+    [self addSubview:_boltDot];
+    [self addSubview:_dangerBar];
+    [self addSubview:_overloadDot];
+}
+
+
+- (void) layout
+{
+//  [super layout]; // Opt-out of Auto Layout
 
     NSRect bounds = [self bounds];
-    bounds = NSInsetRect(bounds, 1, 0);
 
-    CGFloat barHeight = 4;
+    CGFloat barY = round((bounds.size.height - 4) / 2);
 
-    CGFloat level = _decayedLevel;
-
-    CGFloat colorLevel = (level * 2.0) - 1.0;
-    if (colorLevel < 0) colorLevel = 0;
-
-    CGFloat activeColor[] = {
-        ((0x70 / 255.f) * (1.0 - colorLevel)) + colorLevel,
-         (0x70 / 255.f) * (1.0 - colorLevel),
-         (0x70 / 255.f) * (1.0 - colorLevel),
-        1.0
-    };
-    
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
-    CGContextSetFillColorSpace(context, colorSpace);
-
-    NSRect barRect = bounds;
-    barRect.size.height = barHeight;
-    barRect.origin.y = round((bounds.size.height - barRect.size.height) / 2);
-
-    NSPoint boltPoint = NSMakePoint(1, barRect.origin.y + 7);
-    
-    barRect.size.width -= 6;
-    barRect.origin.x += 6;
-   
+    NSRect barRect = CGRectMake(7, barY, bounds.size.width - 7, 4);
     NSRect overloadRect = barRect;
     
     barRect.size.width -= 6;
-    
     overloadRect.size.width =  4;
     overloadRect.origin.x   = CGRectGetMaxX(barRect) + 2;
 
-    // Draw bolt in activeColor
-    {
-        CGFloat x = boltPoint.x;
-        CGFloat y = boltPoint.y;
-
-        CGContextMoveToPoint(   context, x + 2, y     );
-        CGContextAddLineToPoint(context, x + 2, y - 4 );
-        CGContextAddLineToPoint(context, x + 4, y - 4 );
-        CGContextAddLineToPoint(context, x + 2, y - 10);
-        CGContextAddLineToPoint(context, x + 2, y - 6 );
-        CGContextAddLineToPoint(context, x,     y - 6 );
-        CGContextAddLineToPoint(context, x,     y - 6 );
-        CGContextClosePath(context);
-
-        if (_metering) {
-            CGContextSetFillColor(context, activeColor);
-        } else {
-            [GetRGBColor(0x000000, 0.15) set];
-        }
-
-        CGContextFillPath(context);
-    }
-
-    // Draw bar
-    {
-        NSRect leftRect, rightRect;
-
-        if (_metering) {
-            CGFloat levelX = (level * barRect.size.width);
-            if (levelX < 0) levelX = 0;
-
-            NSDivideRect(barRect, &leftRect, &rightRect, levelX, NSMinXEdge);
-        } else {
-            rightRect = leftRect = barRect;
-        }
-
-        CGFloat radius = barRect.size.height > barRect.size.width ? barRect.size.width : barRect.size.height;
-        radius /= 2;
-
-        NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundedRect:barRect xRadius:radius yRadius:radius];
-
-        [NSGraphicsContext saveGraphicsState];
-
-        [GetRGBColor(0x000000, 0.15) set];
-        [[NSBezierPath bezierPathWithRect:rightRect] addClip];
-        [roundedPath fill];
-
-        [NSGraphicsContext restoreGraphicsState];
-
-        if (_metering) {
-            [NSGraphicsContext saveGraphicsState];
-
-            CGContextSetFillColor(context, activeColor);
-            [[NSBezierPath bezierPathWithRect:leftRect] addClip];
-            [roundedPath fill];
-
-            [NSGraphicsContext restoreGraphicsState];
-        }
-    }
-        
-    // Draw overload dot
-    {
-        CGContextSaveGState(context);
-    
-        CGContextAddEllipseInRect(context, overloadRect);
-        CGContextClip(context);
-
-        [GetRGBColor(0x000000, 0.15) set];
-        CGContextFillRect(context, overloadRect);
-        
-        if (_metering) {
-            [GetRGBColor(0xff0000, _overloadLevel) set];
-            CGContextFillRect(context, overloadRect);
-        }
-
-        CGContextRestoreGState(context);
-    }
-
-    CGColorSpaceRelease(colorSpace);
+    [_boltDot     setFrame:CGRectMake(1, barY - 3, 4, 10)];
+    [_dangerBar   setFrame:barRect];
+    [_overloadDot setFrame:overloadRect];
 }
 
+
+#pragma mark - Window Listener
+
+- (void) windowDidUpdateMain:(EmbraceWindow *)window
+{
+    BOOL     isMainWindow   = [[self window] isMainWindow];
+    NSColor *activeBarColor = isMainWindow ? GetRGBColor(0x707070, 1.0) : GetRGBColor(0xA0A0A0, 1.0);
+
+    [_boltDot   setActiveColor:activeBarColor];
+    [_dangerBar setActiveColor:activeBarColor]; 
+}
+
+
+#pragma mark - Private Methods
 
 - (void) _recomputeDecayedLevel
 {
@@ -169,11 +148,20 @@
         overloadLevel = 1 - (overloadElapsed * 0.2);
     }
     
-    if ((decayedLevel != _decayedLevel) || (overloadLevel != _overloadLevel)) {
-        _decayedLevel  = decayedLevel;
-        _overloadLevel = overloadLevel;
-        [self setNeedsDisplay:YES];
-    }
+    if (overloadLevel < 0) overloadLevel = 0;
+    
+    _decayedLevel  = decayedLevel;
+    _overloadLevel = overloadLevel;
+    
+    CGFloat tintLevel = (decayedLevel * 2.0) - 1.0;
+    if (tintLevel < 0) tintLevel = 0;
+
+    [_boltDot   setPercentage:_metering ? 1.0 : 0.0];
+    [_dangerBar setPercentage:_decayedLevel];
+    [_dangerBar setTintLevel:tintLevel];
+    [_boltDot   setTintLevel:tintLevel];
+
+    [_overloadDot setTintLevel:_overloadLevel];
     
     if (_decayedLevel == 0 && _overloadLevel == 0) {
         [_timer invalidate];
@@ -184,6 +172,8 @@
     }
 }
 
+
+#pragma mark - Public Methods
 
 - (void) addDangerPeak:(Float32)dangerPeak lastOverloadTime:(NSTimeInterval)lastOverloadTime
 {
@@ -214,7 +204,7 @@
     if (_metering != metering) {
         _metering = metering;
         _decayedLevel = _dangerLevel = _dangerTime = 0;
-        [self setNeedsDisplay:YES];
+        [self _recomputeDecayedLevel];
     }
 }
 

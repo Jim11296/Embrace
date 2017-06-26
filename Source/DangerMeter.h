@@ -10,7 +10,7 @@
 
 @class Player;
 
-@interface DangerMeter : NSView
+@interface DangerMeter : NSView <EmbraceWindowListener>
 
 @property (nonatomic, getter=isMetering) BOOL metering;
 
