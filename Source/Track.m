@@ -182,6 +182,17 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 }
 
 
++ (BOOL) automaticallyNotifiesObserversForKey:(NSString *)theKey
+{
+    // Player does a setTrackStatus: in each tick
+    if ([theKey isEqualToString:@"trackStatus"]) {
+        return NO;
+    }
+
+    return [super automaticallyNotifiesObserversForKey:theKey];
+}
+
+
 - (id) _initWithUUID:(NSUUID *)UUID fileURL:(NSURL *)url bookmark:(NSData *)bookmark state:(NSDictionary *)state
 {
     if ((self = [super init])) {
@@ -751,6 +762,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 - (void) setTrackStatus:(TrackStatus)trackStatus
 {
     if (_trackStatus != trackStatus) {
+        [self willChangeValueForKey:@"trackStatus"];
+
         // Update played time for: (Queued -> Non-Queued) or (Preparing -> Playing)
         if ((_trackStatus == TrackStatusQueued    && trackStatus != TrackStatusQueued) ||
             (_trackStatus == TrackStatusPreparing && trackStatus == TrackStatusPlaying))
@@ -765,6 +778,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         _trackStatus = trackStatus;
         _dirty = YES;
         [self _saveStateImmediately:YES];
+
+        [self didChangeValueForKey:@"trackStatus"];
     }
 }
 
