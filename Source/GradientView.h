@@ -3,7 +3,7 @@
 //  Embrace
 //
 //  Created by Ricci Adams on 2016-12-10.
-//  Copyright © 2016 Ricci Adams. All rights reserved.
+//  (c) 2016-2017 Ricci Adams. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
