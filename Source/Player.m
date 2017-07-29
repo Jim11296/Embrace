@@ -1397,6 +1397,13 @@ static OSStatus sInputRenderCallback(
         FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
     }
 
+    EmbraceLog(@"Player", @"Setting ScheduleStartTimeStamp with host time: %llu, current time: %llu, delta: %lf, padding: %lf, additional: %lf",
+        (unsigned long long)startTime.mHostTime,
+        (unsigned long long)GetCurrentHostTime(),
+        GetDeltaInSecondsForHostTimes(startTime.mHostTime, GetCurrentHostTime()),
+        padding,
+        additional);
+
 	CheckError(AudioUnitSetProperty(
         _generatorAudioUnit,
         kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
