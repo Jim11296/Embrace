@@ -9,6 +9,7 @@
 #import "WrappedAudioDevice.h"
 #import "CAHALAudioDevice.h"
 #import "CAHALAudioSystemObject.h"
+#import "Utils.h"
 
 
 static NSMutableDictionary *sObjectIDToPrehoggedState = nil;
@@ -138,6 +139,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
         if (prehoggedState) {
             sSetStateDictionaryForDevice(device, prehoggedState, nil);
         }
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
 }
 
@@ -166,6 +169,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
     if ((self = [super init])) {
         try {
             _device = new CAHALAudioDevice((__bridge CFStringRef)deviceUID);
+        } catch (CAException e) {
+            EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
         } catch (...) {
             _device = NULL;
         }
@@ -201,6 +206,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
     
     try {
         transportType = _device->GetTransportType();
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return transportType;
@@ -213,6 +220,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 
     try {
         name = CFBridgingRelease(_device->CopyName());
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return name;
@@ -225,6 +234,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 
     try {
         manufacturer = CFBridgingRelease(_device->CopyManufacturer());
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return manufacturer;
@@ -239,6 +250,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
         if (_device->HasModelUID()){
             modelUID = CFBridgingRelease(_device->CopyModelUID());
         }
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return modelUID;
@@ -251,6 +264,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 
     try {
         pid = _device->GetHogModeOwner();
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
 
     return pid;
@@ -281,6 +296,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 
     try {
         result = (BOOL)_device->IsHogModeSettable();
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return result;
@@ -312,6 +329,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
                 });
             }
         }
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     if (didHog) {
@@ -350,6 +369,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
         if (_device->IsValidNominalSampleRate(rate)) {
             _device->SetNominalSampleRate(rate);
         }
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
 }
 
@@ -360,6 +381,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
 
     try {
         result = _device->GetNominalSampleRate();
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return result;
@@ -372,6 +395,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
         if (_device->IsIOBufferSizeSettable()) {
             _device->SetIOBufferSize(frameSize);
         }
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
 }
 
@@ -382,6 +407,8 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
     
     try {
         frameSize = _device->GetIOBufferSize();
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
     } catch (...) { }
     
     return frameSize;
@@ -429,6 +456,10 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
                 }
             }
         }
+
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
+
     } catch (...) { }
     
     return frameSizes;
@@ -456,6 +487,10 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
                 }
             }
         }
+
+    } catch (CAException e) {
+        EmbraceLog(@"CAException", @"%s failed: %ld", __PRETTY_FUNCTION__, (long)GetStringForFourCharCode(e.GetError()));
+    
     } catch (...) { }
     
     return sampleRates;

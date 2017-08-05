@@ -1397,12 +1397,13 @@ static OSStatus sInputRenderCallback(
         FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
     }
 
-    EmbraceLog(@"Player", @"Setting ScheduleStartTimeStamp with host time: %llu, current time: %llu, delta: %lf, padding: %lf, additional: %lf",
+    EmbraceLog(@"Player", @"Setting ScheduleStartTimeStamp with host time: %llu, current time: %llu, delta: %lf, padding: %lf, outputFrames: %lu, outputSampleRate: %lf",
         (unsigned long long)startTime.mHostTime,
         (unsigned long long)GetCurrentHostTime(),
         GetDeltaInSecondsForHostTimes(startTime.mHostTime, GetCurrentHostTime()),
         padding,
-        additional);
+        (unsigned long)_outputFrames,
+        _outputSampleRate);
 
 	CheckError(AudioUnitSetProperty(
         _generatorAudioUnit,
@@ -1655,12 +1656,16 @@ static OSStatus sInputRenderCallback(
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
 {
+    EmbraceLog(@"Player", @"updateOutputDevice:%@ sampleRate:%lf frames:%lu hogMode:%ld", self, sampleRate, (unsigned long)frames, (long)hogMode);
+    
     if (!sampleRate) {
         sampleRate = [[[[outputDevice controller] availableSampleRates] firstObject] doubleValue];
+        EmbraceLog(@"Player", @"sampleRate was 0, now it's %lf", sampleRate);
     }
 
     if (!frames) {
         frames = [[outputDevice controller] preferredAvailableFrameSize];
+        EmbraceLog(@"Player", @"frames was 0, now it's %lu", (unsigned long)frames);
     }
 
     if (_outputDevice     != outputDevice ||
