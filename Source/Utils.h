@@ -41,6 +41,9 @@ typedef NS_ENUM(NSInteger, Tonality) {
 };
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern BOOL CheckError(OSStatus error, const char *operation);
 extern BOOL CheckErrorGroup(void (^block)());
@@ -66,3 +69,8 @@ extern AppDelegate *GetAppDelegate(void);
 extern NSString *GetStringForTime(NSTimeInterval time);
 
 extern NSString *GetApplicationSupportDirectory(void);
+
+
+#ifdef __cplusplus
+}
+#endif
