@@ -42,8 +42,8 @@ static NSDictionary *sGetDefaultValues()
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
         @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
-        @"mainOutputSampleRate":  @(0),
-        @"mainOutputFrames":      @(0),
+        @"mainOutputSampleRate":  @(44100),
+        @"mainOutputFrames":      @(2048),
         @"mainOutputUsesHogMode": @(NO)
     };
     
@@ -151,6 +151,14 @@ static void sRegisterDefaults()
             }
         }
     }
+    
+    if ([defaults integerForKey:@"mainOutputSampleRate"] == 0) {
+        [defaults setInteger:44100 forKey:@"mainOutputSampleRate"];
+    }
+    
+    if ([defaults integerForKey:@"mainOutputFrames"] == 0) {
+        [defaults setInteger:2048 forKey:@"mainOutputFrames"];
+    }
 }
 
 
@@ -200,24 +208,7 @@ static void sRegisterDefaults()
 - (void) _save
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-    // Do audio device checking
-    AudioDevice *device = [self mainOutputAudioDevice];
     
-    CGFloat mainOutputSampleRate = [self mainOutputSampleRate];
-    if (![[device sampleRates] containsObject:@(mainOutputSampleRate)]) {
-        if (mainOutputSampleRate != 0) {
-            [self setMainOutputSampleRate:0];
-        }
-    }
-
-    CGFloat mainOutputFrames = [self mainOutputFrames];
-    if (![[device frameSizes] containsObject:@(mainOutputFrames)]) {
-        if (mainOutputFrames != 0) {
-            [self setMainOutputFrames:0];
-        }
-    }
-
     NSDictionary *defaultValuesDictionary = sGetDefaultValues();
     for (NSString *key in defaultValuesDictionary) {
         id defaultValue = [defaultValuesDictionary objectForKey:key];
