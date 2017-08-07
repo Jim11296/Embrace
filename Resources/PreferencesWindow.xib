@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesController">
@@ -63,6 +64,14 @@
                         </popUpButtonCell>
                         <connections>
                             <action selector="changeMainDeviceAttributes:" target="-2" id="sEt-g0-j9S"/>
+                            <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="GGd-JZ-tpH" id="I9m-Q3-2Bq">
+                                <dictionary key="options">
+                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                    <integer key="NSNullPlaceholder" value="-1"/>
+                                </dictionary>
+                            </binding>
                             <binding destination="-2" name="enabled" keyPath="self.player.playing" id="GGd-JZ-tpH">
                                 <dictionary key="options">
                                     <string key="NSValueTransformerName">NSNegateBoolean</string>
@@ -89,6 +98,14 @@
                         </popUpButtonCell>
                         <connections>
                             <action selector="changeMainDeviceAttributes:" target="-2" id="RBQ-Hx-TVH"/>
+                            <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="rVx-fz-e5a" id="rS8-xs-wEM">
+                                <dictionary key="options">
+                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                    <integer key="NSNullPlaceholder" value="-1"/>
+                                </dictionary>
+                            </binding>
                             <binding destination="-2" name="enabled" keyPath="self.player.playing" id="rVx-fz-e5a">
                                 <dictionary key="options">
                                     <string key="NSValueTransformerName">NSNegateBoolean</string>
@@ -96,7 +113,7 @@
                             </binding>
                         </connections>
                     </popUpButton>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="9ch-wM-PT9">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="9ch-wM-PT9">
                         <rect key="frame" x="257" y="55" width="53" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Frames:" id="mRd-uS-8Qk">
@@ -105,7 +122,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="nsV-nm-3cE">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="nsV-nm-3cE">
                         <rect key="frame" x="18" y="55" width="114" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sample Rate:" id="owX-qL-HNm">
@@ -114,7 +131,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="2d0-qN-s4P">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="2d0-qN-s4P">
                         <rect key="frame" x="18" y="84" width="114" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Main Output:" id="quY-b3-svF">
@@ -132,6 +149,14 @@
                         </buttonCell>
                         <connections>
                             <action selector="changeMainDeviceAttributes:" target="-2" id="Kmx-2m-iAj"/>
+                            <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="eJU-I6-aQd" id="BLs-w3-i5H">
+                                <dictionary key="options">
+                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                    <integer key="NSNullPlaceholder" value="-1"/>
+                                </dictionary>
+                            </binding>
                             <binding destination="-2" name="enabled2" keyPath="self.deviceHoggable" previousBinding="hlk-eJ-rkt" id="eJU-I6-aQd">
                                 <dictionary key="options">
                                     <integer key="NSMultipleValuesPlaceholder" value="-1"/>
@@ -147,7 +172,7 @@
                             </binding>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="i12-Ui-9PX">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="i12-Ui-9PX">
                         <rect key="frame" x="129" y="10" width="256" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to change the output device." id="O9P-Jt-MKN">

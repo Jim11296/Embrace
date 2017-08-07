@@ -276,7 +276,13 @@ static NSInteger sAutoGapMaximum = 16;
             tooltip = NSLocalizedString(@"The selected output device is not connected", nil);
         } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
             tooltip = NSLocalizedString(@"Another application is using the selected output device", nil);
-        } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
+        } else if (issue == PlayerIssueErrorConfiguringHogMode) {
+            tooltip = NSLocalizedString(@"Failed to take exclusive access to the selected output device", nil);
+        } else if (issue == PlayerIssueErrorConfiguringSampleRate) {
+            tooltip = NSLocalizedString(@"The sample rate is not valid for the selected output device", nil);
+        } else if (issue == PlayerIssueErrorConfiguringFrameSize) {
+            tooltip = NSLocalizedString(@"The number of frames is not valid for the selected output device", nil);
+        } else {
             tooltip = NSLocalizedString(@"The selected output device could not be configured", nil);
         }
 
@@ -663,7 +669,19 @@ static NSInteger sAutoGapMaximum = 16;
             informativeText = [NSString stringWithFormat:format, applicationName, deviceName];
         }
 
-    } else if (issue == PlayerIssueErrorConfiguringOutputDevice) {
+    } else if (issue == PlayerIssueErrorConfiguringHogMode) {
+        messageText = NSLocalizedString(@"Failed to take exclusive access to the output device.", nil);
+        otherButton = NSLocalizedString(@"Show Preferences", nil);
+
+    } else if (issue == PlayerIssueErrorConfiguringSampleRate) {
+        messageText = NSLocalizedString(@"The sample rate is not valid for the selected output device.", nil);
+        otherButton = NSLocalizedString(@"Show Preferences", nil);
+
+    } else if (issue == PlayerIssueErrorConfiguringFrameSize) {
+        messageText = NSLocalizedString(@"The number of frames is not valid for the selected output device.", nil);
+        otherButton = NSLocalizedString(@"Show Preferences", nil);
+
+    } else {
         messageText = NSLocalizedString(@"The selected output device could not be configured.", nil);
         otherButton = NSLocalizedString(@"Show Preferences", nil);
     }

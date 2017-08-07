@@ -68,12 +68,17 @@
     }
  
     [self _rebuildDevicesMenu];
+
+    [self setDeviceConnected:[device isConnected]];
 }
 
 
 - (void) _handleAudioDevicesDidRefresh:(NSNotification *)note
 {
     [self _rebuildDevicesMenu];
+
+    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    [self setDeviceConnected:[device isConnected]];
 }
 
 
@@ -107,6 +112,45 @@
 }
 
 
+- (NSMenuItem *) _itemWithTitle:(NSString *)title representedObject:(id)representedObject valid:(BOOL)valid useIssueImage:(BOOL)useIssueImage
+{
+    NSMenuItem *item = [[NSMenuItem alloc] init];
+
+    [item setTitle:title];
+    [item setRepresentedObject:representedObject];
+    
+    if (!valid) {
+        NSFont *font = [[self mainDevicePopUp] font];
+
+        NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+
+        NSMutableParagraphStyle *ps = nil;
+        if (!useIssueImage) {
+            [[NSParagraphStyle defaultParagraphStyle] mutableCopy]; 
+            [ps setMinimumLineHeight:18];
+            [ps setMaximumLineHeight:18];
+        }
+        
+        [attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]; 
+        if (font) [attributes setObject:font forKey:NSFontAttributeName];
+        if (ps)   [attributes setObject:ps   forKey:NSParagraphStyleAttributeName];
+
+        NSAttributedString *as = [[NSAttributedString alloc] initWithString:title attributes:attributes];
+
+        [item setAttributedTitle:as];
+
+        if (useIssueImage) {
+            [item setImage:[NSImage imageNamed:@"IssueSmall"]];
+        }
+
+    } else {
+        [item setImage:nil];
+    }
+
+    return item;
+}
+
+
 - (void) _rebuildDevicesMenu
 {
     void (^rebuild)(NSPopUpButton *, AudioDevice *) = ^(NSPopUpButton *popUpButton, AudioDevice *deviceToSelect) {
@@ -117,27 +161,11 @@
         NSMenuItem *itemToSelect = nil;
 
         for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-            NSString *name = [device name];
-            if (!name) continue;
+            NSString *title = [device name];
+            if (!title) continue;
 
-            NSMenuItem *item = [[NSMenuItem alloc] init];
-
-            [item setTitle:name];
-            [item setRepresentedObject:device];
-            
-            if (![device isConnected]) {
-                NSAttributedString *as = [[NSAttributedString alloc] initWithString:[device name] attributes:@{
-                    NSForegroundColorAttributeName: GetRGBColor(0x0, 0.5),
-                    NSFontAttributeName: [NSFont systemFontOfSize:13]
-                }];
-
-                [item setAttributedTitle:as];
-                [item setImage:[NSImage imageNamed:@"IssueSmall"]];
-
-
-            } else {
-                [item setImage:nil];
-            }
+            BOOL valid = [device isConnected];
+            NSMenuItem *item = [self _itemWithTitle:title representedObject:device valid:valid useIssueImage:YES];
             
             if ([device isEqual:deviceToSelect]) {
                 itemToSelect = item;
@@ -159,27 +187,34 @@
     NSMenu *menu = [[self sampleRatePopUp] menu];
 
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    double sampleRate = [[Preferences sharedInstance] mainOutputSampleRate];
+    NSNumber *sampleRate = @([[Preferences sharedInstance] mainOutputSampleRate]);
 
-    if (!sampleRate) {
-        sampleRate = [[[[device controller] availableSampleRates] firstObject] doubleValue];
-    }
-
+    NSArray *deviceSampleRates = [device sampleRates];
+    
     [menu removeAllItems];
 
     NSMenuItem *itemToSelect = nil;
 
-    for (NSNumber *number in [device sampleRates]) {
-        NSMenuItem *item = [[NSMenuItem alloc] init];
+    NSMutableArray *sampleRates = [deviceSampleRates mutableCopy];
+    
+    if (![sampleRates containsObject:sampleRate]) {
+        [sampleRates insertObject:sampleRate atIndex:0];
+        [sampleRates sortUsingSelector:@selector(compare:)];
+    }
 
-        [item setTitle:[NSString stringWithFormat:@"%@ Hz", number]];
-        [item setRepresentedObject:number];
+    for (NSNumber *number in sampleRates) {
+        NSString *title = [NSString stringWithFormat:@"%@ Hz", number];
         
-        if (fabs([number doubleValue] - sampleRate) < 1) {
+        BOOL valid = [deviceSampleRates containsObject:number];
+
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:number valid:valid useIssueImage:NO];
+
+        if (fabs([number doubleValue] - [sampleRate doubleValue]) < 1) {
             itemToSelect = item;
         }
         
         [menu addItem:item];
+        if (!valid) [menu addItem:[NSMenuItem separatorItem]];
     }
 
     [[self sampleRatePopUp] selectItem:itemToSelect];
@@ -191,31 +226,37 @@
     NSMenu *menu = [[self framesPopUp] menu];
     
     AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    UInt32 selectedFrames  = [[Preferences sharedInstance] mainOutputFrames];
-    UInt32 preferredFrames = [[device controller] preferredAvailableFrameSize];
-    
+    NSNumber *frameSize = @([[Preferences sharedInstance] mainOutputFrames]);
+
+    NSArray *deviceFrameSizes = [device frameSizes];
+
     [menu removeAllItems];
     
-    NSMenuItem *selectedItem  = nil;
-    NSMenuItem *preferredItem = nil;
+    NSMenuItem *itemToSelect = nil;
 
-    for (NSNumber *number in [device frameSizes]) {
-        NSMenuItem *item = [[NSMenuItem alloc] init];
+    NSMutableArray *frameSizes = [deviceFrameSizes mutableCopy];
+    
+    if (![deviceFrameSizes containsObject:frameSize]) {
+        [frameSizes addObject:frameSize];
+        [frameSizes sortUsingSelector:@selector(compare:)];
+    }
 
-        [item setTitle:[number stringValue]];
-        [item setRepresentedObject:number];
-        
-        if ([number unsignedIntegerValue] == selectedFrames) {
-            selectedItem = item;
-        }
-        if ([number unsignedIntegerValue] == preferredFrames) {
-            preferredItem = item;
+    for (NSNumber *number in frameSizes) {
+        NSString *title = [number stringValue];
+
+        BOOL valid = [deviceFrameSizes containsObject:number];
+
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:number valid:valid useIssueImage:NO];
+
+        if ([number unsignedIntegerValue] == [frameSize unsignedIntegerValue]) {
+            itemToSelect = item;
         }
         
         [menu addItem:item];
+        if (!valid) [menu addItem:[NSMenuItem separatorItem]];
     }
     
-    [[self framesPopUp] selectItem:selectedItem ? selectedItem : preferredItem];
+    [[self framesPopUp] selectItem:itemToSelect];
 }
 
 
