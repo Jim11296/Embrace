@@ -131,8 +131,6 @@ typedef struct {
     
     AudioDeviceID _listeningDeviceID;
 
-    BOOL         _tookHogMode;
-    BOOL         _hadErrorDuringReconfigure;
     BOOL         _hadChangeDuringPlayback;
 
     NSInteger    _reconnectGraph_failureCount;
@@ -202,13 +200,13 @@ typedef struct {
 {
     if (object == _outputDevice) {
         if ([keyPath isEqualToString:@"connected"]) {
-            [self _checkIssues];
-            
             if (![_outputDevice isConnected]) {
                 EmbraceLog(@"Player", @"Calling -hardStop due to %@ -isConnected returning false", _outputDevice);
 
                 [self hardStop];
             }
+
+            [self _reconfigureOutput];
         }
     }
 }
@@ -1130,39 +1128,8 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) _checkIssues
+- (void) _reconfigureOutput_attempt
 {
-    EmbraceLogMethod();
-
-    PlayerIssue issue = PlayerIssueNone;
-    
-    BOOL isHogged = [[_outputDevice controller] isHoggedByAnotherProcess];
-    
-    if (![_outputDevice isConnected]) {
-        issue = PlayerIssueDeviceMissing;
-    } else if (isHogged || (_outputHogMode && !_tookHogMode)) {
-        issue = PlayerIssueDeviceHoggedByOtherProcess;
-    } else if (_hadErrorDuringReconfigure) {
-        issue = PlayerIssueErrorConfiguringOutputDevice;
-    }
-
-    if (issue != _issue) {
-        EmbraceLog(@"Player", @"issue is %ld", (long) issue);
-
-        [self setIssue:issue];
-
-        for (id<PlayerListener> listener in _listeners) {
-            [listener player:self didUpdateIssue:issue];
-        }
-    }
-}
-
-
-
-- (void) _reconfigureOutput
-{
-    EmbraceLogMethod();
-
     // Properties that we will listen for
     //
     AudioObjectPropertyAddress overloadPropertyAddress   = { kAudioDeviceProcessorOverload,           kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
@@ -1184,11 +1151,31 @@ static OSStatus sInputRenderCallback(
         _listeningDeviceID = 0;
     }
 
+    __block BOOL ok = YES;
+    __block PlayerIssue issue = PlayerIssueNone;
+    
+    void (^raiseIssue)(PlayerIssue) = ^(PlayerIssue i) {
+        if (issue == PlayerIssueNone) issue = i;
+        ok = NO;
+    };
+    
+    void (^checkError)(OSStatus error, const char *operation) = ^(OSStatus error, const char *operation) {
+        if (ok && !CheckError(error, operation)) {
+            raiseIssue(PlayerIssueErrorConfiguringOutputDevice);
+        }
+    };
+   
+    if (![_outputDevice isConnected]) {
+        raiseIssue(PlayerIssueDeviceMissing);
+
+    } else if ([[_outputDevice controller] isHoggedByAnotherProcess]) {
+        raiseIssue(PlayerIssueDeviceHoggedByOtherProcess);
+    }
+
     Boolean isRunning = 0;
     AUGraphIsRunning(_graph, &isRunning);
     
-    _hadErrorDuringReconfigure = NO;
-    _hadChangeDuringPlayback   = NO;
+    _hadChangeDuringPlayback = NO;
     
     if (isRunning) AUGraphStop(_graph);
     
@@ -1209,33 +1196,50 @@ static OSStatus sInputRenderCallback(
     WrappedAudioDevice *controller = [_outputDevice controller];
     AudioDeviceID deviceID = [controller objectID];
     
-    if ([_outputDevice isConnected] && ![controller isHoggedByAnotherProcess]) {
+    if (ok) {
         [controller setNominalSampleRate:_outputSampleRate];
+
+        if (!_outputSampleRate || ([controller nominalSampleRate] != _outputSampleRate)) {
+            raiseIssue(PlayerIssueErrorConfiguringSampleRate);
+        }
+    }
+
+    if (ok) {
         [controller setFrameSize:_outputFrames];
 
+        if (!_outputFrames || ([controller frameSize] != _outputFrames)) {
+            raiseIssue(PlayerIssueErrorConfiguringFrameSize);
+        }
+    }
+
+    if (ok) {
         if (_outputHogMode) {
-            _tookHogMode = [controller takeHogMode];
-            EmbraceLog(@"Player", @"-takeHogMode returned %ld", (long)_tookHogMode);
+            if ([controller takeHogMode]) {
+                EmbraceLog(@"Player", @"_outputHogMode is YES, took hog mode.");
+
+            } else {
+                EmbraceLog(@"Player", @"-_outputHogMode is YES, but FAILED to take hog mode.");
+                raiseIssue(PlayerIssueErrorConfiguringHogMode);
+            }
+
         } else {
             EmbraceLog(@"Player", @"_outputHogMode is NO, not taking hog mode");
         }
-
-        if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
+    }
+    
+    if (ok) {
+        checkError(AudioUnitSetProperty(_outputAudioUnit,
             kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0,
             &_outputFrames,
             sizeof(_outputFrames)
-        ), "AudioUnitSetProperty[kAudioDevicePropertyBufferFrameSize]")) {
-            _hadErrorDuringReconfigure = YES;
-        }
+        ), "AudioUnitSetProperty[kAudioDevicePropertyBufferFrameSize]");
 
-        if (!CheckError(AudioUnitSetProperty(_outputAudioUnit,
+        checkError(AudioUnitSetProperty(_outputAudioUnit,
             kAudioOutputUnitProperty_CurrentDevice,
             kAudioUnitScope_Global,
             0,
             &deviceID, sizeof(deviceID)
-        ), "AudioUnitSetProperty[CurrentDevice]")) {
-            _hadErrorDuringReconfigure = YES;
-        }
+        ), "AudioUnitSetProperty[CurrentDevice]");
 
         // Register for new listeners
         //
@@ -1254,13 +1258,11 @@ static OSStatus sInputRenderCallback(
     UInt32 maxFrames;
     UInt32 maxFramesSize = sizeof(maxFrames);
     
-    if (!CheckError(AudioUnitGetProperty(
+    checkError(AudioUnitGetProperty(
         _outputAudioUnit,
         kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
         &maxFrames, &maxFramesSize
-    ), "AudioUnitGetProperty[MaximumFramesPerSlice]")) {
-        _hadErrorDuringReconfigure = YES;
-    }
+    ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
     
     [self _iterateGraphAudioUnits:^(AudioUnit unit) {
         Float64 inputSampleRate  = _outputSampleRate;
@@ -1271,51 +1273,63 @@ static OSStatus sInputRenderCallback(
         }
         
         if (inputSampleRate) {
-            if (!CheckError(AudioUnitSetProperty(
+            checkError(AudioUnitSetProperty(
                 unit,
                 kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0,
                 &inputSampleRate, sizeof(inputSampleRate)
-            ), "AudioUnitSetProperty[ SampleRate, Input ]")) {
-                _hadErrorDuringReconfigure = YES;
-            }
+            ), "AudioUnitSetProperty[ SampleRate, Input ]");
         }
 
         if (outputSampleRate) {
-            if (!CheckError(AudioUnitSetProperty(
+            checkError(AudioUnitSetProperty(
                 unit,
                 kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0,
                 &outputSampleRate, sizeof(outputSampleRate)
-            ), "AudioUnitSetProperty[ SampleRate, Output ]")) {
-                _hadErrorDuringReconfigure = YES;
-            }
+            ), "AudioUnitSetProperty[ SampleRate, Output ]");
         }
 
-        if (!CheckError(AudioUnitSetProperty(
+        checkError(AudioUnitSetProperty(
             unit,
             kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
             &maxFrames, maxFramesSize
-        ), "AudioUnitSetProperty[MaximumFramesPerSlice]")) {
-            _hadErrorDuringReconfigure = YES;
-        }
+        ), "AudioUnitSetProperty[MaximumFramesPerSlice]");
     }];
 
-    if (!CheckError(AUGraphInitialize(_graph), "AUGraphInitialize")) {
-        _hadErrorDuringReconfigure = YES;
+    checkError(AUGraphInitialize(_graph), "AUGraphInitialize");
+
+    if (ok) {
+        [self _reconnectGraph];
+
+        if (isRunning) {
+            [self _startGraph];
+        }
+    }
+   
+    if (issue != _issue) {
+        EmbraceLog(@"Player", @"issue is %ld", (long) issue);
+
+        [self setIssue:issue];
+
+        for (id<PlayerListener> listener in _listeners) {
+            [listener player:self didUpdateIssue:issue];
+        }
     }
 
-    [self _reconnectGraph];
-
-    if (isRunning) {
-        [self _startGraph];
+    if (issue == PlayerIssueNone) {
+        EmbraceLog(@"Player", @"_reconfigureOutput successful");
+    } else {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reconfigureOutput_attempt) object:nil];
+        [self performSelector:@selector(_reconfigureOutput_attempt) withObject:nil afterDelay:1];
     }
+}
 
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reconfigureOutput) object:nil];
-    
-    [self _checkIssues];
-    
-    if (_issue != PlayerIssueNone) {
-        [self performSelector:@selector(_reconfigureOutput) withObject:nil afterDelay:1];
-    }
+
+- (void) _reconfigureOutput
+{
+    EmbraceLogMethod();
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reconfigureOutput_attempt) object:nil];
+    [self _reconfigureOutput_attempt];
 }
 
 
@@ -1385,7 +1399,7 @@ static OSStatus sInputRenderCallback(
     }
 
 	AudioTimeStamp startTime = {0};
-    NSTimeInterval additional = _outputFrames / _outputSampleRate;
+    NSTimeInterval additional = _outputSampleRate ? (_outputFrames / _outputSampleRate) : 0;
 
     EmergencyLimiterSetSampleRate(_emergencyLimiter, _outputSampleRate);
 
@@ -1657,16 +1671,6 @@ static OSStatus sInputRenderCallback(
                     hogMode: (BOOL) hogMode
 {
     EmbraceLog(@"Player", @"updateOutputDevice:%@ sampleRate:%lf frames:%lu hogMode:%ld", self, sampleRate, (unsigned long)frames, (long)hogMode);
-    
-    if (!sampleRate) {
-        sampleRate = [[[[outputDevice controller] availableSampleRates] firstObject] doubleValue];
-        EmbraceLog(@"Player", @"sampleRate was 0, now it's %lf", sampleRate);
-    }
-
-    if (!frames) {
-        frames = [[outputDevice controller] preferredAvailableFrameSize];
-        EmbraceLog(@"Player", @"frames was 0, now it's %lu", (unsigned long)frames);
-    }
 
     if (_outputDevice     != outputDevice ||
         _outputSampleRate != sampleRate   ||
@@ -1685,7 +1689,6 @@ static OSStatus sInputRenderCallback(
         _outputHogMode = hogMode;
 
         [self _reconfigureOutput];
-        [self _checkIssues];
     }
 }
 

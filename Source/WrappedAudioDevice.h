@@ -33,8 +33,6 @@
 @property (nonatomic) double nominalSampleRate;
 @property (nonatomic) UInt32 frameSize;
 
-- (UInt32) preferredAvailableFrameSize;
-
 @property (nonatomic, readonly) NSArray *availableFrameSizes;
 @property (nonatomic, readonly) NSArray *availableSampleRates;
 

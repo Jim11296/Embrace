@@ -15,6 +15,9 @@ typedef NS_ENUM(NSInteger, PlayerIssue) {
     PlayerIssueNone = 0,
     PlayerIssueDeviceMissing,
     PlayerIssueDeviceHoggedByOtherProcess,
+    PlayerIssueErrorConfiguringSampleRate,
+    PlayerIssueErrorConfiguringFrameSize,
+    PlayerIssueErrorConfiguringHogMode,
     PlayerIssueErrorConfiguringOutputDevice
 };
 
