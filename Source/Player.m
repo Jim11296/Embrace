@@ -1022,35 +1022,35 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) _iterateGraphNodes:(void (^)(AUNode))callback
+- (void) _iterateGraphNodes:(void (^)(AUNode, NSString *))callback
 {
-    if (_generatorNode) callback(_generatorNode);
-    if (_converterNode) callback(_converterNode);
-    if (_stereoNode)    callback(_stereoNode);
-    callback(_limiterNode);
+    if (_generatorNode) callback(_generatorNode, @"Generator");
+    if (_converterNode) callback(_converterNode, @"Converter");
+    if (_stereoNode)    callback(_stereoNode,    @"Stereo");
+    callback(_limiterNode, @"Limiter");
     
     for (Effect *effect in _effects) {
         NSValue  *key        = [NSValue valueWithNonretainedObject:effect];
         NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
 
         if (!nodeNumber) continue;
-        callback([nodeNumber intValue]);
+        callback([nodeNumber intValue], [[effect type] name]);
     }
 
-    callback(_mixerNode);
-    callback(_outputNode);
+    callback(_mixerNode,  @"Mixer");
+    callback(_outputNode, @"Output");
 }
 
 
-- (void) _iterateGraphAudioUnits:(void (^)(AudioUnit))callback
+- (void) _iterateGraphAudioUnits:(void (^)(AudioUnit, NSString *))callback
 {
-    [self _iterateGraphNodes:^(AUNode node) {
+    [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
         AudioComponentDescription acd;
         AudioUnit audioUnit;
 
         AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
 
-        callback(audioUnit);
+        callback(audioUnit, unitString);
     }];
 }
 
@@ -1080,7 +1080,7 @@ static OSStatus sInputRenderCallback(
             return NO;
         }
         
-        [self _iterateGraphNodes:^(AUNode node) {
+        [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
             if (lastNode && (node != _limiterNode)) {
                 if (!CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput")) {
                     didConnectAll = NO;
@@ -1159,9 +1159,17 @@ static OSStatus sInputRenderCallback(
         ok = NO;
     };
     
-    void (^checkError)(OSStatus error, const char *operation) = ^(OSStatus error, const char *operation) {
-        if (ok && !CheckError(error, operation)) {
-            raiseIssue(PlayerIssueErrorConfiguringOutputDevice);
+    void (^checkError)(OSStatus, NSString *, NSString *) = ^(OSStatus error, NSString *formatString, NSString *unitString) {
+        if (ok) {
+            const char *errorString = NULL;
+
+            if (error != noErr) {
+                errorString = [[NSString stringWithFormat:formatString, unitString] UTF8String];
+            }
+
+            if (!CheckError(error, errorString)) {
+                raiseIssue(PlayerIssueErrorConfiguringOutputDevice);
+            }
         }
     };
    
@@ -1232,14 +1240,14 @@ static OSStatus sInputRenderCallback(
             kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0,
             &_outputFrames,
             sizeof(_outputFrames)
-        ), "AudioUnitSetProperty[kAudioDevicePropertyBufferFrameSize]");
+        ), @"AudioUnitSetProperty[ Output, kAudioDevicePropertyBufferFrameSize]", nil);
 
         checkError(AudioUnitSetProperty(_outputAudioUnit,
             kAudioOutputUnitProperty_CurrentDevice,
             kAudioUnitScope_Global,
             0,
             &deviceID, sizeof(deviceID)
-        ), "AudioUnitSetProperty[CurrentDevice]");
+        ), @"AudioUnitSetProperty[ Output, CurrentDevice]", nil);
 
         // Register for new listeners
         //
@@ -1262,9 +1270,11 @@ static OSStatus sInputRenderCallback(
         _outputAudioUnit,
         kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
         &maxFrames, &maxFramesSize
-    ), "AudioUnitGetProperty[MaximumFramesPerSlice]");
+    ), @"AudioUnitGetProperty[ Output, MaximumFramesPerSlice ]", nil);
     
-    [self _iterateGraphAudioUnits:^(AudioUnit unit) {
+    EmbraceLog(@"Player", @"Configuring audio units with %lf sample rate, %ld frame size", _outputSampleRate, (long)maxFrames);
+    
+    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
         Float64 inputSampleRate  = _outputSampleRate;
         Float64 outputSampleRate = _outputSampleRate;
 
@@ -1277,7 +1287,7 @@ static OSStatus sInputRenderCallback(
                 unit,
                 kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0,
                 &inputSampleRate, sizeof(inputSampleRate)
-            ), "AudioUnitSetProperty[ SampleRate, Input ]");
+            ), @"AudioUnitSetProperty[ %@, SampleRate, Input ]", unitString);
         }
 
         if (outputSampleRate) {
@@ -1285,17 +1295,17 @@ static OSStatus sInputRenderCallback(
                 unit,
                 kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0,
                 &outputSampleRate, sizeof(outputSampleRate)
-            ), "AudioUnitSetProperty[ SampleRate, Output ]");
+            ), @"AudioUnitSetProperty[ %@, SampleRate, Output ]", unitString);
         }
 
         checkError(AudioUnitSetProperty(
             unit,
             kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
             &maxFrames, maxFramesSize
-        ), "AudioUnitSetProperty[MaximumFramesPerSlice]");
+        ), @"AudioUnitSetProperty[ %@, MaximumFramesPerSlice ]", unitString);
     }];
 
-    checkError(AUGraphInitialize(_graph), "AUGraphInitialize");
+    checkError(AUGraphInitialize(_graph), @"AUGraphInitialize", nil);
 
     if (ok) {
         [self _reconnectGraph];
@@ -1630,11 +1640,12 @@ static OSStatus sInputRenderCallback(
         [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:30];
     }
 
-    [self _iterateGraphAudioUnits:^(AudioUnit unit) {
-        CheckError(
-            AudioUnitReset(unit, kAudioUnitScope_Global, 0),
-            "AudioUnitReset"
-        );
+    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
+        OSStatus err = AudioUnitReset(unit, kAudioUnitScope_Global, 0);
+        
+        if (err != noErr) {
+            CheckError(err, [[NSString stringWithFormat:@"%@, AudioUnitReset", unitString] UTF8String]);
+        }
     }];
 
     [_currentScheduler stopScheduling:_generatorAudioUnit];
