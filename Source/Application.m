@@ -9,6 +9,8 @@
 #import "Application.h"
 #import "AppDelegate.h"
 #import "SetlistController.h"
+#import "Preferences.h"
+
 
 @implementation Application {
     NSHashTable   *_eventListeners;
@@ -82,7 +84,15 @@
 
         [[GetAppDelegate() setlistController] handleNonSpaceKeyDown];
     }
-    
+
+    if (eventType == NSRightMouseDown) {
+        if (![NSApp isActive] && [[Preferences sharedInstance] floatsOnTop]) {
+            [NSApp activateIgnoringOtherApps:YES];
+            [self performSelector:@selector(sendEvent:) withObject:event afterDelay:0];
+            return;
+        }
+    }
+
     [super sendEvent:event];
 }
 
