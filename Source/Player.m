@@ -1278,7 +1278,10 @@ static OSStatus sInputRenderCallback(
         Float64 inputSampleRate  = _outputSampleRate;
         Float64 outputSampleRate = _outputSampleRate;
 
-        if (unit == _outputAudioUnit) {
+        if (unit == _generatorAudioUnit) {
+            inputSampleRate = 0;
+
+        } else if (unit == _outputAudioUnit) {
             outputSampleRate = 0;
         }
         
