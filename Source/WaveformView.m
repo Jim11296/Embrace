@@ -56,6 +56,8 @@
 {
     [super viewDidMoveToWindow];
     
+    [self _inheritContentsScaleFromWindow:[self window]];
+
     [_activeLayer setNeedsDisplay];
     [_inactiveLayer setNeedsDisplay];
 }
@@ -94,13 +96,22 @@
 
 - (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
-    [_inactiveLayer setContentsScale:newScale];
-    [_activeLayer   setContentsScale:newScale];
-
-    [_inactiveLayer setNeedsDisplay];
-    [_activeLayer   setNeedsDisplay];
-
+    [self _inheritContentsScaleFromWindow:window];
     return YES;
+}
+
+
+- (void) _inheritContentsScaleFromWindow:(NSWindow *)window
+{
+    CGFloat contentsScale = [window backingScaleFactor];
+
+    if (contentsScale) {
+        [_inactiveLayer setContentsScale:contentsScale];
+        [_activeLayer   setContentsScale:contentsScale];
+
+        [_inactiveLayer setNeedsDisplay];
+        [_activeLayer   setNeedsDisplay];
+    }
 }
 
 

@@ -1,7 +1,7 @@
-SDKROOT = macosx10.12
+SDKROOT = macosx10.13
 MACOSX_DEPLOYMENT_TARGET = 10.10
 
-CODE_SIGN_IDENTITY = Developer ID Application: Ricci Adams (XXXXXXXXXX)
+CODE_SIGN_IDENTITY = Developer ID Application: Ricci Adams
 
 CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
 CLANG_CXX_LIBRARY = libc++

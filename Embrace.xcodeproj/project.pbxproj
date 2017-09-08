@@ -1438,7 +1438,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1466,7 +1466,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1494,7 +1494,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1528,9 +1528,10 @@
 			baseConfigurationReference = 55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
+				DEVELOPMENT_TEAM = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1543,7 +1544,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1559,10 +1560,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=*]" = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1578,10 +1578,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					<redacted>,
+					$PROJECT_DIR/lib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
