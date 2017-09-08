@@ -156,7 +156,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
-- (void) draggingEnded:(nullable id <NSDraggingInfo>)sender
+- (void) draggingEnded:(id <NSDraggingInfo>)sender
 {
     if ([[NSTableView class] instancesRespondToSelector:@selector(draggingEnded:)]) {
         [super draggingEnded:sender];

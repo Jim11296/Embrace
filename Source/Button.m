@@ -352,6 +352,12 @@ static CGFloat sBorderLayerPadding = 2;
 }
 
 
+- (void) viewDidMoveToWindow
+{
+    [self _updateMainLayerContentsWithScale:[[self window] backingScaleFactor]];
+}
+
+
 - (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
     if (layer == _mainLayer) {
@@ -459,6 +465,17 @@ static CGFloat sBorderLayerPadding = 2;
 }
 
 
+- (void) _inheritContentsScaleFromWindow:(NSWindow *)window
+{
+    CGFloat scale = [window backingScaleFactor];
+    
+    if (scale) {
+        [_mainLayer setContentsScale:scale];
+        [_auxLayer  setContentsScale:scale];
+    }
+}
+
+
 - (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
 {
     if (layer == _mainLayer) {
@@ -470,11 +487,16 @@ static CGFloat sBorderLayerPadding = 2;
 }
 
 
+- (void) viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [self _inheritContentsScaleFromWindow:[self window]];
+}
+
+
 - (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
-    [_mainLayer setContentsScale:newScale];
-    [_auxLayer  setContentsScale:newScale];
-
+    [self _inheritContentsScaleFromWindow:window];
     return YES;
 }
 

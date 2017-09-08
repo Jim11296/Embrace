@@ -131,10 +131,18 @@
 }
 
 
+- (void) viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [self _inheritContentsScaleFromWindow:[self window]];
+}
+
+
 #pragma mark - CALayer Delegate
 
 - (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
 {
+    [self _inheritContentsScaleFromWindow:window];
     return (layer == _leftCapLayer || layer == _rightCapLayer);
 }
 
@@ -177,6 +185,17 @@
 
 
 #pragma mark - Private Methods
+
+- (void) _inheritContentsScaleFromWindow:(NSWindow *)window
+{
+    CGFloat contentsScale = [window backingScaleFactor];
+
+    if (contentsScale) {
+        [_leftCapLayer setContentsScale:contentsScale];
+        [_rightCapLayer setContentsScale:contentsScale];
+    }
+}
+
 
 - (void) _updateFillColor
 {
