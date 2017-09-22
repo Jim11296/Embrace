@@ -331,13 +331,15 @@ static NSInteger sGetYear(NSString *yearString)
     };
 
     if (err == noErr) {
-        transfer( kAFInfoDictionary_Album,    TrackKeyAlbum    );
-        transfer( kAFInfoDictionary_Artist,   TrackKeyArtist   );
-        transfer( kAFInfoDictionary_Composer, TrackKeyComposer );
-        transfer( kAFInfoDictionary_Comments, TrackKeyComments );
-        transfer( kAFInfoDictionary_Genre,    TrackKeyGenre    );
-        transfer( kAFInfoDictionary_Title,    TrackKeyTitle    );
-        transfer( kAFInfoDictionary_Year,     TrackKeyYear     );
+        transfer( kAFInfoDictionary_Album,        TrackKeyAlbum      );
+        transfer( kAFInfoDictionary_Artist,       TrackKeyArtist     );
+        transfer( kAFInfoDictionary_Composer,     TrackKeyComposer   );
+        transfer( kAFInfoDictionary_Comments,     TrackKeyComments   );
+        transfer( kAFInfoDictionary_KeySignature, TrackKeyInitialKey );
+        transfer( kAFInfoDictionary_Genre,        TrackKeyGenre      );
+        transfer( kAFInfoDictionary_Tempo,        TrackKeyBPM        );
+        transfer( kAFInfoDictionary_Title,        TrackKeyTitle      );
+        transfer( kAFInfoDictionary_Year,         TrackKeyYear       );
     }
 
     if (extAudioFile) ExtAudioFileDispose(extAudioFile);
