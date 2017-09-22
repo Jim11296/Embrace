@@ -204,9 +204,13 @@ typedef struct {
                 EmbraceLog(@"Player", @"Calling -hardStop due to %@ -isConnected returning false", _outputDevice);
 
                 [self hardStop];
-            }
+                [self _reconfigureOutput];
 
-            [self _reconfigureOutput];
+            } else {
+                if (![self isPlaying]) {
+                    [self _reconfigureOutput];
+                }
+            }
         }
     }
 }

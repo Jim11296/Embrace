@@ -174,8 +174,11 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
             defaultOutputDevice = device;
         }
 
-        [device setConnected:YES];
-        
+        // Player uses KVO to observe this, don't set it to YES unless it's currently NO
+        if (![device isConnected]) {
+            [device setConnected:YES];
+        }
+
         if (device) {
             [devices addObject:device];
             [map setObject:device forKey:deviceUID];
