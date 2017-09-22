@@ -360,16 +360,17 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     if (object == _observedObject) {
     
         if ([keyPath isEqualToString:@"trackStatus"]) {
+            [self _updateSpeakerImage];
+            [self _updateFieldColors];
             
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *ac) {
-                [ac setAllowsImplicitAnimation:YES];
-                [ac setDuration:0.35];
-                [self _updateSpeakerIcon];
-                
-                [self layoutSubtreeIfNeeded];
+                [ac setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
+                [ac setDuration:0.25];
+                [self _updateSpeakerIconAnimated:YES];
             } completionHandler:nil];
 
-            [self _updateView];
+        } else if ([keyPath isEqualToString:@"estimatedEndTime"]) {
+            [self _updateFieldStrings];
 
         } else if ([_observedKeyPaths containsObject:keyPath]) {
             [self _updateView];
@@ -533,7 +534,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     }
 
     [self _updateErrorButton];
-    [self _updateSpeakerIcon];
+    [self _updateSpeakerIconAnimated:NO];
     [self _adjustConstraintsForLineLayout];
 
     // Update constraints
@@ -560,7 +561,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
-- (void) _updateSpeakerIcon
+- (void) _updateSpeakerIconAnimated:(BOOL)animated
 {
     TrackStatus trackStatus = [[self track] trackStatus];
     BOOL        isPlaying   = (trackStatus == TrackStatusPlaying);
@@ -569,8 +570,13 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         isPlaying = NO;
     }
     
-    [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
-    [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+    if (animated) {
+        [[_speakerLeftConstraint animator] setConstant:(  isPlaying ? 4.0 : -18.0)];
+        [[_speakerImageView      animator] setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+    } else {
+        [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
+        [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+    }
 }
 
 

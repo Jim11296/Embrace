@@ -128,6 +128,14 @@ static void sRegisterDefaults()
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
+    if ([defaults integerForKey:@"mainOutputSampleRate"] == 0) {
+        [defaults setInteger:44100 forKey:@"mainOutputSampleRate"];
+    }
+    
+    if ([defaults integerForKey:@"mainOutputFrames"] == 0) {
+        [defaults setInteger:2048 forKey:@"mainOutputFrames"];
+    }
+
     NSDictionary *defaultValuesDictionary = sGetDefaultValues();
     for (NSString *key in defaultValuesDictionary) {
         id defaultValue = [defaultValuesDictionary objectForKey:key];
@@ -150,14 +158,6 @@ static void sRegisterDefaults()
                 if (device) [self setValue:device forKey:key];
             }
         }
-    }
-    
-    if ([defaults integerForKey:@"mainOutputSampleRate"] == 0) {
-        [defaults setInteger:44100 forKey:@"mainOutputSampleRate"];
-    }
-    
-    if ([defaults integerForKey:@"mainOutputFrames"] == 0) {
-        [defaults setInteger:2048 forKey:@"mainOutputFrames"];
     }
 }
 
