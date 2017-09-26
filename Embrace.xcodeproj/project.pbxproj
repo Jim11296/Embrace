@@ -274,7 +274,6 @@
 		556ACE34187BB43A00AED4BC /* WrappedUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedUtils.h; path = Source/WrappedUtils.h; sourceTree = "<group>"; };
 		556ACE35187BB43A00AED4BC /* WrappedUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedUtils.mm; path = Source/WrappedUtils.mm; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		55708C9F18B8A98E0059110C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
 		55708CC018B97ADB0059110C /* CrashPadClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashPadClient.h; path = Source/CrashPadClient.h; sourceTree = SOURCE_ROOT; };
 		55708CC118B97ADB0059110C /* CrashPadClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPadClient.m; path = Source/CrashPadClient.m; sourceTree = SOURCE_ROOT; };
@@ -564,7 +563,6 @@
 				55708CB618B8AA220059110C /* CrashPad_main.m */,
 			);
 			name = "Crash Pad";
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		557C2C3B18974031002FAFEA /* Public Utility */ = {
@@ -686,7 +684,6 @@
 				55F3B7B71877953D00E8FEC8 /* AVKit.framework */,
 				558DC082187785BC00C85770 /* Cocoa.framework */,
 				55F3B7C318779B0100E8FEC8 /* Foundation.framework */,
-				55708C9F18B8A98E0059110C /* XCTest.framework */,
 				558DC084187785BC00C85770 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -735,7 +732,6 @@
 				553DE142189F107100A355D1 /* ViewTrackController.m */,
 			);
 			name = Controller;
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		558DC089187785BC00C85770 /* Resources */ = {
@@ -761,7 +757,6 @@
 				553DE144189F10D600A355D1 /* ViewTrackWindow.xib */,
 			);
 			name = Resources;
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		55A0B16E1890A80400866F04 /* Test Sounds */ = {
@@ -840,7 +835,6 @@
 				558DC0B8187785F200C85770 /* main.m */,
 			);
 			name = "Other Sources";
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		55BC0B1E1878D8B700D84481 /* View */ = {
@@ -894,7 +888,6 @@
 				557C2C7419138994004A6364 /* TrialBottomView.m */,
 			);
 			name = View;
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		55CF2797187A3DD50042C92A /* iTunes */ = {
