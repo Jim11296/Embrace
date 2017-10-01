@@ -236,12 +236,14 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
 @end
 
 
+static WorkerDelegate *sWorkerDelegate = nil;
+
 int main(int argc, const char *argv[])
 {
-    WorkerDelegate *delegate = [[WorkerDelegate alloc] init];
+    sWorkerDelegate = [[WorkerDelegate alloc] init];
     
     NSXPCListener *listener = [NSXPCListener serviceListener];
-    [listener setDelegate:delegate];
+    [listener setDelegate:sWorkerDelegate];
     
     [listener resume];
 

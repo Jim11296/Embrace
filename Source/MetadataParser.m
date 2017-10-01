@@ -42,6 +42,17 @@ static NSString *sGetStringForFourCharCodeObject(id object)
 #endif
 
 
+// This is used to construct a fake MP3 file for AIFF fallback parsing
+static const UInt8 sFakeMP3Data[] = {
+    0xFF, 0xF3, 0x14, 0xC4, 0x00, 0x00, 0x00, 0x03,
+    0x48, 0x01, 0x40, 0x00, 0x00, 0x4C, 0x41, 0x4D,
+    0x45, 0x33, 0x2E, 0x39, 0x36, 0x2E, 0x31, 0x55,
+    0xFF, 0xF3, 0x14, 0xC4, 0x0B, 0x00, 0x00, 0x03,
+    0x48, 0x01, 0x80, 0x00, 0x00, 0x55, 0x55, 0x55,
+    0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55
+};
+
+
 static const char *sGenreList[128] = {
     "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop", "Jazz", "Metal",
     "New Age", "Oldies", "Other", "Pop", "R&B", "Rap", "Reggae", "Rock", "Techno", "Industrial",
@@ -91,7 +102,9 @@ static NSInteger sGetYear(NSString *yearString)
 }
 
 
-- (void) _parseUsingAVFoundation
+#pragma mark - System Parsers
+
+- (void) _parseUsingAVAsset:(AVAsset *)asset intoDictionary:(NSMutableDictionary *)intoDictionary
 {
     void (^parseMetadataItem)(AVMetadataItem *, NSMutableDictionary *) = ^(AVMetadataItem *item, NSMutableDictionary *dictionary) {
         id commonKey = [item commonKey];
@@ -270,30 +283,34 @@ static NSInteger sGetYear(NSString *yearString)
         }
     };
 
-
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:_URL options:nil];
-
     NSArray *commonMetadata = [asset commonMetadata];
 
     for (AVMetadataItem *item in commonMetadata) {
-        parseMetadataItem(item, _metadata);
+        parseMetadataItem(item, intoDictionary);
     }
 
     for (NSString *format in [asset availableMetadataFormats]) {
         NSArray *metadata = [asset metadataForFormat:format];
     
         for (AVMetadataItem *item in metadata) {
-            parseMetadataItem(item, _metadata);
+            parseMetadataItem(item, intoDictionary);
         }
     }
-
-    NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
-    [_metadata setObject:@(duration) forKey:TrackKeyDuration];
 
     [asset cancelLoading];
     asset = nil;
 }
 
+
+- (void) _parseUsingAVFoundation
+{
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:_URL options:nil];
+    if (asset) [self _parseUsingAVAsset:asset intoDictionary:_metadata];
+
+	NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
+    [_metadata setObject:@(duration) forKey:TrackKeyDuration];
+
+}
 
 - (void) _parseUsingAudioToolbox
 {
@@ -342,9 +359,76 @@ static NSInteger sGetYear(NSString *yearString)
         transfer( kAFInfoDictionary_Year,         TrackKeyYear       );
     }
 
+    if (audioInfo) {
+        CFRelease(audioInfo);
+    }
+
     if (extAudioFile) ExtAudioFileDispose(extAudioFile);
 }
 
+
+#pragma mark - Custom Parsers
+
+- (void) _parseID3WithBytes:(const UInt8 *)bytes length:(NSUInteger)length
+{
+    NSMutableData *id3Data = [NSMutableData dataWithBytes:bytes length:length];
+
+    for (NSInteger j = 0; j < 16; j++) {
+        [id3Data appendBytes:&sFakeMP3Data length:sizeof(sFakeMP3Data)];
+    }
+
+    NSURL *tempURL = [NSURL fileURLWithPath:NSTemporaryDirectory()];
+    tempURL = [tempURL URLByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+    tempURL = [tempURL URLByAppendingPathExtension:@"mp3"];
+
+    NSError *error = nil;
+    
+    if ([id3Data writeToURL:tempURL options:NSDataWritingAtomic error:&error]) {
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:tempURL options:nil];
+        if (asset) [self _parseUsingAVAsset:asset intoDictionary:_metadata];
+
+        [[NSFileManager defaultManager] removeItemAtURL:tempURL error:&error];
+    }
+}
+
+
+- (void) _parseAIFFWithBytes:(const UInt8 *)bytes length:(NSUInteger)length
+{
+    NSInteger i = 0;
+    
+    while ((i + 8) <= length) {
+        OSType chunkID = OSSwapBigToHostInt(*(OSType *)(bytes + i));
+        i += 4;
+        
+        SInt32 chunkSize = OSSwapBigToHostInt(*(SInt32 *)(bytes + i));
+        i += 4;
+
+        if (chunkID == 'ID3 ' && ((i + chunkSize) <= length)) {
+            [self _parseID3WithBytes:(bytes + i) length:chunkSize];
+        }
+
+        i += chunkSize;
+    }
+}
+
+
+- (void) _parseUsingCustomParsers
+{
+    NSData *data = [NSData dataWithContentsOfURL:_URL];
+    
+    const char *bytes  = [data bytes];
+    NSUInteger  length = [data length];
+
+    if (length > 12 &&
+        strncmp(bytes + 0, "FORM", 4) == 0 &&
+        strncmp(bytes + 8, "AIF",  3) == 0)
+    {
+        [self _parseAIFFWithBytes:(const UInt8 *)(bytes + 12) length:(length - 12)];
+    }
+}
+
+
+#pragma mark - Public Methods
 
 - (NSDictionary *) metadata
 {
@@ -358,9 +442,11 @@ static NSInteger sGetYear(NSString *yearString)
 
         // _parseUsingAVFoundation should always add 'duration' and we previously
         // added 'title'. If these are our only keys, parse again with AudioToolbox
+        // and also try our custom parsing code
         //
         if ([_metadata count] <= 2) {
             [self _parseUsingAudioToolbox];
+            [self _parseUsingCustomParsers];
         }
     }
     
