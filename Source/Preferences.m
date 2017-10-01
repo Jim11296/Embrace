@@ -39,12 +39,15 @@ static NSDictionary *sGetDefaultValues()
         @"showsLabelStripes":    @YES,
         @"showsYear":            @NO,
 
+        @"usesMasteringComplexitySRC": @YES,
+
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
-        @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
-        @"mainOutputSampleRate":  @(44100),
-        @"mainOutputFrames":      @(2048),
-        @"mainOutputUsesHogMode": @(NO)
+        @"mainOutputAudioDevice":  [AudioDevice defaultOutputDevice],
+        @"mainOutputSampleRate":   @(44100),
+        @"mainOutputFrames":       @(2048),
+        @"mainOutputUsesHogMode":  @(NO),
+        @"mainOutputResetsVolume": @(YES)
     };
     
     });
