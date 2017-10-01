@@ -29,6 +29,11 @@ typedef NS_ENUM(NSInteger, PlayerInterruptionReason) {
     PlayerInterruptionReasonHoggedByOtherProcess
 };
 
+typedef NS_ENUM(NSInteger, PlayerHogStyle) {
+    PlayerHogStyleNone,
+    PlayerHogStyleTakeExclusiveAccess,
+    PlayerHogStyleTakeExclusiveAccessAndResetVolume
+};
 
 extern volatile NSInteger PlayerShouldUseCrashPad;
 
@@ -57,8 +62,9 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 - (void) updateOutputDevice: (AudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames
-                    hogMode: (BOOL) hogMode;
-
+                    hogMode: (BOOL) hogMode
+               resetsVolume: (BOOL) resetsVolume;
+                   
 @property (nonatomic, readonly) AudioDevice *outputDevice;
 @property (nonatomic, readonly) double outputSampleRate;
 @property (nonatomic, readonly) UInt32 outputFrames;

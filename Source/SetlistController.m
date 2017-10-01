@@ -317,12 +317,14 @@ static NSInteger sAutoGapMaximum = 16;
 {
     Preferences *preferences = [Preferences sharedInstance];
     
-    AudioDevice *device     = [preferences mainOutputAudioDevice];
-    double       sampleRate = [preferences mainOutputSampleRate];
-    UInt32       frames     = [preferences mainOutputFrames];
-    BOOL         hogMode    = [preferences mainOutputUsesHogMode];
+    AudioDevice *device       = [preferences mainOutputAudioDevice];
+    double       sampleRate   = [preferences mainOutputSampleRate];
+    UInt32       frames       = [preferences mainOutputFrames];
+    BOOL         hogMode      = [preferences mainOutputUsesHogMode];
 
-    [[Player sharedInstance] updateOutputDevice:device sampleRate:sampleRate frames:frames hogMode:hogMode];
+    BOOL resetsVolume = hogMode && [preferences mainOutputResetsVolume];
+    
+    [[Player sharedInstance] updateOutputDevice:device sampleRate:sampleRate frames:frames hogMode:hogMode resetsVolume:resetsVolume];
     
     
     NSWindow *window = [self window];

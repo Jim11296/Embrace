@@ -67,5 +67,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) double       mainOutputSampleRate;
 @property (nonatomic) UInt32       mainOutputFrames;
 @property (nonatomic) BOOL         mainOutputUsesHogMode;
+@property (nonatomic) BOOL         mainOutputResetsVolume;
+
+@property (nonatomic) BOOL         usesMasteringComplexitySRC;
 
 @end
