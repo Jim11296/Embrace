@@ -994,7 +994,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
-				55224BEC18A855E900407B46 /* rchook */,
+				55224BEC18A855E900407B46 /* rcbump */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
 				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
@@ -1129,19 +1129,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		55224BEC18A855E900407B46 /* rchook */ = {
+		55224BEC18A855E900407B46 /* rcbump */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = rchook;
+			name = rcbump;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "which rchook\nif [ $? -eq 0 ]; then\n    rchook xcode-build-phase\n    exit $?\nfi";
+			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi";
 		};
 		55708CBB18B979920059110C /* Sign Crash Pad */ = {
 			isa = PBXShellScriptBuildPhase;
