@@ -148,28 +148,22 @@ static NSInteger sAutoGapMaximum = 16;
         NSScrollView *scrollView      = [self scrollView];
         BorderedView *bottomContainer = [self bottomContainer];
     
-
-        // Fix up the bottom here
         NSRect bottomFrame = [bottomContainer frame];
-        bottomFrame.size.height += 38;
         
         NSRect trialBottomViewFrame = bottomFrame;
-        trialBottomViewFrame.origin.y = 34;
-        trialBottomViewFrame.size.height = 32;
-        trialBottomViewFrame.size.width = 172;
-        trialBottomViewFrame.origin.x = round((bottomFrame.size.width - 172) / 2);
+        trialBottomViewFrame.origin.y += bottomFrame.size.height;
+        trialBottomViewFrame.size.height = 42;
        
         NSRect scrollFrame = [scrollView frame];
-        scrollFrame.size.height -= 38;
-        scrollFrame.origin.y += 38;
+        scrollFrame.size.height -= 42;
+        scrollFrame.origin.y += 42;
         [[self scrollView] setFrame:scrollFrame];
         
         [[self bottomContainer] setFrame:bottomFrame];
 
         TrialBottomView *bv = [[TrialBottomView alloc] initWithFrame:trialBottomViewFrame];
-        [bv setAutoresizingMask:NSViewMinXMargin|NSViewMaxXMargin|NSViewHeightSizable];
-        [[self bottomContainer] addSubview:bv];
-
+        [bv setAutoresizingMask:NSViewMaxXMargin|NSViewWidthSizable];
+        [[[self bottomContainer] superview] addSubview:bv];
     }
 #endif
 
