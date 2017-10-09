@@ -438,15 +438,18 @@ static NSInteger sGetYear(NSString *yearString)
             [_metadata setObject:_fallbackTitle forKey:TrackKeyTitle];
         }
 
-        [self _parseUsingAVFoundation];
+        NSString *type;
+        [_URL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:NULL];
 
-        // _parseUsingAVFoundation should always add 'duration' and we previously
-        // added 'title'. If these are our only keys, parse again with AudioToolbox
-        // and also try our custom parsing code
-        //
-        if ([_metadata count] <= 2) {
+        if (type && (
+            UTTypeConformsTo((__bridge CFTypeRef)type, CFSTR("public.aifc-audio")) ||
+            UTTypeConformsTo((__bridge CFTypeRef)type, CFSTR("public.aiff-audio"))
+        )) {
             [self _parseUsingAudioToolbox];
             [self _parseUsingCustomParsers];
+
+        } else {
+            [self _parseUsingAVFoundation];
         }
     }
     

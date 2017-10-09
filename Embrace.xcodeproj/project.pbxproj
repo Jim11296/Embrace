@@ -47,6 +47,7 @@
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
 		553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 553E77901E6ABF4800DA988B /* MetadataParser.m */; };
+		5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5549FCA51F8AF767009006D2 /* CoreServices.framework */; };
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
 		554FCB9D1DFCF0E900DE697E /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 554FCB9C1DFCF0E900DE697E /* GradientView.m */; };
@@ -248,6 +249,7 @@
 		553E44E118C5D23400E8D7B9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		553E778F1E6ABF4800DA988B /* MetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataParser.h; path = Source/MetadataParser.h; sourceTree = SOURCE_ROOT; };
 		553E77901E6ABF4800DA988B /* MetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataParser.m; path = Source/MetadataParser.m; sourceTree = SOURCE_ROOT; };
+		5549FCA51F8AF767009006D2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../Source/Log.h; sourceTree = "<group>"; };
 		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = ../Source/Log.m; sourceTree = "<group>"; };
 		554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CrashReporter.xcodeproj; path = PLCrashReporter/CrashReporter.xcodeproj; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */,
 				5514B6771CDF4A6600F238B7 /* CoreMedia.framework in Frameworks */,
 				5514B6761CDF4A5200F238B7 /* AudioToolbox.framework in Frameworks */,
 				5514B6751CDF4A4B00F238B7 /* AVFoundation.framework in Frameworks */,
@@ -669,6 +672,7 @@
 		558DC081187785BC00C85770 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5549FCA51F8AF767009006D2 /* CoreServices.framework */,
 				55AF60E818C94FDD00BE2212 /* libcrypto.a */,
 				553E44E118C5D23400E8D7B9 /* IOKit.framework */,
 				55A0B16C188F6FD700866F04 /* Accelerate.framework */,
