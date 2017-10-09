@@ -7,6 +7,7 @@
 //
 
 #import "TrialBottomView.h"
+#import "BorderedView.h"
 
 #if TRIAL
 
@@ -15,8 +16,15 @@
 - (id)initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-
         NSRect textFrame = [self bounds];
+        
+        BorderedView *borderedView = [[BorderedView alloc] initWithFrame:[self bounds]];
+        
+        [borderedView setTopBorderColor:GetRGBColor(0xB3CCFF, 1.0)];
+        [borderedView setBackgroundColor:GetRGBColor(0xF2F7FF, 1.0)];
+        [borderedView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+
+        [self addSubview:borderedView];
         
         NSTextField *textView = [[NSTextField alloc] initWithFrame:textFrame];
         [textView setEditable:NO];
@@ -25,7 +33,8 @@
         [textView setBackgroundColor:[NSColor clearColor]];
         [textView setDrawsBackground:NO];
         [textView setAlignment:NSCenterTextAlignment];
-        
+        [textView setAutoresizingMask:NSViewWidthSizable|NSViewMinYMargin|NSViewMaxYMargin];
+
         NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
         [ps setAlignment:NSCenterTextAlignment];
 
@@ -38,7 +47,7 @@
         [as appendAttributedString:as1];
         
         NSAttributedString *as2 = [[NSAttributedString alloc] initWithString:NSLocalizedString(@" to add\nmore than five songs.", nil) attributes:@{
-            NSForegroundColorAttributeName: GetRGBColor(0x0, 0.35),
+            NSForegroundColorAttributeName: GetRGBColor(0x0, 0.5),
             NSParagraphStyleAttributeName: ps
         }];
         [as appendAttributedString:as2];
@@ -50,11 +59,18 @@
         [textView setAttributedStringValue:as];
 
         [self addSubview:textView];
+
+        [textView sizeToFit];
+        NSRect textViewFrame = [textView frame];
+
+        textViewFrame.origin.y = round((frame.size.height - textViewFrame.size.height) / 2);
+        textViewFrame.size.width = frame.size.width;
+
+        [textView setFrame:textViewFrame];
     }
 
     return self;
 }
-
 
 - (void) mouseDown:(NSEvent *)theEvent
 {

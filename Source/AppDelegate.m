@@ -317,8 +317,13 @@
         __weak id weakSelf = self;
 
         NSXPCInterface *interface = [NSXPCInterface interfaceWithProtocol:@protocol(WorkerProtocol)];
-        
-        NSXPCConnection *connection = [[NSXPCConnection alloc] initWithServiceName:@"com.iccir.Embrace.EmbraceWorker"];
+
+        NSString *serviceName = @"com.iccir.Embrace.EmbraceWorker";
+#if TRIAL
+        serviceName = @"com.iccir.Embrace-Trial.EmbraceWorker";
+#endif
+    
+        NSXPCConnection *connection = [[NSXPCConnection alloc] initWithServiceName:serviceName];
         [connection setRemoteObjectInterface:interface];
 
         [connection setInvalidationHandler:^{
