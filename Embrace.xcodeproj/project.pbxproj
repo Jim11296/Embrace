@@ -115,6 +115,7 @@
 		55C24E1518D7D7800057D45E /* StereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* StereoField.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */; };
 		55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */; };
+		55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55CD7ADB1F8B08870047F073 /* Embrace.icns */; };
 		55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2785187A23BD0042C92A /* iTunesManager.m */; };
 		55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CF2787187A241A0042C92A /* ScriptingBridge.framework */; };
 		55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2799187A464B0042C92A /* TrackTableCellView.m */; };
@@ -398,6 +399,7 @@
 		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
 		55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUParametricEQ.aupreset; path = Resources/AUParametricEQ.aupreset; sourceTree = SOURCE_ROOT; };
+		55CD7ADB1F8B08870047F073 /* Embrace.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Embrace.icns; path = Resources/Embrace.icns; sourceTree = SOURCE_ROOT; };
 		55CF2784187A23BD0042C92A /* iTunesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = SOURCE_ROOT; };
 		55CF2785187A23BD0042C92A /* iTunesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesManager.m; path = Source/iTunesManager.m; sourceTree = SOURCE_ROOT; };
 		55CF2787187A241A0042C92A /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
@@ -741,6 +743,7 @@
 		558DC089187785BC00C85770 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				55CD7ADB1F8B08870047F073 /* Embrace.icns */,
 				55A9A30F19CBDF6C002ED9CE /* Images.xcassets */,
 				554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */,
 				55A0B16E1890A80400866F04 /* Test Sounds */,
@@ -1118,6 +1121,7 @@
 				556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */,
 				558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */,
 				55A0B1751890A81900866F04 /* test_f.m4a in Resources */,
+				55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */,
 				552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */,
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
@@ -1159,7 +1163,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
+			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\n# Link Embrace.icns before signing\ncd \"$APP/Contents/Resources/\"\nln -s \"../../../../Resources/Embrace.icns\"\n\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
