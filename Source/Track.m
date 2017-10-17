@@ -675,7 +675,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         NSString      *title      = [pasteboardMetadata title];
         NSString      *artist     = [pasteboardMetadata artist];
         NSTimeInterval duration   = [pasteboardMetadata duration];
-        NSInteger      databaseID = [pasteboardMetadata trackID];
+        NSInteger      databaseID = [pasteboardMetadata databaseID];
 
         EmbraceLog(@"Track", @"%@ has pasteboard metadata: title=%@, artist=%@, duration=%g, databaseID=%ld", self, title, artist, duration, databaseID);
         

@@ -8,9 +8,11 @@
 #import "LoudnessMeasurer.h"
 #import "MetadataParser.h"
 
+#import <iTunesLibrary/iTunesLibrary.h>
 
-static dispatch_queue_t sMetadataQueue          = nil;
-static dispatch_queue_t sLoudnessImmediateQueue = nil;
+static dispatch_queue_t sMetadataQueue           = nil;
+static dispatch_queue_t sLibraryQueue            = nil;
+static dispatch_queue_t sLoudnessImmediateQueue  = nil;
 static dispatch_queue_t sLoudnessBackgroundQueue = nil;
 
 static NSMutableSet *sCancelledUUIDs = nil;
@@ -22,7 +24,9 @@ static NSMutableSet *sLoudnessUUIDs  = nil;
 @end
 
 
-@implementation Worker
+@implementation Worker {
+    ITLibrary *_library;
+}
 
 + (void) initialize
 {
@@ -30,6 +34,7 @@ static NSMutableSet *sLoudnessUUIDs  = nil;
 
     dispatch_once(&onceToken, ^{
         sMetadataQueue           = dispatch_queue_create("metadata",            DISPATCH_QUEUE_SERIAL);
+        sLibraryQueue            = dispatch_queue_create("library",             DISPATCH_QUEUE_SERIAL);
         sLoudnessImmediateQueue  = dispatch_queue_create("loudness-immediate",  DISPATCH_QUEUE_SERIAL);
         sLoudnessBackgroundQueue = dispatch_queue_create("loudness-background", DISPATCH_QUEUE_SERIAL);
 
@@ -208,6 +213,40 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
     }
 }
 
+
+- (void) performLibraryParseWithReply:(void (^)(NSDictionary *))reply
+{
+    dispatch_async(sLibraryQueue, ^{
+        if (!_library) {
+            NSError *error = nil;
+            _library = [ITLibrary libraryWithAPIVersion:@"1.0" error:&error];
+            NSLog(@"%@", error);
+        } else {
+            [_library reloadData];
+        }
+        
+        NSMutableDictionary *result = [NSMutableDictionary dictionary];
+        
+        for (ITLibMediaItem *mediaItem in [_library allMediaItems]) {
+            NSUInteger startTime = [mediaItem startTime];
+            NSUInteger stopTime  = [mediaItem stopTime];
+
+            if (startTime || stopTime) {
+                NSMutableDictionary *trackData = [NSMutableDictionary dictionaryWithCapacity:2];
+                
+                if (startTime) [trackData setObject:@(startTime / 1000.0) forKey:TrackKeyStartTime];
+                if (stopTime)  [trackData setObject:@(stopTime  / 1000.0) forKey:TrackKeyStopTime];
+                
+                NSString *location = [[mediaItem location] path];
+                if (location) [result setObject:trackData forKey:location];
+            }
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            reply(result);
+        });
+    });
+}
 
 @end
 
