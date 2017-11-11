@@ -1732,6 +1732,17 @@ static OSStatus sInputRenderCallback(
 
 #pragma mark - Accessors
 
+- (void) setCurrentTrack:(Track *)currentTrack
+{
+    if (_currentTrack != currentTrack) {
+        _currentTrack = currentTrack;
+        [_currentTrack setTrackStatus:TrackStatusPreparing];
+
+        _timeElapsed = 0;
+    }
+}
+
+
 - (void) setPreAmpLevel:(double)preAmpLevel
 {
     if (_preAmpLevel != preAmpLevel) {
