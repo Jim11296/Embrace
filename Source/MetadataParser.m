@@ -443,7 +443,8 @@ static NSInteger sGetYear(NSString *yearString)
 
         if (type && (
             UTTypeConformsTo((__bridge CFTypeRef)type, CFSTR("public.aifc-audio")) ||
-            UTTypeConformsTo((__bridge CFTypeRef)type, CFSTR("public.aiff-audio"))
+            UTTypeConformsTo((__bridge CFTypeRef)type, CFSTR("public.aiff-audio")) ||
+            UTTypeConformsTo((__bridge CFTypeRef)type, CFSTR("org.xiph.flac"))
         )) {
             [self _parseUsingAudioToolbox];
             [self _parseUsingCustomParsers];

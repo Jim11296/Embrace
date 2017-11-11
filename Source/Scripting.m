@@ -190,6 +190,42 @@
 }
 
 
+- (void) setScriptingLabel:(NSNumber *)scriptingLabel
+{
+    [self setTrackLabel:[scriptingLabel integerValue]];
+}
+
+
+- (NSNumber *) scriptingLabel
+{
+    return @([self trackLabel]);
+}
+
+
+- (void) setScriptingStopsAfterPlaying:(NSNumber *)stopsAfterPlaying
+{
+    [self setStopsAfterPlaying:[stopsAfterPlaying boolValue]];
+}
+
+
+- (NSNumber *) scriptingStopsAfterPlaying
+{
+    return @([self stopsAfterPlaying]);
+}
+
+
+- (void) setScriptingIgnoresAutoGap:(NSNumber *)ignoresAutoGap
+{
+    [self setIgnoresAutoGap:[ignoresAutoGap boolValue]];
+}
+
+
+- (NSNumber *) scriptingIgnoresAutoGap
+{
+    return @([self ignoresAutoGap]);
+}
+
+
 - (NSString *) scriptingKeySignature
 {
     return GetTraditionalStringForTonality([self tonality]);
