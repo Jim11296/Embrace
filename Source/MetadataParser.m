@@ -302,16 +302,6 @@ static NSInteger sGetYear(NSString *yearString)
 }
 
 
-- (void) _parseUsingAVFoundation
-{
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:_URL options:nil];
-    if (asset) [self _parseUsingAVAsset:asset intoDictionary:_metadata];
-
-	NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
-    [_metadata setObject:@(duration) forKey:TrackKeyDuration];
-
-}
-
 - (void) _parseUsingAudioToolbox
 {
     ExtAudioFileRef extAudioFile = NULL;
@@ -438,6 +428,11 @@ static NSInteger sGetYear(NSString *yearString)
             [_metadata setObject:_fallbackTitle forKey:TrackKeyTitle];
         }
 
+        AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:_URL options:nil];
+
+        NSTimeInterval duration = CMTimeGetSeconds([asset duration]);
+        [_metadata setObject:@(duration) forKey:TrackKeyDuration];
+
         NSString *type;
         [_URL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:NULL];
 
@@ -450,7 +445,7 @@ static NSInteger sGetYear(NSString *yearString)
             [self _parseUsingCustomParsers];
 
         } else {
-            [self _parseUsingAVFoundation];
+            if (asset) [self _parseUsingAVAsset:asset intoDictionary:_metadata];
         }
     }
     
