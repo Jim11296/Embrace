@@ -27,6 +27,7 @@
 
 #import "IssueManager.h"
 #import "iTunesManager.h"
+#import "ScriptsManager.h"
 #import "WrappedAudioDevice.h"
 
 #import <CrashReporter.h>
@@ -81,6 +82,11 @@
 @property (nonatomic, weak) IBOutlet NSMenuItem *sendLogsMenuItem;
 @property (nonatomic, weak) IBOutlet NSMenuItem *openSupportMenuItem;
 
+@property (nonatomic, weak) IBOutlet NSMenuItem *scriptsSeparator;
+@property (nonatomic, weak) IBOutlet NSMenuItem *reloadScriptsMenuItem;
+@property (nonatomic, weak) IBOutlet NSMenuItem *openScriptsMenuItem;
+
+
 @end
 
 @implementation AppDelegate {
@@ -123,6 +129,9 @@
 
     // Start parsing iTunes XML
     [iTunesManager sharedInstance];
+    
+    // Load scripts
+    [ScriptsManager sharedInstance];
     
     [EffectType embrace_registerMappedEffects];
 
@@ -608,6 +617,10 @@
         [[self openSupportMenuItem]  setHidden:!visible];
         [[self sendLogsMenuItem]     setHidden:!visible];
 
+        [[self scriptsSeparator]       setHidden:!visible];
+        [[self reloadScriptsMenuItem]  setHidden:!visible];
+        [[self openScriptsMenuItem]    setHidden:!visible];
+
         return YES;
     }
 
@@ -922,6 +935,22 @@
 {
     EmbraceLogMethod();
     [[NSWorkspace sharedWorkspace] openFile:GetApplicationSupportDirectory()];
+}
+
+
+- (IBAction) reloadScripts:(id)sender
+{
+    EmbraceLogMethod();
+    [[ScriptsManager sharedInstance] reloadScripts];
+}
+
+
+- (IBAction) openScripts:(id)sender
+{
+    EmbraceLogMethod();
+    
+    ScriptsManager *manager = [ScriptsManager sharedInstance];
+    [[NSWorkspace sharedWorkspace] openFile:[manager scriptsDirectory]];
 }
 
 

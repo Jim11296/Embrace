@@ -109,6 +109,7 @@
 		55ADE93518815EA8008DC245 /* PlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* PlayBar.m */; };
 		55ADE93818824338008DC245 /* LevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* LevelMeter.m */; };
 		55AF60E918C94FDD00BE2212 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AF60E818C94FDD00BE2212 /* libcrypto.a */; };
+		55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B8587B1FB93ED20095D496 /* ScriptsManager.m */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
 		55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B091877F26300D84481 /* AudioUnit.framework */; };
 		55BC0B0D1877F35000D84481 /* EffectType.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B0C1877F35000D84481 /* EffectType.m */; };
@@ -394,6 +395,8 @@
 		55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetCrashPad.xcconfig; sourceTree = "<group>"; };
 		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetEmbrace.xcconfig; sourceTree = "<group>"; };
 		55AF60E818C94FDD00BE2212 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
+		55B8587A1FB93ED20095D496 /* ScriptsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScriptsManager.h; path = Source/ScriptsManager.h; sourceTree = "<group>"; };
+		55B8587B1FB93ED20095D496 /* ScriptsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScriptsManager.m; path = Source/ScriptsManager.m; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
 		55BC0B051877F19400D84481 /* Effect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Effect.m; path = Source/Effect.m; sourceTree = SOURCE_ROOT; };
 		55BC0B071877F25D00D84481 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -936,6 +939,8 @@
 				55CF848F18BF459600EF33F7 /* Scripting.h */,
 				55CF849018BF459600EF33F7 /* Scripting.m */,
 				55CF848D18BF27AC00EF33F7 /* Embrace.sdef */,
+				55B8587A1FB93ED20095D496 /* ScriptsManager.h */,
+				55B8587B1FB93ED20095D496 /* ScriptsManager.m */,
 			);
 			name = Scripting;
 			sourceTree = "<group>";
@@ -1255,6 +1260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55717BF5187EA65400213213 /* Button.m in Sources */,
+				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
