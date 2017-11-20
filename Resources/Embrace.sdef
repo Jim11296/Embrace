@@ -234,4 +234,13 @@
 
 		</class>
 	</suite>
+
+    <suite name="Embrace Event Handler Suite" code="embr" description="Commands that are executed as Embrace event handlers.">
+        <event name="metadata available" code="embrhe00" description="This handler is called when Embrace parses a track's metadata.">
+            <cocoa name="MetadataAvailable" class="EventHandlerCommand"/>
+            <parameter code="hetr" name="for" description="The track that was parsed." type="track">
+                <cocoa key="Track"/>
+            </parameter>
+        </event>
+    </suite>
 </dictionary>
