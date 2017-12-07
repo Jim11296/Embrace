@@ -239,6 +239,12 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Track Attributes" id="Mhb-vo-4m5">
                                     <items>
+                                        <menuItem title="Album Artist" tag="13" id="vLn-HK-Tqv">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeTrackAttributes:" target="494" id="OVe-wk-6v1"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Artist" id="75U-KG-cj1">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>

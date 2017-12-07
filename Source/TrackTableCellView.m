@@ -804,7 +804,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
             TrackViewAttribute attribute = [attributeNumber integerValue];
             NSString *string = nil;
 
-            if (attribute == TrackViewAttributeArtist) {
+            if (attribute == TrackViewAttributeAlbumArtist) {
+                string = [track albumArtist];
+
+            } else if (attribute == TrackViewAttributeArtist) {
                 string = [track artist];
 
             } else if (attribute == TrackViewAttributeBeatsPerMinute) {
@@ -851,6 +854,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     if ([preferences showsArtist]) {
         [a_2L addObject:@(TrackViewAttributeArtist)];
+    }
+
+    if ([preferences showsAlbumArtist]) {
+        [a_2L addObject:@(TrackViewAttributeAlbumArtist)];
     }
 
     if ([preferences showsYear]) {

@@ -26,6 +26,7 @@ static NSDictionary *sGetDefaultValues()
     
         @"floatsOnTop":          @NO,
 
+        @"showsAlbumArtist":     @NO,
         @"showsArtist":          @YES,
         @"showsBPM":             @YES,
         @"showsComments":        @NO,
@@ -167,7 +168,10 @@ static void sRegisterDefaults()
 
 - (NSString *) _keyForTrackViewAttribute:(TrackViewAttribute)attribute
 {
-    if (attribute == TrackViewAttributeArtist) {
+    if (attribute == TrackViewAttributeAlbumArtist) {
+        return @"showsAlbumArtist";
+
+    } else if (attribute == TrackViewAttributeArtist) {
         return @"showsArtist";
 
     } else if (attribute == TrackViewAttributeBeatsPerMinute) {
