@@ -27,7 +27,9 @@
 @property (nonatomic, readonly) BOOL isHoggedByAnotherProcess;
 @property (nonatomic, readonly) BOOL isHogModeSettable;
 
-- (BOOL) takeHogMode;
+@property (nonatomic, readonly) BOOL hasVolumeControl;
+
+- (BOOL) takeHogModeAndResetVolume:(BOOL)resetsVolume;
 - (void) releaseHogMode;
 
 @property (nonatomic) double nominalSampleRate;

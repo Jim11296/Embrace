@@ -26,6 +26,7 @@ static NSDictionary *sGetDefaultValues()
     
         @"floatsOnTop":          @NO,
 
+        @"showsAlbumArtist":     @NO,
         @"showsArtist":          @YES,
         @"showsBPM":             @YES,
         @"showsComments":        @NO,
@@ -39,12 +40,15 @@ static NSDictionary *sGetDefaultValues()
         @"showsLabelStripes":    @YES,
         @"showsYear":            @NO,
 
+        @"usesMasteringComplexitySRC": @YES,
+
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
-        @"mainOutputAudioDevice": [AudioDevice defaultOutputDevice],
-        @"mainOutputSampleRate":  @(44100),
-        @"mainOutputFrames":      @(2048),
-        @"mainOutputUsesHogMode": @(NO)
+        @"mainOutputAudioDevice":  [AudioDevice defaultOutputDevice],
+        @"mainOutputSampleRate":   @(44100),
+        @"mainOutputFrames":       @(2048),
+        @"mainOutputUsesHogMode":  @(NO),
+        @"mainOutputResetsVolume": @(YES)
     };
     
     });
@@ -164,7 +168,10 @@ static void sRegisterDefaults()
 
 - (NSString *) _keyForTrackViewAttribute:(TrackViewAttribute)attribute
 {
-    if (attribute == TrackViewAttributeArtist) {
+    if (attribute == TrackViewAttributeAlbumArtist) {
+        return @"showsAlbumArtist";
+
+    } else if (attribute == TrackViewAttributeArtist) {
         return @"showsArtist";
 
     } else if (attribute == TrackViewAttributeBeatsPerMinute) {

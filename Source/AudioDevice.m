@@ -19,6 +19,7 @@ static NSString * const sSampleRatesKey   = @"SampleRates";
 static NSString * const sFrameSizesKey    = @"FrameSizes";
 static NSString * const sHoggableKey      = @"Hoggable";
 static NSString * const sTransportTypeKey = @"TransportType";
+static NSString * const sHasVolumeControl = @"HasVolumeControl";
 
 
 static NSArray      *sAllOutputDevices    = nil;
@@ -37,6 +38,7 @@ static AudioDevice  *sChosenAudioDevice   = nil;
 @property (nonatomic) NSArray *frameSizes;
 @property (nonatomic) UInt32 transportType;
 @property (nonatomic, getter=isHoggable)  BOOL hoggable;
+@property (nonatomic) BOOL hasVolumeControl;
 @property (nonatomic, getter=isConnected) BOOL connected;
 @end
 
@@ -45,24 +47,27 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 {
     WrappedAudioDevice *device = [[WrappedAudioDevice alloc] initWithDeviceUID:deviceUID];
 
-    NSString *name          = [device name];
-    NSString *manufacturer  = [device manufacturer];
-    NSString *modelUID      = [device modelUID];
-    NSArray  *frameSizes    = [device availableFrameSizes];
-    NSArray  *sampleRates   = [device availableSampleRates];
-    BOOL      hoggable      = [device isHogModeSettable];
-    UInt32    transportType = [device transportType];
+    NSString *name             = [device name];
+    NSString *manufacturer     = [device manufacturer];
+    NSString *modelUID         = [device modelUID];
+    NSArray  *frameSizes       = [device availableFrameSizes];
+    NSArray  *sampleRates      = [device availableSampleRates];
+    BOOL      hoggable         = [device isHogModeSettable];
+    BOOL      hasVolumeControl = [device hasVolumeControl];
+    UInt32    transportType    = [device transportType];
     
     name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    if (deviceUID)    [result setObject:deviceUID    forKey:sDeviceUIDKey];
-    if (name)         [result setObject:name         forKey:sNameKey];
-    if (manufacturer) [result setObject:manufacturer forKey:sManufacturerKey];
-    if (modelUID)     [result setObject:modelUID     forKey:sModelUIDKey];
-    if (sampleRates)  [result setObject:sampleRates  forKey:sSampleRatesKey];
-    if (frameSizes)   [result setObject:frameSizes   forKey:sFrameSizesKey];
-    if (hoggable)     [result setObject:@YES         forKey:sHoggableKey];
+
+    if (deviceUID)        [result setObject:deviceUID    forKey:sDeviceUIDKey];
+    if (name)             [result setObject:name         forKey:sNameKey];
+    if (manufacturer)     [result setObject:manufacturer forKey:sManufacturerKey];
+    if (modelUID)         [result setObject:modelUID     forKey:sModelUIDKey];
+    if (sampleRates)      [result setObject:sampleRates  forKey:sSampleRatesKey];
+    if (frameSizes)       [result setObject:frameSizes   forKey:sFrameSizesKey];
+    if (hoggable)         [result setObject:@YES         forKey:sHoggableKey];
+    if (hasVolumeControl) [result setObject:@YES         forKey:sHasVolumeControl];
     
     [result setObject:@(transportType) forKey:sTransportTypeKey];
 
@@ -248,14 +253,15 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 
 - (void) _fillDictionary:(NSDictionary *)dictionary
 {
-    [self setDeviceUID:    [dictionary objectForKey:sDeviceUIDKey]];
-    [self setName:         [dictionary objectForKey:sNameKey]];
-    [self setManufacturer: [dictionary objectForKey:sManufacturerKey]];
-    [self setModelUID:     [dictionary objectForKey:sModelUIDKey]];
-    [self setSampleRates:  [dictionary objectForKey:sSampleRatesKey]];
-    [self setFrameSizes:   [dictionary objectForKey:sFrameSizesKey]];
-    [self setHoggable:     [[dictionary objectForKey:sHoggableKey] boolValue]];
-    [self setTransportType:[[dictionary objectForKey:sTransportTypeKey] unsignedIntValue]];
+    [self setDeviceUID:         [dictionary objectForKey:sDeviceUIDKey]];
+    [self setName:              [dictionary objectForKey:sNameKey]];
+    [self setManufacturer:      [dictionary objectForKey:sManufacturerKey]];
+    [self setModelUID:          [dictionary objectForKey:sModelUIDKey]];
+    [self setSampleRates:       [dictionary objectForKey:sSampleRatesKey]];
+    [self setFrameSizes:        [dictionary objectForKey:sFrameSizesKey]];
+    [self setHoggable:         [[dictionary objectForKey:sHoggableKey] boolValue]];
+    [self setHasVolumeControl: [[dictionary objectForKey:sHasVolumeControl] boolValue]];
+    [self setTransportType:    [[dictionary objectForKey:sTransportTypeKey] unsignedIntValue]];
 }
 
 
@@ -274,13 +280,14 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
 
-    if (_deviceUID)    [result setObject:_deviceUID    forKey:sDeviceUIDKey];
-    if (_name)         [result setObject:_name         forKey:sNameKey];
-    if (_manufacturer) [result setObject:_manufacturer forKey:sManufacturerKey];
-    if (_modelUID)     [result setObject:_modelUID     forKey:sModelUIDKey];
-    if (_sampleRates)  [result setObject:_sampleRates  forKey:sSampleRatesKey];
-    if (_frameSizes)   [result setObject:_frameSizes   forKey:sFrameSizesKey];
-    if (_hoggable)     [result setObject:@YES          forKey:sHoggableKey];
+    if (_deviceUID)        [result setObject:_deviceUID    forKey:sDeviceUIDKey];
+    if (_name)             [result setObject:_name         forKey:sNameKey];
+    if (_manufacturer)     [result setObject:_manufacturer forKey:sManufacturerKey];
+    if (_modelUID)         [result setObject:_modelUID     forKey:sModelUIDKey];
+    if (_sampleRates)      [result setObject:_sampleRates  forKey:sSampleRatesKey];
+    if (_frameSizes)       [result setObject:_frameSizes   forKey:sFrameSizesKey];
+    if (_hoggable)         [result setObject:@YES          forKey:sHoggableKey];
+    if (_hasVolumeControl) [result setObject:@YES          forKey:sHasVolumeControl];
     
     [result setObject:@(_transportType) forKey:sTransportTypeKey];
 
