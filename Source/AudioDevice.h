@@ -33,6 +33,8 @@ extern NSString * const AudioDevicesDidRefreshNotification;
 @property (nonatomic, readonly, getter=isHoggable)  BOOL hoggable;
 @property (nonatomic, readonly, getter=isConnected) BOOL connected;
 
+@property (nonatomic, readonly) BOOL hasVolumeControl;
+
 @property (nonatomic, readonly, getter=isBuiltIn) BOOL builtIn;
 @property (nonatomic, readonly, getter=isDefaultOutputDevice) BOOL defaultOutputDevice;
 

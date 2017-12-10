@@ -83,7 +83,11 @@
 
 - (void) layout
 {
-//  [super layout]; // Opt-out of Auto Layout
+    if (@available(macOS 10.12, *)) {
+        // Opt-out of Auto Layout
+    } else {
+        [super layout]; 
+    }
 
     NSRect bounds = [self bounds];
 

@@ -1,10 +1,5 @@
-//
-//  MetadataManager.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-05.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+//  Copyright (c) 2014-2017 Ricci Adams. All rights reserved.
+
 
 #import <Foundation/Foundation.h>
 
@@ -17,35 +12,27 @@ extern NSString * const iTunesManagerDidUpdateLibraryMetadataNotification;
 
 + (id) sharedInstance;
 
+- (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
 @property (nonatomic, readonly) BOOL didParseLibrary;
 
-- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
 - (void) exportPlaylistWithName:(NSString *)name fileURLs:(NSArray *)fileURLs;
 
-- (iTunesLibraryMetadata *) libraryMetadataForTrackID:(NSInteger)trackID;
-- (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
-
-- (iTunesPasteboardMetadata *) pasteboardMetadataForTrackID:(NSInteger)trackID;
+- (void) clearPasteboardMetadata;
+- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
 - (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;
 
-- (void) clearPasteboardMetadata;
-
 @end
 
 
-@interface iTunesMetadata : NSObject
-@property (nonatomic) NSInteger trackID;
-@property (nonatomic, copy) NSString *location;
-@end
-
-
-@interface iTunesLibraryMetadata : iTunesMetadata
+@interface iTunesLibraryMetadata : NSObject
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic) NSTimeInterval stopTime;
 @end
 
 
-@interface iTunesPasteboardMetadata : iTunesMetadata
+@interface iTunesPasteboardMetadata : NSObject
+@property (nonatomic) NSInteger databaseID;
+@property (nonatomic, copy) NSString *location;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *artist;
 @property (nonatomic) NSTimeInterval duration;

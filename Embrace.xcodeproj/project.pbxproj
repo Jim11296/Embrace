@@ -32,6 +32,12 @@
 		5514B6761CDF4A5200F238B7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1A18780D1000D84481 /* AudioToolbox.framework */; };
 		5514B6771CDF4A6600F238B7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B071877F25D00D84481 /* CoreMedia.framework */; };
 		5514B67F1CE0147C00F238B7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F3B7B91877955C00E8FEC8 /* AVFoundation.framework */; };
+		55169D471F958EC4003779FA /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55169D441F9587FF003779FA /* iTunesLibrary.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		55169D501F9ACBFA003779FA /* test_3s_d4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4B1F9ACBFA003779FA /* test_3s_d4.m4a */; };
+		55169D511F9ACBFA003779FA /* test_3s_e4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4C1F9ACBFA003779FA /* test_3s_e4.m4a */; };
+		55169D521F9ACBFA003779FA /* test_3s_c4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4D1F9ACBFA003779FA /* test_3s_c4.m4a */; };
+		55169D531F9ACBFA003779FA /* test_3s_g4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4E1F9ACBFA003779FA /* test_3s_g4.m4a */; };
+		55169D541F9ACBFA003779FA /* test_3s_f4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4F1F9ACBFA003779FA /* test_3s_f4.m4a */; };
 		55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */; };
 		552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9DC218836D2D0041C160 /* AudioDevice.m */; };
 		552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C9E481883856A0041C160 /* PreferencesWindow.xib */; };
@@ -47,6 +53,7 @@
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
 		553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 553E77901E6ABF4800DA988B /* MetadataParser.m */; };
+		5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5549FCA51F8AF767009006D2 /* CoreServices.framework */; };
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
 		554FCB9D1DFCF0E900DE697E /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 554FCB9C1DFCF0E900DE697E /* GradientView.m */; };
@@ -102,6 +109,7 @@
 		55ADE93518815EA8008DC245 /* PlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* PlayBar.m */; };
 		55ADE93818824338008DC245 /* LevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* LevelMeter.m */; };
 		55AF60E918C94FDD00BE2212 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AF60E818C94FDD00BE2212 /* libcrypto.a */; };
+		55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B8587B1FB93ED20095D496 /* ScriptsManager.m */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
 		55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B091877F26300D84481 /* AudioUnit.framework */; };
 		55BC0B0D1877F35000D84481 /* EffectType.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B0C1877F35000D84481 /* EffectType.m */; };
@@ -114,6 +122,7 @@
 		55C24E1518D7D7800057D45E /* StereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* StereoField.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */; };
 		55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */; };
+		55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55CD7ADB1F8B08870047F073 /* Embrace.icns */; };
 		55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2785187A23BD0042C92A /* iTunesManager.m */; };
 		55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CF2787187A241A0042C92A /* ScriptingBridge.framework */; };
 		55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2799187A464B0042C92A /* TrackTableCellView.m */; };
@@ -227,6 +236,13 @@
 		5514B66C1CDF470D00F238B7 /* Worker_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Worker_Profile.xcconfig; sourceTree = "<group>"; };
 		5514B66D1CDF470D00F238B7 /* Worker_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Worker_Release.xcconfig; sourceTree = "<group>"; };
 		5514B6781CDF4AA200F238B7 /* Worker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Worker-Info.plist"; path = "Resources/Worker-Info.plist"; sourceTree = SOURCE_ROOT; };
+		55169D441F9587FF003779FA /* iTunesLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iTunesLibrary.framework; path = ../../../../Library/Frameworks/iTunesLibrary.framework; sourceTree = "<group>"; };
+		55169D491F95A6FE003779FA /* iTunesManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = "<group>"; };
+		55169D4B1F9ACBFA003779FA /* test_3s_d4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_d4.m4a; path = "Resources/Test Sounds/test_3s_d4.m4a"; sourceTree = "<group>"; };
+		55169D4C1F9ACBFA003779FA /* test_3s_e4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_e4.m4a; path = "Resources/Test Sounds/test_3s_e4.m4a"; sourceTree = "<group>"; };
+		55169D4D1F9ACBFA003779FA /* test_3s_c4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_c4.m4a; path = "Resources/Test Sounds/test_3s_c4.m4a"; sourceTree = "<group>"; };
+		55169D4E1F9ACBFA003779FA /* test_3s_g4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_g4.m4a; path = "Resources/Test Sounds/test_3s_g4.m4a"; sourceTree = "<group>"; };
+		55169D4F1F9ACBFA003779FA /* test_3s_f4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_f4.m4a; path = "Resources/Test Sounds/test_3s_f4.m4a"; sourceTree = "<group>"; };
 		55224BE318A7880D00407B46 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = CoreAudio/PublicUtility/CAAutoDisposer.h; sourceTree = "<group>"; };
 		55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedAudioDevice.mm; path = Source/WrappedAudioDevice.mm; sourceTree = "<group>"; };
 		55224BE518A788DA00407B46 /* WrappedAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedAudioDevice.h; path = Source/WrappedAudioDevice.h; sourceTree = "<group>"; };
@@ -248,6 +264,7 @@
 		553E44E118C5D23400E8D7B9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		553E778F1E6ABF4800DA988B /* MetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataParser.h; path = Source/MetadataParser.h; sourceTree = SOURCE_ROOT; };
 		553E77901E6ABF4800DA988B /* MetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataParser.m; path = Source/MetadataParser.m; sourceTree = SOURCE_ROOT; };
+		5549FCA51F8AF767009006D2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../Source/Log.h; sourceTree = "<group>"; };
 		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = ../Source/Log.m; sourceTree = "<group>"; };
 		554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CrashReporter.xcodeproj; path = PLCrashReporter/CrashReporter.xcodeproj; sourceTree = "<group>"; };
@@ -274,7 +291,6 @@
 		556ACE34187BB43A00AED4BC /* WrappedUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedUtils.h; path = Source/WrappedUtils.h; sourceTree = "<group>"; };
 		556ACE35187BB43A00AED4BC /* WrappedUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedUtils.mm; path = Source/WrappedUtils.mm; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		55708C9F18B8A98E0059110C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
 		55708CC018B97ADB0059110C /* CrashPadClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashPadClient.h; path = Source/CrashPadClient.h; sourceTree = SOURCE_ROOT; };
 		55708CC118B97ADB0059110C /* CrashPadClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPadClient.m; path = Source/CrashPadClient.m; sourceTree = SOURCE_ROOT; };
@@ -379,6 +395,8 @@
 		55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetCrashPad.xcconfig; sourceTree = "<group>"; };
 		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetEmbrace.xcconfig; sourceTree = "<group>"; };
 		55AF60E818C94FDD00BE2212 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
+		55B8587A1FB93ED20095D496 /* ScriptsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScriptsManager.h; path = Source/ScriptsManager.h; sourceTree = "<group>"; };
+		55B8587B1FB93ED20095D496 /* ScriptsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScriptsManager.m; path = Source/ScriptsManager.m; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
 		55BC0B051877F19400D84481 /* Effect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Effect.m; path = Source/Effect.m; sourceTree = SOURCE_ROOT; };
 		55BC0B071877F25D00D84481 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -397,6 +415,8 @@
 		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
 		55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUParametricEQ.aupreset; path = Resources/AUParametricEQ.aupreset; sourceTree = SOURCE_ROOT; };
+		55CD7ADB1F8B08870047F073 /* Embrace.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Embrace.icns; path = Resources/Embrace.icns; sourceTree = SOURCE_ROOT; };
+		55CD7AE11F8B10830047F073 /* Embrace-trial.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "Embrace-trial.icns"; path = "Resources/Embrace-trial.icns"; sourceTree = "<group>"; };
 		55CF2784187A23BD0042C92A /* iTunesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = SOURCE_ROOT; };
 		55CF2785187A23BD0042C92A /* iTunesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesManager.m; path = Source/iTunesManager.m; sourceTree = SOURCE_ROOT; };
 		55CF2787187A241A0042C92A /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
@@ -449,6 +469,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55169D471F958EC4003779FA /* iTunesLibrary.framework in Frameworks */,
+				5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */,
 				5514B6771CDF4A6600F238B7 /* CoreMedia.framework in Frameworks */,
 				5514B6761CDF4A5200F238B7 /* AudioToolbox.framework in Frameworks */,
 				5514B6751CDF4A4B00F238B7 /* AVFoundation.framework in Frameworks */,
@@ -564,7 +586,6 @@
 				55708CB618B8AA220059110C /* CrashPad_main.m */,
 			);
 			name = "Crash Pad";
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		557C2C3B18974031002FAFEA /* Public Utility */ = {
@@ -671,6 +692,9 @@
 		558DC081187785BC00C85770 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55169D491F95A6FE003779FA /* iTunesManager.h */,
+				55169D441F9587FF003779FA /* iTunesLibrary.framework */,
+				5549FCA51F8AF767009006D2 /* CoreServices.framework */,
 				55AF60E818C94FDD00BE2212 /* libcrypto.a */,
 				553E44E118C5D23400E8D7B9 /* IOKit.framework */,
 				55A0B16C188F6FD700866F04 /* Accelerate.framework */,
@@ -686,7 +710,6 @@
 				55F3B7B71877953D00E8FEC8 /* AVKit.framework */,
 				558DC082187785BC00C85770 /* Cocoa.framework */,
 				55F3B7C318779B0100E8FEC8 /* Foundation.framework */,
-				55708C9F18B8A98E0059110C /* XCTest.framework */,
 				558DC084187785BC00C85770 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -735,12 +758,13 @@
 				553DE142189F107100A355D1 /* ViewTrackController.m */,
 			);
 			name = Controller;
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		558DC089187785BC00C85770 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				55CD7ADB1F8B08870047F073 /* Embrace.icns */,
+				55CD7AE11F8B10830047F073 /* Embrace-trial.icns */,
 				55A9A30F19CBDF6C002ED9CE /* Images.xcassets */,
 				554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */,
 				55A0B16E1890A80400866F04 /* Test Sounds */,
@@ -761,12 +785,16 @@
 				553DE144189F10D600A355D1 /* ViewTrackWindow.xib */,
 			);
 			name = Resources;
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		55A0B16E1890A80400866F04 /* Test Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				55169D4D1F9ACBFA003779FA /* test_3s_c4.m4a */,
+				55169D4B1F9ACBFA003779FA /* test_3s_d4.m4a */,
+				55169D4C1F9ACBFA003779FA /* test_3s_e4.m4a */,
+				55169D4F1F9ACBFA003779FA /* test_3s_f4.m4a */,
+				55169D4E1F9ACBFA003779FA /* test_3s_g4.m4a */,
 				550D882718AC3C5B00CC7E3A /* rate_44.m4a */,
 				550D882818AC3C5B00CC7E3A /* rate_48.m4a */,
 				550D882918AC3C5B00CC7E3A /* rate_88.m4a */,
@@ -840,7 +868,6 @@
 				558DC0B8187785F200C85770 /* main.m */,
 			);
 			name = "Other Sources";
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		55BC0B1E1878D8B700D84481 /* View */ = {
@@ -894,7 +921,6 @@
 				557C2C7419138994004A6364 /* TrialBottomView.m */,
 			);
 			name = View;
-			path = Embrace;
 			sourceTree = "<group>";
 		};
 		55CF2797187A3DD50042C92A /* iTunes */ = {
@@ -913,6 +939,8 @@
 				55CF848F18BF459600EF33F7 /* Scripting.h */,
 				55CF849018BF459600EF33F7 /* Scripting.m */,
 				55CF848D18BF27AC00EF33F7 /* Embrace.sdef */,
+				55B8587A1FB93ED20095D496 /* ScriptsManager.h */,
+				55B8587B1FB93ED20095D496 /* ScriptsManager.m */,
 			);
 			name = Scripting;
 			sourceTree = "<group>";
@@ -1001,12 +1029,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
-				55224BEC18A855E900407B46 /* rchook */,
+				55224BEC18A855E900407B46 /* rcbump */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
 				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07D187785BC00C85770 /* Resources */,
 				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
+				55CD7AE31F8B11920047F073 /* Fix Icon for Trial */,
 				558DC07C187785BC00C85770 /* Frameworks */,
 				5514B6531CDEE64200F238B7 /* Embed XPC Services */,
 			);
@@ -1108,6 +1137,8 @@
 				55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */,
 				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
+				55169D511F9ACBFA003779FA /* test_3s_e4.m4a in Resources */,
+				55169D501F9ACBFA003779FA /* test_3s_d4.m4a in Resources */,
 				55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
@@ -1118,9 +1149,13 @@
 				55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */,
 				553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */,
 				5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */,
+				55169D531F9ACBFA003779FA /* test_3s_g4.m4a in Resources */,
 				556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */,
+				55169D541F9ACBFA003779FA /* test_3s_f4.m4a in Resources */,
+				55169D521F9ACBFA003779FA /* test_3s_c4.m4a in Resources */,
 				558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */,
 				55A0B1751890A81900866F04 /* test_f.m4a in Resources */,
+				55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */,
 				552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */,
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
@@ -1136,19 +1171,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		55224BEC18A855E900407B46 /* rchook */ = {
+		55224BEC18A855E900407B46 /* rcbump */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = rchook;
+			name = rcbump;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "which rchook\nif [ $? -eq 0 ]; then\n    rchook xcode-build-phase\n    exit $?\nfi";
+			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi";
 		};
 		55708CBB18B979920059110C /* Sign Crash Pad */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1162,7 +1197,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
+			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\n# Link Embrace.icns before signing\ncd \"$APP/Contents/Resources/\"\nln -f -s \"../../../../Resources/Embrace.icns\"\n\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		55CD7AE31F8B11920047F073 /* Fix Icon for Trial */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Fix Icon for Trial";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$PRODUCT_NAME\" = \"Embrace Trial\" ]; then\n    cp \"$PROJECT_DIR/Resources/Embrace-trial.icns\" \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/Embrace.icns\nfi\n\n";
+			showEnvVarsInLog = 0;
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1209,6 +1260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55717BF5187EA65400213213 /* Button.m in Sources */,
+				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,

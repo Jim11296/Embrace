@@ -47,7 +47,21 @@
         if (result) [fileURLs addObject:result];
     };
     
-    if (tag == 1) {
+    if (tag == 0) {
+        add(@"test_c");
+        add(@"test_d");
+        add(@"test_e");
+        add(@"test_f");
+        add(@"test_g");
+
+    } else if (tag == 1) {
+        add(@"test_3s_c4");
+        add(@"test_3s_d4");
+        add(@"test_3s_e4");
+        add(@"test_3s_f4");
+        add(@"test_3s_g4");
+        
+    } else if (tag == 2) {
         add(@"rate_44");
         add(@"rate_44");
         add(@"rate_48");
@@ -56,13 +70,6 @@
         add(@"rate_88");
         add(@"rate_48");
         add(@"rate_44");
-
-    } else {
-        add(@"test_c");
-        add(@"test_d");
-        add(@"test_e");
-        add(@"test_f");
-        add(@"test_g");
     }
 
     [[self _setlistController] clear];

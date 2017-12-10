@@ -398,18 +398,20 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (void) _reallyDisplayTrialAlert
 {
-    NSString *messageText = NSLocalizedString(@"You can only add five songs to the Set List in your trial of Embrace.", nil);
-    NSString *otherButton = NSLocalizedString(@"View in App Store", nil);
-    NSString *informativeText = NSLocalizedString(@"To add more, purchase Embrace from the App Store.", nil);
+    NSAlert *alert = [[NSAlert alloc] init];
     
-    NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:nil alternateButton:nil otherButton:otherButton informativeTextWithFormat:@"%@", informativeText];
+    [alert setMessageText:NSLocalizedString(@"You can only add five songs to the Set List in your trial of Embrace.", nil)];
+    [alert setInformativeText:NSLocalizedString(@"To add more, purchase Embrace from the App Store.", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"View in App Store", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     [alert setAlertStyle:NSInformationalAlertStyle];
     
-    if ([alert runModal] == NSAlertOtherReturn) {
+	if ([alert runModal] == NSAlertFirstButtonReturn) {
         NSURL *url = [NSURL URLWithString:@"macappstore://itunes.apple.com/us/app/embrace/id817962217?mt=12"];
         [[NSWorkspace sharedWorkspace] openURL:url];
     }
 }
+
 
 - (void) _displayTrialAlert
 {

@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesController">
             <connections>
                 <outlet property="framesPopUp" destination="Usr-fc-Nfw" id="qH2-Aw-Fgf"/>
-                <outlet property="hogModeButton" destination="PPF-KH-K1g" id="O1G-48-anx"/>
+                <outlet property="hogModeButton" destination="PPF-KH-K1g" id="Ux8-Zg-VJ3"/>
                 <outlet property="mainDevicePopUp" destination="z6S-hH-vkJ" id="Rxg-zL-qJg"/>
+                <outlet property="resetVolumeButton" destination="1GM-2E-J07" id="08N-XH-nDu"/>
                 <outlet property="sampleRatePopUp" destination="lz2-Nq-eaS" id="uVE-jr-s7h"/>
+                <outlet property="usesMasteringComplexityButton" destination="rD1-lC-Woo" id="pxq-ae-E7y"/>
                 <outlet property="window" destination="1" id="CXg-pP-XyZ"/>
             </connections>
         </customObject>
@@ -19,14 +22,14 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PreferencesWindow" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="498" y="462" width="420" height="122"/>
+            <rect key="contentRect" x="498" y="462" width="420" height="180"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <view key="contentView" id="2">
-                <rect key="frame" x="0.0" y="0.0" width="420" height="122"/>
+            <view key="contentView" misplaced="YES" id="2">
+                <rect key="frame" x="0.0" y="0.0" width="420" height="180"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <popUpButton verticalHuggingPriority="750" id="z6S-hH-vkJ">
-                        <rect key="frame" x="136" y="78" width="245" height="26"/>
+                    <popUpButton verticalHuggingPriority="750" misplaced="YES" id="z6S-hH-vkJ">
+                        <rect key="frame" x="136" y="132" width="245" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="3zs-qI-iuC" id="rq5-I2-z9T">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -48,8 +51,8 @@
                             </binding>
                         </connections>
                     </popUpButton>
-                    <popUpButton verticalHuggingPriority="750" id="lz2-Nq-eaS">
-                        <rect key="frame" x="136" y="49" width="109" height="26"/>
+                    <popUpButton verticalHuggingPriority="750" misplaced="YES" id="lz2-Nq-eaS">
+                        <rect key="frame" x="136" y="103" width="109" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="192000 Hz" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="VRl-Im-VgG" id="yWT-kl-JMr">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -79,8 +82,8 @@
                             </binding>
                         </connections>
                     </popUpButton>
-                    <popUpButton verticalHuggingPriority="750" id="Usr-fc-Nfw">
-                        <rect key="frame" x="314" y="49" width="67" height="26"/>
+                    <popUpButton verticalHuggingPriority="750" misplaced="YES" id="Usr-fc-Nfw">
+                        <rect key="frame" x="314" y="103" width="67" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="4096" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LpN-RV-1Zm" id="0SM-eN-c0l">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -113,8 +116,8 @@
                             </binding>
                         </connections>
                     </popUpButton>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="9ch-wM-PT9">
-                        <rect key="frame" x="257" y="55" width="53" height="17"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="9ch-wM-PT9">
+                        <rect key="frame" x="257" y="109" width="53" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Frames:" id="mRd-uS-8Qk">
                             <font key="font" metaFont="system"/>
@@ -122,8 +125,8 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="nsV-nm-3cE">
-                        <rect key="frame" x="18" y="55" width="114" height="17"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="nsV-nm-3cE">
+                        <rect key="frame" x="18" y="109" width="114" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sample Rate:" id="owX-qL-HNm">
                             <font key="font" metaFont="system"/>
@@ -131,8 +134,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="2d0-qN-s4P">
-                        <rect key="frame" x="18" y="84" width="114" height="17"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="ryF-6a-Y1K">
+                        <rect key="frame" x="18" y="45" width="114" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Playback:" id="ikO-5i-dPh">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="2d0-qN-s4P">
+                        <rect key="frame" x="18" y="138" width="114" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Main Output:" id="quY-b3-svF">
                             <font key="font" metaFont="system"/>
@@ -140,15 +152,15 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button id="PPF-KH-K1g">
-                        <rect key="frame" x="136" y="28" width="242" height="18"/>
+                    <button misplaced="YES" id="PPF-KH-K1g">
+                        <rect key="frame" x="136" y="44" width="242" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Take exclusive access (Hog Mode)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="27o-HX-hko">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="changeMainDeviceAttributes:" target="-2" id="Kmx-2m-iAj"/>
+                            <action selector="changeMainDeviceAttributes:" target="-2" id="BHd-uF-Xg6"/>
                             <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="eJU-I6-aQd" id="BLs-w3-i5H">
                                 <dictionary key="options">
                                     <integer key="NSMultipleValuesPlaceholder" value="-1"/>
@@ -172,10 +184,66 @@
                             </binding>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="i12-Ui-9PX">
-                        <rect key="frame" x="129" y="10" width="256" height="14"/>
+                    <button misplaced="YES" id="1GM-2E-J07">
+                        <rect key="frame" x="136" y="22" width="242" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to change the output device." id="O9P-Jt-MKN">
+                        <buttonCell key="cell" type="check" title="Reset device volume to maximum" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4Sd-vr-urx">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeMainDeviceAttributes:" target="-2" id="dLq-CS-lRC"/>
+                            <binding destination="-2" name="enabled2" keyPath="self.resetVolumeEnabled" previousBinding="tDN-mb-A92" id="dDs-9E-wKS">
+                                <dictionary key="options">
+                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                    <integer key="NSNullPlaceholder" value="-1"/>
+                                </dictionary>
+                            </binding>
+                            <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="dDs-9E-wKS" id="Tug-NE-kmC">
+                                <dictionary key="options">
+                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                    <integer key="NSNullPlaceholder" value="-1"/>
+                                </dictionary>
+                            </binding>
+                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="tDN-mb-A92">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="rD1-lC-Woo">
+                        <rect key="frame" x="136" y="82" width="237" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Use highest-quality rate converters" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="1aS-xy-8Wa">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeMainDeviceAttributes:" target="-2" id="Qn0-Xr-i1Z"/>
+                            <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="n5z-H5-J00" id="Bq3-xG-Y89">
+                                <dictionary key="options">
+                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                    <integer key="NSNullPlaceholder" value="-1"/>
+                                </dictionary>
+                            </binding>
+                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="n5z-H5-J00">
+                                <dictionary key="options">
+                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="i12-Ui-9PX">
+                        <rect key="frame" x="-4" y="161" width="428" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to modify the output device." id="O9P-Jt-MKN">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -190,6 +258,7 @@
                     </textField>
                 </subviews>
             </view>
+            <point key="canvasLocation" x="132" y="188"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="QcB-lQ-hRp"/>
     </objects>

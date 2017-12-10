@@ -30,7 +30,8 @@ typedef NS_ENUM(NSInteger, TrackViewAttribute) {
     TrackViewAttributePlayingStatus   = 9,
     TrackViewAttributeLabelStripes    = 10,
     TrackViewAttributeLabelDots       = 11,
-    TrackViewAttributeYear            = 12
+    TrackViewAttributeYear            = 12,
+    TrackViewAttributeAlbumArtist     = 13
 };
 
 extern NSString * const PreferencesDidChangeNotification;
@@ -46,6 +47,7 @@ extern NSString * const PreferencesDidChangeNotification;
 - (void) setTrackViewAttribute:(TrackViewAttribute)attribute selected:(BOOL)selected;
 - (BOOL) isTrackViewAttributeSelected:(TrackViewAttribute)attribute;
 
+@property (nonatomic) BOOL showsAlbumArtist;
 @property (nonatomic) BOOL showsArtist;
 @property (nonatomic) BOOL showsBPM;
 @property (nonatomic) BOOL showsComments;
@@ -67,5 +69,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) double       mainOutputSampleRate;
 @property (nonatomic) UInt32       mainOutputFrames;
 @property (nonatomic) BOOL         mainOutputUsesHogMode;
+@property (nonatomic) BOOL         mainOutputResetsVolume;
+
+@property (nonatomic) BOOL         usesMasteringComplexitySRC;
 
 @end

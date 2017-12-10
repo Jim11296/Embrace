@@ -115,91 +115,132 @@
 			<property name="remaining time" access="r" code="rems" type="real" description="the remaining time in seconds">
             	<cocoa key="scriptingRemainingTime"/>
             </property>
-
-			<property name="album" access="r" code="albm" type="integer" description="the album name of the track">
-				<cocoa key="scriptingAlbum"/>
-            </property>
         </class>
 
 		<enumeration name="trackStatus" code="trst">
-			<enumerator name="queued" code="trsa" description="the track is queued for playback">
+			<enumerator name="queued" code="trsa" description="The track is queued for playback.">
 				<cocoa integer-value="0"/>
 			</enumerator>
-			<enumerator name="playing" code="trsb" description="the track is currently being played">
+			<enumerator name="playing" code="trsb" description="The track is currently being played.">
 				<cocoa integer-value="1"/>
 			</enumerator>
-			<enumerator name="played" code="trsc" description="the track was played">
+			<enumerator name="played" code="trsc" description="The track was played.">
 				<cocoa integer-value="2"/>
 			</enumerator>
 		</enumeration>
 
+        <enumeration name="trackLabel" code="trla">
+            <enumerator name="none" code="trln" description="The track has no color label.">
+                <cocoa integer-value="0"/>
+            </enumerator>
+            <enumerator name="red" code="trlr" description="The track has a red color label.">
+                <cocoa integer-value="1"/>
+            </enumerator>
+            <enumerator name="orange" code="trlo" description="The track has an orange color label.">
+                <cocoa integer-value="2"/>
+            </enumerator>
+            <enumerator name="yellow" code="trly" description="The track has a yellow color label.">
+                <cocoa integer-value="3"/>
+            </enumerator>
+            <enumerator name="green" code="trlg" description="The track has a green color label.">
+                <cocoa integer-value="4"/>
+            </enumerator>
+            <enumerator name="blue" code="trlb" description="The track has a blue color label.">
+                <cocoa integer-value="5"/>
+            </enumerator>
+            <enumerator name="purple" code="trlp" description="The track has a purple color label.">
+                <cocoa integer-value="6"/>
+            </enumerator>
+        </enumeration>
+
 		<class name="track" code="trck" description="An track in the set list.">
 			<cocoa class="Track"/>
 
-			<property name="aggregate" access="r" code="aggr" type="text" description="a tab-delimited string containing ( title, artist, album, genre, comments, album artist, composer, grouping ).  Additional fields may be added in future versions, order of existing fields will not change.">
+			<property name="aggregate" access="r" code="aggr" type="text" description="A tab-delimited string containing ( title, artist, album, genre, comments, album artist, composer, grouping ).  Additional fields may be added in future versions, order of existing fields will not change.">
 				<cocoa key="scriptingAggregate"/>
             </property>
 
-			<property name="album" access="r" code="albm" type="text" description="the album name of the track">
+			<property name="album" access="r" code="albm" type="text" description="The album name of the track.">
 				<cocoa key="scriptingAlbum"/>
             </property>
 
-			<property name="album artist" access="r" code="alba" type="text" description="the album artist of the track">
+			<property name="album artist" access="r" code="alba" type="text" description="The album artist of the track.">
 				<cocoa key="scriptingAlbumArtist"/>
             </property>
 
-			<property name="artist" access="r" code="arti" type="text" description="the artist/source of the track">
+			<property name="artist" access="r" code="arti" type="text" description="The artist/source of the track.">
 				<cocoa key="scriptingArtist"/>
             </property>
 
-			<property name="comment" access="r" code="comm" type="text" description="freeform notes about the track">
+			<property name="comment" access="r" code="comm" type="text" description="The freeform notes about the track.">
 				<cocoa key="scriptingComment"/>
             </property>
 
-			<property name="composer" access="r" code="comp" type="text" description="the composer of the track">
+			<property name="composer" access="r" code="comp" type="text" description="The composer of the track.">
 				<cocoa key="scriptingComposer"/>
             </property>
 
-			<property name="database ID" access="r" code="dbid" type="integer" description="the iTunes database ID of the track, if available">
+			<property name="database ID" access="r" code="dbid" type="integer" description="The iTunes database ID of the track, if available.">
 				<cocoa key="scriptingDatabaseID"/>
             </property>
 
-			<property name="duration" access="r" code="tdur" type="real" description="the length of the track in seconds">
+			<property name="duration" access="r" code="tdur" type="real" description="The length of the track in seconds.">
 				<cocoa key="scriptingDuration"/>
             </property>
 
-			<property name="energy level" access="r" code="ener" type="integer" description="the average energy level of the track (1-10, 0 if unknown)">
+			<property name="energy level" access="r" code="ener" type="integer" description="The average energy level of the track (1-10, 0 if unknown).">
 				<cocoa key="scriptingEnergyLevel"/>
             </property>
 
-			<property name="file" code="file" description="the track&apos;s location on disk." type="file" access="r">
+			<property name="file" code="file" description="The track&apos;s location on disk." type="file" access="r">
 				<cocoa key="scriptingFile"/>
 			</property>
 
-			<property name="genre" access="r" code="genr" type="text" description="the genre of the track">
+			<property name="genre" access="r" code="genr" type="text" description="The genre of the track.">
 				<cocoa key="scriptingGenre"/>
             </property>
 
-			<property name="grouping" access="r" code="grop" type="text" description="the grouping of the track">
+            <property name="label" access="rw" code="labl" type="trackLabel" description="The color label of the track.">
+                <cocoa key="scriptingLabel"/>
+            </property>
+
+            <property name="stops after playing" access="rw" code="stpl" type="boolean" description="If true, playback stops after this track.">
+                <cocoa key="scriptingStopsAfterPlaying"/>
+            </property>
+
+            <property name="ignores auto gap" access="rw" code="igag" type="boolean" description="If true, playback proceeds to the next track immediately.">
+                <cocoa key="scriptingIgnoresAutoGap"/>
+            </property>
+
+			<property name="grouping" access="r" code="grop" type="text" description="The grouping of the track.">
 				<cocoa key="scriptingGrouping"/>
             </property>
 
-			<property name="key signature" access="r" code="ksig" type="text" description="the key signature of the track">
+			<property name="key signature" access="r" code="ksig" type="text" description="The key signature of the track.">
 				<cocoa key="scriptingKeySignature"/>
             </property>
 
-			<property name="title" access="r" code="titl" type="text" description="the title of the track">
+			<property name="title" access="r" code="titl" type="text" description="The title of the track.">
 				<cocoa key="scriptingTitle"/>
             </property>
 
-			<property name="track status" access="r" code="stat" type="trackStatus" description="the status of the track">
+			<property name="track status" access="r" code="stat" type="trackStatus" description="The status of the track.">
 				<cocoa key="scriptingTrackStatus"/>
             </property>
 
-			<property name="year" access="r" code="year" type="integer" description="the year the track was recorded/released">
+			<property name="year" access="r" code="year" type="integer" description="The year the track was recorded/released.">
 				<cocoa key="scriptingYear"/>
             </property>
 
 		</class>
 	</suite>
+
+    <suite name="Embrace Event Handler Suite" code="embr" description="Commands that are executed as Embrace event handlers.">
+        <event name="metadata available" code="embrhe00" description="This handler is called when Embrace parses a track's metadata.">
+            <cocoa name="MetadataAvailable" class="EventHandlerCommand"/>
+            <parameter code="hetr" name="for" description="The track that was parsed." type="track">
+                <cocoa key="Track"/>
+            </parameter>
+        </event>
+    </suite>
 </dictionary>

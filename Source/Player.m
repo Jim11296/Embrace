@@ -128,6 +128,7 @@ typedef struct {
     double       _outputSampleRate;
     UInt32       _outputFrames;
     BOOL         _outputHogMode;
+    BOOL         _outputResetsVolume;
     
     AudioDeviceID _listeningDeviceID;
 
@@ -893,7 +894,9 @@ static OSStatus sInputRenderCallback(
             AudioUnit converterUnit = 0;
             CheckError(AUGraphNodeInfo(_graph, converterNode,  NULL, &converterUnit),  "AUGraphNodeInfo[ Converter ]");
 
-            UInt32 complexity = kAudioUnitSampleRateConverterComplexity_Mastering;
+            UInt32 complexity = [[Preferences sharedInstance] usesMasteringComplexitySRC] ?
+                kAudioUnitSampleRateConverterComplexity_Mastering :
+                kAudioUnitSampleRateConverterComplexity_Normal;
 
             setPropertyUInt32(converterUnit, kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity);
             setPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
@@ -1257,7 +1260,7 @@ static OSStatus sInputRenderCallback(
 
     if (ok) {
         if (_outputHogMode) {
-            if ([controller takeHogMode]) {
+            if ([controller takeHogModeAndResetVolume:_outputResetsVolume]) {
                 EmbraceLog(@"Player", @"_outputHogMode is YES, took hog mode.");
 
             } else {
@@ -1718,13 +1721,15 @@ static OSStatus sInputRenderCallback(
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
+               resetsVolume: (BOOL) resetsVolume
 {
     EmbraceLog(@"Player", @"updateOutputDevice:%@ sampleRate:%lf frames:%lu hogMode:%ld", self, sampleRate, (unsigned long)frames, (long)hogMode);
 
-    if (_outputDevice     != outputDevice ||
-        _outputSampleRate != sampleRate   ||
-        _outputFrames     != frames       ||
-        _outputHogMode    != hogMode)
+    if (_outputDevice       != outputDevice ||
+        _outputSampleRate   != sampleRate   ||
+        _outputFrames       != frames       ||
+        _outputHogMode      != hogMode      ||
+        _outputResetsVolume != resetsVolume)
     {
         if (_outputDevice != outputDevice) {
             [_outputDevice removeObserver:self forKeyPath:@"connected"];
@@ -1733,9 +1738,10 @@ static OSStatus sInputRenderCallback(
             [_outputDevice addObserver:self forKeyPath:@"connected" options:0 context:NULL];
         }
 
-        _outputSampleRate = sampleRate;
-        _outputFrames = frames;
-        _outputHogMode = hogMode;
+        _outputSampleRate   = sampleRate;
+        _outputFrames       = frames;
+        _outputHogMode      = hogMode;
+        _outputResetsVolume = resetsVolume;
 
         [self _reconfigureOutput];
     }
@@ -1756,6 +1762,17 @@ static OSStatus sInputRenderCallback(
 
 
 #pragma mark - Accessors
+
+- (void) setCurrentTrack:(Track *)currentTrack
+{
+    if (_currentTrack != currentTrack) {
+        _currentTrack = currentTrack;
+        [_currentTrack setTrackStatus:TrackStatusPreparing];
+
+        _timeElapsed = 0;
+    }
+}
+
 
 - (void) setPreAmpLevel:(double)preAmpLevel
 {

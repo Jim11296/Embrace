@@ -22,6 +22,9 @@
 @property (nonatomic, weak)   IBOutlet NSPopUpButton *framesPopUp;
 @property (nonatomic, weak)   IBOutlet NSButton      *hogModeButton;
 
+@property (nonatomic, weak)   IBOutlet NSButton      *resetVolumeButton;
+@property (nonatomic, weak)   IBOutlet NSButton      *usesMasteringComplexityButton;
+
 @end
 
 
@@ -58,13 +61,28 @@
     AudioDevice *device = [preferences mainOutputAudioDevice];
     [self _rebuildFrameMenu];
     [self _rebuildSampleRateMenu];
+
+    [[self usesMasteringComplexityButton] setState:[preferences usesMasteringComplexitySRC]];
     
+    BOOL resetVolumeEnabled = [device hasVolumeControl] &&
+                              [device isHoggable] &&
+                              [preferences mainOutputUsesHogMode];
+
+    [self setResetVolumeEnabled:resetVolumeEnabled];
+
     if ([device isHoggable]) {
         [self setDeviceHoggable:YES];
-        [[self hogModeButton] setState:[preferences mainOutputUsesHogMode]];
+        
+        BOOL mainOutputUsesHogMode = [preferences mainOutputUsesHogMode];
+        [[self hogModeButton] setState:(mainOutputUsesHogMode ? NSOnState : NSOffState)];
+
+        BOOL mainOutputResetsVolume = mainOutputUsesHogMode && [preferences mainOutputResetsVolume] && [device hasVolumeControl];
+        [[self resetVolumeButton] setState:(mainOutputResetsVolume ? NSOnState : NSOffState)];
+
     } else {
         [self setDeviceHoggable:NO];
         [[self hogModeButton] setState:NSOffState];
+        [[self resetVolumeButton] setState:NSOffState];
     }
  
     [self _rebuildDevicesMenu];
@@ -108,6 +126,14 @@
     } else if (sender == [self hogModeButton]) {
         BOOL hogMode = [[self hogModeButton] state] == NSOnState;
         [[Preferences sharedInstance] setMainOutputUsesHogMode:hogMode];
+
+    } else if (sender == [self resetVolumeButton]) {
+        BOOL resetsVolume = [[self resetVolumeButton] state] == NSOnState;
+        [[Preferences sharedInstance] setMainOutputResetsVolume:resetsVolume];
+
+    } else if (sender == [self usesMasteringComplexityButton]) {
+        BOOL usesMasteringComplexitySRC = [[self usesMasteringComplexityButton] state] == NSOnState;
+        [[Preferences sharedInstance] setUsesMasteringComplexitySRC:usesMasteringComplexitySRC];
     }
 }
 

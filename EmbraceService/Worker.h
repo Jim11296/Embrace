@@ -21,4 +21,6 @@ typedef NS_ENUM(NSInteger, WorkerTrackCommand) {
             originalFilename: (NSString *) originalFilename
                        reply: (void (^)(NSDictionary *))reply;
 
+- (void) performLibraryParseWithReply: (void (^)(NSDictionary *))reply;
+
 @end

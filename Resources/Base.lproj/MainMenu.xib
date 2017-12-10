@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -42,6 +43,21 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="openSupportFolder:" target="494" id="XS0-Pz-ba6"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" hidden="YES" id="Oix-70-Ht6">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Reload Scripts" hidden="YES" id="nLb-sh-vgo">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="reloadScripts:" target="494" id="33u-NN-Eby"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open Scripts Folder" hidden="YES" id="ofy-hm-iJj">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openScripts:" target="494" id="JxG-N3-leV"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VFt-Em-ItT">
@@ -223,6 +239,12 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Track Attributes" id="Mhb-vo-4m5">
                                     <items>
+                                        <menuItem title="Album Artist" tag="13" id="vLn-HK-Tqv">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeTrackAttributes:" target="494" id="OVe-wk-6v1"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Artist" id="75U-KG-cj1">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -287,12 +309,6 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="changeTrackAttributes:" target="494" id="jE3-6j-vro"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Title" tag="12" id="fBm-E9-J82">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="changeTrackAttributes:" target="494" id="KIu-aK-13l"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Year" tag="12" id="OVJ-14-Rlw">
@@ -399,45 +415,6 @@ CA
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Help" id="490">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Help" systemMenu="help" id="491">
-                        <items>
-                            <menuItem title="Send Feedback" id="492">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="sendFeedback:" target="494" id="RUA-mJ-gdv"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="h8X-Gz-NjX"/>
-                            <menuItem title="View Website" id="P5t-fr-so8">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="viewWebsite:" target="494" id="XFv-d6-R0O"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="View Facebook Group" id="CFu-eL-gpn">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="viewFacebookGroup:" target="494" id="IZM-8W-bNu"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="View on App Store" id="LCB-EU-dvJ">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="viewOnAppStore:" target="494" id="3Cl-Ra-ISE"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="qkD-3U-L82"/>
-                            <menuItem title="Acknowledgements" id="FJZ-vc-A3o">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="openAcknowledgements:" target="494" id="fAI-5v-igA"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
                 <menuItem title="Window" id="19">
                     <menu key="submenu" title="Window" systemMenu="window" id="24">
                         <items>
@@ -488,6 +465,45 @@ CA
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Help" id="490">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Help" systemMenu="help" id="491">
+                        <items>
+                            <menuItem title="Send Feedback" id="492">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="sendFeedback:" target="494" id="RUA-mJ-gdv"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="h8X-Gz-NjX"/>
+                            <menuItem title="View Website" id="P5t-fr-so8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewWebsite:" target="494" id="XFv-d6-R0O"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View Facebook Group" id="CFu-eL-gpn">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewFacebookGroup:" target="494" id="IZM-8W-bNu"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View on App Store" id="LCB-EU-dvJ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewOnAppStore:" target="494" id="3Cl-Ra-ISE"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="qkD-3U-L82"/>
+                            <menuItem title="Acknowledgements" id="FJZ-vc-A3o">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="openAcknowledgements:" target="494" id="fAI-5v-igA"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
             </items>
             <connections>
                 <outlet property="delegate" destination="494" id="qCH-Hw-dHV"/>
@@ -498,8 +514,11 @@ CA
                 <outlet property="crashReportMenuItem" destination="H4P-8S-3EP" id="R8o-wr-Axn"/>
                 <outlet property="crashReportSeparator" destination="oex-bD-CGM" id="JR6-hR-9EA"/>
                 <outlet property="debugMenuItem" destination="SIh-TN-z42" id="zFu-2M-2jM"/>
+                <outlet property="openScriptsMenuItem" destination="ofy-hm-iJj" id="vzP-Of-FiV"/>
                 <outlet property="openSupportMenuItem" destination="Zbe-Fj-v6o" id="iB2-6X-UnM"/>
                 <outlet property="openSupportSeparator" destination="236" id="0zG-yK-6Kr"/>
+                <outlet property="reloadScriptsMenuItem" destination="nLb-sh-vgo" id="MeD-fT-bRM"/>
+                <outlet property="scriptsSeparator" destination="Oix-70-Ht6" id="Oil-Ah-xkx"/>
                 <outlet property="sendLogsMenuItem" destination="Hnn-Gu-9Wp" id="89X-Ae-OlN"/>
             </connections>
         </customObject>

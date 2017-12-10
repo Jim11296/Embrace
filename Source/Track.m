@@ -10,6 +10,7 @@
 #import "iTunesManager.h"
 #import "TrackKeys.h"
 #import "AppDelegate.h"
+#import "ScriptsManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -649,6 +650,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     
     [worker performTrackCommand:command UUID:UUID bookmarkData:bookmarkData originalFilename:originalFilename reply: ^(NSDictionary *dictionary) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            id strongSelf = weakSelf;
+        
             if (command == WorkerTrackCommandReadMetadata) {
                 EmbraceLog(@"Track", @"%@ received metadata from worker: %@", self, dictionary);
             } else if (command == WorkerTrackCommandReadLoudness) {
@@ -657,7 +660,11 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 EmbraceLog(@"Track", @"%@ received immediate loudness from worker", self);
             }
 
-            [weakSelf _updateState:dictionary initialLoad:NO];
+            [strongSelf _updateState:dictionary initialLoad:NO];
+            
+            if (command == WorkerTrackCommandReadMetadata) {
+                [[ScriptsManager sharedInstance] callMetadataAvailableWithTrack:strongSelf];
+            }
         });
     }];
 }
@@ -675,7 +682,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         NSString      *title      = [pasteboardMetadata title];
         NSString      *artist     = [pasteboardMetadata artist];
         NSTimeInterval duration   = [pasteboardMetadata duration];
-        NSInteger      databaseID = [pasteboardMetadata trackID];
+        NSInteger      databaseID = [pasteboardMetadata databaseID];
 
         EmbraceLog(@"Track", @"%@ has pasteboard metadata: title=%@, artist=%@, duration=%g, databaseID=%ld", self, title, artist, duration, databaseID);
         
