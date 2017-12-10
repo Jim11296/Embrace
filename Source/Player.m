@@ -137,7 +137,8 @@ typedef struct {
     NSInteger    _setupAndStartPlayback_failureCount;
 
     id<NSObject> _processActivityToken;
-    
+    IOPMAssertionID _pmAssertionID;
+
     NSMutableDictionary *_effectToNodeMap;
     NSHashTable *_listeners;
     
@@ -562,8 +563,33 @@ typedef struct {
 {
     [self _clearPowerAssertions];
 
+    // UserIsActive
+    static UInt8 b_UserIsActive[] = { 213,243,229,242,201,243,193,227,244,233,246,229,0 };
+
+    // AppliesOnLidClose
+    static UInt8 b_AppliesOnLidClose[] = { 193,240,240,236,233,229,243,207,238,204,233,228,195,236,239,243,229,0 };
+
+    NSString *UserIsActive      = EmbraceGetPrivateName(b_UserIsActive);
+    NSString *AppliesOnLidClose = EmbraceGetPrivateName(b_AppliesOnLidClose);
+    
+    CFMutableDictionaryRef dict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+
+    NSString *details = [NSString stringWithFormat:@"%@ is true, see <rdar://35954315> for details.", AppliesOnLidClose];
+
+    CFDictionarySetValue(dict, kIOPMAssertionTypeKey, (__bridge CFStringRef)UserIsActive);
+    CFDictionarySetValue(dict, (__bridge CFStringRef)AppliesOnLidClose, kCFBooleanTrue);
+    CFDictionarySetValue(dict, kIOPMAssertionNameKey, @"Embrace is playing mission-critical audio");
+    CFDictionarySetValue(dict, kIOPMAssertionDetailsKey, (__bridge CFStringRef)details);
+
+    IOReturn err = IOPMAssertionCreateWithProperties(dict, &_pmAssertionID);
+    if (err) {
+        EmbraceLog(@"Player", @"IOPMAssertionCreateWithProperties returned 0x%lx", (long)err);
+    }
+
     NSActivityOptions options = NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityLatencyCritical;
     _processActivityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:options reason:@"Embrace is playing audio"];
+
+    CFRelease(dict);
 }
 
 
@@ -572,6 +598,11 @@ typedef struct {
     if (_processActivityToken) {
         [[NSProcessInfo processInfo] endActivity:_processActivityToken];
         _processActivityToken = nil;
+    }
+    
+    if (_pmAssertionID) {
+        IOPMAssertionRelease(_pmAssertionID);
+        _pmAssertionID = kIOPMNullAssertionID;
     }
 }
 
