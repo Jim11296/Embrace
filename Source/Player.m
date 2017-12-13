@@ -560,37 +560,48 @@ typedef struct {
 }
 
 
+- (void) _updateFermata
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
+        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.iccir.Fermata.Update" object:nil userInfo:nil options:NSDistributedNotificationDeliverImmediately];
+    });
+}
+
+
 - (void) _takePowerAssertions
 {
-    [self _clearPowerAssertions];
+    if (!_processActivityToken) {
+        NSActivityOptions options = NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityLatencyCritical;
+        _processActivityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:options reason:@"Embrace is playing audio"];
 
-    // UserIsActive
-    static UInt8 b_UserIsActive[] = { 213,243,229,242,201,243,193,227,244,233,246,229,0 };
-
-    // AppliesOnLidClose
-    static UInt8 b_AppliesOnLidClose[] = { 193,240,240,236,233,229,243,207,238,204,233,228,195,236,239,243,229,0 };
-
-    NSString *UserIsActive      = EmbraceGetPrivateName(b_UserIsActive);
-    NSString *AppliesOnLidClose = EmbraceGetPrivateName(b_AppliesOnLidClose);
-    
-    CFMutableDictionaryRef dict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-
-    NSString *details = [NSString stringWithFormat:@"%@ is true, see <rdar://35954315> for details.", AppliesOnLidClose];
-
-    CFDictionarySetValue(dict, kIOPMAssertionTypeKey, (__bridge CFStringRef)UserIsActive);
-    CFDictionarySetValue(dict, (__bridge CFStringRef)AppliesOnLidClose, kCFBooleanTrue);
-    CFDictionarySetValue(dict, kIOPMAssertionNameKey, @"Embrace is playing mission-critical audio");
-    CFDictionarySetValue(dict, kIOPMAssertionDetailsKey, (__bridge CFStringRef)details);
-
-    IOReturn err = IOPMAssertionCreateWithProperties(dict, &_pmAssertionID);
-    if (err) {
-        EmbraceLog(@"Player", @"IOPMAssertionCreateWithProperties returned 0x%lx", (long)err);
+        [self _updateFermata];
     }
 
-    NSActivityOptions options = NSActivityUserInitiated | NSActivityIdleDisplaySleepDisabled | NSActivityLatencyCritical;
-    _processActivityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:options reason:@"Embrace is playing audio"];
+    if (!_pmAssertionID) {
+        static UInt8 b_DebugDisableLidCloseSensor[] = { 196,229,226,245,231,196,233,243,225,226,236,229,204,233,228,195,236,239,243,229,211,229,238,243,239,242,0 };
+        NSString *DebugDisableLidCloseSensor = EmbraceGetPrivateName(b_DebugDisableLidCloseSensor);
 
-    CFRelease(dict);
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:DebugDisableLidCloseSensor]) {
+            static UInt8 b_UserIsActive[] = { 213,243,229,242,201,243,193,227,244,233,246,229,0 };
+            NSString *UserIsActive = EmbraceGetPrivateName(b_UserIsActive);
+
+            static UInt8 b_AppliesOnLidClose[] = { 193,240,240,236,233,229,243,207,238,204,233,228,195,236,239,243,229,0 };
+            NSString *AppliesOnLidClose = EmbraceGetPrivateName(b_AppliesOnLidClose);
+
+            CFMutableDictionaryRef dict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+
+            CFDictionarySetValue(dict, kIOPMAssertionTypeKey, (__bridge CFStringRef)UserIsActive);
+            CFDictionarySetValue(dict, (__bridge CFStringRef)AppliesOnLidClose, kCFBooleanTrue);
+            CFDictionarySetValue(dict, kIOPMAssertionNameKey, @"Embrace is playing mission-critical audio");
+
+            IOReturn err = IOPMAssertionCreateWithProperties(dict, &_pmAssertionID);
+            if (err) {
+                EmbraceLog(@"Player", @"IOPMAssertionCreateWithProperties returned 0x%lx", (long)err);
+            }
+
+            CFRelease(dict);
+        }
+    }
 }
 
 
@@ -599,6 +610,8 @@ typedef struct {
     if (_processActivityToken) {
         [[NSProcessInfo processInfo] endActivity:_processActivityToken];
         _processActivityToken = nil;
+
+        [self _updateFermata];
     }
     
     if (_pmAssertionID) {
