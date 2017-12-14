@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 55016BD41CF454E0007A85AE /* HostStatistics.m */; };
 		550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5506802F1887711000441AAE /* TimeStringValueTransformer.m */; };
+		550C63B81FE26EE5007841BC /* MTSEscapePod.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B71FE26EE5007841BC /* MTSEscapePod.m */; };
+		550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B91FE26F12007841BC /* MTSTelemetry.m */; };
+		550C63BF1FE2701A007841BC /* MTSBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63BE1FE2701A007841BC /* MTSBase.m */; };
+		550C63C11FE270E4007841BC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550C63C01FE270E3007841BC /* SystemConfiguration.framework */; };
 		550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882718AC3C5B00CC7E3A /* rate_44.m4a */; };
 		550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882918AC3C5B00CC7E3A /* rate_88.m4a */; };
 		550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882818AC3C5B00CC7E3A /* rate_48.m4a */; };
@@ -105,10 +109,8 @@
 		55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A708B018A715C1007BD7C0 /* DragSongsHereView.m */; };
 		55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0BC1877861E00C85770 /* MainMenu.xib */; };
 		55A9A31019CBDF6C002ED9CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55A9A30F19CBDF6C002ED9CE /* Images.xcassets */; };
-		55AB41E118BAE16F00DBCD7B /* libCrashReporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 554D318B18BADDBF007DEB16 /* libCrashReporter.a */; };
 		55ADE93518815EA8008DC245 /* PlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* PlayBar.m */; };
 		55ADE93818824338008DC245 /* LevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* LevelMeter.m */; };
-		55AF60E918C94FDD00BE2212 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AF60E818C94FDD00BE2212 /* libcrypto.a */; };
 		55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B8587B1FB93ED20095D496 /* ScriptsManager.m */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
 		55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B091877F26300D84481 /* AudioUnit.framework */; };
@@ -164,20 +166,6 @@
 			remoteGlobalIDString = 5559E61118DFD42500D61019;
 			remoteInfo = CrashPad;
 		};
-		554D318A18BADDBF007DEB16 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 05E731F30EFA1AAB005EDFB7;
-			remoteInfo = "CrashReporter-MacOSX-Static";
-		};
-		55AB41DD18BADFE700DBCD7B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 05E731F20EFA1AAB005EDFB7;
-			remoteInfo = "CrashReporter-MacOSX-Static";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -210,6 +198,13 @@
 		55016BD41CF454E0007A85AE /* HostStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HostStatistics.m; path = Source/HostStatistics.m; sourceTree = "<group>"; };
 		5506802E1887711000441AAE /* TimeStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeStringValueTransformer.h; path = Source/TimeStringValueTransformer.h; sourceTree = SOURCE_ROOT; };
 		5506802F1887711000441AAE /* TimeStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimeStringValueTransformer.m; path = Source/TimeStringValueTransformer.m; sourceTree = SOURCE_ROOT; };
+		550C63B61FE26EE5007841BC /* MTSEscapePod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSEscapePod.h; path = Source/MTSEscapePod.h; sourceTree = "<group>"; };
+		550C63B71FE26EE5007841BC /* MTSEscapePod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTSEscapePod.m; path = Source/MTSEscapePod.m; sourceTree = "<group>"; };
+		550C63B91FE26F12007841BC /* MTSTelemetry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTSTelemetry.m; path = Source/MTSTelemetry.m; sourceTree = "<group>"; };
+		550C63BA1FE26F12007841BC /* MTSTelemetry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSTelemetry.h; path = Source/MTSTelemetry.h; sourceTree = "<group>"; };
+		550C63BD1FE27019007841BC /* MTSBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSBase.h; path = Source/MTSBase.h; sourceTree = "<group>"; };
+		550C63BE1FE2701A007841BC /* MTSBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTSBase.m; path = Source/MTSBase.m; sourceTree = "<group>"; };
+		550C63C01FE270E3007841BC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		550D882718AC3C5B00CC7E3A /* rate_44.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_44.m4a; path = "Resources/Test Sounds/rate_44.m4a"; sourceTree = SOURCE_ROOT; };
 		550D882818AC3C5B00CC7E3A /* rate_48.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_48.m4a; path = "Resources/Test Sounds/rate_48.m4a"; sourceTree = SOURCE_ROOT; };
 		550D882918AC3C5B00CC7E3A /* rate_88.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_88.m4a; path = "Resources/Test Sounds/rate_88.m4a"; sourceTree = SOURCE_ROOT; };
@@ -267,7 +262,6 @@
 		5549FCA51F8AF767009006D2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../Source/Log.h; sourceTree = "<group>"; };
 		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = ../Source/Log.m; sourceTree = "<group>"; };
-		554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CrashReporter.xcodeproj; path = PLCrashReporter/CrashReporter.xcodeproj; sourceTree = "<group>"; };
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
 		554FCB9B1DFCF0E900DE697E /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GradientView.h; path = Source/GradientView.h; sourceTree = SOURCE_ROOT; };
 		554FCB9C1DFCF0E900DE697E /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GradientView.m; path = Source/GradientView.m; sourceTree = SOURCE_ROOT; };
@@ -394,7 +388,6 @@
 		55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigSubmission.xcconfig; sourceTree = "<group>"; };
 		55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetCrashPad.xcconfig; sourceTree = "<group>"; };
 		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetEmbrace.xcconfig; sourceTree = "<group>"; };
-		55AF60E818C94FDD00BE2212 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = lib/libcrypto.a; sourceTree = "<group>"; };
 		55B8587A1FB93ED20095D496 /* ScriptsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScriptsManager.h; path = Source/ScriptsManager.h; sourceTree = "<group>"; };
 		55B8587B1FB93ED20095D496 /* ScriptsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScriptsManager.m; path = Source/ScriptsManager.m; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
@@ -490,13 +483,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				550C63C11FE270E4007841BC /* SystemConfiguration.framework in Frameworks */,
 				5514B67F1CE0147C00F238B7 /* AVFoundation.framework in Frameworks */,
 				553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */,
-				55AB41E118BAE16F00DBCD7B /* libCrashReporter.a in Frameworks */,
 				55A0B16D188F6FD700866F04 /* Accelerate.framework in Frameworks */,
 				555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */,
 				55BC0B0F1877FC4D00D84481 /* CoreAudioKit.framework in Frameworks */,
-				55AF60E918C94FDD00BE2212 /* libcrypto.a in Frameworks */,
 				55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */,
 				55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */,
 				55BC0B1918780A0200D84481 /* CoreAudio.framework in Frameworks */,
@@ -508,6 +500,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		550C63BC1FE26F18007841BC /* MTS */ = {
+			isa = PBXGroup;
+			children = (
+				550C63BD1FE27019007841BC /* MTSBase.h */,
+				550C63BE1FE2701A007841BC /* MTSBase.m */,
+				550C63BA1FE26F12007841BC /* MTSTelemetry.h */,
+				550C63B91FE26F12007841BC /* MTSTelemetry.m */,
+				550C63B61FE26EE5007841BC /* MTSEscapePod.h */,
+				550C63B71FE26EE5007841BC /* MTSEscapePod.m */,
+			);
+			name = MTS;
+			sourceTree = "<group>";
+		};
 		5514B6401CDEE64200F238B7 /* Worker */ = {
 			isa = PBXGroup;
 			children = (
@@ -556,14 +561,6 @@
 				557C2C3B18974031002FAFEA /* Public Utility */,
 			);
 			name = "CoreAudio Public Utility";
-			sourceTree = "<group>";
-		};
-		554D317818BADDBE007DEB16 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				554D318B18BADDBF007DEB16 /* libCrashReporter.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		556ACE30187BB3F800AED4BC /* Wrapped C++ */ = {
@@ -656,7 +653,6 @@
 			isa = PBXGroup;
 			children = (
 				55AF60C818C94BD700BE2212 /* Config */,
-				554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */,
 				55394ED01884C94F00474E20 /* Embrace.entitlements */,
 				55DD538C18B99A530084628D /* CrashPad.entitlements */,
 				55EF15881D692DCC0021C9A7 /* Worker.entitlements */,
@@ -692,10 +688,10 @@
 		558DC081187785BC00C85770 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				550C63C01FE270E3007841BC /* SystemConfiguration.framework */,
 				55169D491F95A6FE003779FA /* iTunesManager.h */,
 				55169D441F9587FF003779FA /* iTunesLibrary.framework */,
 				5549FCA51F8AF767009006D2 /* CoreServices.framework */,
-				55AF60E818C94FDD00BE2212 /* libcrypto.a */,
 				553E44E118C5D23400E8D7B9 /* IOKit.framework */,
 				55A0B16C188F6FD700866F04 /* Accelerate.framework */,
 				555B3C821880EFD20088C15C /* QuartzCore.framework */,
@@ -948,6 +944,7 @@
 		55DD53A518B9FC3E0084628D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				550C63BC1FE26F18007841BC /* MTS */,
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
 				55F6C72F19CEAA5B00B22793 /* Compatibility.h */,
@@ -1043,7 +1040,6 @@
 			);
 			dependencies = (
 				552EC02D18DFD543000B82AB /* PBXTargetDependency */,
-				55AB41DE18BADFE700DBCD7B /* PBXTargetDependency */,
 				5514B6491CDEE64200F238B7 /* PBXTargetDependency */,
 			);
 			name = Embrace;
@@ -1083,12 +1079,6 @@
 			mainGroup = 558DC076187785BC00C85770;
 			productRefGroup = 558DC080187785BC00C85770 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 554D317818BADDBE007DEB16 /* Products */;
-					ProjectRef = 554D317718BADDBE007DEB16 /* CrashReporter.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				558DC07E187785BC00C85770 /* Embrace */,
@@ -1097,16 +1087,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		554D318B18BADDBF007DEB16 /* libCrashReporter.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCrashReporter.a;
-			remoteRef = 554D318A18BADDBF007DEB16 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		5514B63D1CDEE64200F238B7 /* Resources */ = {
@@ -1259,6 +1239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */,
 				55717BF5187EA65400213213 /* Button.m in Sources */,
 				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
@@ -1305,7 +1286,9 @@
 				5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */,
 				557ABAB61B68D48C006F69D9 /* DotView.m in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,
+				550C63BF1FE2701A007841BC /* MTSBase.m in Sources */,
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
+				550C63B81FE26EE5007841BC /* MTSEscapePod.m in Sources */,
 				55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
@@ -1347,11 +1330,6 @@
 			isa = PBXTargetDependency;
 			target = 5559E61118DFD42500D61019 /* CrashPad */;
 			targetProxy = 552EC02C18DFD543000B82AB /* PBXContainerItemProxy */;
-		};
-		55AB41DE18BADFE700DBCD7B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "CrashReporter-MacOSX-Static";
-			targetProxy = 55AB41DD18BADFE700DBCD7B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

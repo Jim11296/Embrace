@@ -8,4 +8,5 @@
 
 @class PLCrashReporter;
 
-extern void SetupCrashPad(PLCrashReporter *reporter);
+extern BOOL CrashPadIsDebuggerAttached(void);
+extern void SetupCrashPad(void);

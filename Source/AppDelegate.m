@@ -30,8 +30,9 @@
 #import "ScriptsManager.h"
 #import "WrappedAudioDevice.h"
 
-#import <CrashReporter.h>
 #import "CrashReportSender.h"
+#import "MTSEscapePod.h"
+#import "MTSTelemetry.h"
 
 @interface AppDelegate ()
 
@@ -99,9 +100,6 @@
     DebugController        *_debugController;
 #endif
 
-    PLCrashReporter   *_crashReporter;
-    CrashReportSender *_crashSender;
-
     NSMutableArray    *_editEffectControllers;
     NSMutableArray    *_viewTrackControllers;
     
@@ -135,16 +133,18 @@
     
     [EffectType embrace_registerMappedEffects];
 
-    PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeBSD symbolicationStrategy:PLCrashReporterSymbolicationStrategyAll];
-    _crashReporter = [[PLCrashReporter alloc] initWithConfiguration:config];
+    MTSTelemetrySetBasePath(GetApplicationSupportDirectory());
     
-    _crashSender = [[CrashReportSender alloc] initWithAppIdentifier:@"<redacted>"];
+    NSString *escapePodTelemetryName = @"Crashes";
+    
+    MTSEscapePodSetTelemetryName(escapePodTelemetryName);
 
-    [_crashSender extractPendingReportFromReporter:_crashReporter];
-    SetupCrashPad(_crashReporter);
-    
-    if (![CrashReportSender isDebuggerAttached]) {
-        [_crashReporter enableCrashReporter];
+    MTSTelemetryRegisterURL(escapePodTelemetryName, [NSURL URLWithString:@"<redacted>"]);
+
+    if (!CrashPadIsDebuggerAttached()) {
+        SetupCrashPad();
+        MTSEscapePodInstall();
+        MTSTelemetrySend(MTSEscapePodGetTelemetryName(), NO);
     }
 
     _setlistController      = [[SetlistController alloc] init];
@@ -153,8 +153,8 @@
 
     [self _showPreviouslyVisibleWindows];
 
-    BOOL hasCrashReports = [_crashSender hasCrashReports];
-
+    BOOL hasCrashReports = MTSTelemetryHasContents(MTSEscapePodGetTelemetryName());
+    
     [[self crashReportMenuItem] setHidden:!hasCrashReports];
     [[self crashReportSeparator] setHidden:!hasCrashReports];
 
@@ -600,7 +600,7 @@
         return [_setlistController validateMenuItem:menuItem];
 
     } else if (action == @selector(sendCrashReports:)){
-        BOOL hasCrashReports = [_crashSender hasCrashReports];
+        BOOL hasCrashReports = MTSTelemetryHasContents(MTSEscapePodGetTelemetryName());
 
         [[self crashReportMenuItem]  setHidden:!hasCrashReports];
         [[self crashReportSeparator] setHidden:!hasCrashReports];
@@ -873,7 +873,7 @@
     BOOL okToSend = [makeAlertOne() runModal] == NSAlertFirstButtonReturn;
 
     if (okToSend) {
-        [_crashSender sendCrashReportsWithCompletionHandler:^(BOOL didSend) {
+        [CrashReportSender sendCrashReportsWithCompletionHandler:^(BOOL didSend) {
             NSModalResponse response = [makeAlertTwo() runModal];
             
             if (response == NSAlertSecondButtonReturn) {
@@ -919,7 +919,7 @@
     BOOL okToSend = [makeAlertOne() runModal] == NSAlertFirstButtonReturn;
 
     if (okToSend) {
-        [_crashSender sendLogsWithCompletionHandler:^(BOOL didSend) {
+        [CrashReportSender sendLogsWithCompletionHandler:^(BOOL didSend) {
             NSModalResponse response = [makeAlertTwo(didSend) runModal];
             
             if (response == NSAlertSecondButtonReturn) {
@@ -927,7 +927,6 @@
             }
         }];
     }
-
 }
 
 
