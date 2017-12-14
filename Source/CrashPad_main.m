@@ -41,12 +41,15 @@
 
     [alert setMessageText:    NSLocalizedString(@"Embrace encountered a critical error.", nil)];
     [alert setInformativeText:NSLocalizedString(@"Your current song will continue to play, but you must reopen the app to play other songs or access other features.", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Reopen",  nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Quit", nil)];
+    
+    NSButton *reopenButton = [alert addButtonWithTitle:NSLocalizedString(@"Reopen",  nil)];
+    NSButton *quitButton   = [alert addButtonWithTitle:NSLocalizedString(@"Quit", nil)];
+        
+    [reopenButton setKeyEquivalent:@""];
+    [quitButton   setKeyEquivalent:@""];
         
     return [alert runModal] == NSAlertFirstButtonReturn;
 }
-
 
 
 - (void) applicationDidFinishLaunching:(NSNotification *)notification
