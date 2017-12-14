@@ -65,6 +65,38 @@
 }
 
 
+- (void) setScriptingVolume:(NSNumber *)number
+{
+    [[Player sharedInstance] setVolume:[number doubleValue]];
+}
+
+
+- (NSNumber *) scriptingVolume
+{
+    return @([[Player sharedInstance] volume]);
+}
+
+
+- (void) handlePlayScriptCommand:(NSScriptCommand *)command
+{
+    Player *player = [Player sharedInstance];
+    
+    if (![player isPlaying]) {
+        [player play];
+    }
+}
+
+
+- (void) handleStopScriptCommand:(NSScriptCommand *)command
+{
+    Player *player = [Player sharedInstance];
+    
+    if ([player isPlaying]) {
+        [player hardStop];
+    }
+}
+
+
 @end
 
 

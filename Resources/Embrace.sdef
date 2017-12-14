@@ -93,6 +93,14 @@
 			</enumerator>
 		</enumeration>
 
+        <command name="play" code="embrplay" description="Starts playback.">
+            <access-group identifier="*"/>
+        </command>
+
+        <command name="stop" code="embrstop" description="Stops playback.">
+            <access-group identifier="*"/>
+        </command>
+        
         <class name="application" code="capp" description="The Embrace application." inherits="application">
             <cocoa class="Application"/>
 
@@ -115,6 +123,19 @@
 			<property name="remaining time" access="r" code="rems" type="real" description="the remaining time in seconds">
             	<cocoa key="scriptingRemainingTime"/>
             </property>
+
+            <property name="volume" access="rw" code="volm" type="real" description="the volume">
+                <cocoa key="scriptingVolume"/>
+            </property>
+
+            <responds-to command="stop">
+                <cocoa method="handleStopScriptCommand:"/>
+            </responds-to>
+
+            <responds-to command="play">
+                <cocoa method="handlePlayScriptCommand:"/>
+            </responds-to>
+
         </class>
 
 		<enumeration name="trackStatus" code="trst">
