@@ -22,7 +22,7 @@
 #import <pthread.h>
 #import <signal.h>
 #import <Accelerate/Accelerate.h>
-#import <PLCrashLogWriter.h>
+#import "MTSEscapePod.h"
 #import <IOKit/pwr_mgt/IOPMLib.h>
 
 #define CHECK_RENDER_ERRORS_ON_TICK 0
@@ -47,7 +47,7 @@ static OSStatus sApplyEmergencyLimiter(
     UInt32 inNumberFrames,
     AudioBufferList *ioData
 ) {
-    CrashLogWriterSetIgnoredThread(mach_thread_self());
+    MTSEscapePodSetIgnoredThread(mach_thread_self());
 
     EmergencyLimiter *limiter = (EmergencyLimiter *)inRefCon;
     

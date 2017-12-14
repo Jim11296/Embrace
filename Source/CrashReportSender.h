@@ -11,18 +11,9 @@
 
 @interface CrashReportSender : NSObject
 
-+ (NSString *) deviceModel;
-
 + (BOOL) isDebuggerAttached;
 
-- (id) initWithAppIdentifier:(NSString *)appIdentifier;
-
-- (void) extractPendingReportFromReporter:(PLCrashReporter *)reporter;
-
-- (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;
-- (void) sendLogsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;
-
-@property (nonatomic, readonly) BOOL hasCrashReports;
-@property (nonatomic, readonly) NSString *appIdentifier;
++ (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;
++ (void) sendLogsWithCompletionHandler:(void (^)(BOOL))completionHandler;
 
 @end
