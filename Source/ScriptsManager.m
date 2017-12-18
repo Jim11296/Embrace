@@ -97,11 +97,15 @@
 - (void) callMetadataAvailableWithTrack:(Track *)track
 {
     NSAppleEventDescriptor *target = [NSAppleEventDescriptor nullDescriptor];
-    NSAppleEventDescriptor *appleEvent = [[NSAppleEventDescriptor alloc] initWithEventClass:'embr' eventID:'he00' targetDescriptor:target returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
+    if (!target) return;
 
-    if (appleEvent && track) {
-        [appleEvent setParamDescriptor:[[track objectSpecifier] descriptor] forKeyword:'hetr'];
-    }
+    NSAppleEventDescriptor *param  = [[track objectSpecifier] descriptor];
+    if (!param) return;
+    
+    NSAppleEventDescriptor *appleEvent = [[NSAppleEventDescriptor alloc] initWithEventClass:'embr' eventID:'he00' targetDescriptor:target returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
+    if (!appleEvent) return;
+
+    [appleEvent setParamDescriptor:param forKeyword:'hetr'];
 
     for (NSAppleScript *script in _scripts) {
         NSDictionary *errorInfo = nil;
