@@ -29,7 +29,8 @@
 		</command>
 
 		<class name="application" code="capp" description="The application's top-level scripting object.">
-			<cocoa class="NSApplication"/>
+			<cocoa class="Application"/>
+
 			<property name="name" code="pnam" type="text" access="r" description="The name of the application."/>
 			<property name="frontmost" code="pisf" type="boolean" access="r" description="Is this the active application?">
 				<cocoa key="isActive"/>
@@ -101,9 +102,7 @@
             <access-group identifier="*"/>
         </command>
         
-        <class name="application" code="capp" description="The Embrace application." inherits="application">
-            <cocoa class="Application"/>
-
+        <class-extension extends="application" description="The Embrace application.">
             <element access="r" description="The tracks in the set list." type="track">
                 <cocoa key="scriptingTracks"/>
             </element>
@@ -136,7 +135,7 @@
                 <cocoa method="handlePlayScriptCommand:"/>
             </responds-to>
 
-        </class>
+        </class-extension>
 
 		<enumeration name="trackStatus" code="trst">
 			<enumerator name="queued" code="trsa" description="The track is queued for playback.">
@@ -176,6 +175,10 @@
 
 		<class name="track" code="trck" description="An track in the set list.">
 			<cocoa class="Track"/>
+
+            <property name="id" code="ID  " description="A unique identifier for this track." type="text" access="r">
+                <cocoa key="scriptingID" />
+            </property>
 
 			<property name="aggregate" access="r" code="aggr" type="text" description="A tab-delimited string containing ( title, artist, album, genre, comments, album artist, composer, grouping ).  Additional fields may be added in future versions, order of existing fields will not change.">
 				<cocoa key="scriptingAggregate"/>
@@ -260,7 +263,6 @@
         <event name="metadata available" code="embrhe00" description="This handler is called when Embrace parses a track's metadata.">
             <cocoa name="MetadataAvailable" class="EventHandlerCommand"/>
             <parameter code="hetr" name="for" description="The track that was parsed." type="track">
-                <cocoa key="Track"/>
             </parameter>
         </event>
     </suite>

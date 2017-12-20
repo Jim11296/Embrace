@@ -1,7 +1,7 @@
 //  Copyright (c) 2016-2017 Ricci Adams. All rights reserved.
 
 
-#import "Worker.h"
+#import "WorkerService.h"
 
 #import "AudioFile.h"
 #import "TrackKeys.h"

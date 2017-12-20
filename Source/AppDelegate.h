@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol WorkerProtocol;
 
 @class EditEffectController, ViewTrackController, Effect;
 @class SetlistController, Track;

@@ -13,6 +13,9 @@
 		550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B91FE26F12007841BC /* MTSTelemetry.m */; };
 		550C63BF1FE2701A007841BC /* MTSBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63BE1FE2701A007841BC /* MTSBase.m */; };
 		550C63C11FE270E4007841BC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 550C63C01FE270E3007841BC /* SystemConfiguration.framework */; };
+		550C63C51FE63B27007841BC /* FileSystemMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63C41FE63B27007841BC /* FileSystemMonitor.m */; };
+		550C63C81FE6666E007841BC /* ScriptFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63C61FE6666E007841BC /* ScriptFile.m */; };
+		550C63EA1FE76AC3007841BC /* WorkerService.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63E81FE76AA4007841BC /* WorkerService.m */; };
 		550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882718AC3C5B00CC7E3A /* rate_44.m4a */; };
 		550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882918AC3C5B00CC7E3A /* rate_88.m4a */; };
 		550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882818AC3C5B00CC7E3A /* rate_48.m4a */; };
@@ -23,7 +26,6 @@
 		55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */; };
 		55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B4A1B537C2500308F55 /* EditSystemEffectController.m */; };
 		5514B63A1CDD694700F238B7 /* DangerMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6391CDD694700F238B7 /* DangerMeter.m */; };
-		5514B6441CDEE64200F238B7 /* Worker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6431CDEE64200F238B7 /* Worker.m */; };
 		5514B64A1CDEE64200F238B7 /* EmbraceWorker.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6631CDEE9DE00F238B7 /* TrackKeys.m */; };
 		5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6631CDEE9DE00F238B7 /* TrackKeys.m */; };
@@ -71,6 +73,17 @@
 		556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */; };
 		556ACE2F187B901400AED4BC /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE2E187B901400AED4BC /* WaveformView.m */; };
 		556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE35187BB43A00AED4BC /* WrappedUtils.mm */; };
+		556EAEE41FEA013000EF68C3 /* Embrace_Submission.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */; };
+		556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */; };
+		556EAEE61FEA013000EF68C3 /* Embrace_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */; };
+		556EAEE71FEA013000EF68C3 /* Embrace_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */; };
+		556EAEEC1FEA013C00EF68C3 /* CrashPad_Submission.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */; };
+		556EAEED1FEA013C00EF68C3 /* CrashPad_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */; };
+		556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */; };
+		556EAEEF1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */; };
+		556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */; };
+		556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */; };
+		556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */; };
 		55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CC118B97ADB0059110C /* CrashPadClient.m */; };
 		55717BF5187EA65400213213 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* Button.m */; };
 		55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* WhiteSlider.m */; };
@@ -205,6 +218,12 @@
 		550C63BD1FE27019007841BC /* MTSBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSBase.h; path = Source/MTSBase.h; sourceTree = "<group>"; };
 		550C63BE1FE2701A007841BC /* MTSBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTSBase.m; path = Source/MTSBase.m; sourceTree = "<group>"; };
 		550C63C01FE270E3007841BC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		550C63C31FE63B27007841BC /* FileSystemMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FileSystemMonitor.h; path = Source/FileSystemMonitor.h; sourceTree = "<group>"; };
+		550C63C41FE63B27007841BC /* FileSystemMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FileSystemMonitor.m; path = Source/FileSystemMonitor.m; sourceTree = "<group>"; };
+		550C63C61FE6666E007841BC /* ScriptFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ScriptFile.m; path = Source/ScriptFile.m; sourceTree = "<group>"; };
+		550C63C71FE6666E007841BC /* ScriptFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScriptFile.h; path = Source/ScriptFile.h; sourceTree = "<group>"; };
+		550C63E71FE76AA4007841BC /* WorkerService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkerService.h; path = Source/WorkerService.h; sourceTree = SOURCE_ROOT; };
+		550C63E81FE76AA4007841BC /* WorkerService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorkerService.m; path = Source/WorkerService.m; sourceTree = SOURCE_ROOT; };
 		550D882718AC3C5B00CC7E3A /* rate_44.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_44.m4a; path = "Resources/Test Sounds/rate_44.m4a"; sourceTree = SOURCE_ROOT; };
 		550D882818AC3C5B00CC7E3A /* rate_48.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_48.m4a; path = "Resources/Test Sounds/rate_48.m4a"; sourceTree = SOURCE_ROOT; };
 		550D882918AC3C5B00CC7E3A /* rate_88.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_88.m4a; path = "Resources/Test Sounds/rate_88.m4a"; sourceTree = SOURCE_ROOT; };
@@ -221,15 +240,9 @@
 		5514B6381CDD694700F238B7 /* DangerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DangerMeter.h; path = Source/DangerMeter.h; sourceTree = SOURCE_ROOT; };
 		5514B6391CDD694700F238B7 /* DangerMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DangerMeter.m; path = Source/DangerMeter.m; sourceTree = SOURCE_ROOT; };
 		5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = EmbraceWorker.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
-		5514B6421CDEE64200F238B7 /* Worker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Worker.h; sourceTree = "<group>"; };
-		5514B6431CDEE64200F238B7 /* Worker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Worker.m; sourceTree = "<group>"; };
-		5514B6541CDEE6F000F238B7 /* TargetWorker.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetWorker.xcconfig; sourceTree = "<group>"; };
-		5514B6621CDEE9DE00F238B7 /* TrackKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackKeys.h; path = ../Source/TrackKeys.h; sourceTree = "<group>"; };
-		5514B6631CDEE9DE00F238B7 /* TrackKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackKeys.m; path = ../Source/TrackKeys.m; sourceTree = "<group>"; };
-		5514B66A1CDF470D00F238B7 /* Worker_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Worker_Debug.xcconfig; sourceTree = "<group>"; };
-		5514B66B1CDF470D00F238B7 /* Worker_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Worker_Submission.xcconfig; sourceTree = "<group>"; };
-		5514B66C1CDF470D00F238B7 /* Worker_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Worker_Profile.xcconfig; sourceTree = "<group>"; };
-		5514B66D1CDF470D00F238B7 /* Worker_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Worker_Release.xcconfig; sourceTree = "<group>"; };
+		5514B6541CDEE6F000F238B7 /* TargetWorker.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = TargetWorker.xcconfig; path = Config/TargetWorker.xcconfig; sourceTree = SOURCE_ROOT; };
+		5514B6621CDEE9DE00F238B7 /* TrackKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackKeys.h; path = Source/TrackKeys.h; sourceTree = "<group>"; };
+		5514B6631CDEE9DE00F238B7 /* TrackKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackKeys.m; path = Source/TrackKeys.m; sourceTree = "<group>"; };
 		5514B6781CDF4AA200F238B7 /* Worker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Worker-Info.plist"; path = "Resources/Worker-Info.plist"; sourceTree = SOURCE_ROOT; };
 		55169D441F9587FF003779FA /* iTunesLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iTunesLibrary.framework; path = ../../../../Library/Frameworks/iTunesLibrary.framework; sourceTree = "<group>"; };
 		55169D491F95A6FE003779FA /* iTunesManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = "<group>"; };
@@ -248,8 +261,8 @@
 		552C9E4B1883888E0041C160 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = SOURCE_ROOT; };
 		552C9E4D1883EBA40041C160 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = Source/Preferences.h; sourceTree = "<group>"; };
 		552C9E4E1883EBA40041C160 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preferences.m; path = Source/Preferences.m; sourceTree = "<group>"; };
-		553614CC18B4C3B2007BDAD6 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioFile.h; path = ../Source/AudioFile.h; sourceTree = "<group>"; };
-		553614CD18B4C3B2007BDAD6 /* AudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFile.m; path = ../Source/AudioFile.m; sourceTree = "<group>"; };
+		553614CC18B4C3B2007BDAD6 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioFile.h; path = Source/AudioFile.h; sourceTree = "<group>"; };
+		553614CD18B4C3B2007BDAD6 /* AudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFile.m; path = Source/AudioFile.m; sourceTree = "<group>"; };
 		5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentTrackController.m; path = Source/CurrentTrackController.m; sourceTree = SOURCE_ROOT; };
 		5537D75D19CEBA7300DE8117 /* CurrentTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentTrackController.h; path = Source/CurrentTrackController.h; sourceTree = SOURCE_ROOT; };
 		55394ED01884C94F00474E20 /* Embrace.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Embrace.entitlements; path = Resources/Embrace.entitlements; sourceTree = "<group>"; };
@@ -260,8 +273,8 @@
 		553E778F1E6ABF4800DA988B /* MetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataParser.h; path = Source/MetadataParser.h; sourceTree = SOURCE_ROOT; };
 		553E77901E6ABF4800DA988B /* MetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataParser.m; path = Source/MetadataParser.m; sourceTree = SOURCE_ROOT; };
 		5549FCA51F8AF767009006D2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
-		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = ../Source/Log.h; sourceTree = "<group>"; };
-		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = ../Source/Log.m; sourceTree = "<group>"; };
+		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = Source/Log.h; sourceTree = "<group>"; };
+		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = Source/Log.m; sourceTree = "<group>"; };
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
 		554FCB9B1DFCF0E900DE697E /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GradientView.h; path = Source/GradientView.h; sourceTree = SOURCE_ROOT; };
 		554FCB9C1DFCF0E900DE697E /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GradientView.m; path = Source/GradientView.m; sourceTree = SOURCE_ROOT; };
@@ -284,6 +297,21 @@
 		556ACE2E187B901400AED4BC /* WaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaveformView.m; path = Source/WaveformView.m; sourceTree = SOURCE_ROOT; };
 		556ACE34187BB43A00AED4BC /* WrappedUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedUtils.h; path = Source/WrappedUtils.h; sourceTree = "<group>"; };
 		556ACE35187BB43A00AED4BC /* WrappedUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedUtils.mm; path = Source/WrappedUtils.mm; sourceTree = "<group>"; };
+		556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Worker_Release.xcconfig; path = Config/Combined/Worker_Release.xcconfig; sourceTree = "<group>"; };
+		556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Worker_Debug.xcconfig; path = Config/Combined/Worker_Debug.xcconfig; sourceTree = "<group>"; };
+		556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Worker_Profile.xcconfig; path = Config/Combined/Worker_Profile.xcconfig; sourceTree = "<group>"; };
+		556EAEDB1FEA011B00EF68C3 /* Worker_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Worker_Submission.xcconfig; path = Config/Combined/Worker_Submission.xcconfig; sourceTree = "<group>"; };
+		556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Submission.xcconfig; path = Config/Combined/Embrace_Submission.xcconfig; sourceTree = "<group>"; };
+		556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Release.xcconfig; path = Config/Combined/Embrace_Release.xcconfig; sourceTree = "<group>"; };
+		556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Debug.xcconfig; path = Config/Combined/Embrace_Debug.xcconfig; sourceTree = "<group>"; };
+		556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Profile.xcconfig; path = Config/Combined/Embrace_Profile.xcconfig; sourceTree = "<group>"; };
+		556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Submission.xcconfig; path = Config/Combined/CrashPad_Submission.xcconfig; sourceTree = "<group>"; };
+		556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Profile.xcconfig; path = Config/Combined/CrashPad_Profile.xcconfig; sourceTree = "<group>"; };
+		556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Release.xcconfig; path = Config/Combined/CrashPad_Release.xcconfig; sourceTree = "<group>"; };
+		556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Debug.xcconfig; path = Config/Combined/CrashPad_Debug.xcconfig; sourceTree = "<group>"; };
+		556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Release.xcconfig; path = Config/Combined/Embrace_Trial_Release.xcconfig; sourceTree = "<group>"; };
+		556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Debug.xcconfig; path = Config/Combined/Embrace_Trial_Debug.xcconfig; sourceTree = "<group>"; };
+		556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Profile.xcconfig; path = Config/Combined/Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
 		55708CC018B97ADB0059110C /* CrashPadClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashPadClient.h; path = Source/CrashPadClient.h; sourceTree = SOURCE_ROOT; };
@@ -302,10 +330,7 @@
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
 		557C2C591897403E002FAFEA /* CABitOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABitOperations.h; path = CoreAudio/PublicUtility/CABitOperations.h; sourceTree = "<group>"; };
 		557C2C5F1897403E002FAFEA /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = CoreAudio/PublicUtility/CAByteOrder.h; sourceTree = "<group>"; };
-		557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
-		557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Release.xcconfig; sourceTree = "<group>"; };
-		557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Trial_Debug.xcconfig; sourceTree = "<group>"; };
-		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Trial.xcconfig; sourceTree = "<group>"; };
+		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Trial.xcconfig; path = Config/Trial.xcconfig; sourceTree = SOURCE_ROOT; };
 		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
 		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
 		557C2C771897403E002FAFEA /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = CoreAudio/PublicUtility/CAException.h; sourceTree = "<group>"; };
@@ -334,8 +359,8 @@
 		557C43991D615CDC000184D8 /* TipArrowFloater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TipArrowFloater.m; path = Source/TipArrowFloater.m; sourceTree = SOURCE_ROOT; };
 		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
 		557CF69018C1E14B0066D040 /* TracksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TracksController.m; path = Source/TracksController.m; sourceTree = SOURCE_ROOT; };
-		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = ../Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
-		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = ../Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
+		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
+		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
 		5583A5911CF91C5D00B8CC4D /* FastUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FastUtils.h; path = Source/FastUtils.h; sourceTree = "<group>"; };
 		5583A5921CF91C5D00B8CC4D /* FastUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FastUtils.m; path = Source/FastUtils.m; sourceTree = "<group>"; };
 		5583A5961CFC0F1200B8CC4D /* IssueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueManager.h; path = Source/IssueManager.h; sourceTree = "<group>"; };
@@ -357,8 +382,8 @@
 		558DC0CA1877868400C85770 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		5595A7BA18793B9000A7B996 /* EmbraceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmbraceWindow.h; path = Source/EmbraceWindow.h; sourceTree = SOURCE_ROOT; };
 		5595A7BB18793B9000A7B996 /* EmbraceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmbraceWindow.m; path = Source/EmbraceWindow.m; sourceTree = SOURCE_ROOT; };
-		559A671418D18EA200AB5918 /* URLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URLExtensions.h; path = ../Source/URLExtensions.h; sourceTree = "<group>"; };
-		559A671518D18EA200AB5918 /* URLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = URLExtensions.m; path = ../Source/URLExtensions.m; sourceTree = "<group>"; };
+		559A671418D18EA200AB5918 /* URLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URLExtensions.h; path = Source/URLExtensions.h; sourceTree = "<group>"; };
+		559A671518D18EA200AB5918 /* URLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = URLExtensions.m; path = Source/URLExtensions.m; sourceTree = "<group>"; };
 		55A0B167188F447100866F04 /* CurrentTrackWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CurrentTrackWindow.xib; path = Resources/CurrentTrackWindow.xib; sourceTree = SOURCE_ROOT; };
 		55A0B16C188F6FD700866F04 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		55A0B16F1890A81900866F04 /* test_g.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_g.m4a; path = "Resources/Test Sounds/test_g.m4a"; sourceTree = SOURCE_ROOT; };
@@ -373,21 +398,13 @@
 		55ADE93418815EA8008DC245 /* PlayBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayBar.m; path = Source/PlayBar.m; sourceTree = SOURCE_ROOT; };
 		55ADE93618824338008DC245 /* LevelMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LevelMeter.h; path = Source/LevelMeter.h; sourceTree = SOURCE_ROOT; };
 		55ADE93718824338008DC245 /* LevelMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LevelMeter.m; path = Source/LevelMeter.m; sourceTree = SOURCE_ROOT; };
-		55AF60C918C94BD700BE2212 /* Base.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Debug.xcconfig; sourceTree = "<group>"; };
-		55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Profile.xcconfig; sourceTree = "<group>"; };
-		55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Release.xcconfig; sourceTree = "<group>"; };
-		55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CrashPad_Submission.xcconfig; sourceTree = "<group>"; };
-		55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Debug.xcconfig; sourceTree = "<group>"; };
-		55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Profile.xcconfig; sourceTree = "<group>"; };
-		55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Release.xcconfig; sourceTree = "<group>"; };
-		55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Embrace_Submission.xcconfig; sourceTree = "<group>"; };
-		55AF60D318C94BD700BE2212 /* ConfigDebug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigDebug.xcconfig; sourceTree = "<group>"; };
-		55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigProfile.xcconfig; sourceTree = "<group>"; };
-		55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigRelease.xcconfig; sourceTree = "<group>"; };
-		55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigSubmission.xcconfig; sourceTree = "<group>"; };
-		55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetCrashPad.xcconfig; sourceTree = "<group>"; };
-		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetEmbrace.xcconfig; sourceTree = "<group>"; };
+		55AF60C918C94BD700BE2212 /* Base.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = Config/Base.xcconfig; sourceTree = "<group>"; };
+		55AF60D318C94BD700BE2212 /* ConfigDebug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ConfigDebug.xcconfig; path = Config/ConfigDebug.xcconfig; sourceTree = SOURCE_ROOT; };
+		55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ConfigProfile.xcconfig; path = Config/ConfigProfile.xcconfig; sourceTree = SOURCE_ROOT; };
+		55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ConfigRelease.xcconfig; path = Config/ConfigRelease.xcconfig; sourceTree = SOURCE_ROOT; };
+		55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ConfigSubmission.xcconfig; path = Config/ConfigSubmission.xcconfig; sourceTree = SOURCE_ROOT; };
+		55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = TargetCrashPad.xcconfig; path = Config/TargetCrashPad.xcconfig; sourceTree = SOURCE_ROOT; };
+		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = TargetEmbrace.xcconfig; path = Config/TargetEmbrace.xcconfig; sourceTree = SOURCE_ROOT; };
 		55B8587A1FB93ED20095D496 /* ScriptsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScriptsManager.h; path = Source/ScriptsManager.h; sourceTree = "<group>"; };
 		55B8587B1FB93ED20095D496 /* ScriptsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScriptsManager.m; path = Source/ScriptsManager.m; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
@@ -521,20 +538,19 @@
 				5582F7EC18A385570046A24B /* LoudnessMeasurer.m */,
 				553E778F1E6ABF4800DA988B /* MetadataParser.h */,
 				553E77901E6ABF4800DA988B /* MetadataParser.m */,
-				5514B6421CDEE64200F238B7 /* Worker.h */,
-				5514B6431CDEE64200F238B7 /* Worker.m */,
+				550C63E71FE76AA4007841BC /* WorkerService.h */,
+				550C63E81FE76AA4007841BC /* WorkerService.m */,
 			);
 			name = Worker;
-			path = EmbraceService;
 			sourceTree = "<group>";
 		};
 		5514B6561CDEE6FA00F238B7 /* Worker */ = {
 			isa = PBXGroup;
 			children = (
-				5514B66A1CDF470D00F238B7 /* Worker_Debug.xcconfig */,
-				5514B66B1CDF470D00F238B7 /* Worker_Submission.xcconfig */,
-				5514B66C1CDF470D00F238B7 /* Worker_Profile.xcconfig */,
-				5514B66D1CDF470D00F238B7 /* Worker_Release.xcconfig */,
+				556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */,
+				556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */,
+				556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */,
+				556EAEDB1FEA011B00EF68C3 /* Worker_Submission.xcconfig */,
 			);
 			name = Worker;
 			sourceTree = "<group>";
@@ -552,8 +568,7 @@
 				559A671518D18EA200AB5918 /* URLExtensions.m */,
 			);
 			name = Shared;
-			path = EmbraceService;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		552C9DC418836E480041C160 /* CoreAudio Public Utility */ = {
 			isa = PBXGroup;
@@ -620,10 +635,10 @@
 		557C2C5E1910F933004A6364 /* Crash Pad */ = {
 			isa = PBXGroup;
 			children = (
-				55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */,
-				55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */,
-				55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */,
-				55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */,
+				556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */,
+				556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */,
+				556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */,
+				556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */,
 			);
 			name = "Crash Pad";
 			sourceTree = "<group>";
@@ -631,10 +646,10 @@
 		557C2C5F1910F93C004A6364 /* Embrace */ = {
 			isa = PBXGroup;
 			children = (
-				55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */,
-				55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */,
-				55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */,
-				55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */,
+				556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */,
+				556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */,
+				556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */,
+				556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */,
 			);
 			name = Embrace;
 			sourceTree = "<group>";
@@ -642,9 +657,9 @@
 		557C2C601910F944004A6364 /* Embrace Trial */ = {
 			isa = PBXGroup;
 			children = (
-				557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */,
-				557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */,
-				557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */,
+				556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */,
+				556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */,
+				556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */,
 			);
 			name = "Embrace Trial";
 			sourceTree = "<group>";
@@ -818,7 +833,7 @@
 				55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */,
 				55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */,
 			);
-			path = Config;
+			name = Config;
 			sourceTree = "<group>";
 		};
 		55AF60CA18C94BD700BE2212 /* Combined */ = {
@@ -829,7 +844,7 @@
 				557C2C5E1910F933004A6364 /* Crash Pad */,
 				557C2C601910F944004A6364 /* Embrace Trial */,
 			);
-			path = Combined;
+			name = Combined;
 			sourceTree = "<group>";
 		};
 		55BC0B1C1878D7FA00D84481 /* Model */ = {
@@ -935,6 +950,8 @@
 				55CF848F18BF459600EF33F7 /* Scripting.h */,
 				55CF849018BF459600EF33F7 /* Scripting.m */,
 				55CF848D18BF27AC00EF33F7 /* Embrace.sdef */,
+				550C63C71FE6666E007841BC /* ScriptFile.h */,
+				550C63C61FE6666E007841BC /* ScriptFile.m */,
 				55B8587A1FB93ED20095D496 /* ScriptsManager.h */,
 				55B8587B1FB93ED20095D496 /* ScriptsManager.m */,
 			);
@@ -953,6 +970,8 @@
 				55BC0B2A1878E4EF00D84481 /* Utils.m */,
 				5583A5911CF91C5D00B8CC4D /* FastUtils.h */,
 				5583A5921CF91C5D00B8CC4D /* FastUtils.m */,
+				550C63C31FE63B27007841BC /* FileSystemMonitor.h */,
+				550C63C41FE63B27007841BC /* FileSystemMonitor.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1110,14 +1129,18 @@
 			files = (
 				55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */,
 				55A9A31019CBDF6C002ED9CE /* Images.xcassets in Resources */,
+				556EAEEF1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig in Resources */,
 				55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */,
 				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
 				55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */,
 				550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */,
+				556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */,
+				556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */,
 				55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */,
 				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
 				55169D511F9ACBFA003779FA /* test_3s_e4.m4a in Resources */,
+				556EAEEC1FEA013C00EF68C3 /* CrashPad_Submission.xcconfig in Resources */,
 				55169D501F9ACBFA003779FA /* test_3s_d4.m4a in Resources */,
 				55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
@@ -1126,24 +1149,31 @@
 				550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */,
 				55A0B1741890A81900866F04 /* test_g.m4a in Resources */,
 				554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */,
+				556EAEE61FEA013000EF68C3 /* Embrace_Debug.xcconfig in Resources */,
 				55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */,
 				553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */,
 				5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */,
 				55169D531F9ACBFA003779FA /* test_3s_g4.m4a in Resources */,
+				556EAEE71FEA013000EF68C3 /* Embrace_Profile.xcconfig in Resources */,
 				556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */,
 				55169D541F9ACBFA003779FA /* test_3s_f4.m4a in Resources */,
 				55169D521F9ACBFA003779FA /* test_3s_c4.m4a in Resources */,
 				558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */,
+				556EAEED1FEA013C00EF68C3 /* CrashPad_Profile.xcconfig in Resources */,
 				55A0B1751890A81900866F04 /* test_f.m4a in Resources */,
 				55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */,
 				552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */,
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
+				556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
+				556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */,
 				550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */,
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
+				556EAEE41FEA013000EF68C3 /* Embrace_Submission.xcconfig in Resources */,
 				55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */,
 				55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */,
+				556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */,
 				55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1220,10 +1250,10 @@
 				553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */,
 				5514B6691CDF46C700F238B7 /* Log.m in Sources */,
 				5514B6671CDF3BB300F238B7 /* AudioFile.m in Sources */,
-				5514B6441CDEE64200F238B7 /* Worker.m in Sources */,
 				5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */,
 				5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */,
 				5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */,
+				550C63EA1FE76AC3007841BC /* WorkerService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1290,6 +1320,7 @@
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
 				550C63B81FE26EE5007841BC /* MTSEscapePod.m in Sources */,
 				55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */,
+				550C63C51FE63B27007841BC /* FileSystemMonitor.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
 				55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */,
@@ -1312,6 +1343,7 @@
 				55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */,
 				557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */,
 				557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */,
+				550C63C81FE6666E007841BC /* ScriptFile.m in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
 				55C24E1518D7D7800057D45E /* StereoField.m in Sources */,
 				55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */,
@@ -1363,7 +1395,7 @@
 /* Begin XCBuildConfiguration section */
 		5514B64C1CDEE64200F238B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66A1CDF470D00F238B7 /* Worker_Debug.xcconfig */;
+			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
@@ -1371,7 +1403,7 @@
 		};
 		5514B64D1CDEE64200F238B7 /* Trial Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66A1CDF470D00F238B7 /* Worker_Debug.xcconfig */;
+			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
 			};
@@ -1379,7 +1411,7 @@
 		};
 		5514B64E1CDEE64200F238B7 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66C1CDF470D00F238B7 /* Worker_Profile.xcconfig */;
+			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
@@ -1387,7 +1419,7 @@
 		};
 		5514B64F1CDEE64200F238B7 /* Trial Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66C1CDF470D00F238B7 /* Worker_Profile.xcconfig */;
+			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
 			};
@@ -1395,7 +1427,7 @@
 		};
 		5514B6501CDEE64200F238B7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66D1CDF470D00F238B7 /* Worker_Release.xcconfig */;
+			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
@@ -1403,7 +1435,7 @@
 		};
 		5514B6511CDEE64200F238B7 /* Trial Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66D1CDF470D00F238B7 /* Worker_Release.xcconfig */;
+			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
 			};
@@ -1411,7 +1443,7 @@
 		};
 		5514B6521CDEE64200F238B7 /* Submission */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5514B66B1CDF470D00F238B7 /* Worker_Submission.xcconfig */;
+			baseConfigurationReference = 556EAEDB1FEA011B00EF68C3 /* Worker_Submission.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
@@ -1419,7 +1451,7 @@
 		};
 		5559E63A18DFD42600D61019 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */;
+			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
@@ -1428,7 +1460,7 @@
 		};
 		5559E63B18DFD42600D61019 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */;
+			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
@@ -1437,7 +1469,7 @@
 		};
 		5559E63C18DFD42600D61019 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */;
+			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
@@ -1446,7 +1478,7 @@
 		};
 		5559E63D18DFD42600D61019 /* Submission */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CE18C94BD700BE2212 /* CrashPad_Submission.xcconfig */;
+			baseConfigurationReference = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Ricci Adams (XXXXXXXXXX)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
@@ -1463,20 +1495,16 @@
 		};
 		557C2C6A1910F9FB004A6364 /* Trial Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 557C2C631910F954004A6364 /* Embrace_Trial_Debug.xcconfig */;
+			baseConfigurationReference = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Debug";
 		};
 		557C2C6B1910F9FB004A6364 /* Trial Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CB18C94BD700BE2212 /* CrashPad_Debug.xcconfig */;
+			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
 				SKIP_INSTALL = YES;
@@ -1491,20 +1519,16 @@
 		};
 		557C2C6D1910FA13004A6364 /* Trial Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 557C2C611910F954004A6364 /* Embrace_Trial_Profile.xcconfig */;
+			baseConfigurationReference = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Profile";
 		};
 		557C2C6E1910FA13004A6364 /* Trial Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CC18C94BD700BE2212 /* CrashPad_Profile.xcconfig */;
+			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
 				SKIP_INSTALL = YES;
@@ -1519,20 +1543,16 @@
 		};
 		557C2C701910FA1D004A6364 /* Trial Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 557C2C621910F954004A6364 /* Embrace_Trial_Release.xcconfig */;
+			baseConfigurationReference = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Release";
 		};
 		557C2C711910FA1D004A6364 /* Trial Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CD18C94BD700BE2212 /* CrashPad_Release.xcconfig */;
+			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
 			buildSettings = {
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
 				SKIP_INSTALL = YES;
@@ -1555,27 +1575,19 @@
 		};
 		558DC0B1187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60CF18C94BD700BE2212 /* Embrace_Debug.xcconfig */;
+			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				DEVELOPMENT_TEAM = "";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Debug;
 		};
 		558DC0B2187785BC00C85770 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60D018C94BD700BE2212 /* Embrace_Profile.xcconfig */;
+			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Profile;
@@ -1588,12 +1600,8 @@
 		};
 		55AF60A218C94ACD00BE2212 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60D118C94BD700BE2212 /* Embrace_Release.xcconfig */;
+			baseConfigurationReference = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Release;
@@ -1606,12 +1614,8 @@
 		};
 		55AF60A518C94AD100BE2212 /* Submission */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55AF60D218C94BD700BE2212 /* Embrace_Submission.xcconfig */;
+			baseConfigurationReference = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					$PROJECT_DIR/lib,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Submission;

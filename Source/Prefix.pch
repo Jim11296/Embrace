@@ -20,5 +20,4 @@
     #import "Application.h"
     #import "URLExtensions.h"
     #import "EmbraceWindow.h"
-    #import "Worker.h"
 #endif

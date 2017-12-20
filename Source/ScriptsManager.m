@@ -7,11 +7,18 @@
 //
 
 #import "ScriptsManager.h"
+#import "FileSystemMonitor.h"
+#import "Preferences.h"
+#import "ScriptFile.h"
 #import "Track.h"
-#import "Scripting.h"
+
+
+NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload";
 
 @implementation ScriptsManager {
-    NSArray *_scripts;
+    NSArray *_allScriptFiles;
+    NSAppleScript *_handlerScript;
+    FileSystemMonitor *_monitor;
 }
 
 
@@ -31,95 +38,189 @@
 - (instancetype) init
 {
     if ((self = [super init])) {
-        [self _makeScriptsDirectoryIfNeeded];
-        [self reloadScripts];
+        [self _setup];
+        [self _reloadScripts];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     }
     
     return self;
 }
 
 
-- (NSURL *) _scriptsDirectoryURL
+#pragma mark - Private Methods
+
+- (void) _setup
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+
+    NSURL *handlersDirectoryURL  = [self _handlersDirectoryURL];
+    
+    if (![manager fileExistsAtPath:[handlersDirectoryURL path]]) {
+        NSError *error = nil;
+        [manager createDirectoryAtURL:handlersDirectoryURL withIntermediateDirectories:YES attributes:nil error:&error];
+    }
+    
+    _monitor = [[FileSystemMonitor alloc] initWithURL:handlersDirectoryURL callback:^(NSArray *events) {
+        [self _reloadScripts];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ScriptsManagerDidReloadNotification object:nil];
+    }];
+    
+    [_monitor start];
+}
+
+
+- (NSURL *) _handlersDirectoryURL
 {
     NSString *appSupport = GetApplicationSupportDirectory();
     
-    return [NSURL fileURLWithPath:[appSupport stringByAppendingPathComponent:@"Scripts"]];
+    return [NSURL fileURLWithPath:[appSupport stringByAppendingPathComponent:@"Handlers"]];
 }
 
 
-- (void) _makeScriptsDirectoryIfNeeded
+- (void) _reloadScripts
 {
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSURL *scriptsDirectoryURL = [self _scriptsDirectoryURL];
+    NSURL *handlersDirectoryURL = [self _handlersDirectoryURL];
 
-    if (![manager fileExistsAtPath:[scriptsDirectoryURL path]]) {
-        NSError *error = nil;
-        [manager createDirectoryAtURL:scriptsDirectoryURL withIntermediateDirectories:YES attributes:nil error:&error];
-    }
-}
-
-
-- (NSString *) scriptsDirectory
-{
-    return [[self _scriptsDirectoryURL] path];
-}
-
-
-- (void) reloadScripts
-{
-    NSURL *scriptsDirectoryURL = [self _scriptsDirectoryURL];
     NSError *dirError = nil;
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[handlersDirectoryURL path] error:&dirError];
+   
+    NSMutableArray *scriptFiles = [NSMutableArray array];
 
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[scriptsDirectoryURL path] error:&dirError];
-    
-    _scripts = nil;
-    
-    NSMutableArray *scripts = [NSMutableArray array];
-    
+    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+
     for (NSString *item in contents) {
-        NSDictionary *scriptError = nil;
+        if ([item hasPrefix:@"."]) continue;
         
-        NSURL *scriptURL = [scriptsDirectoryURL URLByAppendingPathComponent:item];
-        NSAppleScript *script = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:&scriptError];
-        
-        if (scriptError) {
-            NSLog(@"Embrace error when loading script: %@: %@", item, scriptError);
-            script = nil;
+        NSURL    *scriptURL = [handlersDirectoryURL URLByAppendingPathComponent:item];
+        NSString *type      = nil;
+        NSError  *error     = nil;
+
+        if ([scriptURL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
+            if ([workspace type:type conformsToType:@"com.apple.applescript.script"] ||
+                [workspace type:type conformsToType:@"com.apple.applescript.text"] ||
+                [workspace type:type conformsToType:@"com.apple.applescript.script-bundle"]
+            ) {
+                ScriptFile *scriptFile = [[ScriptFile alloc] initWithURL:scriptURL];
+                [scriptFiles addObject:scriptFile];
+            }
         }
-        
-        if (script) [scripts addObject:script];
     }
     
-    _scripts = scripts;
+    _allScriptFiles = scriptFiles;
+
+    [self _updateHandlerScriptFile];
 }
 
+
+- (void) _updateHandlerScriptFile
+{
+    NSString *scriptHandlerName = [[Preferences sharedInstance] scriptHandlerName];
+    if (![scriptHandlerName length]) {
+        scriptHandlerName = nil;
+    }
+
+    _handlerScript     = nil;
+    _handlerScriptFile = nil;
+
+    for (ScriptFile *file in _allScriptFiles) {
+        if (scriptHandlerName && [[file fileName] isEqualToString:scriptHandlerName]) {
+            _handlerScriptFile = file;
+            break;
+        }
+    }
+    
+    if (_handlerScriptFile) {
+        NSDictionary *errorInfo = nil;
+
+        _handlerScript = [[NSAppleScript alloc] initWithContentsOfURL:[_handlerScriptFile URL] error:&errorInfo];
+        if (errorInfo) {
+            [self _logErrorInfo:errorInfo when:@"loading" scriptFile:_handlerScriptFile];
+        }
+    }
+}
+
+
+- (NSAppleScript *) _handlerScript
+{
+    if (![_handlerScript isCompiled]) {
+        NSDictionary *errorInfo = nil;
+        [_handlerScript compileAndReturnError:&errorInfo];
+
+        if (errorInfo) {
+            [self _logErrorInfo:errorInfo when:@"compiling" scriptFile:_handlerScriptFile];
+        }
+    }
+    
+    return _handlerScript;
+}
+
+
+- (void) _logErrorInfo:(NSDictionary *)errorInfo when:(NSString *)whenString scriptFile:(ScriptFile *)scriptFile
+{
+    NSString *errorNumber  = [errorInfo objectForKey:NSAppleScriptErrorNumber];
+    NSNumber *errorMessage = [errorInfo objectForKey:NSAppleScriptErrorMessage];
+    
+    NSString *finalString = [NSString stringWithFormat:@"Error %@ when %@ '%@': %@", errorNumber, whenString, [scriptFile fileName], errorMessage];
+
+    NSLog(@"%@", finalString);
+    EmbraceLog(@"ScriptsManager", @"%@", finalString);
+}
+
+
+- (void) _handlePreferencesDidChange:(NSNotification *)note
+{
+    NSString *scriptHandlerName = [[Preferences sharedInstance] scriptHandlerName];
+
+    if (![scriptHandlerName length]) {
+        scriptHandlerName = nil;
+    }
+
+    if (scriptHandlerName) {
+        if (![[_handlerScriptFile fileName] isEqual:scriptHandlerName]) {
+            [self _updateHandlerScriptFile];
+        }
+
+    } else {
+        if (_handlerScriptFile) {
+            [self _updateHandlerScriptFile];
+        }
+    }
+}
+
+
+#pragma mark - Public Methods
 
 - (void) callMetadataAvailableWithTrack:(Track *)track
 {
-    NSAppleEventDescriptor *target = [NSAppleEventDescriptor nullDescriptor];
-    if (!target) return;
-
+    NSAppleScript *handlerScript = [self _handlerScript];
+    if (!handlerScript) return;
+    
     NSAppleEventDescriptor *param  = [[track objectSpecifier] descriptor];
     if (!param) return;
     
+    NSAppleEventDescriptor *target = [NSAppleEventDescriptor nullDescriptor];
+    if (!target) return;
+
     NSAppleEventDescriptor *appleEvent = [[NSAppleEventDescriptor alloc] initWithEventClass:'embr' eventID:'he00' targetDescriptor:target returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
     if (!appleEvent) return;
 
     [appleEvent setParamDescriptor:param forKeyword:'hetr'];
 
-    for (NSAppleScript *script in _scripts) {
-        NSDictionary *errorInfo = nil;
-        NSAppleEventDescriptor *result = nil;
-        @try {
-            result = [script executeAppleEvent:appleEvent error:&errorInfo];
-        } @catch (NSException *e) {
-            NSLog(@"NSException: %@", e);
-        }
-
-        if (errorInfo) {
-            NSLog(@"Embrace error when running script: %@", errorInfo);
-        }
+    NSDictionary *errorInfo = nil;
+    
+    [handlerScript executeAppleEvent:appleEvent error:&errorInfo];
+    
+    if (errorInfo) {
+        [self _logErrorInfo:errorInfo when:@"running" scriptFile:_handlerScriptFile];
     }
 }
+
+
+- (void) openHandlersFolder
+{
+    [[NSWorkspace sharedWorkspace] openURL:[self _handlersDirectoryURL]];
+}
+
 
 @end
