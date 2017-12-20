@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -43,21 +43,6 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="openSupportFolder:" target="494" id="XS0-Pz-ba6"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" hidden="YES" id="Oix-70-Ht6">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Reload Scripts" hidden="YES" id="nLb-sh-vgo">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="reloadScripts:" target="494" id="33u-NN-Eby"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Open Scripts Folder" hidden="YES" id="ofy-hm-iJj">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="openScripts:" target="494" id="JxG-N3-leV"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VFt-Em-ItT">
@@ -514,11 +499,8 @@ CA
                 <outlet property="crashReportMenuItem" destination="H4P-8S-3EP" id="R8o-wr-Axn"/>
                 <outlet property="crashReportSeparator" destination="oex-bD-CGM" id="JR6-hR-9EA"/>
                 <outlet property="debugMenuItem" destination="SIh-TN-z42" id="zFu-2M-2jM"/>
-                <outlet property="openScriptsMenuItem" destination="ofy-hm-iJj" id="vzP-Of-FiV"/>
                 <outlet property="openSupportMenuItem" destination="Zbe-Fj-v6o" id="iB2-6X-UnM"/>
                 <outlet property="openSupportSeparator" destination="236" id="0zG-yK-6Kr"/>
-                <outlet property="reloadScriptsMenuItem" destination="nLb-sh-vgo" id="MeD-fT-bRM"/>
-                <outlet property="scriptsSeparator" destination="Oix-70-Ht6" id="Oil-Ah-xkx"/>
                 <outlet property="sendLogsMenuItem" destination="Hnn-Gu-9Wp" id="89X-Ae-OlN"/>
             </connections>
         </customObject>

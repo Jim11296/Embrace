@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesController">
             <connections>
-                <outlet property="framesPopUp" destination="Usr-fc-Nfw" id="qH2-Aw-Fgf"/>
-                <outlet property="hogModeButton" destination="PPF-KH-K1g" id="Ux8-Zg-VJ3"/>
-                <outlet property="mainDevicePopUp" destination="z6S-hH-vkJ" id="Rxg-zL-qJg"/>
-                <outlet property="resetVolumeButton" destination="1GM-2E-J07" id="08N-XH-nDu"/>
-                <outlet property="sampleRatePopUp" destination="lz2-Nq-eaS" id="uVE-jr-s7h"/>
-                <outlet property="usesMasteringComplexityButton" destination="rD1-lC-Woo" id="pxq-ae-E7y"/>
+                <outlet property="advancedItem" destination="Sd7-ph-OZb" id="q9h-vj-Vna"/>
+                <outlet property="advancedPane" destination="EW9-yV-OXP" id="piC-nY-GTp"/>
+                <outlet property="framesPopUp" destination="hcU-l9-txy" id="2EJ-HM-jmP"/>
+                <outlet property="generalItem" destination="anK-jv-iEB" id="HEp-mR-kV8"/>
+                <outlet property="generalPane" destination="wiI-3h-8ky" id="F5y-do-1I9"/>
+                <outlet property="hogModeButton" destination="r1w-Tf-Z6v" id="7iy-aD-jtY"/>
+                <outlet property="mainDevicePopUp" destination="ZQs-XX-Hj2" id="yFC-Wj-5lN"/>
+                <outlet property="resetVolumeButton" destination="TP9-Tf-GVC" id="hRq-LZ-bpR"/>
+                <outlet property="sampleRatePopUp" destination="GT5-ag-OUL" id="hoQ-Us-F3D"/>
+                <outlet property="scriptHandlerPopUp" destination="MVK-di-o8T" id="W6U-Sd-Zc4"/>
+                <outlet property="toolbar" destination="hoP-hc-kjO" id="9bo-RQ-u21"/>
+                <outlet property="usesMasteringComplexityButton" destination="SlT-qX-AJD" id="RNU-CE-a0O"/>
                 <outlet property="window" destination="1" id="CXg-pP-XyZ"/>
             </connections>
         </customObject>
@@ -27,239 +33,339 @@
             <view key="contentView" misplaced="YES" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="420" height="180"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <popUpButton verticalHuggingPriority="750" misplaced="YES" id="z6S-hH-vkJ">
-                        <rect key="frame" x="136" y="132" width="245" height="26"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="3zs-qI-iuC" id="rq5-I2-z9T">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" title="OtherViews" id="CE9-42-vkn">
-                                <items>
-                                    <menuItem title="Item 1" state="on" id="3zs-qI-iuC"/>
-                                    <menuItem title="Item 2" id="0uu-Ff-X2r"/>
-                                    <menuItem title="Item 3" id="DUy-Kd-rmX"/>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                        <connections>
-                            <action selector="changeMainDevice:" target="-2" id="6uh-LY-ZHo"/>
-                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="XRd-Et-CyQ">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </popUpButton>
-                    <popUpButton verticalHuggingPriority="750" misplaced="YES" id="lz2-Nq-eaS">
-                        <rect key="frame" x="136" y="103" width="109" height="26"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="192000 Hz" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="VRl-Im-VgG" id="yWT-kl-JMr">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" title="OtherViews" id="fno-Jf-zre">
-                                <items>
-                                    <menuItem title="192000 Hz" state="on" id="VRl-Im-VgG">
-                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                    </menuItem>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                        <connections>
-                            <action selector="changeMainDeviceAttributes:" target="-2" id="sEt-g0-j9S"/>
-                            <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="GGd-JZ-tpH" id="I9m-Q3-2Bq">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="GGd-JZ-tpH">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </popUpButton>
-                    <popUpButton verticalHuggingPriority="750" misplaced="YES" id="Usr-fc-Nfw">
-                        <rect key="frame" x="314" y="103" width="67" height="26"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="4096" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LpN-RV-1Zm" id="0SM-eN-c0l">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" title="OtherViews" id="k0g-Sc-Yns">
-                                <items>
-                                    <menuItem title="512" id="djx-R0-7zh"/>
-                                    <menuItem title="1024" id="vlU-xD-D97"/>
-                                    <menuItem title="2048" id="FJB-HU-GKj"/>
-                                    <menuItem title="4096" state="on" id="LpN-RV-1Zm">
-                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                    </menuItem>
-                                </items>
-                            </menu>
-                        </popUpButtonCell>
-                        <connections>
-                            <action selector="changeMainDeviceAttributes:" target="-2" id="RBQ-Hx-TVH"/>
-                            <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="rVx-fz-e5a" id="rS8-xs-wEM">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="rVx-fz-e5a">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </popUpButton>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="9ch-wM-PT9">
-                        <rect key="frame" x="257" y="109" width="53" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Frames:" id="mRd-uS-8Qk">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="nsV-nm-3cE">
-                        <rect key="frame" x="18" y="109" width="114" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sample Rate:" id="owX-qL-HNm">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="ryF-6a-Y1K">
-                        <rect key="frame" x="18" y="45" width="114" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Playback:" id="ikO-5i-dPh">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="2d0-qN-s4P">
-                        <rect key="frame" x="18" y="138" width="114" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Main Output:" id="quY-b3-svF">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button misplaced="YES" id="PPF-KH-K1g">
-                        <rect key="frame" x="136" y="44" width="242" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Take exclusive access (Hog Mode)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="27o-HX-hko">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="changeMainDeviceAttributes:" target="-2" id="BHd-uF-Xg6"/>
-                            <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="eJU-I6-aQd" id="BLs-w3-i5H">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled2" keyPath="self.deviceHoggable" previousBinding="hlk-eJ-rkt" id="eJU-I6-aQd">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="hlk-eJ-rkt">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </button>
-                    <button misplaced="YES" id="1GM-2E-J07">
-                        <rect key="frame" x="136" y="22" width="242" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Reset device volume to maximum" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="4Sd-vr-urx">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="changeMainDeviceAttributes:" target="-2" id="dLq-CS-lRC"/>
-                            <binding destination="-2" name="enabled2" keyPath="self.resetVolumeEnabled" previousBinding="tDN-mb-A92" id="dDs-9E-wKS">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="dDs-9E-wKS" id="Tug-NE-kmC">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="tDN-mb-A92">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </button>
-                    <button misplaced="YES" id="rD1-lC-Woo">
-                        <rect key="frame" x="136" y="82" width="237" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Use highest-quality rate converters" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="1aS-xy-8Wa">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="changeMainDeviceAttributes:" target="-2" id="Qn0-Xr-i1Z"/>
-                            <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="n5z-H5-J00" id="Bq3-xG-Y89">
-                                <dictionary key="options">
-                                    <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                    <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                    <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                    <integer key="NSNullPlaceholder" value="-1"/>
-                                </dictionary>
-                            </binding>
-                            <binding destination="-2" name="enabled" keyPath="self.player.playing" id="n5z-H5-J00">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="i12-Ui-9PX">
-                        <rect key="frame" x="-4" y="161" width="428" height="14"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to modify the output device." id="O9P-Jt-MKN">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <binding destination="-2" name="hidden" keyPath="self.player.playing" id="uiC-je-gFv">
-                                <dictionary key="options">
-                                    <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                </dictionary>
-                            </binding>
-                        </connections>
-                    </textField>
-                </subviews>
             </view>
+            <toolbar key="toolbar" implicitIdentifier="38BFB752-B595-4AB6-8241-959620DD59FE" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="hoP-hc-kjO">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="e0s-ax-GFW"/>
+                    <toolbarItem implicitItemIdentifier="BBF88B26-3D55-4A44-8B32-FCDA1244F834" label="Advanced" paletteLabel="Advanced" tag="1" image="NSAdvanced" selectable="YES" id="Sd7-ph-OZb">
+                        <connections>
+                            <action selector="selectPane:" target="-2" id="31x-1i-l1J"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="9DE293EF-469E-4CF5-A0DC-48EF9383E77E" label="General" paletteLabel="General" image="NSPreferencesGeneral" selectable="YES" id="anK-jv-iEB">
+                        <nil key="toolTip"/>
+                        <connections>
+                            <action selector="selectPane:" target="-2" id="qkQ-y4-wdY"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="v5U-07-fgt"/>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="anK-jv-iEB"/>
+                    <toolbarItem reference="Sd7-ph-OZb"/>
+                    <toolbarItem reference="v5U-07-fgt"/>
+                </defaultToolbarItems>
+            </toolbar>
             <point key="canvasLocation" x="132" y="188"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="QcB-lQ-hRp"/>
+        <view id="wiI-3h-8ky" userLabel="General Pane">
+            <rect key="frame" x="0.0" y="0.0" width="420" height="180"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <popUpButton verticalHuggingPriority="750" id="ZQs-XX-Hj2">
+                    <rect key="frame" x="136" y="132" width="245" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="T4g-j7-z0f" id="W7w-oo-bz2">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="3Wy-6f-DbK">
+                            <items>
+                                <menuItem title="Item 1" state="on" id="T4g-j7-z0f"/>
+                                <menuItem title="Item 2" id="9Vw-GQ-46M"/>
+                                <menuItem title="Item 3" id="RGh-gy-TtG"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="changeMainDevice:" target="-2" id="Qiq-qm-dsr"/>
+                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="Dmn-6v-qlY">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </popUpButton>
+                <popUpButton verticalHuggingPriority="750" id="GT5-ag-OUL">
+                    <rect key="frame" x="136" y="103" width="109" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="192000 Hz" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="cka-jn-Ymt" id="CLD-WG-ehZ">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="PwD-Zy-3N6">
+                            <items>
+                                <menuItem title="192000 Hz" state="on" id="cka-jn-Ymt">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="changeMainDeviceAttributes:" target="-2" id="asN-dS-9fw"/>
+                        <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="E80-aO-vUJ" id="7Lz-k0-tzL">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="E80-aO-vUJ">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </popUpButton>
+                <popUpButton verticalHuggingPriority="750" id="hcU-l9-txy">
+                    <rect key="frame" x="314" y="103" width="67" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="4096" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="cHK-ea-ou0" id="f6B-GZ-gcm">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="tEa-s2-7ah">
+                            <items>
+                                <menuItem title="512" id="fXo-YH-ulM"/>
+                                <menuItem title="1024" id="jIs-wm-hlg"/>
+                                <menuItem title="2048" id="dgu-Kp-UF3"/>
+                                <menuItem title="4096" state="on" id="cHK-ea-ou0">
+                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                </menuItem>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="changeMainDeviceAttributes:" target="-2" id="KxS-fE-Cxg"/>
+                        <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="yYs-qf-ftu" id="6mm-b1-vjd">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="yYs-qf-ftu">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </popUpButton>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="8wU-sq-Hw0">
+                    <rect key="frame" x="257" y="109" width="53" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Frames:" id="nbH-VG-HNv">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="DwI-z5-J5x">
+                    <rect key="frame" x="18" y="109" width="114" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sample Rate:" id="JFU-pt-5ye">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="bHk-mt-zRP">
+                    <rect key="frame" x="18" y="45" width="114" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Playback:" id="kju-xZ-p4W">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="A82-J6-b36">
+                    <rect key="frame" x="18" y="138" width="114" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Main Output:" id="xts-21-jLd">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button id="r1w-Tf-Z6v">
+                    <rect key="frame" x="136" y="44" width="242" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Take exclusive access (Hog Mode)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="vHg-FS-sKF">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="changeMainDeviceAttributes:" target="-2" id="5ia-CY-Rly"/>
+                        <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="4Ng-uy-brA" id="b0b-gW-dYw">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled2" keyPath="self.deviceHoggable" previousBinding="kPL-Ax-eu6" id="4Ng-uy-brA">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="kPL-Ax-eu6">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <button id="TP9-Tf-GVC">
+                    <rect key="frame" x="136" y="22" width="242" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Reset device volume to maximum" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="QaM-lZ-7XR">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="changeMainDeviceAttributes:" target="-2" id="Rbf-Et-tgg"/>
+                        <binding destination="-2" name="enabled3" keyPath="self.deviceConnected" previousBinding="H49-JJ-72M" id="dSb-ZG-DoI">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="Q9M-Un-6zq">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled2" keyPath="self.resetVolumeEnabled" previousBinding="Q9M-Un-6zq" id="H49-JJ-72M">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <button id="SlT-qX-AJD">
+                    <rect key="frame" x="136" y="82" width="237" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Use highest-quality rate converters" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ApO-sm-KFc">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="changeMainDeviceAttributes:" target="-2" id="XvA-Dc-oyW"/>
+                        <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="pqY-4L-hoe" id="3k5-Hs-uNG">
+                            <dictionary key="options">
+                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                <integer key="NSNullPlaceholder" value="-1"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="pqY-4L-hoe">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="FNK-A3-Tfj">
+                    <rect key="frame" x="-4" y="161" width="428" height="14"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to modify the output device." id="Kve-QP-Jom">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="hidden" keyPath="self.player.playing" id="c5P-4V-udc">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="2" y="457"/>
+        </view>
+        <view misplaced="YES" id="EW9-yV-OXP" userLabel="Advanced Pane">
+            <rect key="frame" x="0.0" y="0.0" width="420" height="133"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="khf-AK-51B">
+                    <rect key="frame" x="18" y="28" width="128" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="AppleScript handler:" id="5Fc-fL-uac">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="FNt-B8-HCr">
+                    <rect key="frame" x="37" y="91" width="109" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Allow addition of:" id="rKB-Kd-bmk">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" misplaced="YES" id="MVK-di-o8T">
+                    <rect key="frame" x="150" y="21" width="231" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="c9k-T9-BjO" id="xxy-2I-vX9">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="BuI-VF-fpC">
+                            <items>
+                                <menuItem title="Item 1" state="on" id="c9k-T9-BjO"/>
+                                <menuItem title="Item 2" id="IYi-Hc-3ty"/>
+                                <menuItem title="Item 3" id="AnF-Iw-AU5"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="handleScriptHandlerPopUp:" target="-2" id="LIv-36-dWm"/>
+                    </connections>
+                </popUpButton>
+                <button verticalHuggingPriority="750" misplaced="YES" id="zPI-84-7nx">
+                    <rect key="frame" x="151" y="90" width="251" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="radio" title="Built-in and safe system effects" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="8M4-UR-ZeM">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.preferences.allowsAllEffects" id="THf-xF-gKs">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" misplaced="YES" id="ldN-kD-qk1">
+                    <rect key="frame" x="151" y="68" width="138" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="radio" title="All installed effects" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="m9n-fc-paT">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.preferences.allowsAllEffects" id="fA8-JI-XX7"/>
+                    </connections>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="156" y="716.5"/>
+        </view>
     </objects>
+    <resources>
+        <image name="NSAdvanced" width="32" height="32"/>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
+    </resources>
 </document>

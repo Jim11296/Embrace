@@ -8,6 +8,7 @@
 #import "Utils.h"
 #import "AppDelegate.h"
 #import "TrackKeys.h"
+#import "WorkerService.h"
 
 
 NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesManagerDidUpdateLibraryMetadata";

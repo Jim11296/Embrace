@@ -104,18 +104,14 @@
 
 - (NSScriptObjectSpecifier *) objectSpecifier
 {
-    TracksController *tracksController = [[GetAppDelegate() setlistController] tracksController];
-    NSArray *tracks = [tracksController tracks];
+    NSScriptClassDescription *containerDescription = (NSScriptClassDescription *)[NSApp classDescription];
+    return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:containerDescription containerSpecifier:nil key:@"scriptingTracks" uniqueID:[self scriptingID]];
+}
 
-    NSScriptObjectSpecifier *objectSpecifier = nil;
-    NSUInteger index = [tracks indexOfObjectIdenticalTo:self];
 
-    if (index != NSNotFound) {
-        NSScriptClassDescription *containerDescription = (NSScriptClassDescription *)[NSApp classDescription];
-        objectSpecifier = [[NSIndexSpecifier alloc] initWithContainerClassDescription:containerDescription containerSpecifier:nil key:@"scriptingTracks" index:index];
-    }
-
-    return objectSpecifier;
+- (NSString *) scriptingID
+{
+    return [[self UUID] UUIDString];
 }
 
 

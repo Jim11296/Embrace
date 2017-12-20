@@ -14,6 +14,7 @@
 #import "Effect.h"
 #import "EffectAdditions.h"
 #import "Player.h"
+#import "Preferences.h"
 
 
 typedef NS_ENUM(NSInteger, EffectCategory) {
@@ -75,9 +76,12 @@ static EffectCategory sGetCategory(NSString *name)
 @end
 
 
-@implementation EffectsController
+@implementation EffectsController {
+    NSArray *_advancedMenuItems;
+}
 
 @dynamic player;
+
 
 - (NSString *) windowNibName
 {
@@ -94,11 +98,25 @@ static EffectCategory sGetCategory(NSString *name)
 - (void) windowDidLoad
 {
     [super windowDidLoad];
+   
+    [[self tableView] setDoubleAction:@selector(editEffect:)];
 
+    [[self window] setExcludedFromWindowsMenu:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+    
+    [self _buildAddButtonMenu];
+    [self _updateMenuItemVisibility];
+}
+
+
+#pragma mark - Private Methods
+
+- (void) _buildAddButtonMenu
+{
     NSMenu *menu = [[self addButton] menu];
     NSMenu *filterMenu = [[NSMenu alloc] init];
-    NSMenu *otherMenu  = [[NSMenu alloc] init];
-    
+
     NSArray *allEffectTypes = [EffectType allEffectTypes];
     
     allEffectTypes = [allEffectTypes sortedArrayUsingComparator:^(id objectA, id objectB) {
@@ -124,6 +142,8 @@ static EffectCategory sGetCategory(NSString *name)
     
     BOOL didAddItem = NO;
 
+    NSMutableDictionary *manufacturerToItemArrayMap = [NSMutableDictionary dictionary];
+
     for (EffectType *type in allEffectTypes) {
         NSString *name = [type name];
         EffectCategory category = sGetCategory(name);
@@ -141,10 +161,19 @@ static EffectCategory sGetCategory(NSString *name)
         [menuItem setRepresentedObject:type];
 
         if (category == EffectCategoryOther) {
-            [otherMenu addItem:menuItem];
-            
+            NSString *manufacturer = [type manufacturer];
+        
             [menuItem setTarget:[[self addButton] target]];
             [menuItem setAction:[[self addButton] action]];
+
+            NSMutableArray *itemArray = [manufacturerToItemArrayMap objectForKey:manufacturer];
+            
+            if (!itemArray) {
+                itemArray = [NSMutableArray array];
+                [manufacturerToItemArrayMap setObject:itemArray forKey:manufacturer];
+            }
+            
+            [itemArray addObject:menuItem];          
 
         } else if (category == EffectCategoryFilters) {
             [filterMenu addItem:menuItem];
@@ -159,23 +188,96 @@ static EffectCategory sGetCategory(NSString *name)
         didAddItem = YES;
     }
 
-    NSMenuItem *filterMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Filters", nil) action:nil keyEquivalent:@""];
-    [filterMenuItem setSubmenu:filterMenu];
+    // Add "Filters" menu
+    {
+        NSMenuItem *filterMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Filters", nil) action:nil keyEquivalent:@""];
+        [filterMenuItem setSubmenu:filterMenu];
+        [filterMenu setAutoenablesItems:NO];
+
+        [menu addItem:filterMenuItem];
+    }
+
+    NSMutableArray *advancedMenuItems = [NSMutableArray array];
+    NSMutableArray *remainingItems    = [NSMutableArray array];
+
+    // Add separator
+    {
+        NSMenuItem *separatorItem = [NSMenuItem separatorItem];
+        [advancedMenuItems addObject:separatorItem];
+        [menu addItem:separatorItem];
+    }
+
+    // Add manufacturer menus
+    for (NSString *manufacturer in [[manufacturerToItemArrayMap allKeys] sortedArrayUsingSelector:@selector(compare:)]) {
+        NSArray *itemArray = [manufacturerToItemArrayMap objectForKey:manufacturer];
+        
+        if ([itemArray count] > 2) {
+            NSMenu     *brandMenu     = [[NSMenu alloc] init];
+            NSMenuItem *brandMenuItem = [[NSMenuItem alloc] initWithTitle:manufacturer action:nil keyEquivalent:@""];
+            [brandMenuItem setSubmenu:brandMenu];
+
+            for (NSMenuItem *item in itemArray) {
+                [brandMenu addItem:item];
+            }
+
+            [brandMenu setAutoenablesItems:NO];
+
+            [menu addItem:brandMenuItem];
+            [advancedMenuItems addObject:brandMenuItem];
+
+        } else {
+            [remainingItems addObjectsFromArray:itemArray];
+        }
+    }
+
+    // Add Other menu
+    {
+        [remainingItems sortUsingComparator:^(id objectA, id objectB) {
+            NSMenuItem *itemA = (NSMenuItem *)objectA;
+            NSMenuItem *itemB = (NSMenuItem *)objectB;
+            
+            return [[itemA title] compare:[itemB title]];
+        }];
+
+        NSMenu     *otherMenu     = [[NSMenu alloc] init];
+        NSMenuItem *otherMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Others", nil) action:nil keyEquivalent:@""];
+        [otherMenuItem setSubmenu:otherMenu];
+
+        for (NSMenuItem *item in remainingItems) {
+            [otherMenu addItem:item];
+        }
+
+        [otherMenu setAutoenablesItems:NO];
+
+        [menu addItem:otherMenuItem];
+        [advancedMenuItems addObject:otherMenuItem];
+    }
     
-    NSMenuItem *otherMenuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Other Effects", nil) action:nil keyEquivalent:@""];
-    [otherMenuItem setSubmenu:otherMenu];
+    _advancedMenuItems = advancedMenuItems;
 
-    [filterMenu setAutoenablesItems:NO];
-    [otherMenu setAutoenablesItems:NO];
-
-    [menu addItem:filterMenuItem];
-    [menu addItem:otherMenuItem];
-    
-    [[self tableView] setDoubleAction:@selector(editEffect:)];
-
-    [[self window] setExcludedFromWindowsMenu:YES];
+    for (NSMenuItem *item in advancedMenuItems) {
+        [item setHidden:YES];
+    }
 }
 
+
+- (void) _updateMenuItemVisibility
+{
+    BOOL hidden = ![[Preferences sharedInstance] allowsAllEffects];
+
+    for (NSMenuItem *item in _advancedMenuItems) {
+        [item setHidden:hidden];
+    }
+}
+
+
+- (void) _handlePreferencesDidChange:(NSNotification *)note
+{
+    [self _updateMenuItemVisibility];
+}
+
+
+#pragma mark - IBActions
 
 - (IBAction) addEffect:(id)sender
 {
@@ -235,6 +337,8 @@ static EffectCategory sGetCategory(NSString *name)
     }
 }
 
+
+#pragma mark - Accessors
 
 - (Player *) player
 {

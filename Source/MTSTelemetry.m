@@ -60,7 +60,6 @@ static void sSetupStringMap()
 
     char  hwmachine[256];
     char  hwmodel[256];
-    char  osversion[256];
     char  kernosversion[256];
     char  path[256];
 

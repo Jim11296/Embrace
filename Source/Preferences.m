@@ -42,6 +42,9 @@ static NSDictionary *sGetDefaultValues()
 
         @"usesMasteringComplexitySRC": @YES,
 
+        @"scriptHandlerName": @"",
+        @"allowsAllEffects":     @NO,
+
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
 
         @"mainOutputAudioDevice":  [AudioDevice defaultOutputDevice],
@@ -76,7 +79,7 @@ static void sSetDefaultObject(id dictionary, NSString *key, id valueToSave, id d
     } else if ([defaultValue isKindOfClass:[NSData class]]) {
         saveObject(valueToSave, key);
 
-    } else if ([defaultValue isKindOfClass:[NSData class]]) {
+    } else if ([defaultValue isKindOfClass:[NSString class]]) {
         saveObject(valueToSave, key);
     }
 }

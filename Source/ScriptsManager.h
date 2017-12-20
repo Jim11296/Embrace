@@ -8,15 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
-@class Track;
+extern NSString * const ScriptsManagerDidReloadNotification;
+
+@class Track, ScriptFile;
 
 @interface ScriptsManager : NSObject
 
 + (instancetype) sharedInstance;
 
-- (NSString *) scriptsDirectory;
-- (void) reloadScripts;
+- (void) openHandlersFolder;
 
 - (void) callMetadataAvailableWithTrack:(Track *)track;
+
+@property (nonatomic, readonly) NSArray<ScriptFile *> *allScriptFiles;
+@property (nonatomic, readonly) ScriptFile *handlerScriptFile;
+
+@property (nonatomic) NSMenuItem *scriptsMenuItem;
 
 @end

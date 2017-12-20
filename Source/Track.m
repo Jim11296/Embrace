@@ -11,6 +11,7 @@
 #import "TrackKeys.h"
 #import "AppDelegate.h"
 #import "ScriptsManager.h"
+#import "WorkerService.h"
 
 #import <AVFoundation/AVFoundation.h>
 

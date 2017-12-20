@@ -63,6 +63,9 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic) BOOL floatsOnTop;
 
+@property (nonatomic) NSString *scriptHandlerName;
+@property (nonatomic) BOOL allowsAllEffects;
+
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 
 @property (nonatomic) AudioDevice *mainOutputAudioDevice;

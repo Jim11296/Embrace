@@ -26,10 +26,10 @@
 	<string>Copyright © 2016 Ricci Adams. All rights reserved.</string>
 	<key>XPCService</key>
 	<dict>
-		<key>ServiceType</key>
-		<string>Application</string>
 		<key>JoinExistingSession</key>
 		<true/>
+		<key>ServiceType</key>
+		<string>Application</string>
 	</dict>
 </dict>
 </plist>
