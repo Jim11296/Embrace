@@ -101,12 +101,12 @@
         <command name="stop" code="embrstop" description="Stops playback.">
             <access-group identifier="*"/>
         </command>
-        
+      
         <class-extension extends="application" description="The Embrace application.">
             <element access="r" description="The tracks in the set list." type="track">
                 <cocoa key="scriptingTracks"/>
             </element>
-
+            
 			<property name="current track" access="r" code="curt" type="track" description="the currently playing track">
             	<cocoa key="scriptingCurrentTrack"/>
             </property>
@@ -127,6 +127,10 @@
                 <cocoa key="scriptingVolume"/>
             </property>
 
+            <property name="player state" access="r" code="plst" type="playerState" description="Is Embrace playing or stopped?">
+                <cocoa key="scriptingPlayerState"/>
+            </property>
+
             <responds-to command="stop">
                 <cocoa method="handleStopScriptCommand:"/>
             </responds-to>
@@ -136,6 +140,15 @@
             </responds-to>
 
         </class-extension>
+
+        <enumeration name="playerState" code="plst">
+            <enumerator name="stopped" code="pls0" description="Embrace is currently stopped.">
+                <cocoa integer-value="0"/>
+            </enumerator>
+            <enumerator name="playing" code="pls1" description="Embrace is currently playing.">
+                <cocoa integer-value="1"/>
+            </enumerator>
+        </enumeration>
 
 		<enumeration name="trackStatus" code="trst">
 			<enumerator name="queued" code="trsa" description="The track is queued for playback.">
