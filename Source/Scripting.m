@@ -23,6 +23,12 @@
 
 @implementation NSApplication (Scripting)
 
+- (NSNumber *) scriptingPlayerState
+{
+    return [[Player sharedInstance] isPlaying] ? @1 : @0;
+}
+
+
 - (NSArray *) scriptingTracks
 {
     return [[[GetAppDelegate() setlistController] tracksController] tracks];
