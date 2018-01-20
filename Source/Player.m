@@ -568,6 +568,14 @@ typedef struct {
 }
 
 
+- (void) _sendDistributedNotification
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.iccir.Embrace.playerUpdate" object:nil userInfo:nil options:NSDistributedNotificationDeliverImmediately];
+    });
+}
+
+
 - (void) _takePowerAssertions
 {
     if (!_processActivityToken) {
@@ -1497,6 +1505,8 @@ static OSStatus sInputRenderCallback(
         _currentStartHostTime = startTime.mHostTime;
     }
 
+    [self _sendDistributedNotification];
+
     EmbraceLog(@"Player", @"setup complete, starting graph");
     [self _startGraph];
 }
@@ -1713,7 +1723,8 @@ static OSStatus sInputRenderCallback(
     for (id<PlayerListener> listener in _listeners) {
         [listener player:self didUpdatePlaying:NO];
     }
-    
+
+    [self _sendDistributedNotification];
     [self _clearPowerAssertions];
 }
 
