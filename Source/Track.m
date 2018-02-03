@@ -15,9 +15,9 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-NSString * const TrackDidModifyTitleNotificationName        = @"TrackDidModifyTitleNotificationName";
-NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPlayDurationNotification";
-
+NSString * const TrackDidModifyTitleNotificationName            = @"TrackDidModifyTitleNotificationName";
+NSString * const TrackDidModifyPlayDurationNotificationName     = @"TrackDidModifyPlayDurationNotification";
+NSString * const TrackDidModifyExpectedDurationNotificationName = @"TrackDidModifyExpectedDurationNotification";
 
 #define DUMP_UNKNOWN_TAGS 0
 
@@ -365,27 +365,28 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [state setObject:@YES forKey:sIgnoresAutoGapKey];
     }
 
-    if (_album)          [state setObject:_album                forKey:TrackKeyAlbum];
-    if (_albumArtist)    [state setObject:_albumArtist          forKey:TrackKeyAlbumArtist];
-    if (_artist)         [state setObject:_artist               forKey:TrackKeyArtist];
-    if (_beatsPerMinute) [state setObject:@(_beatsPerMinute)    forKey:TrackKeyBPM];
-    if (_bookmark)       [state setObject:_bookmark             forKey:TrackKeyBookmark];
-    if (_comments)       [state setObject:_comments             forKey:TrackKeyComments];
-    if (_composer)       [state setObject:_composer             forKey:TrackKeyComposer];
-    if (_databaseID)     [state setObject:@(_databaseID)        forKey:TrackKeyDatabaseID];
-    if (_duration)       [state setObject:@(_duration)          forKey:TrackKeyDuration];
-    if (_energyLevel)    [state setObject:@(_energyLevel)       forKey:TrackKeyEnergyLevel];
-    if (_genre)          [state setObject:_genre                forKey:TrackKeyGenre];
-    if (_grouping)       [state setObject:_grouping             forKey:TrackKeyGrouping];
-    if (_initialKey)     [state setObject:  _initialKey         forKey:TrackKeyInitialKey];
-    if (_overviewData)   [state setObject:  _overviewData       forKey:TrackKeyOverviewData];
-    if (_overviewRate)   [state setObject:@(_overviewRate)      forKey:TrackKeyOverviewRate];
-    if (_startTime)      [state setObject:@(_startTime)         forKey:TrackKeyStartTime];
-    if (_stopTime)       [state setObject:@(_stopTime)          forKey:TrackKeyStopTime];
-    if (_title)          [state setObject:_title                forKey:TrackKeyTitle];
-    if (_trackLoudness)  [state setObject:@(_trackLoudness)     forKey:TrackKeyTrackLoudness];
-    if (_trackPeak)      [state setObject:@(_trackPeak)         forKey:TrackKeyTrackPeak];
-    if (_year)           [state setObject:@(_year)              forKey:TrackKeyYear];
+    if (_album)            [state setObject:_album                forKey:TrackKeyAlbum];
+    if (_albumArtist)      [state setObject:_albumArtist          forKey:TrackKeyAlbumArtist];
+    if (_artist)           [state setObject:_artist               forKey:TrackKeyArtist];
+    if (_beatsPerMinute)   [state setObject:@(_beatsPerMinute)    forKey:TrackKeyBPM];
+    if (_bookmark)         [state setObject:_bookmark             forKey:TrackKeyBookmark];
+    if (_comments)         [state setObject:_comments             forKey:TrackKeyComments];
+    if (_composer)         [state setObject:_composer             forKey:TrackKeyComposer];
+    if (_databaseID)       [state setObject:@(_databaseID)        forKey:TrackKeyDatabaseID];
+    if (_duration)         [state setObject:@(_duration)          forKey:TrackKeyDuration];
+    if (_energyLevel)      [state setObject:@(_energyLevel)       forKey:TrackKeyEnergyLevel];
+    if (_expectedDuration) [state setObject:@(_expectedDuration)  forKey:TrackKeyExpectedDuration];
+    if (_genre)            [state setObject:_genre                forKey:TrackKeyGenre];
+    if (_grouping)         [state setObject:_grouping             forKey:TrackKeyGrouping];
+    if (_initialKey)       [state setObject:  _initialKey         forKey:TrackKeyInitialKey];
+    if (_overviewData)     [state setObject:  _overviewData       forKey:TrackKeyOverviewData];
+    if (_overviewRate)     [state setObject:@(_overviewRate)      forKey:TrackKeyOverviewRate];
+    if (_startTime)        [state setObject:@(_startTime)         forKey:TrackKeyStartTime];
+    if (_stopTime)         [state setObject:@(_stopTime)          forKey:TrackKeyStopTime];
+    if (_title)            [state setObject:_title                forKey:TrackKeyTitle];
+    if (_trackLoudness)    [state setObject:@(_trackLoudness)     forKey:TrackKeyTrackLoudness];
+    if (_trackPeak)        [state setObject:@(_trackPeak)         forKey:TrackKeyTrackPeak];
+    if (_year)             [state setObject:@(_year)              forKey:TrackKeyYear];
 
 }
 
@@ -864,6 +865,19 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         _trackError = trackError;
         _dirty = YES;
         [self _saveStateImmediately:NO];
+    }
+}
+
+- (void) setExpectedDuration:(NSTimeInterval)expectedDuration
+{
+    if (_expectedDuration != expectedDuration) {
+        _expectedDuration = expectedDuration;
+        _dirty = YES;
+        [self _saveStateImmediately:NO];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyPlayDurationNotificationName object:self];
+        });
     }
 }
 

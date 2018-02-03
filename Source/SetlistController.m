@@ -137,10 +137,11 @@ static NSInteger sAutoGapMaximum = 16;
     [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyPlayDuration:)      name:TrackDidModifyPlayDurationNotificationName object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyTitle:)             name:TrackDidModifyTitleNotificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyPlayDurationNotificationName      object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyExpectedDurationNotificationName  object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyTitle:)             name:TrackDidModifyTitleNotificationName             object:nil];
 
     [self _handlePreferencesDidChange:nil];
 
@@ -352,7 +353,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) _handleTrackDidModifyPlayDuration:(NSNotification *)note
+- (void) _handleTrackDidModifyDuration:(NSNotification *)note
 {
     if (!_willCalculateStartAndEndTimes) {
         [self performSelector:@selector(_calculateStartAndEndTimes) withObject:nil afterDelay:10];
