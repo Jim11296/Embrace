@@ -11,6 +11,7 @@
 
 extern NSString * const TrackDidModifyTitleNotificationName;
 extern NSString * const TrackDidModifyPlayDurationNotificationName;
+extern NSString * const TrackDidModifyExpectedDurationNotificationName;
 
 @class TrackAnalyzer;
 
