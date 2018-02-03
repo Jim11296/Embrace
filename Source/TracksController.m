@@ -1227,37 +1227,39 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
     DuplicateStatusMode duplicateStatusMode = [[Preferences sharedInstance] duplicateStatusMode];
 
-    void (^check)(NSMutableDictionary *, id, Track *) = ^(NSMutableDictionary *map, id key, Track *track) {
-        BOOL isDuplicate = NO;
-
+    BOOL (^check)(NSMutableDictionary *, id, Track *) = ^(NSMutableDictionary *map, id key, Track *track) {
         if (key) {
             Track *existingTrack = [map objectForKey:key];
-                
-            if (existingTrack) {
-                [existingTrack setDuplicate:YES];
-                isDuplicate = YES;
-            }
 
             [map setObject:track forKey:key];
+
+            if (existingTrack) {
+                [existingTrack setDuplicate:YES];
+                return YES;
+            }
         }
-    
-        [track setDuplicate:isDuplicate];
+        
+        return NO;
     };
 
     for (Track *track in _tracks) {
+        BOOL isDuplicate = NO;
+
         if (duplicateStatusMode == DuplicateStatusModeSameTitle) {
-            check(titleToTrackMap, [track title], track);
+            isDuplicate = isDuplicate || check(titleToTrackMap, [track title], track);
 
         } else if (duplicateStatusMode == DuplicateStatusModeSimilarTitle) {
-            check(titleToTrackMap, [track titleForSimilarTitleDetection], track);
+            isDuplicate = isDuplicate || check(titleToTrackMap, [track titleForSimilarTitleDetection], track);
         }
 
         NSInteger databaseID = [track databaseID];
         if (databaseID) {
-            check(databaseIDToTrackMap, @(databaseID), track);
+            isDuplicate = isDuplicate || check(databaseIDToTrackMap, @(databaseID), track);
         }
 
-        check(urlToTrackMap, [track externalURL], track);
+        isDuplicate = isDuplicate || check(urlToTrackMap, [track externalURL], track);
+    
+        [track setDuplicate:isDuplicate];
     }
 }
 
