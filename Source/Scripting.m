@@ -224,6 +224,18 @@
 }
 
 
+- (void) setScriptingExpectedDuration:(NSNumber *)expectedDuration
+{
+    [self setExpectedDuration:[expectedDuration doubleValue]];
+}
+
+
+- (NSNumber *) scriptingExpectedDuration
+{
+    return @([self expectedDuration]);
+}   
+
+
 - (void) setScriptingLabel:(NSNumber *)scriptingLabel
 {
     [self setTrackLabel:[scriptingLabel integerValue]];
