@@ -421,6 +421,93 @@ extern Tonality GetTonalityForString(NSString *string)
 }
 
 
+/*
+    Return a "simplified" string for the "Duplicate Status: Similar Title" feature.
+    
+    1.  Decomposes string with compatibility mapping
+    2.  Folds string into lowercase/no-double-width/no-diacritic version
+    3A. Changes ae, oe, and ij ligatures into two-character versions
+    3B. Ignores ['".,-+]
+    3C. Compresses multiple whitespace characters into a single character
+    3D. Removes text in ()'s, {}'s, and []'s
+    4. Strips whitespace
+*/
+extern NSString *GetSimplifiedString(NSString *string)
+{
+    string = [string decomposedStringWithCompatibilityMapping];
+    string = [string stringByFoldingWithOptions:NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch|NSWidthInsensitiveSearch locale:nil];
+   
+    NSUInteger inLength = [string length];
+
+    unichar *inCharacters = malloc(sizeof(unichar) * inLength); 
+    [string getCharacters:inCharacters range:NSMakeRange(0, inLength)];
+
+    unichar *outCharacters = calloc(inLength * 2, sizeof(unichar));
+    unichar *o = outCharacters;
+    
+    BOOL inWhitespace = NO;
+    NSUInteger nestCount = 0;
+
+    for (NSUInteger i = 0; i < inLength; i++) {
+        unichar c = inCharacters[i];
+        
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+            if (!inWhitespace) {
+                inWhitespace = YES;
+                *o++ = ' ';
+            }
+
+        } else if (c == '.' || c == ',' || c == '\'' || c == '"' || c == '-' || c == '+') {
+            continue;
+           
+        } else if (c == '(') {
+            while (i < inLength) {
+                if (inCharacters[i] == '(') nestCount++;
+                if (inCharacters[i] == ')') nestCount--;
+                if (!nestCount) break;
+                i++;
+            }
+
+        } else if (c == '[') {
+            while (i < inLength) {
+                if (inCharacters[i] == '[') nestCount++;
+                if (inCharacters[i] == ']') nestCount--;
+                if (!nestCount) break;
+                i++;
+            }
+
+        } else if (c == '{') {
+            while (i < inLength) {
+                if (inCharacters[i] == '{') nestCount++;
+                if (inCharacters[i] == '}') nestCount--;
+                if (!nestCount) break;
+                i++;
+            }
+
+        } else if (c == 0xe6) { // ae
+            *o++ = 'a'; *o++ = 'e';
+
+        } else if (c == 0x133) { // ij
+            *o++ = 'i'; *o++ = 'j';
+
+        } else if (c == 0x153) { // oe
+            *o++ = 'o'; *o++ = 'e';
+    
+        } else {
+            inWhitespace = NO;
+            *o++ = c;
+        }
+    }
+
+    NSString *result = [[NSString alloc] initWithCharacters:outCharacters length:o - outCharacters];
+    
+    free(inCharacters);
+    free(outCharacters);
+    
+    return [result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+
 extern NSString *GetTraditionalStringForTonality(Tonality tonality)
 {
     NSArray *array = sGetTraditionalStringArray();

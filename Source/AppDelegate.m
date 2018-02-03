@@ -580,6 +580,11 @@
         KeySignatureDisplayMode mode = [[Preferences sharedInstance] keySignatureDisplayMode];
         BOOL yn = mode == [menuItem tag];
         [menuItem setState:(yn ? NSOnState : NSOffState)];
+
+    } else if (action == @selector(changeDuplicateStatusMode:)) {
+        DuplicateStatusMode mode = [[Preferences sharedInstance] duplicateStatusMode];
+        BOOL yn = mode == [menuItem tag];
+        [menuItem setState:(yn ? NSOnState : NSOffState)];
     
     } else if (action == @selector(changeNumberOfLayoutLines:)) {
         NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
@@ -747,6 +752,17 @@
 
     Preferences *preferences = [Preferences sharedInstance];
     [preferences setKeySignatureDisplayMode:[sender tag]];
+}
+
+
+- (IBAction) changeDuplicateStatusMode:(id)sender
+{
+    EmbraceLogMethod();
+
+    Preferences *preferences = [Preferences sharedInstance];
+    [preferences setDuplicateStatusMode:[sender tag]];
+    
+    [_setlistController detectDuplicates];
 }
 
 

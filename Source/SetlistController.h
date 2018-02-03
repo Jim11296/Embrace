@@ -54,6 +54,8 @@ typedef NS_ENUM(NSInteger, PlaybackAction) {
 - (void) exportToFile;
 - (void) exportToPlaylist;
 
+- (void) detectDuplicates;
+
 - (IBAction) changeLabel:(id)sender;
 
 - (IBAction) revealTime:(id)sender;

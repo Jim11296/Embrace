@@ -15,6 +15,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+NSString * const TrackDidModifyTitleNotificationName        = @"TrackDidModifyTitleNotificationName";
 NSString * const TrackDidModifyPlayDurationNotificationName = @"TrackDidModifyPlayDurationNotification";
 
 
@@ -284,6 +285,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (void) _updateState:(NSDictionary *)state initialLoad:(BOOL)initialLoad
 {
+    BOOL postTitleChanged = NO;
     BOOL postPlayDurationChanged = NO;
 
     for (NSString *key in state) {
@@ -302,6 +304,10 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             [_dirtyKeys addObject:key];
             _dirty = YES;
 
+            if ([@"title" isEqualToString:key]) {
+                postTitleChanged = YES;
+            }
+            
             if ([@[ @"duration", @"startTime", @"endTime" ] containsObject:key]) {
                 postPlayDurationChanged = YES;
             }
@@ -323,6 +329,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
     if (_dirty && !initialLoad) {
         [self _saveStateImmediately:NO];
+    }
+
+    if (postTitleChanged) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyTitleNotificationName object:self];
+        });
     }
 
     if (postPlayDurationChanged) {
@@ -788,6 +800,17 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [self _saveStateImmediately:YES];
 
         [self didChangeValueForKey:@"trackStatus"];
+    }
+}
+
+
+- (void) setTitle:(NSString *)title
+{
+    if (_title != title) {
+        _title = [title precomposedStringWithCanonicalMapping];
+        _titleForSimilarTitleDetection = GetSimplifiedString(title);
+        _dirty = YES;
+        [self _saveStateImmediately:NO];
     }
 }
 

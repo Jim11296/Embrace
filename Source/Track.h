@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AudioFile.h"
 
+extern NSString * const TrackDidModifyTitleNotificationName;
 extern NSString * const TrackDidModifyPlayDurationNotificationName;
 
 @class TrackAnalyzer;
@@ -81,11 +82,15 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic) BOOL stopsAfterPlaying;
 @property (nonatomic) BOOL ignoresAutoGap;
 
+@property (nonatomic) NSTimeInterval expectedDuration;
+
 @property (nonatomic) NSTimeInterval estimatedEndTime;
 @property (nonatomic) TrackError trackError;
 
 @property (nonatomic) TrackLabel trackLabel;
 @property (nonatomic, getter=isDuplicate) BOOL duplicate;
+
+@property (nonatomic, readonly) NSString *titleForSimilarTitleDetection;
 
 // Metadata
 @property (nonatomic, readonly) NSString *title;

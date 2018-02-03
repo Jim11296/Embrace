@@ -34,6 +34,8 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 - (void) toggleIgnoreAutoGap:(id)sender;
 - (void) toggleMarkAsPlayed:(id)sender;
 
+- (void) detectDuplicates;
+
 - (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 
 - (void) didFinishTrack:(Track *)finishedTrack;
