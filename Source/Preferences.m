@@ -46,7 +46,8 @@ static NSDictionary *sGetDefaultValues()
         @"allowsAllEffects":     @NO,
 
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
-
+        @"duplicateStatusMode":     @( DuplicateStatusModeSameFile ),
+        
         @"mainOutputAudioDevice":  [AudioDevice defaultOutputDevice],
         @"mainOutputSampleRate":   @(44100),
         @"mainOutputFrames":       @(2048),

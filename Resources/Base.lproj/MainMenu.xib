@@ -330,6 +330,32 @@ CA
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Duplicate Status" id="udg-2a-Atz">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Duplicate Status" id="YeS-dV-lxd">
+                                    <items>
+                                        <menuItem title="Same File" tag="1" id="lgQ-4k-8Dp">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeDuplicateStatusMode:" target="494" id="moS-6W-dXF"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="ei7-d1-g8E"/>
+                                        <menuItem title="Same Title" tag="2" id="ufg-UE-BIK">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeDuplicateStatusMode:" target="494" id="mCf-nr-Ipa"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Similar Title" tag="4" id="Fem-WT-S02">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="changeDuplicateStatusMode:" target="494" id="Rfe-dB-bsi"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="pF6-2l-LGh"/>
                             <menuItem title="Reveal End Time" keyEquivalent="t" id="WCe-7u-SOG">
                                 <connections>
@@ -510,6 +536,9 @@ CA
             <connections>
                 <action selector="changeTrackAttributes:" target="494" id="qaS-bw-QpJ"/>
             </connections>
+        </menuItem>
+        <menuItem title="Exact Title" id="fpN-Ai-03j">
+            <modifierMask key="keyEquivalentModifierMask"/>
         </menuItem>
     </objects>
 </document>

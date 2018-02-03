@@ -140,6 +140,7 @@ static NSInteger sAutoGapMaximum = 16;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyPlayDuration:)      name:TrackDidModifyPlayDurationNotificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyTitle:)             name:TrackDidModifyTitleNotificationName object:nil];
 
     [self _handlePreferencesDidChange:nil];
 
@@ -338,6 +339,16 @@ static NSInteger sAutoGapMaximum = 16;
     [self _calculateStartAndEndTimes];
     [self _updatePlayButton];
     [self _updateDragSongsView];
+}
+
+
+- (void) _handleTrackDidModifyTitle:(NSNotification *)note
+{
+    DuplicateStatusMode duplicateStatusMode = [[Preferences sharedInstance] duplicateStatusMode];
+    
+    if (duplicateStatusMode == DuplicateStatusModeSameTitle || duplicateStatusMode == DuplicateStatusModeSimilarTitle) {
+        [self detectDuplicates];
+    }
 }
 
 
@@ -597,6 +608,12 @@ static NSInteger sAutoGapMaximum = 16;
     [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
 
     [self _markAsSaved];
+}
+
+
+- (void) detectDuplicates
+{
+    [_tracksController detectDuplicates];
 }
 
 

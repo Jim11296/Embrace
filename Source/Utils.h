@@ -61,6 +61,8 @@ extern Tonality  GetTonalityForString(NSString *string);
 extern NSString *GetTraditionalStringForTonality(Tonality tonality);
 extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality);
 
+extern NSString *GetSimplifiedString(NSString *string);
+
 extern NSColor *GetRGBColor(int rgb, CGFloat alpha);
 extern CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef));
 

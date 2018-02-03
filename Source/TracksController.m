@@ -76,7 +76,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[self tableView] registerNib:nib forIdentifier:@"TrackCell"];
 
     [self _loadState];
-    [self _detectDuplicates];
+    [self detectDuplicates];
     [[self tableView] reloadData];
     
     _didInit = YES;
@@ -322,48 +322,10 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
-- (void) _detectDuplicates
-{
-    NSMutableDictionary *urlToTrackMap        = [NSMutableDictionary dictionaryWithCapacity:[_tracks count]];
-    NSMutableDictionary *databaseIDToTrackMap = [NSMutableDictionary dictionaryWithCapacity:[_tracks count]];
-
-    for (Track *track in _tracks) {
-        NSInteger databaseID = [track databaseID];
-        NSURL *externalURL = [track externalURL];
-        BOOL isDuplicate = NO;
-        
-        if (databaseID) {
-            NSNumber *key = @(databaseID);
-            Track *existingTrack = [databaseIDToTrackMap objectForKey:key];
-            
-            if (existingTrack) {
-                [existingTrack setDuplicate:YES];
-                isDuplicate = YES;
-            }
-
-            [databaseIDToTrackMap setObject:track forKey:key];
-        }
-        
-        if (externalURL) {
-            Track *existingTrack = [urlToTrackMap objectForKey:externalURL];
-            
-            if (existingTrack) {
-                [existingTrack setDuplicate:YES];
-                isDuplicate = YES;
-            }
-            
-            [urlToTrackMap setObject:track forKey:externalURL];
-        }
-        
-        [track setDuplicate:isDuplicate];
-    }
-}
-
-
 - (void) _didModifyTracks
 {
     TrackTrialCheck(^{
-        [self _detectDuplicates];
+        [self detectDuplicates];
 
         NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
         [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
@@ -1252,6 +1214,51 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     });
 
     return result;
+}
+
+
+- (void) detectDuplicates
+{
+    NSUInteger tracksCount = [_tracks count];
+
+    NSMutableDictionary *urlToTrackMap        = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
+    NSMutableDictionary *databaseIDToTrackMap = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
+    NSMutableDictionary *titleToTrackMap      = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
+
+    DuplicateStatusMode duplicateStatusMode = [[Preferences sharedInstance] duplicateStatusMode];
+
+    void (^check)(NSMutableDictionary *, id, Track *) = ^(NSMutableDictionary *map, id key, Track *track) {
+        BOOL isDuplicate = NO;
+
+        if (key) {
+            Track *existingTrack = [map objectForKey:key];
+                
+            if (existingTrack) {
+                [existingTrack setDuplicate:YES];
+                isDuplicate = YES;
+            }
+
+            [map setObject:track forKey:key];
+        }
+    
+        [track setDuplicate:isDuplicate];
+    };
+
+    for (Track *track in _tracks) {
+        if (duplicateStatusMode == DuplicateStatusModeSameTitle) {
+            check(titleToTrackMap, [track title], track);
+
+        } else if (duplicateStatusMode == DuplicateStatusModeSimilarTitle) {
+            check(titleToTrackMap, [track titleForSimilarTitleDetection], track);
+        }
+
+        NSInteger databaseID = [track databaseID];
+        if (databaseID) {
+            check(databaseIDToTrackMap, @(databaseID), track);
+        }
+
+        check(urlToTrackMap, [track externalURL], track);
+    }
 }
 
 

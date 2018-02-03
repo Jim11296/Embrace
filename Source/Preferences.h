@@ -17,6 +17,13 @@ typedef NS_ENUM(NSInteger, KeySignatureDisplayMode) {
 };
 
 
+typedef NS_OPTIONS(NSUInteger, DuplicateStatusMode) {
+    DuplicateStatusModeSameFile     = 1,
+    DuplicateStatusModeSameTitle    = 2,
+    DuplicateStatusModeSimilarTitle = 4
+};
+
+
 typedef NS_ENUM(NSInteger, TrackViewAttribute) {
     TrackViewAttributeArtist          = 0,
     TrackViewAttributeBeatsPerMinute  = 1,
@@ -67,6 +74,7 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) BOOL allowsAllEffects;
 
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
+@property (nonatomic) DuplicateStatusMode duplicateStatusMode;
 
 @property (nonatomic) AudioDevice *mainOutputAudioDevice;
 @property (nonatomic) double       mainOutputSampleRate;
