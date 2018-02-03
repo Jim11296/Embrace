@@ -478,12 +478,23 @@ static NSInteger sAutoGapMaximum = 16;
 
         } else if (status == TrackStatusPreparing || status == TrackStatusPlaying) {
             if ([track isEqual:[player currentTrack]]) {
-                time += [player timeRemaining];
+                NSTimeInterval expectedDuration = [track expectedDuration];
+                NSTimeInterval remaining = [player timeRemaining];
+
+                if (expectedDuration) {
+                    remaining = expectedDuration - [player timeElapsed];
+                    if (remaining < 0) remaining = 0;
+                }
+
+                time += remaining;
                 endTime = now + time;
             }
 
         } else if (status == TrackStatusQueued) {
-            time += [track playDuration];
+            NSTimeInterval duration = [track expectedDuration];
+            if (!duration) duration = [track playDuration];
+        
+            time += duration;
             endTime = now + time;
             
             if (lastTrack) {

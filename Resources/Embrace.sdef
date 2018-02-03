@@ -241,6 +241,10 @@
                 <cocoa key="scriptingLabel"/>
             </property>
 
+            <property name="expected duration" access="rw" code="edur" type="real" description="When non-zero, expected duration is used to estimate End Time.">
+                <cocoa key="scriptingExpectedDuration"/>
+            </property>
+
             <property name="stops after playing" access="rw" code="stpl" type="boolean" description="If true, playback stops after this track.">
                 <cocoa key="scriptingStopsAfterPlaying"/>
             </property>
