@@ -12,6 +12,7 @@
 #import "TracksController.h"
 #import "AppDelegate.h"
 #import "iTunesManager.h"
+#import "Preferences.h"
 
 @interface Track (Scripting)
 @end
@@ -238,7 +239,14 @@
 
 - (void) setScriptingLabel:(NSNumber *)scriptingLabel
 {
-    [self setTrackLabel:[scriptingLabel integerValue]];
+    TrackLabel label = [scriptingLabel integerValue];
+    Preferences *preferences = [Preferences sharedInstance];
+    
+    if (![preferences showsLabelDots] && ![preferences showsLabelStripes] && (label != TrackLabelNone)) {
+        [preferences setShowsLabelStripes:YES];
+    }
+
+    [self setTrackLabel:label];
 }
 
 
