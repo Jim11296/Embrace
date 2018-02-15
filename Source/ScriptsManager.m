@@ -21,6 +21,15 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
     FileSystemMonitor *_monitor;
 }
 
+static NSArray *sGetScriptFileTypes()
+{
+    return @[
+        @"com.apple.applescript.script",
+        @"com.apple.applescript.text",
+        @"com.apple.applescript.script-bundle"
+    ];
+}
+
 
 + (id) sharedInstance
 {
@@ -54,7 +63,7 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
 {
     NSFileManager *manager = [NSFileManager defaultManager];
 
-    NSURL *handlersDirectoryURL  = [self _handlersDirectoryURL];
+    NSURL *handlersDirectoryURL  = [self _scriptsDirectoryURL];
     
     if (![manager fileExistsAtPath:[handlersDirectoryURL path]]) {
         NSError *error = nil;
@@ -70,20 +79,28 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
 }
 
 
-- (NSURL *) _handlersDirectoryURL
+- (NSURL *) _scriptsDirectoryURL
 {
     NSString *appSupport = GetApplicationSupportDirectory();
     
-    return [NSURL fileURLWithPath:[appSupport stringByAppendingPathComponent:@"Handlers"]];
+    return [NSURL fileURLWithPath:[appSupport stringByAppendingPathComponent:@"Scripts"]];
 }
 
 
 - (void) _reloadScripts
 {
-    NSURL *handlersDirectoryURL = [self _handlersDirectoryURL];
+    EmbraceLogMethod();
+
+    NSURL *scriptsDirectoryURL = [self _scriptsDirectoryURL];
 
     NSError *dirError = nil;
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[handlersDirectoryURL path] error:&dirError];
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[scriptsDirectoryURL path] error:&dirError];
+   
+    if (dirError) {
+        EmbraceLog(@"ScriptsManager", @"Could not list handlers: %@", dirError);
+    } else {
+        EmbraceLog(@"ScriptsManager", @"Handler list: %@", contents);
+    }
    
     NSMutableArray *scriptFiles = [NSMutableArray array];
 
@@ -91,19 +108,24 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
 
     for (NSString *item in contents) {
         if ([item hasPrefix:@"."]) continue;
-        
-        NSURL    *scriptURL = [handlersDirectoryURL URLByAppendingPathComponent:item];
+
+        NSURL    *scriptURL = [scriptsDirectoryURL URLByAppendingPathComponent:item];
         NSString *type      = nil;
         NSError  *error     = nil;
 
         if ([scriptURL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error]) {
-            if ([workspace type:type conformsToType:@"com.apple.applescript.script"] ||
-                [workspace type:type conformsToType:@"com.apple.applescript.text"] ||
-                [workspace type:type conformsToType:@"com.apple.applescript.script-bundle"]
-            ) {
-                ScriptFile *scriptFile = [[ScriptFile alloc] initWithURL:scriptURL];
-                [scriptFiles addObject:scriptFile];
+            EmbraceLog(@"ScriptsManager", @"Handler '%@' has type: '%@'", scriptURL, type);
+
+            for (NSString *scriptType in sGetScriptFileTypes()) {
+                if ([workspace type:type conformsToType:scriptType]) {
+                    ScriptFile *scriptFile = [[ScriptFile alloc] initWithURL:scriptURL];
+                    [scriptFiles addObject:scriptFile];
+                    break;
+                }
             }
+
+        } else {
+            EmbraceLog(@"ScriptsManager", @"Could not get resource type of '%@': '%@'", scriptURL, error);
         }
     }
     
@@ -115,7 +137,11 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
 
 - (void) _updateHandlerScriptFile
 {
+    EmbraceLogMethod();
+
     NSString *scriptHandlerName = [[Preferences sharedInstance] scriptHandlerName];
+    EmbraceLog(@"ScriptsManager", @"scriptHandlerName is '%@'", scriptHandlerName);
+    
     if (![scriptHandlerName length]) {
         scriptHandlerName = nil;
     }
@@ -125,6 +151,7 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
 
     for (ScriptFile *file in _allScriptFiles) {
         if (scriptHandlerName && [[file fileName] isEqualToString:scriptHandlerName]) {
+            EmbraceLog(@"ScriptsManager", @"Found matching handler: '%@'", [file fileName]);
             _handlerScriptFile = file;
             break;
         }
@@ -217,9 +244,9 @@ NSString * const ScriptsManagerDidReloadNotification = @"ScriptsManagerDidReload
 }
 
 
-- (void) openHandlersFolder
+- (void) revealScriptsFolder
 {
-    [[NSWorkspace sharedWorkspace] openURL:[self _handlersDirectoryURL]];
+    [[NSWorkspace sharedWorkspace] openURL:[self _scriptsDirectoryURL]];
 }
 
 

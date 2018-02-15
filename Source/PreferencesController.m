@@ -254,15 +254,15 @@
             [menu addItem:item];
         }
     }
-    
-    // Add separator "Open in Finder"
+
+    // Add separator and "Reveal Scripts in Finder"
     {
         [menu addItem:[NSMenuItem separatorItem]];
 
-        NSMenuItem *openItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Open in Finder", nil) action:nil keyEquivalent:@""];
-        [openItem setTag:2];
+        NSMenuItem *revealItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Reveal Scripts in Finder", nil) action:nil keyEquivalent:@""];
+        [revealItem setTag:2];
 
-        [menu addItem:openItem];
+        [menu addItem:revealItem];
     }
     
     if (itemToSelect) {
@@ -383,7 +383,7 @@
         [[Preferences sharedInstance] setScriptHandlerName:[selectedItem representedObject]];
     
     } else if ([selectedItem tag] == 2) {
-        [[ScriptsManager sharedInstance] openHandlersFolder];
+        [[ScriptsManager sharedInstance] revealScriptsFolder];
         [self _rebuildScriptHandlerMenu];
     }
 }

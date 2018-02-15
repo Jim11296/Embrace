@@ -16,7 +16,7 @@ extern NSString * const ScriptsManagerDidReloadNotification;
 
 + (instancetype) sharedInstance;
 
-- (void) openHandlersFolder;
+- (void) revealScriptsFolder;
 
 - (void) callMetadataAvailableWithTrack:(Track *)track;
 
