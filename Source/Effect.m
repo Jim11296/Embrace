@@ -56,7 +56,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     NSString *name = [dictionary objectForKey:sNameKey];
     NSData   *info = [dictionary objectForKey:sInfoKey];
 
-    if (![name isKindOfClass:[NSString class]] || ![info isKindOfClass:[NSData class]]) {
+    if (![name isKindOfClass:[NSString class]] || (info && ![info isKindOfClass:[NSData class]])) {
         self = nil;
         return nil;
     }
@@ -76,14 +76,16 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     
     self = [self initWithEffectType:typeToUse];
  
-    NSError *error = nil;
-    _classInfoToLoad = [NSPropertyListSerialization propertyListWithData:info options:NSPropertyListImmutable format:NULL error:&error];
-    
-    if (!_classInfoToLoad || error) {
-        self = nil;
-        return nil;
+    if (info) {
+        NSError *error = nil;
+        _classInfoToLoad = [NSPropertyListSerialization propertyListWithData:info options:NSPropertyListImmutable format:NULL error:&error];
+        
+        if (!_classInfoToLoad || error) {
+            self = nil;
+            return nil;
+        }
     }
-    
+
     return self;
 }
 

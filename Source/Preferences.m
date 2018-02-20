@@ -8,7 +8,7 @@
 
 #import "Preferences.h"
 #import "AudioDevice.h"
-
+#import "EffectAdditions.h"
 
 NSString * const PreferencesDidChangeNotification = @"PreferencesDidChange";
 
@@ -96,6 +96,9 @@ static void sRegisterDefaults()
         id value = [defaultValuesDictionary objectForKey:key];
         sSetDefaultObject(defaults, key, value, value);
     }
+
+    // Default to a single 10-band EQ
+    [defaults setObject:@[ @{ @"name": EmbraceMappedEffect10BandEQ } ] forKey:@"effects"];
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
