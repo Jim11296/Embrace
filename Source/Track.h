@@ -113,6 +113,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic, readonly) NSInteger energyLevel;
 @property (nonatomic, readonly) NSInteger year;
 
+@property (nonatomic, readonly) NSTimeInterval decodedDuration;
 @property (nonatomic, readonly) double  trackLoudness;
 @property (nonatomic, readonly) double  trackPeak;
 @property (nonatomic, readonly) NSData *overviewData;

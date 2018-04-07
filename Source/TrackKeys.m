@@ -22,14 +22,12 @@ NSString * const TrackKeyAlbumArtist      = @"albumArtist";
 NSString * const TrackKeyComposer         = @"composer";
 NSString * const TrackKeyStartTime        = @"startTime";
 NSString * const TrackKeyStopTime         = @"stopTime";
-NSString * const TrackKeyDuration         = @"duration";
 NSString * const TrackKeyInitialKey       = @"initialKey";
 NSString * const TrackKeyTonality         = @"tonality";
 NSString * const TrackKeyTrackLoudness    = @"trackLoudness";
 NSString * const TrackKeyTrackPeak        = @"trackPeak";
 NSString * const TrackKeyOverviewData     = @"overviewData";
 NSString * const TrackKeyOverviewRate     = @"overviewRate";
-NSString * const TrackKeyExpectedDuration = @"expectedDuration";
 NSString * const TrackKeyBPM              = @"beatsPerMinute";
 NSString * const TrackKeyDatabaseID       = @"databaseID";
 NSString * const TrackKeyGrouping         = @"grouping";
@@ -37,3 +35,13 @@ NSString * const TrackKeyComments         = @"comments";
 NSString * const TrackKeyEnergyLevel      = @"energyLevel";
 NSString * const TrackKeyGenre            = @"genre";
 NSString * const TrackKeyYear             = @"year";
+
+// This is the duration as reported by -[AVURLAsset duration]
+NSString * const TrackKeyDuration = @"duration";
+
+// This is the duration of the decoded PCM buffer
+NSString * const TrackKeyDecodedDuration = @"decodedDuration";
+
+// This is the duration set by the user via an AppleScript
+NSString * const TrackKeyExpectedDuration = @"expectedDuration";
+

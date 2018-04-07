@@ -137,7 +137,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     NSArray *affectingKeys = nil;
  
     if ([key isEqualToString:@"playDuration"]) {
-        affectingKeys = @[ @"duration", @"stopTime", @"startTime" ];
+        affectingKeys = @[ @"duration", @"decodedDuration", @"stopTime", @"startTime" ];
     } else if ([key isEqualToString:@"silenceAtStart"]) {
         affectingKeys = @[ @"overviewData", @"startTime" ];
     } else if ([key isEqualToString:@"silenceAtEnd"]) {
@@ -308,7 +308,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 postTitleChanged = YES;
             }
             
-            if ([@[ @"duration", @"startTime", @"endTime" ] containsObject:key]) {
+            if ([@[ @"duration", @"decodedDuration", @"startTime", @"endTime" ] containsObject:key]) {
                 postPlayDurationChanged = YES;
             }
         }
@@ -373,6 +373,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_comments)         [state setObject:_comments             forKey:TrackKeyComments];
     if (_composer)         [state setObject:_composer             forKey:TrackKeyComposer];
     if (_databaseID)       [state setObject:@(_databaseID)        forKey:TrackKeyDatabaseID];
+    if (_decodedDuration)  [state setObject:@(_decodedDuration)   forKey:TrackKeyDecodedDuration];
     if (_duration)         [state setObject:@(_duration)          forKey:TrackKeyDuration];
     if (_energyLevel)      [state setObject:@(_energyLevel)       forKey:TrackKeyEnergyLevel];
     if (_expectedDuration) [state setObject:@(_expectedDuration)  forKey:TrackKeyExpectedDuration];
@@ -884,7 +885,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 - (NSTimeInterval) playDuration
 {
-    NSTimeInterval stopTime = _stopTime ? _stopTime : _duration;
+    NSTimeInterval duration = _decodedDuration ? _decodedDuration : _duration;
+    NSTimeInterval stopTime = _stopTime ? _stopTime : duration;
     return stopTime - _startTime;
 }
 
