@@ -655,8 +655,6 @@ const CGFloat sTrackWidth      = 5;
 
     CGRect bounds = [self bounds];
 
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.2] set];
-
     void (^drawLineForValue)(Float32) = ^(Float32 value) {
         CGRect knobRect = [_alignedBandView knobRectWithValue:value];
         knobRect = [self convertRect:knobRect fromView:_alignedBandView];
@@ -670,15 +668,19 @@ const CGFloat sTrackWidth      = 5;
         NSRectFill(lineRect);
     };
 
-    drawLineForValue( 1.00 );
-    drawLineForValue( 0.75 );
-    drawLineForValue( 0.50 );
-    drawLineForValue( 0.25 );
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.4] set];
     drawLineForValue( 0.00 );
-    drawLineForValue(-0.25 );
-    drawLineForValue(-0.50 );
-    drawLineForValue(-0.75 );
+
+    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.2] set];
+    drawLineForValue( 1.00 );
     drawLineForValue(-1.00 );
+    drawLineForValue( 0.50 );
+    drawLineForValue(-0.50 );
+
+    drawLineForValue( 0.75 );
+    drawLineForValue( 0.25 );
+    drawLineForValue(-0.25 );
+    drawLineForValue(-0.75 );
 }
 
 
