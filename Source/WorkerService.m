@@ -144,6 +144,9 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
             free(fillBufferList->mBuffers[i].mData);
         }
         
+        NSTimeInterval decodedDuration = fileLengthFrames / fileFormat.mSampleRate;
+        
+        [result setObject:@(decodedDuration)                       forKey:TrackKeyDecodedDuration];
         [result setObject:LoudnessMeasurerGetOverview(measurer)    forKey:TrackKeyOverviewData];
         [result setObject:@(100)                                   forKey:TrackKeyOverviewRate];
         [result setObject:@(LoudnessMeasurerGetLoudness(measurer)) forKey:TrackKeyTrackLoudness];

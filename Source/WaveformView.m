@@ -125,7 +125,7 @@
     
     NSTimeInterval startTime = [track startTime];
     NSTimeInterval stopTime  = [track stopTime];
-    NSTimeInterval duration  = [track duration];
+    NSTimeInterval duration  = [track decodedDuration];
     
     NSInteger startOffset = 0;
     NSInteger stopOffset  = inCount;

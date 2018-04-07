@@ -470,7 +470,7 @@ static NSInteger sAutoGapMaximum = 16;
     Track  *lastTrack = nil;
 
     for (Track *track in [[self tracksController] tracks]) {
-        NSTimeInterval endTime   = 0;
+        NSTimeInterval endTime = 0;
 
         TrackStatus status = [track trackStatus];
         
