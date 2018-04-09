@@ -583,6 +583,23 @@ extern AppDelegate *GetAppDelegate(void)
 }
 
 
+NSString *GetAppBuildString(void)
+{
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge id)kCFBundleVersionKey];
+}
+
+
+NSUInteger GetCombinedBuildNumber(NSString *string)
+{
+    NSArray *components = [string componentsSeparatedByString:@"."];
+ 
+    NSString *majorString = [components count] > 0 ? [components firstObject] : nil;
+    NSString *minorString = [components count] > 1 ? [components lastObject]  : nil;
+
+    return ([majorString integerValue] << 16) + [minorString integerValue];
+}
+
+
 NSString *GetStringForTime(NSTimeInterval time)
 {
     BOOL minus = NO;

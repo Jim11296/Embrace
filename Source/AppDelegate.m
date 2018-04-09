@@ -160,6 +160,10 @@
 #endif
 
     EmbraceLog(@"Hello", @"Embrace finished launching at %@", [NSDate date]);
+
+    EmbraceLog(@"Migration", @"Current build is %@, latest build is %@.",
+        GetAppBuildString(),
+        [[Preferences sharedInstance] latestBuildString]);
 }
 
 

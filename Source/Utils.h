@@ -68,6 +68,9 @@ extern CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^ca
 
 extern AppDelegate *GetAppDelegate(void);
 
+extern NSString  *GetAppBuildString(void);
+extern NSUInteger GetCombinedBuildNumber(NSString *string);
+
 extern NSString *GetStringForTime(NSTimeInterval time);
 
 extern NSString *GetApplicationSupportDirectory(void);
