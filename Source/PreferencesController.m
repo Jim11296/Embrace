@@ -293,15 +293,15 @@
         [self setDeviceHoggable:YES];
         
         BOOL mainOutputUsesHogMode = [preferences mainOutputUsesHogMode];
-        [[self hogModeButton] setState:(mainOutputUsesHogMode ? NSOnState : NSOffState)];
+        [[self hogModeButton] setState:(mainOutputUsesHogMode ? NSControlStateValueOn : NSControlStateValueOff)];
 
         BOOL mainOutputResetsVolume = mainOutputUsesHogMode && [preferences mainOutputResetsVolume] && [device hasVolumeControl];
-        [[self resetVolumeButton] setState:(mainOutputResetsVolume ? NSOnState : NSOffState)];
+        [[self resetVolumeButton] setState:(mainOutputResetsVolume ? NSControlStateValueOn : NSControlStateValueOff)];
 
     } else {
         [self setDeviceHoggable:NO];
-        [[self hogModeButton] setState:NSOffState];
-        [[self resetVolumeButton] setState:NSOffState];
+        [[self hogModeButton] setState:NSControlStateValueOff];
+        [[self resetVolumeButton] setState:NSControlStateValueOff];
     }
  
     [self _rebuildDevicesMenu];
@@ -358,15 +358,15 @@
         [[Preferences sharedInstance] setMainOutputSampleRate:sampleRate];
         
     } else if (sender == [self hogModeButton]) {
-        BOOL hogMode = [[self hogModeButton] state] == NSOnState;
+        BOOL hogMode = [[self hogModeButton] state] == NSControlStateValueOn;
         [[Preferences sharedInstance] setMainOutputUsesHogMode:hogMode];
 
     } else if (sender == [self resetVolumeButton]) {
-        BOOL resetsVolume = [[self resetVolumeButton] state] == NSOnState;
+        BOOL resetsVolume = [[self resetVolumeButton] state] == NSControlStateValueOn;
         [[Preferences sharedInstance] setMainOutputResetsVolume:resetsVolume];
 
     } else if (sender == [self usesMasteringComplexityButton]) {
-        BOOL usesMasteringComplexitySRC = [[self usesMasteringComplexityButton] state] == NSOnState;
+        BOOL usesMasteringComplexitySRC = [[self usesMasteringComplexityButton] state] == NSControlStateValueOn;
         [[Preferences sharedInstance] setUsesMasteringComplexitySRC:usesMasteringComplexitySRC];
     }
 }

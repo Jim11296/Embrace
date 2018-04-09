@@ -50,7 +50,7 @@
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
     if ([menuItem action] == @selector(toggleBypass:)) {
-        [menuItem setState:[[self effect] bypass] ? NSOnState : NSOffState];
+        [menuItem setState:[[self effect] bypass] ? NSControlStateValueOn : NSControlStateValueOff];
     }
 
     return YES;
