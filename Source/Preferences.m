@@ -129,6 +129,19 @@ static void sRegisterDefaults()
         for (NSString *key in sGetDefaultValues()) {
             [self addObserver:self forKeyPath:key options:0 context:NULL];
         }
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *currentBuildString = GetAppBuildString();
+        NSString *latestBuildString  = [defaults objectForKey:@"latest-build"];
+        
+        if (GetCombinedBuildNumber(currentBuildString) > GetCombinedBuildNumber(latestBuildString)) {
+            [defaults setObject:currentBuildString forKey:@"latest-build"];
+            latestBuildString = currentBuildString;
+        }
+
+        [defaults setObject:currentBuildString forKey:@"last-build"];
+
+        _latestBuildString = latestBuildString;
     }
 
     return self;

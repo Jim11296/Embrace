@@ -48,6 +48,8 @@ extern NSString * const PreferencesDidChangeNotification;
 
 + (id) sharedInstance;
 
+@property (nonatomic, readonly) NSString *latestBuildString;
+
 @property (nonatomic) NSInteger numberOfLayoutLines;
 @property (nonatomic) BOOL shortensPlayedTracks;
 
