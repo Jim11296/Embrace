@@ -343,15 +343,15 @@ static void sSetCurrentTrackPinning(BOOL yn)
         NSInteger tag = [menuItem tag];
         
         if (sGetCurrentTrackAppearance() == tag) {
-            [menuItem setState:NSOnState];
+            [menuItem setState:NSControlStateValueOn];
         } else {
-            [menuItem setState:NSOffState];
+            [menuItem setState:NSControlStateValueOff];
         }
     
         return YES;
 
     } else if ([actionString isEqualToString:@"changePinning:"]) {
-        [menuItem setState:sGetCurrentTrackPinning() ? NSOnState : NSOffState];
+        [menuItem setState:sGetCurrentTrackPinning() ? NSControlStateValueOn : NSControlStateValueOff];
         return YES;
     }
     
@@ -375,7 +375,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
 - (IBAction) changePinning:(id)sender
 {
-    sSetCurrentTrackPinning([sender state] == NSOffState);
+    sSetCurrentTrackPinning([sender state] == NSControlStateValueOff);
     [self _updateAppearance];
     [self _updateWindowFrame];
 }

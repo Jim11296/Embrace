@@ -295,7 +295,7 @@
     BOOL orderIn = YES;
 
     if ([sender isKindOfClass:[NSMenuItem class]]) {
-        if ([sender state] == NSOnState) {
+        if ([sender state] == NSControlStateValueOn) {
             orderIn = NO;
         }
     }
@@ -493,7 +493,7 @@
         
         NSString *title = NSLocalizedString(@"Play", nil);
         BOOL enabled = [_setlistController isPreferredPlaybackActionEnabled];
-        NSInteger state = NSOffState;
+        NSInteger state = NSControlStateValueOff;
         
         if (playbackAction == PlaybackActionShowIssue) {
             title = NSLocalizedString(@"Show Issue", nil);
@@ -538,25 +538,25 @@
 
     } else if (action == @selector(showSetlistWindow:)) {
         BOOL yn = [_setlistController isWindowLoaded] && [[_setlistController window] isMainWindow];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
     
     } else if (action == @selector(showEffectsWindow:)) {
         BOOL yn = [_effectsController isWindowLoaded] && [[_effectsController window] isMainWindow];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
     
     } else if (action == @selector(showCurrentTrack:)) {
         BOOL yn = [_currentTrackController isWindowLoaded] && [[_currentTrackController window] isMainWindow];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
         
     } else if (action == @selector(showEqualizer:)) {
         EditEffectController *equalizerController = [self _equalizerEffectController];
 
         if (equalizerController) {
             BOOL yn = [equalizerController isWindowLoaded] && [[equalizerController window] isMainWindow];
-            [menuItem setState:(yn ? NSOnState : NSOffState)];
+            [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
 
         } else {
-            [menuItem setState:NSOffState];
+            [menuItem setState:NSControlStateValueOff];
             return NO;
         }
         
@@ -572,31 +572,31 @@
        
         if (!isEnabled) yn = NO;
 
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
         
         return isEnabled;
 
     } else if (action == @selector(changeKeySignatureDisplayMode:)) {
         KeySignatureDisplayMode mode = [[Preferences sharedInstance] keySignatureDisplayMode];
         BOOL yn = mode == [menuItem tag];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
 
     } else if (action == @selector(changeDuplicateStatusMode:)) {
         DuplicateStatusMode mode = [[Preferences sharedInstance] duplicateStatusMode];
         BOOL yn = mode == [menuItem tag];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
     
     } else if (action == @selector(changeNumberOfLayoutLines:)) {
         NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
 
     } else if (action == @selector(changeShortensPlayedTracks:)) {
         NSInteger yn = [[Preferences sharedInstance] shortensPlayedTracks];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
 
     } else if (action == @selector(changeFloatsOnTop:)) {
         NSInteger yn = [[Preferences sharedInstance] floatsOnTop];
-        [menuItem setState:(yn ? NSOnState : NSOffState)];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
 
     } else if (action == @selector(revealTime:)) {
         return [_setlistController validateMenuItem:menuItem];

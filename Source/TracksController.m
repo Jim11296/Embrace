@@ -799,12 +799,12 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     }
     
     if (isOff && isOn) {
-        [menuItem setState:NSMixedState];
+        [menuItem setState:NSControlStateValueMixed];
         isEnabled = NO;
     } else if (isOn) {
-        [menuItem setState:NSOnState];
+        [menuItem setState:NSControlStateValueOn];
     } else {
-        [menuItem setState:NSOffState];
+        [menuItem setState:NSControlStateValueOff];
     }
 
     return isEnabled;
@@ -829,19 +829,19 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     }
     
     if (isOff && isOn) {
-        [menuItem setState:NSMixedState];
+        [menuItem setState:NSControlStateValueMixed];
         isEnabled = NO;
     } else if (isOn) {
-        [menuItem setState:NSOnState];
+        [menuItem setState:NSControlStateValueOn];
     } else {
-        [menuItem setState:NSOffState];
+        [menuItem setState:NSControlStateValueOff];
     }
 
     return isEnabled;
 }
 
 
-- (BOOL) _validateToggleMarkAsPlayedWithMenuItem:(NSMenuItem *)menuItem
+- (NSControlStateValue) _controlStateForToggleMarkAsPlayed
 {
     BOOL isOn = NO;
     BOOL isOff = NO;
@@ -855,13 +855,18 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     }
 
     if (isOn && isOff) {
-        [menuItem setState:NSMixedState];
-        return NO;
+        return NSControlStateValueMixed;
     } else if (isOn) {
-        [menuItem setState:NSOnState];
+        return NSControlStateValueOn;
     } else {
-        [menuItem setState:NSOffState];
-    }
+        return NSControlStateValueOff;
+     }
+}
+
+
+- (BOOL) _validateToggleMarkAsPlayedWithMenuItem:(NSMenuItem *)menuItem
+{
+    [menuItem setState:[self _controlStateForToggleMarkAsPlayed]];
 
     if ([[Player sharedInstance] currentTrack]) {
         return NO;
@@ -1029,12 +1034,17 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         return;
     }
 
+    NSControlStateValue controlStateValue = [self _controlStateForToggleMarkAsPlayed];
+
+    TrackStatus newTrackStatus;
+    if (controlStateValue == NSControlStateValueOff || controlStateValue == NSControlStateValueMixed) {
+        newTrackStatus = TrackStatusPlayed;
+    } else {
+        newTrackStatus = TrackStatusQueued;
+    }
+
     for (Track *track in [self selectedTracks]) {
-        if ([track trackStatus] == TrackStatusQueued) {
-            [track setTrackStatus:TrackStatusPlayed];
-        } else if ([track trackStatus] == TrackStatusPlayed) {
-            [track setTrackStatus:TrackStatusQueued];
-        }
+        [track setTrackStatus:newTrackStatus];
     }
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
