@@ -230,7 +230,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [_timeField setDrawsBackground:NO];
     [_timeField setSelectable:NO];
     [_timeField setEditable:NO];
-    [_timeField setAlignment:NSRightTextAlignment];
+    [_timeField setAlignment:NSTextAlignmentRight];
     [_timeField setAlphaValue:0];
     [_timeField setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_timeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
@@ -343,9 +343,9 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    NSUInteger mask = (NSControlKeyMask | NSCommandKeyMask | NSShiftKeyMask | NSAlternateKeyMask);
+    NSUInteger mask = (NSEventModifierFlagControl | NSEventModifierFlagCommand | NSEventModifierFlagShift | NSEventModifierFlagOption);
     
-    if (([theEvent modifierFlags] & mask) == NSControlKeyMask) {
+    if (([theEvent modifierFlags] & mask) == NSEventModifierFlagControl) {
         if ([self _tryToPresentContextMenuWithEvent:theEvent]) {
             return;
         }
@@ -502,9 +502,14 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 {
     NSUInteger modifierFlags = [NSEvent modifierFlags];
     
-    modifierFlags &= (NSAlternateKeyMask | NSCommandKeyMask | NSControlKeyMask | NSShiftKeyMask);
+    modifierFlags &= (
+        NSEventModifierFlagOption  |
+        NSEventModifierFlagCommand |
+        NSEventModifierFlagControl |
+        NSEventModifierFlagShift
+    );
     
-    BOOL isCommandKeyDown = (modifierFlags == NSAlternateKeyMask);
+    BOOL isCommandKeyDown = (modifierFlags == NSEventModifierFlagOption);
     
     BOOL showsTime = ((isCommandKeyDown && _mouseInside) || _timeRequested);
 

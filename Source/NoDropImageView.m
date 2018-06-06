@@ -33,11 +33,11 @@
     NSRect rect = NSZeroRect;
     rect.size = size;
 
-    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
+    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:YES hints:nil];
 
     
     [_tintColor set];
-    NSRectFillUsingOperation(rect, NSCompositeSourceIn);
+    NSRectFillUsingOperation(rect, NSCompositingOperationSourceIn);
 }
 
 

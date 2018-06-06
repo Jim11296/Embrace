@@ -69,10 +69,10 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    if ([theEvent type] == NSLeftMouseDown) {
+    if ([theEvent type] == NSEventTypeLeftMouseDown) {
         NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
         
-        if ((modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask)) == NSControlKeyMask) {
+        if ((modifierFlags & (NSEventModifierFlagShift | NSEventModifierFlagControl | NSEventModifierFlagOption | NSEventModifierFlagCommand)) == NSEventModifierFlagControl) {
             [NSMenu popUpContextMenu:[self menu] withEvent:theEvent forView:self];
             return;
         }
@@ -84,7 +84,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
 - (void) rightMouseDown:(NSEvent *)theEvent
 {
-    if ([theEvent type] == NSRightMouseDown) {
+    if ([theEvent type] == NSEventTypeRightMouseDown) {
         [NSMenu popUpContextMenu:[self menu] withEvent:theEvent forView:self];
     } else {
         [super rightMouseDown:theEvent];
@@ -194,10 +194,10 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
     if (pinToBottom) {
         [window setHasShadow:NO];
-        [window setStyleMask:([window styleMask] & ~NSResizableWindowMask)];
+        [window setStyleMask:([window styleMask] & ~NSWindowStyleMaskResizable)];
         [window setMovable:NO];
         [window setMovableByWindowBackground:NO];
-        [window setLevel:NSDockWindowLevel];
+        [window setLevel:NSMainMenuWindowLevel];
 
         [window setCollectionBehavior:(
             NSWindowCollectionBehaviorCanJoinAllSpaces |
@@ -208,7 +208,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
     } else {
         [window setHasShadow:YES];
-        [window setStyleMask:([window styleMask] | NSResizableWindowMask)];
+        [window setStyleMask:([window styleMask] | NSWindowStyleMaskResizable)];
         [window setMovable:YES];
         [window setMovableByWindowBackground:YES];
         [window setCollectionBehavior:NSWindowCollectionBehaviorDefault];

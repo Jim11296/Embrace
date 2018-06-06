@@ -25,12 +25,12 @@
     if ((self = [super init])) {
         __weak id weakSelf = self;
     
-        _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskFromType(NSFlagsChanged) handler:^(NSEvent *event) {
+        _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskFromType(NSEventTypeFlagsChanged) handler:^(NSEvent *event) {
             [weakSelf _handleFlagsChanged:event];
             return event;
         }];
 
-        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskFromType(NSFlagsChanged) handler:^(NSEvent *event) {
+        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskFromType(NSEventTypeFlagsChanged) handler:^(NSEvent *event) {
             [weakSelf _handleFlagsChanged:event];
         }];
     
@@ -52,11 +52,12 @@
 {
     NSEventType eventType = [event type];
 
-    if (eventType == NSKeyDown) {
-        NSUInteger commonModifiers = NSShiftKeyMask |
-            NSControlKeyMask |
-            NSAlternateKeyMask |
-            NSCommandKeyMask;
+    if (eventType == NSEventTypeKeyDown) {
+        NSUInteger commonModifiers =
+            NSEventModifierFlagShift   |
+            NSEventModifierFlagControl |
+            NSEventModifierFlagOption  |
+            NSEventModifierFlagCommand;
 
         if ((([event modifierFlags] & commonModifiers) == 0) && ([event keyCode] == 49)) {
             if ([event isARepeat]) {
@@ -85,7 +86,7 @@
         [[GetAppDelegate() setlistController] handleNonSpaceKeyDown];
     }
 
-    if (eventType == NSRightMouseDown) {
+    if (eventType == NSEventTypeRightMouseDown) {
         if (![NSApp isActive] && [[Preferences sharedInstance] floatsOnTop]) {
             [NSApp activateIgnoringOtherApps:YES];
             [self performSelector:@selector(sendEvent:) withObject:event afterDelay:0];

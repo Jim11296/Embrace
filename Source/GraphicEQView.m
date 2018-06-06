@@ -243,8 +243,8 @@ const CGFloat sTrackWidth      = 5;
     pointInView = [self convertPoint:[firstEvent locationInWindow] fromView:nil];
     NSInteger index = [self _bandIndexAtPoint:pointInView];
     
-    BOOL slow     = ([firstEvent modifierFlags] & NSAlternateKeyMask) > 0;
-    BOOL drawMode = ([firstEvent modifierFlags] & NSControlKeyMask)   > 0;
+    BOOL slow     = ([firstEvent modifierFlags] & NSEventModifierFlagOption)  > 0;
+    BOOL drawMode = ([firstEvent modifierFlags] & NSEventModifierFlagControl) > 0;
 
     CGPoint windowLocation = [firstEvent locationInWindow];
 
@@ -269,7 +269,7 @@ const CGFloat sTrackWidth      = 5;
     
     BOOL insideKnob = NO;
 
-    if ([firstEvent type] == NSLeftMouseDown) {
+    if ([firstEvent type] == NSEventTypeLeftMouseDown) {
         _selectedBandView = [self _bandViewWithWindowLocation:windowLocation insideKnob:&insideKnob];
 
         if (insideKnob) {
@@ -285,9 +285,9 @@ const CGFloat sTrackWidth      = 5;
         [self _beginUpdateWithWindowLocation:windowLocation slow:slow];
 
         while (1) {
-            NSEvent *event = [[self window] nextEventMatchingMask:(NSLeftMouseDraggedMask | NSLeftMouseUpMask | NSFlagsChangedMask)];
+            NSEvent *event = [[self window] nextEventMatchingMask:(NSEventMaskLeftMouseDragged | NSEventMaskLeftMouseUp | NSEventMaskFlagsChanged)];
 
-            if ([event type] == NSLeftMouseDragged) {
+            if ([event type] == NSEventTypeLeftMouseDragged) {
                 windowLocation = [event locationInWindow];
 
                 if (drawMode) {
@@ -308,9 +308,9 @@ const CGFloat sTrackWidth      = 5;
                 [self _continueUpdateWithWindowLocation:windowLocation];
                 sendValue();
 
-            } else if ([event type] == NSFlagsChanged) {
-                BOOL newSlow  = ([event modifierFlags] & NSAlternateKeyMask) > 0;
-                     drawMode = ([event modifierFlags] & NSControlKeyMask)   > 0;
+            } else if ([event type] == NSEventTypeFlagsChanged) {
+                BOOL newSlow  = ([event modifierFlags] & NSEventModifierFlagOption)  > 0;
+                     drawMode = ([event modifierFlags] & NSEventModifierFlagControl) > 0;
 
                 if (slow != newSlow) {
                     slow = newSlow;
@@ -318,7 +318,7 @@ const CGFloat sTrackWidth      = 5;
                     [self _beginUpdateWithWindowLocation:windowLocation slow:slow];
                 }
                 
-            } else if ([event type] == NSLeftMouseUp) {
+            } else if ([event type] == NSEventTypeLeftMouseUp) {
                 [self _endUpdate];
                 break;
             }
@@ -381,7 +381,7 @@ const CGFloat sTrackWidth      = 5;
         [label setBordered:NO];
         [label setBackgroundColor:[NSColor clearColor]];
         [label setDrawsBackground:NO];
-        [label setAlignment:NSCenterTextAlignment];
+        [label setAlignment:NSTextAlignmentCenter];
         [label setTextColor:[NSColor blackColor]];
         [label setControlSize:controlSize];
         [label setFont:[NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:controlSize]]];
@@ -428,7 +428,7 @@ const CGFloat sTrackWidth      = 5;
         
         [self addSubview:bandView];
 
-        NSTextField *label = makeLabel(numberOfBands > 10 ? NSMiniControlSize : NSSmallControlSize);
+        NSTextField *label = makeLabel(numberOfBands > 10 ? NSControlSizeMini : NSControlSizeSmall);
         [label setStringValue:[labelsToUse objectAtIndex:i]];
         [self addSubview:label];
 
@@ -441,8 +441,8 @@ const CGFloat sTrackWidth      = 5;
     _numberOfBands = numberOfBands;
     
     if (!_topLabel) {
-        _topLabel = makeLabel(NSSmallControlSize);
-        [_topLabel setAlignment:NSRightTextAlignment];
+        _topLabel = makeLabel(NSControlSizeSmall);
+        [_topLabel setAlignment:NSTextAlignmentRight];
         [_topLabel setStringValue:NSLocalizedString(@"+12dB", nil)];
 
         [self addSubview:_topLabel];
@@ -450,8 +450,8 @@ const CGFloat sTrackWidth      = 5;
     }
 
     if (!_middleLabel) {
-        _middleLabel = makeLabel(NSSmallControlSize);
-        [_middleLabel setAlignment:NSRightTextAlignment];
+        _middleLabel = makeLabel(NSControlSizeSmall);
+        [_middleLabel setAlignment:NSTextAlignmentRight];
         [_middleLabel setStringValue:NSLocalizedString(@"0dB", nil)];
 
         [self addSubview:_middleLabel];
@@ -459,8 +459,8 @@ const CGFloat sTrackWidth      = 5;
     }
 
     if (!_bottomLabel) {
-        _bottomLabel = makeLabel(NSSmallControlSize);
-        [_bottomLabel setAlignment:NSRightTextAlignment];
+        _bottomLabel = makeLabel(NSControlSizeSmall);
+        [_bottomLabel setAlignment:NSTextAlignmentRight];
         [_bottomLabel setStringValue:NSLocalizedString(@"-12dB", nil)];
 
         [self addSubview:_bottomLabel];

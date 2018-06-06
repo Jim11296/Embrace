@@ -265,7 +265,7 @@
         [alert setInformativeText:NSLocalizedString(@"Music is currently playing. Are you sure you want to quit?", nil)];
         [alert addButtonWithTitle:NSLocalizedString(@"Quit",   nil)];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setAlertStyle:NSAlertStyleCritical];
 
         return [alert runModal] == NSAlertFirstButtonReturn ? NSTerminateNow : NSTerminateCancel;
     }
@@ -616,7 +616,7 @@
     } else if (action == @selector(openSupportFolder:)){
         NSUInteger modifierFlags = [NSEvent modifierFlags];
         
-        NSUInteger mask = NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask;
+        NSUInteger mask = NSEventModifierFlagControl | NSEventModifierFlagOption | NSEventModifierFlagCommand;
         BOOL visible = ((modifierFlags & mask) == mask);
     
         [[self openSupportSeparator] setHidden:!visible];
@@ -695,7 +695,7 @@
 
 
     [openPanel beginWithCompletionHandler:^(NSInteger result) {
-        if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSModalResponseOK) {
             SavePanelState(openPanel, @"open-file-panel");
             
             NSURL *url = [openPanel URL];

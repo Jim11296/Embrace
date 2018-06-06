@@ -201,7 +201,7 @@ static NSInteger sAutoGapMaximum = 16;
 {
     [super flagsChanged:event];
 
-    BOOL commandDown = ([event modifierFlags] & NSCommandKeyMask) == NSCommandKeyMask;
+    BOOL commandDown = ([event modifierFlags] & NSEventModifierFlagCommand) == NSEventModifierFlagCommand;
     
     if (_commandDown != commandDown) {
         if (commandDown) {
@@ -592,7 +592,7 @@ static NSInteger sAutoGapMaximum = 16;
     NSArray  *tracks = [[self tracksController] tracks];
     NSInteger result = [[ExportManager sharedInstance] runModalWithTracks:tracks];
 
-    if (result == NSFileHandlingPanelOKButton) {
+    if (result == NSModalResponseOK) {
         [self _markAsSaved];
     }
 }
@@ -714,7 +714,7 @@ static NSInteger sAutoGapMaximum = 16;
     NSAlert *alert = [[NSAlert alloc] init];
     
     [alert setMessageText:messageText];
-    [alert setAlertStyle:NSCriticalAlertStyle];
+    [alert setAlertStyle:NSAlertStyleCritical];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
 
     if (informativeText) [alert setInformativeText:informativeText];
@@ -767,7 +767,7 @@ static NSInteger sAutoGapMaximum = 16;
 
             EmbraceLog(@"SetlistController", @"About to -hardStop with event: %@", currentEvent);
 
-            if ((type == NSLeftMouseDown) || (type == NSRightMouseDown) || (type == NSOtherMouseDown)) {
+            if ((type == NSEventTypeLeftMouseDown) || (type == NSEventTypeRightMouseDown) || (type == NSEventTypeOtherMouseDown)) {
                 isDoubleClick = [currentEvent clickCount] >= 2;
             }
         
@@ -1132,7 +1132,7 @@ static NSInteger sAutoGapMaximum = 16;
     NSAlert *alert = [[NSAlert alloc] init];
     
     [alert setMessageText:messageText];
-    [alert setAlertStyle:NSCriticalAlertStyle];
+    [alert setAlertStyle:NSAlertStyleCritical];
     [alert setInformativeText:NSLocalizedString(@"You can prevent this by quitting other applications when using Embrace, or by giving Embrace exclusive access in Preferences.", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Show Preferences", nil)];

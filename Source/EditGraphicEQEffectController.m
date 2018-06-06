@@ -53,7 +53,7 @@
     NSWindow *window = [self window];
     [window setTitlebarAppearsTransparent:YES];
     [window setTitleVisibility:NSWindowTitleHidden];
-    [window setStyleMask:[window styleMask] | NSFullSizeContentViewWindowMask];
+    [window setStyleMask:[window styleMask] | NSWindowStyleMaskFullSizeContentView];
     [window setContentMinSize:contentSize];
     [window setContentMaxSize:contentSize];
 

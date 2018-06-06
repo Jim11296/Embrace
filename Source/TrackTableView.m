@@ -34,9 +34,9 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 {
     NSEventType type = [theEvent type];
     
-    if (type == NSRightMouseDown || type == NSRightMouseUp ||
-        type == NSLeftMouseDown  || type == NSLeftMouseUp  ||
-        type == NSOtherMouseDown || type == NSOtherMouseUp)
+    if (type == NSEventTypeRightMouseDown || type == NSEventTypeRightMouseUp ||
+        type == NSEventTypeLeftMouseDown  || type == NSEventTypeLeftMouseUp  ||
+        type == NSEventTypeOtherMouseDown || type == NSEventTypeOtherMouseUp)
     {
         NSPoint location = [theEvent locationInWindow];
         

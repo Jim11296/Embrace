@@ -456,10 +456,10 @@ static CGFloat sBorderLayerPadding = 2;
     rect.origin.x = 0;
     rect.origin.y = round((bounds.size.height - rect.size.height) / 2);
     
-    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
+    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:YES hints:nil];
     
     [color set];
-    NSRectFillUsingOperation(bounds, NSCompositeSourceIn);
+    NSRectFillUsingOperation(bounds, NSCompositingOperationSourceIn);
     
     [NSGraphicsContext setCurrentContext:oldContext];
 }
@@ -511,10 +511,10 @@ static CGFloat sBorderLayerPadding = 2;
     NSRect rect = NSZeroRect;
     rect.size = size;
 
-    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1 respectFlipped:YES hints:nil];
+    [image drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1 respectFlipped:YES hints:nil];
     
     [tintColor set];
-    NSRectFillUsingOperation(rect, NSCompositeSourceIn);
+    NSRectFillUsingOperation(rect, NSCompositingOperationSourceIn);
     
     [result unlockFocus];
     
