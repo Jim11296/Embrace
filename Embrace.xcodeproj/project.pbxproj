@@ -1207,7 +1207,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\n# Link Embrace.icns before signing\ncd \"$APP/Contents/Resources/\"\nln -f -s \"../../../../Resources/Embrace.icns\"\n\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
+			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\n# Link Embrace.icns before signing\ncd \"$APP/Contents/Resources/\"\nln -f -s \"../../../../Resources/Embrace.icns\"\n\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --entitlements \"${PROJECT_DIR}/Resources/CrashPad.entitlements\" --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		55CD7AE31F8B11920047F073 /* Fix Icon for Trial */ = {
