@@ -84,7 +84,7 @@
    
     NSInteger result = [savePanel runModal];
 
-    if (result == NSFileHandlingPanelOKButton) {
+    if (result == NSModalResponseOK) {
         SavePanelState(savePanel, @"save-set-list-panel");
         
         NSURL *URL = [savePanel URL];
