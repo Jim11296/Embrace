@@ -30,6 +30,7 @@ static CGFloat sDotHeight         = 14;
 @property (nonatomic) NSColor *fillColor;
 @end
 
+
 @implementation LabelMenuView {
     LabelMenuPieceView *_ringView;
     NSArray            *_dotViews;
@@ -48,12 +49,12 @@ static CGFloat sDotHeight         = 14;
 
         __block CGRect dotFrame = CGRectMake(sOffsetX, sOffsetY, sDotWidth, sDotHeight);
 
-        LabelMenuPieceView *(^makeDot)(NSInteger, NSColor *, NSColor *) = ^(NSInteger dotIndex, NSColor *borderColor, NSColor *fillColor) {
+        LabelMenuPieceView *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
             LabelMenuPieceView *dotView = [[LabelMenuPieceView alloc] initWithFrame:dotFrame];
-
-            [dotView setBorderColor:borderColor];
-            [dotView setFillColor:fillColor];
-            [dotView setDotIndex:dotIndex];
+            
+            [dotView setBorderColor:[Theme colorNamed:borderName]];
+            [dotView setFillColor:  [Theme colorNamed:fillName  ]];
+            [dotView setDotIndex:trackLabel];
             
             [self addSubview:dotView];
 
@@ -63,19 +64,19 @@ static CGFloat sDotHeight         = 14;
         };
         
         _ringView = [[LabelMenuPieceView alloc] initWithFrame:CGRectMake(0, 0, sDotWidth + 8, sDotHeight + 8)];
-        [_ringView setBorderColor:GetRGBColor(0x808080, 1.0)];
-        [_ringView setFillColor:  GetRGBColor(0x808080, 0.2)];
+        [_ringView setBorderColor:[Theme colorNamed:@"LabelMenuViewRingBorder"]];
+        [_ringView setFillColor:  [Theme colorNamed:@"LabelMenuViewRingFill"  ]];
         [_ringView setDotIndex:NSNotFound];
         [self addSubview:_ringView];
         
         _dotViews = @[
-            makeDot( 0, GetRGBColor(0x808080, 1.0), nil                        ),
-            makeDot( 1, GetRGBColor(0xff3830, 1.0), GetRGBColor(0xff625c, 1.0) ),
-            makeDot( 2, GetRGBColor(0xf89000, 1.0), GetRGBColor(0xffaa47, 1.0) ),
-            makeDot( 3, GetRGBColor(0xfed647, 1.0), GetRGBColor(0xffd64b, 1.0) ),
-            makeDot( 4, GetRGBColor(0x3ec01d, 1.0), GetRGBColor(0x83e163, 1.0) ),
-            makeDot( 5, GetRGBColor(0x20a9f1, 1.0), GetRGBColor(0x4ebdfa, 1.0) ),
-            makeDot( 6, GetRGBColor(0xc869da, 1.0), GetRGBColor(0xd68fe7, 1.0) )
+            makeDot( TrackLabelNone,   @"LabelMenuViewRingBorder",   nil                        ),
+            makeDot( TrackLabelRed,    @"LabelMenuViewBorderRed",    @"LabelMenuViewFillRed"    ),
+            makeDot( TrackLabelOrange, @"LabelMenuViewBorderOrange", @"LabelMenuViewFillOrange" ),
+            makeDot( TrackLabelYellow, @"LabelMenuViewBorderYellow", @"LabelMenuViewFillYellow" ),
+            makeDot( TrackLabelGreen,  @"LabelMenuViewBorderGreen",  @"LabelMenuViewFillGreen"  ),
+            makeDot( TrackLabelBlue,   @"LabelMenuViewBorderBlue",   @"LabelMenuViewFillBlue"   ),
+            makeDot( TrackLabelPurple, @"LabelMenuViewBorderPurple", @"LabelMenuViewFillPurple" )
         ];
     }
 

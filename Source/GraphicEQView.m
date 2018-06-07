@@ -382,7 +382,7 @@ const CGFloat sTrackWidth      = 5;
         [label setBackgroundColor:[NSColor clearColor]];
         [label setDrawsBackground:NO];
         [label setAlignment:NSTextAlignmentCenter];
-        [label setTextColor:[NSColor blackColor]];
+        [label setTextColor:[NSColor labelColor]];
         [label setControlSize:controlSize];
         [label setFont:[NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:controlSize]]];
 
@@ -583,16 +583,16 @@ const CGFloat sTrackWidth      = 5;
     // Draw track
     {
         CGRect trackRect = [self trackRect];
-
-        [[NSColor colorWithCalibratedWhite:(0x80 / 255.0) alpha:1.0] set];
+    
+        [[Theme colorNamed:@"EQTrack"] set];
         [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.0 yRadius:2.0] fill];
     }
 
     // Draw knob
     {
-        NSColor *knobColor = [NSColor whiteColor];
+        NSColor *knobColor = [Theme colorNamed:@"EQKnob"];
         if (_selected) {
-            knobColor = [NSColor colorWithCalibratedWhite:(0xcc / 255.0) alpha:1.0];
+            knobColor = [Theme colorNamed:@"EQKnobSelected"];
         }
     
         CGRect knobRect = [self knobRectWithValue:_value];
@@ -668,10 +668,10 @@ const CGFloat sTrackWidth      = 5;
         NSRectFill(lineRect);
     };
 
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.4] set];
+    [[Theme colorNamed:@"EQMajorTick"] set];
     drawLineForValue( 0.00 );
 
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.2] set];
+    [[Theme colorNamed:@"EQMinorTick"] set];
     drawLineForValue( 1.00 );
     drawLineForValue(-1.00 );
     drawLineForValue( 0.50 );

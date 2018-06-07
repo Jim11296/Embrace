@@ -51,7 +51,6 @@
 		552C9E4F1883EBA40041C160 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4E1883EBA40041C160 /* Preferences.m */; };
 		552EC02A18DFD527000B82AB /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
 		552EC02B18DFD52E000B82AB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
-		552EC02E18DFD617000B82AB /* Crash Pad.app in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 5559E61218DFD42500D61019 /* Crash Pad.app */; };
 		552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
 		553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
 		5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */; };
@@ -89,6 +88,8 @@
 		55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* WhiteSlider.m */; };
 		5572C17E1F00B743007BE284 /* SimpleProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SimpleProgressBar.m */; };
 		5572C1811F00BC2F007BE284 /* SimpleProgressDot.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */; };
+		55779D3A20C77DD900DB660F /* Crash Pad.app in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 5559E61218DFD42500D61019 /* Crash Pad.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		55779D3D20C77FB800DB660F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55779D3C20C77FB800DB660F /* Colors.xcassets */; };
 		557ABAB61B68D48C006F69D9 /* DotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557ABAB51B68D48C006F69D9 /* DotView.m */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
 		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
@@ -106,6 +107,8 @@
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
 		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
+		558AB90220C8C46800B4BAEE /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AB90120C8C46800B4BAEE /* Theme.m */; };
+		558AB90520C8C52700B4BAEE /* ColorSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AB90420C8C52700B4BAEE /* ColorSet.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		558DC0BA187785F200C85770 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B7187785F200C85770 /* AppDelegate.m */; };
 		558DC0BB187785F200C85770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B8187785F200C85770 /* main.m */; };
@@ -164,6 +167,18 @@
 		55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F81FD41B846EE800E03B5B /* IssuesWindow.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		55779D3B20C77EA200DB660F /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.assetcatalog;
+			fileType = folder.assetcatalog;
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# actool\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXContainerItemProxy section */
 		5514B6481CDEE64200F238B7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -199,7 +214,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 12;
 			files = (
-				552EC02E18DFD617000B82AB /* Crash Pad.app in Copy Crash Pad */,
+				55779D3A20C77DD900DB660F /* Crash Pad.app in Copy Crash Pad */,
 			);
 			name = "Copy Crash Pad";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,6 +339,7 @@
 		5572C17D1F00B743007BE284 /* SimpleProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressBar.m; path = Source/SimpleProgressBar.m; sourceTree = SOURCE_ROOT; };
 		5572C17F1F00BC2F007BE284 /* SimpleProgressDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleProgressDot.h; path = Source/SimpleProgressDot.h; sourceTree = SOURCE_ROOT; };
 		5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressDot.m; path = Source/SimpleProgressDot.m; sourceTree = SOURCE_ROOT; };
+		55779D3C20C77FB800DB660F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = Resources/Colors.xcassets; sourceTree = "<group>"; };
 		557ABAB41B68D48C006F69D9 /* DotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DotView.h; path = Source/DotView.h; sourceTree = SOURCE_ROOT; };
 		557ABAB51B68D48C006F69D9 /* DotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DotView.m; path = Source/DotView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
@@ -369,6 +385,10 @@
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
 		55873FDC18AA1E720081772A /* TrackScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackScheduler.h; path = Source/TrackScheduler.h; sourceTree = "<group>"; };
 		55873FDD18AA1E720081772A /* TrackScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackScheduler.m; path = Source/TrackScheduler.m; sourceTree = "<group>"; };
+		558AB90020C8C46800B4BAEE /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Theme.h; path = Source/Theme.h; sourceTree = "<group>"; };
+		558AB90120C8C46800B4BAEE /* Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Theme.m; path = Source/Theme.m; sourceTree = "<group>"; };
+		558AB90320C8C52700B4BAEE /* ColorSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ColorSet.h; path = Source/ColorSet.h; sourceTree = "<group>"; };
+		558AB90420C8C52700B4BAEE /* ColorSet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ColorSet.m; path = Source/ColorSet.m; sourceTree = "<group>"; };
 		558DC07F187785BC00C85770 /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		558DC082187785BC00C85770 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		558DC085187785BC00C85770 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -776,6 +796,7 @@
 			children = (
 				55CD7ADB1F8B08870047F073 /* Embrace.icns */,
 				55CD7AE11F8B10830047F073 /* Embrace-trial.icns */,
+				55779D3C20C77FB800DB660F /* Colors.xcassets */,
 				55A9A30F19CBDF6C002ED9CE /* Images.xcassets */,
 				554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */,
 				55A0B16E1890A80400866F04 /* Test Sounds */,
@@ -884,6 +905,10 @@
 		55BC0B1E1878D8B700D84481 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				558AB90020C8C46800B4BAEE /* Theme.h */,
+				558AB90120C8C46800B4BAEE /* Theme.m */,
+				558AB90320C8C52700B4BAEE /* ColorSet.h */,
+				558AB90420C8C52700B4BAEE /* ColorSet.m */,
 				55BE7738187CD05600BC0D29 /* BorderedView.h */,
 				55BE7739187CD05600BC0D29 /* BorderedView.m */,
 				55717BF3187EA65400213213 /* Button.h */,
@@ -1046,16 +1071,17 @@
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
 				55224BEC18A855E900407B46 /* rcbump */,
-				55DD53A118B9A2160084628D /* Copy Crash Pad */,
-				55708CBB18B979920059110C /* Sign Crash Pad */,
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07D187785BC00C85770 /* Resources */,
+				55DD53A118B9A2160084628D /* Copy Crash Pad */,
+				55708CBB18B979920059110C /* Sign Crash Pad */,
 				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
 				55CD7AE31F8B11920047F073 /* Fix Icon for Trial */,
 				558DC07C187785BC00C85770 /* Frameworks */,
 				5514B6531CDEE64200F238B7 /* Embed XPC Services */,
 			);
 			buildRules = (
+				55779D3B20C77EA200DB660F /* PBXBuildRule */,
 			);
 			dependencies = (
 				552EC02D18DFD543000B82AB /* PBXTargetDependency */,
@@ -1175,6 +1201,7 @@
 				55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */,
 				556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */,
 				55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */,
+				55779D3D20C77FB800DB660F /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1193,7 +1220,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi";
+			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi\n";
 		};
 		55708CBB18B979920059110C /* Sign Crash Pad */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1237,7 +1264,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/test*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/rate*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/DebugWindow.nib";
+			shellScript = "rm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/test*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/rate*.m4a\nrm -rf \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/DebugWindow.nib\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1286,6 +1313,7 @@
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
+				558AB90520C8C52700B4BAEE /* ColorSet.m in Sources */,
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
 				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
@@ -1327,6 +1355,7 @@
 				556098171B48B061008516C3 /* StripeView.m in Sources */,
 				55F3B7B61877908900E8FEC8 /* Track.m in Sources */,
 				558513C718794A2600C268E3 /* EffectsController.m in Sources */,
+				558AB90220C8C46800B4BAEE /* Theme.m in Sources */,
 				556ACE2F187B901400AED4BC /* WaveformView.m in Sources */,
 				5572C17E1F00B743007BE284 /* SimpleProgressBar.m in Sources */,
 				55ADE93818824338008DC245 /* LevelMeter.m in Sources */,

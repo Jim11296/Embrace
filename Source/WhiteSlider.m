@@ -124,19 +124,16 @@
     
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
-    
-    if (isMainWindow) {
-        [GetRGBColor(0x707070, 1.0) set];
-    } else {
-        [GetRGBColor(0xA0A0A0, 1.0) set];
-    }
+  
+    NSColor *activeColor = GetNamedColor(isMainWindow ? @"SharedMeterActiveMain" : @"SharedMeterActive");
+    [activeColor set];
 
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
     [roundedPath fill];
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [GetRGBColor(0x0, 0.15) set];
+    [GetNamedColor(@"SharedMeterInactive") set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     

@@ -130,9 +130,10 @@ static NSInteger sAutoGapMaximum = 16;
     [window addListener:[self playButton]];
     [window addListener:[self volumeSlider]];
     [window addListener:[self autoGapSlider]];
+    [window addListener:[self playBar]];
     [window addListener:self];
 
-    [[self bottomContainer] setTopBorderColor:GetRGBColor(0x0, 0.15)];
+    [[self bottomContainer] setTopBorderColor:GetDeprecatedColor(0x0, 0.15)];
 
     [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
@@ -1027,15 +1028,17 @@ static NSInteger sAutoGapMaximum = 16;
     BorderedView *bottomContainer = [self bottomContainer];
     
     if ([window isMainWindow]) {
-        [topContainer    setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xec / 255.0) alpha:1.0]];
-        [topContainer    setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
-        [bottomContainer setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xe0 / 255.0) alpha:1.0]];
-        [bottomContainer setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
+        [topContainer    setBackgroundGradientTopColor:   [Theme colorNamed:@"TopHeaderGradientStart"]];
+        [topContainer    setBackgroundGradientBottomColor:[Theme colorNamed:@"TopHeaderGradientEnd"]];
+        [bottomContainer setBackgroundGradientTopColor:   [Theme colorNamed:@"BottomHeaderGradientStart"]];
+        [bottomContainer setBackgroundGradientBottomColor:[Theme colorNamed:@"BottomHeaderGradientEnd"]];
         [topContainer    setBackgroundColor:nil];
         [bottomContainer setBackgroundColor:nil];
     } else {
-        [topContainer    setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
-        [bottomContainer setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
+        NSColor *backgroundColor = [Theme colorNamed:@"HeaderInactiveBackground"];
+        
+        [topContainer    setBackgroundColor:backgroundColor];
+        [bottomContainer setBackgroundColor:backgroundColor];
         [topContainer    setBackgroundGradientTopColor:   nil];
         [topContainer    setBackgroundGradientBottomColor:nil];
         [bottomContainer setBackgroundGradientTopColor:   nil];

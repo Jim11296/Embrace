@@ -32,11 +32,6 @@
         [_activeBar    setDelegate:self];
         [_bottomBorder setDelegate:self];
 
-        [_activeBar    setBackgroundColor:[GetRGBColor(0x707070, 1.0) CGColor]];
-        [_inactiveBar  setBackgroundColor:[GetRGBColor(0xc0c0c0, 1.0) CGColor]];
-        [_playhead     setBackgroundColor:[GetRGBColor(0x000000, 1.0) CGColor]];
-        [_bottomBorder setBackgroundColor:[GetRGBColor(0x0, 0.15) CGColor]];
-
         [_playhead setCornerRadius:1];
 
         [self setWantsLayer:YES];
@@ -48,9 +43,38 @@
         [[self layer] addSublayer:_inactiveBar];
         [[self layer] addSublayer:_activeBar];
         [[self layer] addSublayer:_playhead];
+        
+        [self _updateColors];
     }
     
     return self;
+}
+
+
+- (void) _updateColors
+{
+    BOOL isMainWindow = [[self window] isMainWindow];
+
+    NSColor *activeColor   = GetNamedColor(isMainWindow ? @"SharedMeterActiveMain" : @"SharedMeterActive");
+    NSColor *inactiveColor = GetNamedColor(@"SharedMeterInactive");
+    NSColor *dotColor      = GetNamedColor(@"SharedMeterDot");
+
+    [_activeBar    setBackgroundColor:[activeColor   CGColor]];
+    [_inactiveBar  setBackgroundColor:[inactiveColor CGColor]];
+    [_playhead     setBackgroundColor:[dotColor      CGColor]];
+    [_bottomBorder setBackgroundColor:[inactiveColor CGColor]];
+}
+
+
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateColors];
+}
+
+
+- (void) windowDidUpdateMain:(EmbraceWindow *)window
+{
+    [self _updateColors];
 }
 
 
@@ -78,6 +102,7 @@
         playheadFrame.origin.y = -playheadFrame.size.height;
     } else {
         playheadFrame.origin.y = -1;
+        bottomFrame.origin.y = -bottomFrame.size.height;
     }
 
     [self _updatePlayheadX];

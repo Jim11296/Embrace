@@ -61,13 +61,13 @@ static CGFloat sBorderLayerPadding = 2;
 
 - (void) _setupButton
 {
-    _alertColor       = GetRGBColor(0xff0000, 1.0);
-    _alertActiveColor = GetRGBColor(0xc00000, 1.0);
-    _normalColor      = GetRGBColor(0x737373, 1.0);
-    _activeColor      = GetRGBColor(0x4c4c4c, 1.0);
-    _inactiveColor    = GetRGBColor(0xb2b2b2, 1.0);
-    _disabledColor    = GetRGBColor(0xb2b2b2, 1.0);
-    
+    _alertColor       = [Theme colorNamed:@"ButtonAlert"];
+    _alertActiveColor = [Theme colorNamed:@"ButtonAlertActive"];
+    _normalColor      = [Theme colorNamed:@"ButtonNormal"];
+    _activeColor      = [Theme colorNamed:@"ButtonActive"];
+    _inactiveColor    = [Theme colorNamed:@"ButtonInactive"];
+    _disabledColor    = [Theme colorNamed:@"ButtonDisabled"];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSWindowDidBecomeMainNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidResignActiveNotification object:nil];
@@ -336,7 +336,7 @@ static CGFloat sBorderLayerPadding = 2;
         NSRect bounds = CGRectMake(0, 0, 32, 32);
         bounds = CGRectInset(bounds, sBorderLayerPadding + 1, sBorderLayerPadding + 1);
         
-        [GetRGBColor(0x1866e9, 1.0) set];
+        [[Theme colorNamed:@"ButtonMainGlow"] set];
         
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:3.5 yRadius:3.5];
         [path setLineWidth:2];

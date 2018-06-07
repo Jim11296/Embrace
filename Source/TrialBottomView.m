@@ -20,8 +20,8 @@
         
         BorderedView *borderedView = [[BorderedView alloc] initWithFrame:[self bounds]];
         
-        [borderedView setTopBorderColor:GetRGBColor(0xB3CCFF, 1.0)];
-        [borderedView setBackgroundColor:GetRGBColor(0xF2F7FF, 1.0)];
+        [borderedView setTopBorderColor:[Theme colorNamed:@"TrialBorder"]];
+        [borderedView setBackgroundColor:[Theme colorNamed:@"TrialBackground"]];
         [borderedView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
 
         [self addSubview:borderedView];
@@ -41,13 +41,13 @@
         NSMutableAttributedString *as = [[NSMutableAttributedString alloc] init];
         
         NSAttributedString *as1 = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Purchase Embrace", nil) attributes:@{
-            NSForegroundColorAttributeName: GetRGBColor(0x1866E9, 1.0),
+            NSForegroundColorAttributeName: [Theme colorNamed:@"TrialLink"],
             NSParagraphStyleAttributeName: ps
         }];
         [as appendAttributedString:as1];
         
         NSAttributedString *as2 = [[NSAttributedString alloc] initWithString:NSLocalizedString(@" to add\nmore than five songs.", nil) attributes:@{
-            NSForegroundColorAttributeName: GetRGBColor(0x0, 0.5),
+            NSForegroundColorAttributeName: [Theme colorNamed:@"TrialText"],
             NSParagraphStyleAttributeName: ps
         }];
         [as appendAttributedString:as2];

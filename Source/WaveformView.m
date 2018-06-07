@@ -36,8 +36,8 @@
         [[self layer] addSublayer:_inactiveLayer];
         [[self layer] addSublayer:_activeLayer];
 
-        _activeWaveformColor = GetRGBColor(0x202020, 1.0);
-        _inactiveWaveformColor = GetRGBColor(0xababab, 1.0);
+        _activeWaveformColor   = GetDeprecatedColor(0x202020, 1.0);
+        _inactiveWaveformColor = GetDeprecatedColor(0xababab, 1.0);
 
         [self setPercentage:FLT_EPSILON];
     }
