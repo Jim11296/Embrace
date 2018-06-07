@@ -56,9 +56,9 @@
     [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
     [self setAutoresizesSubviews:NO];
 
-    NSColor *inactiveColor = GetRGBColor(0x000000, 0.15);
-    NSColor *tintColor     = GetRGBColor(0xff0000, 1.0);
-
+    NSColor *inactiveColor = GetNamedColor(@"SharedMeterInactive");
+    NSColor *tintColor     = GetNamedColor(@"SharedMeterPeak");
+    
     NSBezierPath *boltPath = [NSBezierPath bezierPath];
     [boltPath moveToPoint:NSMakePoint(2, 10)];
     [boltPath lineToPoint:NSMakePoint(2, 6)];
@@ -117,11 +117,11 @@
 
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
-    BOOL     isMainWindow   = [[self window] isMainWindow];
-    NSColor *activeBarColor = isMainWindow ? GetRGBColor(0x707070, 1.0) : GetRGBColor(0xA0A0A0, 1.0);
-
-    [_boltDot   setActiveColor:activeBarColor];
-    [_dangerBar setActiveColor:activeBarColor]; 
+    BOOL     isMainWindow = [[self window] isMainWindow];
+    NSColor *activeColor  = GetNamedColor(isMainWindow ? @"SharedMeterActiveMain" : @"SharedMeterActive");
+    
+    [_boltDot   setActiveColor:activeColor];
+    [_dangerBar setActiveColor:activeColor]; 
 }
 
 

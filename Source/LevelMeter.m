@@ -57,21 +57,23 @@
 
     _leftLimiterDot  = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
     _rightLimiterDot = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
-    
-    [_leftChannelBar  setInactiveColor:GetRGBColor(0x0, 0.15)];
-    [_rightChannelBar setInactiveColor:GetRGBColor(0x0, 0.15)];
 
-    [_leftPeakDot  setActiveColor:[NSColor blackColor]];
-    [_rightPeakDot setActiveColor:[NSColor blackColor]];
-    [_leftPeakDot  setPercentage:1.0];
-    [_rightPeakDot setPercentage:1.0];
+    NSColor *meterPeakColor     = [Theme colorNamed:@"SharedMeterPeak"];
+    NSColor *meterDotColor      = [Theme colorNamed:@"SharedMeterDot"];
+    NSColor *meterInactiveColor = [Theme colorNamed:@"SharedMeterInactive"];
+
+    [_leftChannelBar  setInactiveColor:meterInactiveColor];
+    [_rightChannelBar setInactiveColor:meterInactiveColor];
+
+    [_leftPeakDot  setInactiveColor:meterDotColor];
+    [_rightPeakDot setInactiveColor:meterDotColor];
     [_leftPeakDot  setHidden:YES];
     [_rightPeakDot setHidden:YES];
 
-    [_leftLimiterDot  setInactiveColor:GetRGBColor(0x0, 0.15)];
-    [_rightLimiterDot setInactiveColor:GetRGBColor(0x0, 0.15)];
-    [_leftLimiterDot  setTintColor:[NSColor redColor]];
-    [_rightLimiterDot setTintColor:[NSColor redColor]];
+    [_leftLimiterDot  setInactiveColor:meterInactiveColor];
+    [_rightLimiterDot setInactiveColor:meterInactiveColor];
+    [_leftLimiterDot  setTintColor:meterPeakColor];
+    [_rightLimiterDot setTintColor:meterPeakColor];
     
     [self addSubview:_leftChannelBar];
     [self addSubview:_rightChannelBar];
@@ -151,11 +153,11 @@
 
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
-    BOOL     isMainWindow   = [[self window] isMainWindow];
-    NSColor *activeBarColor = isMainWindow ? GetRGBColor(0x707070, 1.0) : GetRGBColor(0xA0A0A0, 1.0);
+    BOOL     isMainWindow = [[self window] isMainWindow];
+    NSColor *activeColor  = GetNamedColor(isMainWindow ? @"SharedMeterActiveMain" : @"SharedMeterActive");
 
-    [_leftChannelBar  setActiveColor:activeBarColor];
-    [_rightChannelBar setActiveColor:activeBarColor]; 
+    [_leftChannelBar  setActiveColor:activeColor];
+    [_rightChannelBar setActiveColor:activeColor]; 
 }
 
 

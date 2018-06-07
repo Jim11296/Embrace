@@ -1,4 +1,4 @@
-SDKROOT = macosx10.13
+SDKROOT = macosx10.14
 MACOSX_DEPLOYMENT_TARGET = 10.10
 
 CODE_SIGN_IDENTITY = Developer ID Application: Ricci Adams

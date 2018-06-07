@@ -84,13 +84,13 @@
 - (void) _handleWindowMainChanged:(NSNotification *)note
 {
     if ([[self window] isMainWindow]) {
-        [_backgroundView setBackgroundGradientTopColor:   GetRGBColor(0xf0f0f0, 1.0)];
-        [_backgroundView setBackgroundGradientBottomColor:GetRGBColor(0xd0d0d0, 1.0)];
+        [_backgroundView setBackgroundGradientTopColor:    [Theme colorNamed:@"EQWindowGradientStart"]];
+        [_backgroundView setBackgroundGradientBottomColor: [Theme colorNamed:@"EQWindowGradientEnd"]];
         [_backgroundView setBackgroundColor:nil];
     } else {
         [_backgroundView setBackgroundGradientTopColor:   nil];
         [_backgroundView setBackgroundGradientBottomColor:nil];
-        [_backgroundView setBackgroundColor:GetRGBColor(0xf4f4f4, 1.0)];
+        [_backgroundView setBackgroundColor:  [Theme colorNamed:@"EQWindowInactive"]];
     }
 }
 

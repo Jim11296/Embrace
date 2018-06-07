@@ -8,6 +8,9 @@
 
 #import "Utils.h"
 #import "Track.h"
+#import "ColorSet.h"
+#import "Theme.h"
+
 
 static NSArray *sGetTraditionalStringArray()
 {
@@ -531,6 +534,10 @@ extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality)
     return nil;
 }
 
+NSColor *GetDeprecatedColor(int rgb, CGFloat alpha)
+{
+    return GetRGBColor(rgb, 1.0);
+}
 
 NSColor *GetRGBColor(int rgb, CGFloat alpha)
 {
@@ -538,9 +545,19 @@ NSColor *GetRGBColor(int rgb, CGFloat alpha)
     float g = (((rgb & 0x00FF00) >>  8) / 255.0);
     float b = (((rgb & 0x0000FF) >>  0) / 255.0);
 
-    return [NSColor colorWithSRGBRed:r green:g blue:b alpha:alpha];
+    ColorSet *colorSet = [[ColorSet alloc] init];
+
+    NSColor *color = [NSColor colorWithSRGBRed:r green:g blue:b alpha:alpha];
+    [colorSet addColor:color forAppearanceName:NSAppearanceNameAqua];
+    
+    return colorSet;
 }
 
+
+NSColor *GetNamedColor(NSColorName colorName)
+{
+    return [Theme colorNamed:colorName];
+}
 
 
 CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef))

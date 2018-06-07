@@ -23,65 +23,34 @@
 
 
 
-static NSColor *sGetInactiveHighlightColor()
-{
-    return GetRGBColor(0xdcdcdc, 1.0);
-}
-
-
-static NSColor *sGetActiveHighlightColor()
-{
-    return GetRGBColor(0x0065dc, 1.0);
-}
-
 
 static NSColor *sGetBorderColorForTrackLabel(TrackLabel trackLabel)
 {
-    if (trackLabel == TrackLabelRed) {
-        return GetRGBColor(0xff4439, 1.0);
-        
-    } else if (trackLabel == TrackLabelOrange) {
-        return GetRGBColor(0xff9500, 1.0);
+    NSColorName name = nil;
 
-    } else if (trackLabel == TrackLabelYellow) {
-        return GetRGBColor(0xffcc00, 1.0);
-
-    } else if (trackLabel == TrackLabelGreen) {
-        return GetRGBColor(0x63da38, 1.0);
-
-    } else if (trackLabel == TrackLabelBlue) {
-        return GetRGBColor(0x1badf8, 1.0);
-
-    } else if (trackLabel == TrackLabelPurple) {
-        return GetRGBColor(0xcc73e1, 1.0);
-    }
+    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelBorderRed";
+    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelBorderOrange";
+    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelBorderYellow";
+    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelBorderGreen";
+    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelBorderBlue";
+    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelBorderPurple";
     
-    return nil;
+    return name ? [Theme colorNamed:name] : nil;
 }
 
 
 static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 {
-    if (trackLabel == TrackLabelRed) {
-        return GetRGBColor(0xff6259, 1.0);
-        
-    } else if (trackLabel == TrackLabelOrange) {
-        return GetRGBColor(0xffaa33, 1.0);
+    NSColorName name = nil;
 
-    } else if (trackLabel == TrackLabelYellow) {
-        return GetRGBColor(0xffd633, 1.0);
-
-    } else if (trackLabel == TrackLabelGreen) {
-        return GetRGBColor(0x82e15f, 1.0);
-
-    } else if (trackLabel == TrackLabelBlue) {
-        return GetRGBColor(0x48bdf9, 1.0);
-
-    } else if (trackLabel == TrackLabelPurple) {
-        return GetRGBColor(0xd68fe7, 1.0);
-    }
+    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelFillRed";
+    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelFillOrange";
+    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelFillYellow";
+    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelFillGreen";
+    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelFillBlue";
+    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelFillPurple";
     
-    return nil;
+    return name ? [Theme colorNamed:name] : nil;
 }
 
 
@@ -219,8 +188,8 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [_errorButton setAutoresizingMask:NSViewMinXMargin];
     [_errorButton setTarget:self];
     [_errorButton setAction:@selector(_errorButtonClicked:)];
-    [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
-    [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
+    [_errorButton setAlertColor:[Theme colorNamed:@"ButtonAlert"]];
+    [_errorButton setAlertActiveColor:[Theme colorNamed:@"ButtonAlertActive"]];
     [_errorButton setInactiveColor:[self _bottomTextColor]];
     [_errorButton setAlert:YES];
 
@@ -454,16 +423,21 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     TrackStatus trackStatus = [[self track] trackStatus];
 
     if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
-        return [NSColor whiteColor];
+        return [Theme colorNamed:@"SetlistTopTextSelectedMain"];
     }
 
     if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        return GetRGBColor(_selected ? 0x0 : 0x1866e9, 1.0);
+        if (_selected) {
+            return [Theme colorNamed:@"SetlistTopTextPlayingSelected"];
+        } else {
+            return [Theme colorNamed:@"SetlistTopTextPlaying"];
+        }
+
     } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.5);
+        return [Theme colorNamed:@"SetlistTopTextPlayed"];
     }
     
-    return [NSColor blackColor];
+    return [Theme colorNamed:@"SetlistTopText"];
 }
 
 
@@ -472,16 +446,21 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     TrackStatus trackStatus = [[self track] trackStatus];
 
     if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
-        return [NSColor colorWithCalibratedWhite:1.0 alpha:0.66];
+        return [Theme colorNamed:@"SetlistBottomTextSelectedMain"];
     }
 
     if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        return GetRGBColor(_selected ? 0x0 : 0x1866e9, 0.8);
+        if (_selected) {
+            return [Theme colorNamed:@"SetlistBottomTextPlayingSelected"];
+        } else {
+            return [Theme colorNamed:@"SetlistBottomTextPlaying"];
+        }
+
     } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.4);
+        return [Theme colorNamed:@"SetlistBottomTextPlayed"];
     }
     
-    return GetRGBColor(0x000000, 0.66);
+    return [Theme colorNamed:@"SetlistBottomText"];
 }
 
 
@@ -560,8 +539,8 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [_errorButton setAlertActiveColor:textColor];
 
     } else {
-        [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
-        [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
+        [_errorButton setAlertColor:[Theme colorNamed:@"ButtonAlert"]];
+        [_errorButton setAlertActiveColor:[Theme colorNamed:@"ButtonAlertActive"]];
     }
 }
 
@@ -665,8 +644,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     }
 
     if (showsDot) {
-        NSColor *borderColor = [self isSelected] ? [NSColor whiteColor] : sGetBorderColorForTrackLabel(trackLabel);
-
+        NSColor *borderColor = [self isSelected] ?
+            [NSColor whiteColor] :
+            sGetBorderColorForTrackLabel(trackLabel);
+        
         [_dotView setFillColor:sGetFillColorForTrackLabel(trackLabel)];
         [_dotView setBorderColor:borderColor];
     }
@@ -682,7 +663,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     BorderedView *borderedView = [self borderedView];
 
-    NSColor *bottomBorderColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.1];
+    NSColor *bottomBorderColor = [Theme colorNamed:@"SetlistSeparator"];
     NSColor *bottomDashBackgroundColor = nil;
 
     CGFloat bottomBorderHeight = -1;
@@ -690,16 +671,15 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     if ([track trackStatus] != TrackStatusPlayed) {
         if ([track stopsAfterPlaying]) {
-            bottomBorderColor = [NSColor redColor];
-            bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
+            bottomDashBackgroundColor = [Theme colorNamed:@"SetlistStopAfterPlayingStripe1"];
+            bottomBorderColor         = [Theme colorNamed:@"SetlistStopAfterPlayingStripe2"];
             bottomBorderHeight = 2;
 
         } else if ([track ignoresAutoGap]) {
-            bottomBorderColor = GetRGBColor(0x00cc00, 1.0);
+            bottomBorderColor = [Theme colorNamed:@"SetlistIgnoreAutoGapStripe"];
             bottomBorderHeight = 2;
         }
     }
-
 
     [borderedView setBottomBorderColor:bottomBorderColor];
     [borderedView setBottomBorderHeight:bottomBorderHeight];
@@ -714,9 +694,9 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     if (_selected) {
         if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
-            backgroundColor = sGetActiveHighlightColor();
+            backgroundColor = [Theme colorNamed:@"SetlistActiveHighlight"];
         } else {
-            backgroundColor = sGetInactiveHighlightColor();
+            backgroundColor = [Theme colorNamed:@"SetlistInactiveHighlight"];
         }
         
         topConstraintValue = -2;
@@ -725,7 +705,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
        backgroundColor = [NSColor whiteColor];
     }
     
-   
     [_borderedView setBackgroundColor:backgroundColor];
     [_timeField    setBackgroundColor:backgroundColor];
 
@@ -736,7 +715,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     ] ]];
     
     if (_drawsInsertionPointWorkaround) {
-        [borderedView setTopBorderColor:sGetActiveHighlightColor()];
+        [borderedView setTopBorderColor:[Theme colorNamed:@"SetlistActiveHighlight"]];
         [borderedView setTopBorderHeight:2];
         topConstraintValue = 0;
 
