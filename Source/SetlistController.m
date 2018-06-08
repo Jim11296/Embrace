@@ -33,6 +33,7 @@
 #import "TracksController.h"
 #import "TrialBottomView.h"
 #import "WhiteSlider.h"
+#import "NoDropImageView.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -72,7 +73,8 @@ static NSInteger sAutoGapMaximum = 16;
 
 @property (nonatomic, weak)   IBOutlet NSView *mainView;
 @property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
-@property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
+@property (nonatomic, weak)   IBOutlet BorderedView *bottomSeparator;
+@property (nonatomic, weak)   IBOutlet NoDropImageView *autoGapIcon;
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
 @property (nonatomic, weak)   IBOutlet NSTextField  *autoGapField;
 
@@ -133,10 +135,13 @@ static NSInteger sAutoGapMaximum = 16;
     [window addListener:[self playBar]];
     [window addListener:self];
 
-    [[self bottomContainer] setTopBorderColor:GetDeprecatedColor(0x0, 0.15)];
-
     [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
+    
+    [[self autoGapIcon] setTintColor:[NSColor labelColor]];
+
+    // Match PlayBar inactive color (used for top separator)
+    [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"MeterInactive"]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
@@ -178,15 +183,15 @@ static NSInteger sAutoGapMaximum = 16;
 
     if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
         NSFont *font = [[self autoGapField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
         [[self autoGapField] setFont:font];
 
         font = [[self playOffsetField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
         [[self playOffsetField] setFont:font];
 
         font = [[self playRemainingField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
         [[self playRemainingField] setFont:font];
     }
 
@@ -1024,6 +1029,7 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
+#if 0
     BorderedView *topContainer    = [self topContainer];
     BorderedView *bottomContainer = [self bottomContainer];
     
@@ -1044,6 +1050,7 @@ static NSInteger sAutoGapMaximum = 16;
         [bottomContainer setBackgroundGradientTopColor:   nil];
         [bottomContainer setBackgroundGradientBottomColor:nil];
     }
+#endif
 }
 
 
