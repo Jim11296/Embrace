@@ -58,9 +58,9 @@
     _leftLimiterDot  = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
     _rightLimiterDot = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
 
-    NSColor *meterPeakColor     = [Theme colorNamed:@"SharedMeterPeak"];
-    NSColor *meterDotColor      = [Theme colorNamed:@"SharedMeterDot"];
-    NSColor *meterInactiveColor = [Theme colorNamed:@"SharedMeterInactive"];
+    NSColor *meterPeakColor     = [Theme colorNamed:@"MeterPeak"];
+    NSColor *meterDotColor      = [Theme colorNamed:@"MeterDot"];
+    NSColor *meterInactiveColor = [Theme colorNamed:@"MeterInactive"];
 
     [_leftChannelBar  setInactiveColor:meterInactiveColor];
     [_rightChannelBar setInactiveColor:meterInactiveColor];
@@ -154,7 +154,7 @@
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
     BOOL     isMainWindow = [[self window] isMainWindow];
-    NSColor *activeColor  = GetNamedColor(isMainWindow ? @"SharedMeterActiveMain" : @"SharedMeterActive");
+    NSColor *activeColor  = GetNamedColor(isMainWindow ? @"MeterActiveMain" : @"MeterActive");
 
     [_leftChannelBar  setActiveColor:activeColor];
     [_rightChannelBar setActiveColor:activeColor]; 

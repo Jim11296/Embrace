@@ -125,7 +125,7 @@
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
   
-    NSColor *activeColor = GetNamedColor(isMainWindow ? @"SharedMeterActiveMain" : @"SharedMeterActive");
+    NSColor *activeColor = GetNamedColor(isMainWindow ? @"MeterActiveMain" : @"MeterActive");
     [activeColor set];
 
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
@@ -133,7 +133,7 @@
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [GetNamedColor(@"SharedMeterInactive") set];
+    [GetNamedColor(@"MeterInactive") set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     

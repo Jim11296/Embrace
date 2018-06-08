@@ -14,7 +14,7 @@ static NSDictionary *sColorMap = nil;
 
 static NSColor *sRGBA(int rgb, CGFloat alpha)
 {
-#if DEBUG
+#if 0
     return GetRGBColor(0xFFFFFF - rgb, alpha);
 #else
     return GetRGBColor(rgb, alpha);
@@ -43,11 +43,11 @@ static NSColor *sDualRGB(int lightRGB, int darkRGB)
     NSMutableDictionary *colorMap = [NSMutableDictionary dictionary];
 
     [colorMap addEntriesFromDictionary:@{
-        @"SharedMeterPeak":       sRGB(0xFF0000),
-        @"SharedMeterDot":        sRGB(0x000000),
-        @"SharedMeterActiveMain": sRGB(0x707070),
-        @"SharedMeterActive":     sRGB(0xA0A0A0),
-        @"SharedMeterInactive":   sRGBA(0x000000, 0.15)
+        @"MeterPeak":       sRGB(0xFF0000),
+        @"MeterDot":        sRGB(0x000000),
+        @"MeterActiveMain": sRGB(0x707070),
+        @"MeterActive":     sRGB(0xA0A0A0),
+        @"MeterInactive":   sRGBA(0x000000, 0.15)
     }];
 
     [colorMap addEntriesFromDictionary:@{

@@ -7,7 +7,7 @@
 //
 
 #import "EmbraceWindow.h"
-#import "BorderedView.h"
+
 
 @implementation EmbraceWindow {
     NSHashTable *_listeners;
