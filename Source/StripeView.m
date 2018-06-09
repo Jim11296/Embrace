@@ -23,14 +23,6 @@
     if (_fillColor) {
         [_fillColor set];
         NSRectFill(bounds);
-        
-        
-        NSGradient *g = [[NSGradient alloc] initWithColors:@[
-            [NSColor colorWithCalibratedWhite:1.0 alpha:0.0],
-            [NSColor colorWithCalibratedWhite:1.0 alpha:0.25]
-        ]];
-        
-        [g drawInRect:bounds angle:0];
     }
     
     if (_borderColor) {

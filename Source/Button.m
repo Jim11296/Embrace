@@ -59,6 +59,11 @@ static CGFloat sBorderLayerPadding = 2;
 }
 
 
+- (BOOL) allowsVibrancy
+{
+    return YES;
+}
+
 - (void) _setupButton
 {
     _alertColor       = [Theme colorNamed:@"ButtonAlert"];
@@ -86,7 +91,7 @@ static CGFloat sBorderLayerPadding = 2;
     [self setWantsLayer:YES];
     [[self layer] setMasksToBounds:NO];
     
-    [self setButtonType:NSMomentaryChangeButton];
+    [self setButtonType:NSButtonTypeMomentaryChange];
     
     [self _update:nil];
 }

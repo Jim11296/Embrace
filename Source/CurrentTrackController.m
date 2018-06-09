@@ -186,6 +186,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
         [[self noTrackLabel] setTextColor:[NSColor secondaryLabelColor]];
 
         [[self waveformView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+
         [[self waveformView] setActiveWaveformColor:  [NSColor colorWithCalibratedWhite:0.6  alpha:1.0]];
         [[self waveformView] setInactiveWaveformColor:[NSColor colorWithCalibratedWhite:0.25 alpha:1.0]];
     }

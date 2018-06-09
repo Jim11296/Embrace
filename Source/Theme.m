@@ -8,7 +8,8 @@
 
 #import "Theme.h"
 
-static NSDictionary *sColorMap = nil;
+static NSDictionary *sColorMap  = nil;
+static NSDictionary *sShadowMap = nil;
 
 
 
@@ -22,6 +23,16 @@ static NSColor *sRGBA(int rgb, CGFloat alpha)
 }
 
 
+static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
+{
+    NSShadow *shadow = [[NSShadow alloc] init];
+    
+    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:alpha]];
+    [shadow setShadowOffset:NSMakeSize(0, -yOffset)];
+    [shadow setShadowBlurRadius:blurRadius];
+
+    return shadow;
+}
 
 static NSColor *sRGB(int rgb)
 {
@@ -40,7 +51,8 @@ static NSColor *sDualRGB(int lightRGB, int darkRGB)
 
 + (void) initialize
 {
-    NSMutableDictionary *colorMap = [NSMutableDictionary dictionary];
+    NSMutableDictionary *colorMap  = [NSMutableDictionary dictionary];
+    NSMutableDictionary *shadowMap = [NSMutableDictionary dictionary];
 
     [colorMap addEntriesFromDictionary:@{
         @"MeterPeak":       sRGB(0xFF0000),
@@ -141,10 +153,7 @@ static NSColor *sDualRGB(int lightRGB, int darkRGB)
         
         @"EQTrack":               sRGBA(0x000000, 0.5),
         @"EQMajorTick":           sRGBA(0x000000, 0.4),
-        @"EQMinorTick":           sRGBA(0x000000, 0.2),
-
-        @"EQKnob":                sRGB(0xffffff),
-        @"EQKnobSelected":        sRGB(0xcccccc),
+        @"EQMinorTick":           sRGBA(0x000000, 0.2)
     }];
 
     [colorMap addEntriesFromDictionary:@{
@@ -152,9 +161,16 @@ static NSColor *sDualRGB(int lightRGB, int darkRGB)
         @"ButtonAlertActive": sRGB(0xc00000),
         @"ButtonNormal":      sRGB(0x737373),
         @"ButtonActive":      sRGB(0x4c4c4c),
-        @"ButtonInactive":    sRGB(0xb2b2b2),
-        @"ButtonDisabled":    sRGB(0xb2b2b2),
-        @"ButtonMainGlow":    sRGB(0x1866e9)
+        @"ButtonInactive":    sRGBA(0x000000, 0.25),
+        @"ButtonDisabled":    sRGBA(0x000000, 0.25),
+        @"ButtonMainGlow":    sRGB(0x1866e9),
+        
+        @"KnobMainStart":     sRGB(0xffffff),
+        @"KnobMainEnd":       sRGB(0xf0f0f0),
+        @"KnobHighStart":     sRGB(0xf0f0f0),
+        @"KnobHighEnd":       sRGB(0xe0e0e0),
+        @"KnobStart":         sRGB(0xf6f6f6),
+        @"KnobEnd":           sRGB(0xf0f0f0)
     }];
 
 #if TRIAL
@@ -165,8 +181,18 @@ static NSColor *sDualRGB(int lightRGB, int darkRGB)
         @"TrialText"        sRGBA(0x0, 0.5)
     }];
 #endif
+
+    
+    [shadowMap addEntriesFromDictionary:@{
+        @"KnobMain1": sShadow( 0.4,  1, 2 ),
+        @"KnobMain2": sShadow( 0.6,  0, 1 ),
+        @"Knob":      sShadow( 0.45, 0, 1 )
+
+
+    }];
         
-    sColorMap = colorMap;
+    sColorMap  = colorMap;
+    sShadowMap = shadowMap;
 }
 
 + (NSColor *) colorNamed:(NSString *)colorName
@@ -181,16 +207,15 @@ static NSColor *sDualRGB(int lightRGB, int darkRGB)
 }
 
 
-
-+ (NSColor *) contrastColor
++ (NSShadow *) shadowNamed:(NSString *)shadowName
 {
-    return sDualRGB(0x000000, 0xFFFFFF);
-}
+    if (shadowName) {
+        NSShadow *result = [sShadowMap objectForKey:shadowName];
+        NSAssert(result, @"Unknown shadow name: %@", shadowName);
+        return result;
+    }
 
-
-+ (NSColor *) halfwayColor
-{
-    return sRGB(0x808080);
+    return nil;
 }
 
 
