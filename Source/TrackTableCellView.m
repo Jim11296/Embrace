@@ -16,7 +16,7 @@
 #import "TrackTableView.h"
 #import "StripeView.h"
 #import "DotView.h"
-#import "GradientView.h"
+#import "MaskView.h"
 
 #define SLOW_ANIMATIONS 0
 
@@ -90,7 +90,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     id              _observedObject;
 
     NSTextField    *_timeField;
-    GradientView   *_timeGradientView;
+    MaskView       *_timeMaskView;
     BOOL            _showsTime;
     
     NSArray        *_errorButtonConstraints;
@@ -98,11 +98,11 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     NoDropImageView    *_duplicateImageView;
     NSArray            *_duplicateConstraints;
-    NSLayoutConstraint *_duplicateTrailingConstraint;
+    NSLayoutConstraint *_duplicateRightConstraint;
     
     DotView            *_dotView;
     NSArray            *_dotConstraints;
-    NSLayoutConstraint *_dotTrailingConstraint;
+    NSLayoutConstraint *_dotRightConstraint;
 
     NSTrackingArea *_trackingArea;
     BOOL            _mouseInside;
@@ -196,18 +196,17 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     _timeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
 
     [_timeField setBezeled:NO];
-    [_timeField setDrawsBackground:NO];
     [_timeField setSelectable:NO];
     [_timeField setEditable:NO];
+    [_timeField setDrawsBackground:NO];
     [_timeField setAlignment:NSTextAlignmentRight];
     [_timeField setAlphaValue:0];
     [_timeField setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_timeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_timeField setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_timeField setDrawsBackground:YES];
 
-    _timeGradientView = [[GradientView alloc] initWithFrame:NSZeroRect];
-    [_timeGradientView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _timeMaskView = [[MaskView alloc] initWithFrame:NSZeroRect];
+    [_timeMaskView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
 #if 0
     [_titleField setBackgroundColor:[NSColor yellowColor]];
@@ -223,9 +222,9 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 #endif
 
     _errorButtonConstraints = @[
-        [NSLayoutConstraint constraintWithItem:_titleField         attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0],
-        [NSLayoutConstraint constraintWithItem:_lineTwoLeftField   attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0],
-        [NSLayoutConstraint constraintWithItem:_lineThreeLeftField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0]
+        [NSLayoutConstraint constraintWithItem:_titleField         attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_lineTwoLeftField   attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_lineThreeLeftField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-8.0]
     ];
     
     [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
@@ -267,19 +266,21 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     NSTextField *oldTargetField = [[_endTimeConstraints lastObject] secondItem];
 
     if (targetField && (targetField != oldTargetField)) {
+        CGFloat length = [_timeMaskView gradientLength] + 8;
+        
         _endTimeConstraints = @[
-            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeRight    relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeRight    multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:targetField attribute:NSLayoutAttributeWidth    multiplier:1.0 constant:0.0],
 
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeTop       multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeBottom   relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeBottom    multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeLeading   multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil        attribute:NSLayoutAttributeWidth     multiplier:1.0 constant:32.0]
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeTop       multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeBottom   relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeBottom    multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeRight    relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeRight     multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeLeft     relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeLeft      multiplier:1.0 constant:-length]
         ];
         
-        [[targetField superview] addSubview:_timeField        positioned:NSWindowAbove relativeTo:targetField];
-        [[targetField superview] addSubview:_timeGradientView positioned:NSWindowAbove relativeTo:targetField];
+        [[targetField superview] addSubview:_timeField    positioned:NSWindowAbove relativeTo:targetField];
+        [[targetField superview] addSubview:_timeMaskView positioned:NSWindowAbove relativeTo:targetField];
 
         [NSLayoutConstraint activateConstraints:_endTimeConstraints];
     }
@@ -580,10 +581,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [_duplicateImageView setImage:image];
         [[_durationField superview] addSubview:_duplicateImageView positioned:NSWindowBelow relativeTo:nil];
 
-        _duplicateTrailingConstraint = [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
+        _duplicateRightConstraint = [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-4.0];
         
         _duplicateConstraints = @[
-            _duplicateTrailingConstraint,
+            _duplicateRightConstraint,
             [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0]
         ];
 
@@ -595,7 +596,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         
         [NSLayoutConstraint deactivateConstraints:_duplicateConstraints];
         _duplicateConstraints = nil;
-        _duplicateTrailingConstraint = nil;
+        _duplicateRightConstraint = nil;
     }
 
 
@@ -605,10 +606,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
         [[_durationField superview] addSubview:_dotView positioned:NSWindowBelow relativeTo:nil];
 
-        _dotTrailingConstraint = [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
+        _dotRightConstraint = [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-4.0];
 
         _dotConstraints = @[
-            _dotTrailingConstraint,
+            _dotRightConstraint,
             [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0],
             [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0],
             [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeHeight   relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0]
@@ -623,7 +624,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         
         [NSLayoutConstraint deactivateConstraints:_dotConstraints];
         _dotConstraints = nil;
-        _dotTrailingConstraint = nil;
+        _dotRightConstraint = nil;
     }
 
 
@@ -631,16 +632,16 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     
     if (showsDuplicateIcon && showsDot) {
         constant = 28 + 4;
-        [_duplicateTrailingConstraint setConstant:-18];
-        [_dotTrailingConstraint setConstant:-4];
+        [_duplicateRightConstraint setConstant:-18];
+        [_dotRightConstraint setConstant:-4];
 
     } else if (showsDuplicateIcon) {
         constant = 18;
-        [_duplicateTrailingConstraint setConstant:-4];
+        [_duplicateRightConstraint setConstant:-4];
 
     } else if (showsDot) {
         constant = 8;
-        [_dotTrailingConstraint setConstant:-4];
+        [_dotRightConstraint setConstant:-4];
     }
 
     if (showsDot) {
@@ -706,14 +707,13 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     }
     
     [_borderedView setBackgroundColor:backgroundColor];
-    [_timeField    setBackgroundColor:backgroundColor];
+//    [_timeMaskView setColor:backgroundColor];
 
-    [_timeGradientView setGradient:[[NSGradient alloc] initWithColors:@[
-        [backgroundColor colorWithAlphaComponent:0],
-        [backgroundColor colorWithAlphaComponent:0.75],
-        backgroundColor 
-    ] ]];
+    [_timeMaskView setMaterial:NSVisualEffectMaterialUltraDark];
     
+    [_timeMaskView setGradientLength:32];
+    [_timeMaskView setGradientLayoutAttribute:NSLayoutAttributeLeft];
+
     if (_drawsInsertionPointWorkaround) {
         [borderedView setTopBorderColor:[Theme colorNamed:@"SetlistActiveHighlight"]];
         [borderedView setTopBorderHeight:2];
@@ -994,12 +994,12 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     CGFloat endTimeAlpha = _showsTime ? 1.0 : 0.0;
     
     if (_animatesTime) {
-        [[_timeField        animator] setAlphaValue:endTimeAlpha];
-        [[_timeGradientView animator] setAlphaValue:endTimeAlpha];
+        [[_timeField    animator] setAlphaValue:endTimeAlpha];
+        [[_timeMaskView animator] setAlphaValue:endTimeAlpha];
 
     } else {
-        [_timeField        setAlphaValue:endTimeAlpha];
-        [_timeGradientView setAlphaValue:endTimeAlpha];
+        [_timeField    setAlphaValue:endTimeAlpha];
+        [_timeMaskView setAlphaValue:endTimeAlpha];
     }
 
     [_timeField setContentCompressionResistancePriority:(_showsTime ? (NSLayoutPriorityDefaultHigh + 1) : 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
