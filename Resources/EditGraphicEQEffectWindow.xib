@@ -1,111 +1,107 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="EditGraphicEQEffectController">
             <connections>
-                <outlet property="backgroundView" destination="wze-ct-bgL" id="4H9-R9-l5i"/>
+                <outlet property="backgroundView" destination="p7p-gj-VAV" id="g0A-w3-geT"/>
                 <outlet property="graphicEQView" destination="y1v-uw-fLy" id="hEm-bY-Dbg"/>
-                <outlet property="toolbar" destination="meN-VO-IvV" id="L1T-7S-fiv"/>
                 <outlet property="window" destination="5mm-8W-u52" id="RhH-N2-3zC"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="5mm-8W-u52">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" unifiedTitleAndToolbar="YES"/>
+        <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="5mm-8W-u52">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="159" width="240" height="160"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
             <view key="contentView" id="wIn-2X-2Cg">
                 <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView id="wze-ct-bgL" customClass="BorderedView">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="p7p-gj-VAV">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="112"/>
                         <subviews>
-                            <customView id="y1v-uw-fLy" customClass="GraphicEQView">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QRz-Ip-rVC">
+                                <rect key="frame" x="179" y="80" width="48" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" pullsDown="YES" selectedItem="LjE-Le-dTa" id="9J5-7q-TTq">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" title="OtherViews" id="ks9-Wm-eM7">
+                                        <items>
+                                            <menuItem state="on" image="NSActionTemplate" hidden="YES" id="LjE-Le-dTa"/>
+                                            <menuItem title="Load Preset…" id="SS9-Vd-a9o">
+                                                <connections>
+                                                    <action selector="loadPreset:" target="-2" id="ekG-v1-Osj"/>
+                                                </connections>
+                                            </menuItem>
+                                            <menuItem title="Save Preset…" id="Hhn-Lf-nLl">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                <connections>
+                                                    <action selector="savePreset:" target="-2" id="67F-aT-8oK"/>
+                                                </connections>
+                                            </menuItem>
+                                            <menuItem isSeparatorItem="YES" id="ef1-wq-oVy"/>
+                                            <menuItem title="Restore Default Values" id="99g-S7-2Qf">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                <connections>
+                                                    <action selector="restoreDefaultValues:" target="-2" id="YaP-8s-fTL"/>
+                                                </connections>
+                                            </menuItem>
+                                            <menuItem isSeparatorItem="YES" id="LSa-K5-3s7"/>
+                                            <menuItem title="Bypass Effect" id="Pkk-FP-eHu">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                                <connections>
+                                                    <action selector="toggleBypass:" target="-2" id="rtj-wM-D1U"/>
+                                                </connections>
+                                            </menuItem>
+                                        </items>
+                                        <connections>
+                                            <outlet property="delegate" destination="-2" id="ezW-8v-und"/>
+                                        </connections>
+                                    </menu>
+                                </popUpButtonCell>
+                            </popUpButton>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="y1v-uw-fLy" customClass="GraphicEQView">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="76"/>
                             </customView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jZ1-iP-SHT">
+                                <rect key="frame" x="123" y="80" width="48" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="FlattenTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" inset="2" id="SuR-LF-G9V">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                            </button>
                         </subviews>
-                    </customView>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="y1v-uw-fLy" secondAttribute="trailing" id="F9u-A3-XtV"/>
+                            <constraint firstAttribute="bottom" secondItem="y1v-uw-fLy" secondAttribute="bottom" id="kkV-mN-8l4"/>
+                            <constraint firstItem="y1v-uw-fLy" firstAttribute="leading" secondItem="p7p-gj-VAV" secondAttribute="leading" id="p1h-c6-OgC"/>
+                            <constraint firstItem="y1v-uw-fLy" firstAttribute="top" secondItem="p7p-gj-VAV" secondAttribute="top" constant="36" id="qt1-x8-fwo"/>
+                        </constraints>
+                    </visualEffectView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="p7p-gj-VAV" firstAttribute="leading" secondItem="wIn-2X-2Cg" secondAttribute="leading" id="3sy-RJ-K1F"/>
+                    <constraint firstItem="p7p-gj-VAV" firstAttribute="top" secondItem="wIn-2X-2Cg" secondAttribute="top" priority="999" id="7rs-Dy-ae9"/>
+                    <constraint firstAttribute="trailing" secondItem="p7p-gj-VAV" secondAttribute="trailing" id="UiJ-xn-RIE"/>
+                    <constraint firstAttribute="bottom" secondItem="p7p-gj-VAV" secondAttribute="bottom" id="c4N-CR-XYq"/>
+                    <constraint firstItem="p7p-gj-VAV" firstAttribute="top" secondItem="wIn-2X-2Cg" secondAttribute="top" constant="48" placeholder="YES" id="oz0-rN-P6c"/>
+                </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="5EA7A9ED-9BC9-445F-BB78-6FA70E749604" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="meN-VO-IvV">
+            <toolbar key="toolbar" implicitIdentifier="13E0ACBD-F1A3-44D0-9557-2D795B19AA31" autosavesConfiguration="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="Lsw-Ul-WzN">
                 <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="F2a-ag-Lat"/>
-                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Djo-0R-cRX"/>
-                    <toolbarItem implicitItemIdentifier="7073E97C-63B1-42C7-80C0-D9513F38356A" explicitItemIdentifier="Gear" label="Gear Menu" paletteLabel="Gear Menu" image="NSActionTemplate" id="V7A-fq-fJ9">
-                        <nil key="toolTip"/>
-                        <size key="minSize" width="48" height="25"/>
-                        <size key="maxSize" width="48" height="25"/>
-                        <popUpButton key="view" verticalHuggingPriority="750" id="Vhz-Hc-1lJ">
-                            <rect key="frame" x="15" y="14" width="48" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <popUpButtonCell key="cell" type="squareTextured" title="Item 1" bezelStyle="texturedSquare" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="7Nt-8j-k46" id="ET6-Ie-CeB">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="menu"/>
-                                <menu key="menu" title="OtherViews" id="ofp-hi-2Ng">
-                                    <items>
-                                        <menuItem title="Item 1" state="on" image="NSActionTemplate" hidden="YES" id="3mf-q1-akD"/>
-                                        <menuItem title="Load Preset…" id="7Nt-8j-k46">
-                                            <connections>
-                                                <action selector="loadPreset:" target="-2" id="DNe-JY-tsc"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Save Preset…" id="nyV-ti-cob">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="savePreset:" target="-2" id="Ubg-2F-z6p"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="MQr-fc-4Ba"/>
-                                        <menuItem title="Restore Default Values" id="qTP-xp-fVQ">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="restoreDefaultValues:" target="-2" id="Tv4-p1-Rfk"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="rgK-WM-1kW"/>
-                                        <menuItem title="Bypass Effect" id="PM7-h1-Cfb">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="toggleBypass:" target="-2" id="ahz-9y-Mcq"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                    <connections>
-                                        <outlet property="delegate" destination="-2" id="JiW-EP-Mgc"/>
-                                    </connections>
-                                </menu>
-                            </popUpButtonCell>
-                        </popUpButton>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="9E3F8819-3CF3-48D5-8092-352F37A43181" explicitItemIdentifier="Flatten" label="Flatten" paletteLabel="Flatten" image="FlattenTemplate" id="L7J-TV-BmH">
-                        <nil key="toolTip"/>
-                        <size key="minSize" width="48" height="25"/>
-                        <size key="maxSize" width="48" height="32"/>
-                        <button key="view" toolTip="Flatten all bands" verticalHuggingPriority="750" id="r3g-K3-whW">
-                            <rect key="frame" x="0.0" y="14" width="48" height="25"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="FlattenTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mVa-6F-cXi">
-                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                <font key="font" metaFont="system"/>
-                            </buttonCell>
-                        </button>
-                        <connections>
-                            <action selector="flatten:" target="y1v-uw-fLy" id="zTD-Np-f0b"/>
-                        </connections>
-                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="j3h-Sd-0YN"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="bdy-3L-3eu"/>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
-                    <toolbarItem reference="Djo-0R-cRX"/>
-                    <toolbarItem reference="L7J-TV-BmH"/>
-                    <toolbarItem reference="V7A-fq-fJ9"/>
+                    <toolbarItem reference="bdy-3L-3eu"/>
                 </defaultToolbarItems>
             </toolbar>
             <point key="canvasLocation" x="597" y="415"/>
@@ -113,7 +109,7 @@
         <userDefaultsController representsSharedInstance="YES" id="Rzj-OB-R5q"/>
     </objects>
     <resources>
-        <image name="FlattenTemplate" width="9" height="9"/>
+        <image name="FlattenTemplate" width="18" height="18"/>
         <image name="NSActionTemplate" width="14" height="14"/>
     </resources>
 </document>

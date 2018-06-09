@@ -590,31 +590,46 @@ const CGFloat sTrackWidth      = 5;
 
     // Draw knob
     {
-        NSColor *knobColor = [Theme colorNamed:@"EQKnob"];
-        if (_selected) {
-            knobColor = [Theme colorNamed:@"EQKnobSelected"];
-        }
-    
         CGRect knobRect = [self knobRectWithValue:_value];
-        NSShadow *shadow = [[NSShadow alloc] init];
+        BOOL isMainWindow = [[self window] isMainWindow];
         
-        [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.8]];
-        [shadow setShadowOffset:NSMakeSize(0, 0)];
-        [shadow setShadowBlurRadius:1];
+        NSColor *start = nil;
+        NSColor *end   = nil;
+        
+        NSShadow *shadow1 = nil;
+        NSShadow *shadow2 = nil;
+            
+        if (isMainWindow) {
+            shadow1 = [Theme shadowNamed:@"KnobMain1"];
+            shadow2 = [Theme shadowNamed:@"KnobMain2"];
+        } else {
+            shadow1 = [Theme shadowNamed:@"Knob"];
+        }
+        
+        if (_selected) {
+            start = [Theme colorNamed:@"KnobHighStart"];
+            end   = [Theme colorNamed:@"KnobHighEnd"];
 
-        [shadow set];
-        
-        [knobColor set];
+        } else if (isMainWindow) {
+            start = [Theme colorNamed:@"KnobMainStart"];
+            end   = [Theme colorNamed:@"KnobMainEnd"];
+
+        } else {
+            start = [Theme colorNamed:@"KnobStart"];
+            end   = [Theme colorNamed:@"KnobEnd"];
+        }
+
+        [shadow1 set];
+        [start set];
+
         [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
         
-        NSShadow *shadow2 = [[NSShadow alloc] init];
-        [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.5]];
-        [shadow2 setShadowOffset:NSMakeSize(0, -1)];
-        [shadow2 setShadowBlurRadius:2];
-        [shadow2 set];
+        if (shadow2 && start && end) {
+            [shadow2 set];
 
-        [knobColor set];
-        [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
+            NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
+            [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:knobRect] angle:-90];
+        }
     }
 }
 

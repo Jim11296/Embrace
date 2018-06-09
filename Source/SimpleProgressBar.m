@@ -155,7 +155,7 @@
 {
     NSGraphicsContext *oldContext = [NSGraphicsContext currentContext];
     
-    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO]];
+    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
 
     CGRect bounds = [layer bounds];
     

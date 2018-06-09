@@ -45,7 +45,7 @@
 {
     if (_tintColor != tintColor) {
         _tintColor = tintColor;
-        [self setNeedsDisplay];
+        [self setNeedsDisplay:YES];
     }
 }
 

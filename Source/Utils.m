@@ -577,7 +577,7 @@ CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)
             CGContextScaleCTM(context, scale, -scale);
 
             NSGraphicsContext *savedContext = [NSGraphicsContext currentContext];
-            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:YES]];
 
             callback(context);
             
