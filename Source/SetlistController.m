@@ -133,7 +133,6 @@ static NSInteger sAutoGapMaximum = 16;
     [window addListener:[self volumeSlider]];
     [window addListener:[self autoGapSlider]];
     [window addListener:[self playBar]];
-    [window addListener:self];
 
     [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
@@ -141,7 +140,7 @@ static NSInteger sAutoGapMaximum = 16;
     [[self autoGapIcon] setTintColor:[NSColor labelColor]];
 
     // Match PlayBar inactive color (used for top separator)
-    [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"MeterInactive"]];
+    [[self bottomSeparator] setTopBorderColor:[NSColor colorNamed:@"MeterInactive"]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
@@ -198,8 +197,6 @@ static NSInteger sAutoGapMaximum = 16;
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
-    
-    [self windowDidUpdateMain:nil];
 }
 
 
@@ -1024,33 +1021,6 @@ static NSInteger sAutoGapMaximum = 16;
     }
 
     return NO;
-}
-
-
-- (void) windowDidUpdateMain:(EmbraceWindow *)window
-{
-#if 0
-    BorderedView *topContainer    = [self topContainer];
-    BorderedView *bottomContainer = [self bottomContainer];
-    
-    if ([window isMainWindow]) {
-        [topContainer    setBackgroundGradientTopColor:   [Theme colorNamed:@"TopHeaderGradientStart"]];
-        [topContainer    setBackgroundGradientBottomColor:[Theme colorNamed:@"TopHeaderGradientEnd"]];
-        [bottomContainer setBackgroundGradientTopColor:   [Theme colorNamed:@"BottomHeaderGradientStart"]];
-        [bottomContainer setBackgroundGradientBottomColor:[Theme colorNamed:@"BottomHeaderGradientEnd"]];
-        [topContainer    setBackgroundColor:nil];
-        [bottomContainer setBackgroundColor:nil];
-    } else {
-        NSColor *backgroundColor = [Theme colorNamed:@"HeaderInactiveBackground"];
-        
-        [topContainer    setBackgroundColor:backgroundColor];
-        [bottomContainer setBackgroundColor:backgroundColor];
-        [topContainer    setBackgroundGradientTopColor:   nil];
-        [topContainer    setBackgroundGradientBottomColor:nil];
-        [bottomContainer setBackgroundGradientTopColor:   nil];
-        [bottomContainer setBackgroundGradientBottomColor:nil];
-    }
-#endif
 }
 
 

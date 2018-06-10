@@ -66,7 +66,6 @@ extern NSString *GetSimplifiedString(NSString *string);
 extern NSColor *GetDeprecatedColor(int rgb, CGFloat alpha) __attribute__((deprecated));
 
 extern NSColor *GetRGBColor(int rgb, CGFloat alpha);
-extern NSColor *GetNamedColor(NSColorName colorName);
 extern CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef));
 
 extern AppDelegate *GetAppDelegate(void);

@@ -554,12 +554,6 @@ NSColor *GetRGBColor(int rgb, CGFloat alpha)
 }
 
 
-NSColor *GetNamedColor(NSColorName colorName)
-{
-    return [Theme colorNamed:colorName];
-}
-
-
 CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef))
 {
     size_t width  = size.width * scale;
