@@ -55,9 +55,9 @@
 {
     BOOL isMainWindow = [[self window] isMainWindow];
 
-    NSColor *activeColor   = GetNamedColor(isMainWindow ? @"MeterActiveMain" : @"MeterActive");
-    NSColor *inactiveColor = GetNamedColor(@"MeterInactive");
-    NSColor *dotColor      = GetNamedColor(@"MeterDot");
+    NSColor *activeColor   = [NSColor colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
+    NSColor *inactiveColor = [NSColor colorNamed:@"MeterInactive"];
+    NSColor *dotColor      = [NSColor colorNamed:@"MeterDot"];
 
     [_activeBar    setBackgroundColor:[activeColor   CGColor]];
     [_inactiveBar  setBackgroundColor:[inactiveColor CGColor]];

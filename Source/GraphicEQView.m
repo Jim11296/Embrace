@@ -607,16 +607,16 @@ const CGFloat sTrackWidth      = 5;
         }
         
         if (_selected) {
-            start = [Theme colorNamed:@"KnobHighStart"];
-            end   = [Theme colorNamed:@"KnobHighEnd"];
+            start = [NSColor colorNamed:@"KnobPressed1"];
+            end   = [NSColor colorNamed:@"KnobPressed2"];
 
         } else if (isMainWindow) {
-            start = [Theme colorNamed:@"KnobMainStart"];
-            end   = [Theme colorNamed:@"KnobMainEnd"];
+            start = [NSColor colorNamed:@"KnobMain1"];
+            end   = [NSColor colorNamed:@"KnobMain2"];
 
         } else {
-            start = [Theme colorNamed:@"KnobStart"];
-            end   = [Theme colorNamed:@"KnobEnd"];
+            start = [NSColor colorNamed:@"KnobResigned1"];
+            end   = [NSColor colorNamed:@"KnobResigned2"];
         }
 
         [shadow1 set];

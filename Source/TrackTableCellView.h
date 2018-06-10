@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class ActionButton, BorderedView, Track;
+@class Track;
 
 @interface TrackTableCellView : NSTableCellView
 

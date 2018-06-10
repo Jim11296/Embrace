@@ -52,8 +52,8 @@ static CGFloat sDotHeight         = 14;
         LabelMenuPieceView *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
             LabelMenuPieceView *dotView = [[LabelMenuPieceView alloc] initWithFrame:dotFrame];
             
-            [dotView setBorderColor:[Theme colorNamed:borderName]];
-            [dotView setFillColor:  [Theme colorNamed:fillName  ]];
+            [dotView setBorderColor:[NSColor colorNamed:borderName]];
+            [dotView setFillColor:  [NSColor colorNamed:fillName  ]];
             [dotView setDotIndex:trackLabel];
             
             [self addSubview:dotView];
@@ -64,19 +64,19 @@ static CGFloat sDotHeight         = 14;
         };
         
         _ringView = [[LabelMenuPieceView alloc] initWithFrame:CGRectMake(0, 0, sDotWidth + 8, sDotHeight + 8)];
-        [_ringView setBorderColor:[Theme colorNamed:@"LabelMenuViewRingBorder"]];
-        [_ringView setFillColor:  [Theme colorNamed:@"LabelMenuViewRingFill"  ]];
+        [_ringView setBorderColor:[NSColor colorNamed:@"LabelMenuRingBorder"]];
+        [_ringView setFillColor:  [NSColor colorNamed:@"LabelMenuRingFill"  ]];
         [_ringView setDotIndex:NSNotFound];
         [self addSubview:_ringView];
         
         _dotViews = @[
-            makeDot( TrackLabelNone,   @"LabelMenuViewRingBorder",   nil                        ),
-            makeDot( TrackLabelRed,    @"LabelMenuViewBorderRed",    @"LabelMenuViewFillRed"    ),
-            makeDot( TrackLabelOrange, @"LabelMenuViewBorderOrange", @"LabelMenuViewFillOrange" ),
-            makeDot( TrackLabelYellow, @"LabelMenuViewBorderYellow", @"LabelMenuViewFillYellow" ),
-            makeDot( TrackLabelGreen,  @"LabelMenuViewBorderGreen",  @"LabelMenuViewFillGreen"  ),
-            makeDot( TrackLabelBlue,   @"LabelMenuViewBorderBlue",   @"LabelMenuViewFillBlue"   ),
-            makeDot( TrackLabelPurple, @"LabelMenuViewBorderPurple", @"LabelMenuViewFillPurple" )
+            makeDot( TrackLabelNone,   @"LabelMenuRingBorder",   nil                    ),
+            makeDot( TrackLabelRed,    @"LabelMenuRedBorder",    @"LabelMenuRedFill"    ),
+            makeDot( TrackLabelOrange, @"LabelMenuOrangeBorder", @"LabelMenuOrangeFill" ),
+            makeDot( TrackLabelYellow, @"LabelMenuYellowBorder", @"LabelMenuYellowFill" ),
+            makeDot( TrackLabelGreen,  @"LabelMenuGreenBorder",  @"LabelMenuGreenFill"  ),
+            makeDot( TrackLabelBlue,   @"LabelMenuBlueBorder",   @"LabelMenuBlueFill"   ),
+            makeDot( TrackLabelPurple, @"LabelMenuPurpleBorder", @"LabelMenuPurpleFill" )
         ];
     }
 
@@ -241,8 +241,6 @@ static CGFloat sDotHeight         = 14;
         CGContextStrokePath(context);
         return;
     }
-
-
     
     if ([_fillColor alphaComponent] == 1.0 && [_borderColor alphaComponent] == 1.0) {
         [_borderColor set];

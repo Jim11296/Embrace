@@ -28,14 +28,14 @@ static NSColor *sGetBorderColorForTrackLabel(TrackLabel trackLabel)
 {
     NSColorName name = nil;
 
-    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelBorderRed";
-    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelBorderOrange";
-    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelBorderYellow";
-    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelBorderGreen";
-    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelBorderBlue";
-    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelBorderPurple";
+    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelRedBorder";
+    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelOrangeBorder";
+    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelYellowBorder";
+    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelGreenBorder";
+    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelBlueBorder";
+    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelPurpleBorder";
     
-    return name ? [Theme colorNamed:name] : nil;
+    return name ? [NSColor colorNamed:name] : nil;
 }
 
 
@@ -43,14 +43,14 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 {
     NSColorName name = nil;
 
-    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelFillRed";
-    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelFillOrange";
-    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelFillYellow";
-    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelFillGreen";
-    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelFillBlue";
-    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelFillPurple";
+    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelRedFill";
+    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelOrangeFill";
+    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelYellowFill";
+    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelGreenFill";
+    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelBlueFill";
+    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelPurpleFill";
     
-    return name ? [Theme colorNamed:name] : nil;
+    return name ? [NSColor colorNamed:name] : nil;
 }
 
 
