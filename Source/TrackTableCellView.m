@@ -14,39 +14,9 @@
 #import "NoDropImageView.h"
 #import "Preferences.h"
 #import "TrackTableView.h"
-#import "StripeView.h"
-#import "DotView.h"
+#import "TrackLabelView.h"
 #import "MaskView.h"
 
-
-static NSColor *sGetBorderColorForTrackLabel(TrackLabel trackLabel)
-{
-    NSColorName name = nil;
-
-    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelRedBorder";
-    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelOrangeBorder";
-    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelYellowBorder";
-    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelGreenBorder";
-    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelBlueBorder";
-    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelPurpleBorder";
-    
-    return name ? [Theme colorNamed:name] : nil;
-}
-
-
-static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
-{
-    NSColorName name = nil;
-
-    if      (trackLabel == TrackLabelRed)    name = @"SetlistLabelRedFill";
-    else if (trackLabel == TrackLabelOrange) name = @"SetlistLabelOrangeFill";
-    else if (trackLabel == TrackLabelYellow) name = @"SetlistLabelYellowFill";
-    else if (trackLabel == TrackLabelGreen)  name = @"SetlistLabelGreenFill";
-    else if (trackLabel == TrackLabelBlue)   name = @"SetlistLabelBlueFill";
-    else if (trackLabel == TrackLabelPurple) name = @"SetlistLabelPurpleFill";
-    
-    return name ? [Theme colorNamed:name] : nil;
-}
 
 
 @interface TrackTableCellView () <ApplicationEventListener>
@@ -55,7 +25,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *titleDurationConstraint;
 
 @property (nonatomic, weak) IBOutlet BorderedView *borderedView;
-@property (nonatomic, weak) IBOutlet StripeView   *stripeView;
+@property (nonatomic, weak) IBOutlet TrackLabelView *stripeView;
 
 @property (nonatomic, weak) IBOutlet NSTextField *titleField;
 @property (nonatomic, weak) IBOutlet NSTextField *durationField;
@@ -94,7 +64,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     NSArray            *_duplicateConstraints;
     NSLayoutConstraint *_duplicateRightConstraint;
     
-    DotView            *_dotView;
+    TrackLabelView     *_dotView;
     NSArray            *_dotConstraints;
     NSLayoutConstraint *_dotRightConstraint;
 
@@ -109,7 +79,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 - (id) initWithFrame:(NSRect)frameRect
 {
     if ((self = [super initWithFrame:frameRect])) {
-        [self _setupTrackTableCellView];
+        [self _commonTrackTableCellViewInit];
     }
     
     return self;
@@ -119,7 +89,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 - (id) initWithCoder:(NSCoder *)aDecoder
 {
     if ((self = [super initWithCoder:aDecoder])) {
-        [self _setupTrackTableCellView];
+        [self _commonTrackTableCellViewInit];
     }
     
     return self;
@@ -164,7 +134,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
-- (void) _setupTrackTableCellView
+- (void) _commonTrackTableCellViewInit
 {
     [(Application *)NSApp registerEventListener:self];
 
@@ -323,7 +293,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     if (object == _observedObject) {
     
         if ([keyPath isEqualToString:@"trackStatus"]) {
-            [self _updateForegroundColors];
+            [self _updateColors];
             
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *ac) {
                 [ac setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -455,9 +425,8 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     [[NSAnimationContext currentContext] setDuration:0];
     
-
     [self _updateStripeAndBorderedView];
-    [self _updateForegroundColors];
+    [self _updateColors];
 
     if ([self track]) {
         [self _updateRightIcons];
@@ -488,7 +457,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         isPlaying = NO;
     }
     
-    CGFloat constant = isPlaying ? 4.0 : -13.0;
+    CGFloat constant = isPlaying ? 8.0 : -13.0;
     CGFloat alpha    = isPlaying ? 1.0 :  0.0;
 
     if (animated) {
@@ -537,7 +506,8 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
 
     if (showsDot && !_dotView) {
-        _dotView = [[DotView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        _dotView = [[TrackLabelView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [_dotView setStyle:TrackLabelViewDot];
         [_dotView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
         [[_durationField superview] addSubview:_dotView positioned:NSWindowBelow relativeTo:nil];
@@ -581,13 +551,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     }
 
     if (showsDot) {
-//!color: FIX
-//        NSColor *borderColor = [self isSelected] ?
-//            [NSColor whiteColor] :
-//            sGetBorderColorForTrackLabel(trackLabel);
-//        
-//        [_dotView setFillColor:sGetFillColorForTrackLabel(trackLabel)];
-//        [_dotView setBorderColor:borderColor];
+        [_dotView setLabel:trackLabel];
     }
 
     [_titleDurationConstraint setConstant:constant];
@@ -605,9 +569,13 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
-- (void) _updateForegroundColors
+
+- (void) _updateColors
 {
     NSTableRowView *rowView = [self _rowView];
+
+    BOOL rowIsSelected   = [rowView isSelected];
+    BOOL rowIsEmphasized = [rowView isEmphasized];
 
     NSColor *primaryColor    = nil;
     NSColor *secondaryColor  = nil;
@@ -624,7 +592,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         secondaryColor = [Theme colorNamed:@"SetlistSecondary"];
     }
     
-    if ([rowView isSelected] && [rowView isEmphasized]) {
+    if (rowIsSelected && rowIsEmphasized) {
         primaryColor   = [Theme colorNamed:@"SetlistPrimaryEmphasized"];
         secondaryColor = [Theme colorNamed:@"SetlistSecondaryEmphasized"];
         needsWhiteError = YES;
@@ -646,15 +614,44 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [_duplicateImageView setTintColor:primaryColor];
     [_speakerImageView   setTintColor:primaryColor];
     
-    if (needsWhiteError) {
+    if (rowIsSelected && rowIsEmphasized) {
         [_errorButton setAlertColor:primaryColor];
         [_errorButton setAlertActiveColor:primaryColor];
+        [_errorButton setInactiveColor:primaryColor];
+
+        [_dotView setNeedsWhiteBorder:YES];
+
 
     } else {
         [_errorButton setAlertColor:[Theme colorNamed:@"ButtonAlert"]];
         [_errorButton setAlertActiveColor:[Theme colorNamed:@"ButtonAlertPressed"]];
-        //!color: setInactiveColor here
+        [_errorButton setInactiveColor:primaryColor];
+
+        [_dotView setNeedsWhiteBorder:NO];
     }
+  
+    
+    NSVisualEffectMaterial material = 0;
+    NSColor *color = nil;
+
+    if (@available(macOS 10.14, *)) {
+        material = rowIsSelected ? NSVisualEffectMaterialSelection : NSVisualEffectMaterialContentBackground;
+
+    } else {
+        if (rowIsSelected) {
+            if (rowIsEmphasized) {
+                color = [NSColor alternateSelectedControlColor];
+            } else {
+                color = [NSColor secondarySelectedControlColor];
+            } 
+        } else {
+            color = [NSColor controlBackgroundColor];
+        }
+    }
+    
+    [_timeMaskView setColor:color];
+    [_timeMaskView setMaterial:material];
+    [_timeMaskView setEmphasized:rowIsEmphasized];
 }
 
 
@@ -688,30 +685,8 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [borderedView setBottomDashBackgroundColor:bottomDashBackgroundColor];
 
     TrackLabel trackLabel = [track trackLabel];
-    [[self stripeView] setFillColor:sGetFillColorForTrackLabel(trackLabel)];
-    [[self stripeView] setBorderColor:sGetBorderColorForTrackLabel(trackLabel)];
+    [[self stripeView] setLabel:trackLabel];
     [[self stripeView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
-
-    NSColor *backgroundColor = nil;
-
-//    if (_selected) {
-//        if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
-//            backgroundColor = [Theme colorNamed:@"SetlistActiveHighlight"];
-//        } else {
-//            backgroundColor = [Theme colorNamed:@"SetlistInactiveHighlight"];
-//        }
-//        
-//        topConstraintValue = -2;
-//
-//    } else {
-//       backgroundColor = [NSColor whiteColor];
-//    }
-    
-//    [_borderedView setBackgroundColor:backgroundColor];
-//    [_timeMaskView setColor:backgroundColor];
-
-    [_timeMaskView setMaterial:NSVisualEffectMaterialUltraDark];
-    
 
     [_borderedViewTopConstraint setConstant:topConstraintValue];
 }
@@ -975,7 +950,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
-    [self _updateForegroundColors];
+    [self _updateColors];
 }
 
 

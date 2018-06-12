@@ -36,8 +36,8 @@
         [[self layer] addSublayer:_inactiveLayer];
         [[self layer] addSublayer:_activeLayer];
 
-        _activeWaveformColor   = GetDeprecatedColor(0x202020, 1.0);
-        _inactiveWaveformColor = GetDeprecatedColor(0xababab, 1.0);
+        _activeWaveformColor   = [NSColor labelColor];
+        _inactiveWaveformColor = [NSColor secondaryLabelColor];
 
         [self setPercentage:FLT_EPSILON];
     }

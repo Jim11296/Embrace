@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
-#import "LabelMenuView.h"
+#import "MenuLabelView.h"
 
 
 static NSString *sTagKey = @"tag";
@@ -21,18 +21,16 @@ static CGFloat sDotWidth          = 14;
 static CGFloat sDotHeight         = 14;
 
 
-@interface LabelMenuView ()
-@end
 
-@interface LabelMenuPieceView : NSView
+@interface MenuLabelViewPiece : NSView
 @property (nonatomic) NSInteger dotIndex;
 @property (nonatomic) NSColor *borderColor;
 @property (nonatomic) NSColor *fillColor;
 @end
 
 
-@implementation LabelMenuView {
-    LabelMenuPieceView *_ringView;
+@implementation MenuLabelView {
+    MenuLabelViewPiece *_ringView;
     NSArray            *_dotViews;
 
     NSArray  *_trackingAreas;
@@ -49,8 +47,8 @@ static CGFloat sDotHeight         = 14;
 
         __block CGRect dotFrame = CGRectMake(sOffsetX, sOffsetY, sDotWidth, sDotHeight);
 
-        LabelMenuPieceView *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
-            LabelMenuPieceView *dotView = [[LabelMenuPieceView alloc] initWithFrame:dotFrame];
+        MenuLabelViewPiece *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
+            MenuLabelViewPiece *dotView = [[MenuLabelViewPiece alloc] initWithFrame:dotFrame];
             
             [dotView setBorderColor:[Theme colorNamed:borderName]];
             [dotView setFillColor:  [Theme colorNamed:fillName  ]];
@@ -63,20 +61,20 @@ static CGFloat sDotHeight         = 14;
             return dotView;
         };
         
-        _ringView = [[LabelMenuPieceView alloc] initWithFrame:CGRectMake(0, 0, sDotWidth + 8, sDotHeight + 8)];
-        [_ringView setBorderColor:[Theme colorNamed:@"LabelMenuRingBorder"]];
-        [_ringView setFillColor:  [Theme colorNamed:@"LabelMenuRingFill"  ]];
+        _ringView = [[MenuLabelViewPiece alloc] initWithFrame:CGRectMake(0, 0, sDotWidth + 8, sDotHeight + 8)];
+        [_ringView setBorderColor:[Theme colorNamed:@"MenuLabelRingBorder"]];
+        [_ringView setFillColor:  [Theme colorNamed:@"MenuLabelRingFill"  ]];
         [_ringView setDotIndex:NSNotFound];
         [self addSubview:_ringView];
         
         _dotViews = @[
-            makeDot( TrackLabelNone,   @"LabelMenuRingBorder",   nil                    ),
-            makeDot( TrackLabelRed,    @"LabelMenuRedBorder",    @"LabelMenuRedFill"    ),
-            makeDot( TrackLabelOrange, @"LabelMenuOrangeBorder", @"LabelMenuOrangeFill" ),
-            makeDot( TrackLabelYellow, @"LabelMenuYellowBorder", @"LabelMenuYellowFill" ),
-            makeDot( TrackLabelGreen,  @"LabelMenuGreenBorder",  @"LabelMenuGreenFill"  ),
-            makeDot( TrackLabelBlue,   @"LabelMenuBlueBorder",   @"LabelMenuBlueFill"   ),
-            makeDot( TrackLabelPurple, @"LabelMenuPurpleBorder", @"LabelMenuPurpleFill" )
+            makeDot( TrackLabelNone,   @"MenuLabelRingBorder",   nil                    ),
+            makeDot( TrackLabelRed,    @"MenuLabelRedBorder",    @"MenuLabelRedFill"    ),
+            makeDot( TrackLabelOrange, @"MenuLabelOrangeBorder", @"MenuLabelOrangeFill" ),
+            makeDot( TrackLabelYellow, @"MenuLabelYellowBorder", @"MenuLabelYellowFill" ),
+            makeDot( TrackLabelGreen,  @"MenuLabelGreenBorder",  @"MenuLabelGreenFill"  ),
+            makeDot( TrackLabelBlue,   @"MenuLabelBlueBorder",   @"MenuLabelBlueFill"   ),
+            makeDot( TrackLabelPurple, @"MenuLabelPurpleBorder", @"MenuLabelPurpleFill" )
         ];
     }
 
@@ -105,7 +103,7 @@ static CGFloat sDotHeight         = 14;
     if (selectedIndex == NSNotFound) {
         [_ringView setHidden:YES];
     } else {
-        LabelMenuPieceView *dotView = [_dotViews objectAtIndex:selectedIndex];
+        MenuLabelViewPiece *dotView = [_dotViews objectAtIndex:selectedIndex];
         [_ringView setFrame:CGRectInset([dotView frame], -4, -4)];
         [_ringView setHidden:NO];
     }
@@ -209,7 +207,7 @@ static CGFloat sDotHeight         = 14;
 
 #pragma mark - Piece View
 
-@implementation LabelMenuPieceView
+@implementation MenuLabelViewPiece
 
 - (id) initWithFrame:(NSRect)frameRect
 {

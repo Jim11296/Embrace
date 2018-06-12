@@ -6,7 +6,5 @@
 //  Copyright (c) 2014 Ricci Adams. All rights reserved.
 //
 
-@class PLCrashReporter;
-
 extern BOOL CrashPadIsDebuggerAttached(void);
 extern void SetupCrashPad(void);

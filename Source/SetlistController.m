@@ -22,7 +22,7 @@
 #import "BorderedView.h"
 #import "Button.h"
 #import "EmbraceWindow.h"
-#import "LabelMenuView.h"
+#import "MenuLabelView.h"
 #import "DangerMeter.h"
 #import "LevelMeter.h"
 #import "PlayBar.h"
@@ -51,16 +51,14 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, strong) IBOutlet NSView *dragSongsView;
 
 @property (nonatomic, strong) IBOutlet NSMenu        *gearMenu;
-@property (nonatomic, strong) IBOutlet LabelMenuView *gearLabelMenuView;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearLabelSeparator;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearLabelMenuItem;
+@property (nonatomic, strong) IBOutlet MenuLabelView *gearMenuLabelView;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearMenuLabelSeparator;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearMenuLabelItem;
 
 @property (nonatomic, strong) IBOutlet NSMenu        *tableMenu;
-@property (nonatomic, strong) IBOutlet LabelMenuView *tableLabelMenuView;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableLabelSeparator;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableLabelMenuItem;
-
-@property (nonatomic, weak)   IBOutlet BorderedView *topContainer;
+@property (nonatomic, strong) IBOutlet MenuLabelView *tableMenuLabelView;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelSeparator;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelItem;
 
 @property (nonatomic, weak)   IBOutlet NSTextField  *playOffsetField;
 @property (nonatomic, weak)   IBOutlet PlayBar      *playBar;
@@ -970,18 +968,18 @@ static NSInteger sAutoGapMaximum = 16;
     }
     
     if ([menu isEqual:[self gearMenu]]) {
-        [[self gearLabelSeparator] setHidden:!showLabels];
-        [[self gearLabelMenuItem]  setHidden:!showLabels];
-        [[self gearLabelMenuItem]  setView:showLabels ? [self gearLabelMenuView] : nil];
+        [[self gearMenuLabelSeparator] setHidden:!showLabels];
+        [[self gearMenuLabelItem] setHidden:!showLabels];
+        [[self gearMenuLabelItem] setView:showLabels ? [self gearMenuLabelView] : nil];
 
-        [[self gearLabelMenuView] setSelectedTag:trackLabel];
+        [[self gearMenuLabelView] setSelectedTag:trackLabel];
     
     } else if ([menu isEqual:[self tableMenu]]) {
-        [[self tableLabelSeparator] setHidden:!showLabels];
-        [[self tableLabelMenuItem]  setHidden:!showLabels];
-        [[self tableLabelMenuItem]  setView:showLabels ? [self tableLabelMenuView] : nil];
+        [[self tableMenuLabelSeparator] setHidden:!showLabels];
+        [[self tableMenuLabelItem] setHidden:!showLabels];
+        [[self tableMenuLabelItem] setView:showLabels ? [self tableMenuLabelView] : nil];
        
-        [[self tableLabelMenuView] setSelectedTag:trackLabel];
+        [[self tableMenuLabelView] setSelectedTag:trackLabel];
     }
 }
 

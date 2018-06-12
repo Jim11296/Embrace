@@ -16,6 +16,7 @@
 
 // If material is non-zero, an NSVisualEffectView is used.
 @property (nonatomic) NSVisualEffectMaterial material;
+@property (nonatomic, getter=isEmphasized) BOOL emphasized;
 @property (nonatomic) NSColor *color;
 
 @end

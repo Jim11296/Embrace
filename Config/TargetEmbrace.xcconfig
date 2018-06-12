@@ -5,7 +5,7 @@ INFOPLIST_FILE = Resources/Info.plist
 GCC_PRECOMPILE_PREFIX_HEADER = YES
 GCC_PREFIX_HEADER = Source/Prefix.pch
 
-LD_RUNPATH_SEARCH_PATHS = @executable_path/../Frameworks
+LD_RUNPATH_SEARCH_PATHS = $(inherited) /Library/Frameworks
 ALWAYS_SEARCH_USER_PATHS = NO
 CODE_SIGN_ENTITLEMENTS = Resources/Embrace.entitlements
 
