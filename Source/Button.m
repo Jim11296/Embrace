@@ -80,7 +80,6 @@ static CGFloat sBorderLayerPadding = 2;
     _backgroundView = [[NoDropImageView alloc] initWithFrame:[self bounds]];
     [self addSubview:_backgroundView];
     
-    [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormal"]];
     [_backgroundView setImageScaling:NSImageScaleNone];
     
     CGRect bounds = [self bounds];
@@ -152,11 +151,11 @@ static CGFloat sBorderLayerPadding = 2;
     [_iconView setTintColor:color];
     
     if (isInactive) {
-        [_backgroundView setImage:[NSImage imageNamed:@"ButtonInactive"]];
+        [_backgroundView setImage:[NSImage imageNamed:@"ButtonInactiveBackground"]];
     } else if (_highlighted) {
-        [_backgroundView setImage:[NSImage imageNamed:@"ButtonPressed"]];
+        [_backgroundView setImage:[NSImage imageNamed:@"ButtonPressedBackground"]];
     } else {
-        [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormal"]];
+        [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormalBackground"]];
     }
 
     [_backgroundView setHidden:_iconOnly];

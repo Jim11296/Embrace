@@ -24,28 +24,17 @@
                 <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="p7p-gj-VAV">
+                    <visualEffectView wantsLayer="YES" fixedFrame="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="p7p-gj-VAV">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="112"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="y1v-uw-fLy" customClass="GraphicEQView">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="76"/>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y1v-uw-fLy" customClass="GraphicEQView">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="112"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </customView>
                         </subviews>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="y1v-uw-fLy" secondAttribute="trailing" id="F9u-A3-XtV"/>
-                            <constraint firstAttribute="bottom" secondItem="y1v-uw-fLy" secondAttribute="bottom" id="kkV-mN-8l4"/>
-                            <constraint firstItem="y1v-uw-fLy" firstAttribute="leading" secondItem="p7p-gj-VAV" secondAttribute="leading" id="p1h-c6-OgC"/>
-                            <constraint firstItem="y1v-uw-fLy" firstAttribute="top" secondItem="p7p-gj-VAV" secondAttribute="top" constant="36" id="qt1-x8-fwo"/>
-                        </constraints>
                     </visualEffectView>
                 </subviews>
-                <constraints>
-                    <constraint firstItem="p7p-gj-VAV" firstAttribute="leading" secondItem="wIn-2X-2Cg" secondAttribute="leading" id="3sy-RJ-K1F"/>
-                    <constraint firstItem="p7p-gj-VAV" firstAttribute="top" secondItem="wIn-2X-2Cg" secondAttribute="top" priority="999" id="7rs-Dy-ae9"/>
-                    <constraint firstAttribute="trailing" secondItem="p7p-gj-VAV" secondAttribute="trailing" id="UiJ-xn-RIE"/>
-                    <constraint firstAttribute="bottom" secondItem="p7p-gj-VAV" secondAttribute="bottom" id="c4N-CR-XYq"/>
-                    <constraint firstItem="p7p-gj-VAV" firstAttribute="top" secondItem="wIn-2X-2Cg" secondAttribute="top" constant="48" placeholder="YES" id="oz0-rN-P6c"/>
-                </constraints>
             </view>
             <toolbar key="toolbar" implicitIdentifier="13E0ACBD-F1A3-44D0-9557-2D795B19AA31" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconOnly" sizeMode="regular" id="Lsw-Ul-WzN">
                 <allowedToolbarItems>
