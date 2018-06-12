@@ -52,8 +52,8 @@ static CGFloat sDotHeight         = 14;
         LabelMenuPieceView *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
             LabelMenuPieceView *dotView = [[LabelMenuPieceView alloc] initWithFrame:dotFrame];
             
-            [dotView setBorderColor:[NSColor colorNamed:borderName]];
-            [dotView setFillColor:  [NSColor colorNamed:fillName  ]];
+            [dotView setBorderColor:[Theme colorNamed:borderName]];
+            [dotView setFillColor:  [Theme colorNamed:fillName  ]];
             [dotView setDotIndex:trackLabel];
             
             [self addSubview:dotView];
@@ -64,8 +64,8 @@ static CGFloat sDotHeight         = 14;
         };
         
         _ringView = [[LabelMenuPieceView alloc] initWithFrame:CGRectMake(0, 0, sDotWidth + 8, sDotHeight + 8)];
-        [_ringView setBorderColor:[NSColor colorNamed:@"LabelMenuRingBorder"]];
-        [_ringView setFillColor:  [NSColor colorNamed:@"LabelMenuRingFill"  ]];
+        [_ringView setBorderColor:[Theme colorNamed:@"LabelMenuRingBorder"]];
+        [_ringView setFillColor:  [Theme colorNamed:@"LabelMenuRingFill"  ]];
         [_ringView setDotIndex:NSNotFound];
         [self addSubview:_ringView];
         

@@ -56,6 +56,8 @@ const CGFloat sTrackWidth      = 5;
     CGPoint   _startLocation;
     CGFloat   _draggableHeight;
     BOOL      _dragIsSlow;
+    
+    CGRect _hitTestRect;
 }
 
 
@@ -101,8 +103,6 @@ const CGFloat sTrackWidth      = 5;
     
     CGRect bounds = [self bounds];
    
-    [_controlView setFrame:bounds];
-   
     CGRect bandRect = CGRectMake(0, 20, 19, bounds.size.height - 20);
     
     CGFloat firstX = 49;
@@ -110,18 +110,18 @@ const CGFloat sTrackWidth      = 5;
     CGFloat bandMinX = bounds.size.width;
     CGFloat bandMaxX = 0;
     
+    CGRect controlFrame = CGRectNull;
+    
     void (^alignLabel)(NSTextField *, GraphicEQBandView *, Float32) = ^(NSTextField *label, GraphicEQBandView *bandView, Float32 value) {
         CGRect knobRect = [bandView knobRectWithValue:value];
         knobRect = [self convertRect:knobRect fromView:bandView];
         
-
         CGFloat knobY = knobRect.origin.y;
         CGFloat bandX = [bandView frame].origin.x;
         
         CGRect topFrame = [label frame];
         
-        
-        topFrame.origin.x = bandX - (topFrame.size.width + 2);
+        topFrame.origin.x = bandX - (topFrame.size.width + 5);
         topFrame.origin.y = knobY;
         [label setFrame:topFrame];
     };
@@ -133,6 +133,7 @@ const CGFloat sTrackWidth      = 5;
         NSTextField       *label    = [_labelViews objectAtIndex:i];
         
         [bandView setFrame:bandRect];
+        controlFrame = CGRectUnion(controlFrame, bandRect);
  
         bandMinX = MIN(bandMinX, CGRectGetMinX(bandRect));
         bandMaxX = MAX(bandMaxX, CGRectGetMaxX(bandRect));
@@ -155,8 +156,8 @@ const CGFloat sTrackWidth      = 5;
             backgroundFrame.origin.y = firstBandFrame.origin.y;
             backgroundFrame.size.height = backgroundFrame.size.height;
             
-            backgroundFrame.origin.x = bandMinX;
-            backgroundFrame.size.width = bandMaxX - bandMinX;
+            backgroundFrame.origin.x = bandMinX - 4;
+            backgroundFrame.size.width = (bandMaxX - bandMinX) + 8;
             
             [_backgroundView setFrame:backgroundFrame];
 
@@ -165,6 +166,8 @@ const CGFloat sTrackWidth      = 5;
             alignLabel(_bottomLabel, firstBand, -1.0);
         }
     }
+    
+    [_controlView setFrame:controlFrame];
 }
 
 
@@ -487,11 +490,6 @@ const CGFloat sTrackWidth      = 5;
 
 @implementation GraphicEQControlView
 
-- (BOOL) acceptsFirstResponder
-{
-    return YES;
-}
-
 - (void) mouseDown:(NSEvent *)event
 {
     [(GraphicEQView *)[self superview] _controlViewMouseDown:event];
@@ -607,16 +605,16 @@ const CGFloat sTrackWidth      = 5;
         }
         
         if (_selected) {
-            start = [NSColor colorNamed:@"KnobPressed1"];
-            end   = [NSColor colorNamed:@"KnobPressed2"];
+            start = [Theme colorNamed:@"KnobPressed1"];
+            end   = [Theme colorNamed:@"KnobPressed2"];
 
         } else if (isMainWindow) {
-            start = [NSColor colorNamed:@"KnobMain1"];
-            end   = [NSColor colorNamed:@"KnobMain2"];
+            start = [Theme colorNamed:@"KnobMain1"];
+            end   = [Theme colorNamed:@"KnobMain2"];
 
         } else {
-            start = [NSColor colorNamed:@"KnobResigned1"];
-            end   = [NSColor colorNamed:@"KnobResigned2"];
+            start = [Theme colorNamed:@"KnobResigned1"];
+            end   = [Theme colorNamed:@"KnobResigned2"];
         }
 
         [shadow1 set];

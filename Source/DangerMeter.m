@@ -56,8 +56,8 @@
     [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
     [self setAutoresizesSubviews:NO];
 
-    NSColor *inactiveColor = [NSColor colorNamed:@"MeterInactive"];
-    NSColor *tintColor     = [NSColor colorNamed:@"MeterPeak"];
+    NSColor *inactiveColor = [Theme colorNamed:@"MeterInactive"];
+    NSColor *tintColor     = [Theme colorNamed:@"MeterPeak"];
     
     NSBezierPath *boltPath = [NSBezierPath bezierPath];
     [boltPath moveToPoint:NSMakePoint(2, 10)];
@@ -118,7 +118,7 @@
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
     BOOL     isMainWindow = [[self window] isMainWindow];
-    NSColor *activeColor  = [NSColor colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
+    NSColor *activeColor  = [Theme colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
     
     [_boltDot   setActiveColor:activeColor];
     [_dangerBar setActiveColor:activeColor]; 

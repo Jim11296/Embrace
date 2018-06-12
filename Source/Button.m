@@ -67,9 +67,9 @@ static CGFloat sBorderLayerPadding = 2;
 - (void) _setupButton
 {
     _alertColor       = [Theme colorNamed:@"ButtonAlert"];
-    _alertActiveColor = [Theme colorNamed:@"ButtonAlertActive"];
+    _alertActiveColor = [Theme colorNamed:@"ButtonAlertPressed"];
     _normalColor      = [Theme colorNamed:@"ButtonNormal"];
-    _activeColor      = [Theme colorNamed:@"ButtonActive"];
+    _activeColor      = [Theme colorNamed:@"ButtonPressed"];
     _inactiveColor    = [Theme colorNamed:@"ButtonInactive"];
     _disabledColor    = [Theme colorNamed:@"ButtonDisabled"];
 

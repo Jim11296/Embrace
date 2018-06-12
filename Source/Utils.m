@@ -8,7 +8,6 @@
 
 #import "Utils.h"
 #import "Track.h"
-#import "ColorSet.h"
 #import "Theme.h"
 
 
@@ -539,18 +538,14 @@ NSColor *GetDeprecatedColor(int rgb, CGFloat alpha)
     return GetRGBColor(rgb, 1.0);
 }
 
+
 NSColor *GetRGBColor(int rgb, CGFloat alpha)
 {
     float r = (((rgb & 0xFF0000) >> 16) / 255.0);
     float g = (((rgb & 0x00FF00) >>  8) / 255.0);
     float b = (((rgb & 0x0000FF) >>  0) / 255.0);
 
-    ColorSet *colorSet = [[ColorSet alloc] init];
-
-    NSColor *color = [NSColor colorWithSRGBRed:r green:g blue:b alpha:alpha];
-    [colorSet addColor:color forAppearanceName:NSAppearanceNameAqua];
-    
-    return colorSet;
+    return [NSColor colorWithSRGBRed:r green:g blue:b alpha:alpha];
 }
 
 

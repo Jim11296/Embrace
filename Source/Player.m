@@ -38,6 +38,22 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 volatile NSInteger PlayerShouldUseCrashPad = 0;
 
+static void sMemoryBarrier()
+{
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    OSMemoryBarrier();
+    #pragma clang diagnostic pop
+}
+
+static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theValue)
+{
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    OSAtomicIncrement64Barrier(theValue);
+    #pragma clang diagnostic pop
+}
+
 
 static OSStatus sApplyEmergencyLimiter(
     void *inRefCon,
@@ -636,8 +652,12 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 {
     // This is "usually sent from the AudioDevice's IO thread".  Hence, we cannot call dispatch_async()
     RenderUserInfo *userInfo = (RenderUserInfo *)inClientData;
-    OSAtomicIncrement32(&userInfo->nextOverloadCount);
 
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    OSAtomicIncrement32(&userInfo->nextOverloadCount);
+    #pragma clang diagnostic pop
+    
     return noErr;
 }
 
@@ -766,7 +786,7 @@ static OSStatus sInputRenderCallback(
         userInfo->inputUnit = userInfo->nextInputUnit;
         userInfo->previousStereoLevel = userInfo->stereoLevel;
         userInfo->sampleTime = 0;
-        OSMemoryBarrier();
+        sMemoryBarrier();
 
         userInfo->inputID = userInfo->nextInputID;
     }
@@ -784,13 +804,13 @@ static OSStatus sInputRenderCallback(
 
     if (isRunning) {
         _renderUserInfo.nextInputUnit = audioUnit;
-        OSMemoryBarrier();
+        sMemoryBarrier();
 
-        OSAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
 
         NSInteger loopGuard = 0;
         while (1) {
-            OSMemoryBarrier();
+            sMemoryBarrier();
 
             if (_renderUserInfo.inputID == _renderUserInfo.nextInputID) {
                 break;
@@ -811,9 +831,9 @@ static OSStatus sInputRenderCallback(
     } else {
         _renderUserInfo.inputUnit = NULL;
         _renderUserInfo.nextInputUnit = audioUnit;
-        OSMemoryBarrier();
+        sMemoryBarrier();
 
-        OSAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
     }
 }
 
