@@ -27,7 +27,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="312" height="60"/>
                     <subviews>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="0mJ-te-wAf">
-                            <rect key="frame" x="24" y="41" width="246" height="17"/>
+                            <rect key="frame" x="23" y="41" width="247" height="17"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Title" usesSingleLineMode="YES" id="7sP-hf-Z5h">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -35,7 +35,7 @@
                             </textFieldCell>
                         </textField>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="KYa-Yb-9f5">
-                            <rect key="frame" x="24" y="25" width="212" height="14"/>
+                            <rect key="frame" x="23" y="25" width="213" height="14"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 2 Left" usesSingleLineMode="YES" id="bc4-y0-9mN">
                                 <font key="font" metaFont="smallSystem"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
@@ -43,7 +43,7 @@
                             </textFieldCell>
                         </textField>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Cd2-5a-ZGp">
-                            <rect key="frame" x="24" y="9" width="212" height="14"/>
+                            <rect key="frame" x="23" y="9" width="213" height="14"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 3 Left" usesSingleLineMode="YES" id="WvC-6Z-80D">
                                 <font key="font" metaFont="smallSystem"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
@@ -75,12 +75,12 @@
                             </textFieldCell>
                         </textField>
                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gtl-mJ-WxD" customClass="NoDropImageView">
-                            <rect key="frame" x="0.0" y="18" width="24" height="24"/>
+                            <rect key="frame" x="4" y="24" width="17" height="12"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="24" id="4gf-kh-6FX"/>
-                                <constraint firstAttribute="width" constant="24" id="H7Q-tG-0GZ"/>
+                                <constraint firstAttribute="height" constant="12" id="4gf-kh-6FX"/>
+                                <constraint firstAttribute="width" constant="17" id="H7Q-tG-0GZ"/>
                             </constraints>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="o3E-8L-KKf"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="SpeakerTemplate" id="o3E-8L-KKf"/>
                         </imageView>
                         <customView horizontalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="NGb-9e-QcY" customClass="Button">
                             <rect key="frame" x="289" y="22" width="16" height="16"/>
@@ -93,10 +93,11 @@
                     <constraints>
                         <constraint firstItem="KYa-Yb-9f5" firstAttribute="top" secondItem="0mJ-te-wAf" secondAttribute="bottom" constant="2" id="5sF-AG-aO0"/>
                         <constraint firstItem="0mJ-te-wAf" firstAttribute="top" secondItem="G0T-eR-fVJ" secondAttribute="top" constant="2" id="Ai0-ce-Skr"/>
+                        <constraint firstItem="gtl-mJ-WxD" firstAttribute="centerY" secondItem="G0T-eR-fVJ" secondAttribute="centerY" id="BHR-vu-E89"/>
                         <constraint firstItem="NGb-9e-QcY" firstAttribute="centerY" secondItem="G0T-eR-fVJ" secondAttribute="centerY" id="Btd-Qh-HDa"/>
                         <constraint firstItem="0mJ-te-wAf" firstAttribute="left" secondItem="KYa-Yb-9f5" secondAttribute="left" id="E6H-Za-7di"/>
                         <constraint firstAttribute="right" secondItem="oJ2-ys-Q1u" secondAttribute="right" constant="7" id="PPr-Wi-lGR"/>
-                        <constraint firstItem="gtl-mJ-WxD" firstAttribute="left" secondItem="G0T-eR-fVJ" secondAttribute="left" id="WDB-ms-m2b"/>
+                        <constraint firstItem="gtl-mJ-WxD" firstAttribute="left" secondItem="G0T-eR-fVJ" secondAttribute="left" constant="4" id="WDB-ms-m2b"/>
                         <constraint firstItem="KYa-Yb-9f5" firstAttribute="baseline" secondItem="vHN-Td-1li" secondAttribute="baseline" id="WaX-Ee-Muu"/>
                         <constraint firstItem="vHN-Td-1li" firstAttribute="left" secondItem="KYa-Yb-9f5" secondAttribute="right" priority="750" constant="8" id="ZGN-XV-vzh"/>
                         <constraint firstAttribute="right" secondItem="9DW-9o-kn1" secondAttribute="right" constant="7" id="apu-Va-pa2"/>
@@ -108,9 +109,8 @@
                         <constraint firstItem="NGb-9e-QcY" firstAttribute="right" secondItem="oJ2-ys-Q1u" secondAttribute="right" id="q83-FV-E8O"/>
                         <constraint firstItem="Cd2-5a-ZGp" firstAttribute="top" secondItem="KYa-Yb-9f5" secondAttribute="bottom" constant="2" id="smP-qt-wt7"/>
                         <constraint firstItem="oJ2-ys-Q1u" firstAttribute="leading" secondItem="0mJ-te-wAf" secondAttribute="trailing" priority="750" constant="8" id="uC8-Wo-BEi"/>
-                        <constraint firstItem="gtl-mJ-WxD" firstAttribute="top" secondItem="G0T-eR-fVJ" secondAttribute="top" constant="18" id="uO8-4c-ALr"/>
                         <constraint firstItem="vHN-Td-1li" firstAttribute="baseline" secondItem="KYa-Yb-9f5" secondAttribute="baseline" id="ubL-2f-Vt1"/>
-                        <constraint firstItem="KYa-Yb-9f5" firstAttribute="left" secondItem="gtl-mJ-WxD" secondAttribute="right" constant="2" id="xpp-mh-5KS"/>
+                        <constraint firstItem="KYa-Yb-9f5" firstAttribute="left" secondItem="gtl-mJ-WxD" secondAttribute="right" constant="4" id="xpp-mh-5KS"/>
                     </constraints>
                 </customView>
             </subviews>
@@ -138,7 +138,6 @@
                 <outlet property="lineTwoRightField" destination="vHN-Td-1li" id="PFc-IX-QTx"/>
                 <outlet property="speakerImageView" destination="gtl-mJ-WxD" id="6o6-bq-HKJ"/>
                 <outlet property="speakerLeftConstraint" destination="WDB-ms-m2b" id="07a-Fc-tSY"/>
-                <outlet property="speakerTopConstraint" destination="uO8-4c-ALr" id="0pg-Wv-iu7"/>
                 <outlet property="stripeView" destination="nkF-z6-beo" id="2x6-cb-9hh"/>
                 <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
                 <outlet property="titleDurationConstraint" destination="uC8-Wo-BEi" id="ULH-w0-8dO"/>
@@ -147,4 +146,7 @@
             <point key="canvasLocation" x="624.5" y="476"/>
         </tableCellView>
     </objects>
+    <resources>
+        <image name="SpeakerTemplate" width="17" height="12"/>
+    </resources>
 </document>

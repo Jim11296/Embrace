@@ -73,8 +73,8 @@
     [[self layer] addSublayer:_activeBarLayer];
     [[self layer] addSublayer:_rightCapLayer];
 
-    _inactiveColor = [NSColor colorNamed:@"MeterInactive"];
-    _activeColor   = [NSColor colorNamed:@"MeterActive"];
+    _inactiveColor = [Theme colorNamed:@"MeterInactive"];
+    _activeColor   = [Theme colorNamed:@"MeterActive"];
     [_inactiveBarLayer setBackgroundColor:[_inactiveColor CGColor]];
 
     [self _updateFillColor];

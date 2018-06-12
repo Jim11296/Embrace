@@ -14,13 +14,7 @@ extern NSString * const EmbraceQueuedTrackPasteboardType;
 
 
 @interface TrackTableView : NSTableView
-- (void) updateInsertionPointWorkaround:(BOOL)yn;
-
-- (void) updateSelectedColorWorkaround:(BOOL)yn;
-- (void) willDrawInsertionPointAboveRow:(NSInteger)row;
-
 @property (nonatomic, readonly) NSInteger rowWithMouseInside;
-
 @end
 
 

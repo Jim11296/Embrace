@@ -44,7 +44,7 @@ static NSInteger sAutoGapMinimum = 0;
 static NSInteger sAutoGapMaximum = 16;
 
 
-@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate, EmbraceWindowListener>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate>
 
 @property (nonatomic, strong, readwrite) IBOutlet TracksController *tracksController;
 
@@ -140,7 +140,7 @@ static NSInteger sAutoGapMaximum = 16;
     [[self autoGapIcon] setTintColor:[NSColor labelColor]];
 
     // Match PlayBar inactive color (used for top separator)
-    [[self bottomSeparator] setTopBorderColor:[NSColor colorNamed:@"MeterInactive"]];
+    [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"MeterInactive"]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];

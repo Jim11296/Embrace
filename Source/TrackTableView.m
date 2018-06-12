@@ -60,50 +60,6 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
-- (void) updateSelectedColorWorkaround:(BOOL)yn
-{
-    [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
-        NSInteger numberOfColumns = [rowView numberOfColumns];
-
-        for (NSInteger i = 0; i < numberOfColumns; i++) {
-            id view = [rowView viewAtColumn:i];
-
-            if ([view respondsToSelector:@selector(setDrawsLighterSelectedBackground:)]) {
-                [view setDrawsLighterSelectedBackground:yn];
-            }
-        }
-    }];
-}
-
-
-- (void) updateInsertionPointWorkaround:(BOOL)yn
-{
-    [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
-        NSInteger numberOfColumns = [rowView numberOfColumns];
-
-        BOOL workaround = yn && (row == 0);
-
-        for (NSInteger i = 0; i < numberOfColumns; i++) {
-            id view = [rowView viewAtColumn:i];
-
-            if ([view respondsToSelector:@selector(setDrawsInsertionPointWorkaround:)]) {
-                [view setDrawsInsertionPointWorkaround:workaround];
-            }
-        }
-    }];
-}
-
-
-- (void) willDrawInsertionPointAboveRow:(NSInteger)row
-{
-    [[self selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
-        if ((index == row) || (index == (row - 1))) {
-            [self updateSelectedColorWorkaround:YES];
-        }
-    }];
-}
-
-
 - (void) draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint
 {
     if ([[NSTableView class] instancesRespondToSelector:@selector(draggingSession:willBeginAtPoint:)]) {
@@ -148,9 +104,6 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
         [super draggingExited:sender];
     }
 
-    [self updateSelectedColorWorkaround:NO];
-    [self updateInsertionPointWorkaround:NO];
-
     _dragInside = NO;
     [self _updateDrag];
 }
@@ -173,9 +126,6 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     if ([[NSTableView class] instancesRespondToSelector:@selector(concludeDragOperation:)]) {
         [super concludeDragOperation:sender];
     }
-
-    [self updateSelectedColorWorkaround:NO];
-    [self updateInsertionPointWorkaround:NO];
 
     _dragInside = NO;
     _inLocalDrag = NO;

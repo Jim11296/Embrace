@@ -12,12 +12,12 @@
 #import "EffectType.h"
 #import "BorderedView.h"
 #import "GraphicEQView.h"
+#import "Button.h"
 
 #import <AudioUnit/AUCocoaUIView.h>
 
 @interface EditGraphicEQEffectController ()
 
-@property (nonatomic, weak) IBOutlet NSToolbar *toolbar;
 @property (nonatomic, weak) IBOutlet NSVisualEffectView *backgroundView;
 @property (nonatomic, weak) IBOutlet GraphicEQView *graphicEQView;
 
@@ -45,21 +45,20 @@
     [_graphicEQView setAudioUnit:[[self effect] audioUnit]];
 
     CGSize contentSize = CGSizeMake(
-        [_graphicEQView numberOfBands] == 10 ? 397 : 772,
+        [_graphicEQView numberOfBands] == 10 ? 395 : 770,
         215
     );
 
     NSWindow *window = [self window];
     [window setContentMinSize:contentSize];
     [window setContentMaxSize:contentSize];
+    [window setMovableByWindowBackground:YES];
 
     CGRect rect = [window contentRectForFrameRect:[[self window] frame]];
     rect.size = contentSize;
     rect = [window frameRectForContentRect:rect];
 
     [window setFrame:rect display:YES animate:NO];
-
-    [[self toolbar] setShowsBaselineSeparator:NO];
 }
 
 
@@ -73,7 +72,7 @@
 
 - (IBAction) flatten:(id)sender
 {
-    [self restoreDefaultValues:sender];
+    [_graphicEQView flatten:self];
 }
 
 

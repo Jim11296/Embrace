@@ -73,16 +73,16 @@
     }
 
     if ([self isHighlighted]) {
-        start = [NSColor colorNamed:@"KnobPressed1"];
-        end   = [NSColor colorNamed:@"KnobPressed2"];
+        start = [Theme colorNamed:@"KnobPressed1"];
+        end   = [Theme colorNamed:@"KnobPressed2"];
 
     } else if (isMainWindow) {
-        start = [NSColor colorNamed:@"KnobMain1"];
-        end   = [NSColor colorNamed:@"KnobMain2"];
+        start = [Theme colorNamed:@"KnobMain1"];
+        end   = [Theme colorNamed:@"KnobMain2"];
 
     } else {
-        start = [NSColor colorNamed:@"KnobResigned1"];
-        end   = [NSColor colorNamed:@"KnobResigned2"];
+        start = [Theme colorNamed:@"KnobResigned1"];
+        end   = [Theme colorNamed:@"KnobResigned2"];
     }
 
     [shadow1 set];
@@ -118,7 +118,7 @@
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
   
-    NSColor *activeColor = [NSColor colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
+    NSColor *activeColor = [Theme colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
     [activeColor set];
 
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
@@ -126,7 +126,7 @@
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [[NSColor colorNamed:@"MeterInactive"] set];
+    [[Theme colorNamed:@"MeterInactive"] set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     
