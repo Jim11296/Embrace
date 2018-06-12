@@ -43,7 +43,7 @@
     [super windowDidLoad];
 
     [_graphicEQView setAudioUnit:[[self effect] audioUnit]];
-
+   
     CGSize contentSize = CGSizeMake(
         [_graphicEQView numberOfBands] == 10 ? 395 : 770,
         215
@@ -53,12 +53,23 @@
     [window setContentMinSize:contentSize];
     [window setContentMaxSize:contentSize];
     [window setMovableByWindowBackground:YES];
+    [window setTitleVisibility:NSWindowTitleHidden];
+    [window setTitlebarAppearsTransparent:YES];
 
-    CGRect rect = [window contentRectForFrameRect:[[self window] frame]];
+    CGRect rect = [window contentRectForFrameRect:[window frame]];
     rect.size = contentSize;
     rect = [window frameRectForContentRect:rect];
 
     [window setFrame:rect display:YES animate:NO];
+    
+    // Adjust subviews (we can't do this in Interface Builder as the NSVisualEffectView
+    // obscures the toolbar
+    //
+    [[self backgroundView] setFrame:[[window contentView] bounds]];
+
+    CGRect eqViewFrame = [[self backgroundView] bounds];
+    eqViewFrame.size.height -= 34;
+    [[self graphicEQView] setFrame:eqViewFrame];
 }
 
 

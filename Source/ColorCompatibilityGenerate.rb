@@ -5,6 +5,12 @@ VariableName = ARGV[0]
 InputPath    = ARGV[1]
 OutputPath   = ARGV[2]
 
+UsedNames = { }
+
+begin
+    File.unlink(OutputPath)
+rescue
+end
 
 def parseComponent(value)
     if value.kind_of? String then
@@ -39,7 +45,20 @@ end
 
 OutputLines = [ ]
 
+
 Find.find(InputPath) do |path|
+    if m = path.match(/\/(\w*?)\.(\w*?)\/Contents.json$/) then
+        name = m[1]
+
+        if UsedNames[name] then
+            STDERR.puts "error: Duplicate asset named \"#{name}\""
+            exit(2)
+        end
+
+        UsedNames[name] = true
+    end
+   
+
     if m = path.match(/\/(\w*?)\.colorset\/Contents.json$/) then
         root = JSON.parse(File.read(path))
         result = nil
@@ -57,7 +76,7 @@ Find.find(InputPath) do |path|
         if result then
             OutputLines.push("    { \"#{name}\", #{result} },")
         else
-            STDERR.puts "Could not find legacy color for \"#{name}\" color set"
+            STDERR.puts "error: Could not extract color for \"#{name}\" color set"
             exit(2)
         end
     end
