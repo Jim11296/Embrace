@@ -16,7 +16,7 @@
 typedef NS_ENUM(NSInteger, CurrentTrackAppearance) {
     CurrentTrackAppearanceWhite = 0,
     CurrentTrackAppearanceLight = 1,
-    CurrentTrackAppearanceDark  = 2,
+    CurrentTrackAppearanceDark  = 2
 };
 
 

@@ -23,7 +23,7 @@
 - (instancetype) initWithFrame:(NSRect)frameRect
 {
     if ((self = [super initWithFrame:frameRect])) {
-        [self _setupLevelMeter];
+        [self _commonLevelMeterInit];
     }
     
     return self;
@@ -33,14 +33,14 @@
 - (instancetype) initWithCoder:(NSCoder *)coder
 {
     if ((self = [super initWithCoder:coder])) {
-        [self _setupLevelMeter];
+        [self _commonLevelMeterInit];
     }
     
     return self;
 }
 
 
-- (void) _setupLevelMeter
+- (void) _commonLevelMeterInit
 {
     [self setWantsLayer:YES];
     [self setLayer:[CALayer layer]];

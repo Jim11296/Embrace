@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface LabelMenuView : NSControl
+@interface MenuLabelView : NSControl
 
 @property (nonatomic) NSInteger selectedTag;
 

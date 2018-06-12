@@ -32,7 +32,7 @@
 - (instancetype) initWithFrame:(NSRect)frameRect
 {
     if ((self = [super initWithFrame:frameRect])) {
-        [self _setupDangerMeter];
+        [self _commonDangerMeterInit];
     }
     
     return self;
@@ -42,14 +42,14 @@
 - (instancetype) initWithCoder:(NSCoder *)coder
 {
     if ((self = [super initWithCoder:coder])) {
-        [self _setupDangerMeter];
+        [self _commonDangerMeterInit];
     }
     
     return self;
 }
 
 
-- (void) _setupDangerMeter
+- (void) _commonDangerMeterInit
 {
     [self setWantsLayer:YES];
     [self setLayer:[CALayer layer]];

@@ -17,30 +17,25 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
 {
     if (!color) return;
 
-    CGRect gradientRect = rect;
-    CGRect solidRect    = rect;
-
-    gradientRect.size.width = length;
-    solidRect.size.width = rect.size.width - length;
-
-    CGFloat angle = 0;
-
+    CGPoint startPoint = CGPointZero;
+    CGPoint endPoint   = CGPointZero;
+    
     if (attribute == NSLayoutAttributeRight) {
-        gradientRect.origin.x += solidRect.size.width;
-        angle = 180;
+        startPoint = CGPointMake(CGRectGetMaxX(rect), 0);
+        endPoint   = CGPointMake(startPoint.x - length, 0);
 
     } else {
-        solidRect.origin.x += gradientRect.size.width;
-        angle = 0;
+        startPoint = CGPointMake(CGRectGetMinX(rect), 0);
+        endPoint   = CGPointMake(startPoint.x + length, 0);
     }
 
     [[[NSGradient alloc] initWithColors:@[
-        [color colorWithAlphaComponent:0],
-        color
-    ]] drawInRect:gradientRect angle:angle];
-
+        [NSColor clearColor],
+        [NSColor blackColor]
+    ]] drawFromPoint:startPoint toPoint:endPoint options:NSGradientDrawsAfterEndingLocation];
+    
     [color set];
-    NSRectFill(solidRect);
+    NSRectFillUsingOperation(rect, NSCompositingOperationSourceIn);
 }
 
 
@@ -54,7 +49,7 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
 - (instancetype) initWithFrame:(NSRect)frameRect
 {
     if ((self = [super initWithFrame:frameRect])) {
-        [self _commonContentBackgroundViewInit];
+        [self _commonMaskViewInit];
     }
 
     return self;
@@ -64,14 +59,14 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
 - (instancetype) initWithCoder:(NSCoder *)decoder
 {
     if ((self = [super initWithCoder:decoder])) {
-        [self _commonContentBackgroundViewInit];
+        [self _commonMaskViewInit];
     }
 
     return self;
 }
 
 
-- (void) _commonContentBackgroundViewInit
+- (void) _commonMaskViewInit
 {
     _colorView = [[MaskColorView alloc] initWithFrame:[self bounds]];
     [_colorView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
@@ -86,7 +81,10 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
     if (_material) {
         if (!_effectView) {
             _effectView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
+
             [_effectView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+            [_effectView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+            
             [self addSubview:_effectView positioned:NSWindowBelow relativeTo:_colorView];
         }
         
@@ -119,6 +117,8 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
             }
         }
 
+        [_effectView setMaterial:_material];
+        [_effectView setEmphasized:_emphasized];
         [_effectView setHidden:NO];
         [_colorView setHidden:YES];
 
@@ -134,6 +134,15 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
 {
     if (_material != material) {
         _material = material;
+        [self _update];
+    }
+}
+
+
+- (void) setEmphasized:(BOOL)emphasized
+{
+    if (_emphasized != emphasized) {
+        _emphasized = emphasized;
         [self _update];
     }
 }
@@ -169,7 +178,6 @@ static void sDrawGradient(NSRect rect, NSColor *color, NSLayoutAttribute attribu
 
 
 @end
-
 
 
 @implementation MaskColorView

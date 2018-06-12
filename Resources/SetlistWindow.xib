@@ -16,7 +16,7 @@
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
                 <outlet property="gearLabelMenuItem" destination="pYs-4n-BUC" id="5rf-Xl-jpd"/>
-                <outlet property="gearLabelMenuView" destination="hg8-Ej-WfS" id="jXy-Ur-2YB"/>
+                <outlet property="gearLabelMenuView" destination="hg8-Ej-WfS" id="Z7U-xH-sce"/>
                 <outlet property="gearLabelSeparator" destination="g95-hB-sI5" id="psg-8K-Bnh"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
                 <outlet property="levelMeter" destination="9x2-yQ-Jbg" id="V38-xr-dDB"/>
@@ -27,7 +27,7 @@
                 <outlet property="playRemainingField" destination="rvF-zp-fPR" id="SEU-xg-Wuf"/>
                 <outlet property="scrollView" destination="9qw-rj-zd3" id="IsL-0T-5Wf"/>
                 <outlet property="tableLabelMenuItem" destination="anf-f4-hIA" id="tUf-vn-9NQ"/>
-                <outlet property="tableLabelMenuView" destination="lH7-Ja-gL2" id="Vp1-DN-CP9"/>
+                <outlet property="tableLabelMenuView" destination="lH7-Ja-gL2" id="PA7-98-36c"/>
                 <outlet property="tableLabelSeparator" destination="ek2-yc-gNp" id="5WA-1k-8vF"/>
                 <outlet property="tableMenu" destination="trO-cQ-b0j" id="5ek-RH-DVO"/>
                 <outlet property="tracksController" destination="PiM-Bj-V6d" id="vGc-HC-w7B"/>
@@ -43,7 +43,7 @@
             </connections>
         </customObject>
         <userDefaultsController representsSharedInstance="YES" id="Bui-lf-GNg"/>
-        <customView id="hg8-Ej-WfS" userLabel="Label Menu (Gear Button)" customClass="LabelMenuView">
+        <customView id="hg8-Ej-WfS" userLabel="Label Menu (Gear Button)" customClass="MenuLabelView">
             <rect key="frame" x="0.0" y="0.0" width="164" height="27"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <connections>
@@ -51,7 +51,7 @@
             </connections>
             <point key="canvasLocation" x="664" y="649.5"/>
         </customView>
-        <customView id="lH7-Ja-gL2" userLabel="Label Menu (Table View)" customClass="LabelMenuView">
+        <customView id="lH7-Ja-gL2" userLabel="Label Menu (Table View)" customClass="MenuLabelView">
             <rect key="frame" x="0.0" y="0.0" width="164" height="27"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <connections>

@@ -29,7 +29,7 @@
 - (id) initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        [self _setupLayers];
+        [self _commonSimpleProgressBarInit];
     }
     
     return self;
@@ -39,14 +39,14 @@
 - (id) initWithCoder:(NSCoder *)coder
 {
     if ((self = [super initWithCoder:coder])) {
-        [self _setupLayers];
+        [self _commonSimpleProgressBarInit];
     }
 
     return self;
 }
 
 
-- (void) _setupLayers
+- (void) _commonSimpleProgressBarInit
 {
     [self setWantsLayer:YES];
     [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];

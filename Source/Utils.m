@@ -533,11 +533,6 @@ extern NSString *GetOpenKeyNotationStringForTonality(Tonality tonality)
     return nil;
 }
 
-NSColor *GetDeprecatedColor(int rgb, CGFloat alpha)
-{
-    return GetRGBColor(rgb, 1.0);
-}
-
 
 NSColor *GetRGBColor(int rgb, CGFloat alpha)
 {

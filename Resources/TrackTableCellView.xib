@@ -17,7 +17,7 @@
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="eIS-U0-iuH" customClass="BorderedView">
                     <rect key="frame" x="0.0" y="0.0" width="312" height="60"/>
                 </customView>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="nkF-z6-beo" userLabel="Stripe" customClass="StripeView">
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="nkF-z6-beo" userLabel="Stripe" customClass="TrackLabelView">
                     <rect key="frame" x="308" y="0.0" width="4" height="60"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="4" id="bwu-kj-Gmb"/>
