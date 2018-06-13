@@ -47,7 +47,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 
     if (colorName) {
         if (@available(macOS 10.14, *)) {
-            color = [Theme colorNamed:colorName];
+            color = [NSColor colorNamed:colorName];
         } else {
             color = GetCompatibilityColorNamed(colorName);
         }
