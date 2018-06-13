@@ -56,6 +56,8 @@ const CGFloat sTrackWidth      = 5;
     CGPoint   _startLocation;
     CGFloat   _draggableHeight;
     BOOL      _dragIsSlow;
+    
+    BOOL _firstEventInsideKnob;
 }
 
 
@@ -272,14 +274,25 @@ const CGFloat sTrackWidth      = 5;
     if ([firstEvent type] == NSEventTypeLeftMouseDown) {
         _selectedBandView = [self _bandViewWithWindowLocation:windowLocation insideKnob:&insideKnob];
 
+        NSInteger clickCount = [firstEvent clickCount];
+
         if (insideKnob) {
-            if ([firstEvent clickCount] > 1) {
-                [_selectedBandView setValue:0];
+            if (clickCount > 1) {
+                if (_firstEventInsideKnob) {
+                    [_selectedBandView setValue:0];
+                    sendValue();
+                    return;
+                }
+            } else {
+                _firstEventInsideKnob = YES; 
             }
-            
+           
         } else if (!insideKnob) {
-            [_selectedBandView jumpKnobToWindowLocation:windowLocation];
-            sendValue();
+            if (clickCount == 1) {
+                [_selectedBandView jumpKnobToWindowLocation:windowLocation];
+                _firstEventInsideKnob = NO;
+                sendValue();
+            }
         }
 
         [self _beginUpdateWithWindowLocation:windowLocation slow:slow];
@@ -328,7 +341,7 @@ const CGFloat sTrackWidth      = 5;
     for (GraphicEQBandView *bandView in _bandViews) {
         [bandView setSelected:NO];
     }
-    
+
     _selectedBandView = nil;
 }
 
@@ -349,7 +362,7 @@ const CGFloat sTrackWidth      = 5;
 }
 
 
-- (IBAction) flatten:(id)sender
+- (void) flatten
 {
     AudioUnitParameterID parameterID = 0;
 
