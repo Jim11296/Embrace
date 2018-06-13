@@ -61,7 +61,7 @@ static CGFloat sBorderLayerPadding = 2;
 
 - (BOOL) allowsVibrancy
 {
-    return YES;
+    return NO;
 }
 
 - (void) _setupButton
@@ -126,6 +126,7 @@ static CGFloat sBorderLayerPadding = 2;
 {
     [self _update:nil];
 }
+
 
 
 - (void) _update:(NSNotification *)note

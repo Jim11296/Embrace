@@ -110,8 +110,6 @@ const CGFloat sTrackWidth      = 5;
     CGFloat bandMinX = bounds.size.width;
     CGFloat bandMaxX = 0;
     
-    CGRect controlFrame = CGRectNull;
-    
     void (^alignLabel)(NSTextField *, GraphicEQBandView *, Float32) = ^(NSTextField *label, GraphicEQBandView *bandView, Float32 value) {
         CGRect knobRect = [bandView knobRectWithValue:value];
         knobRect = [self convertRect:knobRect fromView:bandView];
@@ -126,22 +124,28 @@ const CGFloat sTrackWidth      = 5;
         [label setFrame:topFrame];
     };
     
-    for (NSInteger i = 0; i < _numberOfBands; i++) {
-        bandRect.origin.x = firstX + (i * (_numberOfBands > 10 ? 23 : 35));
-        
-        GraphicEQBandView *bandView = [_bandViews  objectAtIndex:i];
-        NSTextField       *label    = [_labelViews objectAtIndex:i];
-        
-        [bandView setFrame:bandRect];
-        controlFrame = CGRectUnion(controlFrame, bandRect);
- 
-        bandMinX = MIN(bandMinX, CGRectGetMinX(bandRect));
-        bandMaxX = MAX(bandMaxX, CGRectGetMaxX(bandRect));
-        
-        CGRect labelRect = CGRectInset(bandRect, -32, 0);
-        labelRect.size.height = 20;
-        labelRect.origin.y = 0;
-        [label setFrame:labelRect];
+    if (_numberOfBands) {
+        CGRect controlFrame = CGRectNull;
+
+        for (NSInteger i = 0; i < _numberOfBands; i++) {
+            bandRect.origin.x = firstX + (i * (_numberOfBands > 10 ? 23 : 35));
+            
+            GraphicEQBandView *bandView = [_bandViews  objectAtIndex:i];
+            NSTextField       *label    = [_labelViews objectAtIndex:i];
+            
+            [bandView setFrame:bandRect];
+            controlFrame = CGRectUnion(controlFrame, bandRect);
+     
+            bandMinX = MIN(bandMinX, CGRectGetMinX(bandRect));
+            bandMaxX = MAX(bandMaxX, CGRectGetMaxX(bandRect));
+            
+            CGRect labelRect = CGRectInset(bandRect, -32, 0);
+            labelRect.size.height = 20;
+            labelRect.origin.y = 0;
+            [label setFrame:labelRect];
+        }
+
+        [_controlView setFrame:controlFrame];
     }
 
     // Background view and labels
@@ -166,8 +170,6 @@ const CGFloat sTrackWidth      = 5;
             alignLabel(_bottomLabel, firstBand, -1.0);
         }
     }
-    
-    [_controlView setFrame:controlFrame];
 }
 
 
