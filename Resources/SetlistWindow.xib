@@ -15,10 +15,11 @@
                 <outlet property="dangerMeter" destination="yvU-8G-5CX" id="Uvs-Zh-ps9"/>
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
-                <outlet property="gearLabelMenuItem" destination="pYs-4n-BUC" id="5rf-Xl-jpd"/>
-                <outlet property="gearLabelMenuView" destination="hg8-Ej-WfS" id="Z7U-xH-sce"/>
-                <outlet property="gearLabelSeparator" destination="g95-hB-sI5" id="psg-8K-Bnh"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
+                <outlet property="gearMenuLabelItem" destination="pYs-4n-BUC" id="iAh-1l-2Xs"/>
+                <outlet property="gearMenuLabelSeparator" destination="g95-hB-sI5" id="gex-z3-8mf"/>
+                <outlet property="gearMenuLabelView" destination="hg8-Ej-WfS" id="aJD-tP-ni0"/>
+                <outlet property="headerView" destination="rwv-u7-urb" id="tHx-NL-4WQ"/>
                 <outlet property="levelMeter" destination="9x2-yQ-Jbg" id="V38-xr-dDB"/>
                 <outlet property="mainView" destination="kmP-AQ-nuK" id="LUd-qc-cK2"/>
                 <outlet property="playBar" destination="pkk-ZT-czS" id="NoQ-ry-IUU"/>
@@ -26,10 +27,10 @@
                 <outlet property="playOffsetField" destination="Ceq-EF-rHK" id="Bhd-Pk-UD7"/>
                 <outlet property="playRemainingField" destination="rvF-zp-fPR" id="SEU-xg-Wuf"/>
                 <outlet property="scrollView" destination="9qw-rj-zd3" id="IsL-0T-5Wf"/>
-                <outlet property="tableLabelMenuItem" destination="anf-f4-hIA" id="tUf-vn-9NQ"/>
-                <outlet property="tableLabelMenuView" destination="lH7-Ja-gL2" id="PA7-98-36c"/>
-                <outlet property="tableLabelSeparator" destination="ek2-yc-gNp" id="5WA-1k-8vF"/>
                 <outlet property="tableMenu" destination="trO-cQ-b0j" id="5ek-RH-DVO"/>
+                <outlet property="tableMenuLabelItem" destination="anf-f4-hIA" id="721-EN-Eeg"/>
+                <outlet property="tableMenuLabelSeparator" destination="ek2-yc-gNp" id="zMm-23-hHx"/>
+                <outlet property="tableMenuLabelView" destination="lH7-Ja-gL2" id="Fkb-xf-0dN"/>
                 <outlet property="tracksController" destination="PiM-Bj-V6d" id="vGc-HC-w7B"/>
                 <outlet property="volumeSlider" destination="1QF-Cc-1Ru" id="aZX-Qs-S9B"/>
                 <outlet property="window" destination="gir-FZ-88a" id="eb8-8W-6sk"/>
@@ -115,15 +116,15 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="424"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <visualEffectView wantsLayer="YES" misplaced="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" id="7k7-pw-0AG" userLabel="Top Header">
+                    <customView id="rwv-u7-urb">
                         <rect key="frame" x="0.0" y="353" width="320" height="71"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <customView appearanceType="aqua" id="9x2-yQ-Jbg" customClass="LevelMeter">
+                            <customView id="9x2-yQ-Jbg" customClass="LevelMeter">
                                 <rect key="frame" x="57" y="37" width="210" height="16"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </customView>
-                            <customView appearanceType="aqua" id="pkk-ZT-czS" customClass="PlayBar">
+                            <customView id="pkk-ZT-czS" customClass="PlayBar">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </customView>
@@ -183,7 +184,7 @@
                                 </connections>
                             </customView>
                         </subviews>
-                    </visualEffectView>
+                    </customView>
                     <customView id="kmP-AQ-nuK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="355"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

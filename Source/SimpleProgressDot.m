@@ -12,6 +12,12 @@
 @implementation SimpleProgressDot
 
 
+- (BOOL) allowsVibrancy
+{
+    return YES;
+}
+
+
 - (void) drawRect:(NSRect)dirtyRect
 {
     NSColor *fillColor = _inactiveColor;

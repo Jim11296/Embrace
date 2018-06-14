@@ -8,7 +8,7 @@
 
 @interface GraphicEQView : NSView
 
-- (IBAction) flatten:(id)sender;
+- (void) flatten;
 
 - (void) reloadData;
 
