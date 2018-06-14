@@ -83,7 +83,7 @@
 
 - (IBAction) flatten:(id)sender
 {
-    [_graphicEQView flatten:self];
+    [_graphicEQView flatten];
 }
 
 

@@ -18,7 +18,6 @@
 }
 
 
-
 - (id) initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
@@ -51,6 +50,67 @@
 }
 
 
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateColors];
+}
+
+
+- (void) windowDidUpdateMain:(EmbraceWindow *)window
+{
+    [self _updateColors];
+}
+
+
+- (BOOL) allowsVibrancy
+{
+    return YES;
+}
+
+
+- (void) layout
+{
+    if (@available(macOS 10.12, *)) {
+        // Opt-out of Auto Layout
+    } else {
+        [super layout]; 
+    }
+
+    NSRect bounds = [self bounds];
+    CGFloat scale = [[self window] backingScaleFactor];
+
+    NSRect barFrame = bounds;
+    barFrame.size.height = 3;
+
+    NSRect bottomFrame = bounds;
+    bottomFrame.size.height = (1.0 / scale);
+
+    NSRect playheadFrame = bounds;
+    playheadFrame.size.height = 9;
+
+    [self _updatePlayheadX];
+    
+    NSRect leftRect, rightRect;
+    NSDivideRect(barFrame, &leftRect, &rightRect, _playheadX - barFrame.origin.x, NSMinXEdge);
+
+    playheadFrame.origin.x   = _playheadX;
+    playheadFrame.origin.y -= 2.0;
+    playheadFrame.size.width = 2;
+    
+    [_activeBar    setHidden:!_playing];
+    [_inactiveBar  setHidden:!_playing];
+    [_playhead     setHidden:!_playing];
+    [_bottomBorder setHidden: _playing];
+
+    [_activeBar    setFrame:leftRect];
+    [_inactiveBar  setFrame:rightRect];
+    [_playhead     setFrame:playheadFrame];
+    [_bottomBorder setFrame:bottomFrame];
+}
+
+
+#pragma mark - Private Methods
+
 - (void) _updateColors
 {
     BOOL isMainWindow = [[self window] isMainWindow];
@@ -66,61 +126,6 @@
 }
 
 
-- (void) viewDidChangeEffectiveAppearance
-{
-    [self _updateColors];
-}
-
-
-- (void) windowDidUpdateMain:(EmbraceWindow *)window
-{
-    [self _updateColors];
-}
-
-
-- (void) layout
-{
-    if (@available(macOS 10.12, *)) {
-        // Opt-out of Auto Layout
-    } else {
-        [super layout]; 
-    }
-
-    NSRect bounds = [self bounds];
-
-    NSRect barFrame = bounds;
-    barFrame.size.height = 3;
-
-    NSRect bottomFrame = bounds;
-    bottomFrame.size.height = 1;
-
-    NSRect playheadFrame = bounds;
-    playheadFrame.size.height = 8;
-
-    if (!_playing) {
-        barFrame.origin.y = -barFrame.size.height;
-        playheadFrame.origin.y = -playheadFrame.size.height;
-    } else {
-        playheadFrame.origin.y = -1;
-        bottomFrame.origin.y = -bottomFrame.size.height;
-    }
-
-    [self _updatePlayheadX];
-    
-    NSRect leftRect, rightRect;
-    NSDivideRect(barFrame, &leftRect, &rightRect, _playheadX - barFrame.origin.x, NSMinXEdge);
-
-    playheadFrame.origin.x   = _playheadX;
-    playheadFrame.size.width = 2;
-    
-    [_activeBar    setFrame:leftRect];
-    [_inactiveBar  setFrame:rightRect];
-    [_playhead     setFrame:playheadFrame];
-    [_bottomBorder setFrame:bottomFrame];
-}
-
-
-
 - (void) _updatePlayheadX
 {
     NSRect bounds = [self bounds];
@@ -128,6 +133,8 @@
     _playheadX = round((bounds.size.width - 2) * _percentage * scale) / scale;
 }
 
+
+#pragma mark - Accessors
 
 - (void) setPercentage:(float)percentage
 {

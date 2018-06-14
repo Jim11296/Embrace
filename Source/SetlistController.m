@@ -69,6 +69,7 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
 
+@property (nonatomic, weak)   IBOutlet NSView *headerView;
 @property (nonatomic, weak)   IBOutlet NSView *mainView;
 @property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
 @property (nonatomic, weak)   IBOutlet BorderedView *bottomSeparator;
@@ -136,6 +137,19 @@ static NSInteger sAutoGapMaximum = 16;
     [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
     
     [[self autoGapIcon] setTintColor:[NSColor labelColor]];
+
+    NSView *headerView = [self headerView];
+
+    CGRect headerEffectFrame = [headerView bounds];
+    headerEffectFrame.origin.y -= 1.0;
+    headerEffectFrame.size.height += 1.0;
+    
+    NSVisualEffectView *effectView = [[NSVisualEffectView alloc] initWithFrame:headerEffectFrame];
+    [effectView setMaterial:NSVisualEffectMaterialTitlebar];
+    [effectView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+    [effectView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+
+    [headerView addSubview:effectView positioned:NSWindowBelow relativeTo:[[headerView subviews] firstObject]];
 
     // Match PlayBar inactive color (used for top separator)
     [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"MeterInactive"]];

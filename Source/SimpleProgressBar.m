@@ -142,6 +142,12 @@
 }
 
 
+- (BOOL) allowsVibrancy
+{
+    return YES;
+}
+
+
 #pragma mark - CALayer Delegate
 
 - (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
