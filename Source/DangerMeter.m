@@ -155,8 +155,8 @@
     BOOL isMainWindow = [[self window] isMainWindow];
 
     NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
-    NSColor *filledColor   = nil;
     NSColor *redColor      = [Theme colorNamed:@"MeterRed"];
+    NSColor *filledColor   = nil;
 
     if (isMainWindow) {
         filledColor = [Theme colorNamed:@"MeterFilledMain"];

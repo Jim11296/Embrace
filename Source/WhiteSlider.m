@@ -75,7 +75,6 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
         NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
         [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:rect] angle:90];
     }
-
 }
 
 
