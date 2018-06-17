@@ -1082,7 +1082,6 @@
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07D187785BC00C85770 /* Resources */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
-				55708CBB18B979920059110C /* Sign Crash Pad */,
 				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
 				55CD7AE31F8B11920047F073 /* Fix Icon for Trial */,
 				558DC07C187785BC00C85770 /* Frameworks */,
@@ -1111,8 +1110,13 @@
 				TargetAttributes = {
 					5514B63E1CDEE64200F238B7 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = XXXXXXXXXX;
+					};
+					5559E61118DFD42500D61019 = {
+						DevelopmentTeam = XXXXXXXXXX;
 					};
 					558DC07E187785BC00C85770 = {
+						DevelopmentTeam = XXXXXXXXXX;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -1229,30 +1233,13 @@
 			shellPath = /bin/sh;
 			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi\n";
 		};
-		55708CBB18B979920059110C /* Sign Crash Pad */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(PROJECT_DIR)/Resources/CrashPad.entitlements",
-				"$(BUILT_PRODUCTS_DIR)/$(SHARED_SUPPORT_FOLDER_PATH)/Crash Pad.app/Contents/MacOS/Crash Pad",
-			);
-			name = "Sign Crash Pad";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "APP=\"${BUILT_PRODUCTS_DIR}\"/\"${SHARED_SUPPORT_FOLDER_PATH}/Crash Pad.app\"\nEXECUTABLE=\"$APP/Contents/MacOS/Crash Pad\"\n\n# Link Embrace.icns before signing\ncd \"$APP/Contents/Resources/\"\nln -f -s \"../../../../Resources/Embrace.icns\"\n\n\nif [ -n \"$CODE_SIGN_IDENTITY\" ]; then\n    codesign --entitlements \"${PROJECT_DIR}/Resources/CrashPad.entitlements\" --verbose --force --sign \"$CODE_SIGN_IDENTITY\" \"$EXECUTABLE\"\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		557ECCB520CE260F0042FDF6 /* Generate Compatibility Colors */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Resources/Assets.xcassets",
+				"$(SRCROOT)/Resources/Assets.xcassets/**",
 				"$(SRCROOT)/Source/ColorCompatibilityGenerate.rb",
 			);
 			name = "Generate Compatibility Colors";
@@ -1535,7 +1522,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Ricci Adams (XXXXXXXXXX)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1552,7 +1538,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Debug";
@@ -1576,7 +1561,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Profile";
@@ -1600,7 +1584,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Release";
@@ -1632,8 +1615,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
-				DEVELOPMENT_TEAM = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Debug;
@@ -1642,7 +1623,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Profile;
