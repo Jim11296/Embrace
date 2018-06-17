@@ -12,19 +12,12 @@
 
 @property (nonatomic) NSColor *backgroundColor;
 
-@property (nonatomic) NSColor *backgroundGradientTopColor;
-@property (nonatomic) NSColor *backgroundGradientBottomColor;
-
 @property (nonatomic) NSColor *topBorderColor;
 @property (nonatomic) CGFloat  topBorderHeight;
-@property (nonatomic) CGFloat  topBorderLeftInset;
-@property (nonatomic) CGFloat  topBorderRightInset;
 @property (nonatomic) NSColor *topDashBackgroundColor;
 
 @property (nonatomic) NSColor *bottomBorderColor;
 @property (nonatomic) CGFloat  bottomBorderHeight;
-@property (nonatomic) CGFloat  bottomBorderLeftInset;
-@property (nonatomic) CGFloat  bottomBorderRightInset;
 @property (nonatomic) NSColor *bottomDashBackgroundColor;
 
 @end

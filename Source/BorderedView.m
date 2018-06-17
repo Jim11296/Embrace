@@ -12,20 +12,24 @@
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-    CGFloat scale = [[self window] backingScaleFactor];
-    NSRect bounds = [self bounds];
+    CGFloat scale  = [[self window] backingScaleFactor];
+    CGRect  bounds = [self bounds];
+
+    CGFloat onePixel = scale > 1 ? 0.5 : 1;
+
+    CGRect insetBounds = bounds;
+
+    // Dark Aqua adds a translucent bezel, pull in by one pixel to match
+    if (@available(macOS 10.14, *)) {
+        if (IsAppearanceDarkAqua(self) && (scale > 1)) {
+            insetBounds = CGRectInset(bounds, onePixel, 0);
+        }
+    }
 
     if (_backgroundColor) {
         [_backgroundColor set];
         NSRectFill(bounds);
     }
-
-    if (_backgroundGradientTopColor || _backgroundGradientBottomColor) {
-        NSGradient *g = [[NSGradient alloc] initWithStartingColor:_backgroundGradientTopColor endingColor:_backgroundGradientBottomColor];
-        [g drawInRect:bounds angle:-90];
-    }
-
-    CGFloat onePixel = scale > 1 ? 0.5 : 1;
 
     void (^fillRect)(NSRect, NSColor *, NSColor *) = ^(NSRect rect, NSColor *lineColor, NSColor *dashBackgroundColor) {
         if (dashBackgroundColor) {
@@ -37,7 +41,7 @@
             NSRect dashRect = rect;
             dashRect.size.width = 2;
 
-            for (CGFloat x = 0; x < rect.size.width; ) {
+            for (CGFloat x = rect.origin.x; x < rect.size.width; ) {
                 dashRect.origin.x = x;
 
                 if (scale > 1) {
@@ -56,23 +60,30 @@
     };
     
     if (_topBorderColor) {
+        NSRect  rect   = bounds;
         CGFloat height = _topBorderHeight;
-        if (height <= 0) height = onePixel;
-        
-        NSRect rect = NSMakeRect(0, bounds.size.height - height, bounds.size.width, height);
-        rect.size.width -= _topBorderLeftInset + _topBorderRightInset;
-        rect.origin.x += _topBorderLeftInset;
+
+        if (height <= 0) {
+            height = onePixel;
+            rect = insetBounds;
+        }
+
+        rect.origin.y = bounds.size.height - height;
+        rect.size.height = height;
         
         fillRect(rect, _topBorderColor, _topDashBackgroundColor);
     }
     
     if (_bottomBorderColor) {
+        NSRect  rect   = bounds;
         CGFloat height = _bottomBorderHeight;
-        if (height <= 0) height = onePixel;
 
-        NSRect rect = NSMakeRect(0, 0, bounds.size.width, height);
-        rect.size.width -= _bottomBorderLeftInset + _bottomBorderRightInset;
-        rect.origin.x += _bottomBorderLeftInset;
+        if (height <= 0) {
+            height = onePixel;
+            rect = insetBounds;
+        }
+
+        rect.size.height = height;
 
         fillRect(rect, _bottomBorderColor, _bottomDashBackgroundColor);
     }
@@ -85,24 +96,6 @@
 {
     if (_backgroundColor != backgroundColor) {
         _backgroundColor = backgroundColor;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
-- (void) setBackgroundGradientBottomColor:(NSColor *)backgroundGradientBottomColor
-{
-    if (_backgroundGradientBottomColor != backgroundGradientBottomColor) {
-        _backgroundGradientBottomColor = backgroundGradientBottomColor;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
-- (void) setBackgroundGradientTopColor:(NSColor *)backgroundGradientTopColor
-{
-    if (_backgroundGradientTopColor != backgroundGradientTopColor) {
-        _backgroundGradientTopColor = backgroundGradientTopColor;
         [self setNeedsDisplay:YES];
     }
 }
@@ -126,24 +119,6 @@
 }
 
 
-- (void) setTopBorderLeftInset:(CGFloat)topBorderLeftInset
-{
-    if (_topBorderLeftInset != topBorderLeftInset) {
-        _topBorderLeftInset = topBorderLeftInset;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
-- (void) setTopBorderRightInset:(CGFloat)topBorderRightInset
-{
-    if (_topBorderRightInset != topBorderRightInset) {
-        _topBorderRightInset = topBorderRightInset;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
 - (void) setBottomBorderColor:(NSColor *)bottomBorderColor
 {
     if (_bottomBorderColor != bottomBorderColor) {
@@ -157,24 +132,6 @@
 {
     if (_bottomBorderHeight != bottomBorderHeight) {
         _bottomBorderHeight = bottomBorderHeight;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
-- (void) setBottomBorderLeftInset:(CGFloat)bottomBorderLeftInset
-{
-    if (_bottomBorderLeftInset != bottomBorderLeftInset) {
-        _bottomBorderLeftInset = bottomBorderLeftInset;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
-- (void) setBottomBorderRightInset:(CGFloat)bottomBorderRightInset
-{
-    if (_bottomBorderRightInset != bottomBorderRightInset) {
-        _bottomBorderRightInset = bottomBorderRightInset;
         [self setNeedsDisplay:YES];
     }
 }

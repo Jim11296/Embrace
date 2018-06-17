@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class Player;
 
 @interface DangerMeter : NSView <EmbraceWindowListener>
 

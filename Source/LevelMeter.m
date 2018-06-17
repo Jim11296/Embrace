@@ -7,18 +7,27 @@
 //
 
 #import "LevelMeter.h"
-#import "SimpleProgressDot.h"
 #import "SimpleProgressBar.h"
+
+@interface LevelMeterPeakDot : NSView
+@end
+
+@interface LevelMeterLimiterDot : NSView
+@property (nonatomic, getter=isOn) BOOL on;
+@end
 
 
 @implementation LevelMeter {
-    SimpleProgressBar *_leftChannelBar;
-    SimpleProgressBar *_rightChannelBar;
-    SimpleProgressDot *_leftPeakDot;
-    SimpleProgressDot *_rightPeakDot;
-    SimpleProgressDot *_leftLimiterDot;
-    SimpleProgressDot *_rightLimiterDot;
+    SimpleProgressBar    *_leftChannelBar;
+    SimpleProgressBar    *_rightChannelBar;
+
+    LevelMeterPeakDot    *_leftPeakDot;
+    LevelMeterPeakDot    *_rightPeakDot;
+
+    LevelMeterLimiterDot *_leftLimiterDot;
+    LevelMeterLimiterDot *_rightLimiterDot;
 }
+
 
 - (instancetype) initWithFrame:(NSRect)frameRect
 {
@@ -52,28 +61,14 @@
     _leftChannelBar  = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
     _rightChannelBar = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
     
-    _leftPeakDot     = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
-    _rightPeakDot    = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+    _leftPeakDot     = [[LevelMeterPeakDot alloc] initWithFrame:CGRectZero];
+    _rightPeakDot    = [[LevelMeterPeakDot alloc] initWithFrame:CGRectZero];
 
-    _leftLimiterDot  = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
-    _rightLimiterDot = [[SimpleProgressDot alloc] initWithFrame:CGRectZero];
+    _leftLimiterDot  = [[LevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
+    _rightLimiterDot = [[LevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
 
-    NSColor *meterPeakColor     = [Theme colorNamed:@"MeterPeak"];
-    NSColor *meterDotColor      = [Theme colorNamed:@"MeterDot"];
-    NSColor *meterInactiveColor = [Theme colorNamed:@"MeterInactive"];
-
-    [_leftChannelBar  setInactiveColor:meterInactiveColor];
-    [_rightChannelBar setInactiveColor:meterInactiveColor];
-
-    [_leftPeakDot  setInactiveColor:meterDotColor];
-    [_rightPeakDot setInactiveColor:meterDotColor];
     [_leftPeakDot  setHidden:YES];
     [_rightPeakDot setHidden:YES];
-
-    [_leftLimiterDot  setInactiveColor:meterInactiveColor];
-    [_rightLimiterDot setInactiveColor:meterInactiveColor];
-    [_leftLimiterDot  setTintColor:meterPeakColor];
-    [_rightLimiterDot setTintColor:meterPeakColor];
     
     [self addSubview:_leftChannelBar];
     [self addSubview:_rightChannelBar];
@@ -153,11 +148,8 @@
 
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
-    BOOL     isMainWindow = [[self window] isMainWindow];
-    NSColor *activeColor  = [Theme colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
-
-    [_leftChannelBar  setActiveColor:activeColor];
-    [_rightChannelBar setActiveColor:activeColor]; 
+    [_leftChannelBar  windowDidUpdateMain:window];
+    [_rightChannelBar windowDidUpdateMain:window];
 }
 
 
@@ -195,9 +187,9 @@
         [_leftChannelBar  setPercentage:leftPercent];
         [_rightChannelBar setPercentage:rightPercent];
     
-        [_leftLimiterDot  setTintLevel:(_limiterActive ? 1.0 : 0.0)];
-        [_rightLimiterDot setTintLevel:(_limiterActive ? 1.0 : 0.0)];
-        
+        [_leftLimiterDot  setOn:_limiterActive];
+        [_rightLimiterDot setOn:_limiterActive];
+
         [self setNeedsLayout:YES];
     }
 }
@@ -213,12 +205,62 @@
         [_leftChannelBar  setPercentage:0];
         [_rightChannelBar setPercentage:0];
         
-        [_leftLimiterDot  setTintLevel:0];
-        [_rightLimiterDot setTintLevel:0];
-
         [_leftPeakDot  setHidden:!metering];
         [_rightPeakDot setHidden:!metering];
-        
+
+        [_leftLimiterDot  setOn:NO];
+        [_rightLimiterDot setOn:NO];
+    }
+}
+
+
+@end
+
+
+@implementation LevelMeterPeakDot
+
+
+- (void) drawRect:(CGRect)rect
+{
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+    
+    [[Theme colorNamed:@"MeterMarker"] set];
+    CGContextFillEllipseInRect(context, [self bounds]);
+}
+
+
+@end
+
+
+@implementation LevelMeterLimiterDot
+
+
+- (void) drawRect:(CGRect)rect
+{
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+
+    if (_on) {
+        [[Theme colorNamed:@"MeterRed"] set];
+
+    } else {
+        NSColor *color = [Theme colorNamed:@"MeterUnfilled"];
+
+        if (IsAppearanceDarkAqua(self)) {
+            CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+            color = GetColorWithMultipliedAlpha(color, alpha);
+        }
+
+        [color set];
+    }
+    
+    CGContextFillEllipseInRect(context, [self bounds]);
+}
+
+
+- (void) setOn:(BOOL)on
+{
+    if (_on != on) {
+        _on = on;
         [self setNeedsDisplay:YES];
     }
 }

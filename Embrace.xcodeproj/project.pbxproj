@@ -86,7 +86,6 @@
 		55717BF5187EA65400213213 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* Button.m */; };
 		55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* WhiteSlider.m */; };
 		5572C17E1F00B743007BE284 /* SimpleProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SimpleProgressBar.m */; };
-		5572C1811F00BC2F007BE284 /* SimpleProgressDot.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */; };
 		55779D3A20C77DD900DB660F /* Crash Pad.app in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 5559E61218DFD42500D61019 /* Crash Pad.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		55779D6020CA0ADA00DB660F /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */; };
 		55779D6120CA0B2500DB660F /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */; };
@@ -336,8 +335,6 @@
 		55717BF7187EAB8C00213213 /* WhiteSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WhiteSlider.m; path = Source/WhiteSlider.m; sourceTree = SOURCE_ROOT; };
 		5572C17C1F00B743007BE284 /* SimpleProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleProgressBar.h; path = Source/SimpleProgressBar.h; sourceTree = SOURCE_ROOT; };
 		5572C17D1F00B743007BE284 /* SimpleProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressBar.m; path = Source/SimpleProgressBar.m; sourceTree = SOURCE_ROOT; };
-		5572C17F1F00BC2F007BE284 /* SimpleProgressDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleProgressDot.h; path = Source/SimpleProgressDot.h; sourceTree = SOURCE_ROOT; };
-		5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressDot.m; path = Source/SimpleProgressDot.m; sourceTree = SOURCE_ROOT; };
 		55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iTunesLibrary.framework; path = System/Library/Frameworks/iTunesLibrary.framework; sourceTree = SDKROOT; };
 		557ABAB41B68D48C006F69D9 /* TrackLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackLabelView.h; path = Source/TrackLabelView.h; sourceTree = SOURCE_ROOT; };
 		557ABAB51B68D48C006F69D9 /* TrackLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackLabelView.m; path = Source/TrackLabelView.m; sourceTree = SOURCE_ROOT; };
@@ -952,8 +949,6 @@
 				55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */,
 				55ADE93318815EA8008DC245 /* PlayBar.h */,
 				55ADE93418815EA8008DC245 /* PlayBar.m */,
-				5572C17F1F00BC2F007BE284 /* SimpleProgressDot.h */,
-				5572C1801F00BC2F007BE284 /* SimpleProgressDot.m */,
 				5572C17C1F00B743007BE284 /* SimpleProgressBar.h */,
 				5572C17D1F00B743007BE284 /* SimpleProgressBar.m */,
 				556ACE2D187B901400AED4BC /* WaveformView.h */,
@@ -1333,7 +1328,6 @@
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
-				5572C1811F00BC2F007BE284 /* SimpleProgressDot.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,

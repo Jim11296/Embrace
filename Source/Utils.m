@@ -622,3 +622,27 @@ NSString *GetApplicationSupportDirectory()
     NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleExecutable"];
     return sFindOrCreateDirectory(NSApplicationSupportDirectory, NSUserDomainMask, name, NULL);
 }
+
+
+BOOL IsAppearanceDarkAqua(NSView *view)
+{
+    if (@available(macOS 10.14, *)) {
+        NSAppearance *effectiveAppearance =[view effectiveAppearance];
+        NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
+       
+        NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
+
+        return [bestMatch isEqualToString:NSAppearanceNameDarkAqua];
+
+    } else {
+        return NO;
+    }
+}
+
+
+extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat inAlpha)
+{
+    CGFloat newAlpha = [inColor alphaComponent] * inAlpha;
+    return [inColor colorWithAlphaComponent:newAlpha];
+}
+
