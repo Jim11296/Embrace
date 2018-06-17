@@ -10,8 +10,8 @@
 
 
 @implementation SimpleProgressBar {
-    NSColor *_unfilledColor;
-    NSColor *_filledColor;
+    CGColorRef _unfilledColor;
+    CGColorRef _filledColor;
 }
 
 
@@ -32,6 +32,16 @@
     }
 
     return self;
+}
+
+
+- (void) dealloc
+{
+    CGColorRelease(_unfilledColor);
+    _unfilledColor = NULL;
+
+    CGColorRelease(_filledColor);
+    _filledColor = NULL;
 }
 
 
@@ -59,11 +69,21 @@
     NSRect leftRect, rightRect;
     NSDivideRect(bounds, &leftRect, &rightRect, filledWidth, NSMinXEdge);
 
-    [_filledColor set];
-    CGContextFillRect(context, leftRect);
+    if (_filledColor) {
+        CGContextSetFillColorWithColor(context, _filledColor);
+        CGContextFillRect(context, leftRect);
+    }
 
-    [_unfilledColor set];
-    CGContextFillRect(context, rightRect);
+    if (_unfilledColor) {
+        CGContextSetFillColorWithColor(context, _unfilledColor);
+        CGContextFillRect(context, rightRect);
+    }
+}
+
+
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateColors];
 }
 
 
@@ -91,8 +111,11 @@
         filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
     }
     
-    _unfilledColor = unfilledColor;
-    _filledColor   = filledColor;
+    CGColorRelease(_unfilledColor);
+    _unfilledColor = CGColorRetain([unfilledColor CGColor]);
+
+    CGColorRelease(_filledColor);
+    _filledColor = CGColorRetain([filledColor CGColor]);
 
     [self setNeedsDisplay:YES];
 }
