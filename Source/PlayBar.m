@@ -7,12 +7,17 @@
 //
 
 #import "PlayBar.h"
+#import "SimpleProgressBar.h"
+#import "BorderedView.h"
+
+@interface PlayBarPlayhead : NSView
+@end
+
 
 @implementation PlayBar {
-    CALayer *_playhead;
-    CALayer *_inactiveBar;
-    CALayer *_activeBar;
-    CALayer *_bottomBorder;
+    PlayBarPlayhead   *_playhead;
+    BorderedView      *_borderedView;
+    SimpleProgressBar *_progressBar;
     
     CGFloat  _playheadX;
 }
@@ -21,37 +26,40 @@
 - (id) initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        _playhead     = [CALayer layer];
-        _inactiveBar  = [CALayer layer];
-        _activeBar    = [CALayer layer];
-        _bottomBorder = [CALayer layer];
-
-        [_playhead     setDelegate:self];
-        [_inactiveBar  setDelegate:self];
-        [_activeBar    setDelegate:self];
-        [_bottomBorder setDelegate:self];
-
-        [_playhead setCornerRadius:1];
-
-        [self setWantsLayer:YES];
-        [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
-        [[self layer] setMasksToBounds:YES];
-        [self setAutoresizesSubviews:NO];
-        
-        [[self layer] addSublayer:_bottomBorder];
-        [[self layer] addSublayer:_inactiveBar];
-        [[self layer] addSublayer:_activeBar];
-        [[self layer] addSublayer:_playhead];
-        
-        [self _updateColors];
+        [self _commonPlayBarInit];
     }
     
     return self;
 }
 
 
-- (void) viewDidChangeEffectiveAppearance
+- (id) initWithCoder:(NSCoder *)decoder
 {
+    if ((self = [super initWithCoder:decoder])) {
+        [self _commonPlayBarInit];
+    }
+    
+    return self;
+}
+
+
+- (void) _commonPlayBarInit
+{
+    _progressBar = [[SimpleProgressBar alloc] initWithFrame:[self bounds]];
+    [_progressBar setRounded:NO];
+
+    _playhead     = [[PlayBarPlayhead alloc] initWithFrame:CGRectZero];
+    _borderedView = [[BorderedView alloc] initWithFrame:CGRectZero];
+
+    [_borderedView setBottomBorderHeight:0];
+    [_borderedView setBottomBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+    
+    [self setAutoresizesSubviews:NO];
+    
+    [self addSubview:_borderedView];
+    [self addSubview:_progressBar];
+    [self addSubview:_playhead];
+        
     [self _updateColors];
 }
 
@@ -62,9 +70,9 @@
 }
 
 
-- (BOOL) allowsVibrancy
+- (void) viewDidChangeEffectiveAppearance
 {
-    return YES;
+    [self _updateColors];
 }
 
 
@@ -86,7 +94,7 @@
     bottomFrame.size.height = (1.0 / scale);
 
     NSRect playheadFrame = bounds;
-    playheadFrame.size.height = 9;
+    playheadFrame.size.height = 7;
 
     [self _updatePlayheadX];
     
@@ -94,35 +102,29 @@
     NSDivideRect(barFrame, &leftRect, &rightRect, _playheadX - barFrame.origin.x, NSMinXEdge);
 
     playheadFrame.origin.x   = _playheadX;
-    playheadFrame.origin.y -= 2.0;
+    playheadFrame.origin.y   = 0;
     playheadFrame.size.width = 2;
     
-    [_activeBar    setHidden:!_playing];
-    [_inactiveBar  setHidden:!_playing];
+    [_progressBar  setHidden:!_playing];
     [_playhead     setHidden:!_playing];
-    [_bottomBorder setHidden: _playing];
+    [_borderedView setHidden: _playing];
 
-    [_activeBar    setFrame:leftRect];
-    [_inactiveBar  setFrame:rightRect];
+    [_progressBar  setFrame:barFrame];
     [_playhead     setFrame:playheadFrame];
-    [_bottomBorder setFrame:bottomFrame];
+    [_borderedView setFrame:bottomFrame];
 }
+
 
 
 #pragma mark - Private Methods
 
 - (void) _updateColors
 {
-    BOOL isMainWindow = [[self window] isMainWindow];
-
-    NSColor *activeColor   = [Theme colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
-    NSColor *inactiveColor = [Theme colorNamed:@"MeterInactive"];
-    NSColor *dotColor      = [Theme colorNamed:@"MeterDot"];
-
-    [_activeBar    setBackgroundColor:[activeColor   CGColor]];
-    [_inactiveBar  setBackgroundColor:[inactiveColor CGColor]];
-    [_playhead     setBackgroundColor:[dotColor      CGColor]];
-    [_bottomBorder setBackgroundColor:[inactiveColor CGColor]];
+//    NSColor *inactiveColor = [Theme colorNamed:@"MeterUnfilled"];
+//    NSColor *dotColor      = [Theme colorNamed:@"MeterMarker"];
+//
+//
+//    [_bottomBorder setBackgroundColor:[inactiveColor CGColor]];
 }
 
 
@@ -142,6 +144,8 @@
         if (isnan(percentage)) percentage = 0;
         _percentage = percentage;
 
+        [_progressBar setPercentage:percentage];
+
         CGFloat oldPlayheadX = _playheadX;
         [self _updatePlayheadX];
         
@@ -160,5 +164,24 @@
     }
 }
 
+
+@end
+
+
+@implementation PlayBarPlayhead
+
+- (void) drawRect:(NSRect)dirtyRect
+{
+    NSColor *markerColor = [Theme colorNamed:@"MeterMarker"];
+
+    CGRect frame = [self bounds];
+
+    frame.origin.y    -= 2.0;
+    frame.size.height += 2.0;
+
+    [markerColor set];
+    [[NSBezierPath bezierPathWithRoundedRect:frame xRadius:1 yRadius:1] fill];
+
+}
 
 @end

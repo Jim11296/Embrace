@@ -13,7 +13,6 @@
 @interface Theme : NSObject
 
 + (NSColor *) colorNamed:(NSColorName)colorName;
-+ (NSShadow *) shadowNamed:(NSString *)shadowName;
 
 @end
 

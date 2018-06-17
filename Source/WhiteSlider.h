@@ -12,6 +12,8 @@
 
 @interface WhiteSlider : NSSlider <EmbraceWindowListener>
 
++ (void) drawKnobWithView:(NSView *)view rect:(CGRect)rect highlighted:(BOOL)highlighted;
+
 @property (nonatomic, weak) id<WhiteSliderDragDelegate> dragDelegate;
 @property (readonly) NSRect knobRect;
 

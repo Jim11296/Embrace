@@ -152,7 +152,7 @@ static NSInteger sAutoGapMaximum = 16;
     [headerView addSubview:effectView positioned:NSWindowBelow relativeTo:[[headerView subviews] firstObject]];
 
     // Match PlayBar inactive color (used for top separator)
-    [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"MeterInactive"]];
+    [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];

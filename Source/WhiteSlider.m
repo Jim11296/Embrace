@@ -9,7 +9,74 @@
 #import "WhiteSlider.h"
 
 
+static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
+{
+    NSShadow *shadow = [[NSShadow alloc] init];
+    
+    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:alpha]];
+    [shadow setShadowOffset:NSMakeSize(0, -yOffset)];
+    [shadow setShadowBlurRadius:blurRadius];
+
+    return shadow;
+}
+
+
 @implementation WhiteSlider
+
++ (void) drawKnobWithView:(NSView *)view rect:(CGRect)rect highlighted:(BOOL)highlighted
+{
+    BOOL isMainWindow = [[view window] isMainWindow];
+    
+    NSColor *start = nil;
+    NSColor *end   = nil;
+    
+    NSShadow *shadow1 = nil;
+    NSShadow *shadow2 = nil;
+    
+    if (IsAppearanceDarkAqua(view)) {
+        if (isMainWindow) {
+            shadow1 = sShadow( 0.6, 1, 2 );
+            shadow2 = sShadow( 0.8, 0, 1 );
+        } else {
+            shadow1 = sShadow( 0.9, 0, 1 );
+        }
+
+    } else {
+        if (isMainWindow) {
+            shadow1 = sShadow( 0.4, 1, 2 );
+            shadow2 = sShadow( 0.6, 0, 1 );
+        } else {
+            shadow1 = sShadow( 0.45, 0, 1 );
+        }
+
+    }
+
+    if (highlighted) {
+        start = [Theme colorNamed:@"KnobPressed1"];
+        end   = [Theme colorNamed:@"KnobPressed2"];
+
+    } else if (isMainWindow) {
+        start = [Theme colorNamed:@"KnobMain1"];
+        end   = [Theme colorNamed:@"KnobMain2"];
+
+    } else {
+        start = [Theme colorNamed:@"KnobResigned1"];
+        end   = [Theme colorNamed:@"KnobResigned2"];
+    }
+
+    [shadow1 set];
+    [start set];
+
+    [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
+    
+    if (shadow2 && start && end) {
+        [shadow2 set];
+
+        NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
+        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:rect] angle:90];
+    }
+
+}
 
 
 - (void) mouseDown:(NSEvent *)theEvent
@@ -45,6 +112,7 @@
     NSRect _cellFrame;
 }
 
+
 - (NSRect) knobRectFlipped:(BOOL)flipped
 {
     NSRect result = [super knobRectFlipped:flipped];
@@ -57,45 +125,7 @@
 
 - (void) drawKnob:(NSRect)knobRect
 {
-    BOOL isMainWindow = [[[self controlView] window] isMainWindow];
-    
-    NSColor *start = nil;
-    NSColor *end   = nil;
-    
-    NSShadow *shadow1 = nil;
-    NSShadow *shadow2 = nil;
-        
-    if (isMainWindow) {
-        shadow1 = [Theme shadowNamed:@"KnobMain1"];
-        shadow2 = [Theme shadowNamed:@"KnobMain2"];
-    } else {
-        shadow1 = [Theme shadowNamed:@"Knob"];
-    }
-
-    if ([self isHighlighted]) {
-        start = [Theme colorNamed:@"KnobPressed1"];
-        end   = [Theme colorNamed:@"KnobPressed2"];
-
-    } else if (isMainWindow) {
-        start = [Theme colorNamed:@"KnobMain1"];
-        end   = [Theme colorNamed:@"KnobMain2"];
-
-    } else {
-        start = [Theme colorNamed:@"KnobResigned1"];
-        end   = [Theme colorNamed:@"KnobResigned2"];
-    }
-
-    [shadow1 set];
-    [start set];
-
-    [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
-    
-    if (shadow2 && start && end) {
-        [shadow2 set];
-
-        NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
-        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:knobRect] angle:90];
-    }
+    [WhiteSlider drawKnobWithView:[self controlView] rect:knobRect highlighted:[self isHighlighted]];
 }
 
 
@@ -118,7 +148,7 @@
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
   
-    NSColor *activeColor = [Theme colorNamed:isMainWindow ? @"MeterActiveMain" : @"MeterActive"];
+    NSColor *activeColor = [Theme colorNamed:isMainWindow ? @"MeterFilledMain" : @"MeterFilled"];
     [activeColor set];
 
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
@@ -126,7 +156,7 @@
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [[Theme colorNamed:@"MeterInactive"] set];
+    [[Theme colorNamed:@"MeterUnfilled"] set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     
@@ -141,7 +171,22 @@
     NSInteger numberOfTickMarks = [self numberOfTickMarks];
     [self setNumberOfTickMarks:0];
     
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+    BOOL inTransparencyLayer = NO;
+
+    if (IsAppearanceDarkAqua(controlView)) {
+        CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+        
+        CGContextSetAlpha(context, alpha);
+        CGContextBeginTransparencyLayer(context, NULL);
+        inTransparencyLayer = YES;
+    }
+    
     [super drawWithFrame:cellFrame inView:controlView];
+    
+    if (inTransparencyLayer) {
+        CGContextEndTransparencyLayer(context);
+    }
     
     [self setNumberOfTickMarks:numberOfTickMarks];
 }

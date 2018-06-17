@@ -6,13 +6,10 @@
 //  Copyright (c) 2017 Ricci Adams. All rights reserved.
 //
 
-@interface SimpleProgressBar : NSView
-
-@property (nonatomic) NSColor *inactiveColor;
-@property (nonatomic) NSColor *activeColor;
-@property (nonatomic) NSColor *tintColor;
+@interface SimpleProgressBar : NSView <EmbraceWindowListener>
 
 @property (nonatomic) CGFloat percentage;
-@property (nonatomic) CGFloat tintLevel;
+
+@property (nonatomic, getter=isRounded) BOOL rounded;
 
 @end

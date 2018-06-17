@@ -7,6 +7,7 @@
 //
 
 #import "GraphicEQView.h"
+#import "WhiteSlider.h"
 
 
 const CGFloat sKnobHeight      = 15;
@@ -85,7 +86,6 @@ const CGFloat sTrackWidth      = 5;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 
 - (BOOL) wantsUpdateLayer
@@ -557,6 +557,12 @@ const CGFloat sTrackWidth      = 5;
 }
 
 
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self setNeedsDisplay:YES];
+}
+
+
 - (BOOL) isWindowLocationInsideKnob:(CGPoint)windowLocation
 {
     CGPoint point = [self convertPoint:windowLocation fromView:nil];
@@ -602,45 +608,7 @@ const CGFloat sTrackWidth      = 5;
     // Draw knob
     {
         CGRect knobRect = [self knobRectWithValue:_value];
-        BOOL isMainWindow = [[self window] isMainWindow];
-        
-        NSColor *start = nil;
-        NSColor *end   = nil;
-        
-        NSShadow *shadow1 = nil;
-        NSShadow *shadow2 = nil;
-            
-        if (isMainWindow) {
-            shadow1 = [Theme shadowNamed:@"KnobMain1"];
-            shadow2 = [Theme shadowNamed:@"KnobMain2"];
-        } else {
-            shadow1 = [Theme shadowNamed:@"Knob"];
-        }
-        
-        if (_selected) {
-            start = [Theme colorNamed:@"KnobPressed1"];
-            end   = [Theme colorNamed:@"KnobPressed2"];
-
-        } else if (isMainWindow) {
-            start = [Theme colorNamed:@"KnobMain1"];
-            end   = [Theme colorNamed:@"KnobMain2"];
-
-        } else {
-            start = [Theme colorNamed:@"KnobResigned1"];
-            end   = [Theme colorNamed:@"KnobResigned2"];
-        }
-
-        [shadow1 set];
-        [start set];
-
-        [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
-        
-        if (shadow2 && start && end) {
-            [shadow2 set];
-
-            NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
-            [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:knobRect] angle:-90];
-        }
+        [WhiteSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
     }
 }
 

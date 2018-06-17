@@ -75,6 +75,9 @@ extern NSString *GetStringForTime(NSTimeInterval time);
 
 extern NSString *GetApplicationSupportDirectory(void);
 
+extern BOOL IsAppearanceDarkAqua(NSView *view);
+
+extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat alpha);
 
 #ifdef __cplusplus
 }
