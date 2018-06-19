@@ -12,6 +12,8 @@
 @implementation SimpleProgressBar {
     CGColorRef _unfilledColor;
     CGColorRef _filledColor;
+    
+    CGFloat _lastFilledWidth;
 }
 
 
@@ -57,14 +59,14 @@
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
     CGRect bounds = [self bounds];
-    CGFloat scale = [[self window] backingScaleFactor];
 
     if (_rounded) {
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:(bounds.size.height / 2) yRadius:(bounds.size.height / 2)];
         [path addClip];
     }
     
-    CGFloat filledWidth = round(bounds.size.width * _percentage * scale) / scale;
+    CGFloat filledWidth = [self _filledWidth];
+    _lastFilledWidth = filledWidth;
 
     NSRect leftRect, rightRect;
     NSDivideRect(bounds, &leftRect, &rightRect, filledWidth, NSMinXEdge);
@@ -78,6 +80,15 @@
         CGContextSetFillColorWithColor(context, _unfilledColor);
         CGContextFillRect(context, rightRect);
     }
+}
+
+
+- (CGFloat) _filledWidth
+{
+    CGRect  bounds = [self bounds];
+    CGFloat scale  = [[self window] backingScaleFactor];
+
+    return round(bounds.size.width * _percentage * scale) / scale;
 }
 
 
@@ -122,12 +133,17 @@
 
 
 #pragma mark - Accessors
+ 
 
 - (void) setPercentage:(CGFloat)percentage
 {
     if (_percentage != percentage) {
         _percentage = percentage;
-        [self setNeedsDisplay:YES];
+        
+        CGFloat filledWidth = [self _filledWidth];
+        if (_lastFilledWidth != filledWidth) {
+            [self setNeedsDisplay:YES];
+        }
     }
 }
 
