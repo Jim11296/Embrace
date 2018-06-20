@@ -118,6 +118,12 @@
 }
 
 
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateView];
+}
+
+
 - (TrackTableView *) _tableView
 {
     NSView *view = [self superview];
