@@ -23,6 +23,54 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
+- (instancetype) initWithFrame:(NSRect)frameRect
+{
+    if ((self = [super initWithFrame:frameRect])) {
+        [self _commonTrackTableViewInit];
+    }
+    
+    return self;
+}
+
+
+- (instancetype) initWithCoder:(NSCoder *)coder
+{
+    if ((self = [super initWithCoder:coder])) {
+        [self _commonTrackTableViewInit];
+    }
+    
+    return self;
+}
+
+
+- (void) _commonTrackTableViewInit
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleControlTintDidChange:) name:NSControlTintDidChangeNotification object:nil];
+}
+
+
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updatePlayingTextColor];
+}
+
+
+- (void) _handleControlTintDidChange:(NSNotification *)note
+{
+    // As of 10.14 beta 2, -viewDidChangeEffectiveAppearance is rarely
+    // called for control accent color changes. Hence, we listen for this
+    // notification.
+    
+    [self _updatePlayingTextColor];
+}
+
+
 - (void) viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
@@ -162,6 +210,88 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     if ([delegate respondsToSelector:@selector(trackTableView:isModifyingViaDrag:)]) {
         [delegate trackTableView:self isModifyingViaDrag:(_inLocalDrag || _dragInside)];
     }
+}
+
+
+- (void) _updatePlayingTextColor
+{
+    NSColor *playingTextColor = nil;
+
+    NSColor *(^getColorWithHue)(CGFloat, NSArray<NSNumber *> *) = ^(CGFloat normalizedHue, NSArray<NSNumber *> *values) {
+        CGFloat hue = fmod(normalizedHue * 360.0, 360.0);
+
+//        CGFloat keys[] = { -2.0, 28.0,   41.0,   106.0, 211.0, 299.0,  332.0, 358.0, 388.0  };
+
+
+        CGFloat keys[] = { -2.0, 28.0,   41.0,   106.0, 214.0, 299.0,  332.0, 358.0, 388.0  };
+
+        NSColor *result = nil;
+
+        if ([values count] == 14) {
+            for (NSInteger i = 0; i < 8; i++) {
+                CGFloat keyA = keys[i];
+                CGFloat keyB = keys[i+1];
+                
+                if (hue >= keyA && hue <= keyB) {
+                    CGFloat sA = [[values objectAtIndex:((i*2)+0) % 14] doubleValue];
+                    CGFloat sB = [[values objectAtIndex:((i*2)+2) % 14] doubleValue];
+
+                    CGFloat bA = [[values objectAtIndex:((i*2)+1) % 14] doubleValue];
+                    CGFloat bB = [[values objectAtIndex:((i*2)+3) % 14] doubleValue];
+
+                    CGFloat multiplier = (hue - keyA) / (keyB - keyA);
+                    CGFloat saturation = sA + ((sB - sA) * multiplier);
+                    CGFloat brightness = bA + ((bB - bA) * multiplier);
+                    
+                    result = [NSColor colorWithHue:normalizedHue saturation:saturation brightness:brightness alpha:1.0];
+                    break;
+                }
+            }
+        }
+
+        return result;
+    };
+
+
+    if (@available(macOS 10.14, *)) {
+        NSColor *controlAccentColor = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
+
+        CGFloat hue;
+        [controlAccentColor getHue:&hue saturation:NULL brightness:NULL alpha:NULL];
+        
+        if (IsAppearanceDarkAqua(self)) {
+            playingTextColor = getColorWithHue(hue, @[
+                @0.70, @0.95, /* Red    */
+                @0.75, @0.90, /* Orange */
+                @0.70, @0.85, /* Yellow */
+                @0.60, @0.75, /* Green  */
+                @0.60, @1.00, /* Blue   */
+                @0.40, @0.85, /* Purple */
+                @0.60, @0.95  /* Pink   */
+            ]);
+
+        } else {
+            playingTextColor = getColorWithHue(hue, @[
+                @1.0,  @0.9,   /* Red    */
+                @1.0,  @0.8,   /* Orange */
+                @1.0,  @0.75,  /* Yellow */
+                @1.0,  @0.55,  /* Green  */
+                @1.0,  @0.9,   /* Blue   */
+                @1.0,  @0.55,  /* Purple */
+                @1.0,  @0.9    /* Pink   */
+            ]);
+        }
+    }
+    
+    if (!playingTextColor) {
+        playingTextColor = [Theme colorNamed:@"SetlistPlayingTextFallback"];
+    }
+
+    _playingTextColor = playingTextColor;
+
+    [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
+        [[rowView viewAtColumn:0] updateColors];
+    }];
 }
 
 

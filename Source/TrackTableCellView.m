@@ -299,7 +299,7 @@
     if (object == _observedObject) {
     
         if ([keyPath isEqualToString:@"trackStatus"]) {
-            [self _updateColors];
+            [self updateColors];
             
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *ac) {
                 [ac setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -432,7 +432,7 @@
     [[NSAnimationContext currentContext] setDuration:0];
     
     [self _updateStripeAndBorderedView];
-    [self _updateColors];
+    [self updateColors];
 
     if ([self track]) {
         [self _updateRightIcons];
@@ -576,7 +576,7 @@
 
 
 
-- (void) _updateColors
+- (void) updateColors
 {
     NSTableRowView *rowView = [self _rowView];
 
@@ -604,8 +604,8 @@
         needsWhiteError = YES;
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimaryPlaying"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondaryPlaying"];
+        primaryColor   = [[self _tableView] playingTextColor];
+        secondaryColor = [primaryColor colorWithAlphaComponent:0.8];
     }
    
     [[self titleField]    setTextColor:primaryColor];
@@ -956,7 +956,7 @@
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
-    [self _updateColors];
+    [self updateColors];
 }
 
 

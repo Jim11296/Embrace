@@ -13,6 +13,7 @@
 @interface TrackTableCellView : NSTableCellView
 
 - (void) revealTime;
+- (void) updateColors;
 
 @property (nonatomic, readonly) Track *track;
 
