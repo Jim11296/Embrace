@@ -165,6 +165,7 @@
 		55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABF718B21C31006B6FBB /* Localizable.strings */; };
 		55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F81FD21B846E3300E03B5B /* IssuesController.m */; };
 		55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F81FD41B846EE800E03B5B /* IssuesWindow.xib */; };
+		55FE4C3520DB9E220069126D /* TrackErrorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FE4C3420DB9E220069126D /* TrackErrorButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -491,6 +492,8 @@
 		55F81FD11B846E3300E03B5B /* IssuesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssuesController.h; path = Source/IssuesController.h; sourceTree = SOURCE_ROOT; };
 		55F81FD21B846E3300E03B5B /* IssuesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssuesController.m; path = Source/IssuesController.m; sourceTree = SOURCE_ROOT; };
 		55F81FD41B846EE800E03B5B /* IssuesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IssuesWindow.xib; path = Resources/IssuesWindow.xib; sourceTree = SOURCE_ROOT; };
+		55FE4C3320DB9E220069126D /* TrackErrorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackErrorButton.h; path = Source/TrackErrorButton.h; sourceTree = "<group>"; };
+		55FE4C3420DB9E220069126D /* TrackErrorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackErrorButton.m; path = Source/TrackErrorButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -939,6 +942,8 @@
 				556098131B47CABD008516C3 /* MenuLabelView.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
 				5506802F1887711000441AAE /* TimeStringValueTransformer.m */,
+				55FE4C3320DB9E220069126D /* TrackErrorButton.h */,
+				55FE4C3420DB9E220069126D /* TrackErrorButton.m */,
 				557ABAB41B68D48C006F69D9 /* TrackLabelView.h */,
 				557ABAB51B68D48C006F69D9 /* TrackLabelView.m */,
 				550D883618ACD5F800CC7E3A /* TrackTableView.h */,
@@ -1399,6 +1404,7 @@
 				557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */,
 				557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */,
 				550C63C81FE6666E007841BC /* ScriptFile.m in Sources */,
+				55FE4C3520DB9E220069126D /* TrackErrorButton.m in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
 				55C24E1518D7D7800057D45E /* StereoField.m in Sources */,
 				55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */,
