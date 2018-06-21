@@ -15,6 +15,7 @@ extern NSString * const EmbraceQueuedTrackPasteboardType;
 
 @interface TrackTableView : NSTableView
 @property (nonatomic, readonly) NSInteger rowWithMouseInside;
+@property (nonatomic, readonly) NSColor *playingTextColor;
 @end
 
 
