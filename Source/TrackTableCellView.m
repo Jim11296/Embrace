@@ -9,7 +9,7 @@
 #import "TrackTableCellView.h"
 #import "Track.h"
 #import "BorderedView.h"
-#import "Button.h"
+#import "TrackErrorButton.h"
 #import "AppDelegate.h"
 #import "NoDropImageView.h"
 #import "Preferences.h"
@@ -37,7 +37,7 @@
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
 
 @property (nonatomic, weak) IBOutlet NoDropImageView *speakerImageView;
-@property (nonatomic, weak) IBOutlet Button *errorButton;
+@property (nonatomic, weak) IBOutlet TrackErrorButton *errorButton;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerLeftConstraint;
 
@@ -153,12 +153,9 @@
 
 - (void) awakeFromNib
 {
-    [_errorButton setImage:[NSImage imageNamed:@"TrackErrorTemplate"]];
-    [_errorButton setIconOnly:YES];
     [_errorButton setAutoresizingMask:NSViewMinXMargin];
     [_errorButton setTarget:self];
     [_errorButton setAction:@selector(_errorButtonClicked:)];
-    [_errorButton setAlert:YES];
 
     _timeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
 
@@ -621,17 +618,14 @@
     [_speakerImageView   setTintColor:primaryColor];
     
     if (rowIsSelected && rowIsEmphasized) {
-        [_errorButton setAlertColor:primaryColor];
-        [_errorButton setAlertActiveColor:primaryColor];
-        [_errorButton setInactiveColor:primaryColor];
+        [_errorButton setNormalColor:primaryColor];
+        [_errorButton setPressedColor:primaryColor];
 
         [_dotView setNeedsWhiteBorder:YES];
 
-
     } else {
-        [_errorButton setAlertColor:[Theme colorNamed:@"ButtonAlert"]];
-        [_errorButton setAlertActiveColor:[Theme colorNamed:@"ButtonAlertPressed"]];
-        [_errorButton setInactiveColor:primaryColor];
+        [_errorButton setNormalColor:[Theme colorNamed:@"ButtonAlert"]];
+        [_errorButton setPressedColor:[Theme colorNamed:@"ButtonAlertPressed"]];
 
         [_dotView setNeedsWhiteBorder:NO];
     }
@@ -893,7 +887,7 @@
     NSTextField *line2Right  = [self lineTwoRightField];
     NSTextField *line3Left   = [self lineThreeLeftField];
     NSTextField *line3Right  = [self lineThreeRightField];
-    Button      *errorButton = [self errorButton];
+    NSView      *errorButton = [self errorButton];
 
     BOOL showError = [[self track] trackError] != TrackErrorNone;
 
