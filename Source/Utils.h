@@ -79,6 +79,8 @@ extern BOOL IsAppearanceDarkAqua(NSView *view);
 
 extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat alpha);
 
+extern void PerformWithAppearance(NSAppearance *appearance, void (^block)());
+
 #ifdef __cplusplus
 }
 #endif
