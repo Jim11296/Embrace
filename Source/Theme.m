@@ -17,7 +17,7 @@
     NSColor *color = nil;
 
     if (colorName) {
-        if (@available(macOS 10.14, *)) {
+        if (@available(macOS 10.13, *)) {
             color = [NSColor colorNamed:colorName];
         } else {
             color = GetCompatibilityColorNamed(colorName);

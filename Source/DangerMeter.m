@@ -8,6 +8,20 @@
 
 #import "DangerMeter.h"
 
+static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *output)
+{
+    if      (fraction > 1) fraction = 1;
+    else if (fraction < 0) fraction = 0;
+    
+    CGFloat iFraction = 1.0 - fraction;
+
+    output[0] = (b[0] * fraction) + (a[0] * iFraction);
+    output[1] = (b[1] * fraction) + (a[1] * iFraction);
+    output[2] = (b[2] * fraction) + (a[2] * iFraction);
+    output[3] = (b[3] * fraction) + (a[3] * iFraction);
+}
+
+
 
 @implementation DangerMeter {
     NSTimer *_timer;
@@ -20,9 +34,10 @@
     NSTimeInterval _dangerTime;
     NSTimeInterval _overloadTime;
    
-    NSColor *_unfilledColor;
-    NSColor *_filledColor;
-    NSColor *_redColor;
+    CGColorSpaceRef _colorSpace;
+    CGFloat _unfilledComponents[4];
+    CGFloat _filledComponents[4];
+    CGFloat _redComponents[4];
 }
 
 
@@ -48,7 +63,15 @@
 
 - (void) _commonDangerMeterInit
 {
+    _colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
     [self _updateColors];
+}
+
+
+- (void) dealloc
+{
+    CGColorSpaceRelease(_colorSpace);
+    _colorSpace = NULL;
 }
 
 
@@ -72,15 +95,13 @@
     overloadRect.size.width =  4;
     overloadRect.origin.x   = CGRectGetMaxX(barRect) + 2;
 
-    NSColor *filledColor = _filledColor;
-    if (_redLevel > 0) {
-        filledColor = [filledColor blendedColorWithFraction:_redLevel ofColor:_redColor];
-    }
-    
-    NSColor *overloadColor = _unfilledColor;
-    if (_overloadLevel > 0) {
-        overloadColor = [overloadColor blendedColorWithFraction:_overloadLevel ofColor:_redColor];
-    }
+    CGFloat barComponents[4];
+    sBlendComponents(_filledComponents, _redComponents, _redLevel, barComponents);
+
+    CGFloat overloadComponents[4];
+    sBlendComponents(_unfilledComponents, _redComponents, _overloadLevel, overloadComponents);
+
+    CGContextSetFillColorSpace(context, _colorSpace);
 
     // Draw bolt
     {
@@ -92,13 +113,13 @@
         CGContextAddLineToPoint(context, 3, 5);
         CGContextAddLineToPoint(context, 1, 5);
 
-        [(_metering ? filledColor : _unfilledColor) set];
+        CGContextSetFillColor(context, (_metering ? barComponents : _unfilledComponents));
         CGContextFillPath(context);
     }
     
     // Draw overload dot
     {
-        [overloadColor set];
+        CGContextSetFillColor(context, overloadComponents);
         CGContextBeginPath(context);
         CGContextAddEllipseInRect(context, overloadRect);
         CGContextFillPath(context);
@@ -115,7 +136,7 @@
         CGRect leftRect = barRect;
         leftRect.size.width = filledWidthFloor;
 
-        [filledColor set];
+        CGContextSetFillColor(context, barComponents);
         CGContextFillRect(context, leftRect);
 
         CGRect middleRect = barRect;
@@ -126,7 +147,10 @@
         if (middleAlpha > (1 / 256.0)) {
             middleRect.size.width = 1.0 / scale;
 
-            [[_unfilledColor blendedColorWithFraction:middleAlpha ofColor:filledColor] set];
+            CGFloat components[4];
+            sBlendComponents(_unfilledComponents, barComponents, middleAlpha, components);
+
+            CGContextSetFillColor(context, components);
             NSRectFill(middleRect);
         }
         
@@ -134,7 +158,7 @@
         rightRect.origin.x = CGRectGetMaxX(middleRect);
         rightRect.size.width = CGRectGetMaxX(barRect) - rightRect.origin.x;
 
-        [_unfilledColor set];
+        CGContextSetFillColor(context, _unfilledComponents);
         CGContextFillRect(context, rightRect);
     }
 }
@@ -155,14 +179,19 @@
     BOOL isMainWindow = [[self window] isMainWindow];
 
     NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
-    NSColor *filledColor   = nil;
     NSColor *redColor      = [Theme colorNamed:@"MeterRed"];
+    NSColor *filledColor   = nil;
 
     if (isMainWindow) {
         filledColor = [Theme colorNamed:@"MeterFilledMain"];
     } else {
         filledColor = [Theme colorNamed:@"MeterFilled"];
     }
+    
+    NSColorSpace *sRGBColorSpace = [NSColorSpace sRGBColorSpace];
+    unfilledColor = [unfilledColor colorUsingColorSpace:sRGBColorSpace];
+    redColor      = [redColor      colorUsingColorSpace:sRGBColorSpace];
+    filledColor   = [filledColor   colorUsingColorSpace:sRGBColorSpace];
     
     if (IsAppearanceDarkAqua(self)) {
         CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
@@ -171,9 +200,9 @@
         filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
     }
     
-    _unfilledColor = unfilledColor;
-    _filledColor   = filledColor;
-    _redColor      = redColor;
+    [unfilledColor getComponents:_unfilledComponents];
+    [filledColor   getComponents:_filledComponents];
+    [redColor      getComponents:_redComponents];
     
     [self setNeedsDisplay:YES];
 }

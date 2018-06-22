@@ -10,8 +10,10 @@
 
 
 @implementation SimpleProgressBar {
-    NSColor *_unfilledColor;
-    NSColor *_filledColor;
+    CGColorRef _unfilledColor;
+    CGColorRef _filledColor;
+    
+    CGFloat _lastFilledWidth;
 }
 
 
@@ -35,6 +37,16 @@
 }
 
 
+- (void) dealloc
+{
+    CGColorRelease(_unfilledColor);
+    _unfilledColor = NULL;
+
+    CGColorRelease(_filledColor);
+    _filledColor = NULL;
+}
+
+
 - (void) _commonSimpleProgressBarInit
 {
     _rounded = YES;
@@ -47,23 +59,42 @@
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
     CGRect bounds = [self bounds];
-    CGFloat scale = [[self window] backingScaleFactor];
 
     if (_rounded) {
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:(bounds.size.height / 2) yRadius:(bounds.size.height / 2)];
         [path addClip];
     }
     
-    CGFloat filledWidth = round(bounds.size.width * _percentage * scale) / scale;
+    CGFloat filledWidth = [self _filledWidth];
+    _lastFilledWidth = filledWidth;
 
     NSRect leftRect, rightRect;
     NSDivideRect(bounds, &leftRect, &rightRect, filledWidth, NSMinXEdge);
 
-    [_filledColor set];
-    CGContextFillRect(context, leftRect);
+    if (_filledColor) {
+        CGContextSetFillColorWithColor(context, _filledColor);
+        CGContextFillRect(context, leftRect);
+    }
 
-    [_unfilledColor set];
-    CGContextFillRect(context, rightRect);
+    if (_unfilledColor) {
+        CGContextSetFillColorWithColor(context, _unfilledColor);
+        CGContextFillRect(context, rightRect);
+    }
+}
+
+
+- (CGFloat) _filledWidth
+{
+    CGRect  bounds = [self bounds];
+    CGFloat scale  = [[self window] backingScaleFactor];
+
+    return round(bounds.size.width * _percentage * scale) / scale;
+}
+
+
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateColors];
 }
 
 
@@ -91,20 +122,28 @@
         filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
     }
     
-    _unfilledColor = unfilledColor;
-    _filledColor   = filledColor;
+    CGColorRelease(_unfilledColor);
+    _unfilledColor = CGColorRetain([unfilledColor CGColor]);
+
+    CGColorRelease(_filledColor);
+    _filledColor = CGColorRetain([filledColor CGColor]);
 
     [self setNeedsDisplay:YES];
 }
 
 
 #pragma mark - Accessors
+ 
 
 - (void) setPercentage:(CGFloat)percentage
 {
     if (_percentage != percentage) {
         _percentage = percentage;
-        [self setNeedsDisplay:YES];
+        
+        CGFloat filledWidth = [self _filledWidth];
+        if (_lastFilledWidth != filledWidth) {
+            [self setNeedsDisplay:YES];
+        }
     }
 }
 

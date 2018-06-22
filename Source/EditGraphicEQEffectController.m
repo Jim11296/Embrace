@@ -44,7 +44,7 @@
     [_graphicEQView setAudioUnit:[[self effect] audioUnit]];
    
     CGSize contentSize = CGSizeMake(
-        [_graphicEQView numberOfBands] == 10 ? 395 : 770,
+        [_graphicEQView numberOfBands] == 10 ? 362 : 765,
         215
     );
 
