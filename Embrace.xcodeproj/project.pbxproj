@@ -136,7 +136,6 @@
 		55BC0B1918780A0200D84481 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1818780A0200D84481 /* CoreAudio.framework */; };
 		55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1A18780D1000D84481 /* AudioToolbox.framework */; };
 		55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B2A1878E4EF00D84481 /* Utils.m */; };
-		55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BE7739187CD05600BC0D29 /* BorderedView.m */; };
 		55C24E1518D7D7800057D45E /* StereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* StereoField.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */; };
 		55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */; };
@@ -147,6 +146,8 @@
 		55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF27A9187AB2650042C92A /* EditEffectController.m */; };
 		55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848D18BF27AC00EF33F7 /* Embrace.sdef */; };
 		55CF849118BF459600EF33F7 /* Scripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF849018BF459600EF33F7 /* Scripting.m */; };
+		55D20D4920DC8E78007AA05E /* HairlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D20D4820DC8E77007AA05E /* HairlineView.m */; };
+		55D20D4C20DC90B1007AA05E /* TrackStripeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D20D4B20DC90B1007AA05E /* TrackStripeView.m */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
 		55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */; };
@@ -439,8 +440,6 @@
 		55BC0B1A18780D1000D84481 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		55BC0B291878E4EF00D84481 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = Source/Utils.h; sourceTree = SOURCE_ROOT; };
 		55BC0B2A1878E4EF00D84481 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Source/Utils.m; sourceTree = SOURCE_ROOT; };
-		55BE7738187CD05600BC0D29 /* BorderedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BorderedView.h; path = Source/BorderedView.h; sourceTree = SOURCE_ROOT; };
-		55BE7739187CD05600BC0D29 /* BorderedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BorderedView.m; path = Source/BorderedView.m; sourceTree = SOURCE_ROOT; };
 		55C24E1318D7D7800057D45E /* StereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoField.h; path = Source/StereoField.h; sourceTree = "<group>"; };
 		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
@@ -458,6 +457,10 @@
 		55CF848D18BF27AC00EF33F7 /* Embrace.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Embrace.sdef; path = Resources/Embrace.sdef; sourceTree = SOURCE_ROOT; };
 		55CF848F18BF459600EF33F7 /* Scripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scripting.h; path = Source/Scripting.h; sourceTree = "<group>"; };
 		55CF849018BF459600EF33F7 /* Scripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Scripting.m; path = Source/Scripting.m; sourceTree = "<group>"; };
+		55D20D4720DC8E76007AA05E /* HairlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HairlineView.h; path = Source/HairlineView.h; sourceTree = "<group>"; };
+		55D20D4820DC8E77007AA05E /* HairlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HairlineView.m; path = Source/HairlineView.m; sourceTree = "<group>"; };
+		55D20D4A20DC90B1007AA05E /* TrackStripeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrackStripeView.h; path = Source/TrackStripeView.h; sourceTree = "<group>"; };
+		55D20D4B20DC90B1007AA05E /* TrackStripeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TrackStripeView.m; path = Source/TrackStripeView.m; sourceTree = "<group>"; };
 		55DD538C18B99A530084628D /* CrashPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = CrashPad.entitlements; path = Resources/CrashPad.entitlements; sourceTree = "<group>"; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
@@ -920,8 +923,6 @@
 			children = (
 				558AB90020C8C46800B4BAEE /* Theme.h */,
 				558AB90120C8C46800B4BAEE /* Theme.m */,
-				55BE7738187CD05600BC0D29 /* BorderedView.h */,
-				55BE7739187CD05600BC0D29 /* BorderedView.m */,
 				55717BF3187EA65400213213 /* Button.h */,
 				55717BF4187EA65400213213 /* Button.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
@@ -938,6 +939,8 @@
 				55698DA71B54ECBE00C9E200 /* GraphicEQView.m */,
 				55ADE93618824338008DC245 /* LevelMeter.h */,
 				55ADE93718824338008DC245 /* LevelMeter.m */,
+				55D20D4720DC8E76007AA05E /* HairlineView.h */,
+				55D20D4820DC8E77007AA05E /* HairlineView.m */,
 				556098121B47CABD008516C3 /* MenuLabelView.h */,
 				556098131B47CABD008516C3 /* MenuLabelView.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
@@ -952,6 +955,8 @@
 				55CF2799187A464B0042C92A /* TrackTableCellView.m */,
 				55B03B9B20CDFDBD0055881F /* TrackTableRowView.h */,
 				55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */,
+				55D20D4A20DC90B1007AA05E /* TrackStripeView.h */,
+				55D20D4B20DC90B1007AA05E /* TrackStripeView.m */,
 				55ADE93318815EA8008DC245 /* PlayBar.h */,
 				55ADE93418815EA8008DC245 /* PlayBar.m */,
 				5572C17C1F00B743007BE284 /* SimpleProgressBar.h */,
@@ -1327,6 +1332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55D20D4920DC8E78007AA05E /* HairlineView.m in Sources */,
 				550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */,
 				55717BF5187EA65400213213 /* Button.m in Sources */,
 				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
@@ -1338,7 +1344,6 @@
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
 				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
 				55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */,
-				55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */,
 				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
@@ -1353,6 +1358,7 @@
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
 				55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */,
+				55D20D4C20DC90B1007AA05E /* TrackStripeView.m in Sources */,
 				5595A7BC18793B9000A7B996 /* EmbraceWindow.m in Sources */,
 				557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */,
 				55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */,
@@ -1558,7 +1564,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Debug";
@@ -1582,7 +1587,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Profile";
@@ -1606,7 +1610,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Release";
@@ -1638,7 +1641,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Developer ID Application: Ricci Adams (XXXXXXXXXX)";
 				DEVELOPMENT_TEAM = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1648,7 +1650,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Profile;

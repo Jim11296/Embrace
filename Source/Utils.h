@@ -81,6 +81,9 @@ extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat alpha);
 
 extern void PerformWithAppearance(NSAppearance *appearance, void (^block)());
 
+// Returns bounds without system bezel 
+extern CGRect GetInsetBounds(NSView *view);
+
 #ifdef __cplusplus
 }
 #endif

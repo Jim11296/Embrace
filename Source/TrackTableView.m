@@ -61,16 +61,6 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
-- (void) _handleControlTintDidChange:(NSNotification *)note
-{
-    // As of 10.14 beta 2, -viewDidChangeEffectiveAppearance is rarely
-    // called for control accent color changes. Hence, we listen for this
-    // notification.
-    
-    [self _updatePlayingTextColor];
-}
-
-
 - (void) viewDidMoveToWindow
 {
     [super viewDidMoveToWindow];
@@ -108,109 +98,17 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
-- (void) draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint
+#pragma mark - Private Methods
+
+- (void) _handleControlTintDidChange:(NSNotification *)note
 {
-    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingSession:willBeginAtPoint:)]) {
-        [super draggingSession:session willBeginAtPoint:screenPoint];
-    }
-
-    _inLocalDrag = YES;
-    [self _updateDrag];
-}
-
-
-- (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
-{
-    if (context == NSDraggingContextOutsideApplication) {
-        return NSDragOperationDelete;
-    }
+    // As of 10.14 beta 2, -viewDidChangeEffectiveAppearance is rarely
+    // called for control accent color changes. Hence, we listen for this
+    // notification.
     
-    return NSDragOperationCopy|NSDragOperationGeneric;
+    [self _updatePlayingTextColor];
 }
 
-
-- (NSImage *) dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
-{
-    return [NSImage imageNamed:@"DragIcon"];
-}
-
-
-- (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender;
-{
-    NSDragOperation result = [super draggingEntered:sender];
-
-    _dragInside = YES;
-    [self _updateDrag];
-
-    return result;
-}
-
-
-- (void) draggingExited:(id <NSDraggingInfo>)sender
-{
-    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingExited:)]) {
-        [super draggingExited:sender];
-    }
-
-    _dragInside = NO;
-    [self _updateDrag];
-}
-
-
-- (void) draggingEnded:(id <NSDraggingInfo>)sender
-{
-    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingEnded:)]) {
-        [super draggingEnded:sender];
-    }
-    
-    _dragInside = NO;
-    _inLocalDrag = NO;
-    [self _updateDrag];
-}
-
-
-- (void) concludeDragOperation:(id<NSDraggingInfo>)sender
-{
-    if ([[NSTableView class] instancesRespondToSelector:@selector(concludeDragOperation:)]) {
-        [super concludeDragOperation:sender];
-    }
-
-    _dragInside = NO;
-    _inLocalDrag = NO;
-    [self _updateDrag];
-}
-
-
-- (void) draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
-{
-    NSRect frame = [[self window] frame];
-
-    BOOL isLockedTrack = [[session draggingPasteboard] dataForType:EmbraceLockedTrackPasteboardType] != nil;
-
-    if (NSPointInRect(screenPoint, frame)) {
-        [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
-
-    } else {
-        if (isLockedTrack) {
-            [[NSCursor operationNotAllowedCursor] set];
-            [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
-
-        } else {
-            [[NSCursor disappearingItemCursor] set];
-            [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
-        }
-    }
-}
-
-
-- (void) _updateDrag
-{
-    id delegate = [self delegate];
-
-    if ([delegate respondsToSelector:@selector(trackTableView:isModifyingViaDrag:)]) {
-        [delegate trackTableView:self isModifyingViaDrag:(_inLocalDrag || _dragInside)];
-    }
-}
 
 
 - (void) _updatePlayingTextColor
@@ -346,6 +244,119 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     }
 
     _rowWithMouseInside = rowWithMouseInside;
+}
+
+
+- (void) drawGridInClipRect:(NSRect)clipRect
+{
+    // Do nothing
+}
+
+
+#pragma mark - Dragging
+
+- (void) _updateDrag
+{
+    id delegate = [self delegate];
+
+    if ([delegate respondsToSelector:@selector(trackTableView:isModifyingViaDrag:)]) {
+        [delegate trackTableView:self isModifyingViaDrag:(_inLocalDrag || _dragInside)];
+    }
+}
+
+
+- (void) draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint
+{
+    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingSession:willBeginAtPoint:)]) {
+        [super draggingSession:session willBeginAtPoint:screenPoint];
+    }
+
+    _inLocalDrag = YES;
+    [self _updateDrag];
+}
+
+
+- (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
+{
+    if (context == NSDraggingContextOutsideApplication) {
+        return NSDragOperationDelete;
+    }
+    
+    return NSDragOperationCopy|NSDragOperationGeneric;
+}
+
+
+- (NSImage *) dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
+{
+    return [NSImage imageNamed:@"DragIcon"];
+}
+
+
+- (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender;
+{
+    NSDragOperation result = [super draggingEntered:sender];
+
+    _dragInside = YES;
+    [self _updateDrag];
+
+    return result;
+}
+
+
+- (void) draggingExited:(id <NSDraggingInfo>)sender
+{
+    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingExited:)]) {
+        [super draggingExited:sender];
+    }
+
+    _dragInside = NO;
+    [self _updateDrag];
+}
+
+
+- (void) draggingEnded:(id <NSDraggingInfo>)sender
+{
+    if ([[NSTableView class] instancesRespondToSelector:@selector(draggingEnded:)]) {
+        [super draggingEnded:sender];
+    }
+    
+    _dragInside = NO;
+    _inLocalDrag = NO;
+    [self _updateDrag];
+}
+
+
+- (void) concludeDragOperation:(id<NSDraggingInfo>)sender
+{
+    if ([[NSTableView class] instancesRespondToSelector:@selector(concludeDragOperation:)]) {
+        [super concludeDragOperation:sender];
+    }
+
+    _dragInside = NO;
+    _inLocalDrag = NO;
+    [self _updateDrag];
+}
+
+
+- (void) draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
+{
+    NSRect frame = [[self window] frame];
+
+    BOOL isLockedTrack = [[session draggingPasteboard] dataForType:EmbraceLockedTrackPasteboardType] != nil;
+
+    if (NSPointInRect(screenPoint, frame)) {
+        [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
+
+    } else {
+        if (isLockedTrack) {
+            [[NSCursor operationNotAllowedCursor] set];
+            [session setAnimatesToStartingPositionsOnCancelOrFail:YES];
+
+        } else {
+            [[NSCursor disappearingItemCursor] set];
+            [session setAnimatesToStartingPositionsOnCancelOrFail:NO];
+        }
+    }
 }
 
 
