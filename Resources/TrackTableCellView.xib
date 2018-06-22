@@ -14,10 +14,13 @@
             <rect key="frame" x="0.0" y="0.0" width="312" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="eIS-U0-iuH" customClass="BorderedView">
-                    <rect key="frame" x="0.0" y="0.0" width="312" height="60"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="eIS-U0-iuH" customClass="TrackStripeView">
+                    <rect key="frame" x="0.0" y="0.0" width="312" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="Y7C-1H-Yrz"/>
+                    </constraints>
                 </customView>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="nkF-z6-beo" userLabel="Stripe" customClass="TrackLabelView">
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="nkF-z6-beo" userLabel="Edge Label View" customClass="TrackLabelView">
                     <rect key="frame" x="308" y="0.0" width="4" height="60"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="4" id="bwu-kj-Gmb"/>
@@ -121,16 +124,14 @@
                 <constraint firstAttribute="bottom" secondItem="G0T-eR-fVJ" secondAttribute="bottom" id="T6z-hx-tMa"/>
                 <constraint firstAttribute="right" secondItem="nkF-z6-beo" secondAttribute="right" id="Tbc-Gt-oiP"/>
                 <constraint firstAttribute="bottom" secondItem="eIS-U0-iuH" secondAttribute="bottom" id="U7j-0S-Pec"/>
-                <constraint firstItem="eIS-U0-iuH" firstAttribute="top" secondItem="7VA-Gs-oX4" secondAttribute="top" id="dwT-AJ-kO2"/>
                 <constraint firstItem="G0T-eR-fVJ" firstAttribute="top" secondItem="7VA-Gs-oX4" secondAttribute="top" id="ewP-UV-7o4"/>
                 <constraint firstAttribute="bottom" secondItem="nkF-z6-beo" secondAttribute="bottom" id="fcx-0Y-1hO"/>
                 <constraint firstItem="eIS-U0-iuH" firstAttribute="left" secondItem="7VA-Gs-oX4" secondAttribute="left" id="ift-y9-fYC"/>
                 <constraint firstItem="nkF-z6-beo" firstAttribute="top" secondItem="7VA-Gs-oX4" secondAttribute="top" id="wkt-Ne-T5f"/>
             </constraints>
             <connections>
-                <outlet property="borderedView" destination="eIS-U0-iuH" id="EIt-Uc-jdg"/>
-                <outlet property="borderedViewTopConstraint" destination="dwT-AJ-kO2" id="mu0-lA-VJ3"/>
                 <outlet property="durationField" destination="oJ2-ys-Q1u" id="XEM-Dt-grU"/>
+                <outlet property="edgeLabelView" destination="nkF-z6-beo" id="sc9-Z5-DMm"/>
                 <outlet property="errorButton" destination="NGb-9e-QcY" id="Gas-vi-M0y"/>
                 <outlet property="lineThreeLeftField" destination="Cd2-5a-ZGp" id="3uN-uw-VVf"/>
                 <outlet property="lineThreeRightField" destination="9DW-9o-kn1" id="f9o-fT-Hg5"/>
@@ -138,7 +139,7 @@
                 <outlet property="lineTwoRightField" destination="vHN-Td-1li" id="PFc-IX-QTx"/>
                 <outlet property="speakerImageView" destination="gtl-mJ-WxD" id="6o6-bq-HKJ"/>
                 <outlet property="speakerLeftConstraint" destination="WDB-ms-m2b" id="07a-Fc-tSY"/>
-                <outlet property="stripeView" destination="nkF-z6-beo" id="2x6-cb-9hh"/>
+                <outlet property="stripeView" destination="eIS-U0-iuH" id="M5O-f3-bub"/>
                 <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
                 <outlet property="titleDurationConstraint" destination="uC8-Wo-BEi" id="ULH-w0-8dO"/>
                 <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>

@@ -10,7 +10,6 @@
 #import "Effect.h"
 #import "EffectAdditions.h"
 #import "EffectType.h"
-#import "BorderedView.h"
 #import "GraphicEQView.h"
 #import "Button.h"
 

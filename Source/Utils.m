@@ -654,3 +654,21 @@ void PerformWithAppearance(NSAppearance *appearance, void (^block)())
     block();
     [NSAppearance setCurrentAppearance:oldAppearance];
 }
+
+
+CGRect GetInsetBounds(NSView *view)
+{
+    CGFloat scale = [[view window] backingScaleFactor];
+    CGRect  bounds = [view bounds];
+    CGRect  insetBounds = bounds;
+
+    // Dark Aqua adds a translucent bezel, pull in by one pixel to match
+    if (@available(macOS 10.14, *)) {
+        if (IsAppearanceDarkAqua(view) && (scale > 1)) {
+            insetBounds = CGRectInset(bounds, 1, 0);
+        }
+    }
+    
+    return insetBounds;
+}
+

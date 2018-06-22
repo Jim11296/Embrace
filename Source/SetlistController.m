@@ -19,7 +19,7 @@
 #import "iTunesManager.h"
 #import "TrackTableCellView.h"
 #import "WaveformView.h"
-#import "BorderedView.h"
+#import "HairlineView.h"
 #import "Button.h"
 #import "EmbraceWindow.h"
 #import "MenuLabelView.h"
@@ -72,7 +72,8 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet NSView *headerView;
 @property (nonatomic, weak)   IBOutlet NSView *mainView;
 @property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
-@property (nonatomic, weak)   IBOutlet BorderedView *bottomSeparator;
+@property (nonatomic, weak)   IBOutlet NSView *footerView;
+@property (nonatomic, weak)   IBOutlet HairlineView *bottomSeparator;
 @property (nonatomic, weak)   IBOutlet NoDropImageView *autoGapIcon;
 @property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
 @property (nonatomic, weak)   IBOutlet NSTextField  *autoGapField;
@@ -152,8 +153,9 @@ static NSInteger sAutoGapMaximum = 16;
     [headerView addSubview:effectView positioned:NSWindowBelow relativeTo:[[headerView subviews] firstObject]];
 
     // Match PlayBar inactive color (used for top separator)
-    [[self bottomSeparator] setTopBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
-    
+    [[self bottomSeparator] setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+    [[self bottomSeparator] setLayoutAttribute:NSLayoutAttributeTop];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyPlayDurationNotificationName      object:nil];
@@ -164,25 +166,25 @@ static NSInteger sAutoGapMaximum = 16;
 
 #if TRIAL
     {
-        NSScrollView *scrollView      = [self scrollView];
-        BorderedView *bottomContainer = [self bottomContainer];
+        NSScrollView *scrollView = [self scrollView];
+        NSView       *footerView = [self footerView];
     
-        NSRect bottomFrame = [bottomContainer frame];
+        NSRect footerFrame = [footerView frame];
         
-        NSRect trialBottomViewFrame = bottomFrame;
-        trialBottomViewFrame.origin.y += bottomFrame.size.height;
-        trialBottomViewFrame.size.height = 42;
+        NSRect trialFrame = footerFrame;
+        trialFrame.origin.y += footerFrame.size.height;
+        trialFrame.size.height = 42;
        
         NSRect scrollFrame = [scrollView frame];
         scrollFrame.size.height -= 42;
         scrollFrame.origin.y += 42;
-        [[self scrollView] setFrame:scrollFrame];
+        [scrollView setFrame:scrollFrame];
         
-        [[self bottomContainer] setFrame:bottomFrame];
+        [footerView setFrame:footerFrame];
 
-        TrialBottomView *bv = [[TrialBottomView alloc] initWithFrame:trialBottomViewFrame];
-        [bv setAutoresizingMask:NSViewMaxXMargin|NSViewWidthSizable];
-        [[[self bottomContainer] superview] addSubview:bv];
+        TrialBottomView *trialView = [[TrialBottomView alloc] initWithFrame:trialFrame];
+        [trialView setAutoresizingMask:NSViewMaxXMargin|NSViewWidthSizable];
+        [[footerView superview] addSubview:trialView];
     }
 #endif
 
