@@ -1,14 +1,9 @@
-//
-//  PlayBar.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-11.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+//  Copyright (c) 2014-2018 Ricci Adams. All rights reserved.
+
 
 #import "PlayBar.h"
 #import "SimpleProgressBar.h"
-#import "BorderedView.h"
+#import "HairlineView.h"
 
 @interface PlayBarPlayhead : NSView
 @end
@@ -16,7 +11,7 @@
 
 @implementation PlayBar {
     PlayBarPlayhead   *_playhead;
-    BorderedView      *_borderedView;
+    HairlineView      *_hairlineView;
     SimpleProgressBar *_progressBar;
     
     CGFloat  _playheadX;
@@ -49,14 +44,14 @@
     [_progressBar setRounded:NO];
 
     _playhead     = [[PlayBarPlayhead alloc] initWithFrame:CGRectZero];
-    _borderedView = [[BorderedView alloc] initWithFrame:CGRectZero];
+    _hairlineView = [[HairlineView alloc] initWithFrame:CGRectZero];
 
-    [_borderedView setBottomBorderHeight:0];
-    [_borderedView setBottomBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+    [_hairlineView setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+    [_hairlineView setLayoutAttribute:NSLayoutAttributeBottom];
     
     [self setAutoresizesSubviews:NO];
     
-    [self addSubview:_borderedView];
+    [self addSubview:_hairlineView];
     [self addSubview:_progressBar];
     [self addSubview:_playhead];
         
@@ -107,11 +102,11 @@
     
     [_progressBar  setHidden:!_playing];
     [_playhead     setHidden:!_playing];
-    [_borderedView setHidden: _playing];
+    [_hairlineView setHidden: _playing];
 
     [_progressBar  setFrame:barFrame];
     [_playhead     setFrame:playheadFrame];
-    [_borderedView setFrame:bottomFrame];
+    [_hairlineView setFrame:bottomFrame];
 }
 
 

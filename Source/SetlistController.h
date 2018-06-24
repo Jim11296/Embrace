@@ -9,10 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Player.h"
 
-
-@class WaveformView;
 @class TracksController;
-@class PlayBar, BorderedView, CloseButton, Button, LevelMeter, WhiteSlider;
 
 
 typedef NS_ENUM(NSInteger, PlaybackAction) {

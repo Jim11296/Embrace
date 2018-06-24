@@ -7,24 +7,47 @@
 //
 
 #import "TrialBottomView.h"
-#import "BorderedView.h"
+#import "HairlineView.h"
 
 #if TRIAL
 
 @implementation TrialBottomView
 
-- (id)initWithFrame:(NSRect)frame
+- (id) initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
         NSRect textFrame = [self bounds];
-        
-        BorderedView *borderedView = [[BorderedView alloc] initWithFrame:[self bounds]];
-        
-        [borderedView setTopBorderColor:[Theme colorNamed:@"TrialBorder"]];
-        [borderedView setBackgroundColor:[Theme colorNamed:@"TrialBackground"]];
-        [borderedView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
 
-        [self addSubview:borderedView];
+        if (@available(macOS 10.14, *)) {
+            NSVisualEffectView *backgroundView = [[NSVisualEffectView alloc] initWithFrame:[self bounds]];
+            
+            [backgroundView setMaterial:NSVisualEffectMaterialHeaderView];
+            [backgroundView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+            [backgroundView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+
+            [self addSubview:backgroundView];
+        } else {
+            NSBox *box = [[NSBox alloc] initWithFrame:[self bounds]];
+            [box setFillColor:[NSColor colorWithWhite:0.95 alpha:1.0]];
+            [box setBorderColor:[NSColor clearColor]];
+            [box setBoxType:NSBoxCustom];
+            
+            [box setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+
+            [self addSubview:box];
+        }
+        
+        CGRect hairlineFrame = [self bounds];
+        hairlineFrame.origin.y = hairlineFrame.size.height - 1;
+        hairlineFrame.size.height = 1;
+
+        HairlineView *hairlineView = [[HairlineView alloc] initWithFrame:[self bounds]];
+        [hairlineView setFrame:hairlineFrame];
+        [hairlineView setAutoresizingMask:NSViewWidthSizable];
+        [hairlineView setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+        [hairlineView setLayoutAttribute:NSLayoutAttributeTop];
+
+        [self addSubview:hairlineView];
         
         NSTextField *textView = [[NSTextField alloc] initWithFrame:textFrame];
         [textView setEditable:NO];
@@ -41,13 +64,15 @@
         NSMutableAttributedString *as = [[NSMutableAttributedString alloc] init];
         
         NSAttributedString *as1 = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Purchase Embrace", nil) attributes:@{
-            NSForegroundColorAttributeName: [Theme colorNamed:@"TrialLink"],
+            NSForegroundColorAttributeName: [NSColor textColor],
+            NSFontAttributeName: [NSFont systemFontOfSize:12.0 weight:NSFontWeightSemibold],
             NSParagraphStyleAttributeName: ps
         }];
         [as appendAttributedString:as1];
         
         NSAttributedString *as2 = [[NSAttributedString alloc] initWithString:NSLocalizedString(@" to add\nmore than five songs.", nil) attributes:@{
-            NSForegroundColorAttributeName: [Theme colorNamed:@"TrialText"],
+            NSForegroundColorAttributeName: [NSColor secondaryLabelColor],
+            NSFontAttributeName: [NSFont systemFontOfSize:12.0 weight:NSFontWeightMedium],
             NSParagraphStyleAttributeName: ps
         }];
         [as appendAttributedString:as2];

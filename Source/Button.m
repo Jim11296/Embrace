@@ -59,10 +59,11 @@ static CGFloat sBorderLayerPadding = 2;
 }
 
 
-- (BOOL) allowsVibrancy
+- (void) viewDidChangeEffectiveAppearance
 {
-    return NO;
+    [self _update:nil];
 }
+
 
 - (void) _setupButton
 {
@@ -158,8 +159,6 @@ static CGFloat sBorderLayerPadding = 2;
     } else {
         [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormalBackground"]];
     }
-
-    [_backgroundView setHidden:_iconOnly];
 }
 
 
@@ -187,15 +186,6 @@ static CGFloat sBorderLayerPadding = 2;
 {
     if (_alertColor != alertColor) {
         _alertColor = alertColor;
-        [self _update:nil];
-    }
-}
-
-
-- (void) setIconOnly:(BOOL)iconOnly
-{
-    if (_iconOnly != iconOnly) {
-        _iconOnly = iconOnly;
         [self _update:nil];
     }
 }
@@ -425,6 +415,12 @@ static CGFloat sBorderLayerPadding = 2;
 - (void) updateLayer { }
 
 
+- (void) viewDidChangeEffectiveAppearance
+{
+    [_mainLayer setNeedsDisplay];
+}
+
+
 - (void) layout
 {
     [super layout];
@@ -452,7 +448,7 @@ static CGFloat sBorderLayerPadding = 2;
 {
     NSGraphicsContext *oldContext = [NSGraphicsContext currentContext];
     
-    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:NO]];
+    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:NO]];
 
     NSRect bounds = [layer bounds];
     
@@ -483,12 +479,14 @@ static CGFloat sBorderLayerPadding = 2;
 
 - (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
 {
-    if (layer == _mainLayer) {
-        [self _drawLayer:layer image:_image color:_tintColor inContext:ctx];
-    
-    } else if (layer == _auxLayer) {
-        [self _drawLayer:layer image:_auxImage color:_auxColor inContext:ctx];
-    }
+    PerformWithAppearance([self effectiveAppearance], ^{
+        if (layer == _mainLayer) {
+            [self _drawLayer:layer image:_image color:_tintColor inContext:ctx];
+        
+        } else if (layer == _auxLayer) {
+            [self _drawLayer:layer image:_auxImage color:_auxColor inContext:ctx];
+        }
+    });
 }
 
 
