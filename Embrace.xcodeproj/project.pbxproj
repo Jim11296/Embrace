@@ -136,7 +136,6 @@
 		55BC0B1918780A0200D84481 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1818780A0200D84481 /* CoreAudio.framework */; };
 		55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1A18780D1000D84481 /* AudioToolbox.framework */; };
 		55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B2A1878E4EF00D84481 /* Utils.m */; };
-		55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BE7739187CD05600BC0D29 /* BorderedView.m */; };
 		55C24E1518D7D7800057D45E /* StereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* StereoField.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */; };
 		55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */; };
@@ -147,6 +146,9 @@
 		55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF27A9187AB2650042C92A /* EditEffectController.m */; };
 		55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 55CF848D18BF27AC00EF33F7 /* Embrace.sdef */; };
 		55CF849118BF459600EF33F7 /* Scripting.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF849018BF459600EF33F7 /* Scripting.m */; };
+		55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D7000920DC9F3A002FB978 /* HairlineView.m */; };
+		55D7001020DCA3A8002FB978 /* TrackStripeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D7000D20DCA3A6002FB978 /* TrackStripeView.m */; };
+		55D7001120DCA3A8002FB978 /* TrackErrorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D7000F20DCA3A7002FB978 /* TrackErrorButton.m */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
 		55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */; };
@@ -438,8 +440,6 @@
 		55BC0B1A18780D1000D84481 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		55BC0B291878E4EF00D84481 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = Source/Utils.h; sourceTree = SOURCE_ROOT; };
 		55BC0B2A1878E4EF00D84481 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Source/Utils.m; sourceTree = SOURCE_ROOT; };
-		55BE7738187CD05600BC0D29 /* BorderedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BorderedView.h; path = Source/BorderedView.h; sourceTree = SOURCE_ROOT; };
-		55BE7739187CD05600BC0D29 /* BorderedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BorderedView.m; path = Source/BorderedView.m; sourceTree = SOURCE_ROOT; };
 		55C24E1318D7D7800057D45E /* StereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoField.h; path = Source/StereoField.h; sourceTree = "<group>"; };
 		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
@@ -457,6 +457,12 @@
 		55CF848D18BF27AC00EF33F7 /* Embrace.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Embrace.sdef; path = Resources/Embrace.sdef; sourceTree = SOURCE_ROOT; };
 		55CF848F18BF459600EF33F7 /* Scripting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scripting.h; path = Source/Scripting.h; sourceTree = "<group>"; };
 		55CF849018BF459600EF33F7 /* Scripting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Scripting.m; path = Source/Scripting.m; sourceTree = "<group>"; };
+		55D7000920DC9F3A002FB978 /* HairlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HairlineView.m; path = Source/HairlineView.m; sourceTree = "<group>"; };
+		55D7000A20DC9F3B002FB978 /* HairlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HairlineView.h; path = Source/HairlineView.h; sourceTree = "<group>"; };
+		55D7000C20DCA3A6002FB978 /* TrackStripeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackStripeView.h; path = Source/TrackStripeView.h; sourceTree = "<group>"; };
+		55D7000D20DCA3A6002FB978 /* TrackStripeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackStripeView.m; path = Source/TrackStripeView.m; sourceTree = "<group>"; };
+		55D7000E20DCA3A7002FB978 /* TrackErrorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackErrorButton.h; path = Source/TrackErrorButton.h; sourceTree = "<group>"; };
+		55D7000F20DCA3A7002FB978 /* TrackErrorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackErrorButton.m; path = Source/TrackErrorButton.m; sourceTree = "<group>"; };
 		55DD538C18B99A530084628D /* CrashPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = CrashPad.entitlements; path = Resources/CrashPad.entitlements; sourceTree = "<group>"; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
@@ -917,8 +923,6 @@
 			children = (
 				558AB90020C8C46800B4BAEE /* Theme.h */,
 				558AB90120C8C46800B4BAEE /* Theme.m */,
-				55BE7738187CD05600BC0D29 /* BorderedView.h */,
-				55BE7739187CD05600BC0D29 /* BorderedView.m */,
 				55717BF3187EA65400213213 /* Button.h */,
 				55717BF4187EA65400213213 /* Button.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
@@ -933,14 +937,20 @@
 				554FCB9C1DFCF0E900DE697E /* MaskView.m */,
 				55698DA61B54ECBE00C9E200 /* GraphicEQView.h */,
 				55698DA71B54ECBE00C9E200 /* GraphicEQView.m */,
+				55D7000A20DC9F3B002FB978 /* HairlineView.h */,
+				55D7000920DC9F3A002FB978 /* HairlineView.m */,
 				55ADE93618824338008DC245 /* LevelMeter.h */,
 				55ADE93718824338008DC245 /* LevelMeter.m */,
 				556098121B47CABD008516C3 /* MenuLabelView.h */,
 				556098131B47CABD008516C3 /* MenuLabelView.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
 				5506802F1887711000441AAE /* TimeStringValueTransformer.m */,
+				55D7000E20DCA3A7002FB978 /* TrackErrorButton.h */,
+				55D7000F20DCA3A7002FB978 /* TrackErrorButton.m */,
 				557ABAB41B68D48C006F69D9 /* TrackLabelView.h */,
 				557ABAB51B68D48C006F69D9 /* TrackLabelView.m */,
+				55D7000C20DCA3A6002FB978 /* TrackStripeView.h */,
+				55D7000D20DCA3A6002FB978 /* TrackStripeView.m */,
 				550D883618ACD5F800CC7E3A /* TrackTableView.h */,
 				550D883718ACD5F800CC7E3A /* TrackTableView.m */,
 				55CF2798187A464B0042C92A /* TrackTableCellView.h */,
@@ -1314,15 +1324,16 @@
 				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
+				55D7001020DCA3A8002FB978 /* TrackStripeView.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
 				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
 				55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */,
-				55BE773A187CD05600BC0D29 /* BorderedView.m in Sources */,
 				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
+				55D7001120DCA3A8002FB978 /* TrackErrorButton.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
@@ -1374,6 +1385,7 @@
 				55ADE93818824338008DC245 /* LevelMeter.m in Sources */,
 				554B733F18E402E1001E154E /* Log.m in Sources */,
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,
+				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
 				557C2CCA1897403E002FAFEA /* CAHostTimeBase.cpp in Sources */,
 				557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */,
 				55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */,
