@@ -7,25 +7,24 @@
 //
 
 #import "TrackTableCellView.h"
+
 #import "Track.h"
-#import "BorderedView.h"
-#import "Button.h"
+#import "TrackErrorButton.h"
 #import "AppDelegate.h"
 #import "NoDropImageView.h"
 #import "Preferences.h"
-#import "TrackTableView.h"
 #import "TrackLabelView.h"
+#import "TrackTableView.h"
+#import "TrackStripeView.h"
 #import "MaskView.h"
 
 
 
 @interface TrackTableCellView () <ApplicationEventListener>
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderedViewTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *titleDurationConstraint;
 
-@property (nonatomic, weak) IBOutlet BorderedView *borderedView;
-@property (nonatomic, weak) IBOutlet TrackLabelView *stripeView;
+@property (nonatomic, weak) IBOutlet TrackStripeView *stripeView;
 
 @property (nonatomic, weak) IBOutlet NSTextField *titleField;
 @property (nonatomic, weak) IBOutlet NSTextField *durationField;
@@ -37,9 +36,12 @@
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
 
 @property (nonatomic, weak) IBOutlet NoDropImageView *speakerImageView;
-@property (nonatomic, weak) IBOutlet Button *errorButton;
+@property (nonatomic, weak) IBOutlet TrackErrorButton *errorButton;
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerLeftConstraint;
+
+@property (nonatomic, strong)          TrackLabelView *dotLabelView;
+@property (nonatomic, weak)   IBOutlet TrackLabelView *edgeLabelView;
 
 @end
 
@@ -64,7 +66,6 @@
     NSArray            *_duplicateConstraints;
     NSLayoutConstraint *_duplicateRightConstraint;
     
-    TrackLabelView     *_dotView;
     NSArray            *_dotConstraints;
     NSLayoutConstraint *_dotRightConstraint;
 
@@ -153,12 +154,9 @@
 
 - (void) awakeFromNib
 {
-    [_errorButton setImage:[NSImage imageNamed:@"TrackErrorTemplate"]];
-    [_errorButton setIconOnly:YES];
     [_errorButton setAutoresizingMask:NSViewMinXMargin];
     [_errorButton setTarget:self];
     [_errorButton setAction:@selector(_errorButtonClicked:)];
-    [_errorButton setAlert:YES];
 
     _timeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
 
@@ -299,7 +297,7 @@
     if (object == _observedObject) {
     
         if ([keyPath isEqualToString:@"trackStatus"]) {
-            [self _updateColors];
+            [self updateColors];
             
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *ac) {
                 [ac setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -431,8 +429,8 @@
 
     [[NSAnimationContext currentContext] setDuration:0];
     
-    [self _updateStripeAndBorderedView];
-    [self _updateColors];
+    [self _updateLabelEdgeAndStripe];
+    [self updateColors];
 
     if ([self track]) {
         [self _updateRightIcons];
@@ -511,28 +509,28 @@
     }
 
 
-    if (showsDot && !_dotView) {
-        _dotView = [[TrackLabelView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-        [_dotView setStyle:TrackLabelViewDot];
-        [_dotView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if (showsDot && !_dotLabelView) {
+        _dotLabelView = [[TrackLabelView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [_dotLabelView setStyle:TrackLabelViewDot];
+        [_dotLabelView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
-        [[_durationField superview] addSubview:_dotView positioned:NSWindowBelow relativeTo:nil];
+        [[_durationField superview] addSubview:_dotLabelView positioned:NSWindowBelow relativeTo:nil];
 
-        _dotRightConstraint = [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-4.0];
+        _dotRightConstraint = [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-4.0];
 
         _dotConstraints = @[
             _dotRightConstraint,
-            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0],
-            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0],
-            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeHeight   relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0]
+            [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0],
+            [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0],
+            [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeHeight   relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0]
         ];
 
         [NSLayoutConstraint activateConstraints:_dotConstraints];
 
         
-    } else if (!showsDot && _dotView) {
-        [_dotView removeFromSuperview];
-        _dotView = nil;
+    } else if (!showsDot && _dotLabelView) {
+        [_dotLabelView removeFromSuperview];
+        _dotLabelView = nil;
         
         [NSLayoutConstraint deactivateConstraints:_dotConstraints];
         _dotConstraints = nil;
@@ -557,7 +555,7 @@
     }
 
     if (showsDot) {
-        [_dotView setLabel:trackLabel];
+        [_dotLabelView setLabel:trackLabel];
     }
 
     [_titleDurationConstraint setConstant:constant];
@@ -576,7 +574,7 @@
 
 
 
-- (void) _updateColors
+- (void) updateColors
 {
     NSTableRowView *rowView = [self _rowView];
 
@@ -604,8 +602,8 @@
         needsWhiteError = YES;
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimaryPlaying"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondaryPlaying"];
+        primaryColor   = [[self _tableView] playingTextColor];
+        secondaryColor = [primaryColor colorWithAlphaComponent:0.8];
     }
    
     [[self titleField]    setTextColor:primaryColor];
@@ -621,19 +619,16 @@
     [_speakerImageView   setTintColor:primaryColor];
     
     if (rowIsSelected && rowIsEmphasized) {
-        [_errorButton setAlertColor:primaryColor];
-        [_errorButton setAlertActiveColor:primaryColor];
-        [_errorButton setInactiveColor:primaryColor];
+        [_errorButton setNormalColor:primaryColor];
+        [_errorButton setPressedColor:primaryColor];
 
-        [_dotView setNeedsWhiteBorder:YES];
-
+        [_dotLabelView setNeedsWhiteBorder:YES];
 
     } else {
-        [_errorButton setAlertColor:[Theme colorNamed:@"ButtonAlert"]];
-        [_errorButton setAlertActiveColor:[Theme colorNamed:@"ButtonAlertPressed"]];
-        [_errorButton setInactiveColor:primaryColor];
+        [_errorButton setNormalColor:[Theme colorNamed:@"ButtonAlert"]];
+        [_errorButton setPressedColor:[Theme colorNamed:@"ButtonAlertPressed"]];
 
-        [_dotView setNeedsWhiteBorder:NO];
+        [_dotLabelView setNeedsWhiteBorder:NO];
     }
   
     
@@ -641,7 +636,15 @@
     NSColor *color = nil;
 
     if (@available(macOS 10.14, *)) {
-        material = rowIsSelected ? NSVisualEffectMaterialSelection : NSVisualEffectMaterialContentBackground;
+        if (rowIsSelected) {
+            if (rowIsEmphasized) {
+                color = [NSColor selectedContentBackgroundColor];
+            } else {
+                color = [NSColor unemphasizedSelectedContentBackgroundColor];
+            }
+        } else {
+            material = NSVisualEffectMaterialContentBackground;
+        }
 
     } else {
         if (rowIsSelected) {
@@ -661,43 +664,38 @@
 }
 
 
-- (void) _updateStripeAndBorderedView
+- (void) _updateLabelEdgeAndStripe
 {
     Track *track = [self track];
     if (!track) return;
 
-    BorderedView *borderedView = [self borderedView];
+    TrackStripeView *stripeView = [self stripeView];
 
-    NSColor *bottomBorderColor = [Theme colorNamed:@"SetlistSeparator"];
-    NSColor *bottomDashBackgroundColor = nil;
-
-    CGFloat bottomBorderHeight = -1;
-    CGFloat topConstraintValue = 0;
+    NSColor *stripeSolidColor = nil;
+    NSColor *stripeDashColor  = nil;
 
     if ([track trackStatus] != TrackStatusPlayed) {
         if ([track stopsAfterPlaying]) {
-            bottomDashBackgroundColor = [Theme colorNamed:@"SetlistStopAfterPlayingStripe1"];
-            bottomBorderColor         = [Theme colorNamed:@"SetlistStopAfterPlayingStripe2"];
-            bottomBorderHeight = 2;
+            stripeSolidColor = [Theme colorNamed:@"SetlistStopAfterPlayingStripe2"];
+            stripeDashColor  = [Theme colorNamed:@"SetlistStopAfterPlayingStripe1"];
 
         } else if ([track ignoresAutoGap]) {
-            bottomBorderColor = [Theme colorNamed:@"SetlistIgnoreAutoGapStripe"];
-            bottomBorderHeight = 2;
+            stripeSolidColor = [Theme colorNamed:@"SetlistIgnoreAutoGapStripe"];
         }
     }
 
-    [borderedView setBottomBorderColor:bottomBorderColor];
-    [borderedView setBottomBorderHeight:bottomBorderHeight];
-    [borderedView setBottomDashBackgroundColor:bottomDashBackgroundColor];
+    if (stripeSolidColor || stripeDashColor) {
+        [stripeView setSolidColor:stripeSolidColor];
+        [stripeView setDashColor:stripeDashColor];
+        [stripeView setHidden:NO];
+    } else {
+        [stripeView setHidden:YES];
+    }
 
     TrackLabel trackLabel = [track trackLabel];
-    [[self stripeView] setLabel:trackLabel];
-    [[self stripeView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
-
-    [_borderedViewTopConstraint setConstant:topConstraintValue];
+    [[self edgeLabelView] setLabel:trackLabel];
+    [[self edgeLabelView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
 }
-
-
 
 
 - (void) _updateFieldStrings
@@ -893,7 +891,7 @@
     NSTextField *line2Right  = [self lineTwoRightField];
     NSTextField *line3Left   = [self lineThreeLeftField];
     NSTextField *line3Right  = [self lineThreeRightField];
-    Button      *errorButton = [self errorButton];
+    NSView      *errorButton = [self errorButton];
 
     BOOL showError = [[self track] trackError] != TrackErrorNone;
 
@@ -956,7 +954,7 @@
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
-    [self _updateColors];
+    [self updateColors];
 }
 
 

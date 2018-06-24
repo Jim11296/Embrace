@@ -72,6 +72,8 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[self tableView] setDoubleAction:@selector(viewClickedTrack:)];
 #endif
 
+    [[self tableView] setGridStyleMask:NSTableViewSolidHorizontalGridLineMask];
+    
     NSNib *nib = [[NSNib alloc] initWithNibNamed:@"TrackTableCellView" bundle:nil];
     [[self tableView] registerNib:nib forIdentifier:@"TrackCell"];
 
