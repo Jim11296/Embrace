@@ -1,16 +1,12 @@
-//
-//  LevelMeter.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-11.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "LevelMeter.h"
 #import "SimpleProgressBar.h"
 
+
 @interface LevelMeterPeakDot : NSView
 @end
+
 
 @interface LevelMeterLimiterDot : NSView
 @property (nonatomic, getter=isOn) BOOL on;

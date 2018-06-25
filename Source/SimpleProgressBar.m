@@ -1,10 +1,4 @@
-//
-//  SimpleProgressBar.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2017-06-25.
-//  Copyright (c) 2017 Ricci Adams. All rights reserved.
-//
+// (c) 2017-2018 Ricci Adams.  All rights reserved.
 
 #import "SimpleProgressBar.h"
 

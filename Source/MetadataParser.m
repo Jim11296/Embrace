@@ -1,4 +1,4 @@
-//  Copyright (c) 2016-2017 Ricci Adams. All rights reserved.
+// (c) 2016-2018 Ricci Adams.  All rights reserved.
 
 #import "MetadataParser.h"
 #import <AudioToolbox/AudioToolbox.h>

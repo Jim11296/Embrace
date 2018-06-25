@@ -1,10 +1,4 @@
-//
-//  GradientView.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2016-12-10.
-//  (c) 2016-2017 Ricci Adams. All rights reserved.
-//
+// (c) 2018 Ricci Adams.  All rights reserved.
 
 #import "MaskView.h"
 

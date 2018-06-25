@@ -1,3 +1,5 @@
+# (c) 2018 Ricci Adams.  All rights reserved.
+
 require "json"
 require "find"
 

@@ -1,10 +1,4 @@
-//
-//  AudioFile.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-02-19.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
@@ -17,6 +11,7 @@ typedef NS_ENUM(NSInteger, AudioFileError) {
     AudioFileErrorReadFailed       = 104,
     AudioFileErrorReadTooSlow      = 105
 };
+
 
 @interface AudioFile : NSObject
 

@@ -1,10 +1,4 @@
-//
-//  GraphicEQView.m
-//  EQView
-//
-//  Created by Ricci Adams on 2015-07-09.
-//  Copyright (c) 2015 Ricci Adams. All rights reserved.
-//
+// (c) 2015-2018 Ricci Adams.  All rights reserved.
 
 #import "GraphicEQView.h"
 #import "WhiteSlider.h"
