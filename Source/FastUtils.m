@@ -1,13 +1,6 @@
-//
-//  FastUtils.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2016-05-27.
-//  (c) 2016-2017 Ricci Adams. All rights reserved.
-//
+// (c) 2016-2018 Ricci Adams.  All rights reserved.
 
 #import "FastUtils.h"
-
 
 
 void ApplySilenceToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData)

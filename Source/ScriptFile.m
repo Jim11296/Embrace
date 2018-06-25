@@ -1,10 +1,4 @@
-//
-//  ScriptsManager.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2017-11-12.
-//  Copyright © 2017 Ricci Adams. All rights reserved.
-//
+// (c) 2017-2018 Ricci Adams.  All rights reserved.
 
 #import "ScriptFile.h"
 

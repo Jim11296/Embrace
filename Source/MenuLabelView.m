@@ -1,10 +1,4 @@
-//
-//  PlayBar.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-11.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "MenuLabelView.h"
 
@@ -19,7 +13,6 @@ static NSInteger sMasterTag = 1000;
 static CGFloat sHorizontalPadding = 8;
 static CGFloat sDotWidth          = 14;
 static CGFloat sDotHeight         = 14;
-
 
 
 @interface MenuLabelViewPiece : NSView

@@ -1,3 +1,5 @@
+// (c) 2018 Ricci Adams.  All rights reserved.
+
 #import "ColorCompatibility.h"
 
 typedef struct { char *name; float r; float g; float b; float a; } ColorDataEntry;

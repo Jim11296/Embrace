@@ -1,10 +1,4 @@
-//
-//  WrappedUtils
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-06.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "WrappedUtils.h"
 #import "CAHostTimeBase.h"

@@ -1,14 +1,9 @@
-//
-//  WhiteSlider.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-09.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
 
 @protocol WhiteSliderDragDelegate;
+
 
 @interface WhiteSlider : NSSlider <EmbraceWindowListener>
 
@@ -18,6 +13,7 @@
 @property (readonly) NSRect knobRect;
 
 @end
+
 
 @interface WhiteSliderCell : NSSliderCell
 
