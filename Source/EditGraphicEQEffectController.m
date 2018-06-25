@@ -5,7 +5,7 @@
 #import "EffectAdditions.h"
 #import "EffectType.h"
 #import "GraphicEQView.h"
-#import "Button.h"
+#import "EmbraceButton.h"
 
 #import <AudioUnit/AUCocoaUIView.h>
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -133,10 +133,10 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     </customView>
-                                    <slider wantsLayer="YES" verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
+                                    <slider wantsLayer="YES" verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="EmbraceSlider">
                                         <rect key="frame" x="55" y="18" width="210" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="EmbraceSliderCell"/>
                                         <connections>
                                             <action selector="changeVolume:" target="-2" id="jC8-Ne-Dew"/>
                                             <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
@@ -154,7 +154,7 @@
                                             <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
                                         </connections>
                                     </textField>
-                                    <customView id="Twn-WM-C4J" customClass="Button">
+                                    <customView id="Twn-WM-C4J" customClass="EmbraceButton">
                                         <rect key="frame" x="7" y="22" width="42" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <connections>
@@ -173,7 +173,7 @@
                                             <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
                                         </connections>
                                     </textField>
-                                    <customView id="4bi-5W-Bp7" customClass="Button">
+                                    <customView id="4bi-5W-Bp7" customClass="EmbraceButton">
                                         <rect key="frame" x="271" y="22" width="42" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <connections>
@@ -231,11 +231,11 @@
                                         </tableView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="csK-JI-TFk">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="csK-JI-TFk">
                                     <rect key="frame" x="0.0" y="307" width="320" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="gLr-mq-zGm">
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="gLr-mq-zGm">
                                     <rect key="frame" x="-15" y="17" width="16" height="11"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -260,10 +260,10 @@
                                             <binding destination="-2" name="value" keyPath="self.autoGapTimeString" id="tqy-WQ-Uo9"/>
                                         </connections>
                                     </textField>
-                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
+                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="EmbraceSlider">
                                         <rect key="frame" x="29" y="1" width="254" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="16" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="17" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="16" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="17" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="EmbraceSliderCell"/>
                                         <connections>
                                             <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
                                         </connections>

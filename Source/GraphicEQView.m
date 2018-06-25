@@ -1,7 +1,7 @@
 // (c) 2015-2018 Ricci Adams.  All rights reserved.
 
 #import "GraphicEQView.h"
-#import "WhiteSlider.h"
+#import "EmbraceSlider.h"
 
 
 const CGFloat sKnobHeight      = 15;
@@ -599,7 +599,7 @@ const CGFloat sTrackWidth      = 5;
     [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.5 yRadius:2.5] fill];
 
     CGRect knobRect  = [self knobRectWithValue:_value];
-    [WhiteSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
+    [EmbraceSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
 }
 
 

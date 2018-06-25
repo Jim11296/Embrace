@@ -1,6 +1,6 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "WhiteSlider.h"
+#import "EmbraceSlider.h"
 
 
 static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
@@ -15,7 +15,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 }
 
 
-@implementation WhiteSlider
+@implementation EmbraceSlider
 
 + (void) drawKnobWithView:(NSView *)view rect:(CGRect)rect highlighted:(BOOL)highlighted
 {
@@ -74,9 +74,9 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    [_dragDelegate whiteSliderDidStartDrag:self];
+    [_dragDelegate sliderDidStartDrag:self];
     [super mouseDown:theEvent];
-    [_dragDelegate whiteSliderDidEndDrag:self];
+    [_dragDelegate sliderDidEndDrag:self];
 }
 
 
@@ -101,7 +101,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 @end
 
 
-@implementation WhiteSliderCell {
+@implementation EmbraceSliderCell {
     NSRect _cellFrame;
 }
 
@@ -118,7 +118,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 
 - (void) drawKnob:(NSRect)knobRect
 {
-    [WhiteSlider drawKnobWithView:[self controlView] rect:knobRect highlighted:[self isHighlighted]];
+    [EmbraceSlider drawKnobWithView:[self controlView] rect:knobRect highlighted:[self isHighlighted]];
 }
 
 

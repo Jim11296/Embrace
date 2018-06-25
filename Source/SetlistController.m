@@ -15,7 +15,7 @@
 #import "TrackTableCellView.h"
 #import "WaveformView.h"
 #import "HairlineView.h"
-#import "Button.h"
+#import "EmbraceButton.h"
 #import "EmbraceWindow.h"
 #import "MenuLabelView.h"
 #import "DangerMeter.h"
@@ -27,7 +27,7 @@
 #import "TrackTableView.h"
 #import "TracksController.h"
 #import "TrialBottomView.h"
-#import "WhiteSlider.h"
+#import "EmbraceSlider.h"
 #import "NoDropImageView.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -39,7 +39,7 @@ static NSInteger sAutoGapMinimum = 0;
 static NSInteger sAutoGapMaximum = 16;
 
 
-@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, EmbraceSliderDragDelegate>
 
 @property (nonatomic, strong, readwrite) IBOutlet TracksController *tracksController;
 
@@ -55,23 +55,23 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelSeparator;
 @property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelItem;
 
-@property (nonatomic, weak)   IBOutlet NSTextField  *playOffsetField;
-@property (nonatomic, weak)   IBOutlet PlayBar      *playBar;
-@property (nonatomic, weak)   IBOutlet NSTextField  *playRemainingField;
-@property (nonatomic, weak)   IBOutlet Button       *playButton;
-@property (nonatomic, weak)   IBOutlet Button       *gearButton;
-@property (nonatomic, weak)   IBOutlet DangerMeter  *dangerMeter;
-@property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
-@property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
+@property (nonatomic, weak)   IBOutlet NSTextField   *playOffsetField;
+@property (nonatomic, weak)   IBOutlet PlayBar       *playBar;
+@property (nonatomic, weak)   IBOutlet NSTextField   *playRemainingField;
+@property (nonatomic, weak)   IBOutlet EmbraceButton *playButton;
+@property (nonatomic, weak)   IBOutlet EmbraceButton *gearButton;
+@property (nonatomic, weak)   IBOutlet DangerMeter   *dangerMeter;
+@property (nonatomic, weak)   IBOutlet LevelMeter    *levelMeter;
+@property (nonatomic, weak)   IBOutlet EmbraceSlider *volumeSlider;
 
-@property (nonatomic, weak)   IBOutlet NSView *headerView;
-@property (nonatomic, weak)   IBOutlet NSView *mainView;
-@property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
-@property (nonatomic, weak)   IBOutlet NSView *footerView;
-@property (nonatomic, weak)   IBOutlet HairlineView *bottomSeparator;
+@property (nonatomic, weak)   IBOutlet NSView          *headerView;
+@property (nonatomic, weak)   IBOutlet NSView          *mainView;
+@property (nonatomic, weak)   IBOutlet NSScrollView    *scrollView;
+@property (nonatomic, weak)   IBOutlet NSView          *footerView;
+@property (nonatomic, weak)   IBOutlet HairlineView    *bottomSeparator;
 @property (nonatomic, weak)   IBOutlet NoDropImageView *autoGapIcon;
-@property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
-@property (nonatomic, weak)   IBOutlet NSTextField  *autoGapField;
+@property (nonatomic, weak)   IBOutlet EmbraceSlider   *autoGapSlider;
+@property (nonatomic, weak)   IBOutlet NSTextField     *autoGapField;
 
 @end
 
@@ -272,7 +272,7 @@ static NSInteger sAutoGapMaximum = 16;
     BOOL      alert    = NO;
     BOOL      outlined = NO;
 
-    Button *playButton = [self playButton];
+    EmbraceButton *playButton = [self playButton];
     
     if (action == PlaybackActionShowIssue) {
         image = [NSImage imageNamed:@"DeviceIssueTemplate"];
@@ -425,7 +425,7 @@ static NSInteger sAutoGapMaximum = 16;
     EmbraceLogMethod();
 
     PlaybackAction action = [self preferredPlaybackAction];
-    Button *playButton = [self playButton];
+    EmbraceButton *playButton = [self playButton];
     
     if ([playButton isEnabled] && beforeVolume) {
         Player *player = [Player sharedInstance];
@@ -995,7 +995,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) whiteSliderDidStartDrag:(WhiteSlider *)slider
+- (void) sliderDidStartDrag:(EmbraceSlider *)slider
 {
     if (slider == _volumeSlider) {
         _volumeBeforeDrag = [slider doubleValue];
@@ -1006,7 +1006,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) whiteSliderDidEndDrag:(WhiteSlider *)slider
+- (void) sliderDidEndDrag:(EmbraceSlider *)slider
 {
     if (slider == _volumeSlider) {
         CGFloat volumeBeforeDrag = _volumeBeforeDrag;
