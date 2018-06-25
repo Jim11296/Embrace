@@ -83,8 +83,8 @@
 		556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */; };
 		556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */; };
 		55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CC118B97ADB0059110C /* CrashPadClient.m */; };
-		55717BF5187EA65400213213 /* Button.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* Button.m */; };
-		55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* WhiteSlider.m */; };
+		55717BF5187EA65400213213 /* EmbraceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* EmbraceButton.m */; };
+		55717BF8187EAB8C00213213 /* EmbraceSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* EmbraceSlider.m */; };
 		5572C17E1F00B743007BE284 /* SimpleProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SimpleProgressBar.m */; };
 		55779D3A20C77DD900DB660F /* Crash Pad.app in Copy Crash Pad */ = {isa = PBXBuildFile; fileRef = 5559E61218DFD42500D61019 /* Crash Pad.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		55779D6020CA0ADA00DB660F /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */; };
@@ -331,10 +331,10 @@
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
 		55708CC018B97ADB0059110C /* CrashPadClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashPadClient.h; path = Source/CrashPadClient.h; sourceTree = SOURCE_ROOT; };
 		55708CC118B97ADB0059110C /* CrashPadClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPadClient.m; path = Source/CrashPadClient.m; sourceTree = SOURCE_ROOT; };
-		55717BF3187EA65400213213 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Button.h; path = Source/Button.h; sourceTree = SOURCE_ROOT; };
-		55717BF4187EA65400213213 /* Button.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Button.m; path = Source/Button.m; sourceTree = SOURCE_ROOT; };
-		55717BF6187EAB8C00213213 /* WhiteSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WhiteSlider.h; path = Source/WhiteSlider.h; sourceTree = SOURCE_ROOT; };
-		55717BF7187EAB8C00213213 /* WhiteSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WhiteSlider.m; path = Source/WhiteSlider.m; sourceTree = SOURCE_ROOT; };
+		55717BF3187EA65400213213 /* EmbraceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmbraceButton.h; path = Source/EmbraceButton.h; sourceTree = SOURCE_ROOT; };
+		55717BF4187EA65400213213 /* EmbraceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmbraceButton.m; path = Source/EmbraceButton.m; sourceTree = SOURCE_ROOT; };
+		55717BF6187EAB8C00213213 /* EmbraceSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmbraceSlider.h; path = Source/EmbraceSlider.h; sourceTree = SOURCE_ROOT; };
+		55717BF7187EAB8C00213213 /* EmbraceSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmbraceSlider.m; path = Source/EmbraceSlider.m; sourceTree = SOURCE_ROOT; };
 		5572C17C1F00B743007BE284 /* SimpleProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleProgressBar.h; path = Source/SimpleProgressBar.h; sourceTree = SOURCE_ROOT; };
 		5572C17D1F00B743007BE284 /* SimpleProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleProgressBar.m; path = Source/SimpleProgressBar.m; sourceTree = SOURCE_ROOT; };
 		55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iTunesLibrary.framework; path = System/Library/Frameworks/iTunesLibrary.framework; sourceTree = SDKROOT; };
@@ -923,14 +923,16 @@
 			children = (
 				558AB90020C8C46800B4BAEE /* Theme.h */,
 				558AB90120C8C46800B4BAEE /* Theme.m */,
-				55717BF3187EA65400213213 /* Button.h */,
-				55717BF4187EA65400213213 /* Button.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
 				5514B6381CDD694700F238B7 /* DangerMeter.h */,
 				5514B6391CDD694700F238B7 /* DangerMeter.m */,
 				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
 				55A708B018A715C1007BD7C0 /* DragSongsHereView.m */,
+				55717BF3187EA65400213213 /* EmbraceButton.h */,
+				55717BF4187EA65400213213 /* EmbraceButton.m */,
+				55717BF6187EAB8C00213213 /* EmbraceSlider.h */,
+				55717BF7187EAB8C00213213 /* EmbraceSlider.m */,
 				5595A7BA18793B9000A7B996 /* EmbraceWindow.h */,
 				5595A7BB18793B9000A7B996 /* EmbraceWindow.m */,
 				554FCB9B1DFCF0E900DE697E /* MaskView.h */,
@@ -943,6 +945,10 @@
 				55ADE93718824338008DC245 /* LevelMeter.m */,
 				556098121B47CABD008516C3 /* MenuLabelView.h */,
 				556098131B47CABD008516C3 /* MenuLabelView.m */,
+				55ADE93318815EA8008DC245 /* PlayBar.h */,
+				55ADE93418815EA8008DC245 /* PlayBar.m */,
+				5572C17C1F00B743007BE284 /* SimpleProgressBar.h */,
+				5572C17D1F00B743007BE284 /* SimpleProgressBar.m */,
 				5506802E1887711000441AAE /* TimeStringValueTransformer.h */,
 				5506802F1887711000441AAE /* TimeStringValueTransformer.m */,
 				55D7000E20DCA3A7002FB978 /* TrackErrorButton.h */,
@@ -957,14 +963,8 @@
 				55CF2799187A464B0042C92A /* TrackTableCellView.m */,
 				55B03B9B20CDFDBD0055881F /* TrackTableRowView.h */,
 				55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */,
-				55ADE93318815EA8008DC245 /* PlayBar.h */,
-				55ADE93418815EA8008DC245 /* PlayBar.m */,
-				5572C17C1F00B743007BE284 /* SimpleProgressBar.h */,
-				5572C17D1F00B743007BE284 /* SimpleProgressBar.m */,
 				556ACE2D187B901400AED4BC /* WaveformView.h */,
 				556ACE2E187B901400AED4BC /* WaveformView.m */,
-				55717BF6187EAB8C00213213 /* WhiteSlider.h */,
-				55717BF7187EAB8C00213213 /* WhiteSlider.m */,
 				55E0B34018CBFA6900B4087C /* NoDropImageView.h */,
 				55E0B34118CBFA6900B4087C /* NoDropImageView.m */,
 				557C43981D615CDC000184D8 /* TipArrowFloater.h */,
@@ -1320,10 +1320,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */,
-				55717BF5187EA65400213213 /* Button.m in Sources */,
+				55717BF5187EA65400213213 /* EmbraceButton.m in Sources */,
 				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
-				55717BF8187EAB8C00213213 /* WhiteSlider.m in Sources */,
+				55717BF8187EAB8C00213213 /* EmbraceSlider.m in Sources */,
 				55D7001020DCA3A8002FB978 /* TrackStripeView.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,

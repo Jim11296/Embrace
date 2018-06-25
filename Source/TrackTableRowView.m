@@ -23,7 +23,7 @@
 
     }
 
-    NSRectFill([self bounds]);
+    NSRectFillUsingOperation([self bounds], NSCompositingOperationSourceOver);
 }
 
 
@@ -42,7 +42,7 @@
     
     NSRectClip(dirtyRect);
     [[Theme colorNamed:@"SetlistSeparator"] set];
-    NSRectFill(rect);
+    NSRectFillUsingOperation(rect, NSCompositingOperationSourceOver);
 }
 
 @end

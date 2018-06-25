@@ -1,17 +1,17 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "Button.h"
+#import "EmbraceButton.h"
 #import "NoDropImageView.h"
 
 static CGFloat sBorderLayerPadding = 2;
 
 
-@interface ButtonBorderView : NSView <CALayerDelegate> 
+@interface EmbraceButtonBorderView : NSView <CALayerDelegate> 
 - (void) performAnimate:(BOOL)orderIn;
 @end
 
 
-@interface ButtonIconView : NSView <CALayerDelegate> 
+@interface EmbraceButtonIconView : NSView <CALayerDelegate> 
 
 - (void) _performOpenAnimationWithImage:(NSImage *)image tintColor:(NSColor *)tintColor;
 - (void) _performPopAnimationWithImage:(NSImage *)image tintColor:(NSColor *)tintColor isPopIn:(BOOL)isPopIn;
@@ -23,11 +23,11 @@ static CGFloat sBorderLayerPadding = 2;
 
 
 
-@implementation Button {
-    BOOL              _highlighted;
-    ButtonIconView   *_iconView;
-    ButtonBorderView *_borderView;
-    NSImageView      *_backgroundView;
+@implementation EmbraceButton {
+    BOOL                     _highlighted;
+    EmbraceButtonIconView   *_iconView;
+    EmbraceButtonBorderView *_borderView;
+    NSImageView             *_backgroundView;
 }
 
 
@@ -61,13 +61,6 @@ static CGFloat sBorderLayerPadding = 2;
 
 - (void) _setupButton
 {
-    _alertColor       = [Theme colorNamed:@"ButtonAlert"];
-    _alertActiveColor = [Theme colorNamed:@"ButtonAlertPressed"];
-    _normalColor      = [Theme colorNamed:@"ButtonNormal"];
-    _activeColor      = [Theme colorNamed:@"ButtonPressed"];
-    _inactiveColor    = [Theme colorNamed:@"ButtonInactive"];
-    _disabledColor    = [Theme colorNamed:@"ButtonDisabled"];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSWindowDidBecomeMainNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidResignActiveNotification object:nil];
@@ -79,7 +72,7 @@ static CGFloat sBorderLayerPadding = 2;
     
     CGRect bounds = [self bounds];
     
-    _iconView = [[ButtonIconView alloc] initWithFrame:bounds];
+    _iconView = [[EmbraceButtonIconView alloc] initWithFrame:bounds];
     [self addSubview:_iconView];
 
     [self setWantsLayer:YES];
@@ -126,21 +119,21 @@ static CGFloat sBorderLayerPadding = 2;
 
 - (void) _update:(NSNotification *)note
 {
-    NSColor *color = _normalColor;
+    NSColor *color = [Theme colorNamed:@"ButtonNormal"];
 
     BOOL isInactive = ![[self window] isMainWindow] || ![NSApp isActive];
-    
+
     if (![self isEnabled]) {
-        color = _disabledColor;
+        color = [Theme colorNamed:@"ButtonDisabled"];
 
     } else if (isInactive) {
-        color = _inactiveColor;
+        color = [Theme colorNamed:@"ButtonInactive"];
 
     } else if ([self isAlert]) {
-        color = _highlighted ? _alertActiveColor : _alertColor;
+        color = _highlighted ? [Theme colorNamed:@"ButtonAlertPressed"] : [Theme colorNamed:@"ButtonAlert"];
 
     } else if (_highlighted) {
-        color = _activeColor;
+        color = [Theme colorNamed:@"ButtonPressed"];
     }
 
     [_iconView setImage:[self image]];
@@ -176,24 +169,21 @@ static CGFloat sBorderLayerPadding = 2;
 }
 
 
-- (void) setAlertColor:(NSColor *)alertColor
-{
-    if (_alertColor != alertColor) {
-        _alertColor = alertColor;
-        [self _update:nil];
-    }
-}
-
-
 - (void) performOpenAnimationToImage:(NSImage *)image enabled:(BOOL)enabled
 {
-    [_iconView _performOpenAnimationWithImage:image tintColor:(enabled ? _normalColor : _inactiveColor)];
+    NSColor *normalColor   = [Theme colorNamed:@"ButtonNormal"];
+    NSColor *inactiveColor = [Theme colorNamed:@"ButtonInactive"];
+
+    [_iconView _performOpenAnimationWithImage:image tintColor:(enabled ? normalColor : inactiveColor)];
 }
 
 
 - (void) performPopAnimation:(BOOL)isPopIn toImage:(NSImage *)image alert:(BOOL)alert
 {
-    [_iconView _performPopAnimationWithImage:image tintColor:(alert ? _alertColor : _normalColor) isPopIn:isPopIn];
+    NSColor *alertColor  = [Theme colorNamed:@"ButtonAlert"];
+    NSColor *normalColor = [Theme colorNamed:@"ButtonNormal"];
+
+    [_iconView _performPopAnimationWithImage:image tintColor:(alert ? alertColor : normalColor) isPopIn:isPopIn];
 }
 
 
@@ -201,7 +191,7 @@ static CGFloat sBorderLayerPadding = 2;
 {
     if (outlined != _outlined) {
         if (outlined && !_borderView) {
-            _borderView = [[ButtonBorderView alloc] initWithFrame:[self bounds]];
+            _borderView = [[EmbraceButtonBorderView alloc] initWithFrame:[self bounds]];
             [self addSubview:_borderView];
         }
     
@@ -220,7 +210,7 @@ static CGFloat sBorderLayerPadding = 2;
 @end
 
 
-@implementation ButtonBorderView {
+@implementation EmbraceButtonBorderView {
     CALayer *_mainLayer;
 }
 
@@ -361,7 +351,7 @@ static CGFloat sBorderLayerPadding = 2;
 
 
 
-@implementation ButtonIconView {
+@implementation EmbraceButtonIconView {
     CALayer *_mainLayer;
 
     CALayer *_auxLayer;
