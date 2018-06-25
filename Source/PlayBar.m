@@ -55,27 +55,20 @@
     [self addSubview:_progressBar];
     [self addSubview:_playhead];
         
-    [self _updateColors];
+    [self _updateHidden];
 }
 
 
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
-    [self _updateColors];
-}
-
-
-- (void) viewDidChangeEffectiveAppearance
-{
-    [self _updateColors];
+    [_progressBar windowDidUpdateMain:window];
 }
 
 
 - (void) layout
 {
-    if (@available(macOS 10.12, *)) {
-        // Opt-out of Auto Layout
-    } else {
+    // Opt-out of Auto Layout unless we are on macOS 10.11
+    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
         [super layout]; 
     }
 
@@ -100,10 +93,6 @@
     playheadFrame.origin.y   = 0;
     playheadFrame.size.width = 2;
     
-    [_progressBar  setHidden:!_playing];
-    [_playhead     setHidden:!_playing];
-    [_hairlineView setHidden: _playing];
-
     [_progressBar  setFrame:barFrame];
     [_playhead     setFrame:playheadFrame];
     [_hairlineView setFrame:bottomFrame];
@@ -113,13 +102,11 @@
 
 #pragma mark - Private Methods
 
-- (void) _updateColors
+- (void) _updateHidden
 {
-//    NSColor *inactiveColor = [Theme colorNamed:@"MeterUnfilled"];
-//    NSColor *dotColor      = [Theme colorNamed:@"MeterMarker"];
-//
-//
-//    [_bottomBorder setBackgroundColor:[inactiveColor CGColor]];
+    [_progressBar  setHidden:!_playing];
+    [_playhead     setHidden:!_playing];
+    [_hairlineView setHidden: _playing];
 }
 
 
@@ -155,7 +142,7 @@
 {
     if (_playing != playing) {
         _playing = playing;
-        [self setNeedsLayout:YES];
+        [self _updateHidden];
     }
 }
 
