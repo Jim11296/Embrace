@@ -40,6 +40,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 - (void) _commonTrackTableViewInit
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleControlTintDidChange:) name:NSControlTintDidChangeNotification object:nil];
+    [self _updatePlayingTextColor];
 }
 
 
@@ -104,7 +105,6 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 }
 
 
-
 - (void) _updatePlayingTextColor
 {
     NSColor *playingTextColor = nil;
@@ -112,10 +112,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     NSColor *(^getColorWithHue)(CGFloat, NSArray<NSNumber *> *) = ^(CGFloat normalizedHue, NSArray<NSNumber *> *values) {
         CGFloat hue = fmod(normalizedHue * 360.0, 360.0);
 
-//        CGFloat keys[] = { -2.0, 28.0,   41.0,   106.0, 211.0, 299.0,  332.0, 358.0, 388.0  };
-
-
-        CGFloat keys[] = { -2.0, 28.0,   41.0,   106.0, 214.0, 299.0,  332.0, 358.0, 388.0  };
+        CGFloat keys[] = { -2.0, 28.0, 41.0, 106.0, 214.0, 299.0,  332.0, 358.0, 388.0 };
 
         NSColor *result = nil;
 
