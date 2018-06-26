@@ -3,7 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface PlayBar : NSView <CALayerDelegate, EmbraceWindowListener>
+@interface PlayBar : NSView <EmbraceWindowListener>
 
 @property (nonatomic) float percentage;
 @property (nonatomic, getter=isPlaying) BOOL playing;

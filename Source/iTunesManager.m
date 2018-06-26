@@ -42,10 +42,7 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
 {
     if ((self = [super init])) {
         _libraryCheckTimer = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
-        
-        if ([_libraryCheckTimer respondsToSelector:@selector(setTolerance:)]) {
-            [_libraryCheckTimer setTolerance:5.0];
-        }
+        [_libraryCheckTimer setTolerance:5.0];
         
         [self _checkLibrary:nil];
     }
