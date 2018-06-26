@@ -48,7 +48,10 @@
 
     [_hairlineView setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
     [_hairlineView setLayoutAttribute:NSLayoutAttributeBottom];
-    
+
+    [self setWantsLayer:YES];
+    [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
+
     [self setAutoresizesSubviews:NO];
     
     [self addSubview:_hairlineView];
@@ -67,37 +70,25 @@
 
 - (void) layout
 {
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
-
     NSRect bounds = [self bounds];
-    CGFloat scale = [[self window] backingScaleFactor];
 
     NSRect barFrame = bounds;
     barFrame.size.height = 3;
 
     NSRect bottomFrame = bounds;
-    bottomFrame.size.height = (1.0 / scale);
+    bottomFrame.size.height = 1;
 
-    NSRect playheadFrame = bounds;
-    playheadFrame.size.height = 7;
+    [_progressBar  setFrame:barFrame];
+    [_hairlineView setFrame:bottomFrame];
 
     [self _updatePlayheadX];
-    
-    NSRect leftRect, rightRect;
-    NSDivideRect(barFrame, &leftRect, &rightRect, _playheadX - barFrame.origin.x, NSMinXEdge);
+    [_playhead setFrame:CGRectMake(_playheadX, 0, 2, 7)];
 
-    playheadFrame.origin.x   = _playheadX;
-    playheadFrame.origin.y   = 0;
-    playheadFrame.size.width = 2;
-    
-    [_progressBar  setFrame:barFrame];
-    [_playhead     setFrame:playheadFrame];
-    [_hairlineView setFrame:bottomFrame];
+    // Opt-out of Auto Layout unless we are on macOS 10.11
+    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
+        [super layout]; 
+    }
 }
-
 
 
 #pragma mark - Private Methods
