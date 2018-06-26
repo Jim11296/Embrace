@@ -7,7 +7,7 @@
 
 @interface TrackScheduler : NSObject
 
-- (id) initWithTrack:(Track *)track outputFormat:(AudioStreamBasicDescription)outputFormat;
+- (id) initWithTrack:(Track *)track;
 
 - (BOOL) setup;
 
