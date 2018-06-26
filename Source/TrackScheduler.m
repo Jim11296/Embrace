@@ -25,18 +25,16 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 @implementation TrackScheduler {
     AudioFile *_audioFile;
     AudioStreamBasicDescription _clientFormat;
-    AudioStreamBasicDescription _outputFormat;
 
     ScheduledAudioSlice *_slice;
     NSArray *_protectedBuffers;
 }
 
 
-- (id) initWithTrack:(Track *)track outputFormat:(AudioStreamBasicDescription)outputFormat
+- (id) initWithTrack:(Track *)track
 {
     if ((self = [super init])) {
         _track = track;
-        _outputFormat = outputFormat;
     }
     
     return self;
