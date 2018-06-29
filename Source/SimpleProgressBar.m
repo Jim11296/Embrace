@@ -100,35 +100,36 @@
 
 - (void) _updateColors
 {
-    BOOL isMainWindow = [[self window] isMainWindow];
+    PerformWithAppearance([self effectiveAppearance], ^{
+        BOOL isMainWindow = [[self window] isMainWindow];
 
-    NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
-    NSColor *filledColor   = [Theme colorNamed:@"MeterFilled"];
-    
-    if (isMainWindow) {
-        filledColor = [Theme colorNamed:@"MeterFilledMain"];
-    }
+        NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
+        NSColor *filledColor   = [Theme colorNamed:@"MeterFilled"];
+        
+        if (isMainWindow) {
+            filledColor = [Theme colorNamed:@"MeterFilledMain"];
+        }
 
-    if (IsAppearanceDarkAqua(self)) {
-        CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+        if (IsAppearanceDarkAqua(self)) {
+            CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
 
-        unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
-        filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
-    }
-    
-    CGColorRelease(_unfilledColor);
-    _unfilledColor = CGColorRetain([unfilledColor CGColor]);
+            unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
+            filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
+        }
+        
+        CGColorRelease(_unfilledColor);
+        _unfilledColor = CGColorRetain([unfilledColor CGColor]);
 
-    CGColorRelease(_filledColor);
-    _filledColor = CGColorRetain([filledColor CGColor]);
+        CGColorRelease(_filledColor);
+        _filledColor = CGColorRetain([filledColor CGColor]);
 
-    [self setNeedsDisplay:YES];
+        [self setNeedsDisplay:YES];
+    });
 }
 
 
 #pragma mark - Accessors
  
-
 - (void) setPercentage:(CGFloat)percentage
 {
     if (_percentage != percentage) {

@@ -74,6 +74,12 @@ const CGFloat sTrackWidth      = 5;
 }
 
 
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateBandAlpha];
+}
+
+
 - (BOOL) wantsUpdateLayer
 {
     return YES;
@@ -213,6 +219,20 @@ const CGFloat sTrackWidth      = 5;
 - (void) _endUpdate
 {
     [_selectedBandView setSelected:NO];
+}
+
+
+- (void) _updateBandAlpha
+{
+    CGFloat alpha = 1.0;
+
+    if (IsAppearanceDarkAqua(self)) {
+        alpha = [[Theme colorNamed:@"EQDarkAlpha"] alphaComponent];
+
+        for (GraphicEQBandView *bandView in _bandViews) {
+            [bandView setAlphaValue:alpha];
+        }
+    }
 }
 
 
@@ -458,6 +478,7 @@ const CGFloat sTrackWidth      = 5;
         [_bottomLabel sizeToFit];
     }
     
+    [self _updateBandAlpha];
     [self reloadData];
 }
 
@@ -566,6 +587,9 @@ const CGFloat sTrackWidth      = 5;
 
 - (void) drawRect:(NSRect)dirtyRect
 {
+//    BOOL isMainWindow = [[self window] isMainWindow];
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+
     CGRect bounds    = [self bounds];
     CGRect trackRect = [self trackRect];
 
@@ -581,10 +605,11 @@ const CGFloat sTrackWidth      = 5;
         NSRectFill(lineRect);
     };
 
-    [[Theme colorNamed:@"EQMajorTick"] set];
-    drawTick( 0.00 );
 
-    [[Theme colorNamed:@"EQMinorTick"] set];
+    NSColor *primaryColor   = [Theme colorNamed:@"EQPrimary"];
+    NSColor *secondaryColor = [Theme colorNamed:@"EQSecondary"];
+    
+    [secondaryColor set];
     drawTick( 1.00 );
     drawTick(-1.00 );
     drawTick( 0.50 );
@@ -595,7 +620,8 @@ const CGFloat sTrackWidth      = 5;
     drawTick(-0.25 );
     drawTick(-0.75 );
 
-    [[Theme colorNamed:@"EQTrack"] set];
+    [primaryColor set];
+    drawTick( 0.00 );
     [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.5 yRadius:2.5] fill];
 
     CGRect knobRect  = [self knobRectWithValue:_value];

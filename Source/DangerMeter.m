@@ -170,35 +170,37 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
 
 - (void) _updateColors
 {
-    BOOL isMainWindow = [[self window] isMainWindow];
+    PerformWithAppearance([self effectiveAppearance], ^{
+        BOOL isMainWindow = [[self window] isMainWindow];
 
-    NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
-    NSColor *redColor      = [Theme colorNamed:@"MeterRed"];
-    NSColor *filledColor   = nil;
+        NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
+        NSColor *redColor      = [Theme colorNamed:@"MeterRed"];
+        NSColor *filledColor   = nil;
 
-    if (isMainWindow) {
-        filledColor = [Theme colorNamed:@"MeterFilledMain"];
-    } else {
-        filledColor = [Theme colorNamed:@"MeterFilled"];
-    }
-    
-    NSColorSpace *sRGBColorSpace = [NSColorSpace sRGBColorSpace];
-    unfilledColor = [unfilledColor colorUsingColorSpace:sRGBColorSpace];
-    redColor      = [redColor      colorUsingColorSpace:sRGBColorSpace];
-    filledColor   = [filledColor   colorUsingColorSpace:sRGBColorSpace];
-    
-    if (IsAppearanceDarkAqua(self)) {
-        CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+        if (isMainWindow) {
+            filledColor = [Theme colorNamed:@"MeterFilledMain"];
+        } else {
+            filledColor = [Theme colorNamed:@"MeterFilled"];
+        }
         
-        unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
-        filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
-    }
-    
-    [unfilledColor getComponents:_unfilledComponents];
-    [filledColor   getComponents:_filledComponents];
-    [redColor      getComponents:_redComponents];
-    
-    [self setNeedsDisplay:YES];
+        NSColorSpace *sRGBColorSpace = [NSColorSpace sRGBColorSpace];
+        unfilledColor = [unfilledColor colorUsingColorSpace:sRGBColorSpace];
+        redColor      = [redColor      colorUsingColorSpace:sRGBColorSpace];
+        filledColor   = [filledColor   colorUsingColorSpace:sRGBColorSpace];
+        
+        if (IsAppearanceDarkAqua(self)) {
+            CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+            
+            unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
+            filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
+        }
+        
+        [unfilledColor getComponents:_unfilledComponents];
+        [filledColor   getComponents:_filledComponents];
+        [redColor      getComponents:_redComponents];
+        
+        [self setNeedsDisplay:YES];
+    });
 }
 
 
