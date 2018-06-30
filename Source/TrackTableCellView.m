@@ -114,7 +114,9 @@
 
 - (void) viewDidChangeEffectiveAppearance
 {
-    [self _updateView];
+    PerformWithAppearance([self effectiveAppearance], ^{
+        [self _updateView];
+    });
 }
 
 

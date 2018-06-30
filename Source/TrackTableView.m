@@ -52,7 +52,9 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 
 - (void) viewDidChangeEffectiveAppearance
 {
-    [self _updatePlayingTextColor];
+    PerformWithAppearance([self effectiveAppearance], ^{
+        [self _updatePlayingTextColor];
+    });
 }
 
 
