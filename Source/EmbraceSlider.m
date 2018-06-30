@@ -67,7 +67,9 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
         [shadow2 set];
 
         NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
-        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:rect] angle:90];
+        
+        CGFloat angle = [view isFlipped] ? 90 : -90;
+        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:rect] angle:angle];
     }
 }
 

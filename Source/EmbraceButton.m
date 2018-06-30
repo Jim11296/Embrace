@@ -55,7 +55,9 @@ static CGFloat sBorderLayerPadding = 2;
 
 - (void) viewDidChangeEffectiveAppearance
 {
-    [self _update:nil];
+    PerformWithAppearance([self effectiveAppearance], ^{
+        [self _update:nil];
+    });
 }
 
 
