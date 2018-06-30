@@ -896,11 +896,11 @@ static OSStatus sInputRenderCallback(
         };
         
         UInt32 maxFrames = getPropertyUInt32(_outputAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
-        
+         
         AudioStreamBasicDescription outputFormat;
         getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputFormat);
         
-        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack outputFormat:outputFormat];
+        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack];
         
         if (![_currentScheduler setup]) {
             EmbraceLog(@"Player", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);

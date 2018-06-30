@@ -1181,6 +1181,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         [track setTrackStatus:TrackStatusQueued];
     }
 
+    [[self tableView] reloadData];
     [self _didModifyTracks];
 }
 
