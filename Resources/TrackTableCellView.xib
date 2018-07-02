@@ -15,9 +15,9 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="eIS-U0-iuH" customClass="TrackStripeView">
-                    <rect key="frame" x="0.0" y="0.0" width="312" height="2"/>
+                    <rect key="frame" x="0.0" y="0.0" width="312" height="1"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="2" id="Y7C-1H-Yrz"/>
+                        <constraint firstAttribute="height" constant="1" id="Y7C-1H-Yrz"/>
                     </constraints>
                 </customView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="nkF-z6-beo" userLabel="Edge Label View" customClass="TrackLabelView">
