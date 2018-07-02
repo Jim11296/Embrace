@@ -13,7 +13,6 @@
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-    CGFloat scale  = [[self window] backingScaleFactor];
     CGRect  bounds = [self bounds];
 
     CGRect insetBounds = GetInsetBounds(self);
@@ -27,15 +26,10 @@
         [_dashColor set];
 
         NSRect dashRect = insetBounds;
-        dashRect.size.width = bounds.size.height;
+        dashRect.size.width = bounds.size.height * 3;
 
         while (dashRect.origin.x < insetBounds.size.width) {
-            if (scale > 1) {
-                [[NSBezierPath bezierPathWithOvalInRect:dashRect] fill];
-            } else {
-                NSRectFill(dashRect);
-            }
-
+            NSRectFill(dashRect);
             dashRect.origin.x += (dashRect.size.width * 2);
         }
     }
