@@ -1,32 +1,38 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "DangerMeter.h"
+#import "SetlistDangerMeter.h"
+#import "SetlistProgressBar.h"
 
-static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *output)
-{
-    if      (fraction > 1) fraction = 1;
-    else if (fraction < 0) fraction = 0;
-    
-    CGFloat iFraction = 1.0 - fraction;
-
-    output[0] = (b[0] * fraction) + (a[0] * iFraction);
-    output[1] = (b[1] * fraction) + (a[1] * iFraction);
-    output[2] = (b[2] * fraction) + (a[2] * iFraction);
-    output[3] = (b[3] * fraction) + (a[3] * iFraction);
-}
+@interface SetlistDangerMeter () <CALayerDelegate>
+@end
 
 
+@interface SetlistDangerMeterLight : NSView
+@property (nonatomic, weak) SetlistProgressBar *linkedProgressBar;
 
-@implementation DangerMeter {
+@property (nonatomic, getter=isOn)   BOOL on;
+@property (nonatomic, getter=isBolt) BOOL bolt;
+@end
+
+@implementation SetlistDangerMeterLight
+@end
+
+@implementation SetlistDangerMeter {
+    CALayer *_boltLight;
+    CALayer *_overloadLight;
+
+    SetlistProgressBar *_progressBar;
+
     NSTimer *_timer;
 
-    double _dangerLevel;
+    double         _dangerLevel;
+    NSTimeInterval _dangerTime;
+    NSTimeInterval _overloadTime;
+
+    // Updated in _recomputeDecayedLevel
     double _decayedLevel;
     double _overloadLevel;
     double _redLevel;
-
-    NSTimeInterval _dangerTime;
-    NSTimeInterval _overloadTime;
    
     CGColorSpaceRef _colorSpace;
     CGFloat _unfilledComponents[4];
@@ -57,24 +63,115 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
 
 - (void) _commonDangerMeterInit
 {
-    _colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
-    [self _updateColors];
+    [self setWantsLayer:YES];
+    [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
+
+    _progressBar = [[SetlistProgressBar alloc] initWithFrame:CGRectZero];
+
+    _boltLight = [CALayer layer];
+    [_boltLight setNeedsDisplay];
+    [_boltLight setDelegate:self];
+
+    _overloadLight = [CALayer layer];
+    [_overloadLight setNeedsDisplay];
+    [_overloadLight setDelegate:self];
+
+    [[self layer] addSublayer:_boltLight];
+    [[self layer] addSublayer:_overloadLight];
+    
+    [self addSubview:_progressBar];
 }
 
 
-- (void) dealloc
+- (BOOL) wantsUpdateLayer
 {
-    CGColorSpaceRelease(_colorSpace);
-    _colorSpace = NULL;
+    return YES;
 }
 
 
-- (void) viewDidChangeEffectiveAppearance
+- (void) updateLayer
 {
-    [self _updateColors];
+    // No-op
 }
 
 
+- (void) layout
+{
+    CGRect bounds = [self bounds];
+
+    CGRect boltRect = CGRectMake(1, 1, 4, 10);
+
+    CGRect barRect = CGRectMake(7, 4, bounds.size.width - 7, 4);
+    CGRect overloadRect = barRect;
+    
+    barRect.size.width -= 6;
+    overloadRect.size.width =  4;
+    overloadRect.origin.x   = CGRectGetMaxX(barRect) + 2;
+
+    [_boltLight setFrame:boltRect];
+    [_progressBar setFrame:barRect];
+    [_overloadLight setFrame:overloadRect];
+
+    // Opt-out of Auto Layout unless we are on macOS 10.11
+    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
+        [super layout]; 
+    }
+}
+
+
+- (void) drawLayer:(CALayer *)layer inContext:(CGContextRef)context
+{
+    if (layer == _boltLight) {
+        CGContextBeginPath(context);
+        CGContextMoveToPoint(   context, 2, 10);
+        CGContextAddLineToPoint(context, 2, 6);
+        CGContextAddLineToPoint(context, 4, 6);
+        CGContextAddLineToPoint(context, 2, 0);
+        CGContextAddLineToPoint(context, 2, 4);
+        CGContextAddLineToPoint(context, 0, 4);
+
+        if (_metering) {
+            [_progressBar setFilledColorWithRedLevel:_redLevel inContext:context];
+        } else {
+            [_progressBar setUnfilledColorWithRedLevel:0 inContext:context];
+        }
+
+        CGContextFillPath(context);
+
+    } else if (layer == _overloadLight) {
+        [_progressBar setUnfilledColorWithRedLevel:_overloadLevel inContext:context];
+        CGContextFillEllipseInRect(context, [layer bounds]);
+    }
+}
+
+
+
+- (void) viewDidMoveToWindow
+{
+    [super viewDidMoveToWindow];
+    [self _inheritContentsScaleFromWindow:[self window]];
+}
+
+
+- (BOOL) layer:(CALayer *)layer shouldInheritContentsScale:(CGFloat)newScale fromWindow:(NSWindow *)window
+{
+    [self _inheritContentsScaleFromWindow:window];
+    return (layer == _boltLight || layer == _overloadLight);
+}
+
+
+- (void) _inheritContentsScaleFromWindow:(NSWindow *)window
+{
+    CGFloat contentsScale = [window backingScaleFactor];
+
+    if (contentsScale) {
+        [_boltLight setContentsScale:contentsScale];
+        [_overloadLight setContentsScale:contentsScale];
+    }
+}
+
+
+/*
 - (void) drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
@@ -156,53 +253,21 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
         CGContextFillRect(context, rightRect);
     }
 }
+*/
 
 
 #pragma mark - Window Listener
 
 - (void) windowDidUpdateMain:(EmbraceWindow *)window
 {
-    [self _updateColors];
+    [_progressBar windowDidUpdateMain:window];
+
+    [_boltLight setNeedsDisplay];
+    [_overloadLight setNeedsDisplay];
 }
 
 
 #pragma mark - Private Methods
-
-- (void) _updateColors
-{
-    PerformWithAppearance([self effectiveAppearance], ^{
-        BOOL isMainWindow = [[self window] isMainWindow];
-
-        NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
-        NSColor *redColor      = [Theme colorNamed:@"MeterRed"];
-        NSColor *filledColor   = nil;
-
-        if (isMainWindow) {
-            filledColor = [Theme colorNamed:@"MeterFilledMain"];
-        } else {
-            filledColor = [Theme colorNamed:@"MeterFilled"];
-        }
-        
-        NSColorSpace *sRGBColorSpace = [NSColorSpace sRGBColorSpace];
-        unfilledColor = [unfilledColor colorUsingColorSpace:sRGBColorSpace];
-        redColor      = [redColor      colorUsingColorSpace:sRGBColorSpace];
-        filledColor   = [filledColor   colorUsingColorSpace:sRGBColorSpace];
-        
-        if (IsAppearanceDarkAqua(self)) {
-            CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
-            
-            unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
-            filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
-        }
-        
-        [unfilledColor getComponents:_unfilledComponents];
-        [filledColor   getComponents:_filledComponents];
-        [redColor      getComponents:_redComponents];
-        
-        [self setNeedsDisplay:YES];
-    });
-}
-
 
 - (void) _recomputeDecayedLevel
 {
@@ -234,17 +299,22 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
     CGFloat redLevel = (decayedLevel * 2.0) - 1.0;
     if (redLevel < 0) redLevel = 0;
 
-    if (_decayedLevel  != decayedLevel  ||
-        _overloadLevel != overloadLevel ||
-        _redLevel      != redLevel
-    ) {
-        _decayedLevel  = decayedLevel;
-        _overloadLevel = overloadLevel;
-        _redLevel      = redLevel;
-
-        [self setNeedsDisplay:YES];
+    if (_decayedLevel != decayedLevel) {
+        _decayedLevel = decayedLevel;
+        [_progressBar setPercentage:_decayedLevel];
     }
-    
+
+    if (_redLevel != redLevel) {
+        _redLevel = redLevel;
+        [_progressBar setRedLevel:redLevel];
+        [_boltLight setNeedsDisplay];
+    }
+
+    if (_overloadLevel != overloadLevel) {
+        _overloadLevel = overloadLevel;
+        [_overloadLight setNeedsDisplay];
+    }
+
     if (_decayedLevel == 0 && _overloadLevel == 0) {
         [_timer invalidate];
         _timer = nil;
@@ -267,12 +337,15 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
     
     if ((now - lastOverloadTime) < 5) {
         dangerLevel = 1.0;
-        dangerTime = lastOverloadTime;
+
+        if (lastOverloadTime > dangerTime) {
+            dangerTime = lastOverloadTime;
+        }
     }
 
     _overloadTime = lastOverloadTime;
 
-    if (dangerLevel > _decayedLevel) {
+    if (dangerLevel >= _decayedLevel) {
         _dangerLevel = dangerLevel;
         _dangerTime  = dangerTime;
 
@@ -285,12 +358,14 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
 {
     if (_metering != metering) {
         _metering = metering;
-        _decayedLevel = _dangerLevel = _dangerTime = 0;
+        _dangerLevel = _dangerTime = _overloadTime = 0;
+
         [self _recomputeDecayedLevel];
         
-        [self setNeedsDisplay:YES];
+        [_boltLight setNeedsDisplay];
     }
 }
 
 
 @end
+

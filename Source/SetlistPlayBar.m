@@ -1,18 +1,18 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "PlayBar.h"
-#import "SimpleProgressBar.h"
+#import "SetlistPlayBar.h"
+#import "SetlistProgressBar.h"
 #import "HairlineView.h"
 
 
-@interface PlayBarPlayhead : NSView
+@interface SetlistPlayBarPlayhead : NSView
 @end
 
 
-@implementation PlayBar {
-    PlayBarPlayhead   *_playhead;
-    HairlineView      *_hairlineView;
-    SimpleProgressBar *_progressBar;
+@implementation SetlistPlayBar {
+    SetlistPlayBarPlayhead *_playhead;
+    HairlineView           *_hairlineView;
+    SetlistProgressBar     *_progressBar;
     
     CGFloat  _playheadX;
 }
@@ -40,10 +40,10 @@
 
 - (void) _commonPlayBarInit
 {
-    _progressBar = [[SimpleProgressBar alloc] initWithFrame:[self bounds]];
+    _progressBar = [[SetlistProgressBar alloc] initWithFrame:[self bounds]];
     [_progressBar setRounded:NO];
 
-    _playhead     = [[PlayBarPlayhead alloc] initWithFrame:CGRectZero];
+    _playhead     = [[SetlistPlayBarPlayhead alloc] initWithFrame:CGRectZero];
     _hairlineView = [[HairlineView alloc] initWithFrame:CGRectZero];
 
     [_hairlineView setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
@@ -141,7 +141,7 @@
 @end
 
 
-@implementation PlayBarPlayhead
+@implementation SetlistPlayBarPlayhead
 
 - (void) drawRect:(NSRect)dirtyRect
 {
@@ -154,7 +154,6 @@
 
     [markerColor set];
     [[NSBezierPath bezierPathWithRoundedRect:frame xRadius:1 yRadius:1] fill];
-
 }
 
 @end

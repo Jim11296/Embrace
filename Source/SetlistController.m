@@ -15,20 +15,20 @@
 #import "TrackTableCellView.h"
 #import "WaveformView.h"
 #import "HairlineView.h"
-#import "EmbraceButton.h"
 #import "EmbraceWindow.h"
 #import "MenuLabelView.h"
-#import "DangerMeter.h"
-#import "LevelMeter.h"
-#import "PlayBar.h"
+#import "NoDropImageView.h"
 #import "Preferences.h"
-#import "ViewTrackController.h"
+#import "SetlistButton.h"
+#import "SetlistDangerMeter.h"
+#import "SetlistLevelMeter.h"
+#import "SetlistPlayBar.h"
+#import "SetlistSlider.h"
 #import "TipArrowFloater.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
 #import "TrialBottomView.h"
-#import "EmbraceSlider.h"
-#import "NoDropImageView.h"
+#import "ViewTrackController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -39,7 +39,7 @@ static NSInteger sAutoGapMinimum = 0;
 static NSInteger sAutoGapMaximum = 16;
 
 
-@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, EmbraceSliderDragDelegate>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, SetlistSliderDragDelegate>
 
 @property (nonatomic, strong, readwrite) IBOutlet TracksController *tracksController;
 
@@ -55,14 +55,14 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelSeparator;
 @property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelItem;
 
-@property (nonatomic, weak)   IBOutlet NSTextField   *playOffsetField;
-@property (nonatomic, weak)   IBOutlet PlayBar       *playBar;
-@property (nonatomic, weak)   IBOutlet NSTextField   *playRemainingField;
-@property (nonatomic, weak)   IBOutlet EmbraceButton *playButton;
-@property (nonatomic, weak)   IBOutlet EmbraceButton *gearButton;
-@property (nonatomic, weak)   IBOutlet DangerMeter   *dangerMeter;
-@property (nonatomic, weak)   IBOutlet LevelMeter    *levelMeter;
-@property (nonatomic, weak)   IBOutlet EmbraceSlider *volumeSlider;
+@property (nonatomic, weak)   IBOutlet NSTextField        *playOffsetField;
+@property (nonatomic, weak)   IBOutlet NSTextField        *playRemainingField;
+@property (nonatomic, weak)   IBOutlet SetlistButton      *playButton;
+@property (nonatomic, weak)   IBOutlet SetlistButton      *gearButton;
+@property (nonatomic, weak)   IBOutlet SetlistDangerMeter *dangerMeter;
+@property (nonatomic, weak)   IBOutlet SetlistLevelMeter  *levelMeter;
+@property (nonatomic, weak)   IBOutlet SetlistPlayBar     *playBar;
+@property (nonatomic, weak)   IBOutlet SetlistSlider      *volumeSlider;
 
 @property (nonatomic, weak)   IBOutlet NSView          *headerView;
 @property (nonatomic, weak)   IBOutlet NSView          *mainView;
@@ -70,7 +70,7 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet NSView          *footerView;
 @property (nonatomic, weak)   IBOutlet HairlineView    *bottomSeparator;
 @property (nonatomic, weak)   IBOutlet NoDropImageView *autoGapIcon;
-@property (nonatomic, weak)   IBOutlet EmbraceSlider   *autoGapSlider;
+@property (nonatomic, weak)   IBOutlet SetlistSlider   *autoGapSlider;
 @property (nonatomic, weak)   IBOutlet NSTextField     *autoGapField;
 
 @end
@@ -129,9 +129,9 @@ static NSInteger sAutoGapMaximum = 16;
     [window addListener:[self autoGapSlider]];
     [window addListener:[self playBar]];
 
-    [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
-    [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
-    
+    [[self playButton] setIcon:SetlistButtonIconPlay];
+    [[self gearButton] setIcon:SetlistButtonIconGear];
+
     [[self autoGapIcon] setTintColor:[NSColor labelColor]];
 
     NSView *headerView = [self headerView];
@@ -267,16 +267,15 @@ static NSInteger sAutoGapMaximum = 16;
     Player *player = [Player sharedInstance];
     BOOL isVolumeZero = ([player volume] == 0);
 
-    NSImage  *image    = nil;
     NSString *tooltip  = nil;
-    BOOL      alert    = NO;
     BOOL      outlined = NO;
 
-    EmbraceButton *playButton = [self playButton];
-    
+    SetlistButtonIcon icon = SetlistButtonIconNone;
+
+    SetlistButton *playButton = [self playButton];
+
     if (action == PlaybackActionShowIssue) {
-        image = [NSImage imageNamed:@"DeviceIssueTemplate"];
-        alert = YES;
+        icon = SetlistButtonIconDeviceIssue;
 
         PlayerIssue issue = [player issue];
 
@@ -299,12 +298,11 @@ static NSInteger sAutoGapMaximum = 16;
             outlined = YES;
         }
 
-        image = _confirmStop ? [NSImage imageNamed:@"ConfirmTemplate"] : [NSImage imageNamed:@"StopTemplate"];
-        alert = _confirmStop;
+        icon = _confirmStop ? SetlistButtonIconReallyStop : SetlistButtonIconStop;
         enabled = YES;
 
     } else {
-        image = [NSImage imageNamed:@"PlayTemplate"];
+        icon = SetlistButtonIconPlay;
 
         Track *next = [[self tracksController] firstQueuedTrack];
 
@@ -313,8 +311,7 @@ static NSInteger sAutoGapMaximum = 16;
         }
     }
 
-    [playButton setAlert:alert];
-    [playButton setImage:image];
+    [playButton setIcon:icon];
     [playButton setToolTip:tooltip];
     [playButton setOutlined:outlined];
     [playButton setEnabled:enabled];
@@ -425,15 +422,14 @@ static NSInteger sAutoGapMaximum = 16;
     EmbraceLogMethod();
 
     PlaybackAction action = [self preferredPlaybackAction];
-    EmbraceButton *playButton = [self playButton];
+    SetlistButton *playButton = [self playButton];
     
     if ([playButton isEnabled] && beforeVolume) {
         Player *player = [Player sharedInstance];
         BOOL isVolumeZero = [player volume] == 0;
 
         if (action == PlaybackActionStop && isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"PlayTemplate"] enabled:YES];
-            
+            [[self playButton] setIcon:SetlistButtonIconPlay animated:YES];
             [[Player sharedInstance] hardStop];
             [[Player sharedInstance] setVolume:beforeVolume];
         }
@@ -448,7 +444,8 @@ static NSInteger sAutoGapMaximum = 16;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmStop) object:nil];
 
     _confirmStop = NO;
-    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"StopTemplate"] alert:NO];
+    
+    [[self playButton] setIcon:SetlistButtonIconStop animated:YES];
     [self _updatePlayButton];
 }
 
@@ -766,7 +763,7 @@ static NSInteger sAutoGapMaximum = 16;
         if (!_confirmStop) {
             _confirmStop = YES;
 
-            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"ConfirmTemplate"] alert:YES];
+            [[self playButton] setIcon:SetlistButtonIconReallyStop animated:YES];
             
             [self _updatePlayButton];
             [self performSelector:@selector(_clearConfirmStop) withObject:nil afterDelay:2];
@@ -995,7 +992,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) sliderDidStartDrag:(EmbraceSlider *)slider
+- (void) sliderDidStartDrag:(SetlistSlider *)slider
 {
     if (slider == _volumeSlider) {
         _volumeBeforeDrag = [slider doubleValue];
@@ -1006,7 +1003,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) sliderDidEndDrag:(EmbraceSlider *)slider
+- (void) sliderDidEndDrag:(SetlistSlider *)slider
 {
     if (slider == _volumeSlider) {
         CGFloat volumeBeforeDrag = _volumeBeforeDrag;

@@ -74,7 +74,7 @@ extern BOOL IsAppearanceDarkAqua(NSView *view);
 
 extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat alpha);
 
-extern void PerformWithAppearance(NSAppearance *appearance, void (^block)());
+extern void PerformWithAppearance(NSAppearance *appearance, void (^block)(void));
 
 // Returns bounds without system bezel 
 extern CGRect GetInsetBounds(NSView *view);

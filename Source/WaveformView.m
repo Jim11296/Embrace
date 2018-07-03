@@ -290,15 +290,6 @@
 }
 
 
-- (void) setShowsDebugInformation:(BOOL)showsDebugInformation
-{
-    if (_showsDebugInformation != showsDebugInformation) {
-        _showsDebugInformation = showsDebugInformation;
-        [self setNeedsLayout:YES];
-    }
-}
-
-
 - (void) redisplay
 {
     [_activeLayer   setNeedsDisplay];

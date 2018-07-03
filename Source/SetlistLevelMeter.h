@@ -2,10 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class Player;
-
-
-@interface LevelMeter : NSView <EmbraceWindowListener>
+@interface SetlistLevelMeter : NSView <EmbraceWindowListener>
 
 @property (nonatomic, getter=isMetering) BOOL metering;
 

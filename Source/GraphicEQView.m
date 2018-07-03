@@ -1,7 +1,7 @@
 // (c) 2015-2018 Ricci Adams.  All rights reserved.
 
 #import "GraphicEQView.h"
-#import "EmbraceSlider.h"
+#import "SetlistSlider.h"
 
 
 const CGFloat sKnobHeight      = 15;
@@ -587,9 +587,6 @@ const CGFloat sTrackWidth      = 5;
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-//    BOOL isMainWindow = [[self window] isMainWindow];
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
-
     CGRect bounds    = [self bounds];
     CGRect trackRect = [self trackRect];
 
@@ -625,7 +622,7 @@ const CGFloat sTrackWidth      = 5;
     [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.5 yRadius:2.5] fill];
 
     CGRect knobRect  = [self knobRectWithValue:_value];
-    [EmbraceSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
+    [SetlistSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
 }
 
 
