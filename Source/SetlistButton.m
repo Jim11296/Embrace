@@ -7,12 +7,13 @@ static CGFloat sBorderLayerPadding = 2;
 
   
 typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
-    SetlistButtonStyleNormal       = 0,
-    SetlistButtonStylePressed      = 1,
-    SetlistButtonStyleInactive     = 2,
-    SetlistButtonStyleDisabled     = 3,
-    SetlistButtonStyleAlertPressed = 4,
-    SetlistButtonStyleAlert        = 5
+    SetlistButtonStyleNone         = 0,
+    SetlistButtonStyleNormal       = 1,
+    SetlistButtonStylePressed      = 2,
+    SetlistButtonStyleInactive     = 3,
+    SetlistButtonStyleDisabled     = 4,
+    SetlistButtonStyleAlertPressed = 5,
+    SetlistButtonStyleAlert        = 6
 };
 
 
@@ -155,13 +156,19 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
         iconStyle = SetlistButtonStyleDisabled;
 
     } else if (isInactive) {
-        iconStyle = backgroundStyle = SetlistButtonStyleInactive;
+        iconStyle = SetlistButtonStyleInactive;
 
     } else if (icon == SetlistButtonIconDeviceIssue || icon == SetlistButtonIconReallyStop) {
         iconStyle = _highlighted ? SetlistButtonStyleAlertPressed : SetlistButtonStyleAlert;
 
     } else if (_highlighted) {
-        iconStyle = backgroundStyle = SetlistButtonStylePressed;
+        iconStyle = SetlistButtonStylePressed;
+    }
+    
+    if (isInactive) {
+        iconStyle = SetlistButtonStyleInactive;
+    } else if (_highlighted) {
+        backgroundStyle = SetlistButtonStylePressed;
     }
 
     [_iconView setIcon:[self icon]];
