@@ -295,8 +295,8 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
     [_leftBarLayer  setBackgroundColor:_leftColor];
     [_rightBarLayer setBackgroundColor:_rightColor];
 
-    if (_leftCapFillWidth  > 0) [_leftCapLayer  setNeedsDisplay];
-    if (_rightCapFillWidth > 0) [_rightCapLayer setNeedsDisplay];
+    [_leftCapLayer  setNeedsDisplay];
+    [_rightCapLayer setNeedsDisplay];
 
     [_leftBarLayer  setBackgroundColor:_leftColor];
     [_rightBarLayer setBackgroundColor:_rightColor];
