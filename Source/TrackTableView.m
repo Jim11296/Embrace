@@ -152,13 +152,13 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
         
         if (IsAppearanceDarkAqua(self)) {
             playingTextColor = getColorWithHue(hue, @[
-                @0.70, @0.95, /* Red    */
-                @0.75, @0.90, /* Orange */
-                @0.70, @0.85, /* Yellow */
-                @0.60, @0.75, /* Green  */
-                @0.60, @1.00, /* Blue   */
-                @0.40, @0.85, /* Purple */
-                @0.60, @0.95  /* Pink   */
+                @0.5, @1.0, /* Red    */
+                @0.5, @1.0, /* Orange */
+                @0.5, @1.0, /* Yellow */
+                @0.5, @1.0, /* Green  */
+                @0.5, @1.0, /* Blue   */
+                @0.4, @1.0, /* Purple */
+                @0.5, @1.0  /* Pink   */
             ]);
 
         } else {

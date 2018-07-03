@@ -596,7 +596,7 @@
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
         primaryColor   = [[self _tableView] playingTextColor];
-        secondaryColor = [primaryColor colorWithAlphaComponent:0.8];
+        secondaryColor = primaryColor;
     }
    
     [[self titleField]    setTextColor:primaryColor];

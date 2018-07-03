@@ -72,7 +72,7 @@
 {
     NSRect bounds = [self bounds];
 
-    NSRect barFrame = bounds;
+    NSRect barFrame = GetInsetBounds(self);
     barFrame.size.height = 3;
 
     NSRect bottomFrame = bounds;
@@ -80,6 +80,7 @@
 
     [_progressBar  setFrame:barFrame];
     [_hairlineView setFrame:bottomFrame];
+    
 
     [self _updatePlayheadX];
     [_playhead setFrame:CGRectMake(_playheadX, 0, 2, 7)];
