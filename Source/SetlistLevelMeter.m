@@ -1,27 +1,27 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "LevelMeter.h"
-#import "SimpleProgressBar.h"
+#import "SetlistLevelMeter.h"
+#import "SetlistProgressBar.h"
 
 
-@interface LevelMeterPeakDot : NSView
+@interface SetlistLevelMeterPeakDot : NSView
 @end
 
 
-@interface LevelMeterLimiterDot : NSView
+@interface SetlistLevelMeterLimiterDot : NSView
 @property (nonatomic, getter=isOn) BOOL on;
 @end
 
 
-@implementation LevelMeter {
-    SimpleProgressBar    *_leftChannelBar;
-    SimpleProgressBar    *_rightChannelBar;
+@implementation SetlistLevelMeter {
+    SetlistProgressBar *_leftChannelBar;
+    SetlistProgressBar *_rightChannelBar;
 
-    LevelMeterPeakDot    *_leftPeakDot;
-    LevelMeterPeakDot    *_rightPeakDot;
+    SetlistLevelMeterPeakDot    *_leftPeakDot;
+    SetlistLevelMeterPeakDot    *_rightPeakDot;
 
-    LevelMeterLimiterDot *_leftLimiterDot;
-    LevelMeterLimiterDot *_rightLimiterDot;
+    SetlistLevelMeterLimiterDot *_leftLimiterDot;
+    SetlistLevelMeterLimiterDot *_rightLimiterDot;
 }
 
 
@@ -54,14 +54,14 @@
 
     _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
 
-    _leftChannelBar  = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
-    _rightChannelBar = [[SimpleProgressBar alloc] initWithFrame:CGRectZero];
+    _leftChannelBar  = [[SetlistProgressBar alloc] initWithFrame:CGRectZero];
+    _rightChannelBar = [[SetlistProgressBar alloc] initWithFrame:CGRectZero];
     
-    _leftPeakDot     = [[LevelMeterPeakDot alloc] initWithFrame:CGRectZero];
-    _rightPeakDot    = [[LevelMeterPeakDot alloc] initWithFrame:CGRectZero];
+    _leftPeakDot     = [[SetlistLevelMeterPeakDot alloc] initWithFrame:CGRectZero];
+    _rightPeakDot    = [[SetlistLevelMeterPeakDot alloc] initWithFrame:CGRectZero];
 
-    _leftLimiterDot  = [[LevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
-    _rightLimiterDot = [[LevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
+    _leftLimiterDot  = [[SetlistLevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
+    _rightLimiterDot = [[SetlistLevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
 
     [_leftPeakDot  setHidden:YES];
     [_rightPeakDot setHidden:YES];
@@ -181,7 +181,7 @@
         
         [_leftChannelBar  setPercentage:leftPercent];
         [_rightChannelBar setPercentage:rightPercent];
-    
+        
         [_leftLimiterDot  setOn:_limiterActive];
         [_rightLimiterDot setOn:_limiterActive];
 
@@ -212,7 +212,7 @@
 @end
 
 
-@implementation LevelMeterPeakDot
+@implementation SetlistLevelMeterPeakDot
 
 
 - (void) drawRect:(CGRect)rect
@@ -227,7 +227,7 @@
 @end
 
 
-@implementation LevelMeterLimiterDot
+@implementation SetlistLevelMeterLimiterDot
 
 
 - (void) drawRect:(CGRect)rect

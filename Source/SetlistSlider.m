@@ -1,6 +1,6 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "EmbraceSlider.h"
+#import "SetlistSlider.h"
 
 
 static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
@@ -15,7 +15,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 }
 
 
-@implementation EmbraceSlider
+@implementation SetlistSlider
 
 + (void) drawKnobWithView:(NSView *)view rect:(CGRect)rect highlighted:(BOOL)highlighted
 {
@@ -103,7 +103,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 @end
 
 
-@implementation EmbraceSliderCell {
+@implementation SetlistSliderCell {
     NSRect _cellFrame;
 }
 
@@ -120,7 +120,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 
 - (void) drawKnob:(NSRect)knobRect
 {
-    [EmbraceSlider drawKnobWithView:[self controlView] rect:knobRect highlighted:[self isHighlighted]];
+    [SetlistSlider drawKnobWithView:[self controlView] rect:knobRect highlighted:[self isHighlighted]];
 }
 
 

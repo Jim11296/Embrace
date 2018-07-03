@@ -255,7 +255,6 @@
     _mouseInside = YES;
 
     [self _updateTimeVisibilityAnimated:NO];
-    [self _updateView];
     
     [[self _tableView] _trackTableViewCell:self mouseInside:YES];
 }
@@ -267,7 +266,6 @@
     _mouseInside = NO;
 
     [self _updateTimeVisibilityAnimated:NO];
-    [self _updateView];
 
     [[self _tableView] _trackTableViewCell:self mouseInside:NO];
 }

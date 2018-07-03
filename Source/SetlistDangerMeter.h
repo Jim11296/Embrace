@@ -3,7 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface DangerMeter : NSView <EmbraceWindowListener>
+@interface SetlistDangerMeter : NSView <EmbraceWindowListener>
 
 @property (nonatomic, getter=isMetering) BOOL metering;
 

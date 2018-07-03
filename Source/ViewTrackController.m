@@ -35,7 +35,6 @@
         [[self window] setTitle:[_track title]];
     }
 
-    [[self waveformView] setShowsDebugInformation:YES];
     [[self waveformView] setTrack:_track];
 }
 

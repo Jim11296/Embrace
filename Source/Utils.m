@@ -641,7 +641,7 @@ extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat inAlpha)
 }
 
 
-void PerformWithAppearance(NSAppearance *appearance, void (^block)())
+void PerformWithAppearance(NSAppearance *appearance, void (^block)(void))
 {
     NSAppearance *oldAppearance = [NSAppearance currentAppearance];
     [NSAppearance setCurrentAppearance:appearance];
