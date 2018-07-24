@@ -14,8 +14,6 @@ extern NSString * const iTunesManagerDidUpdateLibraryMetadataNotification;
 - (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
 @property (nonatomic, readonly) BOOL didParseLibrary;
 
-- (void) exportPlaylistWithName:(NSString *)name fileURLs:(NSArray *)fileURLs;
-
 - (void) clearPasteboardMetadata;
 - (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
 - (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;

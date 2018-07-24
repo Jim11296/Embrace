@@ -449,7 +449,6 @@
 		55CF2784187A23BD0042C92A /* iTunesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunesManager.h; path = Source/iTunesManager.h; sourceTree = SOURCE_ROOT; };
 		55CF2785187A23BD0042C92A /* iTunesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iTunesManager.m; path = Source/iTunesManager.m; sourceTree = SOURCE_ROOT; };
 		55CF2787187A241A0042C92A /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
-		55CF278A187A24DB0042C92A /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iTunes.h; path = Source/iTunes.h; sourceTree = SOURCE_ROOT; };
 		55CF2798187A464B0042C92A /* TrackTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackTableCellView.h; path = Source/TrackTableCellView.h; sourceTree = SOURCE_ROOT; };
 		55CF2799187A464B0042C92A /* TrackTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackTableCellView.m; path = Source/TrackTableCellView.m; sourceTree = SOURCE_ROOT; };
 		55CF27A8187AB2650042C92A /* EditEffectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditEffectController.h; path = Source/EditEffectController.h; sourceTree = SOURCE_ROOT; };
@@ -978,7 +977,6 @@
 		55CF2797187A3DD50042C92A /* iTunes */ = {
 			isa = PBXGroup;
 			children = (
-				55CF278A187A24DB0042C92A /* iTunes.h */,
 				55CF2784187A23BD0042C92A /* iTunesManager.h */,
 				55CF2785187A23BD0042C92A /* iTunesManager.m */,
 			);
