@@ -120,15 +120,29 @@
     
     NSTimeInterval startTime = [track startTime];
     NSTimeInterval stopTime  = [track stopTime];
-    NSTimeInterval duration  = [track decodedDuration];
-    
+   
     NSInteger startOffset = 0;
     NSInteger stopOffset  = inCount;
+   
+    if (startTime || stopTime) {
+        NSTimeInterval duration = [track decodedDuration];
+        if (!duration) duration = [track duration];
+        if (!duration) return nil;
     
-    if (startTime) startOffset = round((startTime / duration) * inCount);
-    if (stopTime)  stopOffset  = round((stopTime  / duration) * inCount);
+        if (startTime) startOffset = round((startTime / duration) * inCount);
+        if (stopTime)  stopOffset  = round((stopTime  / duration) * inCount);
+    }
     
-    return [NSData dataWithBytes:(inBytes + startOffset) length:(stopOffset - startOffset)];
+    if (startOffset < 0)       startOffset = 0;
+    if (startOffset > inCount) startOffset = inCount;
+
+    if (stopOffset < 0)       stopOffset = 0;
+    if (stopOffset > inCount) stopOffset = inCount; 
+    
+    NSInteger length = (stopOffset - startOffset);
+    if (length < 0) return nil;
+     
+    return [NSData dataWithBytes:(inBytes + startOffset) length:length];
 }
 
 
