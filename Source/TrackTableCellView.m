@@ -574,9 +574,8 @@
     BOOL rowIsSelected   = [rowView isSelected];
     BOOL rowIsEmphasized = [rowView isEmphasized];
 
-    NSColor *primaryColor    = nil;
-    NSColor *secondaryColor  = nil;
-    BOOL     needsWhiteError = NO; 
+    NSColor *primaryColor   = nil;
+    NSColor *secondaryColor = nil;
 
     TrackStatus trackStatus = [[self track] trackStatus];
 
@@ -592,7 +591,6 @@
     if (rowIsSelected && rowIsEmphasized) {
         primaryColor   = [Theme colorNamed:@"SetlistPrimaryEmphasized"];
         secondaryColor = [Theme colorNamed:@"SetlistSecondaryEmphasized"];
-        needsWhiteError = YES;
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
         primaryColor   = [[self _tableView] playingTextColor];
@@ -618,7 +616,7 @@
         [_dotLabelView setNeedsWhiteBorder:YES];
 
     } else {
-        [_errorButton setNormalColor:[Theme colorNamed:@"ButtonAlert"]];
+        [_errorButton setNormalColor: [Theme colorNamed:@"ButtonAlert"]];
         [_errorButton setPressedColor:[Theme colorNamed:@"ButtonAlertPressed"]];
 
         [_dotLabelView setNeedsWhiteBorder:NO];
