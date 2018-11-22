@@ -1,10 +1,7 @@
-//  Copyright (c) 2014-2017 Ricci Adams. All rights reserved.
-
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "iTunesManager.h"
 
-#import <ScriptingBridge/ScriptingBridge.h>
-#import "iTunes.h"
 #import "Utils.h"
 #import "AppDelegate.h"
 #import "TrackKeys.h"
@@ -21,8 +18,6 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
 
     NSMutableDictionary *_pathToTrackIDMap;
     NSMutableDictionary *_trackIDToPasteboardMetadataMap;
-
-    dispatch_queue_t _tunesQueue;
 }
 
 
@@ -43,70 +38,12 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
 {
     if ((self = [super init])) {
         _libraryCheckTimer = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(_checkLibrary:) userInfo:nil repeats:YES];
-        
-        if ([_libraryCheckTimer respondsToSelector:@selector(setTolerance:)]) {
-            [_libraryCheckTimer setTolerance:5.0];
-        }
+        [_libraryCheckTimer setTolerance:5.0];
         
         [self _checkLibrary:nil];
     }
 
     return self;
-}
-
-
-#pragma mark - Export
-
-- (void) _performOnTunesQueue:(void (^)())block completion:(void (^)())completion
-{
-    if (!_tunesQueue) {
-        _tunesQueue = dispatch_queue_create("iTunesManager", 0);
-    }
-    
-    void (^blockCopy)() = [block copy];
-    void (^completionCopy)() = [completion copy];
-
-    dispatch_async(_tunesQueue, ^{
-        blockCopy();
-        if (completionCopy) completionCopy();
-    });
-}
-
-
-- (void) exportPlaylistWithName:(NSString *)playlistName fileURLs:(NSArray *)fileURLs
-{
-    [self _performOnTunesQueue:^{
-        iTunesApplication *iTunes = (iTunesApplication *)[[SBApplication alloc] initWithBundleIdentifier:@"com.apple.iTunes"];
-
-        SBElementArray *sources = [iTunes sources];
-        iTunesSource *library = nil;
-
-        for (iTunesSource *source in sources) {
-            if ([source kind] == iTunesESrcLibrary) {
-                library = source;
-                break;
-            }
-        }
-
-        iTunesUserPlaylist *playlist = nil;
-
-        if (!playlist) {
-            playlist = [[[iTunes classForScriptingClass:@"playlist"] alloc] init];
-            [[library userPlaylists] insertObject:playlist atIndex:0];
-            [playlist setName:playlistName];
-        }
-        
-        if (playlist) {
-            for (NSURL *fileURL in fileURLs) {
-                [iTunes add:@[ fileURL ] to:playlist];
-            }
-        }
-
-        [iTunes activate];
-        
-        [[[playlist tracks] firstObject] reveal];
-
-    } completion:nil];
 }
 
 

@@ -1,16 +1,11 @@
-//
-//  FileMonitor.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2017-12-16.
-//  Copyright © 2017 Ricci Adams. All rights reserved.
-//
+// (c) 2017-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
 
 @class FileSystemMonitorEvent;
 
 typedef void (^FileSystemMonitorCallback)(NSArray<FileSystemMonitorEvent *> *events);
+
 
 @interface FileSystemMonitor : NSObject
 

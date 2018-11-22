@@ -1,10 +1,4 @@
-//
-//  TracksController.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-03-01.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "TracksController.h"
 #import "Track.h"
@@ -14,6 +8,7 @@
 #import "Player.h"
 #import "Preferences.h"
 #import "TrackTableView.h"
+#import "TrackTableRowView.h"
 #import "iTunesManager.h"
 #import "ExportManager.h"
 
@@ -64,7 +59,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
 {
     if (_didInit) return;
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTableViewSelectionDidChange:) name:NSTableViewSelectionDidChangeNotification object:[self tableView]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
     [[self tableView] registerForDraggedTypes:@[ (__bridge NSString *)kUTTypeFileURL, NSURLPboardType, NSFilenamesPboardType, EmbraceQueuedTrackPasteboardType, EmbraceLockedTrackPasteboardType ]];
@@ -72,6 +66,8 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[self tableView] setDoubleAction:@selector(viewClickedTrack:)];
 #endif
 
+    [[self tableView] setGridStyleMask:NSTableViewSolidHorizontalGridLineMask];
+    
     NSNib *nib = [[NSNib alloc] initWithNibNamed:@"TrackTableCellView" bundle:nil];
     [[self tableView] registerNib:nib forIdentifier:@"TrackCell"];
 
@@ -309,19 +305,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
-- (void) _handleTableViewSelectionDidChange:(NSNotification *)note
-{
-    TrackTrialCheck(^{
-        NSIndexSet *selectionIndexes = [[self tableView] selectedRowIndexes];
-        
-        [[self tableView] enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *view, NSInteger row) {
-            TrackTableCellView *trackView = (TrackTableCellView *)[view viewAtColumn:0];
-            [trackView setSelected:[selectionIndexes containsIndex:row]];
-        }];
-    });
-}
-
-
 - (void) _didModifyTracks
 {
     TrackTrialCheck(^{
@@ -438,17 +421,25 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
+- (NSView *) tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row
+{
+    TrackTableRowView *rowView = [tableView makeViewWithIdentifier:@"TrackRow" owner:self];
+
+    if (!rowView) {
+        rowView = [[TrackTableRowView alloc] initWithFrame:CGRectZero];
+        [rowView setIdentifier:@"TrackRow"];
+    }
+
+    return rowView;
+}
+
+
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
     __block NSView *result = nil;
 
     TrackTrialCheck(^{
-        TrackTableCellView *cellView = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
-
-        NSIndexSet *selectionIndexes = [tableView selectedRowIndexes];
-        [cellView setSelected:[selectionIndexes containsIndex:row]];
-
-        result = cellView;
+        result = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
     });
     
     return result;
@@ -492,9 +483,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (void) tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
-    [_tableView updateInsertionPointWorkaround:NO];
-    [_tableView updateSelectedColorWorkaround:NO];
-
     if (operation == NSDragOperationNone) {
         NSRect frame = [[[self tableView] window] frame];
 
@@ -527,8 +515,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     BOOL isQueuedTrack   =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
     BOOL isExternalTrack = !isLockedTrack && !isQueuedTrack;
 
-    [_tableView updateInsertionPointWorkaround:NO];
-
     NSDragOperation mask = [info draggingSourceOperationMask];
     BOOL isCopy = (mask & (NSDragOperationGeneric|NSDragOperationCopy)) == NSDragOperationCopy;
     
@@ -540,24 +526,16 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         Track *track = [self trackAtIndex:row];
 
         if (!track || [track trackStatus] == TrackStatusQueued) {
-            if (row == 0) {
-                [_tableView updateInsertionPointWorkaround:YES];
-            }
-
             if (isCopy) {
-                [_tableView willDrawInsertionPointAboveRow:row];
                 return NSDragOperationCopy;
 
             } else if (!_draggedIndexSetIsContiguous) {
-                [_tableView willDrawInsertionPointAboveRow:row];
                 return NSDragOperationGeneric;
 
             } else if (isQueuedTrack) {
                 if ((row >= [_draggedIndexSet firstIndex]) && (row <= ([_draggedIndexSet lastIndex] + 1))) {
                     return NSDragOperationNone;
                 } else {
-                    [_tableView willDrawInsertionPointAboveRow:row];
-
                     if (isCopy) {
                         return NSDragOperationCopy;
                     } else {
@@ -577,7 +555,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
             if (!track || [track trackStatus] == TrackStatusQueued) {
                 [_tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
-                [_tableView willDrawInsertionPointAboveRow:(row + 1)];
                 return NSDragOperationCopy;
             }
         }
@@ -596,7 +573,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     EmbraceLog(@"TracksController", @"Accepting drop: %@ -> %ld, %ld", _draggedIndexSet, (long)row, (long)dropOperation);
 
     NSDragOperation dragOperation = [self tableView:_tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
-    [_tableView updateInsertionPointWorkaround:NO];
 
     NSPasteboard *pboard = [info draggingPasteboard];
 
@@ -634,7 +610,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
             __block NSInteger oldIndexOffset = 0;
             __block NSInteger newIndexOffset = 0;
-
 
             [_draggedIndexSet enumerateIndexesUsingBlock:^(NSUInteger oldIndex, BOOL *stop) {
                 Track *track = [self trackAtIndex:(oldIndex + oldIndexOffset)];
@@ -698,9 +673,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 {
-    [_tableView updateInsertionPointWorkaround:NO];
-    [_tableView updateSelectedColorWorkaround:NO];
-
     return [self acceptDrop:info row:row dropOperation:dropOperation];
 }
 
@@ -1209,6 +1181,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         [track setTrackStatus:TrackStatusQueued];
     }
 
+    [[self tableView] reloadData];
     [self _didModifyTracks];
 }
 

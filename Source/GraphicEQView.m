@@ -1,12 +1,7 @@
-//
-//  GraphicEQView.m
-//  EQView
-//
-//  Created by Ricci Adams on 2015-07-09.
-//  Copyright (c) 2015 Ricci Adams. All rights reserved.
-//
+// (c) 2015-2018 Ricci Adams.  All rights reserved.
 
 #import "GraphicEQView.h"
+#import "SetlistSlider.h"
 
 
 const CGFloat sKnobHeight      = 15;
@@ -32,10 +27,10 @@ const CGFloat sTrackWidth      = 5;
 
 @end
 
-
-@interface GraphicEQBackgroundView : NSView
-@property (nonatomic, strong) GraphicEQBandView *alignedBandView;
-@end
+//
+//@interface GraphicEQBackgroundView : NSView
+//@property (nonatomic, strong) GraphicEQBandView *alignedBandView;
+//@end
 
 
 #pragma mark - Main View
@@ -44,9 +39,8 @@ const CGFloat sTrackWidth      = 5;
     NSArray  *_bandViews;
     NSArray  *_labelViews;
     
-    GraphicEQControlView    *_controlView;
-    GraphicEQBackgroundView *_backgroundView;
-    GraphicEQBandView       *_selectedBandView;
+    GraphicEQControlView *_controlView;
+    GraphicEQBandView    *_selectedBandView;
 
     NSTextField *_topLabel;
     NSTextField *_middleLabel;
@@ -67,13 +61,6 @@ const CGFloat sTrackWidth      = 5;
         _controlView = [[GraphicEQControlView alloc] initWithFrame:[self bounds]];
         [_controlView setTranslatesAutoresizingMaskIntoConstraints:NO];
         
-        _backgroundView = [[GraphicEQBackgroundView alloc] initWithFrame:[self bounds]];
-        [_backgroundView setTranslatesAutoresizingMaskIntoConstraints:NO];
-
-        [self setWantsLayer:YES];
-        [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
-
-        [self addSubview:_backgroundView];
         [self addSubview:_controlView];
     }
 
@@ -86,6 +73,11 @@ const CGFloat sTrackWidth      = 5;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateBandAlpha];
+}
 
 
 - (BOOL) wantsUpdateLayer
@@ -103,11 +95,10 @@ const CGFloat sTrackWidth      = 5;
     
     CGRect bounds = [self bounds];
    
-    [_controlView setFrame:bounds];
-   
     CGRect bandRect = CGRectMake(0, 20, 19, bounds.size.height - 20);
-    
-    CGFloat firstX = 49;
+    bandRect.size.width = _numberOfBands > 10 ? 23 : 31;
+
+    CGFloat firstX = 44;
     
     CGFloat bandMinX = bounds.size.width;
     CGFloat bandMaxX = 0;
@@ -116,52 +107,45 @@ const CGFloat sTrackWidth      = 5;
         CGRect knobRect = [bandView knobRectWithValue:value];
         knobRect = [self convertRect:knobRect fromView:bandView];
         
-
         CGFloat knobY = knobRect.origin.y;
         CGFloat bandX = [bandView frame].origin.x;
         
         CGRect topFrame = [label frame];
         
-        
-        topFrame.origin.x = bandX - (topFrame.size.width + 2);
+        topFrame.origin.x = bandX - topFrame.size.width;
         topFrame.origin.y = knobY;
         [label setFrame:topFrame];
     };
     
-    for (NSInteger i = 0; i < _numberOfBands; i++) {
-        bandRect.origin.x = firstX + (i * (_numberOfBands > 10 ? 23 : 35));
-        
-        GraphicEQBandView *bandView = [_bandViews  objectAtIndex:i];
-        NSTextField       *label    = [_labelViews objectAtIndex:i];
-        
-        [bandView setFrame:bandRect];
- 
-        bandMinX = MIN(bandMinX, CGRectGetMinX(bandRect));
-        bandMaxX = MAX(bandMaxX, CGRectGetMaxX(bandRect));
-        
-        CGRect labelRect = CGRectInset(bandRect, -32, 0);
-        labelRect.size.height = 20;
-        labelRect.origin.y = 0;
-        [label setFrame:labelRect];
+    if (_numberOfBands) {
+        CGRect controlFrame = CGRectNull;
+
+        for (NSInteger i = 0; i < _numberOfBands; i++) {
+            bandRect.origin.x = firstX + (i * bandRect.size.width);
+            
+            GraphicEQBandView *bandView = [_bandViews  objectAtIndex:i];
+            NSTextField       *label    = [_labelViews objectAtIndex:i];
+            
+            [bandView setFrame:bandRect];
+            controlFrame = CGRectUnion(controlFrame, bandRect);
+     
+            bandMinX = MIN(bandMinX, CGRectGetMinX(bandRect));
+            bandMaxX = MAX(bandMaxX, CGRectGetMaxX(bandRect));
+            
+            CGRect labelRect = CGRectInset(bandRect, -32, 0);
+            labelRect.size.height = 20;
+            labelRect.origin.y = 0;
+            [label setFrame:labelRect];
+        }
+
+        [_controlView setFrame:controlFrame];
     }
 
     // Background view and labels
     {
         GraphicEQBandView *firstBand = [_bandViews firstObject];
-        [_backgroundView setAlignedBandView:firstBand];
 
         if (firstBand) {
-            CGRect backgroundFrame = [self bounds];
-            CGRect firstBandFrame = [firstBand frame];
-
-            backgroundFrame.origin.y = firstBandFrame.origin.y;
-            backgroundFrame.size.height = backgroundFrame.size.height;
-            
-            backgroundFrame.origin.x = bandMinX;
-            backgroundFrame.size.width = bandMaxX - bandMinX;
-            
-            [_backgroundView setFrame:backgroundFrame];
-
             alignLabel(_topLabel,    firstBand,  1.0);
             alignLabel(_middleLabel, firstBand,  0.0);
             alignLabel(_bottomLabel, firstBand, -1.0);
@@ -235,6 +219,20 @@ const CGFloat sTrackWidth      = 5;
 - (void) _endUpdate
 {
     [_selectedBandView setSelected:NO];
+}
+
+
+- (void) _updateBandAlpha
+{
+    CGFloat alpha = 1.0;
+
+    if (IsAppearanceDarkAqua(self)) {
+        alpha = [[Theme colorNamed:@"EQDarkAlpha"] alphaComponent];
+
+        for (GraphicEQBandView *bandView in _bandViews) {
+            [bandView setAlphaValue:alpha];
+        }
+    }
 }
 
 
@@ -395,7 +393,7 @@ const CGFloat sTrackWidth      = 5;
         [label setBackgroundColor:[NSColor clearColor]];
         [label setDrawsBackground:NO];
         [label setAlignment:NSTextAlignmentCenter];
-        [label setTextColor:[NSColor blackColor]];
+        [label setTextColor:[NSColor labelColor]];
         [label setControlSize:controlSize];
         [label setFont:[NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:controlSize]]];
 
@@ -480,6 +478,7 @@ const CGFloat sTrackWidth      = 5;
         [_bottomLabel sizeToFit];
     }
     
+    [self _updateBandAlpha];
     [self reloadData];
 }
 
@@ -499,11 +498,6 @@ const CGFloat sTrackWidth      = 5;
 #pragma mark - Control View
 
 @implementation GraphicEQControlView
-
-- (BOOL) acceptsFirstResponder
-{
-    return YES;
-}
 
 - (void) mouseDown:(NSEvent *)event
 {
@@ -533,7 +527,7 @@ const CGFloat sTrackWidth      = 5;
     CGRect bounds = [self bounds];
 
     CGFloat trackPadding = (sVerticalPadding + (sKnobHeight / 2.0)) - (sTrackWidth / 2.0);
-    trackPadding -= 1.0;
+    trackPadding -= 2.0;
     
     CGRect result = CGRectInset(bounds, 0, trackPadding);
     result.size.width = sTrackWidth;
@@ -593,42 +587,42 @@ const CGFloat sTrackWidth      = 5;
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-    // Draw track
-    {
-        CGRect trackRect = [self trackRect];
+    CGRect bounds    = [self bounds];
+    CGRect trackRect = [self trackRect];
 
-        [[NSColor colorWithCalibratedWhite:(0x80 / 255.0) alpha:1.0] set];
-        [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.0 yRadius:2.0] fill];
-    }
+    void (^drawTick)(Float32) = ^(Float32 value) {
+        CGRect valueRect = [self knobRectWithValue:value];
 
-    // Draw knob
-    {
-        NSColor *knobColor = [NSColor whiteColor];
-        if (_selected) {
-            knobColor = [NSColor colorWithCalibratedWhite:(0xcc / 255.0) alpha:1.0];
-        }
+        CGRect lineRect = bounds;
+        lineRect.origin.y = valueRect.origin.y;
+        lineRect.size.height = 1;
+        
+        lineRect.origin.y += (valueRect.size.height - 1.0) / 2.0;
+        
+        NSRectFill(lineRect);
+    };
+
+
+    NSColor *primaryColor   = [Theme colorNamed:@"EQPrimary"];
+    NSColor *secondaryColor = [Theme colorNamed:@"EQSecondary"];
     
-        CGRect knobRect = [self knobRectWithValue:_value];
-        NSShadow *shadow = [[NSShadow alloc] init];
-        
-        [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.8]];
-        [shadow setShadowOffset:NSMakeSize(0, 0)];
-        [shadow setShadowBlurRadius:1];
+    [secondaryColor set];
+    drawTick( 1.00 );
+    drawTick(-1.00 );
+    drawTick( 0.50 );
+    drawTick(-0.50 );
 
-        [shadow set];
-        
-        [knobColor set];
-        [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
-        
-        NSShadow *shadow2 = [[NSShadow alloc] init];
-        [shadow2 setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:0.5]];
-        [shadow2 setShadowOffset:NSMakeSize(0, -1)];
-        [shadow2 setShadowBlurRadius:2];
-        [shadow2 set];
+    drawTick( 0.75 );
+    drawTick( 0.25 );
+    drawTick(-0.25 );
+    drawTick(-0.75 );
 
-        [knobColor set];
-        [[NSBezierPath bezierPathWithOvalInRect:knobRect] fill];
-    }
+    [primaryColor set];
+    drawTick( 0.00 );
+    [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.5 yRadius:2.5] fill];
+
+    CGRect knobRect  = [self knobRectWithValue:_value];
+    [SetlistSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
 }
 
 
@@ -657,53 +651,3 @@ const CGFloat sTrackWidth      = 5;
 
 @end
 
-
-#pragma mark -
-
-@implementation GraphicEQBackgroundView
-
-- (void) drawRect:(NSRect)rect
-{
-    if (!_alignedBandView) return;
-
-    CGRect bounds = [self bounds];
-
-    void (^drawLineForValue)(Float32) = ^(Float32 value) {
-        CGRect knobRect = [_alignedBandView knobRectWithValue:value];
-        knobRect = [self convertRect:knobRect fromView:_alignedBandView];
-        
-        CGRect lineRect = bounds;
-        lineRect.origin.y = knobRect.origin.y;
-        lineRect.size.height = 1;
-        
-        lineRect.origin.y += (knobRect.size.height - 1.0) / 2.0;
-        
-        NSRectFill(lineRect);
-    };
-
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.4] set];
-    drawLineForValue( 0.00 );
-
-    [[NSColor colorWithCalibratedWhite:0.0 alpha:0.2] set];
-    drawLineForValue( 1.00 );
-    drawLineForValue(-1.00 );
-    drawLineForValue( 0.50 );
-    drawLineForValue(-0.50 );
-
-    drawLineForValue( 0.75 );
-    drawLineForValue( 0.25 );
-    drawLineForValue(-0.25 );
-    drawLineForValue(-0.75 );
-}
-
-
-- (void) setAlignedBandView:(GraphicEQBandView *)alignedBandView
-{
-    if (_alignedBandView != alignedBandView) {
-        _alignedBandView = alignedBandView;
-        [self setNeedsDisplay:YES];
-    }
-}
-
-
-@end

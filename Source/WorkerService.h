@@ -1,8 +1,6 @@
-//  Copyright (c) 2016-2017 Ricci Adams. All rights reserved.
-
+// (c) 2016-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
-
 
 typedef NS_ENUM(NSInteger, WorkerTrackCommand) {
     WorkerTrackCommandReadMetadata,         // Reads the file metadating using AVAsset

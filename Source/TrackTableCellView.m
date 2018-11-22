@@ -1,97 +1,23 @@
-//
-//  SongTableViewCell.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-05.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "TrackTableCellView.h"
+
 #import "Track.h"
-#import "BorderedView.h"
-#import "Button.h"
+#import "TrackErrorButton.h"
 #import "AppDelegate.h"
 #import "NoDropImageView.h"
 #import "Preferences.h"
+#import "TrackLabelView.h"
 #import "TrackTableView.h"
-#import "StripeView.h"
-#import "DotView.h"
-#import "GradientView.h"
-
-#define SLOW_ANIMATIONS 0
-
-
-
-
-static NSColor *sGetInactiveHighlightColor()
-{
-    return GetRGBColor(0xdcdcdc, 1.0);
-}
-
-
-static NSColor *sGetActiveHighlightColor()
-{
-    return GetRGBColor(0x0065dc, 1.0);
-}
-
-
-static NSColor *sGetBorderColorForTrackLabel(TrackLabel trackLabel)
-{
-    if (trackLabel == TrackLabelRed) {
-        return GetRGBColor(0xff4439, 1.0);
-        
-    } else if (trackLabel == TrackLabelOrange) {
-        return GetRGBColor(0xff9500, 1.0);
-
-    } else if (trackLabel == TrackLabelYellow) {
-        return GetRGBColor(0xffcc00, 1.0);
-
-    } else if (trackLabel == TrackLabelGreen) {
-        return GetRGBColor(0x63da38, 1.0);
-
-    } else if (trackLabel == TrackLabelBlue) {
-        return GetRGBColor(0x1badf8, 1.0);
-
-    } else if (trackLabel == TrackLabelPurple) {
-        return GetRGBColor(0xcc73e1, 1.0);
-    }
-    
-    return nil;
-}
-
-
-static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
-{
-    if (trackLabel == TrackLabelRed) {
-        return GetRGBColor(0xff6259, 1.0);
-        
-    } else if (trackLabel == TrackLabelOrange) {
-        return GetRGBColor(0xffaa33, 1.0);
-
-    } else if (trackLabel == TrackLabelYellow) {
-        return GetRGBColor(0xffd633, 1.0);
-
-    } else if (trackLabel == TrackLabelGreen) {
-        return GetRGBColor(0x82e15f, 1.0);
-
-    } else if (trackLabel == TrackLabelBlue) {
-        return GetRGBColor(0x48bdf9, 1.0);
-
-    } else if (trackLabel == TrackLabelPurple) {
-        return GetRGBColor(0xd68fe7, 1.0);
-    }
-    
-    return nil;
-}
+#import "TrackStripeView.h"
+#import "MaskView.h"
 
 
 @interface TrackTableCellView () <ApplicationEventListener>
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderedViewTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *titleDurationConstraint;
 
-@property (nonatomic, weak) IBOutlet BorderedView *borderedView;
-@property (nonatomic, weak) IBOutlet StripeView   *stripeView;
+@property (nonatomic, weak) IBOutlet TrackStripeView *stripeView;
 
 @property (nonatomic, weak) IBOutlet NSTextField *titleField;
 @property (nonatomic, weak) IBOutlet NSTextField *durationField;
@@ -102,11 +28,13 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeLeftField;
 @property (nonatomic, weak) IBOutlet NSTextField *lineThreeRightField;
 
-@property (nonatomic, weak) IBOutlet NSImageView *speakerImageView;
-@property (nonatomic, weak) IBOutlet Button *errorButton;
+@property (nonatomic, weak) IBOutlet NoDropImageView *speakerImageView;
+@property (nonatomic, weak) IBOutlet TrackErrorButton *errorButton;
 
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerLeftConstraint;
+
+@property (nonatomic, strong)          TrackLabelView *dotLabelView;
+@property (nonatomic, weak)   IBOutlet TrackLabelView *edgeLabelView;
 
 @end
 
@@ -121,7 +49,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     id              _observedObject;
 
     NSTextField    *_timeField;
-    GradientView   *_timeGradientView;
+    MaskView       *_timeMaskView;
     BOOL            _showsTime;
     
     NSArray        *_errorButtonConstraints;
@@ -129,11 +57,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     NoDropImageView    *_duplicateImageView;
     NSArray            *_duplicateConstraints;
-    NSLayoutConstraint *_duplicateTrailingConstraint;
+    NSLayoutConstraint *_duplicateRightConstraint;
     
-    DotView            *_dotView;
     NSArray            *_dotConstraints;
-    NSLayoutConstraint *_dotTrailingConstraint;
+    NSLayoutConstraint *_dotRightConstraint;
 
     NSTrackingArea *_trackingArea;
     BOOL            _mouseInside;
@@ -146,7 +73,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 - (id) initWithFrame:(NSRect)frameRect
 {
     if ((self = [super initWithFrame:frameRect])) {
-        [self _setupTrackTableCellView];
+        [self _commonTrackTableCellViewInit];
     }
     
     return self;
@@ -156,7 +83,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 - (id) initWithCoder:(NSCoder *)aDecoder
 {
     if ((self = [super initWithCoder:aDecoder])) {
-        [self _setupTrackTableCellView];
+        [self _commonTrackTableCellViewInit];
     }
     
     return self;
@@ -185,6 +112,14 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
+- (void) viewDidChangeEffectiveAppearance
+{
+    PerformWithAppearance([self effectiveAppearance], ^{
+        [self _updateView];
+    });
+}
+
+
 - (TrackTableView *) _tableView
 {
     NSView *view = [self superview];
@@ -201,7 +136,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
-- (void) _setupTrackTableCellView
+- (void) _commonTrackTableCellViewInit
 {
     [(Application *)NSApp registerEventListener:self];
 
@@ -214,31 +149,32 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
 - (void) awakeFromNib
 {
-    [_errorButton setImage:[NSImage imageNamed:@"TrackErrorTemplate"]];
-    [_errorButton setIconOnly:YES];
     [_errorButton setAutoresizingMask:NSViewMinXMargin];
     [_errorButton setTarget:self];
     [_errorButton setAction:@selector(_errorButtonClicked:)];
-    [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
-    [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
-    [_errorButton setInactiveColor:[self _bottomTextColor]];
-    [_errorButton setAlert:YES];
 
     _timeField = [[NSTextField alloc] initWithFrame:NSZeroRect];
 
     [_timeField setBezeled:NO];
-    [_timeField setDrawsBackground:NO];
     [_timeField setSelectable:NO];
     [_timeField setEditable:NO];
+    [_timeField setDrawsBackground:NO];
     [_timeField setAlignment:NSTextAlignmentRight];
     [_timeField setAlphaValue:0];
     [_timeField setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_timeField setContentCompressionResistancePriority:(NSLayoutPriorityDefaultHigh + 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
     [_timeField setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_timeField setDrawsBackground:YES];
 
-    _timeGradientView = [[GradientView alloc] initWithFrame:NSZeroRect];
-    [_timeGradientView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    _timeMaskView = [[MaskView alloc] initWithFrame:NSZeroRect];
+    [_timeMaskView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_timeMaskView setGradientLength:32];
+    [_timeMaskView setGradientLayoutAttribute:NSLayoutAttributeLeft];
+
+    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
+        NSFont *font = [[self durationField] font];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        [[self durationField] setFont:font];
+    }
 
 #if 0
     [_titleField setBackgroundColor:[NSColor yellowColor]];
@@ -254,9 +190,9 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 #endif
 
     _errorButtonConstraints = @[
-        [NSLayoutConstraint constraintWithItem:_titleField         attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0],
-        [NSLayoutConstraint constraintWithItem:_lineTwoLeftField   attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0],
-        [NSLayoutConstraint constraintWithItem:_lineThreeLeftField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-8.0]
+        [NSLayoutConstraint constraintWithItem:_titleField         attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_lineTwoLeftField   attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_lineThreeLeftField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_errorButton attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-8.0]
     ];
     
     [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
@@ -280,37 +216,33 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     NSInteger numberOfLines = [[Preferences sharedInstance] numberOfLayoutLines];
 
     NSTextField *targetField = nil;
-    CGFloat speakerTopY = 0;
 
     if (numberOfLines == 1) {
         targetField = [self durationField];
-        speakerTopY = 0;
     } else if (numberOfLines == 2) {
         targetField = [self lineTwoRightField];
-        speakerTopY = 7;
     } else if (numberOfLines == 3) {
         targetField = [self lineThreeRightField];
-        speakerTopY = 16;
     }
-    
-    [_speakerTopConstraint setConstant:speakerTopY];
 
     NSTextField *oldTargetField = [[_endTimeConstraints lastObject] secondItem];
 
     if (targetField && (targetField != oldTargetField)) {
+        CGFloat length = [_timeMaskView gradientLength] + 8;
+        
         _endTimeConstraints = @[
-            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeRight    relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeRight    multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual              toItem:targetField attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0.0],
             [NSLayoutConstraint constraintWithItem:_timeField attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:targetField attribute:NSLayoutAttributeWidth    multiplier:1.0 constant:0.0],
 
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeTop       multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeBottom   relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeBottom    multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeLeading   multiplier:1.0 constant:0.0],
-            [NSLayoutConstraint constraintWithItem:_timeGradientView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil        attribute:NSLayoutAttributeWidth     multiplier:1.0 constant:32.0]
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeTop       multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeBottom   relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeBottom    multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeRight    relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeRight     multiplier:1.0 constant:0.0],
+            [NSLayoutConstraint constraintWithItem:_timeMaskView attribute:NSLayoutAttributeLeft     relatedBy:NSLayoutRelationEqual toItem:_timeField attribute:NSLayoutAttributeLeft      multiplier:1.0 constant:-length]
         ];
         
-        [[targetField superview] addSubview:_timeField        positioned:NSWindowAbove relativeTo:targetField];
-        [[targetField superview] addSubview:_timeGradientView positioned:NSWindowAbove relativeTo:targetField];
+        [[targetField superview] addSubview:_timeField    positioned:NSWindowAbove relativeTo:targetField];
+        [[targetField superview] addSubview:_timeMaskView positioned:NSWindowAbove relativeTo:targetField];
 
         [NSLayoutConstraint activateConstraints:_endTimeConstraints];
     }
@@ -323,7 +255,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     _mouseInside = YES;
 
     [self _updateTimeVisibilityAnimated:NO];
-    [self _updateView];
     
     [[self _tableView] _trackTableViewCell:self mouseInside:YES];
 }
@@ -335,7 +266,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     _mouseInside = NO;
 
     [self _updateTimeVisibilityAnimated:NO];
-    [self _updateView];
 
     [[self _tableView] _trackTableViewCell:self mouseInside:NO];
 }
@@ -360,8 +290,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     if (object == _observedObject) {
     
         if ([keyPath isEqualToString:@"trackStatus"]) {
-            [self _updateSpeakerImage];
-            [self _updateFieldColors];
+            [self updateColors];
             
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *ac) {
                 [ac setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -449,42 +378,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 }
 
 
-- (NSColor *) _topTextColor
-{
-    TrackStatus trackStatus = [[self track] trackStatus];
-
-    if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
-        return [NSColor whiteColor];
-    }
-
-    if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        return GetRGBColor(_selected ? 0x0 : 0x1866e9, 1.0);
-    } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.5);
-    }
-    
-    return [NSColor blackColor];
-}
-
-
-- (NSColor *) _bottomTextColor
-{
-    TrackStatus trackStatus = [[self track] trackStatus];
-
-    if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
-        return [NSColor colorWithCalibratedWhite:1.0 alpha:0.66];
-    }
-
-    if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        return GetRGBColor(_selected ? 0x0 : 0x1866e9, 0.8);
-    } else if (trackStatus == TrackStatusPlayed) {
-        return GetRGBColor(0x000000, 0.4);
-    }
-    
-    return GetRGBColor(0x000000, 0.66);
-}
-
-
 - (void) _errorButtonClicked:(id)sender
 {
     [GetAppDelegate() displayErrorForTrack:[self track]];
@@ -527,19 +420,20 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 {
     Track *track = [self track];
 
-    [self _updateStripeAndBorderedView];
-    [self _updateSpeakerImage];
+    [[NSAnimationContext currentContext] setDuration:0];
+    
+    [self _updateLabelEdgeAndStripe];
+    [self updateColors];
 
     if ([self track]) {
         [self _updateRightIcons];
         [self _updateFieldStrings];
         [self _updateFieldHidden];
-        [self _updateFieldColors];
         [self _updateFieldAlphas];
     }
 
-    [self _updateErrorButton];
     [self _updateSpeakerIconAnimated:NO];
+    
     [self _adjustConstraintsForLineLayout];
 
     // Update constraints
@@ -547,21 +441,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
     } else {
         [NSLayoutConstraint deactivateConstraints:_errorButtonConstraints];
-    }
-}
-
-
-- (void) _updateErrorButton
-{
-    if ([self isSelected]) {
-        NSColor *textColor = [self _topTextColor];
-
-        [_errorButton setAlertColor:textColor];
-        [_errorButton setAlertActiveColor:textColor];
-
-    } else {
-        [_errorButton setAlertColor:GetRGBColor(0xff0000, 1.0)];
-        [_errorButton setAlertActiveColor:GetRGBColor(0xd00000, 1.0)];
     }
 }
 
@@ -575,12 +454,15 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         isPlaying = NO;
     }
     
+    CGFloat constant = isPlaying ? 8.0 : -13.0;
+    CGFloat alpha    = isPlaying ? 1.0 :  0.0;
+
     if (animated) {
-        [[_speakerLeftConstraint animator] setConstant:(  isPlaying ? 4.0 : -18.0)];
-        [[_speakerImageView      animator] setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+        [[_speakerLeftConstraint animator] setConstant:constant];
+        [[_speakerImageView animator] setAlphaValue:alpha];
     } else {
-        [_speakerLeftConstraint setConstant:(  isPlaying ? 4.0 : -18.0)];
-        [_speakerImageView      setAlphaValue:(isPlaying ? 1.0 :  0.0 )];
+        [_speakerLeftConstraint setConstant:constant];
+        [_speakerImageView setAlphaValue:alpha];
     }
 }
 
@@ -601,10 +483,10 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         [_duplicateImageView setImage:image];
         [[_durationField superview] addSubview:_duplicateImageView positioned:NSWindowBelow relativeTo:nil];
 
-        _duplicateTrailingConstraint = [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
+        _duplicateRightConstraint = [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-4.0];
         
         _duplicateConstraints = @[
-            _duplicateTrailingConstraint,
+            _duplicateRightConstraint,
             [NSLayoutConstraint constraintWithItem:_duplicateImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0]
         ];
 
@@ -616,35 +498,36 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         
         [NSLayoutConstraint deactivateConstraints:_duplicateConstraints];
         _duplicateConstraints = nil;
-        _duplicateTrailingConstraint = nil;
+        _duplicateRightConstraint = nil;
     }
 
 
-    if (showsDot && !_dotView) {
-        _dotView = [[DotView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-        [_dotView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    if (showsDot && !_dotLabelView) {
+        _dotLabelView = [[TrackLabelView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [_dotLabelView setStyle:TrackLabelViewDot];
+        [_dotLabelView setTranslatesAutoresizingMaskIntoConstraints:NO];
 
-        [[_durationField superview] addSubview:_dotView positioned:NSWindowBelow relativeTo:nil];
+        [[_durationField superview] addSubview:_dotLabelView positioned:NSWindowBelow relativeTo:nil];
 
-        _dotTrailingConstraint = [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-4.0];
+        _dotRightConstraint = [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-4.0];
 
         _dotConstraints = @[
-            _dotTrailingConstraint,
-            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0],
-            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0],
-            [NSLayoutConstraint constraintWithItem:_dotView attribute:NSLayoutAttributeHeight   relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0]
+            _dotRightConstraint,
+            [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeTop      relatedBy:NSLayoutRelationEqual toItem:_durationField attribute:NSLayoutAttributeTop     multiplier:1.0 constant:4.0],
+            [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeWidth    relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0],
+            [NSLayoutConstraint constraintWithItem:_dotLabelView attribute:NSLayoutAttributeHeight   relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute     multiplier:1.0 constant:10.0]
         ];
 
         [NSLayoutConstraint activateConstraints:_dotConstraints];
 
         
-    } else if (!showsDot && _dotView) {
-        [_dotView removeFromSuperview];
-        _dotView = nil;
+    } else if (!showsDot && _dotLabelView) {
+        [_dotLabelView removeFromSuperview];
+        _dotLabelView = nil;
         
         [NSLayoutConstraint deactivateConstraints:_dotConstraints];
         _dotConstraints = nil;
-        _dotTrailingConstraint = nil;
+        _dotRightConstraint = nil;
     }
 
 
@@ -652,123 +535,157 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     
     if (showsDuplicateIcon && showsDot) {
         constant = 28 + 4;
-        [_duplicateTrailingConstraint setConstant:-18];
-        [_dotTrailingConstraint setConstant:-4];
+        [_duplicateRightConstraint setConstant:-18];
+        [_dotRightConstraint setConstant:-4];
 
     } else if (showsDuplicateIcon) {
         constant = 18;
-        [_duplicateTrailingConstraint setConstant:-4];
+        [_duplicateRightConstraint setConstant:-4];
 
     } else if (showsDot) {
         constant = 8;
-        [_dotTrailingConstraint setConstant:-4];
+        [_dotRightConstraint setConstant:-4];
     }
 
     if (showsDot) {
-        NSColor *borderColor = [self isSelected] ? [NSColor whiteColor] : sGetBorderColorForTrackLabel(trackLabel);
-
-        [_dotView setFillColor:sGetFillColorForTrackLabel(trackLabel)];
-        [_dotView setBorderColor:borderColor];
+        [_dotLabelView setLabel:trackLabel];
     }
 
     [_titleDurationConstraint setConstant:constant];
 }
 
+- (NSTableRowView *) _rowView
+{
+    NSView *superview = [self superview];
+    
+    if ([superview isKindOfClass:[NSTableRowView class]]) {
+        return (NSTableRowView *)superview;
+    } else {
+        return nil;
+    }
+}
 
-- (void) _updateStripeAndBorderedView
+
+
+- (void) updateColors
+{
+    NSTableRowView *rowView = [self _rowView];
+
+    BOOL rowIsSelected   = [rowView isSelected];
+    BOOL rowIsEmphasized = [rowView isEmphasized];
+
+    NSColor *primaryColor   = nil;
+    NSColor *secondaryColor = nil;
+
+    TrackStatus trackStatus = [[self track] trackStatus];
+
+    if (trackStatus == TrackStatusPlayed) {
+        primaryColor   = [Theme colorNamed:@"SetlistPrimaryPlayed"];
+        secondaryColor = [Theme colorNamed:@"SetlistSecondaryPlayed"];
+    
+    } else {
+        primaryColor   = [Theme colorNamed:@"SetlistPrimary"];
+        secondaryColor = [Theme colorNamed:@"SetlistSecondary"];
+    }
+    
+    if (rowIsSelected && rowIsEmphasized) {
+        primaryColor   = [Theme colorNamed:@"SetlistPrimaryEmphasized"];
+        secondaryColor = [Theme colorNamed:@"SetlistSecondaryEmphasized"];
+
+    } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
+        primaryColor   = [[self _tableView] playingTextColor];
+        secondaryColor = primaryColor;
+    }
+   
+    [[self titleField]    setTextColor:primaryColor];
+    [[self durationField] setTextColor:primaryColor];
+
+    [[self lineTwoLeftField]    setTextColor:secondaryColor];
+    [[self lineTwoRightField]   setTextColor:secondaryColor];
+    [[self lineThreeLeftField]  setTextColor:secondaryColor];
+    [[self lineThreeRightField] setTextColor:secondaryColor];
+    [_timeField                 setTextColor:secondaryColor];
+
+    [_duplicateImageView setTintColor:primaryColor];
+    [_speakerImageView   setTintColor:primaryColor];
+    
+    if (rowIsSelected && rowIsEmphasized) {
+        [_errorButton setNormalColor:primaryColor];
+        [_errorButton setPressedColor:primaryColor];
+
+        [_dotLabelView setNeedsWhiteBorder:YES];
+
+    } else {
+        [_errorButton setNormalColor: [Theme colorNamed:@"ButtonAlert"]];
+        [_errorButton setPressedColor:[Theme colorNamed:@"ButtonAlertPressed"]];
+
+        [_dotLabelView setNeedsWhiteBorder:NO];
+    }
+  
+    
+    NSVisualEffectMaterial material = 0;
+    NSColor *color = nil;
+
+    if (@available(macOS 10.14, *)) {
+        if (rowIsSelected) {
+            if (rowIsEmphasized) {
+                color = [NSColor selectedContentBackgroundColor];
+            } else {
+                color = [NSColor unemphasizedSelectedContentBackgroundColor];
+            }
+        } else {
+            material = NSVisualEffectMaterialContentBackground;
+        }
+
+    } else {
+        if (rowIsSelected) {
+            if (rowIsEmphasized) {
+                color = [NSColor alternateSelectedControlColor];
+            } else {
+                color = [NSColor secondarySelectedControlColor];
+            } 
+        } else {
+            color = [NSColor controlBackgroundColor];
+        }
+    }
+    
+    [_timeMaskView setColor:color];
+    [_timeMaskView setMaterial:material];
+    [_timeMaskView setEmphasized:rowIsEmphasized];
+}
+
+
+- (void) _updateLabelEdgeAndStripe
 {
     Track *track = [self track];
     if (!track) return;
 
-    BorderedView *borderedView = [self borderedView];
+    TrackStripeView *stripeView = [self stripeView];
 
-    NSColor *bottomBorderColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.1];
-    NSColor *bottomDashBackgroundColor = nil;
-
-    CGFloat bottomBorderHeight = -1;
-    CGFloat topConstraintValue = 0;
+    NSColor *stripeSolidColor = nil;
+    NSColor *stripeDashColor  = nil;
 
     if ([track trackStatus] != TrackStatusPlayed) {
         if ([track stopsAfterPlaying]) {
-            bottomBorderColor = [NSColor redColor];
-            bottomDashBackgroundColor = GetRGBColor(0xffd0d0, 1.0);
-            bottomBorderHeight = 2;
+            stripeSolidColor = [Theme colorNamed:@"SetlistStopAfterPlayingStripe2"];
+            stripeDashColor  = [Theme colorNamed:@"SetlistStopAfterPlayingStripe1"];
 
         } else if ([track ignoresAutoGap]) {
-            bottomBorderColor = GetRGBColor(0x00cc00, 1.0);
-            bottomBorderHeight = 2;
+            stripeSolidColor = [Theme colorNamed:@"SetlistIgnoreAutoGapStripe"];
         }
     }
 
-
-    [borderedView setBottomBorderColor:bottomBorderColor];
-    [borderedView setBottomBorderHeight:bottomBorderHeight];
-    [borderedView setBottomDashBackgroundColor:bottomDashBackgroundColor];
+    if (stripeSolidColor || stripeDashColor) {
+        [stripeView setSolidColor:stripeSolidColor];
+        [stripeView setDashColor:stripeDashColor];
+        [stripeView setHidden:NO];
+    } else {
+        [stripeView setHidden:YES];
+    }
 
     TrackLabel trackLabel = [track trackLabel];
-    [[self stripeView] setFillColor:sGetFillColorForTrackLabel(trackLabel)];
-    [[self stripeView] setBorderColor:sGetBorderColorForTrackLabel(trackLabel)];
-    [[self stripeView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
-
-    NSColor *backgroundColor = nil;
-
-    if (_selected) {
-        if ([[self window] isMainWindow] && !_drawsLighterSelectedBackground) {
-            backgroundColor = sGetActiveHighlightColor();
-        } else {
-            backgroundColor = sGetInactiveHighlightColor();
-        }
-        
-        topConstraintValue = -2;
-
-    } else {
-       backgroundColor = [NSColor whiteColor];
-    }
-    
-   
-    [_borderedView setBackgroundColor:backgroundColor];
-    [_timeField    setBackgroundColor:backgroundColor];
-
-    [_timeGradientView setGradient:[[NSGradient alloc] initWithColors:@[
-        [backgroundColor colorWithAlphaComponent:0],
-        [backgroundColor colorWithAlphaComponent:0.75],
-        backgroundColor 
-    ] ]];
-    
-    if (_drawsInsertionPointWorkaround) {
-        [borderedView setTopBorderColor:sGetActiveHighlightColor()];
-        [borderedView setTopBorderHeight:2];
-        topConstraintValue = 0;
-
-    } else {
-        [borderedView setTopBorderColor:nil];
-        [borderedView setTopBorderHeight:0];
-    }
-
-    [_borderedViewTopConstraint setConstant:topConstraintValue];
-}
-
-
-- (void) _updateSpeakerImage
-{
-    BOOL isPlaying = ([[self track] trackStatus] == TrackStatusPlaying);
-
-    if ([[self window] isMainWindow] && _selected && !_drawsLighterSelectedBackground)  {
-        [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerWhite"]];
-        return;
-    }
-
-    if (isPlaying) {
-        if (_selected) {
-            [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerBlack"]];
-        } else {
-            [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerBlue"]];
-        }
-
-        return;
-    }
-    
-    [[self speakerImageView] setImage:[NSImage imageNamed:@"SpeakerBlack"]];
+    [[self edgeLabelView] setLabel:trackLabel];
+    [[self edgeLabelView] setHidden:![[Preferences sharedInstance] showsLabelStripes]];
 }
 
 
@@ -939,12 +856,12 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
         NSFont *font = [[self lineTwoLeftField] font];
         font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
         [_timeField setFont:font];
+
     } else {
         [_timeField setFont:[[self lineTwoLeftField] font]];
     }
         
     [_timeField setStringValue:timeString];
-    [_timeField setTextColor:[self _bottomTextColor]];
     
     NSString *titleString = [track title];
     if (!titleString) titleString = @"";
@@ -965,7 +882,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     NSTextField *line2Right  = [self lineTwoRightField];
     NSTextField *line3Left   = [self lineThreeLeftField];
     NSTextField *line3Right  = [self lineThreeRightField];
-    Button      *errorButton = [self errorButton];
+    NSView      *errorButton = [self errorButton];
 
     BOOL showError = [[self track] trackError] != TrackErrorNone;
 
@@ -975,23 +892,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     [line3Left   setHidden:(numberOfLines < 3)];
     [line3Right  setHidden:showError || (numberOfLines < 3)];
     [errorButton setHidden:!showError];
-}
-
-
-- (void) _updateFieldColors
-{
-    NSColor *topTextColor    = [self _topTextColor];
-    NSColor *bottomTextColor = [self _bottomTextColor];
-
-    [[self titleField]    setTextColor:topTextColor];
-    [[self durationField] setTextColor:topTextColor];
-
-    [[self lineTwoLeftField]    setTextColor:bottomTextColor];
-    [[self lineTwoRightField]   setTextColor:bottomTextColor];
-    [[self lineThreeLeftField]  setTextColor:bottomTextColor];
-    [[self lineThreeRightField] setTextColor:bottomTextColor];
-    
-    [_duplicateImageView setTintColor:topTextColor];
 }
 
 
@@ -1015,12 +915,12 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     CGFloat endTimeAlpha = _showsTime ? 1.0 : 0.0;
     
     if (_animatesTime) {
-        [[_timeField        animator] setAlphaValue:endTimeAlpha];
-        [[_timeGradientView animator] setAlphaValue:endTimeAlpha];
+        [[_timeField    animator] setAlphaValue:endTimeAlpha];
+        [[_timeMaskView animator] setAlphaValue:endTimeAlpha];
 
     } else {
-        [_timeField        setAlphaValue:endTimeAlpha];
-        [_timeGradientView setAlphaValue:endTimeAlpha];
+        [_timeField    setAlphaValue:endTimeAlpha];
+        [_timeMaskView setAlphaValue:endTimeAlpha];
     }
 
     [_timeField setContentCompressionResistancePriority:(_showsTime ? (NSLayoutPriorityDefaultHigh + 1) : 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
@@ -1037,7 +937,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 
     _timeRequested = YES;
     [self _updateTimeVisibilityAnimated:YES];
-
 }
 
 
@@ -1046,25 +945,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 - (void) setBackgroundStyle:(NSBackgroundStyle)backgroundStyle
 {
     [super setBackgroundStyle:backgroundStyle];
-    [self _updateView];
-}
-
-
-- (void) setDrawsInsertionPointWorkaround:(BOOL)drawsInsertionPointWorkaround
-{
-    if (_drawsInsertionPointWorkaround != drawsInsertionPointWorkaround) {
-        _drawsInsertionPointWorkaround = drawsInsertionPointWorkaround;
-        [self _updateView];
-    }
-}
-
-
-- (void) setDrawsLighterSelectedBackground:(BOOL)drawsLighterSelectedBackground
-{
-    if (_drawsLighterSelectedBackground != drawsLighterSelectedBackground) {
-        _drawsLighterSelectedBackground = drawsLighterSelectedBackground;
-        [self _updateView];
-    }
+    [self updateColors];
 }
 
 
@@ -1072,15 +953,6 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
 {
     if (_expandedPlayedTrack != expandedPlayedTrack) {
         _expandedPlayedTrack = expandedPlayedTrack;
-        [self _updateView];
-    }
-}
-
-
-- (void) setSelected:(BOOL)selected
-{
-    if (_selected != selected) {
-        _selected = selected;
         [self _updateView];
     }
 }

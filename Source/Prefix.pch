@@ -5,7 +5,8 @@
 //
 
 #ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
 
     #import <AudioUnit/AudioUnit.h>
     #import <AudioToolbox/AudioToolbox.h>
@@ -15,6 +16,7 @@
 
     #import "Utils.h"
     #import "Compatibility.h"
+    #import "Theme.h"
     #import "Log.h"
     #import "WrappedUtils.h"
     #import "Application.h"

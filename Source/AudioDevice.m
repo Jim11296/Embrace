@@ -1,10 +1,4 @@
-//
-//  AudioDevice.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-12.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "AudioDevice.h"
 #import "WrappedAudioDevice.h"

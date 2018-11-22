@@ -1,12 +1,7 @@
-//
-//  Utils.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-04.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
+
 
 @class AppDelegate;
 
@@ -75,6 +70,14 @@ extern NSString *GetStringForTime(NSTimeInterval time);
 
 extern NSString *GetApplicationSupportDirectory(void);
 
+extern BOOL IsAppearanceDarkAqua(NSView *view);
+
+extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat alpha);
+
+extern void PerformWithAppearance(NSAppearance *appearance, void (^block)(void));
+
+// Returns bounds without system bezel 
+extern CGRect GetInsetBounds(NSView *view);
 
 #ifdef __cplusplus
 }

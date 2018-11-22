@@ -1,13 +1,9 @@
-//
-//  Utils.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-04.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "Utils.h"
 #import "Track.h"
+#import "Theme.h"
+
 
 static NSArray *sGetTraditionalStringArray()
 {
@@ -542,7 +538,6 @@ NSColor *GetRGBColor(int rgb, CGFloat alpha)
 }
 
 
-
 CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef))
 {
     size_t width  = size.width * scale;
@@ -560,7 +555,7 @@ CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)
             CGContextScaleCTM(context, scale, -scale);
 
             NSGraphicsContext *savedContext = [NSGraphicsContext currentContext];
-            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:YES]];
 
             callback(context);
             
@@ -621,3 +616,53 @@ NSString *GetApplicationSupportDirectory()
     NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleExecutable"];
     return sFindOrCreateDirectory(NSApplicationSupportDirectory, NSUserDomainMask, name, NULL);
 }
+
+
+BOOL IsAppearanceDarkAqua(NSView *view)
+{
+    if (@available(macOS 10.14, *)) {
+        NSAppearance *effectiveAppearance =[view effectiveAppearance];
+        NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
+       
+        NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
+
+        return [bestMatch isEqualToString:NSAppearanceNameDarkAqua];
+
+    } else {
+        return NO;
+    }
+}
+
+
+extern NSColor *GetColorWithMultipliedAlpha(NSColor *inColor, CGFloat inAlpha)
+{
+    CGFloat newAlpha = [inColor alphaComponent] * inAlpha;
+    return [inColor colorWithAlphaComponent:newAlpha];
+}
+
+
+void PerformWithAppearance(NSAppearance *appearance, void (^block)(void))
+{
+    NSAppearance *oldAppearance = [NSAppearance currentAppearance];
+    [NSAppearance setCurrentAppearance:appearance];
+    block();
+    [NSAppearance setCurrentAppearance:oldAppearance];
+}
+
+
+CGRect GetInsetBounds(NSView *view)
+{
+    CGFloat scale = [[view window] backingScaleFactor];
+    CGRect  bounds = [view bounds];
+    CGRect  insetBounds = bounds;
+
+    // Dark Aqua adds a translucent bezel, pull in by one pixel to match
+    if (@available(macOS 10.14, *)) {
+        if (IsAppearanceDarkAqua(view) && (scale > 1)) {
+            insetBounds = CGRectInset(bounds, 1, 0);
+        }
+    }
+    
+    return insetBounds;
+}
+

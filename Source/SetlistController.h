@@ -1,18 +1,9 @@
-//
-//  SetlistController.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-03.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Cocoa/Cocoa.h>
 #import "Player.h"
 
-
-@class WaveformView;
 @class TracksController;
-@class PlayBar, BorderedView, CloseButton, Button, LevelMeter, WhiteSlider;
 
 
 typedef NS_ENUM(NSInteger, PlaybackAction) {
