@@ -49,6 +49,18 @@ static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theVa
 }
 
 
+static BOOL sIsOutputUnitRunning(AudioUnit outputUnit)
+{
+    if (!outputUnit) return NO;
+
+    Boolean isRunning = false;
+    UInt32 size = sizeof(isRunning);
+    CheckError(AudioUnitGetProperty( outputUnit, kAudioOutputUnitProperty_IsRunning, kAudioUnitScope_Global, 0, &isRunning, &size ), "sIsOutputUnitRunning");
+    
+    return isRunning ? YES : NO;
+}
+
+
 static OSStatus sApplyEmergencyLimiter(
     void *inRefCon,
     AudioUnitRenderActionFlags *ioActionFlags,
@@ -111,12 +123,6 @@ typedef struct {
 
     AUGraph   _graph;
 
-    AUNode    _inputNode;
-    AUNode    _converterNode;
-	AUNode    _limiterNode;
-    AUNode    _mixerNode;
-	AUNode    _outputNode;
-
     AudioUnit _inputAudioUnit;
     AudioUnit _converterAudioUnit;
     AudioUnit _limiterAudioUnit;
@@ -141,7 +147,7 @@ typedef struct {
     id<NSObject> _processActivityToken;
     IOPMAssertionID _pmAssertionID;
 
-    NSMutableDictionary *_effectToNodeMap;
+    NSMutableDictionary *_effectToAudioUnitMap;
     NSHashTable *_listeners;
     
     NSTimer *_tickTimer;
@@ -271,24 +277,24 @@ typedef struct {
 
 - (void) _updateEffects:(NSArray *)effects
 {
-    NSMutableDictionary *effectToNodeMap = [NSMutableDictionary dictionary];
+    NSMutableDictionary *effectToAudioUnitMap = [NSMutableDictionary dictionary];
 
     for (Effect *effect in effects) {
         NSValue *key = [NSValue valueWithNonretainedObject:effect];
-        AUNode node = 0;
+        AudioUnit audioUnit = NULL;
 
         OSStatus err = noErr;
 
-        AudioComponentDescription acd = [[effect type] AudioComponentDescription];
-
-        NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
-        if (nodeNumber) {
-            node = [nodeNumber intValue];
+        NSValue *unitValue = [_effectToAudioUnitMap objectForKey:key];
+        if (unitValue) {
+            audioUnit = [unitValue pointerValue];
 
         } else {
-            err = AUGraphAddNode(_graph, &acd, &node);
+            AudioComponentDescription acd = [[effect type] AudioComponentDescription];
+
+            AudioComponent component = AudioComponentFindNext(NULL, &acd);
             
-            if (err != noErr) {
+            if (!component) {
                 [effect _setAudioUnit:NULL error:err];
                 continue;
             }
@@ -307,10 +313,7 @@ typedef struct {
                 continue;
             }
 
-            AudioComponentDescription unused;
-            AudioUnit unit = NULL;
-
-            err = AUGraphNodeInfo(_graph, node, &unused, &unit);
+            err = AudioComponentInstanceNew(component, &audioUnit);
             
             if (err != noErr) {
                 [effect _setAudioUnit:NULL error:err];
@@ -318,7 +321,7 @@ typedef struct {
             }
 
             err = AudioUnitSetProperty(
-                unit,
+                audioUnit,
                 kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
                 &maxFrames, maxFramesSize
             );
@@ -329,14 +332,6 @@ typedef struct {
             }
         }
         
-        AudioUnit audioUnit;
-        err = AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
-
-        if (err != noErr) {
-            [effect _setAudioUnit:NULL error:err];
-            continue;
-        }
-        
         AudioUnitParameter changedUnit;
         changedUnit.mAudioUnit = audioUnit;
         changedUnit.mParameterID = kAUParameterListener_AnyParameter;
@@ -344,18 +339,18 @@ typedef struct {
 
         [effect _setAudioUnit:audioUnit error:noErr];
 
-        [effectToNodeMap setObject:@(node) forKey:key];
+        [effectToAudioUnitMap setObject:[NSValue valueWithPointer:audioUnit] forKey:key];
     }
 
 
-    for (NSValue *key in _effectToNodeMap) {
-        if (![effectToNodeMap objectForKey:key]) {
-            AUNode node = [[_effectToNodeMap objectForKey:key] intValue];
-            AUGraphRemoveNode(_graph, node);
+    for (NSValue *key in _effectToAudioUnitMap) {
+        if (![effectToAudioUnitMap objectForKey:key]) {
+            AudioUnit unit = [[_effectToAudioUnitMap objectForKey:key] pointerValue];
+            AudioComponentInstanceDispose(unit);
         }
     }
 
-    _effectToNodeMap = effectToNodeMap;
+    _effectToAudioUnitMap = effectToAudioUnitMap;
 
     [self _reconnectGraph];
 }
@@ -759,10 +754,7 @@ static OSStatus sInputRenderCallback(
 {
     EmbraceLog(@"Player", @"Sending %p to render thread", audioUnit);
 
-    Boolean isRunning;
-    AUGraphIsRunning(_graph, &isRunning);
-
-    if (isRunning) {
+    if (sIsOutputUnitRunning(_outputAudioUnit)) {
         _renderUserInfo.nextInputUnit = audioUnit;
         sMemoryBarrier();
 
@@ -776,9 +768,7 @@ static OSStatus sInputRenderCallback(
                 break;
             }
         
-            AUGraphIsRunning(_graph, &isRunning);
-            
-            if (!isRunning) return;
+            if (!sIsOutputUnitRunning(_outputAudioUnit)) return;
 
             if (loopGuard >= 1000) {
                 EmbraceLog(@"Player", @"_sendHeadUnitToRenderThread timed out");
@@ -878,10 +868,8 @@ static OSStatus sInputRenderCallback(
             converterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
             converterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-            AUNode converterNode = 0;
-            CheckError(AUGraphAddNode( _graph, &converterCD,  &converterNode),  "AUGraphAddNode[ Converter ]");
-
-            CheckError(AUGraphNodeInfo(_graph, converterNode,  NULL, &converterUnit),  "AUGraphNodeInfo[ Converter ]");
+            AudioComponent converterComponent = AudioComponentFindNext(NULL, &converterCD);
+            CheckError( AudioComponentInstanceNew(converterComponent, &converterUnit), "AudioComponentInstanceNew[ Converter ]" );
 
             UInt32 complexity = [[Preferences sharedInstance] usesMasteringComplexitySRC] ?
                 kAudioUnitSampleRateConverterComplexity_Mastering :
@@ -904,7 +892,6 @@ static OSStatus sInputRenderCallback(
             // maxFrames will be different when going through a SRC
             maxFramesForInput = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
 
-            _converterNode = converterNode;
             _converterAudioUnit = converterUnit;
         }
 
@@ -916,9 +903,8 @@ static OSStatus sInputRenderCallback(
             inputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
             inputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-            AUNode inputNode = 0;
-            CheckError(AUGraphAddNode(_graph, &inputCD, &inputNode), "AUGraphAddNode[ Input ]");
-            CheckError(AUGraphNodeInfo(_graph, inputNode, NULL, &inputUnit),  "AUGraphNodeInfo[ Input ]");
+            AudioComponent inputComponent = AudioComponentFindNext(NULL, &inputCD);
+            CheckError( AudioComponentInstanceNew(inputComponent, &inputUnit), "AudioComponentInstanceNew[ Input ]" );
 
             setPropertyUInt32( inputUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFramesForInput);
 
@@ -927,7 +913,6 @@ static OSStatus sInputRenderCallback(
             
             CheckError(AudioUnitInitialize(inputUnit), "AudioUnitInitialize[ Input ]");
 
-            _inputNode = inputNode;
             _inputAudioUnit = inputUnit;
         }
 
@@ -948,18 +933,16 @@ static OSStatus sInputRenderCallback(
 
     if (_inputAudioUnit) {
         CheckError(AudioUnitUninitialize(_inputAudioUnit), "AudioUnitUninitialize[ Input ]");
-        CheckError(AUGraphRemoveNode(_graph, _inputNode), "AUGraphRemoveNode[ Input ]" );
-        
+        CheckError(AudioComponentInstanceDispose(_inputAudioUnit), "AudioComponentInstanceDispose[ Input ]");
+
         _inputAudioUnit = NULL;
-        _inputNode = 0;
     }
 
     if (_converterAudioUnit) {
         CheckError(AudioUnitUninitialize(_converterAudioUnit), "AudioUnitUninitialize[ Converter ]");
-        CheckError(AUGraphRemoveNode(_graph, _converterNode), "AUGraphRemoveNode[ Converter ]" );
-        
+        CheckError(AudioComponentInstanceDispose(_converterAudioUnit), "AudioComponentInstanceDispose[ Converter ]");
+
         _converterAudioUnit = NULL;
-        _converterNode = 0;
     }
 }
 
@@ -988,17 +971,13 @@ static OSStatus sInputRenderCallback(
     outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
     outputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-    CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
-    CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
-    CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
+    AudioComponent limiterComponent = AudioComponentFindNext(NULL, &limiterCD);
+    AudioComponent mixerComponent   = AudioComponentFindNext(NULL, &mixerCD);
+    AudioComponent outputComponent  = AudioComponentFindNext(NULL, &outputCD);
 
-	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
-
-    CheckError(AUGraphNodeInfo(_graph, _limiterNode, NULL, &_limiterAudioUnit), "AUGraphNodeInfo[ Limiter ]");
-	CheckError(AUGraphNodeInfo(_graph, _mixerNode,   NULL, &_mixerAudioUnit),   "AUGraphNodeInfo[ Mixer ]");
-	CheckError(AUGraphNodeInfo(_graph, _outputNode,  NULL, &_outputAudioUnit),  "AUGraphNodeInfo[ Output ]");
-
-	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
+    CheckError( AudioComponentInstanceNew(limiterComponent, &_limiterAudioUnit), "AudioComponentInstanceNew[ Limiter ]" );
+    CheckError( AudioComponentInstanceNew(mixerComponent,   &_mixerAudioUnit),   "AudioComponentInstanceNew[ Mixer ]" );
+    CheckError( AudioComponentInstanceNew(outputComponent,  &_outputAudioUnit),  "AudioComponentInstanceNew[ Output ]" );
 
     UInt32 on = 1;
     CheckError(AudioUnitSetProperty(_mixerAudioUnit,
@@ -1023,35 +1002,22 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) _iterateGraphNodes:(void (^)(AUNode, NSString *))callback
-{
-    if (_inputNode)     callback(_inputNode,     @"Input");
-    if (_converterNode) callback(_converterNode, @"Converter");
-    callback(_limiterNode, @"Limiter");
-    
-    for (Effect *effect in _effects) {
-        NSValue  *key        = [NSValue valueWithNonretainedObject:effect];
-        NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
-
-        if (!nodeNumber) continue;
-        callback([nodeNumber intValue], [[effect type] name]);
-    }
-
-    callback(_mixerNode,  @"Mixer");
-    callback(_outputNode, @"Output");
-}
-
-
 - (void) _iterateGraphAudioUnits:(void (^)(AudioUnit, NSString *))callback
 {
-    [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
-        AudioComponentDescription acd;
-        AudioUnit audioUnit;
+    if (_inputAudioUnit)     callback(_inputAudioUnit,     @"Input");
+    if (_converterAudioUnit) callback(_converterAudioUnit, @"Converter");
+    callback(_limiterAudioUnit, @"Limiter");
+    
+    for (Effect *effect in _effects) {
+        NSValue  *key       = [NSValue valueWithNonretainedObject:effect];
+        NSValue  *unitValue = [_effectToAudioUnitMap objectForKey:key];
 
-        AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
+        if (!unitValue) continue;
+        callback([unitValue pointerValue], [[effect type] name]);
+    }
 
-        callback(audioUnit, unitString);
-    }];
+    callback(_mixerAudioUnit,  @"Mixer");
+    callback(_outputAudioUnit, @"Output");
 }
 
 
@@ -1065,32 +1031,40 @@ static OSStatus sInputRenderCallback(
             return NO;
         }
         
-        __block AUNode lastNode = 0;
+        __block AudioUnit lastUnit = NULL;
         __block NSInteger index = 0;
         __block BOOL didConnectAll = YES;
 
-        AURenderCallbackStruct inputCallbackStruct;
-        inputCallbackStruct.inputProc        = &sInputRenderCallback;
-        inputCallbackStruct.inputProcRefCon  = &_renderUserInfo;
+        AURenderCallbackStruct headRenderCallback = { &sInputRenderCallback, &_renderUserInfo };
+        UInt32 callbackSize = sizeof(headRenderCallback);
 
         if (!CheckError(
-            AUGraphSetNodeInputCallback(_graph, _limiterNode, 0, &inputCallbackStruct),
+            AudioUnitSetProperty(_limiterAudioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &headRenderCallback, callbackSize),
             "AUGraphSetNodeInputCallback"
         )) {
             return NO;
         }
         
-        [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
-            if (lastNode && (node != _limiterNode)) {
-                if (!CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput")) {
+        [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
+            if (lastUnit && (unit != _limiterAudioUnit)) {
+                AudioUnitConnection connection = { lastUnit, 0, 0 };
+
+                if (!CheckError(
+                    AudioUnitSetProperty(unit, kAudioUnitProperty_MakeConnection, kAudioUnitScope_Input, 0, &connection, sizeof(connection)),
+                    "AUGraphConnectNodeInput"
+                )) {
                     didConnectAll = NO;
                 }
             }
 
-            lastNode = node;
+            lastUnit = unit;
             index++;
         }];
-        
+
+        [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
+            AudioUnitInitialize(unit);
+        }];
+
         if (!didConnectAll) {
             return NO;
         }
@@ -1180,15 +1154,16 @@ static OSStatus sInputRenderCallback(
         raiseIssue(PlayerIssueDeviceHoggedByOtherProcess);
     }
 
-    Boolean isRunning = 0;
-    AUGraphIsRunning(_graph, &isRunning);
+    BOOL isRunning = sIsOutputUnitRunning(_outputAudioUnit);
     
     _hadChangeDuringPlayback = NO;
     
-    if (isRunning) AUGraphStop(_graph);
+    if (isRunning) AudioOutputUnitStop(_outputAudioUnit);
     
-    CheckError(AUGraphUninitialize(_graph), "AUGraphUninitialize");
-
+    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
+        CheckError(AudioUnitUninitialize(unit), "AudioUnitUninitialize");
+    }];
+    
     AUGraphClearConnections(_graph);
 
     for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
@@ -1306,9 +1281,11 @@ static OSStatus sInputRenderCallback(
             kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
             &maxFrames, maxFramesSize
         ), @"AudioUnitSetProperty[ %@, MaximumFramesPerSlice ]", unitString);
-    }];
 
-    checkError(AUGraphInitialize(_graph), @"AUGraphInitialize", nil);
+        checkError(AudioUnitInitialize(
+            unit
+        ), @"AudioUnitInitialize[ %@ ]", unitString);
+    }];
 
     if (ok) {
         [self _reconnectGraph];
@@ -1426,11 +1403,8 @@ static OSStatus sInputRenderCallback(
 {
     EmbraceLogMethod();
 
-    Boolean isRunning = 0;
-    AUGraphIsRunning(_graph, &isRunning);
-
-    if (!isRunning) {
-        CheckError(AUGraphStart(_graph), "AUGraphStart");
+    if (!sIsOutputUnitRunning(_outputAudioUnit)) {
+        CheckError(AudioOutputUnitStart(_outputAudioUnit), "AudioOutputUnitStart");
     }
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_stopGraph) object:nil];
@@ -1440,7 +1414,7 @@ static OSStatus sInputRenderCallback(
 - (void) _stopGraph
 {
     EmbraceLogMethod();
-    CheckError(AUGraphStop(_graph), "AUGraphStop");
+    CheckError(AudioOutputUnitStop(_outputAudioUnit), "AUGraphStop");
 }
 
 
@@ -1449,14 +1423,8 @@ static OSStatus sInputRenderCallback(
 - (AudioUnit) audioUnitForEffect:(Effect *)effect
 {
     NSValue *key = [NSValue valueWithNonretainedObject:effect];
-    AUNode node = [[_effectToNodeMap objectForKey:key] intValue];
 
-    AudioUnit audioUnit;
-    AudioComponentDescription acd;
-
-    CheckError(AUGraphNodeInfo(_graph, node, &acd, &audioUnit), "AUGraphNodeInfo");
-
-    return audioUnit;
+    return [[_effectToAudioUnitMap objectForKey:key] pointerValue];
 }
 
 
@@ -1603,13 +1571,7 @@ static OSStatus sInputRenderCallback(
         _tickTimer = nil;
     }
 
-    Boolean isRunning = 0;
-    CheckError(
-        AUGraphIsRunning(_graph, &isRunning),
-        "AUGraphIsRunning"
-    );
-
-    if (isRunning) {
+    if (sIsOutputUnitRunning(_outputAudioUnit)) {
         [self _sendHeadUnitToRenderThread:NULL];
         [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:30];
     }
