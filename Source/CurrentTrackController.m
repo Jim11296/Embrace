@@ -1,10 +1,4 @@
-//
-//  LegacyCurrentTrackController.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-21.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "CurrentTrackController.h"
 #import "Player.h"
@@ -16,7 +10,7 @@
 typedef NS_ENUM(NSInteger, CurrentTrackAppearance) {
     CurrentTrackAppearanceWhite = 0,
     CurrentTrackAppearanceLight = 1,
-    CurrentTrackAppearanceDark  = 2,
+    CurrentTrackAppearanceDark  = 2
 };
 
 
@@ -186,6 +180,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
         [[self noTrackLabel] setTextColor:[NSColor secondaryLabelColor]];
 
         [[self waveformView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
+
         [[self waveformView] setActiveWaveformColor:  [NSColor colorWithCalibratedWhite:0.6  alpha:1.0]];
         [[self waveformView] setInactiveWaveformColor:[NSColor colorWithCalibratedWhite:0.25 alpha:1.0]];
     }

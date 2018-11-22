@@ -1,0 +1,21 @@
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
+
+#import <Cocoa/Cocoa.h>
+
+@interface SetlistLevelMeter : NSView <EmbraceWindowListener>
+
+@property (nonatomic, getter=isMetering) BOOL metering;
+
+- (void) setLeftAveragePower: (Float32) leftAveragePower
+           rightAveragePower: (Float32) rightAveragePower
+               leftPeakPower: (Float32) leftPeakPower
+              rightPeakPower: (Float32) rightPeakPower
+               limiterActive: (BOOL) limiterActive;
+
+@property (nonatomic, readonly) Float32 leftAveragePower;
+@property (nonatomic, readonly) Float32 rightAveragePower;
+@property (nonatomic, readonly) Float32 leftPeakPower;
+@property (nonatomic, readonly) Float32 rightPeakPower;
+@property (nonatomic, readonly, getter=isLimiterActive) BOOL limiterActive;
+
+@end

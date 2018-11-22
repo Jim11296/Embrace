@@ -1,10 +1,4 @@
-//
-//  TipArrowFloater.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2016-08-14.
-//  Copyright © 2016 Ricci Adams. All rights reserved.
-//
+// (c) 2016-2018 Ricci Adams.  All rights reserved.
 
 #import "TipArrowFloater.h"
 

@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SetlistController">
             <connections>
                 <outlet property="autoGapField" destination="27g-A4-whb" id="1kz-97-faD"/>
+                <outlet property="autoGapIcon" destination="rx0-fs-t7a" id="4Oc-ZZ-RrM"/>
                 <outlet property="autoGapSlider" destination="Cip-py-M5e" id="xyq-QJ-X6M"/>
-                <outlet property="bottomContainer" destination="MK7-2f-n0z" id="Rnk-eB-LEM"/>
+                <outlet property="bottomSeparator" destination="KlC-Os-yxn" id="cf5-ku-7IN"/>
                 <outlet property="dangerMeter" destination="yvU-8G-5CX" id="Uvs-Zh-ps9"/>
                 <outlet property="dragSongsView" destination="Fvc-DQ-N2K" id="I40-9C-wMY"/>
+                <outlet property="footerView" destination="fTB-k8-Bmg" id="tJn-4D-Zfh"/>
                 <outlet property="gearButton" destination="4bi-5W-Bp7" id="t9N-Ge-6wE"/>
-                <outlet property="gearLabelMenuItem" destination="pYs-4n-BUC" id="5rf-Xl-jpd"/>
-                <outlet property="gearLabelMenuView" destination="hg8-Ej-WfS" id="jXy-Ur-2YB"/>
-                <outlet property="gearLabelSeparator" destination="g95-hB-sI5" id="psg-8K-Bnh"/>
                 <outlet property="gearMenu" destination="Kdj-dO-hkZ" id="tFR-Qe-Ff1"/>
+                <outlet property="gearMenuLabelItem" destination="pYs-4n-BUC" id="iAh-1l-2Xs"/>
+                <outlet property="gearMenuLabelSeparator" destination="g95-hB-sI5" id="gex-z3-8mf"/>
+                <outlet property="gearMenuLabelView" destination="hg8-Ej-WfS" id="aJD-tP-ni0"/>
+                <outlet property="headerView" destination="gZt-Xz-QI9" id="ee9-4H-6re"/>
                 <outlet property="levelMeter" destination="9x2-yQ-Jbg" id="V38-xr-dDB"/>
                 <outlet property="mainView" destination="kmP-AQ-nuK" id="LUd-qc-cK2"/>
                 <outlet property="playBar" destination="pkk-ZT-czS" id="NoQ-ry-IUU"/>
@@ -24,11 +28,10 @@
                 <outlet property="playOffsetField" destination="Ceq-EF-rHK" id="Bhd-Pk-UD7"/>
                 <outlet property="playRemainingField" destination="rvF-zp-fPR" id="SEU-xg-Wuf"/>
                 <outlet property="scrollView" destination="9qw-rj-zd3" id="IsL-0T-5Wf"/>
-                <outlet property="tableLabelMenuItem" destination="anf-f4-hIA" id="tUf-vn-9NQ"/>
-                <outlet property="tableLabelMenuView" destination="lH7-Ja-gL2" id="Vp1-DN-CP9"/>
-                <outlet property="tableLabelSeparator" destination="ek2-yc-gNp" id="5WA-1k-8vF"/>
                 <outlet property="tableMenu" destination="trO-cQ-b0j" id="5ek-RH-DVO"/>
-                <outlet property="topContainer" destination="K7L-NV-xHB" id="C70-T5-Zve"/>
+                <outlet property="tableMenuLabelItem" destination="anf-f4-hIA" id="721-EN-Eeg"/>
+                <outlet property="tableMenuLabelSeparator" destination="ek2-yc-gNp" id="zMm-23-hHx"/>
+                <outlet property="tableMenuLabelView" destination="lH7-Ja-gL2" id="Fkb-xf-0dN"/>
                 <outlet property="tracksController" destination="PiM-Bj-V6d" id="vGc-HC-w7B"/>
                 <outlet property="volumeSlider" destination="1QF-Cc-1Ru" id="aZX-Qs-S9B"/>
                 <outlet property="window" destination="gir-FZ-88a" id="eb8-8W-6sk"/>
@@ -42,7 +45,7 @@
             </connections>
         </customObject>
         <userDefaultsController representsSharedInstance="YES" id="Bui-lf-GNg"/>
-        <customView id="hg8-Ej-WfS" userLabel="Label Menu (Gear Button)" customClass="LabelMenuView">
+        <customView id="hg8-Ej-WfS" userLabel="Label Menu (Gear Button)" customClass="MenuLabelView">
             <rect key="frame" x="0.0" y="0.0" width="164" height="27"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <connections>
@@ -50,7 +53,7 @@
             </connections>
             <point key="canvasLocation" x="664" y="649.5"/>
         </customView>
-        <customView id="lH7-Ja-gL2" userLabel="Label Menu (Table View)" customClass="LabelMenuView">
+        <customView id="lH7-Ja-gL2" userLabel="Label Menu (Table View)" customClass="MenuLabelView">
             <rect key="frame" x="0.0" y="0.0" width="164" height="27"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <connections>
@@ -104,82 +107,88 @@
                 <outlet property="delegate" destination="-2" id="SRi-5i-aw6"/>
             </connections>
         </menu>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="EmbraceWindow">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PlaylistWindow" animationBehavior="default" id="gir-FZ-88a" userLabel="Window" customClass="EmbraceWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="533" y="338" width="320" height="424"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="240" height="354"/>
-            <view key="contentView" id="eL9-9a-De5">
+            <view key="contentView" wantsLayer="YES" id="eL9-9a-De5">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="424"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView appearanceType="aqua" id="K7L-NV-xHB" userLabel="Header" customClass="BorderedView">
+                    <customView id="gZt-Xz-QI9">
                         <rect key="frame" x="0.0" y="353" width="320" height="71"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <customView appearanceType="aqua" id="9x2-yQ-Jbg" customClass="LevelMeter">
-                                <rect key="frame" x="57" y="37" width="210" height="16"/>
+                            <customView wantsLayer="YES" id="rwv-u7-urb" userLabel="Inner Container">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="71"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </customView>
-                            <customView appearanceType="aqua" id="pkk-ZT-czS" customClass="PlayBar">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </customView>
-                            <slider verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="WhiteSlider">
-                                <rect key="frame" x="55" y="18" width="210" height="20"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="WhiteSliderCell"/>
-                                <connections>
-                                    <action selector="changeVolume:" target="-2" id="jC8-Ne-Dew"/>
-                                    <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
-                                </connections>
-                            </slider>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
-                                <rect key="frame" x="269" y="6" width="46" height="14"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
-                                </connections>
-                            </textField>
-                            <customView id="Twn-WM-C4J" customClass="Button">
-                                <rect key="frame" x="7" y="22" width="42" height="28"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
-                                </connections>
-                            </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
-                                <rect key="frame" x="5" y="6" width="46" height="14"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
-                                </connections>
-                            </textField>
-                            <customView id="4bi-5W-Bp7" customClass="Button">
-                                <rect key="frame" x="271" y="22" width="42" height="28"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
-                                    <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
-                                </connections>
-                            </customView>
-                            <customView id="yvU-8G-5CX" customClass="DangerMeter">
-                                <rect key="frame" x="271" y="54" width="42" height="11"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <outlet property="menu" destination="Kdj-dO-hkZ" id="53k-6Q-ubP"/>
-                                </connections>
+                                <subviews>
+                                    <customView id="9x2-yQ-Jbg" customClass="SetlistLevelMeter">
+                                        <rect key="frame" x="57" y="37" width="210" height="16"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    </customView>
+                                    <customView id="pkk-ZT-czS" customClass="SetlistPlayBar">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    </customView>
+                                    <slider wantsLayer="YES" verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="SetlistSlider">
+                                        <rect key="frame" x="55" y="18" width="210" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="SetlistSliderCell"/>
+                                        <connections>
+                                            <action selector="changeVolume:" target="-2" id="jC8-Ne-Dew"/>
+                                            <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
+                                        </connections>
+                                    </slider>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
+                                        <rect key="frame" x="269" y="6" width="46" height="14"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
+                                            <font key="font" metaFont="smallSystem"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                        <connections>
+                                            <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
+                                        </connections>
+                                    </textField>
+                                    <customView id="Twn-WM-C4J" customClass="SetlistButton">
+                                        <rect key="frame" x="7" y="22" width="42" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <connections>
+                                            <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
+                                        </connections>
+                                    </customView>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
+                                        <rect key="frame" x="5" y="6" width="46" height="14"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
+                                            <font key="font" metaFont="smallSystem"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                        <connections>
+                                            <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
+                                        </connections>
+                                    </textField>
+                                    <customView id="4bi-5W-Bp7" customClass="SetlistButton">
+                                        <rect key="frame" x="271" y="22" width="42" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                        <connections>
+                                            <action selector="showGearMenu:" target="-2" id="aLZ-FW-J4T"/>
+                                            <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
+                                        </connections>
+                                    </customView>
+                                    <customView id="yvU-8G-5CX" customClass="SetlistDangerMeter">
+                                        <rect key="frame" x="271" y="54" width="42" height="11"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                        <connections>
+                                            <outlet property="menu" destination="Kdj-dO-hkZ" id="53k-6Q-ubP"/>
+                                        </connections>
+                                    </customView>
+                                </subviews>
                             </customView>
                         </subviews>
                     </customView>
@@ -192,9 +201,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -231,26 +240,30 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <customView appearanceType="aqua" id="MK7-2f-n0z" customClass="BorderedView">
+                            <visualEffectView wantsLayer="YES" misplaced="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" id="fTB-k8-Bmg">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <customView misplaced="YES" id="KlC-Os-yxn" customClass="HairlineView">
+                                        <rect key="frame" x="0.0" y="26" width="320" height="2"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    </customView>
                                     <textField toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" alphaValue="0.5" id="27g-A4-whb">
                                         <rect key="frame" x="281" y="3" width="36" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="center" title="0:00" id="kXQ-cJ-H9c">
                                             <font key="font" metaFont="smallSystem"/>
-                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                         </textFieldCell>
                                         <connections>
                                             <binding destination="-2" name="value" keyPath="self.autoGapTimeString" id="tqy-WQ-Uo9"/>
                                         </connections>
                                     </textField>
-                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="WhiteSlider">
+                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="SetlistSlider">
                                         <rect key="frame" x="29" y="1" width="254" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="16" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="17" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="WhiteSliderCell"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="16" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="17" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="SetlistSliderCell"/>
                                         <connections>
                                             <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
                                         </connections>
@@ -261,7 +274,7 @@
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="PaddingTemplate" id="k41-UM-ODJ"/>
                                     </imageView>
                                 </subviews>
-                            </customView>
+                            </visualEffectView>
                         </subviews>
                     </customView>
                 </subviews>
@@ -340,7 +353,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Drag Songs Here" id="Ilb-M9-emE">
                         <font key="font" metaFont="system"/>
-                        <color key="textColor" red="0.83529418706893921" green="0.83529418706893921" blue="0.83529418706893921" alpha="1" colorSpace="deviceRGB"/>
+                        <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>

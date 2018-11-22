@@ -1,16 +1,9 @@
-//
-//  EffectSettingsController.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-06.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "EditSystemEffectController.h"
 #import "Effect.h"
 #import "EffectAdditions.h"
 #import "EffectType.h"
-#import "BorderedView.h"
 #import <objc/runtime.h>
 
 

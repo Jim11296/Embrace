@@ -1,10 +1,4 @@
-//
-//  WaveformView.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-06.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "WaveformView.h"
 #import "Track.h"
@@ -16,6 +10,7 @@
     CALayer   *_inactiveLayer;
     CALayer   *_activeLayer;
 }
+
 
 - (id) initWithFrame:(NSRect)frameRect
 {
@@ -36,8 +31,8 @@
         [[self layer] addSublayer:_inactiveLayer];
         [[self layer] addSublayer:_activeLayer];
 
-        _activeWaveformColor = GetRGBColor(0x202020, 1.0);
-        _inactiveWaveformColor = GetRGBColor(0xababab, 1.0);
+        _activeWaveformColor   = [NSColor labelColor];
+        _inactiveWaveformColor = [NSColor secondaryLabelColor];
 
         [self setPercentage:FLT_EPSILON];
     }
@@ -125,15 +120,29 @@
     
     NSTimeInterval startTime = [track startTime];
     NSTimeInterval stopTime  = [track stopTime];
-    NSTimeInterval duration  = [track decodedDuration];
-    
+   
     NSInteger startOffset = 0;
     NSInteger stopOffset  = inCount;
+   
+    if (startTime || stopTime) {
+        NSTimeInterval duration = [track decodedDuration];
+        if (!duration) duration = [track duration];
+        if (!duration) return nil;
     
-    if (startTime) startOffset = round((startTime / duration) * inCount);
-    if (stopTime)  stopOffset  = round((stopTime  / duration) * inCount);
+        if (startTime) startOffset = round((startTime / duration) * inCount);
+        if (stopTime)  stopOffset  = round((stopTime  / duration) * inCount);
+    }
     
-    return [NSData dataWithBytes:(inBytes + startOffset) length:(stopOffset - startOffset)];
+    if (startOffset < 0)       startOffset = 0;
+    if (startOffset > inCount) startOffset = inCount;
+
+    if (stopOffset < 0)       stopOffset = 0;
+    if (stopOffset > inCount) stopOffset = inCount; 
+    
+    NSInteger length = (stopOffset - startOffset);
+    if (length < 0) return nil;
+     
+    return [NSData dataWithBytes:(inBytes + startOffset) length:length];
 }
 
 
@@ -291,15 +300,6 @@
         
         [_activeLayer   setNeedsDisplay];
         [_inactiveLayer setNeedsDisplay];
-    }
-}
-
-
-- (void) setShowsDebugInformation:(BOOL)showsDebugInformation
-{
-    if (_showsDebugInformation != showsDebugInformation) {
-        _showsDebugInformation = showsDebugInformation;
-        [self setNeedsLayout:YES];
     }
 }
 

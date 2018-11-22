@@ -1,4 +1,5 @@
-// (c) 2012-2017 musictheory.net, LLC
+// (c) 2012-2018 musictheory.net, LLC
+
 
 typedef void (*MTSEscapePodSignalCallback)(int signal, siginfo_t *info, ucontext_t *uap);
 

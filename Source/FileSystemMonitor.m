@@ -1,12 +1,7 @@
-//
-//  FileMonitor.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2017-12-16.
-//  Copyright © 2017 Ricci Adams. All rights reserved.
-//
+// (c) 2017-2018 Ricci Adams.  All rights reserved.
 
 #import "FileSystemMonitor.h"
+
 
 @interface FileSystemMonitor ()
 - (void) _invokeCallbackWithEvents:(NSArray<FileSystemMonitorEvent *> *)events;

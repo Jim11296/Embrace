@@ -1,9 +1,4 @@
-//
-//  SetlistController
-//
-//  Created by Ricci Adams on 2014-01-03.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "SetlistController.h"
 
@@ -19,20 +14,21 @@
 #import "iTunesManager.h"
 #import "TrackTableCellView.h"
 #import "WaveformView.h"
-#import "BorderedView.h"
-#import "Button.h"
+#import "HairlineView.h"
 #import "EmbraceWindow.h"
-#import "LabelMenuView.h"
-#import "DangerMeter.h"
-#import "LevelMeter.h"
-#import "PlayBar.h"
+#import "MenuLabelView.h"
+#import "NoDropImageView.h"
 #import "Preferences.h"
-#import "ViewTrackController.h"
+#import "SetlistButton.h"
+#import "SetlistDangerMeter.h"
+#import "SetlistLevelMeter.h"
+#import "SetlistPlayBar.h"
+#import "SetlistSlider.h"
 #import "TipArrowFloater.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
 #import "TrialBottomView.h"
-#import "WhiteSlider.h"
+#import "ViewTrackController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -43,38 +39,39 @@ static NSInteger sAutoGapMinimum = 0;
 static NSInteger sAutoGapMaximum = 16;
 
 
-@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, WhiteSliderDragDelegate, EmbraceWindowListener>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, SetlistSliderDragDelegate>
 
 @property (nonatomic, strong, readwrite) IBOutlet TracksController *tracksController;
 
 @property (nonatomic, strong) IBOutlet NSView *dragSongsView;
 
 @property (nonatomic, strong) IBOutlet NSMenu        *gearMenu;
-@property (nonatomic, strong) IBOutlet LabelMenuView *gearLabelMenuView;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearLabelSeparator;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearLabelMenuItem;
+@property (nonatomic, strong) IBOutlet MenuLabelView *gearMenuLabelView;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearMenuLabelSeparator;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *gearMenuLabelItem;
 
 @property (nonatomic, strong) IBOutlet NSMenu        *tableMenu;
-@property (nonatomic, strong) IBOutlet LabelMenuView *tableLabelMenuView;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableLabelSeparator;
-@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableLabelMenuItem;
+@property (nonatomic, strong) IBOutlet MenuLabelView *tableMenuLabelView;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelSeparator;
+@property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelItem;
 
-@property (nonatomic, weak)   IBOutlet BorderedView *topContainer;
+@property (nonatomic, weak)   IBOutlet NSTextField        *playOffsetField;
+@property (nonatomic, weak)   IBOutlet NSTextField        *playRemainingField;
+@property (nonatomic, weak)   IBOutlet SetlistButton      *playButton;
+@property (nonatomic, weak)   IBOutlet SetlistButton      *gearButton;
+@property (nonatomic, weak)   IBOutlet SetlistDangerMeter *dangerMeter;
+@property (nonatomic, weak)   IBOutlet SetlistLevelMeter  *levelMeter;
+@property (nonatomic, weak)   IBOutlet SetlistPlayBar     *playBar;
+@property (nonatomic, weak)   IBOutlet SetlistSlider      *volumeSlider;
 
-@property (nonatomic, weak)   IBOutlet NSTextField  *playOffsetField;
-@property (nonatomic, weak)   IBOutlet PlayBar      *playBar;
-@property (nonatomic, weak)   IBOutlet NSTextField  *playRemainingField;
-@property (nonatomic, weak)   IBOutlet Button       *playButton;
-@property (nonatomic, weak)   IBOutlet Button       *gearButton;
-@property (nonatomic, weak)   IBOutlet DangerMeter  *dangerMeter;
-@property (nonatomic, weak)   IBOutlet LevelMeter   *levelMeter;
-@property (nonatomic, weak)   IBOutlet WhiteSlider  *volumeSlider;
-
-@property (nonatomic, weak)   IBOutlet NSView *mainView;
-@property (nonatomic, weak)   IBOutlet NSScrollView *scrollView;
-@property (nonatomic, weak)   IBOutlet BorderedView *bottomContainer;
-@property (nonatomic, weak)   IBOutlet WhiteSlider  *autoGapSlider;
-@property (nonatomic, weak)   IBOutlet NSTextField  *autoGapField;
+@property (nonatomic, weak)   IBOutlet NSView          *headerView;
+@property (nonatomic, weak)   IBOutlet NSView          *mainView;
+@property (nonatomic, weak)   IBOutlet NSScrollView    *scrollView;
+@property (nonatomic, weak)   IBOutlet NSView          *footerView;
+@property (nonatomic, weak)   IBOutlet HairlineView    *bottomSeparator;
+@property (nonatomic, weak)   IBOutlet NoDropImageView *autoGapIcon;
+@property (nonatomic, weak)   IBOutlet SetlistSlider   *autoGapSlider;
+@property (nonatomic, weak)   IBOutlet NSTextField     *autoGapField;
 
 @end
 
@@ -130,13 +127,30 @@ static NSInteger sAutoGapMaximum = 16;
     [window addListener:[self playButton]];
     [window addListener:[self volumeSlider]];
     [window addListener:[self autoGapSlider]];
-    [window addListener:self];
+    [window addListener:[self playBar]];
 
-    [[self bottomContainer] setTopBorderColor:GetRGBColor(0x0, 0.15)];
+    [[self playButton] setIcon:SetlistButtonIconPlay];
+    [[self gearButton] setIcon:SetlistButtonIconGear];
 
-    [[self playButton] setImage:[NSImage imageNamed:@"PlayTemplate"]];
-    [[self gearButton] setImage:[NSImage imageNamed:@"GearTemplate"]];
+    [[self autoGapIcon] setTintColor:[NSColor labelColor]];
+
+    NSView *headerView = [self headerView];
+
+    CGRect headerEffectFrame = [headerView bounds];
+    headerEffectFrame.origin.y -= 1.0;
+    headerEffectFrame.size.height += 1.0;
     
+    NSVisualEffectView *effectView = [[NSVisualEffectView alloc] initWithFrame:headerEffectFrame];
+    [effectView setMaterial:NSVisualEffectMaterialTitlebar];
+    [effectView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+    [effectView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+
+    [headerView addSubview:effectView positioned:NSWindowBelow relativeTo:[[headerView subviews] firstObject]];
+
+    // Match PlayBar inactive color (used for top separator)
+    [[self bottomSeparator] setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+    [[self bottomSeparator] setLayoutAttribute:NSLayoutAttributeTop];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyPlayDurationNotificationName      object:nil];
@@ -147,25 +161,25 @@ static NSInteger sAutoGapMaximum = 16;
 
 #if TRIAL
     {
-        NSScrollView *scrollView      = [self scrollView];
-        BorderedView *bottomContainer = [self bottomContainer];
+        NSScrollView *scrollView = [self scrollView];
+        NSView       *footerView = [self footerView];
     
-        NSRect bottomFrame = [bottomContainer frame];
+        NSRect footerFrame = [footerView frame];
         
-        NSRect trialBottomViewFrame = bottomFrame;
-        trialBottomViewFrame.origin.y += bottomFrame.size.height;
-        trialBottomViewFrame.size.height = 42;
+        NSRect trialFrame = footerFrame;
+        trialFrame.origin.y += footerFrame.size.height;
+        trialFrame.size.height = 42;
        
         NSRect scrollFrame = [scrollView frame];
         scrollFrame.size.height -= 42;
         scrollFrame.origin.y += 42;
-        [[self scrollView] setFrame:scrollFrame];
+        [scrollView setFrame:scrollFrame];
         
-        [[self bottomContainer] setFrame:bottomFrame];
+        [footerView setFrame:footerFrame];
 
-        TrialBottomView *bv = [[TrialBottomView alloc] initWithFrame:trialBottomViewFrame];
-        [bv setAutoresizingMask:NSViewMaxXMargin|NSViewWidthSizable];
-        [[[self bottomContainer] superview] addSubview:bv];
+        TrialBottomView *trialView = [[TrialBottomView alloc] initWithFrame:trialFrame];
+        [trialView setAutoresizingMask:NSViewMaxXMargin|NSViewWidthSizable];
+        [[footerView superview] addSubview:trialView];
     }
 #endif
 
@@ -177,23 +191,21 @@ static NSInteger sAutoGapMaximum = 16;
 
     if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
         NSFont *font = [[self autoGapField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
         [[self autoGapField] setFont:font];
 
         font = [[self playOffsetField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
         [[self playOffsetField] setFont:font];
 
         font = [[self playRemainingField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
         [[self playRemainingField] setFont:font];
     }
 
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
-    
-    [self windowDidUpdateMain:nil];
 }
 
 
@@ -255,16 +267,15 @@ static NSInteger sAutoGapMaximum = 16;
     Player *player = [Player sharedInstance];
     BOOL isVolumeZero = ([player volume] == 0);
 
-    NSImage  *image    = nil;
     NSString *tooltip  = nil;
-    BOOL      alert    = NO;
     BOOL      outlined = NO;
 
-    Button *playButton = [self playButton];
-    
+    SetlistButtonIcon icon = SetlistButtonIconNone;
+
+    SetlistButton *playButton = [self playButton];
+
     if (action == PlaybackActionShowIssue) {
-        image = [NSImage imageNamed:@"DeviceIssueTemplate"];
-        alert = YES;
+        icon = SetlistButtonIconDeviceIssue;
 
         PlayerIssue issue = [player issue];
 
@@ -287,12 +298,11 @@ static NSInteger sAutoGapMaximum = 16;
             outlined = YES;
         }
 
-        image = _confirmStop ? [NSImage imageNamed:@"ConfirmTemplate"] : [NSImage imageNamed:@"StopTemplate"];
-        alert = _confirmStop;
+        icon = _confirmStop ? SetlistButtonIconReallyStop : SetlistButtonIconStop;
         enabled = YES;
 
     } else {
-        image = [NSImage imageNamed:@"PlayTemplate"];
+        icon = SetlistButtonIconPlay;
 
         Track *next = [[self tracksController] firstQueuedTrack];
 
@@ -301,8 +311,7 @@ static NSInteger sAutoGapMaximum = 16;
         }
     }
 
-    [playButton setAlert:alert];
-    [playButton setImage:image];
+    [playButton setIcon:icon];
     [playButton setToolTip:tooltip];
     [playButton setOutlined:outlined];
     [playButton setEnabled:enabled];
@@ -413,15 +422,14 @@ static NSInteger sAutoGapMaximum = 16;
     EmbraceLogMethod();
 
     PlaybackAction action = [self preferredPlaybackAction];
-    Button *playButton = [self playButton];
+    SetlistButton *playButton = [self playButton];
     
     if ([playButton isEnabled] && beforeVolume) {
         Player *player = [Player sharedInstance];
         BOOL isVolumeZero = [player volume] == 0;
 
         if (action == PlaybackActionStop && isVolumeZero) {
-            [playButton performOpenAnimationToImage:[NSImage imageNamed:@"PlayTemplate"] enabled:YES];
-            
+            [[self playButton] setIcon:SetlistButtonIconPlay animated:YES];
             [[Player sharedInstance] hardStop];
             [[Player sharedInstance] setVolume:beforeVolume];
         }
@@ -436,7 +444,8 @@ static NSInteger sAutoGapMaximum = 16;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_clearConfirmStop) object:nil];
 
     _confirmStop = NO;
-    [[self playButton] performPopAnimation:NO toImage:[NSImage imageNamed:@"StopTemplate"] alert:NO];
+    
+    [[self playButton] setIcon:SetlistButtonIconStop animated:YES];
     [self _updatePlayButton];
 }
 
@@ -602,24 +611,33 @@ static NSInteger sAutoGapMaximum = 16;
 {
     EmbraceLogMethod();
 
-    NSMutableArray *fileURLs = [NSMutableArray array];
-    
-    for (Track *track in [[self tracksController] tracks]) {
-        NSURL *fileURL = [track externalURL];
-        if (fileURL) [fileURLs addObject:fileURL];
-    }
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterLongStyle];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    
-    NSMutableString *name = [NSMutableString string];
-    NSString *dateString = [formatter stringFromDate:[NSDate date]];
-    [name appendFormat:@"%@ (%@)", NSLocalizedString(@"Embrace", nil), dateString];
-    
-    [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
+    ExportManager *exportManager = [ExportManager sharedInstance];
 
-    [self _markAsSaved];
+    NSArray *tracks = [[self tracksController] tracks];
+
+    NSString *suggestedName = [exportManager suggestedNameWithTracks:tracks];
+    NSString *contents = [exportManager stringWithFormat:ExportManagerFormatM3U tracks:tracks];
+
+    NSString *fileName = [suggestedName stringByAppendingPathExtension:@"m3u8"];
+    NSString *UUIDString = [[NSUUID UUID] UUIDString];
+    
+    NSError *error = nil;
+
+    NSString *toPath = [NSTemporaryDirectory() stringByAppendingPathComponent:UUIDString];
+
+    if (!error) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:toPath withIntermediateDirectories:YES attributes:nil error:&error];
+        toPath = [toPath stringByAppendingPathComponent:fileName];
+    }
+
+    if (!error) {
+        [contents writeToFile:toPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    }
+
+    if (!error) {
+        [[NSWorkspace sharedWorkspace] openFile:toPath withApplication:@"iTunes" andDeactivate:YES];
+        [self _markAsSaved];
+    }
 }
 
 
@@ -754,7 +772,7 @@ static NSInteger sAutoGapMaximum = 16;
         if (!_confirmStop) {
             _confirmStop = YES;
 
-            [[self playButton] performPopAnimation:YES toImage:[NSImage imageNamed:@"ConfirmTemplate"] alert:YES];
+            [[self playButton] setIcon:SetlistButtonIconReallyStop animated:YES];
             
             [self _updatePlayButton];
             [self performSelector:@selector(_clearConfirmStop) withObject:nil afterDelay:2];
@@ -967,23 +985,23 @@ static NSInteger sAutoGapMaximum = 16;
     }
     
     if ([menu isEqual:[self gearMenu]]) {
-        [[self gearLabelSeparator] setHidden:!showLabels];
-        [[self gearLabelMenuItem]  setHidden:!showLabels];
-        [[self gearLabelMenuItem]  setView:showLabels ? [self gearLabelMenuView] : nil];
+        [[self gearMenuLabelSeparator] setHidden:!showLabels];
+        [[self gearMenuLabelItem] setHidden:!showLabels];
+        [[self gearMenuLabelItem] setView:showLabels ? [self gearMenuLabelView] : nil];
 
-        [[self gearLabelMenuView] setSelectedTag:trackLabel];
+        [[self gearMenuLabelView] setSelectedTag:trackLabel];
     
     } else if ([menu isEqual:[self tableMenu]]) {
-        [[self tableLabelSeparator] setHidden:!showLabels];
-        [[self tableLabelMenuItem]  setHidden:!showLabels];
-        [[self tableLabelMenuItem]  setView:showLabels ? [self tableLabelMenuView] : nil];
+        [[self tableMenuLabelSeparator] setHidden:!showLabels];
+        [[self tableMenuLabelItem] setHidden:!showLabels];
+        [[self tableMenuLabelItem] setView:showLabels ? [self tableMenuLabelView] : nil];
        
-        [[self tableLabelMenuView] setSelectedTag:trackLabel];
+        [[self tableMenuLabelView] setSelectedTag:trackLabel];
     }
 }
 
 
-- (void) whiteSliderDidStartDrag:(WhiteSlider *)slider
+- (void) sliderDidStartDrag:(SetlistSlider *)slider
 {
     if (slider == _volumeSlider) {
         _volumeBeforeDrag = [slider doubleValue];
@@ -994,7 +1012,7 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
-- (void) whiteSliderDidEndDrag:(WhiteSlider *)slider
+- (void) sliderDidEndDrag:(SetlistSlider *)slider
 {
     if (slider == _volumeSlider) {
         CGFloat volumeBeforeDrag = _volumeBeforeDrag;
@@ -1018,29 +1036,6 @@ static NSInteger sAutoGapMaximum = 16;
     }
 
     return NO;
-}
-
-
-- (void) windowDidUpdateMain:(EmbraceWindow *)window
-{
-    BorderedView *topContainer    = [self topContainer];
-    BorderedView *bottomContainer = [self bottomContainer];
-    
-    if ([window isMainWindow]) {
-        [topContainer    setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xec / 255.0) alpha:1.0]];
-        [topContainer    setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
-        [bottomContainer setBackgroundGradientTopColor:   [NSColor colorWithCalibratedWhite:(0xe0 / 255.0) alpha:1.0]];
-        [bottomContainer setBackgroundGradientBottomColor:[NSColor colorWithCalibratedWhite:(0xd3 / 255.0) alpha:1.0]];
-        [topContainer    setBackgroundColor:nil];
-        [bottomContainer setBackgroundColor:nil];
-    } else {
-        [topContainer    setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
-        [bottomContainer setBackgroundColor:GetRGBColor(0xf6f6f6, 1.0)];
-        [topContainer    setBackgroundGradientTopColor:   nil];
-        [topContainer    setBackgroundGradientBottomColor:nil];
-        [bottomContainer setBackgroundGradientTopColor:   nil];
-        [bottomContainer setBackgroundGradientBottomColor:nil];
-    }
 }
 
 

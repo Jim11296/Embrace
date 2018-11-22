@@ -1,10 +1,4 @@
-//
-//  player.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-01-03.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "Player.h"
 #import "Track.h"
@@ -37,6 +31,22 @@ static NSString * const sStereoBalanceKey = @"stereo-balance";
 static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
 volatile NSInteger PlayerShouldUseCrashPad = 0;
+
+static void sMemoryBarrier()
+{
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    OSMemoryBarrier();
+    #pragma clang diagnostic pop
+}
+
+static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theValue)
+{
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    OSAtomicIncrement64Barrier(theValue);
+    #pragma clang diagnostic pop
+}
 
 
 static OSStatus sApplyEmergencyLimiter(
@@ -73,11 +83,6 @@ static OSStatus sApplyEmergencyLimiter(
 @end
 
 
-//typedef NS_ENUM(NSInteger, RenderThreadCommand) {
-//    RenderThreadCommandNewInputUnit,
-    
-
-
 typedef struct {
     volatile SInt64    inputID;
     volatile AudioUnit inputUnit;
@@ -104,20 +109,16 @@ typedef struct {
 
     RenderUserInfo _renderUserInfo;
 
-    UInt64    _currentStartHostTime;
-
     AUGraph   _graph;
 
-	AUNode    _generatorNode;
+    AUNode    _inputNode;
     AUNode    _converterNode;
-    AUNode    _stereoNode;
 	AUNode    _limiterNode;
     AUNode    _mixerNode;
 	AUNode    _outputNode;
 
-    AudioUnit _generatorAudioUnit;
+    AudioUnit _inputAudioUnit;
     AudioUnit _converterAudioUnit;
-    AudioUnit _stereoAudioUnit;
     AudioUnit _limiterAudioUnit;
     AudioUnit _mixerAudioUnit;
     AudioUnit _outputAudioUnit;
@@ -362,29 +363,13 @@ typedef struct {
 
 - (void) _tick:(NSTimer *)timer
 {
-    AudioTimeStamp timeStamp = {0};
-    UInt32 timeStampSize = sizeof(timeStamp);
-
     TrackStatus status = TrackStatusPlaying;
 
     if (!_currentScheduler) {
         return;
     }
-
-    if (!CheckError(
-        AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &timeStamp, &timeStampSize),
-        "AudioUnitGetProperty[ kAudioUnitProperty_CurrentPlayTime ]"
-    )) {
-        EmbraceLog(@"Player", @"Early return from -_tick: due to error to AudioUnitGetProperty()");
-        return;
-    }
-
-    if ((timeStamp.mFlags & kAudioTimeStampSampleTimeValid) == 0) {
-        EmbraceLog(@"Player", @"Early return from -_tick: due to error to kAudioTimeStampSampleTimeValid == 0");
-        return;
-    }
     
-    Float64 currentPlayTime = timeStamp.mSampleTime;
+    NSInteger samplesPlayed = [_currentScheduler samplesPlayed];
     BOOL done = NO;
     
     AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower,      kAudioUnitScope_Output, 0, &_leftAveragePower);
@@ -420,10 +405,6 @@ typedef struct {
 
         AudioUnitGetProperty(_converterAudioUnit, kAudioUnitProperty_LastRenderError, kAudioUnitScope_Global, 0, &renderError, &renderErrorSize);
         NSLog(@"%ld", (long)renderError);
-
-        AudioUnitGetProperty(_generatorAudioUnit, kAudioUnitProperty_LastRenderError, kAudioUnitScope_Global, 0, &renderError, &renderErrorSize);
-        NSLog(@"%ld", (long)renderError);
-
     }
 #endif
 
@@ -434,13 +415,11 @@ typedef struct {
 
     char logBranchTaken = 0;
 
-    if (timeStamp.mSampleTime < 0) {
+    if (samplesPlayed <= 0) {
         status = TrackStatusPreparing;
 
-        _timeElapsed = GetDeltaInSecondsForHostTimes(GetCurrentHostTime(), _currentStartHostTime);
-        if (_timeElapsed > 0) {
-            _timeElapsed = 0;
-        }
+        _timeElapsed = [_currentScheduler timeElapsed];
+        if (_timeElapsed > 0) _timeElapsed = 0;
 
         _timeRemaining = [_currentTrack playDuration];
         
@@ -450,9 +429,7 @@ typedef struct {
         logBranchTaken = 'a';
 
     } else {
-        Float64 sampleRate = [_currentScheduler clientFormat].mSampleRate;
-        
-        _timeElapsed = sampleRate ? currentPlayTime / sampleRate : 0;
+        _timeElapsed = [_currentScheduler timeElapsed];
         _timeRemaining = [_currentTrack playDuration] - _timeElapsed;
         
         roundedTimeElapsed = floor(_timeElapsed);
@@ -461,11 +438,11 @@ typedef struct {
         logBranchTaken = 'b';
     }
 
-    if (_timeRemaining < 0 || [_currentTrack trackError]) {
+    if ([_currentScheduler isDone] || [_currentTrack trackError]) {
         Float64 sampleRate = [_currentScheduler clientFormat].mSampleRate;
 
         EmbraceLog(@"Player", @"Marking track as done.  _timeElapsed: %g, _timeRemaining: %g, error: %ld", _timeElapsed, _timeRemaining, (long) [_currentTrack trackError]);
-        EmbraceLog(@"Player", @"Branch taken was: %c.  _currentStartHostTime: %@, sampleRate: %g, currentPlayTime: %g", logBranchTaken, @(_currentStartHostTime), (double)sampleRate, (double)currentPlayTime);
+        EmbraceLog(@"Player", @"Branch taken was: %c.  sampleRate: %g, samplesPlayed: %ld", logBranchTaken, (double)sampleRate, (long)samplesPlayed);
         
         done = YES;
 
@@ -491,7 +468,6 @@ typedef struct {
     if (![_currentTrack didAnalyzeLoudness]) {
         [self setTimeElapsedString:@""];
     }
-
 
     NSTimeInterval duration = _timeElapsed + _timeRemaining;
     if (!duration) duration = 1;
@@ -636,8 +612,12 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 {
     // This is "usually sent from the AudioDevice's IO thread".  Hence, we cannot call dispatch_async()
     RenderUserInfo *userInfo = (RenderUserInfo *)inClientData;
-    OSAtomicIncrement32(&userInfo->nextOverloadCount);
 
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    OSAtomicIncrement32(&userInfo->nextOverloadCount);
+    #pragma clang diagnostic pop
+    
     return noErr;
 }
 
@@ -766,7 +746,7 @@ static OSStatus sInputRenderCallback(
         userInfo->inputUnit = userInfo->nextInputUnit;
         userInfo->previousStereoLevel = userInfo->stereoLevel;
         userInfo->sampleTime = 0;
-        OSMemoryBarrier();
+        sMemoryBarrier();
 
         userInfo->inputID = userInfo->nextInputID;
     }
@@ -775,7 +755,7 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) _sendInputUnitToRenderThread:(AudioUnit)audioUnit
+- (void) _sendHeadUnitToRenderThread:(AudioUnit)audioUnit
 {
     EmbraceLog(@"Player", @"Sending %p to render thread", audioUnit);
 
@@ -784,13 +764,13 @@ static OSStatus sInputRenderCallback(
 
     if (isRunning) {
         _renderUserInfo.nextInputUnit = audioUnit;
-        OSMemoryBarrier();
+        sMemoryBarrier();
 
-        OSAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
 
         NSInteger loopGuard = 0;
         while (1) {
-            OSMemoryBarrier();
+            sMemoryBarrier();
 
             if (_renderUserInfo.inputID == _renderUserInfo.nextInputID) {
                 break;
@@ -801,7 +781,7 @@ static OSStatus sInputRenderCallback(
             if (!isRunning) return;
 
             if (loopGuard >= 1000) {
-                EmbraceLog(@"Player", @"_sendInputUnitToRenderThread timed out");
+                EmbraceLog(@"Player", @"_sendHeadUnitToRenderThread timed out");
                 break;
             }
 
@@ -811,9 +791,9 @@ static OSStatus sInputRenderCallback(
     } else {
         _renderUserInfo.inputUnit = NULL;
         _renderUserInfo.nextInputUnit = audioUnit;
-        OSMemoryBarrier();
+        sMemoryBarrier();
 
-        OSAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
     }
 }
 
@@ -825,18 +805,6 @@ static OSStatus sInputRenderCallback(
     [self _teardownGraphHead];
 
     BOOL ok = CheckErrorGroup(^{
-        AudioComponentDescription generatorCD = {0};
-        generatorCD.componentType = kAudioUnitType_Generator;
-        generatorCD.componentSubType = kAudioUnitSubType_ScheduledSoundPlayer;
-        generatorCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-        generatorCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-        AUNode    generatorNode = 0;
-        AudioUnit generatorUnit = 0;
-
-        CheckError(AUGraphAddNode(_graph, &generatorCD,  &generatorNode), "AUGraphAddNode[ Generator ]");
-        CheckError(AUGraphNodeInfo(_graph, generatorNode,  NULL, &generatorUnit), "AUGraphNodeInfo[ Player ]");
-
         UInt32 (^getPropertyUInt32)(AudioUnit, AudioUnitPropertyID, AudioUnitScope) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope) {
             UInt32 result = 0;
             UInt32 resultSize = sizeof(result);
@@ -880,29 +848,30 @@ static OSStatus sInputRenderCallback(
                 "AudioUnitSetProperty Stream"
             );
         };
-        
-        UInt32 maxFrames = getPropertyUInt32(_outputAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
-        
-        AudioStreamBasicDescription outputFormat;
-        getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputFormat);
-        
-        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack outputFormat:outputFormat];
+
+        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack];
         
         if (![_currentScheduler setup]) {
             EmbraceLog(@"Player", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
             [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
             return;
         }
-        
-        AudioStreamBasicDescription inputFormat = [_currentScheduler clientFormat];
 
-        setPropertyFloat64(generatorUnit, kAudioUnitProperty_SampleRate,   kAudioUnitScope_Output, inputFormat.mSampleRate);
-        setPropertyStream( generatorUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &inputFormat);
-        setPropertyUInt32( generatorUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
+        UInt32 maxFrames = getPropertyUInt32(_outputAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
+        UInt32 maxFramesForInput = maxFrames;
 
-        AudioUnit lastUnit = generatorUnit;
+        AudioStreamBasicDescription outputFormat;
+        getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputFormat);
         
-        if (inputFormat.mSampleRate != _outputSampleRate) {
+        AudioStreamBasicDescription fileFormat = [_currentScheduler clientFormat];
+
+        AudioStreamBasicDescription inputFormat = outputFormat;
+        inputFormat.mSampleRate = fileFormat.mSampleRate;
+
+        AudioUnit inputUnit     = 0;
+        AudioUnit converterUnit = NULL;
+
+        if (fileFormat.mSampleRate != _outputSampleRate) {
             AudioComponentDescription converterCD = {0};
             converterCD.componentType = kAudioUnitType_FormatConverter;
             converterCD.componentSubType = kAudioUnitSubType_AUConverter;
@@ -912,7 +881,6 @@ static OSStatus sInputRenderCallback(
             AUNode converterNode = 0;
             CheckError(AUGraphAddNode( _graph, &converterCD,  &converterNode),  "AUGraphAddNode[ Converter ]");
 
-            AudioUnit converterUnit = 0;
             CheckError(AUGraphNodeInfo(_graph, converterNode,  NULL, &converterUnit),  "AUGraphNodeInfo[ Converter ]");
 
             UInt32 complexity = [[Preferences sharedInstance] usesMasteringComplexitySRC] ?
@@ -934,54 +902,36 @@ static OSStatus sInputRenderCallback(
             CheckError(AudioUnitInitialize(converterUnit), "AudioUnitInitialize[ Converter ]");
 
             // maxFrames will be different when going through a SRC
-            UInt32 maxFramesForSRC = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
-            if (maxFramesForSRC != maxFrames) {
-                setPropertyUInt32( generatorUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFramesForSRC);
-            }
+            maxFramesForInput = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
 
             _converterNode = converterNode;
             _converterAudioUnit = converterUnit;
-
-            inputFormat = unitFormat;
-
-            lastUnit = converterUnit;
         }
 
-        if (inputFormat.mChannelsPerFrame != 2) {
-            AudioComponentDescription stereoCD = {0};
-            stereoCD.componentType = kAudioUnitType_Mixer;
-            stereoCD.componentSubType = kAudioUnitSubType_StereoMixer;
-            stereoCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-            stereoCD.componentFlags = kAudioComponentFlag_SandboxSafe;
+        // Make input node
+        {
+            AudioComponentDescription inputCD = {0};
+            inputCD.componentType = kAudioUnitType_Mixer;
+            inputCD.componentSubType = kAudioUnitSubType_StereoMixer;
+            inputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+            inputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
 
-            AUNode stereoNode = 0;
-            CheckError(AUGraphAddNode(_graph, &stereoCD, &stereoNode), "AUGraphAddNode[ Stereo ]");
+            AUNode inputNode = 0;
+            CheckError(AUGraphAddNode(_graph, &inputCD, &inputNode), "AUGraphAddNode[ Input ]");
+            CheckError(AUGraphNodeInfo(_graph, inputNode, NULL, &inputUnit),  "AUGraphNodeInfo[ Input ]");
 
-            AudioUnit stereoUnit = 0;
-            CheckError(AUGraphNodeInfo(_graph, stereoNode, NULL, &stereoUnit),  "AUGraphNodeInfo[ Stereo ]");
+            setPropertyUInt32( inputUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFramesForInput);
 
-            setPropertyUInt32( stereoUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
-
-            setPropertyStream(stereoUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &inputFormat);
-            setPropertyStream(stereoUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputFormat);
+            setPropertyStream(inputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &fileFormat);
+            setPropertyStream(inputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &inputFormat);
             
-            CheckError(AudioUnitInitialize(stereoUnit), "AudioUnitInitialize[ Stereo ]");
+            CheckError(AudioUnitInitialize(inputUnit), "AudioUnitInitialize[ Input ]");
 
-            _stereoNode = stereoNode;
-            _stereoAudioUnit = stereoUnit;
-
-            lastUnit = stereoUnit;
+            _inputNode = inputNode;
+            _inputAudioUnit = inputUnit;
         }
 
-        CheckError(
-            AudioUnitInitialize(generatorUnit),
-            "AudioUnitInitialize[ Generator ]"
-        );
-
-        _generatorNode = generatorNode;
-        _generatorAudioUnit = generatorUnit;
-
-        [self _sendInputUnitToRenderThread:lastUnit];
+        [self _sendHeadUnitToRenderThread:(converterUnit ? converterUnit : inputUnit)];
     });
     
     if (ok) {
@@ -996,20 +946,12 @@ static OSStatus sInputRenderCallback(
 {
     EmbraceLogMethod();
 
-    if (_generatorAudioUnit) {
-        CheckError(AudioUnitUninitialize(_generatorAudioUnit), "AudioUnitUninitialize[ Generator ]");
-        CheckError(AUGraphRemoveNode(_graph, _generatorNode), "AUGraphRemoveNode[ Generator ]" );
-
-        _generatorAudioUnit = NULL;
-        _generatorNode = 0;
-    }
-
-    if (_stereoAudioUnit) {
-        CheckError(AudioUnitUninitialize(_stereoAudioUnit), "AudioUnitUninitialize[ Stereo ]");
-        CheckError(AUGraphRemoveNode(_graph, _stereoNode), "AUGraphRemoveNode[ Stereo ]" );
+    if (_inputAudioUnit) {
+        CheckError(AudioUnitUninitialize(_inputAudioUnit), "AudioUnitUninitialize[ Input ]");
+        CheckError(AUGraphRemoveNode(_graph, _inputNode), "AUGraphRemoveNode[ Input ]" );
         
-        _stereoAudioUnit = NULL;
-        _stereoNode = 0;
+        _inputAudioUnit = NULL;
+        _inputNode = 0;
     }
 
     if (_converterAudioUnit) {
@@ -1052,9 +994,9 @@ static OSStatus sInputRenderCallback(
 
 	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
 
-    CheckError(AUGraphNodeInfo(_graph, _limiterNode,    NULL, &_limiterAudioUnit),    "AUGraphNodeInfo[ Limiter ]");
-	CheckError(AUGraphNodeInfo(_graph, _mixerNode,      NULL, &_mixerAudioUnit),      "AUGraphNodeInfo[ Mixer ]");
-	CheckError(AUGraphNodeInfo(_graph, _outputNode,     NULL, &_outputAudioUnit),     "AUGraphNodeInfo[ Output ]");
+    CheckError(AUGraphNodeInfo(_graph, _limiterNode, NULL, &_limiterAudioUnit), "AUGraphNodeInfo[ Limiter ]");
+	CheckError(AUGraphNodeInfo(_graph, _mixerNode,   NULL, &_mixerAudioUnit),   "AUGraphNodeInfo[ Mixer ]");
+	CheckError(AUGraphNodeInfo(_graph, _outputNode,  NULL, &_outputAudioUnit),  "AUGraphNodeInfo[ Output ]");
 
 	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
 
@@ -1083,9 +1025,8 @@ static OSStatus sInputRenderCallback(
 
 - (void) _iterateGraphNodes:(void (^)(AUNode, NSString *))callback
 {
-    if (_generatorNode) callback(_generatorNode, @"Generator");
+    if (_inputNode)     callback(_inputNode,     @"Input");
     if (_converterNode) callback(_converterNode, @"Converter");
-    if (_stereoNode)    callback(_stereoNode,    @"Stereo");
     callback(_limiterNode, @"Limiter");
     
     for (Effect *effect in _effects) {
@@ -1337,7 +1278,7 @@ static OSStatus sInputRenderCallback(
         Float64 inputSampleRate  = _outputSampleRate;
         Float64 outputSampleRate = _outputSampleRate;
 
-        if (unit == _generatorAudioUnit) {
+        if (unit == _inputAudioUnit) {
             inputSampleRate = 0;
 
         } else if (unit == _outputAudioUnit) {
@@ -1414,9 +1355,9 @@ static OSStatus sInputRenderCallback(
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
-    [self _sendInputUnitToRenderThread:NULL];
+    [self _sendHeadUnitToRenderThread:NULL];
 
-    [_currentScheduler stopScheduling:_generatorAudioUnit];
+    [_currentScheduler stopScheduling:_inputAudioUnit];
     _currentScheduler = nil;
 
     if ([track isResolvingURLs]) {
@@ -1459,51 +1400,20 @@ static OSStatus sInputRenderCallback(
 
     [self _updateLoudnessAndPreAmp];
 
-	AudioTimeStamp timestamp = {0};
-    timestamp.mFlags = kAudioTimeStampSampleTimeValid;
-    timestamp.mSampleTime = -1;
+    if (padding > 0 && _outputSampleRate > 0) {
+        padding += _outputSampleRate ? (_outputFrames / _outputSampleRate) : 0;
+    }
 
-    BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_generatorAudioUnit timeStamp:timestamp];
+    EmbraceLog(@"Player", @"Calling startSchedulingWithAudioUnit. audioUnit=%p, padding=%lf", _inputAudioUnit, padding);
+        
+    BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_inputAudioUnit paddingInSeconds:padding];
     if (!didScheldule) {
         EmbraceLog(@"Player", @"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
         [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
         return;
     }
 
-	AudioTimeStamp startTime = {0};
-    NSTimeInterval additional = _outputSampleRate ? (_outputFrames / _outputSampleRate) : 0;
-
     EmergencyLimiterSetSampleRate(_emergencyLimiter, _outputSampleRate);
-
-    if (padding == 0) {
-        startTime.mFlags = kAudioTimeStampHostTimeValid;
-        startTime.mHostTime = 0;
-    
-    } else {
-        FillAudioTimeStampWithFutureSeconds(&startTime, padding + additional);
-    }
-
-    EmbraceLog(@"Player", @"Setting ScheduleStartTimeStamp with host time: %llu, current time: %llu, delta: %lf, padding: %lf, outputFrames: %lu, outputSampleRate: %lf",
-        (unsigned long long)startTime.mHostTime,
-        (unsigned long long)GetCurrentHostTime(),
-        GetDeltaInSecondsForHostTimes(startTime.mHostTime, GetCurrentHostTime()),
-        padding,
-        (unsigned long)_outputFrames,
-        _outputSampleRate);
-
-	CheckError(AudioUnitSetProperty(
-        _generatorAudioUnit,
-        kAudioUnitProperty_ScheduleStartTimeStamp, kAudioUnitScope_Global, 0,
-        &startTime, sizeof(startTime)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_ScheduleStartTimeStamp]");
-    
-	
-    if (startTime.mHostTime) {
-        _currentStartHostTime = startTime.mHostTime;
-    } else {
-        FillAudioTimeStampWithFutureSeconds(&startTime, 0);
-        _currentStartHostTime = startTime.mHostTime;
-    }
 
     [self _sendDistributedNotification];
 
@@ -1700,7 +1610,7 @@ static OSStatus sInputRenderCallback(
     );
 
     if (isRunning) {
-        [self _sendInputUnitToRenderThread:NULL];
+        [self _sendHeadUnitToRenderThread:NULL];
         [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:30];
     }
 
@@ -1712,7 +1622,7 @@ static OSStatus sInputRenderCallback(
         }
     }];
 
-    [_currentScheduler stopScheduling:_generatorAudioUnit];
+    [_currentScheduler stopScheduling:_inputAudioUnit];
     _currentScheduler = nil;
     
     _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;

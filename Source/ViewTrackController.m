@@ -1,10 +1,4 @@
-//
-//  ViewTrackController.m
-//  Embrace
-//
-//  Created by Ricci Adams on 2014-02-02.
-//  Copyright (c) 2014 Ricci Adams. All rights reserved.
-//
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "ViewTrackController.h"
 #import "WaveformView.h"
@@ -41,7 +35,6 @@
         [[self window] setTitle:[_track title]];
     }
 
-    [[self waveformView] setShowsDebugInformation:YES];
     [[self waveformView] setTrack:_track];
 }
 
