@@ -41,8 +41,7 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 
 @property (nonatomic) double volume;
 
-@property (nonatomic, strong) NSArray *effects;
-- (AudioUnit) audioUnitForEffect:(Effect *)effect;
+@property (nonatomic, strong) NSArray<Effect *> *effects;
 - (void) saveEffectState;
 
 @property (nonatomic) BOOL preventNextTrack;
