@@ -1,6 +1,6 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "EmergencyLimiter.h"
+#import "HugLimiter.h"
 
 #import <Accelerate/Accelerate.h>
 
@@ -9,18 +9,17 @@
 static float sPeakValue =  1.0 - (2.0 / 32767.0);
 
 enum {
-    EmergencyLimiterStateOff,
-    EmergencyLimiterStateHolding,
-    EmergencyLimiterStateDecaying
-} EmergencyLimiterState;
+    HugLimiterStateOff,
+    HugLimiterStateHolding,
+    HugLimiterStateDecaying
+} HugLimiterState;
 
-struct EmergencyLimiter {
+struct HugLimiter {
     NSInteger _holdTime;
     NSInteger _decayTime;
     NSInteger _initialDecayTime;
     NSInteger _maxDecayTime;
     double _sampleRate;
-
 
     NSInteger _state;
 
@@ -30,7 +29,6 @@ struct EmergencyLimiter {
 
     NSInteger _samplesHeld;
     NSInteger _samplesDecayed;
-    
 };
 
 inline static float lerp(float v0, float v1, float t)
@@ -105,34 +103,34 @@ inline static void sGetMax(UInt32 frameCount, AudioBufferList *bufferList, float
 }
 
 
-inline static void sRamp(EmergencyLimiter *self, UInt32 frameCount, AudioBufferList *bufferList, float max, NSInteger index)
+inline static void sRamp(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList, float max, NSInteger index)
 {
     float toMultiplier = sPeakValue / max;
 
     sApplyEnvelope(frameCount, bufferList, self->_multiplier, toMultiplier, index);
 
     self->_multiplier = toMultiplier;
-    self->_state = EmergencyLimiterStateHolding;
+    self->_state = HugLimiterStateHolding;
     self->_samplesHeld = 0;
     self->_samplesDecayed = 0;
 }
 
 
-inline static void sHold(EmergencyLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
+inline static void sHold(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
 {
     sApplyEnvelope(frameCount, bufferList, 0, self->_multiplier, 0);
     
     self->_samplesHeld += frameCount;
 
     if (self->_samplesHeld > self->_holdTime) {
-        self->_state = EmergencyLimiterStateDecaying;
+        self->_state = HugLimiterStateDecaying;
         self->_multiplierAtDecayStart = self->_multiplier;
         self->_samplesDecayed = 0;
     }
 }
 
 
-inline static void sDecay(EmergencyLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
+inline static void sDecay(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
 {
     float percent = ((self->_samplesDecayed + frameCount) / (float)self->_decayTime);
     if (percent > 1.0) percent = 1.0;
@@ -145,36 +143,38 @@ inline static void sDecay(EmergencyLimiter *self, UInt32 frameCount, AudioBuffer
     self->_multiplier = toMultiplier;
 
     if (self->_samplesDecayed > self->_decayTime) {
-        EmergencyLimiterReset(self);
+        HugLimiterReset(self);
     }
 }
 
 
-#pragma mark - Public Functions
+#pragma mark - Lifecycle
 
-EmergencyLimiter *EmergencyLimiterCreate()
+HugLimiter *HugLimiterCreate()
 {
-    EmergencyLimiter *self = malloc(sizeof(EmergencyLimiter));
+    HugLimiter *self = malloc(sizeof(HugLimiter));
     
     self->_holdTime  = 0.0;
     self->_decayTime = 0.0;
     self->_initialDecayTime = 0.0;
 
-    EmergencyLimiterReset(self);
+    HugLimiterReset(self);
     
     return self;
 }
 
 
-void EmergencyLimiterFree(EmergencyLimiter *limiter)
+void HugLimiterFree(HugLimiter *limiter)
 {
     free(limiter);
 }
 
 
-void EmergencyLimiterReset(EmergencyLimiter *self)
+#pragma mark - Public Methods
+
+void HugLimiterReset(HugLimiter *self)
 {
-    self->_state = EmergencyLimiterStateOff;
+    self->_state = HugLimiterStateOff;
     self->_lastMax = sPeakValue;
     self->_multiplier = 1.0;
     self->_multiplierAtDecayStart = 1.0;
@@ -184,7 +184,7 @@ void EmergencyLimiterReset(EmergencyLimiter *self)
 }
 
 
-void EmergencyLimiterProcess(EmergencyLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
+void HugLimiterProcess(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
 {
     float max;
     NSInteger maxIndex;
@@ -195,10 +195,10 @@ void EmergencyLimiterProcess(EmergencyLimiter *self, UInt32 frameCount, AudioBuf
         self->_lastMax = max;
         sRamp(self, frameCount, bufferList, max, maxIndex);
     
-    } else if (self->_state == EmergencyLimiterStateHolding) {
+    } else if (self->_state == HugLimiterStateHolding) {
         sHold(self, frameCount, bufferList);
 
-    } else if (self->_state == EmergencyLimiterStateDecaying) {
+    } else if (self->_state == HugLimiterStateDecaying) {
         sDecay(self, frameCount, bufferList);
         sGetMax(frameCount, bufferList, &max, &maxIndex);
         
@@ -221,13 +221,15 @@ void EmergencyLimiterProcess(EmergencyLimiter *self, UInt32 frameCount, AudioBuf
 #if CHECK_RESULTS
         sGetMax(frameCount, bufferList, &max, &maxIndex);
         if (max >= 1.0) {
-            NSLog(@"Still clipping after emergency limiter");
+            NSLog(@"Still clipping after limiter");
         }
 #endif
 }
 
 
-void EmergencyLimiterSetSampleRate(EmergencyLimiter *self, double sampleRate)
+#pragma mark - Accessors
+
+void HugLimiterSetSampleRate(HugLimiter *self, double sampleRate)
 {
     self->_sampleRate   = sampleRate;
     self->_holdTime     = sampleRate * 0.25;
@@ -237,18 +239,18 @@ void EmergencyLimiterSetSampleRate(EmergencyLimiter *self, double sampleRate)
 
     self->_decayTime = self->_initialDecayTime;
     
-    EmergencyLimiterReset(self);
+    HugLimiterReset(self);
 }
 
 
-double EmergencyLimiterGetSampleRate(EmergencyLimiter *self)
+double HugLimiterGetSampleRate(const HugLimiter *self)
 {
     return self->_sampleRate;
 }
 
 
-BOOL EmergencyLimiterIsActive(EmergencyLimiter *self)
+BOOL HugLimiterIsActive(const HugLimiter *self)
 {
-    return self->_state != EmergencyLimiterStateOff;
+    return self->_state != HugLimiterStateOff;
 }
 

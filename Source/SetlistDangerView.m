@@ -1,9 +1,9 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "SetlistDangerMeter.h"
+#import "SetlistDangerView.h"
 #import "SetlistProgressBar.h"
 
-@interface SetlistDangerMeter () <CALayerDelegate>
+@interface SetlistDangerView () <CALayerDelegate>
 @end
 
 
@@ -17,7 +17,7 @@
 @implementation SetlistDangerMeterLight
 @end
 
-@implementation SetlistDangerMeter {
+@implementation SetlistDangerView {
     CALayer *_boltLight;
     CALayer *_overloadLight;
 
@@ -111,11 +111,6 @@
     [_boltLight setFrame:boltRect];
     [_progressBar setFrame:barRect];
     [_overloadLight setFrame:overloadRect];
-
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
 }
 
 

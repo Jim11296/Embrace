@@ -161,11 +161,6 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
     [_leftBarLayer  setFrame:leftBarFrame];
     [_rightBarLayer setFrame:rightBarFrame];
     [_rightCapLayer setFrame:CGRectMake(bounds.size.width - capWidth, 0, capWidth, capWidth)];
-
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
 }
 
 
