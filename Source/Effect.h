@@ -15,14 +15,14 @@ extern NSString * const EffectDidDeallocNotification;
 + (instancetype) effectWithEffectType:(EffectType *)effectType;
 - (id) initWithEffectType:(EffectType *)effectType;
 
-- (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL;
+- (void) loadAudioPresetAtFileURL:(NSURL *)fileURL;
 - (BOOL) saveAudioPresetAtFileURL:(NSURL *)fileURL;
 - (void) restoreDefaultValues;
 
 - (NSDictionary *) stateDictionary;
 
-@property (nonatomic, readonly) AudioUnit audioUnit;
-@property (nonatomic, readonly) OSStatus audioUnitError;
+@property (nonatomic) AUAudioUnit *audioUnit;
+@property (nonatomic) NSError *audioUnitError;
 
 @property (nonatomic, readonly) EffectType *type;
 @property (nonatomic, readonly) BOOL hasCustomView;

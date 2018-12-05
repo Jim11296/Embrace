@@ -103,11 +103,6 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (void) layout
 {
     [_iconView setFrame:[self bounds]];
-
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
 }
 
 
@@ -274,11 +269,6 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (void) layout
 {
     [_mainLayer setFrame:CGRectInset([self bounds], -sBorderLayerPadding, -sBorderLayerPadding)];
-
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
 }
 
 
@@ -466,11 +456,6 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     auxFrame.origin.y = round((bounds.size.height - auxFrame.size.height) / 2);
 
     [_auxLayer setFrame:auxFrame];
-
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
 }
 
 

@@ -6,7 +6,7 @@
 
 - (void) reloadData;
 
-@property (nonatomic) AudioUnit audioUnit;
+@property (nonatomic) AUAudioUnit *audioUnit;
 @property (nonatomic, readonly) NSInteger numberOfBands;
 
 @end

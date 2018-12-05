@@ -19,23 +19,9 @@
 @end
 
 
-@interface NSView (Radar21789723Workaround)
-- (NSPoint) embrace_radar_21789723_convertPointToBase:(NSPoint)aPoint;
-@end
-
-
-@implementation NSView (Radar21789723Workaround)
-
-- (NSPoint) embrace_radar_21789723_convertPointToBase:(NSPoint)aPoint
-{
-    return [self convertPoint:aPoint toView:nil];
-}
-
-@end
-
-
 @implementation EditSystemEffectController {
     NSView *_effectView;
+    NSViewController *_effectViewController;
     BOOL _inViewFrameCallback;
 }
 
@@ -59,16 +45,32 @@
     Effect *effect = [self effect];
     if (!effect) return;
 
+    __weak id weakSelf = self;
+
+    [[effect audioUnit] requestViewControllerWithCompletionHandler:^(AUViewControllerBase *viewController) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf _didReceiveViewController:viewController];
+        });
+    }];
+}
+
+
+#pragma mark - Private Methods
+
+- (void) _didReceiveViewController:(NSViewController *)vc
+{
     NSWindow *window = [self window];
 
     NSRect contentLayoutRect = [window contentLayoutRect];
         
-    _effectView = [self _customViewWithEffect:effect size:contentLayoutRect.size];
-
-    if (!_effectView) {
-        _effectView = [[AUGenericView alloc] initWithAudioUnit:[effect audioUnit] displayFlags:(AUViewPropertiesDisplayFlag|AUViewParametersDisplayFlag)];
-    }
-
+    NSViewController *contentViewController = [self contentViewController];
+    
+    [contentViewController addChildViewController:vc];
+    
+    NSView *effectView = [vc view];
+    _effectView = effectView;
+    _effectViewController = vc;
+    
     NSRect effectViewFrame = [_effectView frame];
 
     NSRect newWindowFrame = [window frame];
@@ -97,28 +99,6 @@
 }
 
 
-#pragma mark - Private Methods
-
-- (void) _performWorkaroundsIfNeeded
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // AUCompressionExpansionView
-        static UInt8 a[] = { 193,213,195,239,237,240,242,229,243,243,233,239,238,197,248,240,225,238,243,233,239,238,214,233,229,247,0 };
-
-        // AppleEQGraphView
-        static UInt8 b[] = { 193,240,240,236,229,197,209,199,242,225,240,232,214,233,229,247,0 };
-
-        // AUCompressionView
-        static UInt8 c[] = { 193,213,195,239,237,240,242,229,243,243,233,239,238,214,233,229,247,0 };
-
-        EmbraceSwizzle(EmbraceGetPrivateName(a), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
-        EmbraceSwizzle(EmbraceGetPrivateName(b), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
-        EmbraceSwizzle(EmbraceGetPrivateName(c), @"embrace_radar_21789723_convertPointToBase:", @"convertPointToBase:");
-    });
-}
-
-
 - (void) _tweakView:(NSView *)view
 {
     Class AppleAUCustomViewBase   = NSClassFromString(@"AppleAUCustomViewBase");
@@ -136,49 +116,6 @@
         }
     }
 }
-
-
-- (NSView *) _customViewWithEffect:(Effect *)effect size:(NSSize)size;
-{
-    AudioUnit unit = [effect audioUnit];
-
-    UInt32  dataSize   = 0;
-    Boolean isWritable = 0;
-
-    OSStatus err = AudioUnitGetPropertyInfo(unit, kAudioUnitProperty_CocoaUI, kAudioUnitScope_Global, 0, &dataSize, &isWritable);
-    if (err != noErr) return nil;
-
-    unsigned numberOfClasses = (dataSize - sizeof(CFURLRef)) / sizeof(CFStringRef);
-    if (!numberOfClasses) return nil;
-
-    AudioUnitCocoaViewInfo *viewInfo = (AudioUnitCocoaViewInfo *)malloc(dataSize);
-    AudioUnitGetProperty(unit, kAudioUnitProperty_CocoaUI, kAudioUnitScope_Global, 0, viewInfo, &dataSize);
-
-    NSURL    *viewURL       = (__bridge NSURL    *)(viewInfo->mCocoaAUViewBundleLocation);
-    NSString *viewClassName = (__bridge NSString *)(viewInfo->mCocoaAUViewClass[0]);
-
-    Class viewClass = [[NSBundle bundleWithURL:viewURL] classNamed:viewClassName];
-
-    NSView *result = nil;
-    
-    if ([viewClass conformsToProtocol: @protocol(AUCocoaUIBase)]) {
-        id<AUCocoaUIBase> factory = [[viewClass alloc] init];
-        [self _performWorkaroundsIfNeeded];
-        result = [factory uiViewForAudioUnit:unit withSize:size];
-    }
-    
-    if (viewInfo) {
-        for (NSInteger i = 0; i < numberOfClasses; i++) {
-            CFRelease(viewInfo->mCocoaAUViewClass[i]);
-        }
-
-        CFRelease(viewInfo->mCocoaAUViewBundleLocation);
-        free(viewInfo);
-    }
-    
-    return result;
-}
-
 
 
 - (void) _resizeWindowWithOldSize:(NSSize)oldSize newSize:(NSSize)newSize

@@ -13,10 +13,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
 @implementation Effect {
     EffectType   *_type;
-    NSDictionary *_classInfoToLoad;
-    NSDictionary *_defaultClassInfo;
-    AudioUnit     _audioUnit;
-    OSStatus      _audioUnitError;
+    NSDictionary *_defaultFullState;
     EffectSettingsController *_settingsController;
 }
 
@@ -39,6 +36,23 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 {
     if ((self = [super init])) {
         _type = effectType;
+        
+        NSError *error = nil;
+        _audioUnit = [[AUAudioUnit alloc] initWithComponentDescription:[effectType AudioComponentDescription] error:&error];
+        _audioUnitError = error;
+
+        if (_audioUnit) {
+            MappedEffectTypeConfigurator configurator = [effectType configurator];
+            if (configurator) configurator(_audioUnit);
+        }
+
+        NSString *defaultPresetPath = [[NSBundle mainBundle] pathForResource:[[self type] name] ofType:@"aupreset"];
+        if (defaultPresetPath) {
+            NSDictionary *defaultPreset = [NSDictionary dictionaryWithContentsOfFile:defaultPresetPath];
+            [_audioUnit setFullState:defaultPreset];
+        }
+
+        _defaultFullState = [_audioUnit fullState];
     }
     
     return self;
@@ -72,9 +86,11 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
  
     if (info) {
         NSError *error = nil;
-        _classInfoToLoad = [NSPropertyListSerialization propertyListWithData:info options:NSPropertyListImmutable format:NULL error:&error];
         
-        if (!_classInfoToLoad || error) {
+        NSDictionary *fullState = [NSPropertyListSerialization propertyListWithData:info options:NSPropertyListImmutable format:NULL error:&error];
+        if (fullState) [_audioUnit setFullState:fullState];
+        
+        if (!fullState || error) {
             self = nil;
             return nil;
         }
@@ -90,102 +106,37 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
-#pragma mark - Friend Methods
-
-- (void) _setAudioUnit:(AudioUnit)audioUnit error:(OSStatus)err
-{
-    if ((audioUnit != _audioUnit) && audioUnit) {
-        MappedEffectTypeConfigurator configurator = [[self type] configurator];
-        
-        if (configurator) {
-            configurator(audioUnit);
-        }
-    }
-
-    _audioUnit = audioUnit;
-    _audioUnitError = err;
-
-    if (_audioUnit) {
-        NSString *defaultPresetPath = [[NSBundle mainBundle] pathForResource:[[self type] name] ofType:@"aupreset"];
-        if (defaultPresetPath) {
-            NSDictionary *defaultPreset = [NSDictionary dictionaryWithContentsOfFile:defaultPresetPath];
-            [self _loadClassInfoDictionary:defaultPreset];
-        }
-
-        _defaultClassInfo = [self _classInfoDictionary];
-    
-        if (_classInfoToLoad) {
-            [self _loadClassInfoDictionary:_classInfoToLoad];
-            _classInfoToLoad = nil;
-        }
-    }
-}
-
-
-#pragma mark - Private Methods
-
-- (NSDictionary *) _classInfoDictionary
-{
-    NSDictionary *classInfo = nil;
-    UInt32 classInfoSize = sizeof(classInfo);
-    
-    OSStatus err = AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_ClassInfo, kAudioUnitScope_Global, 0, &classInfo, &classInfoSize);
-    
-    if (err != noErr) {
-        classInfo = nil;
-    }
-    
-    return classInfo;
-}
-
-
-- (BOOL) _loadClassInfoDictionary:(NSDictionary *)dictionary
-{
-    if (noErr != AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_ClassInfo, kAudioUnitScope_Global, 0, &dictionary, sizeof(dictionary))) {
-        return NO;
-    }
- 
-    AudioUnitParameter changedUnit;
-    changedUnit.mAudioUnit = _audioUnit;
-    changedUnit.mParameterID = kAUParameterListener_AnyParameter;
-
-    AUParameterListenerNotify(NULL, NULL, &changedUnit);
-
-    return YES;
-}
-
-
 #pragma mark - Public Methods
 
-- (BOOL) loadAudioPresetAtFileURL:(NSURL *)fileURL
+- (void) loadAudioPresetAtFileURL:(NSURL *)fileURL
 {
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfURL:fileURL];
-    if (!dictionary) return NO;
+    if (!dictionary) return;
 
-    return [self _loadClassInfoDictionary:dictionary];
+    [_audioUnit setFullState:dictionary];
 }
 
 
 - (BOOL) saveAudioPresetAtFileURL:(NSURL *)fileURL
 {
-    return [[self _classInfoDictionary] writeToURL:fileURL atomically:YES];
+    return [[_audioUnit fullState] writeToURL:fileURL atomically:YES];
 }
 
 
 - (void) restoreDefaultValues
 {
-    [self _loadClassInfoDictionary:_defaultClassInfo];
+    [_audioUnit setFullState:_defaultFullState];
 }
 
 
 - (NSDictionary *) stateDictionary
 {
-    NSDictionary *classInfo = [self _classInfoDictionary];
-    if (!classInfo) classInfo = [NSDictionary dictionary];
+    NSDictionary *fullState = [_audioUnit fullState];
+    if (!fullState) fullState = [NSDictionary dictionary];
     
     NSError  *error = nil;
     NSString *name  = [_type name];
-    NSData   *info  = [NSPropertyListSerialization dataWithPropertyList:classInfo format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
+    NSData   *info  = [NSPropertyListSerialization dataWithPropertyList:fullState format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
     
     if (error || !info || !name) return nil;
     
@@ -200,31 +151,19 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
 - (BOOL) hasCustomView
 {
-    UInt32 dataSize   = 0;
-    Boolean isWritable = 0;
-    AudioUnitGetPropertyInfo(_audioUnit, kAudioUnitProperty_CocoaUI, kAudioUnitScope_Global, 0, &dataSize, &isWritable);
-    
-    return (dataSize > 0);
+    return [_audioUnit providesUserInterface];
 }
 
 
 - (void) setBypass:(BOOL)bypass
 {
-    UInt32 data = bypass ? 1 : 0;
-    UInt32 dataSize = sizeof(data);
-    
-    AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_BypassEffect, kAudioUnitScope_Global, 0, &data, dataSize);
+    [_audioUnit setShouldBypassEffect:bypass];
 }
 
 
 - (BOOL) bypass
 {
-    UInt32 data = 0;
-    UInt32 dataSize = sizeof(data);
-    
-    AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_BypassEffect, kAudioUnitScope_Global, 0, &data, &dataSize);
-    
-    return (data > 0);
+    return [_audioUnit shouldBypassEffect];
 }
 
 @end

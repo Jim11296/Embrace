@@ -1,9 +1,9 @@
-// (c) 2016-2018 Ricci Adams.  All rights reserved.
+// (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "FastUtils.h"
+#import "HugFastUtils.h"
 
 
-void ApplySilenceToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData)
+void HugApplySilenceToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData)
 {
     for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
         AudioBuffer *buffer = &ioData->mBuffers[i];
@@ -20,13 +20,12 @@ void ApplySilenceToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData)
 }
 
 
-void ApplyFadeToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData, float inFromValue, float inToValue)
+void HugApplyFadeToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData, float inFromValue, float inToValue)
 {
     const double sSilence = pow(10.0, -120.0 / 20.0); // Silence is -120dB
 
     double fromValue = inFromValue ? inFromValue : sSilence;
     double toValue   = inToValue   ? inToValue   : sSilence;
-
     
     for (NSInteger i = 0; i < ioData->mNumberBuffers; i++) {
         AudioBuffer *buffer = &ioData->mBuffers[i];

@@ -20,8 +20,8 @@
 #import "NoDropImageView.h"
 #import "Preferences.h"
 #import "SetlistButton.h"
-#import "SetlistDangerMeter.h"
-#import "SetlistLevelMeter.h"
+#import "SetlistDangerView.h"
+#import "SetlistMeterView.h"
 #import "SetlistPlayBar.h"
 #import "SetlistSlider.h"
 #import "TipArrowFloater.h"
@@ -55,14 +55,14 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelSeparator;
 @property (nonatomic, weak)   IBOutlet NSMenuItem    *tableMenuLabelItem;
 
-@property (nonatomic, weak)   IBOutlet NSTextField        *playOffsetField;
-@property (nonatomic, weak)   IBOutlet NSTextField        *playRemainingField;
-@property (nonatomic, weak)   IBOutlet SetlistButton      *playButton;
-@property (nonatomic, weak)   IBOutlet SetlistButton      *gearButton;
-@property (nonatomic, weak)   IBOutlet SetlistDangerMeter *dangerMeter;
-@property (nonatomic, weak)   IBOutlet SetlistLevelMeter  *levelMeter;
-@property (nonatomic, weak)   IBOutlet SetlistPlayBar     *playBar;
-@property (nonatomic, weak)   IBOutlet SetlistSlider      *volumeSlider;
+@property (nonatomic, weak)   IBOutlet NSTextField       *playOffsetField;
+@property (nonatomic, weak)   IBOutlet NSTextField       *playRemainingField;
+@property (nonatomic, weak)   IBOutlet SetlistButton     *playButton;
+@property (nonatomic, weak)   IBOutlet SetlistButton     *gearButton;
+@property (nonatomic, weak)   IBOutlet SetlistDangerView *dangerView;
+@property (nonatomic, weak)   IBOutlet SetlistMeterView  *meterView;
+@property (nonatomic, weak)   IBOutlet SetlistPlayBar    *playBar;
+@property (nonatomic, weak)   IBOutlet SetlistSlider     *volumeSlider;
 
 @property (nonatomic, weak)   IBOutlet NSView          *headerView;
 @property (nonatomic, weak)   IBOutlet NSView          *mainView;
@@ -121,8 +121,8 @@ static NSInteger sAutoGapMaximum = 16;
     [[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
     [[window standardWindowButton:NSWindowZoomButton]        setHidden:YES];
 
-    [window addListener:[self dangerMeter]];
-    [window addListener:[self levelMeter]];
+    [window addListener:[self dangerView]];
+    [window addListener:[self meterView]];
     [window addListener:[self gearButton]];
     [window addListener:[self playButton]];
     [window addListener:[self volumeSlider]];
@@ -189,19 +189,17 @@ static NSInteger sAutoGapMaximum = 16;
     [[self volumeSlider] setDragDelegate:self];
     [self _updateDragSongsView];
 
-    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        NSFont *font = [[self autoGapField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
-        [[self autoGapField] setFont:font];
+    NSFont *font = [[self autoGapField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
+    [[self autoGapField] setFont:font];
 
-        font = [[self playOffsetField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
-        [[self playOffsetField] setFont:font];
+    font = [[self playOffsetField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
+    [[self playOffsetField] setFont:font];
 
-        font = [[self playRemainingField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
-        [[self playRemainingField] setFont:font];
-    }
+    font = [[self playRemainingField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightMedium];
+    [[self playRemainingField] setFont:font];
 
     [window setExcludedFromWindowsMenu:YES];
 
@@ -1057,8 +1055,8 @@ static NSInteger sAutoGapMaximum = 16;
     EmbraceLog(@"SetlistController", @"player:didUpdatePlaying:%ld", (long)playing);
 
     if (playing) {
-        [[self dangerMeter] setMetering:YES];
-        [[self levelMeter] setMetering:YES];
+        [[self dangerView] setMetering:YES];
+        [[self meterView] setMetering:YES];
         [[self playBar] setPlaying:YES];
         
         [[self playOffsetField]    setHidden:NO];
@@ -1074,8 +1072,8 @@ static NSInteger sAutoGapMaximum = 16;
         [[self playBar] setPercentage:0];
         [[self playBar] setPlaying:NO];
 
-        [[self dangerMeter] setMetering:NO];
-        [[self levelMeter] setMetering:NO];
+        [[self dangerView] setMetering:NO];
+        [[self meterView] setMetering:NO];
     }
 
     [self _updatePlayButton];
@@ -1143,12 +1141,6 @@ static NSInteger sAutoGapMaximum = 16;
     NSTimeInterval timeElapsed   = [player timeElapsed];
     NSTimeInterval timeRemaining = [player timeRemaining];
 
-    Float32 leftAveragePower  = [player leftAveragePower];
-    Float32 rightAveragePower = [player rightAveragePower];
-    Float32 leftPeakPower     = [player leftPeakPower];
-    Float32 rightPeakPower    = [player rightPeakPower];
-    BOOL    limiterActive     = [player isLimiterActive];
-
     Float32 dangerPeak        = [player dangerPeak];
     NSTimeInterval lastOverloadTime = [player lastOverloadTime];
     
@@ -1166,13 +1158,11 @@ static NSInteger sAutoGapMaximum = 16;
 
     [[self playBar] setPercentage:percentage];
 
-    [[self dangerMeter] addDangerPeak:dangerPeak lastOverloadTime:lastOverloadTime];
+    [[self dangerView] addDangerPeak:dangerPeak lastOverloadTime:lastOverloadTime];
 
-    [[self levelMeter] setLeftAveragePower: leftAveragePower
-                         rightAveragePower: rightAveragePower
-                             leftPeakPower: leftPeakPower
-                            rightPeakPower: rightPeakPower
-                             limiterActive: limiterActive];
+    [[self meterView] setLeftMeterData:[player leftMeterData]
+                        rightMeterData:[player rightMeterData]];
+    
 
     [self _updatePlayButton];
 }

@@ -170,11 +170,9 @@
     [_timeMaskView setGradientLength:32];
     [_timeMaskView setGradientLayoutAttribute:NSLayoutAttributeLeft];
 
-    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        NSFont *font = [[self durationField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
-        [[self durationField] setFont:font];
-    }
+    NSFont *font = [[self durationField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+    [[self durationField] setFont:font];
 
 #if 0
     [_titleField setBackgroundColor:[NSColor yellowColor]];
@@ -852,14 +850,9 @@
         timeString = [NSString stringWithFormat:timeStringFormat, [formatter stringFromDate:date]];
     }
 
-    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        NSFont *font = [[self lineTwoLeftField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
-        [_timeField setFont:font];
-
-    } else {
-        [_timeField setFont:[[self lineTwoLeftField] font]];
-    }
+    NSFont *font = [[self lineTwoLeftField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+    [_timeField setFont:font];
         
     [_timeField setStringValue:timeString];
     

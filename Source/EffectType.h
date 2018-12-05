@@ -5,7 +5,7 @@
 @class Effect;
 
 
-typedef void (^MappedEffectTypeConfigurator)(AudioUnit unit);
+typedef void (^MappedEffectTypeConfigurator)(AUAudioUnit *unit);
 
 @interface EffectType : NSObject
 

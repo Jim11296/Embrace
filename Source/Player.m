@@ -9,7 +9,7 @@
 #import "Preferences.h"
 #import "WrappedAudioDevice.h"
 #import "TrackScheduler.h"
-#import "AudioGraph.h"
+#import "HugAudioEngine.h"
 
 #import <pthread.h>
 #import <signal.h>
@@ -44,7 +44,7 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
     Track         *_currentTrack;
     NSTimeInterval _currentPadding;
 
-    AudioGraph *_graph;
+    HugAudioEngine *_engine;
     
     AudioDevice *_outputDevice;
     double       _outputSampleRate;
@@ -107,12 +107,12 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
 
         _volume = -1;
         
-        _graph = [[AudioGraph alloc] init];
+        _engine = [[HugAudioEngine alloc] init];
         
-        [_graph buildTail];
+        [_engine buildTail];
 
         [self _loadState];
-        [_graph reconnectGraph];
+        [_engine reconnectGraph];
     }
     
     return self;
@@ -193,7 +193,7 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
 {
     TrackStatus status = TrackStatusPlaying;
 
-    TrackScheduler *scheduler = [_graph scheduler];
+    TrackScheduler *scheduler = [_engine scheduler];
 
     if (!scheduler) {
         return;
@@ -202,14 +202,11 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
     NSInteger samplesPlayed = [scheduler samplesPlayed];
     BOOL done = NO;
     
-    _leftAveragePower  = [_graph leftAveragePower];
-    _rightAveragePower = [_graph rightAveragePower];
-    _leftPeakPower     = [_graph leftPeakPower];
-    _rightPeakPower    = [_graph rightPeakPower];
-    _limiterActive     = [_graph isLimiterActive];
-    _dangerPeak        = [_graph dangerPeak];
+    _leftMeterData  = [_engine leftMeterData];
+    _rightMeterData = [_engine rightMeterData];
+    _dangerPeak     = [_engine dangerPeak];
 
-    if ([_graph didOverload]) {
+    if ([_engine didOverload]) {
         _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];    
         EmbraceLog(@"Player", @"kAudioDeviceProcessorOverload detected");
     }
@@ -331,7 +328,11 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
 
     EmbraceLog(@"Player", @"updating preGain to %g, trackLoudness=%g, trackPeak=%g, replayGain=%g", preGain, trackLoudness, trackPeak, replayGain);
 
-    [_graph updatePreGain:preGain];
+
+    // Convert from dB to linear
+    preGain = pow(10, preGain / 20);
+    
+    [_engine updatePreGain:preGain];
 }
 
 
@@ -535,13 +536,13 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         raiseIssue(PlayerIssueDeviceHoggedByOtherProcess);
     }
 
-    BOOL isRunning = [_graph isRunning];
+    BOOL isRunning = [_engine isRunning];
     
     _hadChangeDuringPlayback = NO;
     
-    if (isRunning) [_graph stop];
+    if (isRunning) [_engine stop];
     
-    [_graph uninitializeAll];
+    [_engine uninitializeAll];
     
     for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
         WrappedAudioDevice *controller = [device controller];
@@ -603,10 +604,10 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     }
 
 
-    ok = ok && [_graph configureWithDeviceID:deviceID sampleRate:_outputSampleRate frames:_outputFrames];
+    ok = ok && [_engine configureWithDeviceID:deviceID sampleRate:_outputSampleRate frames:_outputFrames];
     
     if (ok) {
-        [_graph reconnectGraph];
+        [_engine reconnectGraph];
 
 //!graph: Do we need this?
 //        if (isRunning) {
@@ -652,7 +653,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
-    [_graph from_Player_setupAndStartPlayback_1];
+    [_engine from_Player_setupAndStartPlayback_1];
 
     if ([track isResolvingURLs]) {
         EmbraceLog(@"Player", @"%@ isn't ready due to URL resolution", track);
@@ -677,7 +678,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
     PlayerShouldUseCrashPad = 0;
 
-    if ([_graph from_Player_setupAndStartPlayback_2_withTrack:_currentTrack]) {
+    if ([_engine from_Player_setupAndStartPlayback_2_withTrack:_currentTrack]) {
         _setupAndStartPlayback_failureCount = 0;
 
     } else {
@@ -698,13 +699,13 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         padding += _outputSampleRate ? (_outputFrames / _outputSampleRate) : 0;
     }
 
-    BOOL didScheldule = [_graph from_Player_setupAndStartPlayback_3_withPadding:padding];
+    BOOL didScheldule = [_engine from_Player_setupAndStartPlayback_3_withPadding:padding];
     if (!didScheldule) return;
 
     [self _sendDistributedNotification];
 
     EmbraceLog(@"Player", @"setup complete, starting graph");
-    [_graph start];
+    [_engine start];
 }
 
 
@@ -855,10 +856,9 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         _tickTimer = nil;
     }
 
-    [_graph stop];
+    [_engine stop];
 
-    _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
-    _limiterActive = NO;
+    _leftMeterData = _rightMeterData = nil;
     
     for (id<PlayerListener> listener in _listeners) {
         [listener player:self didUpdatePlaying:NO];
@@ -964,33 +964,37 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         _stereoLevel = stereoLevel;
         [[NSUserDefaults standardUserDefaults] setObject:@(stereoLevel) forKey:sStereoLevelKey];
 
-        [_graph updateStereoLevel:stereoLevel];
+        [_engine updateStereoWidth:stereoLevel];
     }
 }
 
 
 - (void) setStereoBalance:(float)stereoBalance
 {
-    if (stereoBalance < -1.0f) stereoBalance = -1.0f;
-    if (stereoBalance >  1.0f) stereoBalance =  1.0f;
-
     if (_stereoBalance != stereoBalance) {
         _stereoBalance = stereoBalance;
         [[NSUserDefaults standardUserDefaults] setObject:@(stereoBalance) forKey:sStereoBalanceKey];
 
-        [_graph updateStereoBalance:_stereoBalance];
+        // Convert input range of [ 0.0, 1.0 ] to [ -1.0, 1.0 ]
+        [_engine updateStereoBalance:((stereoBalance * 2) - 1.0)];
     }
 }
 
 
 - (void) setEffects:(NSArray *)effects
 {
-    if (_effects != effects) {
-        _effects = effects;
+    if (_effects == effects) return;
 
-        [_graph updateEffects:effects];
-        [self saveEffectState];
+    NSMutableArray *audioUnits = [NSMutableArray array];
+    for (Effect *effect in effects) {
+        [audioUnits addObject:[effect audioUnit]];
     }
+
+    _effects = effects;
+
+    [_engine updateEffectAudioUnits:audioUnits];
+
+    [self saveEffectState];
 }
 
 
@@ -1001,10 +1005,13 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
     if (_volume != volume) {
         _volume = volume;
-
         [[NSUserDefaults standardUserDefaults] setDouble:_volume forKey:sVolumeKey];
+
+        double graphVolume = volume * sMaxVolume;
+        if (graphVolume > sMaxVolume) graphVolume = sMaxVolume;
         
-        [_graph updateVolume:volume];
+        graphVolume = graphVolume * graphVolume * graphVolume;
+        [_engine updateVolume:graphVolume];
         
         for (id<PlayerListener> listener in _listeners) {
             [listener player:self didUpdateVolume:_volume];

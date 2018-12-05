@@ -1,27 +1,35 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "SetlistLevelMeter.h"
+#import "SetlistMeterView.h"
 #import "SetlistProgressBar.h"
+#import "HugMeterData.h"
 
-
-@interface SetlistLevelMeterPeakDot : NSView
+@interface SetlistMeterViewHeldDot : NSView
 @end
 
 
-@interface SetlistLevelMeterLimiterDot : NSView
+@interface SetlistMeterViewLimiterDot : NSView
 @property (nonatomic, getter=isOn) BOOL on;
 @end
 
 
-@implementation SetlistLevelMeter {
+@implementation SetlistMeterView {
     SetlistProgressBar *_leftChannelBar;
     SetlistProgressBar *_rightChannelBar;
 
-    SetlistLevelMeterPeakDot    *_leftPeakDot;
-    SetlistLevelMeterPeakDot    *_rightPeakDot;
+    SetlistMeterViewHeldDot *_leftHeldDot;
+    SetlistMeterViewHeldDot *_rightHeldDot;
 
-    SetlistLevelMeterLimiterDot *_leftLimiterDot;
-    SetlistLevelMeterLimiterDot *_rightLimiterDot;
+    SetlistMeterViewLimiterDot *_leftLimiterDot;
+    SetlistMeterViewLimiterDot *_rightLimiterDot;
+
+    float _leftPeakLevel;
+    float _leftHeldLevel;
+    BOOL  _leftLimiterActive;
+
+    float _rightPeakLevel;
+    float _rightHeldLevel;
+    BOOL  _rightLimiterActive;
 }
 
 
@@ -52,25 +60,23 @@
     [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
     [self setAutoresizesSubviews:NO];
 
-    _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
-
     _leftChannelBar  = [[SetlistProgressBar alloc] initWithFrame:CGRectZero];
     _rightChannelBar = [[SetlistProgressBar alloc] initWithFrame:CGRectZero];
     
-    _leftPeakDot     = [[SetlistLevelMeterPeakDot alloc] initWithFrame:CGRectZero];
-    _rightPeakDot    = [[SetlistLevelMeterPeakDot alloc] initWithFrame:CGRectZero];
+    _leftHeldDot     = [[SetlistMeterViewHeldDot alloc] initWithFrame:CGRectZero];
+    _rightHeldDot    = [[SetlistMeterViewHeldDot alloc] initWithFrame:CGRectZero];
 
-    _leftLimiterDot  = [[SetlistLevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
-    _rightLimiterDot = [[SetlistLevelMeterLimiterDot alloc] initWithFrame:CGRectZero];
+    _leftLimiterDot  = [[SetlistMeterViewLimiterDot alloc] initWithFrame:CGRectZero];
+    _rightLimiterDot = [[SetlistMeterViewLimiterDot alloc] initWithFrame:CGRectZero];
 
-    [_leftPeakDot  setHidden:YES];
-    [_rightPeakDot setHidden:YES];
+    [_leftHeldDot  setHidden:YES];
+    [_rightHeldDot setHidden:YES];
     
     [self addSubview:_leftChannelBar];
     [self addSubview:_rightChannelBar];
 
-    [self addSubview:_leftPeakDot];
-    [self addSubview:_rightPeakDot];
+    [self addSubview:_leftHeldDot];
+    [self addSubview:_rightHeldDot];
 
     [self addSubview:_leftLimiterDot];
     [self addSubview:_rightLimiterDot];
@@ -100,8 +106,10 @@
     leftLimiterFrame.size.width = rightLimiterFrame.size.width = 4;
     leftLimiterFrame.origin.x   = rightLimiterFrame.origin.x = CGRectGetMaxX(leftChannelFrame) + 1;
    
-    void (^layoutPeak)(NSView *, NSRect, Float32) = ^(NSView *peakDot, NSRect channelFrame, Float32 power) {
-        CGFloat peakX = (60 + power) * ((channelFrame.size.width - 2) / 60);
+    void (^layoutPeak)(NSView *, NSRect, float) = ^(NSView *peakDot, NSRect channelFrame, float level) {
+        float power = cbrt(level);
+        
+        CGFloat peakX = power * (channelFrame.size.width - 2);
         if (peakX < 0) peakX  = 0;
 
         CGFloat alpha = 0;
@@ -129,13 +137,8 @@
     [_leftLimiterDot  setFrame:leftLimiterFrame];
     [_rightLimiterDot setFrame:rightLimiterFrame];
 
-    layoutPeak(_leftPeakDot,  leftChannelFrame,  _leftPeakPower);
-    layoutPeak(_rightPeakDot, rightChannelFrame, _rightPeakPower);
-
-    // Opt-out of Auto Layout unless we are on macOS 10.11
-    if (NSAppKitVersionNumber < NSAppKitVersionNumber10_12) {
-        [super layout]; 
-    }
+    layoutPeak(_leftHeldDot,  leftChannelFrame,  [_leftMeterData heldLevel]);
+    layoutPeak(_rightHeldDot, rightChannelFrame, [_rightMeterData heldLevel]);
 }
 
 
@@ -150,40 +153,25 @@
 
 #pragma mark - Accessors
 
-- (void) setLeftAveragePower: (Float32) leftAveragePower
-           rightAveragePower: (Float32) rightAveragePower
-               leftPeakPower: (Float32) leftPeakPower
-              rightPeakPower: (Float32) rightPeakPower
-               limiterActive: (BOOL) limiterActive
+- (void) setLeftMeterData: (HugMeterData *) leftMeterData
+           rightMeterData: (HugMeterData *) rightMeterData
 {
-    if (leftPeakPower     > 0) leftPeakPower     = 0;
-    if (rightPeakPower    > 0) rightPeakPower    = 0;
-    if (leftAveragePower  > 0) leftAveragePower  = 0;
-    if (rightAveragePower > 0) rightAveragePower = 0;
+    if (leftMeterData  != _leftMeterData ||
+        rightMeterData != _rightMeterData ||
+        ![leftMeterData  isEqual:_leftMeterData] ||
+        ![rightMeterData isEqual:_rightMeterData]
+    ) {
+        _leftMeterData  = leftMeterData;
+        _rightMeterData = rightMeterData;
 
-    if (_leftAveragePower  != leftAveragePower  ||
-        _rightAveragePower != rightAveragePower ||
-        _leftPeakPower     != leftPeakPower     ||
-        _rightPeakPower    != rightPeakPower    ||
-        _limiterActive     != limiterActive)
-    {
-        _leftAveragePower  = leftAveragePower;
-        _rightAveragePower = rightAveragePower;
-        _leftPeakPower     = leftPeakPower;
-        _rightPeakPower    = rightPeakPower;
-        _limiterActive     = limiterActive;
-        
-        CGFloat leftPercent = (60.0 + leftAveragePower) / 60.0;
-        if (leftPercent < 0) leftPercent = 0;
+        CGFloat leftPercent  = cbrt([leftMeterData  peakLevel]);
+        CGFloat rightPercent = cbrt([rightMeterData peakLevel]);
 
-        CGFloat rightPercent = (60.0 + rightAveragePower) / 60.0;
-        if (rightPercent < 0) rightPercent = 0;
-        
         [_leftChannelBar  setPercentage:leftPercent];
         [_rightChannelBar setPercentage:rightPercent];
         
-        [_leftLimiterDot  setOn:_limiterActive];
-        [_rightLimiterDot setOn:_limiterActive];
+        [_leftLimiterDot  setOn:[leftMeterData  isLimiterActive]];
+        [_rightLimiterDot setOn:[rightMeterData isLimiterActive]];
 
         [self setNeedsLayout:YES];
     }
@@ -194,14 +182,14 @@
 {
     if (_metering != metering) {
         _metering = metering;
-        _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
-        _limiterActive = NO;
+        _leftMeterData  = nil;
+        _rightMeterData = nil;
         
         [_leftChannelBar  setPercentage:0];
         [_rightChannelBar setPercentage:0];
         
-        [_leftPeakDot  setHidden:!metering];
-        [_rightPeakDot setHidden:!metering];
+        [_leftHeldDot  setHidden:!metering];
+        [_rightHeldDot setHidden:!metering];
 
         [_leftLimiterDot  setOn:NO];
         [_rightLimiterDot setOn:NO];
@@ -212,7 +200,7 @@
 @end
 
 
-@implementation SetlistLevelMeterPeakDot
+@implementation SetlistMeterViewHeldDot
 
 
 - (void) drawRect:(CGRect)rect
@@ -227,7 +215,7 @@
 @end
 
 
-@implementation SetlistLevelMeterLimiterDot
+@implementation SetlistMeterViewLimiterDot
 
 
 - (void) drawRect:(CGRect)rect

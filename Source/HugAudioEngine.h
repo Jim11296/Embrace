@@ -8,11 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
 
-@class Effect, TrackScheduler;
+@class TrackScheduler, HugMeterData;
 
-@interface AudioGraph : NSObject
+@interface HugAudioEngine : NSObject
 
 - (void) uninitializeAll;
 
@@ -27,20 +26,23 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) buildTail;
 - (void) reconnectGraph;
 
-
 - (BOOL) configureWithDeviceID: (AudioDeviceID) deviceID
                     sampleRate: (double) sampleRate
                         frames: (UInt32) inFrames;
 
-// Player -> Graph
+// Full-scale, linear, 1.0 = 0dBFS
 - (void) updatePreGain:(float)preGain;
+
+// Full-scale, linear, 1.0 = 0dBFS
 - (void) updateVolume:(float)volume;
-- (void) updateStereoLevel:(float)stereoLevel;
+
+// -1.0 = reverse, 0.0 = mono, 1.0 = normal stereo
+- (void) updateStereoWidth:(float)stereoWidth;
+
+// -1.0 = left, 0.0 = center, 1.0 = right
 - (void) updateStereoBalance:(float)stereoBalance;
 
-
-
-- (void) updateEffects:(NSArray<Effect *> *)effects;
+- (void) updateEffectAudioUnits:(NSArray<AUAudioUnit *> *)effectAudioUnits;
 
 // Graph -> Player
 
@@ -48,13 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, getter=isRunning) BOOL running;
 
-@property (nonatomic, readonly, getter=isLimiterActive) BOOL limiterActive;
-
-@property (nonatomic, readonly) float leftAveragePower;
-@property (nonatomic, readonly) float rightAveragePower;
-
-@property (nonatomic, readonly) float leftPeakPower;
-@property (nonatomic, readonly) float rightPeakPower;
+@property (nonatomic, readonly) HugMeterData *leftMeterData;
+@property (nonatomic, readonly) HugMeterData *rightMeterData;
 
 @property (nonatomic, readonly) float dangerPeak;
 
@@ -62,4 +59,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
+
