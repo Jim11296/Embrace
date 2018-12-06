@@ -2,7 +2,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ProtectedBuffer : NSObject
+@interface HugProtectedBuffer : NSObject
 
 - (id) initWithCapacity:(NSUInteger)capacity;
 

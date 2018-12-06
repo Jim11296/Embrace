@@ -12,15 +12,17 @@
 #import "HugLinearRamper.h"
 #import "HugStereoField.h"
 #import "HugFastUtils.h"
-#import "TrackScheduler.h"
-#import "MTSEscapePod.h"
 #import "HugLevelMeter.h"
-#import "Preferences.h"
 #import "HugMeterData.h"
 #import "HugSimpleGraph.h"
+#import "HugRingBuffer.h"
+#import "HugUtils.h"
 
 //!graph: Awkward
 #import "Player.h"
+#import "TrackScheduler.h"
+#import "MTSEscapePod.h"
+#import "Preferences.h"
 
 static void sMemoryBarrier()
 {
@@ -39,6 +41,51 @@ static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theVa
     #pragma clang diagnostic pop
 }
 
+enum {
+    PacketTypeUnknown = 0,
+
+    // Transmitted via _statusRingBuffer
+    PacketTypeTiming = 1,
+    PacketTypeMeter  = 2,
+    PacketTypeDanger = 3,
+    
+    // Transmitted via _errorRingBuffer
+    PacketTypeStatusBufferFull = 101, // Uses PacketDataUnknown
+    PacketTypeOverload         = 102, // Uses PacketDataUnknown
+    PacketTypeErrorMessage     = 200,
+};
+
+typedef struct {
+    uint64_t timestamp;
+    UInt16 type;
+} PacketDataUnknown;
+
+typedef struct {
+    uint64_t timestamp;
+    UInt16 type;
+    NSInteger sampleCount;
+} PacketDataTiming;
+
+typedef struct {
+    uint64_t timestamp;
+    UInt16 type;
+    UInt16 frameCount;
+    uint64_t renderTime;
+} PacketDataDanger;
+
+typedef struct {
+    uint64_t timestamp;
+    UInt16 type;
+    HugMeterDataStruct leftMeterData;
+    HugMeterDataStruct rightMeterData;
+} PacketDataMeter;
+
+typedef struct {
+    uint64_t timestamp;
+    UInt16 type;
+    UInt16 msgLength;
+    char   message[0];
+} PacketErrorMessage;
 
 typedef struct {
     volatile SInt64    inputID;
@@ -52,13 +99,9 @@ typedef struct {
     volatile float     volume;
     volatile float     preGain;
 
+    volatile UInt64    renderStart;
+
     volatile UInt64    sampleTime;
-    
-    volatile AURenderPullInputBlock outputPullBlock;
-    
-    // Worker Thread -> Main Thread
-    volatile SInt32    overloadCount;
-    volatile SInt32    nextOverloadCount;
 } RenderUserInfo;
 
 
@@ -101,6 +144,14 @@ static OSStatus sOutputUnitRenderCallback(
     HugLinearRamper *_preGainRamper;
     HugLinearRamper *_volumeRamper;
 
+    HugRingBuffer   *_errorRingBuffer;
+    HugRingBuffer   *_statusRingBuffer;
+
+    HugMeterData    *_leftMeterData;
+    HugMeterData    *_rightMeterData;
+    float            _dangerLevel;
+    NSTimeInterval   _lastOverloadTime;
+
     NSArray<AUAudioUnit *> *_effectAudioUnits;
 }
 
@@ -119,7 +170,7 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (void) buildTail
 {
-    EmbraceLogMethod();
+    HugLogMethod();
 
     AudioComponentDescription outputCD = {
         kAudioUnitType_Output,
@@ -139,6 +190,9 @@ static OSStatus sOutputUnitRenderCallback(
     _leftLevelMeter   = HugLevelMeterCreate();
     _rightLevelMeter  = HugLevelMeterCreate();
     _emergencyLimiter = HugLimiterCreate();
+    
+    _statusRingBuffer = HugRingBufferCreate(8196);
+    _errorRingBuffer  = HugRingBufferCreate(8196);
 
     [self updateVolume:0];
     [self updateStereoBalance:0];
@@ -160,11 +214,11 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (BOOL) from_Player_setupAndStartPlayback_3_withPadding:(NSTimeInterval)padding
 {
-    EmbraceLog(@"Player", @"Calling startSchedulingWithAudioUnit. audioUnit=%p, padding=%lf", _inputAudioUnit, padding);
+    HugLog(@"Calling startSchedulingWithAudioUnit. audioUnit=%p, padding=%lf", _inputAudioUnit, padding);
 
     BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_inputAudioUnit paddingInSeconds:padding];
     if (!didScheldule) {
-        EmbraceLog(@"Player", @"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
+        HugLog(@"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
         return NO;
     }
     
@@ -174,7 +228,7 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (void) _sendHeadUnitToRenderThread:(AudioUnit)audioUnit
 {
-    EmbraceLog(@"Player", @"Sending %p to render thread", audioUnit);
+    HugLog(@"Sending %p to render thread", audioUnit);
 
     if ([self isRunning]) {
         _renderUserInfo.nextInputUnit = audioUnit;
@@ -193,7 +247,7 @@ static OSStatus sOutputUnitRenderCallback(
             if (![self isRunning]) return;
 
             if (loopGuard >= 1000) {
-                EmbraceLog(@"Player", @"_sendHeadUnitToRenderThread timed out");
+                HugLog(@"_sendHeadUnitToRenderThread timed out");
                 break;
             }
 
@@ -212,18 +266,28 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (void) reconnectGraph
 {
-    EmbraceLogMethod();
+    HugLogMethod();
 
-    HugLimiter      *limiter         = _emergencyLimiter;
-    HugStereoField  *stereoField     = _stereoField;
-    HugLevelMeter   *leftLevelMeter  = _leftLevelMeter;
-    HugLevelMeter   *rightLevelMeter = _rightLevelMeter;
-    HugLinearRamper *preGainRamper   = _preGainRamper;
-    HugLinearRamper *volumeRamper    = _volumeRamper;
+    HugLimiter      *limiter          = _emergencyLimiter;
+    HugStereoField  *stereoField      = _stereoField;
+    HugLevelMeter   *leftLevelMeter   = _leftLevelMeter;
+    HugLevelMeter   *rightLevelMeter  = _rightLevelMeter;
+    HugLinearRamper *preGainRamper    = _preGainRamper;
+    HugLinearRamper *volumeRamper     = _volumeRamper;
+    HugRingBuffer   *statusRingBuffer = _statusRingBuffer;
+    HugRingBuffer   *errorRingBuffer  = _errorRingBuffer;
 
     RenderUserInfo *userInfo = &_renderUserInfo;
 
     HugSimpleGraph *graph = [[HugSimpleGraph alloc] init];
+     
+    void (^__sendStatusPacket)(void *, CFIndex) = ^(void *buffer, CFIndex length) {
+        if (!HugRingBufferWrite(statusRingBuffer, buffer, length)) {
+            PacketDataUnknown packet = { 0, PacketTypeStatusBufferFull };
+            HugRingBufferWrite(errorRingBuffer, &packet, sizeof(packet));
+        }
+    };
+    #define sendStatusPacket(packet) __sendStatusPacket(&(packet), sizeof((packet)));
     
     [graph addBlock:^(
         AudioUnitRenderActionFlags *ioActionFlags,
@@ -232,19 +296,25 @@ static OSStatus sOutputUnitRenderCallback(
         NSInteger inputBusNumber,
         AudioBufferList *ioData
     ) {
+        userInfo->renderStart = HugGetCurrentHostTime();
+
         AudioUnit unit  = userInfo->inputUnit;
         OSStatus result = noErr;
         
         BOOL willChangeUnits = (userInfo->nextInputID != userInfo->inputID);
 
+        float *leftData  = ioData->mNumberBuffers > 0 ? ioData->mBuffers[0].mData : NULL;
+        float *rightData = ioData->mNumberBuffers > 1 ? ioData->mBuffers[1].mData : NULL;
+
         if (!unit) {
             *ioActionFlags |= kAudioUnitRenderAction_OutputIsSilence;
-            HugApplySilenceToAudioBuffer(inNumberFrames, ioData);
+            HugApplySilence(leftData, inNumberFrames);
+            HugApplySilence(rightData, inNumberFrames);
 
         } else {
             AudioTimeStamp timestampToUse = {0};
             timestampToUse.mSampleTime = userInfo->sampleTime;
-            timestampToUse.mHostTime   = GetCurrentHostTime();
+            timestampToUse.mHostTime   = HugGetCurrentHostTime();
             timestampToUse.mFlags      = kAudioTimeStampSampleTimeValid|kAudioTimeStampHostTimeValid;
 
             result = AudioUnitRender(unit, ioActionFlags, &timestampToUse, 0, inNumberFrames, ioData);
@@ -255,11 +325,12 @@ static OSStatus sOutputUnitRenderCallback(
     //            usleep(50000);
     //        }
 
-            HugStereoFieldProcess(stereoField, ioData, userInfo->stereoBalance, userInfo->stereoWidth);
-            HugLinearRamperProcess(preGainRamper, ioData, userInfo->preGain);
+            HugStereoFieldProcess(stereoField, leftData, rightData, inNumberFrames, userInfo->stereoBalance, userInfo->stereoWidth);
+            HugLinearRamperProcess(preGainRamper, leftData, rightData, inNumberFrames, userInfo->preGain);
 
             if (willChangeUnits) {
-                HugApplyFadeToAudioBuffer(inNumberFrames, ioData, 1.0, 0.0);
+                HugApplyFade(leftData,  inNumberFrames, 1.0, 0.0);
+                HugApplyFade(rightData, inNumberFrames, 1.0, 0.0);
             }
         }
 
@@ -314,24 +385,63 @@ static OSStatus sOutputUnitRenderCallback(
         NSInteger inputBusNumber,
         AudioBufferList *ioData
     ) {
+        uint64_t currentTime = HugGetCurrentHostTime();
+
         MTSEscapePodSetIgnoredThread(mach_thread_self());
+        
+        size_t meterFrameCount = HugLevelMeterGetMaxFrameCount(_leftLevelMeter);
+        
+        NSInteger offset = 0;
+        NSInteger framesRemaining = inNumberFrames;
+
+        float *leftData  = ioData->mNumberBuffers > 0 ? ioData->mBuffers[0].mData : NULL;
+        float *rightData = ioData->mNumberBuffers > 1 ? ioData->mBuffers[1].mData : NULL;
 
         float volume = userInfo->volume;
-        HugLinearRamperProcess(volumeRamper, ioData, volume);
+        HugLinearRamperProcess(volumeRamper, leftData, rightData, inNumberFrames, volume);
+        
+        while (framesRemaining > 0) {
+            NSInteger framesToProcess = MIN(framesRemaining, meterFrameCount);
 
-        if (ioData->mNumberBuffers > 0) {
-            HugLevelMeterProcess(leftLevelMeter, ioData->mBuffers[0].mData);
-        }
+            PacketDataMeter packet = {0};
+            packet.timestamp = currentTime;
+            packet.type = PacketTypeMeter;
 
-        if (ioData->mNumberBuffers > 1) {
-            HugLevelMeterProcess(rightLevelMeter, ioData->mBuffers[1].mData);
+            if (leftData) {
+                HugLevelMeterProcess(leftLevelMeter, leftData + offset, framesToProcess);
+
+                packet.leftMeterData.peakLevel = HugLevelMeterGetPeakLevel(leftLevelMeter);
+                packet.leftMeterData.heldLevel = HugLevelMeterGetHeldLevel(leftLevelMeter);
+            }
+
+            if (rightData) {
+                HugLevelMeterProcess(rightLevelMeter, rightData + offset, framesToProcess);
+
+                packet.rightMeterData.peakLevel = HugLevelMeterGetPeakLevel(rightLevelMeter);
+                packet.rightMeterData.heldLevel = HugLevelMeterGetHeldLevel(rightLevelMeter);
+            }
+
+            HugLimiterProcess(limiter, leftData + offset, rightData + offset, framesToProcess);
+            packet.leftMeterData.limiterActive = HugLimiterIsActive(limiter);
+            packet.rightMeterData.limiterActive = packet.leftMeterData.limiterActive;
+
+            sendStatusPacket(packet);
+
+            framesRemaining -= meterFrameCount;
+            offset += meterFrameCount;
         }
-    
-        HugLimiterProcess(limiter, inNumberFrames, ioData);
+        
+        // Calculate danger level and send packet
+        {
+            uint64_t renderTime = HugGetCurrentHostTime() - userInfo->renderStart;
+            PacketDataDanger packet = { currentTime, PacketTypeDanger, inNumberFrames, renderTime };
+            sendStatusPacket(packet);
+        }
         
         return noErr;
     }];
 
+    _graph = graph;
     _graphRenderBlock = [graph renderBlock];
 }
 
@@ -389,7 +499,7 @@ static OSStatus sOutputUnitRenderCallback(
     _outputSampleRate = sampleRate;
     _outputFrames = frames;
 
-    EmbraceLog(@"Player", @"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)framesSize);
+    HugLog(@"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)framesSize);
     
     [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
         Float64 inputSampleRate  = sampleRate;
@@ -429,16 +539,18 @@ static OSStatus sOutputUnitRenderCallback(
         ), @"AudioUnitInitialize[ %@ ]", unitString);
     }];
 
-    HugLimiterSetSampleRate(_emergencyLimiter, sampleRate);
 
     HugLevelMeterSetSampleRate(_leftLevelMeter, sampleRate);
     HugLevelMeterSetSampleRate(_rightLevelMeter, sampleRate);
+    HugLimiterSetSampleRate(_emergencyLimiter, sampleRate);
 
-    HugLinearRamperSetFrameCount(_preGainRamper, frames);
-    HugStereoFieldSetFrameCount(_stereoField, frames);
-    HugLevelMeterSetFrameCount(_leftLevelMeter, frames);
-    HugLevelMeterSetFrameCount(_rightLevelMeter, frames);
-    HugLinearRamperSetFrameCount(_volumeRamper, frames);
+    HugLinearRamperSetMaxFrameCount(_preGainRamper, frames);
+    HugLinearRamperSetMaxFrameCount(_volumeRamper, frames);
+    HugStereoFieldSetMaxFrameCount(_stereoField, frames);
+
+    size_t meterFrame = MIN(frames, 1024);
+    HugLevelMeterSetMaxFrameCount(_leftLevelMeter, meterFrame);
+    HugLevelMeterSetMaxFrameCount(_rightLevelMeter, meterFrame);
 
     return ok;
 }
@@ -446,7 +558,7 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (BOOL) _buildGraphHeadAndTrackScheduler_withTrack:(Track *)track
 {
-    EmbraceLogMethod();
+    HugLogMethod();
 
     [self _teardownGraphHead];
 
@@ -498,7 +610,7 @@ static OSStatus sOutputUnitRenderCallback(
         _currentScheduler = [[TrackScheduler alloc] initWithTrack:track];
         
         if (![_currentScheduler setup]) {
-            EmbraceLog(@"Player", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
+            HugLog(@"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
             [track setTrackError:(TrackError)[_currentScheduler audioFileError]];
             return;
         }
@@ -572,6 +684,15 @@ static OSStatus sOutputUnitRenderCallback(
             _inputAudioUnit = inputUnit;
         }
 
+        if (_converterAudioUnit) {
+            AudioUnitConnection connection = { _inputAudioUnit, 0, 0 };
+   
+            CheckError(
+                AudioUnitSetProperty(_converterAudioUnit, kAudioUnitProperty_MakeConnection, kAudioUnitScope_Input, 0, &connection, sizeof(connection)),
+                "kAudioUnitProperty_MakeConnection"
+            );
+        }   
+
         [self _sendHeadUnitToRenderThread:(converterUnit ? converterUnit : inputUnit)];
     });
     
@@ -594,7 +715,7 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (void) _teardownGraphHead
 {
-    EmbraceLogMethod();
+    HugLogMethod();
 
     if (_inputAudioUnit) {
         CheckError(AudioUnitUninitialize(_inputAudioUnit), "AudioUnitUninitialize[ Input ]");
@@ -622,7 +743,7 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (void) start
 {
-    EmbraceLogMethod();
+    HugLogMethod();
 
     if (![self isRunning]) {
         CheckError(AudioOutputUnitStart(_outputAudioUnit), "AudioOutputUnitStart");
@@ -703,59 +824,97 @@ static OSStatus sOutputUnitRenderCallback(
 }
 
 
+- (void) _readRingBuffers
+{
+    uint64_t current = HugGetCurrentHostTime();
+
+    // Process status
+    while (1) {
+        PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_statusRingBuffer, sizeof(PacketDataUnknown));
+        if (!unknown) break;
+        
+        if (unknown->timestamp >= current) {
+            break;
+        }
+        
+        if (unknown->type == PacketTypeTiming) {
+            PacketDataTiming packet;
+            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataTiming))) return;
+
+        } else if (unknown->type == PacketTypeMeter) {
+            PacketDataMeter packet;
+            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataMeter))) return;
+            
+            _leftMeterData  = [[HugMeterData alloc] initWithStruct:packet.leftMeterData];
+            _rightMeterData = [[HugMeterData alloc] initWithStruct:packet.rightMeterData];
+
+        } else if (unknown->type == PacketTypeDanger) {
+            PacketDataDanger packet;
+            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataDanger))) return;
+            
+            uint64_t renderTime = packet.renderTime;
+            
+            double callbackDuration = packet.frameCount / _outputSampleRate;
+            double elapsedDuration  = HugGetSecondsWithHostTime(renderTime);
+            
+            _dangerLevel = elapsedDuration / callbackDuration;
+
+        } else {
+            NSAssert(NO, @"Unknown packet type");
+        }
+    }
+    
+    // Process error buffer
+    while (1) {
+        PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_errorRingBuffer, sizeof(PacketDataUnknown));
+        if (!unknown) return;
+
+        if (unknown->type == PacketTypeOverload) {
+            PacketDataUnknown packet;
+            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
+
+            _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
+
+            HugLog(@"kAudioDeviceProcessorOverload detected");
+           
+        } else if (unknown->type == PacketTypeStatusBufferFull) {
+            PacketDataUnknown packet;
+            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
+
+            HugLog(@"_statusRingBuffer is full");
+            
+        } else if (unknown->type == PacketTypeErrorMessage) {
+        
+        }
+    }
+}
+
+
 - (HugMeterData *) leftMeterData
 {
-    HugMeterDataStruct s = {0};
-
-    s.peakLevel = HugLevelMeterGetPeakLevel(_leftLevelMeter);
-    s.heldLevel = HugLevelMeterGetHeldLevel(_leftLevelMeter);
-    s.limiterActive = HugLimiterIsActive(_emergencyLimiter);
-    
-    return [[HugMeterData alloc] initWithStruct:s];
+    [self _readRingBuffers];
+    return _leftMeterData;
 }
 
 
 - (HugMeterData *) rightMeterData
 {
-    HugMeterDataStruct s = {0};
-
-    s.peakLevel = HugLevelMeterGetPeakLevel(_rightLevelMeter);
-    s.heldLevel = HugLevelMeterGetHeldLevel(_rightLevelMeter);
-    s.limiterActive = HugLimiterIsActive(_emergencyLimiter);
-    
-    return [[HugMeterData alloc] initWithStruct:s];
+    [self _readRingBuffers];
+    return _rightMeterData;
 }
 
 
-
-- (float) dangerPeak
+- (float) dangerLevel
 {
-//!graph: Re-add this
-//    AUGraphGetCPULoad(_graph, &_dangerAverage);
-//    
-//    Float32 dangerPeak = 0;
-//    AUGraphGetMaxCPULoad(_graph, &_dangerPeak);
-//
-//    if (dangerPeak) {
-//        _dangerPeak = dangerPeak;
-//    } else if (_dangerAverage == 0) {
-//        _dangerPeak = 0;
-//    }
-
-    return 0;
+    [self _readRingBuffers];
+    return _dangerLevel;
 }
 
 
-- (BOOL) didOverload
+- (NSTimeInterval) lastOverloadTime
 {
-    BOOL result = NO;
-
-    if (_renderUserInfo.nextOverloadCount != _renderUserInfo.overloadCount) {
-        _renderUserInfo.overloadCount = _renderUserInfo.nextOverloadCount;
-        result = YES;
-    }
-
-    return result;
+    [self _readRingBuffers];
+    return _lastOverloadTime;
 }
 
 

@@ -6,7 +6,7 @@
 
 
 struct HugLinearRamper {
-    UInt32 _frameCount;
+    size_t _maxFrameCount;
     float  _previousLevel;
     float *_scratch;
 };
@@ -41,28 +41,15 @@ void HugLinearRamperReset(HugLinearRamper *self, float level)
 }
 
 
-void HugLinearRamperProcess(HugLinearRamper *self, AudioBufferList *bufferList, float level)
-{
-    // Build envelope
-    
-    UInt32 frameCount = self->_frameCount;
+void HugLinearRamperProcess(HugLinearRamper *self, float *left, float *right, size_t frameCount, float level)
+{  
     float previousLevel = self->_previousLevel;
     float *scratch = self->_scratch;
 
-    // Determine frame count
-    for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
-        AudioBuffer *buffer = &bufferList->mBuffers[i];
-        UInt32 bufferFrameCount = buffer->mDataByteSize / sizeof(float);
-        
-        frameCount = MIN(frameCount, bufferFrameCount);
-    }
-
     // Fast path, level is the same as previous
     if (level == previousLevel) {
-        for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
-            AudioBuffer *buffer = &bufferList->mBuffers[i];
-            vDSP_vsmul(buffer->mData, 1, &level, buffer->mData, 1, frameCount);
-        }
+        if (left)  vDSP_vsmul(left,  1, &level, left,  1, frameCount);
+        if (right) vDSP_vsmul(right, 1, &level, right, 1, frameCount);
 
     // Slower path, we need to calculate envelope from previousLevel -> level and apply
     } else {
@@ -80,12 +67,9 @@ void HugLinearRamperProcess(HugLinearRamper *self, AudioBufferList *bufferList, 
 
         // scratch += previousLevel
         vDSP_vsadd(scratch, 1, &previousLevel, scratch, 1, frameCount);
-        
-        // buffer.mData *= scratch
-        for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
-            AudioBuffer buffer = bufferList->mBuffers[i];
-            vDSP_vmul(buffer.mData, 1, scratch, 1, buffer.mData, 1, frameCount);
-        }
+
+        if (left)  vDSP_vmul(left,  1, scratch, 1, left,  1, frameCount);
+        if (right) vDSP_vmul(right, 1, scratch, 1, right, 1, frameCount);
     }
     
     self->_previousLevel = level;
@@ -94,16 +78,16 @@ void HugLinearRamperProcess(HugLinearRamper *self, AudioBufferList *bufferList, 
 
 #pragma mark - Accessors
 
-void HugLinearRamperSetFrameCount(HugLinearRamper *self, UInt32 frameCount)
+void HugLinearRamperSetMaxFrameCount(HugLinearRamper *self, size_t maxFrameCount)
 {
-    self->_frameCount = frameCount;
+    self->_maxFrameCount = maxFrameCount;
 
     free(self->_scratch);
-    self->_scratch = frameCount ? malloc(sizeof(float) * frameCount) : NULL;
+    self->_scratch = maxFrameCount ? malloc(sizeof(float) * maxFrameCount) : NULL;
 }
 
 
-UInt32 HugLinearRamperGetFrameCount(HugLinearRamper *self)
+size_t HugLinearRamperGetMaxFrameCount(HugLinearRamper *self)
 {
-    return self->_frameCount;
+    return self->_maxFrameCount;
 }

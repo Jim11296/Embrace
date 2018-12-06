@@ -6,7 +6,7 @@
 
 
 struct HugStereoField {
-    size_t _frameCount;
+    size_t _maxFrameCount;
     float  _previousBalance;
     float  _previousWidth;
 };
@@ -34,17 +34,9 @@ void HugStereoFieldReset(HugStereoField *self, float balance, float width)
 }
 
 
-void HugStereoFieldProcess(HugStereoField *self, AudioBufferList *ioData, float balance, float width)
+void HugStereoFieldProcess(HugStereoField *self, float *left, float *right, size_t frameCount, float balance, float width)
 {
-    float *left  = (float *)ioData->mBuffers[0].mData;
-    float *right = (float *)ioData->mBuffers[1].mData;
-
-    size_t leftCount  = ioData->mBuffers[0].mDataByteSize / sizeof(float);
-    size_t rightCount = ioData->mBuffers[1].mDataByteSize / sizeof(float);
-
-    size_t frameCount = self->_frameCount;
-    frameCount = MIN(leftCount,  frameCount);
-    frameCount = MIN(rightCount, frameCount);
+    if (!left || !right) return;
 
     float previousWidth = self->_previousWidth;
 
@@ -116,14 +108,14 @@ void HugStereoFieldProcess(HugStereoField *self, AudioBufferList *ioData, float 
 }
 
 
-void HugStereoFieldSetFrameCount(HugStereoField *self, size_t frameCount)
+void HugStereoFieldSetMaxFrameCount(HugStereoField *self, size_t maxFrameCount)
 {
-    self->_frameCount = frameCount;
+    self->_maxFrameCount = maxFrameCount;
 }
 
 
-size_t HugStereoFieldGetFrameCount(const HugStereoField *self)
+size_t HugStereoFieldGetMaxFrameCount(const HugStereoField *self)
 {
-    return self->_frameCount;
+    return self->_maxFrameCount;
 }
 

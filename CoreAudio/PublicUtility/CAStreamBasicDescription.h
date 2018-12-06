@@ -334,9 +334,6 @@ public:
 	static void			ResetFormat(AudioStreamBasicDescription& ioDescription);
 	static void			FillOutFormat(AudioStreamBasicDescription& ioDescription, const AudioStreamBasicDescription& inTemplateDescription);
 	static void			GetSimpleName(const AudioStreamBasicDescription& inDescription, char* outName, UInt32 inMaxNameLength, bool inAbbreviate, bool inIncludeSampleRate = false);
-#if CoreAudio_Debug
-	static void			PrintToLog(const AudioStreamBasicDescription& inDesc);
-#endif
 };
 
 bool		operator<(const AudioStreamBasicDescription& x, const AudioStreamBasicDescription& y);

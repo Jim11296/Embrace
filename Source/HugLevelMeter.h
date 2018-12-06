@@ -8,13 +8,13 @@ extern HugLevelMeter *HugLevelMeterCreate(void);
 extern void HugLevelMeterFree(HugLevelMeter *meter);
 
 extern void HugLevelMeterReset(HugLevelMeter *meter);
-extern void HugLevelMeterProcess(HugLevelMeter *meter, float *buffer);
+extern void HugLevelMeterProcess(HugLevelMeter *meter, float *buffer, size_t frameCount);
 
 extern void HugLevelMeterSetSampleRate(HugLevelMeter *meter, double sampleRate);
 extern double  HugLevelMeterGetSampleRate(const HugLevelMeter *meter);
 
-extern void HugLevelMeterSetFrameCount(HugLevelMeter *meter, UInt32 frameCount);
-extern UInt32 HugLevelMeterGetFrameCount(const HugLevelMeter *meter);
+extern void HugLevelMeterSetMaxFrameCount(HugLevelMeter *meter, size_t maxFrameCount);
+extern size_t HugLevelMeterGetMaxFrameCount(const HugLevelMeter *meter);
 
 extern void HugLevelMeterSetAverageEnabled(HugLevelMeter *self, UInt8 averageEnabled);
 extern UInt8 HugLevelMeterIsAverageEnabled(const HugLevelMeter *self);

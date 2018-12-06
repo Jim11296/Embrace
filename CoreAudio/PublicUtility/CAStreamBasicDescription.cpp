@@ -372,21 +372,6 @@ void	CAStreamBasicDescription::GetSimpleName(const AudioStreamBasicDescription& 
 	};
 }
 
-#if CoreAudio_Debug
-#include "CALogMacros.h"
-
-void	CAStreamBasicDescription::PrintToLog(const AudioStreamBasicDescription& inDesc)
-{
-	PrintFloat		("  Sample Rate:        ", inDesc.mSampleRate);
-	Print4CharCode	("  Format ID:          ", inDesc.mFormatID);
-	PrintHex		("  Format Flags:       ", inDesc.mFormatFlags);
-	PrintInt		("  Bytes per Packet:   ", inDesc.mBytesPerPacket);
-	PrintInt		("  Frames per Packet:  ", inDesc.mFramesPerPacket);
-	PrintInt		("  Bytes per Frame:    ", inDesc.mBytesPerFrame);
-	PrintInt		("  Channels per Frame: ", inDesc.mChannelsPerFrame);
-	PrintInt		("  Bits per Channel:   ", inDesc.mBitsPerChannel);
-}
-#endif
 
 bool	operator<(const AudioStreamBasicDescription& x, const AudioStreamBasicDescription& y)
 {

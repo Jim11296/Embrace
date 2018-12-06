@@ -38,64 +38,47 @@ inline static float lerp(float v0, float v1, float t)
 
 
 inline static void sApplyEnvelope(
-    UInt32 frameCount,
-    AudioBufferList *bufferList,
+    float *samples,
+    size_t frameCount,
     float fromMultiplier,
     float toMultiplier,
     NSInteger toIndex)
 {
-    NSInteger bufferCount = bufferList->mNumberBuffers;
-
-    for (NSInteger b = 0; b < bufferCount; b++) {
-        AudioBuffer buffer = bufferList->mBuffers[b];
-        
-        float *samples = (float *)buffer.mData;
-        NSInteger sampleCount = buffer.mDataByteSize / sizeof(float);
+    // If toIndex is specified, apply linear ramp from fromMultiplier to toMultiplier
+    if (toIndex) {
+        if (toIndex > frameCount) toIndex = frameCount;
     
-        // If toIndex is specified, apply linear ramp from fromMultiplier to toMultiplier
-        if (toIndex) {
-            if (toIndex > sampleCount) toIndex = sampleCount;
-        
-            for (NSInteger s = 0; s < toIndex; s++) {
-                samples[s] *= lerp(fromMultiplier, toMultiplier, (s / (float)toIndex));
-            }
+        for (NSInteger s = 0; s < toIndex; s++) {
+            samples[s] *= lerp(fromMultiplier, toMultiplier, (s / (float)toIndex));
         }
+    }
 
-        if ((sampleCount - toIndex) > 0) {
-            vDSP_vsmul(samples + toIndex, 1, &toMultiplier, samples + toIndex, 1, sampleCount - toIndex);
-        }
+    if ((frameCount - toIndex) > 0) {
+        vDSP_vsmul(samples + toIndex, 1, &toMultiplier, samples + toIndex, 1, frameCount - toIndex);
     }
 }
 
-
-inline static void sGetMax(UInt32 frameCount, AudioBufferList *bufferList, float *outMax, NSInteger *outMaxIndex)
+inline static void sGetMax(float *samples, size_t frameCount, float *outMax, NSInteger *outMaxIndex)
 {
     float     max      = 0;
     NSInteger maxIndex = 0;
 
-    NSInteger bufferCount = bufferList->mNumberBuffers;
+    float bufferMax;
+    vDSP_Length bufferMaxIndex;
+    vDSP_maxvi(samples, 1, &bufferMax, &bufferMaxIndex, frameCount);
 
-    for (NSInteger i = 0; i < bufferCount; i++) {
-        AudioBuffer buffer  = bufferList->mBuffers[i];
-        float      *samples = (float *)buffer.mData;
+    float bufferMin;
+    vDSP_Length bufferMinIndex;
+    vDSP_minvi(samples, 1, &bufferMin, &bufferMinIndex, frameCount);
 
-        float bufferMax;
-        vDSP_Length bufferMaxIndex;
-        vDSP_maxvi(samples, 1, &bufferMax, &bufferMaxIndex, frameCount);
-
-        float bufferMin;
-        vDSP_Length bufferMinIndex;
-        vDSP_minvi(samples, 1, &bufferMin, &bufferMinIndex, frameCount);
-
-        if (-bufferMin > bufferMax) {
-            bufferMax = -bufferMin;
-            bufferMaxIndex = bufferMinIndex;
-        }
-        
-        if (bufferMax > max) {
-            max = bufferMax;
-            maxIndex = bufferMaxIndex;
-        }
+    if (-bufferMin > bufferMax) {
+        bufferMax = -bufferMin;
+        bufferMaxIndex = bufferMinIndex;
+    }
+    
+    if (bufferMax > max) {
+        max = bufferMax;
+        maxIndex = bufferMaxIndex;
     }
     
     *outMax = max;
@@ -103,11 +86,33 @@ inline static void sGetMax(UInt32 frameCount, AudioBufferList *bufferList, float
 }
 
 
-inline static void sRamp(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList, float max, NSInteger index)
+inline static void sGetStereoMax(float *left, float *right, size_t frameCount, float *outMax, NSInteger *outMaxIndex)
+{
+    float     leftMax      = 0;
+    NSInteger leftMaxIndex = 0;
+
+    float     rightMax      = 0;
+    NSInteger rightMaxIndex = 0;
+
+    if (left)  sGetMax(left,  frameCount, &leftMax,  &leftMaxIndex);
+    if (right) sGetMax(right, frameCount, &rightMax, &rightMaxIndex);
+ 
+    if (rightMax > leftMax) {
+        leftMax      = rightMax;
+        leftMaxIndex = rightMaxIndex;
+    }
+    
+    *outMax      = leftMax;
+    *outMaxIndex = leftMaxIndex;
+}
+
+
+inline static void sRamp(HugLimiter *self, float *left, float *right, size_t frameCount, float max, NSInteger index)
 {
     float toMultiplier = sPeakValue / max;
 
-    sApplyEnvelope(frameCount, bufferList, self->_multiplier, toMultiplier, index);
+    if (left)  sApplyEnvelope(left,  frameCount, self->_multiplier, toMultiplier, index);
+    if (right) sApplyEnvelope(right, frameCount, self->_multiplier, toMultiplier, index);
 
     self->_multiplier = toMultiplier;
     self->_state = HugLimiterStateHolding;
@@ -116,10 +121,11 @@ inline static void sRamp(HugLimiter *self, UInt32 frameCount, AudioBufferList *b
 }
 
 
-inline static void sHold(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
+inline static void sHold(HugLimiter *self, float *left, float *right, size_t frameCount)
 {
-    sApplyEnvelope(frameCount, bufferList, 0, self->_multiplier, 0);
-    
+    if (left)  sApplyEnvelope(left,  frameCount, self->_multiplier, self->_multiplier, 0);
+    if (right) sApplyEnvelope(right, frameCount, self->_multiplier, self->_multiplier, 0);
+
     self->_samplesHeld += frameCount;
 
     if (self->_samplesHeld > self->_holdTime) {
@@ -130,14 +136,15 @@ inline static void sHold(HugLimiter *self, UInt32 frameCount, AudioBufferList *b
 }
 
 
-inline static void sDecay(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
+inline static void sDecay(HugLimiter *self, float *left, float *right, size_t frameCount)
 {
     float percent = ((self->_samplesDecayed + frameCount) / (float)self->_decayTime);
     if (percent > 1.0) percent = 1.0;
     
     float toMultiplier = lerp(self->_multiplierAtDecayStart, 1.0, percent);
 
-    sApplyEnvelope(frameCount, bufferList, self->_multiplier, toMultiplier, frameCount);
+    if (left)  sApplyEnvelope(left,  frameCount, self->_multiplier, toMultiplier, frameCount);
+    if (right) sApplyEnvelope(right, frameCount, self->_multiplier, toMultiplier, frameCount);
 
     self->_samplesDecayed += frameCount;
     self->_multiplier = toMultiplier;
@@ -184,28 +191,28 @@ void HugLimiterReset(HugLimiter *self)
 }
 
 
-void HugLimiterProcess(HugLimiter *self, UInt32 frameCount, AudioBufferList *bufferList)
+void HugLimiterProcess(HugLimiter *self, float *left, float *right, size_t frameCount)
 {
     float max;
     NSInteger maxIndex;
 
-    sGetMax(frameCount, bufferList, &max, &maxIndex);
+    sGetStereoMax(left, right, frameCount, &max, &maxIndex);
     
     if (max > self->_lastMax) {
         self->_lastMax = max;
-        sRamp(self, frameCount, bufferList, max, maxIndex);
+        sRamp(self, left, right, frameCount, max, maxIndex);
     
     } else if (self->_state == HugLimiterStateHolding) {
-        sHold(self, frameCount, bufferList);
+        sHold(self, left, right, frameCount);
 
     } else if (self->_state == HugLimiterStateDecaying) {
-        sDecay(self, frameCount, bufferList);
-        sGetMax(frameCount, bufferList, &max, &maxIndex);
+        sDecay(self, left, right, frameCount);
+        sGetStereoMax(left, right, frameCount, &max, &maxIndex);
         
         if (max > sPeakValue) {
             float oldMultiplier = self->_multiplier;
             self->_multiplier = 1.0;
-            sRamp(self, frameCount, bufferList, max, maxIndex);
+            sRamp(self, left, right, frameCount, max, maxIndex);
             
             self->_multiplier *= oldMultiplier;
             self->_lastMax = sPeakValue / oldMultiplier;
@@ -219,7 +226,7 @@ void HugLimiterProcess(HugLimiter *self, UInt32 frameCount, AudioBufferList *buf
     }
 
 #if CHECK_RESULTS
-        sGetMax(frameCount, bufferList, &max, &maxIndex);
+        sGetStereoMax(left, right, frameCount, &max, &maxIndex);
         if (max >= 1.0) {
             NSLog(@"Still clipping after limiter");
         }

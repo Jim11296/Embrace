@@ -137,39 +137,6 @@
 		#define vprint(msg)
 	#endif
 	
-	// Original macro keeps its function of turning on and off use of CADebuggerStop() for both asserts and throws.
-	// For backwards compat, it overrides any setting of the two sub-macros.
-	#if	CoreAudio_StopOnFailure
-		#include "CADebugger.h"
-		#undef CoreAudio_StopOnAssert
-		#define CoreAudio_StopOnAssert 1
-		#undef CoreAudio_StopOnThrow
-		#define CoreAudio_StopOnThrow 1
-		#define STOP	CADebuggerStop()
-	#else
-		#define STOP
-	#endif
-
-	#if CoreAudio_StopOnAssert
-		#if !CoreAudio_StopOnFailure
-			#include "CADebugger.h"
-			#define STOP
-		#endif
-		#define __ASSERT_STOP CADebuggerStop()
-	#else
-		#define __ASSERT_STOP
-	#endif
-
-	#if CoreAudio_StopOnThrow
-		#if !CoreAudio_StopOnFailure
-			#include "CADebugger.h"
-			#define STOP
-		#endif
-		#define __THROW_STOP CADebuggerStop()
-	#else
-		#define __THROW_STOP
-	#endif
-
 #else
 	#define	DebugMsg(inFormat, ...)
 	#ifndef DEBUGPRINT
@@ -178,7 +145,6 @@
 	#define vprint(msg)
 	#define	STOP
 	#define __ASSERT_STOP
-	#define __THROW_STOP
 #endif
 
 //	Old-style numbered DebugMessage calls are implemented in terms of DebugMsg() now
@@ -206,14 +172,12 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 			if(!(inCondition))															\
 			{																			\
 				DebugMessage(inMessage);												\
-				__ASSERT_STOP;																	\
 			}
 
 #define	AssertFileLine(inCondition, inMessage)											\
 			if(!(inCondition))															\
 			{																			\
 				DebugMessageN3("%s, line %d: %s", __FILE__, __LINE__, inMessage);		\
-				__ASSERT_STOP;															\
 			}
 
 #define	AssertNoError(inError, inMessage)												\
@@ -223,7 +187,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 				{																		\
 					char __4CC[5] = CA4CCToCString(__Err);								\
 					DebugMessageN2(inMessage ", Error: %d (%s)", (int)__Err, __4CC);		\
-					__ASSERT_STOP;														\
 				}																		\
 			}
 
@@ -233,7 +196,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 				if(__Err != 0)															\
 				{																		\
 					DebugMessageN1(inMessage ", Error: 0x%X", __Err);					\
-					__ASSERT_STOP;														\
 				}																		\
 			}
 
@@ -242,7 +204,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 				if((inPtr) == NULL)														\
 				{																		\
 					DebugMessage(inMessage);											\
-					__ASSERT_STOP;														\
 				}																		\
 			}
 
@@ -344,7 +305,7 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 
 #if defined(__cplusplus)
 
-#define Throw(inException)  __THROW_STOP; throw (inException)
+#define Throw(inException)  throw (inException)
 
 #define	ThrowIf(inCondition, inException, inMessage)									\
 			if(inCondition)																\
@@ -408,7 +369,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 #define	Assert(inCondition, inMessage)													\
 			if(!(inCondition))															\
 			{																			\
-				__ASSERT_STOP;															\
 			}
 
 #define AssertFileLine(inCondition, inMessage) Assert(inCondition, inMessage)
@@ -418,7 +378,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 				SInt32 __Err = (inError);												\
 				if(__Err != 0)															\
 				{																		\
-					__ASSERT_STOP;														\
 				}																		\
 			}
 
@@ -427,7 +386,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 				unsigned int __Err = (unsigned int)(inError);							\
 				if(__Err != 0)															\
 				{																		\
-					__ASSERT_STOP;														\
 				}																		\
 			}
 
@@ -435,7 +393,6 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 			{																			\
 				if((inPtr) == NULL)														\
 				{																		\
-					__ASSERT_STOP;														\
 				}																		\
 			}
 
@@ -525,7 +482,7 @@ void	LogWarning(const char *fmt, ...);		// writes to syslog (and stderr if debug
 
 #if defined(__cplusplus)
 
-#define Throw(inException)  __THROW_STOP; throw (inException)
+#define Throw(inException)  throw (inException)
 
 #define	ThrowIf(inCondition, inException, inMessage)									\
 			if(inCondition)																\

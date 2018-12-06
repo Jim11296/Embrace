@@ -53,9 +53,9 @@
 @property (nonatomic, readonly) HugMeterData *leftMeterData;
 @property (nonatomic, readonly) HugMeterData *rightMeterData;
 
-@property (nonatomic, readonly) float dangerPeak;
+@property (nonatomic, readonly) float dangerLevel;
 
-@property (nonatomic, readonly) BOOL didOverload;
+@property (nonatomic, readonly) NSTimeInterval lastOverloadTime;
 
 @end
 

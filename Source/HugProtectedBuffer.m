@@ -1,9 +1,10 @@
 // (c) 2015-2018 Ricci Adams.  All rights reserved.
 
-#import "ProtectedBuffer.h"
+#import "HugProtectedBuffer.h"
+#import "HugUtils.h"
 
 
-@implementation ProtectedBuffer {
+@implementation HugProtectedBuffer {
     void        *_totalBytes;
     vm_size_t    _totalLength;
     size_t       _pageSize;
@@ -69,7 +70,7 @@
         _protected = (mprotect(_totalBytes, _totalLength, PROT_READ) == noErr);
     }
 
-    EmbraceLog(@"ProtectedBuffer", @"%p locked: %ld, protected: %ld", _bytes, (long)_locked, (long)_protected);
+    HugLog(@"Buffer %p - locked: %ld, protected: %ld", _bytes, (long)_locked, (long)_protected);
 }
 
 

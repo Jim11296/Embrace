@@ -5,7 +5,7 @@
 #import <Accelerate/Accelerate.h>
 
 
-inline static void sGetPeak(UInt32 frameCount, float *samples, float *outMax, NSInteger *outMaxIndex)
+inline static void sGetPeak(float *samples, size_t frameCount, float *outMax, NSInteger *outMaxIndex)
 {
     float     max      = 0;
     NSInteger maxIndex = 0;
@@ -34,7 +34,7 @@ inline static void sGetPeak(UInt32 frameCount, float *samples, float *outMax, NS
 
 
 struct HugLevelMeter {
-    UInt32 _frameCount;
+    size_t _maxFrameCount;
     double _sampleRate;
     UInt8  _averageEnabled;
 
@@ -43,10 +43,9 @@ struct HugLevelMeter {
     double _averageLevel;
     double _peakLevel;
     double _heldLevel;
-    double _decay;
     
-    UInt32 _heldIndex;
-    UInt32 _heldCount;
+    size_t _heldIndex;
+    size_t _heldCount;
     
 };
 
@@ -85,35 +84,31 @@ void HugLevelMeterReset(HugLevelMeter *self)
 
     if (self->_sampleRate > 0) {
         self->_heldCount = self->_sampleRate * 0.8;
-        
-        double peakDecayRateDB = (self->_frameCount / self->_sampleRate) * -11.8;
-        self->_decay = pow(10, peakDecayRateDB / 20.0);
-
     } else {
         self->_heldCount = 0;
-        self->_decay = 0;
     }
     
 
     free(self->_scratch);
     self->_scratch = NULL;
 
-    if (self->_averageEnabled && self->_frameCount) {
-        self->_scratch = malloc(sizeof(float) * self->_frameCount);
+    if (self->_averageEnabled && self->_maxFrameCount) {
+        self->_scratch = malloc(sizeof(float) * self->_maxFrameCount);
     }
 }
 
 
-void HugLevelMeterProcess(HugLevelMeter *self, float *buffer)
+extern void HugLevelMeterProcess(HugLevelMeter *self, float *buffer, size_t frameCount)
 {
-    
-    UInt32 frameCount = self->_frameCount;
+    if (frameCount > self->_maxFrameCount) {
+        frameCount = self->_maxFrameCount;
+    }
 
     float currentAverage;
     float currentPeak;
     NSInteger peakIndex;
 
-    sGetPeak(frameCount, buffer, &currentPeak, &peakIndex);
+    sGetPeak(buffer, frameCount, &currentPeak, &peakIndex);
 
     // Calculate RMS of scratch buffer
     if (self->_scratch) {
@@ -127,7 +122,9 @@ void HugLevelMeterProcess(HugLevelMeter *self, float *buffer)
     double decayedAverageLevel = self->_averageLevel;
     double decayedPeakLevel    = self->_peakLevel;
     double decayedHeldLevel    = self->_heldLevel;
-    double decay               = self->_decay;
+
+    double decayRateDB = (frameCount / self->_sampleRate) * -11.8;
+    double decay = pow(10, decayRateDB / 20.0);    
     
     // Always decay average and peak
     {
@@ -136,7 +133,7 @@ void HugLevelMeterProcess(HugLevelMeter *self, float *buffer)
     }
     
     // Decay held level once we've held it for a second
-    self->_heldIndex += self->_frameCount;
+    self->_heldIndex += frameCount;
     if (self->_heldIndex >= self->_heldCount) {
         decayedHeldLevel *= decay;
     }
@@ -177,16 +174,16 @@ double HugLevelMeterGetSampleRate(const HugLevelMeter *self)
 }
 
 
-void HugLevelMeterSetFrameCount(HugLevelMeter *self, UInt32 frameCount)
+void HugLevelMeterSetMaxFrameCount(HugLevelMeter *self, size_t maxFrameCount)
 {
-    self->_frameCount = frameCount;
+    self->_maxFrameCount = maxFrameCount;
     HugLevelMeterReset(self);
 }
 
 
-UInt32 HugLevelMeterGetFrameCount(const HugLevelMeter *self)
+size_t HugLevelMeterGetMaxFrameCount(const HugLevelMeter *self)
 {
-    return self->_frameCount;
+    return self->_maxFrameCount;
 }
 
 

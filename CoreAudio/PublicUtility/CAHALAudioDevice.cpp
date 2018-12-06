@@ -178,6 +178,7 @@ bool	CAHALAudioDevice::TakeHogMode()
 	{
 		SetPropertyData(theAddress, 0, NULL, sizeof(pid_t), &thePID);
 	}
+
 	return thePID == getpid();
 }
 

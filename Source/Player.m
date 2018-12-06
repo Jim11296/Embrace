@@ -202,14 +202,10 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
     NSInteger samplesPlayed = [scheduler samplesPlayed];
     BOOL done = NO;
     
-    _leftMeterData  = [_engine leftMeterData];
-    _rightMeterData = [_engine rightMeterData];
-    _dangerPeak     = [_engine dangerPeak];
-
-    if ([_engine didOverload]) {
-        _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];    
-        EmbraceLog(@"Player", @"kAudioDeviceProcessorOverload detected");
-    }
+    _leftMeterData    = [_engine leftMeterData];
+    _rightMeterData   = [_engine rightMeterData];
+    _dangerPeak       = [_engine dangerLevel];
+    _lastOverloadTime = [_engine lastOverloadTime];
 
     _timeElapsed = 0;
 
