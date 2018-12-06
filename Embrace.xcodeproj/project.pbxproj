@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 55016BD41CF454E0007A85AE /* HostStatistics.m */; };
 		550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5506802F1887711000441AAE /* TimeStringValueTransformer.m */; };
 		550C63B81FE26EE5007841BC /* MTSEscapePod.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B71FE26EE5007841BC /* MTSEscapePod.m */; };
 		550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B91FE26F12007841BC /* MTSTelemetry.m */; };
@@ -64,9 +63,12 @@
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
 		554FCB9D1DFCF0E900DE697E /* MaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 554FCB9C1DFCF0E900DE697E /* MaskView.m */; };
-		5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */; };
+		5555F5501B4D19220092A8C2 /* HugProtectedBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5555F54F1B4D19220092A8C2 /* HugProtectedBuffer.m */; };
 		555953E921B6834D0032EE54 /* HugMeterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953E821B6834D0032EE54 /* HugMeterData.m */; };
 		555953EC21B762730032EE54 /* HugSimpleGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953EB21B762730032EE54 /* HugSimpleGraph.m */; };
+		555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953EE21B769D40032EE54 /* HugRingBuffer.m */; };
+		555953F221B7F6C90032EE54 /* HugUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F121B7F6C90032EE54 /* HugUtils.m */; };
+		555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F421B8B6FB0032EE54 /* HugAudioSource.m */; };
 		555A701B1890BCBF00305EC6 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 555A701A1890BCBF00305EC6 /* Application.m */; };
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
 		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
@@ -100,9 +102,7 @@
 		557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */; };
 		557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */; };
 		557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */; };
-		557C2CCA1897403E002FAFEA /* CAHostTimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C851897403E002FAFEA /* CAHostTimeBase.cpp */; };
 		557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */; };
-		557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CD9189740D7002FAFEA /* CADebugger.cpp */; };
 		557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */; };
 		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
 		557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C43991D615CDC000184D8 /* TipArrowFloater.m */; };
@@ -229,8 +229,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		55016BD31CF454E0007A85AE /* HostStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HostStatistics.h; path = Source/HostStatistics.h; sourceTree = "<group>"; };
-		55016BD41CF454E0007A85AE /* HostStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HostStatistics.m; path = Source/HostStatistics.m; sourceTree = "<group>"; };
 		5506802E1887711000441AAE /* TimeStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeStringValueTransformer.h; path = Source/TimeStringValueTransformer.h; sourceTree = SOURCE_ROOT; };
 		5506802F1887711000441AAE /* TimeStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimeStringValueTransformer.m; path = Source/TimeStringValueTransformer.m; sourceTree = SOURCE_ROOT; };
 		550C63B61FE26EE5007841BC /* MTSEscapePod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSEscapePod.h; path = Source/MTSEscapePod.h; sourceTree = "<group>"; };
@@ -305,12 +303,18 @@
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
 		554FCB9B1DFCF0E900DE697E /* MaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaskView.h; path = Source/MaskView.h; sourceTree = SOURCE_ROOT; };
 		554FCB9C1DFCF0E900DE697E /* MaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MaskView.m; path = Source/MaskView.m; sourceTree = SOURCE_ROOT; };
-		5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProtectedBuffer.h; path = Source/ProtectedBuffer.h; sourceTree = "<group>"; };
-		5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProtectedBuffer.m; path = Source/ProtectedBuffer.m; sourceTree = "<group>"; };
+		5555F54E1B4D19220092A8C2 /* HugProtectedBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugProtectedBuffer.h; path = Source/HugProtectedBuffer.h; sourceTree = "<group>"; };
+		5555F54F1B4D19220092A8C2 /* HugProtectedBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugProtectedBuffer.m; path = Source/HugProtectedBuffer.m; sourceTree = "<group>"; };
 		555953E721B6834D0032EE54 /* HugMeterData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugMeterData.h; path = Source/HugMeterData.h; sourceTree = "<group>"; };
 		555953E821B6834D0032EE54 /* HugMeterData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugMeterData.m; path = Source/HugMeterData.m; sourceTree = "<group>"; };
 		555953EA21B762730032EE54 /* HugSimpleGraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugSimpleGraph.h; path = Source/HugSimpleGraph.h; sourceTree = "<group>"; };
 		555953EB21B762730032EE54 /* HugSimpleGraph.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugSimpleGraph.m; path = Source/HugSimpleGraph.m; sourceTree = "<group>"; };
+		555953ED21B769D40032EE54 /* HugRingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugRingBuffer.h; path = Source/HugRingBuffer.h; sourceTree = "<group>"; };
+		555953EE21B769D40032EE54 /* HugRingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugRingBuffer.m; path = Source/HugRingBuffer.m; sourceTree = "<group>"; };
+		555953F021B7F6C90032EE54 /* HugUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugUtils.h; path = Source/HugUtils.h; sourceTree = "<group>"; };
+		555953F121B7F6C90032EE54 /* HugUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugUtils.m; path = Source/HugUtils.m; sourceTree = "<group>"; };
+		555953F321B8B6FB0032EE54 /* HugAudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugAudioSource.h; path = Source/HugAudioSource.h; sourceTree = "<group>"; };
+		555953F421B8B6FB0032EE54 /* HugAudioSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugAudioSource.m; path = Source/HugAudioSource.m; sourceTree = "<group>"; };
 		5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CrashPad-Info.plist"; path = "Resources/CrashPad-Info.plist"; sourceTree = SOURCE_ROOT; };
 		5559E61218DFD42500D61019 /* Crash Pad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Crash Pad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		555A70191890BCBF00305EC6 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = Source/Application.h; sourceTree = SOURCE_ROOT; };
@@ -369,17 +373,10 @@
 		557C2C801897403E002FAFEA /* CAHALAudioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioObject.h; path = CoreAudio/PublicUtility/CAHALAudioObject.h; sourceTree = "<group>"; };
 		557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioSystemObject.cpp; path = CoreAudio/PublicUtility/CAHALAudioSystemObject.cpp; sourceTree = "<group>"; };
 		557C2C841897403E002FAFEA /* CAHALAudioSystemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioSystemObject.h; path = CoreAudio/PublicUtility/CAHALAudioSystemObject.h; sourceTree = "<group>"; };
-		557C2C851897403E002FAFEA /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHostTimeBase.cpp; path = CoreAudio/PublicUtility/CAHostTimeBase.cpp; sourceTree = "<group>"; };
-		557C2C861897403E002FAFEA /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHostTimeBase.h; path = CoreAudio/PublicUtility/CAHostTimeBase.h; sourceTree = "<group>"; };
-		557C2C871897403E002FAFEA /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CALogMacros.h; path = CoreAudio/PublicUtility/CALogMacros.h; sourceTree = "<group>"; };
 		557C2C881897403E002FAFEA /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = CoreAudio/PublicUtility/CAMath.h; sourceTree = "<group>"; };
-		557C2C891897403E002FAFEA /* CAMixMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMixMap.h; path = CoreAudio/PublicUtility/CAMixMap.h; sourceTree = "<group>"; };
 		557C2C8F1897403E002FAFEA /* CAPropertyAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAPropertyAddress.h; path = CoreAudio/PublicUtility/CAPropertyAddress.h; sourceTree = "<group>"; };
-		557C2C921897403E002FAFEA /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAReferenceCounted.h; path = CoreAudio/PublicUtility/CAReferenceCounted.h; sourceTree = "<group>"; };
 		557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
 		557C2C9C1897403E002FAFEA /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
-		557C2CD9189740D7002FAFEA /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugger.cpp; path = CoreAudio/PublicUtility/CADebugger.cpp; sourceTree = "<group>"; };
-		557C2CDA189740D7002FAFEA /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugger.h; path = CoreAudio/PublicUtility/CADebugger.h; sourceTree = "<group>"; };
 		557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = CoreAudio/PublicUtility/CADebugMacros.cpp; sourceTree = "<group>"; };
 		557C2CDC189740D7002FAFEA /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = CoreAudio/PublicUtility/CADebugMacros.h; sourceTree = "<group>"; };
 		557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = CoreAudio/PublicUtility/CADebugPrintf.cpp; sourceTree = "<group>"; };
@@ -615,6 +612,8 @@
 			children = (
 				55D9BDD121A64C1100EBF00C /* HugAudioEngine.h */,
 				55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */,
+				555953F321B8B6FB0032EE54 /* HugAudioSource.h */,
+				555953F421B8B6FB0032EE54 /* HugAudioSource.m */,
 				55C24E1318D7D7800057D45E /* HugFastUtils.h */,
 				55C24E1418D7D7800057D45E /* HugFastUtils.m */,
 				551CE71821B3CE9500D422E4 /* HugLinearRamper.h */,
@@ -625,10 +624,16 @@
 				555953E821B6834D0032EE54 /* HugMeterData.m */,
 				551CE71121B3A3D800D422E4 /* HugLevelMeter.h */,
 				551CE71221B3A3D800D422E4 /* HugLevelMeter.m */,
+				5555F54E1B4D19220092A8C2 /* HugProtectedBuffer.h */,
+				5555F54F1B4D19220092A8C2 /* HugProtectedBuffer.m */,
+				555953ED21B769D40032EE54 /* HugRingBuffer.h */,
+				555953EE21B769D40032EE54 /* HugRingBuffer.m */,
 				555953EA21B762730032EE54 /* HugSimpleGraph.h */,
 				555953EB21B762730032EE54 /* HugSimpleGraph.m */,
 				551CE71B21B3E24400D422E4 /* HugStereoField.h */,
 				551CE71C21B3E24400D422E4 /* HugStereoField.m */,
+				555953F021B7F6C90032EE54 /* HugUtils.h */,
+				555953F121B7F6C90032EE54 /* HugUtils.m */,
 			);
 			name = Hug;
 			sourceTree = "<group>";
@@ -669,8 +674,6 @@
 				55224BE318A7880D00407B46 /* CAAutoDisposer.h */,
 				557C2C591897403E002FAFEA /* CABitOperations.h */,
 				557C2C5F1897403E002FAFEA /* CAByteOrder.h */,
-				557C2CDA189740D7002FAFEA /* CADebugger.h */,
-				557C2CD9189740D7002FAFEA /* CADebugger.cpp */,
 				557C2CDC189740D7002FAFEA /* CADebugMacros.h */,
 				557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */,
 				557C2CDE189740D7002FAFEA /* CADebugPrintf.h */,
@@ -682,13 +685,8 @@
 				557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */,
 				557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */,
 				557C2C841897403E002FAFEA /* CAHALAudioSystemObject.h */,
-				557C2C861897403E002FAFEA /* CAHostTimeBase.h */,
-				557C2C851897403E002FAFEA /* CAHostTimeBase.cpp */,
-				557C2C871897403E002FAFEA /* CALogMacros.h */,
 				557C2C881897403E002FAFEA /* CAMath.h */,
-				557C2C891897403E002FAFEA /* CAMixMap.h */,
 				557C2C8F1897403E002FAFEA /* CAPropertyAddress.h */,
-				557C2C921897403E002FAFEA /* CAReferenceCounted.h */,
 				557C2C9C1897403E002FAFEA /* CAStreamBasicDescription.h */,
 				557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */,
 			);
@@ -933,16 +931,12 @@
 				55BC0B051877F19400D84481 /* Effect.m */,
 				55102B411B53564500308F55 /* EffectAdditions.h */,
 				55102B421B53564500308F55 /* EffectAdditions.m */,
-				55016BD31CF454E0007A85AE /* HostStatistics.h */,
-				55016BD41CF454E0007A85AE /* HostStatistics.m */,
 				5583A5961CFC0F1200B8CC4D /* IssueManager.h */,
 				5583A5971CFC0F1200B8CC4D /* IssueManager.m */,
 				55F3B7B41877908900E8FEC8 /* Track.h */,
 				55F3B7B51877908900E8FEC8 /* Track.m */,
 				552C9E4D1883EBA40041C160 /* Preferences.h */,
 				552C9E4E1883EBA40041C160 /* Preferences.m */,
-				5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */,
-				5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1362,8 +1356,6 @@
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
 				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
-				55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */,
-				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
 				55D7001120DCA3A8002FB978 /* TrackErrorButton.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
@@ -1376,18 +1368,21 @@
 				55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */,
 				55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */,
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
+				555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
 				55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */,
 				5595A7BC18793B9000A7B996 /* EmbraceWindow.m in Sources */,
 				557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */,
 				555953EC21B762730032EE54 /* HugSimpleGraph.m in Sources */,
 				55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */,
+				555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */,
 				553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */,
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
 				5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
 				556098141B47CABD008516C3 /* MenuLabelView.m in Sources */,
+				555953F221B7F6C90032EE54 /* HugUtils.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
 				55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */,
@@ -1397,7 +1392,7 @@
 				55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */,
 				55ADE93518815EA8008DC245 /* SetlistPlayBar.m in Sources */,
 				554FCB9D1DFCF0E900DE697E /* MaskView.m in Sources */,
-				5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */,
+				5555F5501B4D19220092A8C2 /* HugProtectedBuffer.m in Sources */,
 				557ABAB61B68D48C006F69D9 /* TrackLabelView.m in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,
 				550C63BF1FE2701A007841BC /* MTSBase.m in Sources */,
@@ -1420,7 +1415,6 @@
 				554B733F18E402E1001E154E /* Log.m in Sources */,
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,
 				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
-				557C2CCA1897403E002FAFEA /* CAHostTimeBase.cpp in Sources */,
 				555953E921B6834D0032EE54 /* HugMeterData.m in Sources */,
 				557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */,
 				55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */,

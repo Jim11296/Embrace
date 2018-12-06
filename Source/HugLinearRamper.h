@@ -7,8 +7,8 @@ typedef struct HugLinearRamper HugLinearRamper;
 extern HugLinearRamper *HugLinearRamperCreate(void);
 extern void HugLinearRamperFree(HugLinearRamper *meter);
 
-extern void HugLinearRamperSetFrameCount(HugLinearRamper *ramper, UInt32 frameCount);
-extern UInt32 HugLinearRamperGetFrameCount(HugLinearRamper *ramper);
+extern void HugLinearRamperSetMaxFrameCount(HugLinearRamper *ramper, size_t maxFrameCount);
+extern size_t HugLinearRamperGetMaxFrameCount(HugLinearRamper *ramper);
 
 extern void HugLinearRamperReset(HugLinearRamper *ramper, float level);
-extern void HugLinearRamperProcess(HugLinearRamper *ramper, AudioBufferList *bufferList, float level);
+void HugLinearRamperProcess(HugLinearRamper *self, float *left, float *right, size_t frameCount, float level);

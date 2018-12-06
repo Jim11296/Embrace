@@ -3,6 +3,6 @@
 #import <Foundation/Foundation.h>
 
 
-extern void HugApplySilenceToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData);
+extern void HugApplySilence(float *samples, size_t frameCount);
 
-extern void HugApplyFadeToAudioBuffer(UInt32 inNumberFrames, AudioBufferList *ioData, float fromValue, float toValue);
+extern void HugApplyFade(float *samples, size_t frameCount, float inFromValue, float inToValue);

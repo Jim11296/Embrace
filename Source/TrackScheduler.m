@@ -4,7 +4,7 @@
 #import "Track.h"
 #import "AudioFile.h"
 #import "Player.h"
-#import "ProtectedBuffer.h"
+#import "HugProtectedBuffer.h"
 
 
 @interface TrackScheduler ()
@@ -78,7 +78,7 @@ static OSStatus sInputCallback(
     AudioStreamBasicDescription _clientFormat;
 
     TrackSchedulerContext *_context;
-    NSArray *_protectedBuffers;
+    NSArray<HugProtectedBuffer *> *_protectedBuffers;
 }
 
 
@@ -111,7 +111,7 @@ static OSStatus sInputCallback(
 
 - (void) _lockBuffers
 {
-    for (ProtectedBuffer *protectedBuffer in _protectedBuffers) {
+    for (HugProtectedBuffer *protectedBuffer in _protectedBuffers) {
         [protectedBuffer lock];
     }
 }
@@ -237,7 +237,7 @@ static OSStatus sInputCallback(
     NSMutableArray *protectedBuffers = [NSMutableArray array];
 
     for (NSInteger i = 0; i < bufferCount; i++) {
-        ProtectedBuffer *protectedBuffer = [[ProtectedBuffer alloc] initWithCapacity:totalBytes];
+        HugProtectedBuffer *protectedBuffer = [[HugProtectedBuffer alloc] initWithCapacity:totalBytes];
     
         list->mBuffers[i].mNumberChannels = 1;
         list->mBuffers[i].mDataByteSize = (UInt32)totalBytes;
