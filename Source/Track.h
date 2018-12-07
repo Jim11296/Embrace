@@ -1,7 +1,7 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import "AudioFile.h"
+#import "HugAudioFile.h"
 
 extern NSString * const TrackDidModifyTitleNotificationName;
 extern NSString * const TrackDidModifyPlayDurationNotificationName;
@@ -33,10 +33,10 @@ typedef NS_ENUM(NSInteger, TrackLabel) {
 typedef NS_ENUM(NSInteger, TrackError) {
     TrackErrorNone             = 0,
 
-    TrackErrorProtectedContent = AudioFileErrorProtectedContent,
-    TrackErrorConversionFailed = AudioFileErrorConversionFailed,
-    TrackErrorOpenFailed       = AudioFileErrorOpenFailed,
-    TrackErrorReadTooSlow      = AudioFileErrorReadTooSlow
+    TrackErrorProtectedContent = HugAudioFileErrorProtectedContent,
+    TrackErrorConversionFailed = HugAudioFileErrorConversionFailed,
+    TrackErrorOpenFailed       = HugAudioFileErrorOpenFailed,
+    TrackErrorReadTooSlow      = HugAudioFileErrorReadTooSlow
 };
 
 

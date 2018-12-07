@@ -1,7 +1,7 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import "AudioFile.h"
+#import "HugAudioFile.h"
 
 @class Track;
 
@@ -14,7 +14,7 @@
 - (BOOL) startSchedulingWithAudioUnit:(AudioUnit)audioUnit paddingInSeconds:(NSTimeInterval)paddingInSeconds;
 - (void) stopScheduling:(AudioUnit)audioUnit;
 
-- (AudioFileError) audioFileError;
+- (HugAudioFileError) audioFileError;
 
 - (NSTimeInterval) timeElapsed;
 - (NSInteger) samplesPlayed;

@@ -28,7 +28,7 @@
 		5514B64A1CDEE64200F238B7 /* EmbraceWorker.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6631CDEE9DE00F238B7 /* TrackKeys.m */; };
 		5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6631CDEE9DE00F238B7 /* TrackKeys.m */; };
-		5514B6671CDF3BB300F238B7 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
+		5514B6671CDF3BB300F238B7 /* HugAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */; };
 		5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5582F7EC18A385570046A24B /* LoudnessMeasurer.m */; };
 		5514B6691CDF46C700F238B7 /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 559A671518D18EA200AB5918 /* URLExtensions.m */; };
@@ -53,7 +53,7 @@
 		552EC02A18DFD527000B82AB /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
 		552EC02B18DFD52E000B82AB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
-		553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
+		553614CE18B4C3B2007BDAD6 /* HugAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */; };
 		5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */; };
 		553DE143189F107100A355D1 /* ViewTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 553DE142189F107100A355D1 /* ViewTrackController.m */; };
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
@@ -69,6 +69,7 @@
 		555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953EE21B769D40032EE54 /* HugRingBuffer.m */; };
 		555953F221B7F6C90032EE54 /* HugUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F121B7F6C90032EE54 /* HugUtils.m */; };
 		555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F421B8B6FB0032EE54 /* HugAudioSource.m */; };
+		555953F721BA0C300032EE54 /* HugUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F121B7F6C90032EE54 /* HugUtils.m */; };
 		555A701B1890BCBF00305EC6 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 555A701A1890BCBF00305EC6 /* Application.m */; };
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
 		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
@@ -286,8 +287,8 @@
 		552C9E4B1883888E0041C160 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = SOURCE_ROOT; };
 		552C9E4D1883EBA40041C160 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = Source/Preferences.h; sourceTree = "<group>"; };
 		552C9E4E1883EBA40041C160 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preferences.m; path = Source/Preferences.m; sourceTree = "<group>"; };
-		553614CC18B4C3B2007BDAD6 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioFile.h; path = Source/AudioFile.h; sourceTree = "<group>"; };
-		553614CD18B4C3B2007BDAD6 /* AudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFile.m; path = Source/AudioFile.m; sourceTree = "<group>"; };
+		553614CC18B4C3B2007BDAD6 /* HugAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugAudioFile.h; path = Source/HugAudioFile.h; sourceTree = "<group>"; };
+		553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugAudioFile.m; path = Source/HugAudioFile.m; sourceTree = "<group>"; };
 		5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentTrackController.m; path = Source/CurrentTrackController.m; sourceTree = SOURCE_ROOT; };
 		5537D75D19CEBA7300DE8117 /* CurrentTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentTrackController.h; path = Source/CurrentTrackController.h; sourceTree = SOURCE_ROOT; };
 		55394ED01884C94F00474E20 /* Embrace.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Embrace.entitlements; path = Resources/Embrace.entitlements; sourceTree = "<group>"; };
@@ -597,8 +598,6 @@
 			children = (
 				554B733D18E402E1001E154E /* Log.h */,
 				554B733E18E402E1001E154E /* Log.m */,
-				553614CC18B4C3B2007BDAD6 /* AudioFile.h */,
-				553614CD18B4C3B2007BDAD6 /* AudioFile.m */,
 				5514B6621CDEE9DE00F238B7 /* TrackKeys.h */,
 				5514B6631CDEE9DE00F238B7 /* TrackKeys.m */,
 				559A671418D18EA200AB5918 /* URLExtensions.h */,
@@ -610,6 +609,8 @@
 		551CE71421B3A3F100D422E4 /* Hug */ = {
 			isa = PBXGroup;
 			children = (
+				553614CC18B4C3B2007BDAD6 /* HugAudioFile.h */,
+				553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */,
 				55D9BDD121A64C1100EBF00C /* HugAudioEngine.h */,
 				55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */,
 				555953F321B8B6FB0032EE54 /* HugAudioSource.h */,
@@ -1323,8 +1324,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */,
+				555953F721BA0C300032EE54 /* HugUtils.m in Sources */,
 				5514B6691CDF46C700F238B7 /* Log.m in Sources */,
-				5514B6671CDF3BB300F238B7 /* AudioFile.m in Sources */,
+				5514B6671CDF3BB300F238B7 /* HugAudioFile.m in Sources */,
 				5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */,
 				5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */,
 				5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */,
@@ -1376,7 +1378,7 @@
 				555953EC21B762730032EE54 /* HugSimpleGraph.m in Sources */,
 				55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */,
 				555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */,
-				553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */,
+				553614CE18B4C3B2007BDAD6 /* HugAudioFile.m in Sources */,
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
 				5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,

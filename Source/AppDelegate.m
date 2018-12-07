@@ -29,6 +29,7 @@
 #import "CrashReportSender.h"
 #import "MTSEscapePod.h"
 #import "MTSTelemetry.h"
+#import "HugUtils.h"
 
 @interface AppDelegate ()
 
@@ -109,6 +110,10 @@
     EmbraceLogMethod();
 
     EmbraceCheckCompatibility();
+
+    HugSetLogger(^(NSString *category, NSString *message) {
+        EmbraceLog(category, @"%@", message);
+    });
 
     // Load preferences
     [Preferences sharedInstance];

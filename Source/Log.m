@@ -2,6 +2,7 @@
 
 
 #import "Log.h"
+#import "HugUtils.h"
 
 static NSString *sLogFileDirectory = nil;
 
@@ -125,18 +126,6 @@ void EmbraceLog(NSString *category, NSString *format, ...)
 
 void _EmbraceLogMethod(const char *f)
 {
-    NSString *string = [NSString stringWithUTF8String:f];
-
-    if ([string hasPrefix:@"-["] || [string hasPrefix:@"+["]) {
-        NSCharacterSet *cs = [NSCharacterSet characterSetWithCharactersInString:@"+-[]"];
-        
-        string = [string stringByTrimmingCharactersInSet:cs];
-        NSArray *components = [string componentsSeparatedByString:@" "];
-        
-        EmbraceLog([components firstObject], @"%@", [components lastObject]);
-        
-    } else {
-        EmbraceLog(@"Function", @"%@", string);
-    }
+    _HugLogMethod(f);
 }
 

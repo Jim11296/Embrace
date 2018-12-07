@@ -70,7 +70,7 @@
         _protected = (mprotect(_totalBytes, _totalLength, PROT_READ) == noErr);
     }
 
-    HugLog(@"Buffer %p - locked: %ld, protected: %ld", _bytes, (long)_locked, (long)_protected);
+    HugLog(@"HugProtectedBuffer", @"%p - locked: %ld, protected: %ld", _bytes, (long)_locked, (long)_protected);
 }
 
 

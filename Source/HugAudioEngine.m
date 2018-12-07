@@ -214,11 +214,11 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (BOOL) from_Player_setupAndStartPlayback_3_withPadding:(NSTimeInterval)padding
 {
-    HugLog(@"Calling startSchedulingWithAudioUnit. audioUnit=%p, padding=%lf", _inputAudioUnit, padding);
+    HugLog(@"HugAudioEngine", @"Calling startSchedulingWithAudioUnit. audioUnit=%p, padding=%lf", _inputAudioUnit, padding);
 
     BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_inputAudioUnit paddingInSeconds:padding];
     if (!didScheldule) {
-        HugLog(@"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
+        HugLog(@"HugAudioEngine", @"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
         return NO;
     }
     
@@ -228,7 +228,7 @@ static OSStatus sOutputUnitRenderCallback(
 
 - (void) _sendHeadUnitToRenderThread:(AudioUnit)audioUnit
 {
-    HugLog(@"Sending %p to render thread", audioUnit);
+    HugLog(@"HugAudioEngine", @"Sending %p to render thread", audioUnit);
 
     if ([self isRunning]) {
         _renderUserInfo.nextInputUnit = audioUnit;
@@ -247,7 +247,7 @@ static OSStatus sOutputUnitRenderCallback(
             if (![self isRunning]) return;
 
             if (loopGuard >= 1000) {
-                HugLog(@"_sendHeadUnitToRenderThread timed out");
+                HugLog(@"HugAudioEngine", @"_sendHeadUnitToRenderThread timed out");
                 break;
             }
 
@@ -499,7 +499,7 @@ static OSStatus sOutputUnitRenderCallback(
     _outputSampleRate = sampleRate;
     _outputFrames = frames;
 
-    HugLog(@"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)framesSize);
+    HugLog(@"HugAudioEngine", @"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)framesSize);
     
     [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
         Float64 inputSampleRate  = sampleRate;
@@ -610,7 +610,7 @@ static OSStatus sOutputUnitRenderCallback(
         _currentScheduler = [[TrackScheduler alloc] initWithTrack:track];
         
         if (![_currentScheduler setup]) {
-            HugLog(@"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
+            HugLog(@"HugAudioEngine", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
             [track setTrackError:(TrackError)[_currentScheduler audioFileError]];
             return;
         }
@@ -875,13 +875,13 @@ static OSStatus sOutputUnitRenderCallback(
 
             _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
 
-            HugLog(@"kAudioDeviceProcessorOverload detected");
+            HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected");
            
         } else if (unknown->type == PacketTypeStatusBufferFull) {
             PacketDataUnknown packet;
             if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
 
-            HugLog(@"_statusRingBuffer is full");
+            HugLog(@"HugAudioEngine", @"_statusRingBuffer is full");
             
         } else if (unknown->type == PacketTypeErrorMessage) {
         

@@ -55,24 +55,46 @@ NSTimeInterval HugGetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2)
 }
 
 
-static void (^sHugLogger)(NSString *) = NULL;
+static void (^sHugLogger)(NSString *, NSString *) = NULL;
 
-void HugLog(NSString *format, ...)
+
+void HugSetLogger(void (^logger)(NSString *category, NSString *message))
 {
+    sHugLogger = logger;
+}
+
+
+void HugLog(NSString *category, NSString *format, ...)
+{
+    if (!sHugLogger) return;
+
     va_list v;
 
     va_start(v, format);
 
     NSString *contents = [[NSString alloc] initWithFormat:format arguments:v];
-    if (sHugLogger) sHugLogger(contents);
+    if (sHugLogger) sHugLogger(category, contents);
     
     va_end(v);
 }
 
 
-extern void _HugLogMethod(const char *f)
+void _HugLogMethod(const char *f)
 {
-    NSString *contents = [[NSString alloc] initWithCString:f encoding:NSUTF8StringEncoding];
-    if (sHugLogger) sHugLogger(contents);
+    if (!sHugLogger) return;
+
+    NSString *string = [NSString stringWithUTF8String:f];
+
+    if ([string hasPrefix:@"-["] || [string hasPrefix:@"+["]) {
+        NSCharacterSet *cs = [NSCharacterSet characterSetWithCharactersInString:@"+-[]"];
+        
+        string = [string stringByTrimmingCharactersInSet:cs];
+        NSArray *components = [string componentsSeparatedByString:@" "];
+        
+        sHugLogger([components firstObject], [components lastObject]);
+        
+    } else {
+        sHugLogger(@"Function", string);
+    }
 }
 
