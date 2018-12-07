@@ -2,7 +2,7 @@
 
 #import "TrackScheduler.h"
 #import "Track.h"
-#import "AudioFile.h"
+#import "HugAudioFile.h"
 #import "Player.h"
 #import "HugProtectedBuffer.h"
 
@@ -11,7 +11,7 @@
 @property (atomic) NSInteger      totalFrames;
 @property (atomic) BOOL           shouldCancelRead;
 @property (atomic) OSStatus       rawError;
-@property (atomic) AudioFileError audioFileError;
+@property (atomic) HugAudioFileError audioFileError;
 @end
 
 
@@ -74,7 +74,7 @@ static OSStatus sInputCallback(
 
 
 @implementation TrackScheduler {
-    AudioFile *_audioFile;
+    HugAudioFile *_audioFile;
     AudioStreamBasicDescription _clientFormat;
 
     TrackSchedulerContext *_context;
@@ -125,60 +125,18 @@ static OSStatus sInputCallback(
 
 - (BOOL) _setupAudioFile
 {
-    NSURL *url = [_track internalURL];
+    _audioFile = [[HugAudioFile alloc] initWithFileURL:[_track internalURL]];
 
-    AudioStreamBasicDescription fileFormat = {0};
-    SInt64 fileLengthFrames = 0;
-
-    _audioFile = [[AudioFile alloc] initWithFileURL:url];
-
-    if (!CheckError(
-        [_audioFile open],
-        "[_audioFile open]"
-    )) {
-        EmbraceLog(@"TrackScheduler", @"%@, Could not open AudioFile", _track);
-        [self setAudioFileError:[_audioFile audioFileError]];
+    if (![_audioFile prepare]) {
+        HugAudioFileError audioFileError = [_audioFile audioFileError];
+        EmbraceLog(@"TrackScheduler", @"%@, Could not open AudioFile. Error %ld", _track, audioFileError);
+        [self setAudioFileError:audioFileError];
+        
         return NO;
     }
 
-    if (!CheckError(
-        [_audioFile getFileDataFormat:&fileFormat],
-        "[_audioFile getFileDataFormat:]"
-    )) {
-        EmbraceLog(@"TrackScheduler", @"%@, Could not get data format for AudioFile", _track);
-        [self setAudioFileError:[_audioFile audioFileError]];
-        return NO;
-    }
-
-    _clientFormat = GetPCMStreamBasicDescription(fileFormat.mSampleRate, fileFormat.mChannelsPerFrame, NO);
-
-    if (!CheckError(
-        [_audioFile setClientDataFormat:&_clientFormat],
-        "[_audioFile getClientDataFormat:]"
-    )) {
-        EmbraceLog(@"TrackScheduler", @"%@, Could not set client format for AudioFile", _track);
-        [self setAudioFileError:[_audioFile audioFileError]];
-        return NO;
-    }
-    
-    if (![_audioFile canRead] &&
-        ![_audioFile convert] &&
-        ![_audioFile canRead])
-    {
-        EmbraceLog(@"TrackScheduler", @"%@, read/convert/read error: %ld", _track, (long)[_audioFile audioFileError]);
-        [self setAudioFileError:[_audioFile audioFileError]];
-        return NO;
-    }
-    
-    
-    if (!CheckError(
-        [_audioFile getFileLengthFrames:&fileLengthFrames],
-        "[_audioFile getFileLengthFrames:]"
-    )) {
-        EmbraceLog(@"TrackScheduler", @"%@, could not get file length frames for AudioFile", _track);
-        [self setAudioFileError:[_audioFile audioFileError]];
-        return NO;
-    }
+    SInt64 fileLengthFrames = [_audioFile fileLengthFrames];
+    _clientFormat = [_audioFile format];
 
     // Determine start and stop time in frames
     {
@@ -410,7 +368,7 @@ static OSStatus sInputCallback(
     int64_t fiveSecondsInNs = 5l * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(primeSemaphore, dispatch_time(0, fiveSecondsInNs))) {
         EmbraceLog(@"TrackScheduler", @"dispatch_semaphore_wait() timed out for %@", _track);
-        [self setAudioFileError:AudioFileErrorReadTooSlow];
+        [self setAudioFileError:HugAudioFileErrorReadTooSlow];
     }
 
     EmbraceLog(@"TrackScheduler", @"%@ primed!", _track);

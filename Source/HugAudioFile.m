@@ -1,13 +1,12 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
-#import "AudioFile.h"
-#import "Log.h"
-#import "URLExtensions.h"
+#import "HugAudioFile.h"
+#import "HugUtils.h"
 
 #import <AVFoundation/AVFoundation.h>
 
 
-@implementation AudioFile {
+@implementation HugAudioFile {
     NSURL *_fileURL;
     NSURL *_exportedURL;
     ExtAudioFileRef _audioFile;
@@ -18,10 +17,6 @@
 {
     if ((self = [super init])) {
         _fileURL = fileURL;
-        
-        if (![_fileURL embrace_startAccessingResourceWithKey:@"audio-file"]) {
-            EmbraceLog(@"AudioFile", @"%@, -embrace_startAccessingResource failed", self);
-        }
     }
 
     return self;
@@ -30,8 +25,6 @@
 
 - (void) dealloc
 {
-    [_fileURL embrace_stopAccessingResourceWithKey:@"audio-file"];
-
     if (_exportedURL) {
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtURL:_exportedURL error:&error];
@@ -53,6 +46,8 @@
 }
 
 
+#pragma mark - Private Methods
+
 - (void) _clearAudioFile
 {
     if (_audioFile) {
@@ -60,7 +55,6 @@
         _audioFile = NULL;
     }
 }
-
 
 - (OSStatus) _reopenAudioFileWithURL:(NSURL *)url
 {
@@ -70,60 +64,43 @@
     OSStatus err = noErr;
 
     if (err == noErr) {
-        err = [self getClientDataFormat:&clientDataFormat];
+        err = [self _getClientDataFormat:&clientDataFormat];
     }
 
     [self _clearAudioFile];
 
     if (err == noErr) {
         err = ExtAudioFileOpenURL((__bridge CFURLRef)_exportedURL, &_audioFile);
-        if (err != noErr) EmbraceLog(@"AudioFile", @"%@, ExtAudioFileOpenURL() failed %ld", self, (long)err);
+        if (err != noErr) HugLog(@"HugAudioFile", @"%@, ExtAudioFileOpenURL() failed %ld", self, (long)err);
     }
     
     if (err == noErr) {
-        err = [self setClientDataFormat:&clientDataFormat];
+        err = [self _setClientDataFormat:&clientDataFormat];
     }
 
     if (err == noErr) {
-        err = [self getFileDataFormat:&fileDataFormat];
+        err = [self _getFileDataFormat:&fileDataFormat];
     }
 
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -_reopenAudioFileWithURL: error %ld", self, (long)err);
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -_reopenAudioFileWithURL: error %ld", self, (long)err);
     
     return err;
 }
 
 
-- (OSStatus) open
-{
-    OSStatus err = noErr;
-
-    if (!_audioFile) {
-        err = ExtAudioFileOpenURL((__bridge CFURLRef)_fileURL, &_audioFile);
-    }
-    
-    if (err != noErr) {
-        EmbraceLog(@"AudioFile", @"ExtAudioFileOpenURL() returned %ld", (long)err);
-        _audioFileError = AudioFileErrorOpenFailed;
-    }
-    
-    return err;
-}
-
-
-- (BOOL) canRead
+- (BOOL) _canRead
 {
     SInt64 fileLengthFrames = 0;
     OSStatus err = noErr;
     
     if (err == noErr) {
-        err = [self getFileLengthFrames:&fileLengthFrames];
+        err = [self _getFileLengthFrames:&fileLengthFrames];
     }
     
     AudioStreamBasicDescription clientDataFormat = {0};
     
     if (err == noErr) {
-        err = [self getClientDataFormat:&clientDataFormat];
+        err = [self _getClientDataFormat:&clientDataFormat];
     }
 
     UInt32 channelCount = clientDataFormat.mChannelsPerFrame;
@@ -158,7 +135,7 @@
 }
 
 
-- (BOOL) convert
+- (BOOL) _convert
 {
     AVAssetExportSession *session;
     BOOL hasProtectedContent = NO;
@@ -208,16 +185,16 @@
 
     int64_t fifteenSecondsInNs = 15l * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(semaphore, dispatch_time(0, fifteenSecondsInNs))) {
-        EmbraceLog(@"AudioFile", @"%@ dispatch_semaphore_wait() timed out!", self);
+        HugLog(@"HugAudioFile", @"%@ dispatch_semaphore_wait() timed out!", self);
         [session cancelExport];
         return NO;
     }
 
     if ([session error]) {
         if (hasProtectedContent) {
-            _audioFileError = AudioFileErrorProtectedContent;
+            _audioFileError = HugAudioFileErrorProtectedContent;
         } else {
-            _audioFileError = AudioFileErrorConversionFailed;
+            _audioFileError = HugAudioFileErrorConversionFailed;
         }
     
         return NO;
@@ -229,10 +206,106 @@
 }
 
 
+- (OSStatus) _getFileDataFormat:(AudioStreamBasicDescription *)fileDataFormat
+{
+    UInt32 size = sizeof(AudioStreamBasicDescription);
+    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileDataFormat, &size, fileDataFormat);
+
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -getFileDataFormat: error %ld", self, (long)err);
+
+    return err;
+}
+
+
+- (OSStatus) _getFileLengthFrames:(SInt64 *)fileLengthFrames
+{
+    UInt32 size = sizeof(SInt64);
+    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileLengthFrames, &size, fileLengthFrames);
+
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -getFileLengthFrames: error %ld", self, (long)err);
+
+    return err;
+}
+
+
+- (OSStatus) _setClientDataFormat:(AudioStreamBasicDescription *)clientDataFormat
+{
+    UInt32 size = sizeof(AudioStreamBasicDescription);
+    OSStatus err = ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, size, clientDataFormat);
+
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -setClientDataFormat: error %ld", self, (long)err);
+
+    return err;
+}
+
+
+- (OSStatus) _getClientDataFormat:(AudioStreamBasicDescription *)clientDataFormat
+{
+    UInt32 size = sizeof(AudioStreamBasicDescription);
+    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, &size, clientDataFormat);
+    
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -getClientDataFormat: returned %ld", self, (long)err);
+
+    return err;
+}
+
+
+#pragma mark - Public Methods
+
+- (BOOL) prepare
+{
+    if (_audioFile) return NO;
+
+    _audioFileError = HugAudioFileErrorOpenFailed;
+    
+    OSStatus openErr = ExtAudioFileOpenURL((__bridge CFURLRef)_fileURL, &_audioFile);
+    if (openErr != noErr) {
+        HugLog(@"HugAudioFile", @"ExtAudioFileOpenURL() returned %ld", (long)openErr);
+        return NO;
+    }
+
+    AudioStreamBasicDescription fileDataFormat = {0};
+    
+    if ([self _getFileDataFormat:&fileDataFormat] != noErr) {
+        return NO;
+    }
+
+    AudioStreamBasicDescription clientDataFormat = {
+        fileDataFormat.mSampleRate,
+        kAudioFormatLinearPCM,
+        kAudioFormatFlagsNativeFloatPacked | kAudioFormatFlagIsNonInterleaved,
+        sizeof(float),    // mBytesPerPacket
+        1,                // mFramesPerPacket
+        sizeof(float),    // mBytesPerFrame
+        fileDataFormat.mChannelsPerFrame,
+        sizeof(float) * 8 // mBitsPerChannel
+    };
+
+    if ([self _setClientDataFormat:&clientDataFormat] != noErr) {
+        return NO;
+    }
+    
+    if (![self _canRead] && ![self _convert] && ![self _canRead]) {
+        return NO;
+    }
+    
+    SInt64 fileLengthFrames = 0;
+    if ([self _getFileLengthFrames:&fileLengthFrames] != noErr) {
+        return NO;
+    }
+
+    _audioFileError   = HugAudioFileErrorNone;
+    _fileLengthFrames = fileLengthFrames;
+    _format           = clientDataFormat;
+
+    return YES;
+}
+
+
 - (OSStatus) readFrames:(inout UInt32 *)ioNumberFrames intoBufferList:(inout AudioBufferList *)bufferList
 {
     OSStatus err = ExtAudioFileRead(_audioFile, ioNumberFrames, bufferList);
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -readFrames:intoBufferList: error %ld", self, (long)err);
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -readFrames:intoBufferList: error %ld", self, (long)err);
     return err;
 }
 
@@ -240,52 +313,22 @@
 - (OSStatus) seekToFrame:(SInt64)startFrame
 {
     OSStatus err = ExtAudioFileSeek(_audioFile, startFrame);
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -seekToFrame: error %ld", self, (long)err);
+    if (err != noErr) HugLog(@"HugAudioFile", @"%@, -seekToFrame: error %ld", self, (long)err);
     return err;
 }
 
 
-- (OSStatus) getFileDataFormat:(AudioStreamBasicDescription *)fileDataFormat
+#pragma mark - Accessors
+
+- (double) sampleRate
 {
-    UInt32 size = sizeof(AudioStreamBasicDescription);
-    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileDataFormat, &size, fileDataFormat);
-
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -getFileDataFormat: error %ld", self, (long)err);
-
-    return err;
+    return _format.mSampleRate;
 }
 
 
-- (OSStatus) getFileLengthFrames:(SInt64 *)fileLengthFrames
+- (NSInteger) channelCount
 {
-    UInt32 size = sizeof(SInt64);
-    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_FileLengthFrames, &size, fileLengthFrames);
-
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -getFileLengthFrames: error %ld", self, (long)err);
-
-    return err;
-}
-
-
-- (OSStatus) setClientDataFormat:(AudioStreamBasicDescription *)clientDataFormat
-{
-    UInt32 size = sizeof(AudioStreamBasicDescription);
-    OSStatus err = ExtAudioFileSetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, size, clientDataFormat);
-
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -setClientDataFormat: error %ld", self, (long)err);
-
-    return err;
-}
-
-
-- (OSStatus) getClientDataFormat:(AudioStreamBasicDescription *)clientDataFormat
-{
-    UInt32 size = sizeof(AudioStreamBasicDescription);
-    OSStatus err = ExtAudioFileGetProperty(_audioFile, kExtAudioFileProperty_ClientDataFormat, &size, clientDataFormat);
-    
-    if (err != noErr) EmbraceLog(@"AudioFile", @"%@, -getClientDataFormat: returned %ld", self, (long)err);
-
-    return err;
+    return _format.mChannelsPerFrame;
 }
 
 
