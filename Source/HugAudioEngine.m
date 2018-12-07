@@ -122,6 +122,15 @@ static OSStatus sOutputUnitRenderCallback(
 }
 
 
+static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
+{
+    PacketDataUnknown packet = { 0, PacketTypeOverload };
+    HugRingBufferWrite((HugRingBuffer *)inClientData, &packet, sizeof(packet));
+    
+    return noErr;
+}
+
+
 @implementation HugAudioEngine {
     RenderUserInfo _renderUserInfo;
 
@@ -134,8 +143,9 @@ static OSStatus sOutputUnitRenderCallback(
     HugSimpleGraph *_graph;
     AURenderPullInputBlock _graphRenderBlock;
 
-    double       _outputSampleRate;
-    UInt32       _outputFrames;
+    AudioDeviceID _outputDeviceID;
+    double        _outputSampleRate;
+    UInt32        _outputFrames;
 
     HugLimiter      *_emergencyLimiter;
     HugStereoField  *_stereoField;
@@ -466,6 +476,19 @@ static OSStatus sOutputUnitRenderCallback(
         }
     };
 
+    // Listen for kAudioDeviceProcessorOverload
+    {
+        AudioObjectPropertyAddress overloadAddress = { kAudioDeviceProcessorOverload, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+
+        if (_outputDeviceID) {
+            AudioObjectRemovePropertyListener(_outputDeviceID, &overloadAddress, sHandleAudioDeviceOverload, (void *)_errorRingBuffer);
+        }
+        
+        if (deviceID) {
+            AudioObjectAddPropertyListener(deviceID, &overloadAddress, sHandleAudioDeviceOverload, (void *)_errorRingBuffer);
+        }
+    }
+
     UInt32 frames = inFrames;
     UInt32 framesSize = sizeof(frames);
 
@@ -496,6 +519,7 @@ static OSStatus sOutputUnitRenderCallback(
         sizeof(renderCallback)
     ), @"AudioUnitSetProperty[ Output, kAudioDevicePropertyBufferFrameSize]", nil);
 
+    _outputDeviceID = deviceID;
     _outputSampleRate = sampleRate;
     _outputFrames = frames;
 
