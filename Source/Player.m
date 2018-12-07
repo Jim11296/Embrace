@@ -403,24 +403,6 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
 
 #pragma mark - Audio Device Notifications
 
-
-//!graph: FIX
-/*
-static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
-{
-    // This is "usually sent from the AudioDevice's IO thread".  Hence, we cannot call dispatch_async()
-    RenderUserInfo *userInfo = (RenderUserInfo *)inClientData;
-
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    OSAtomicIncrement32(&userInfo->nextOverloadCount);
-    #pragma clang diagnostic pop
-    
-    return noErr;
-}
-*/
-
-
 static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
 {
     Player *player = (__bridge Player *)inClientData;
@@ -461,7 +443,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 - (void) _handleAudioDeviceIOStoppedAbnormally
 {
     NSLog(@"_handleAudioDeviceIOStoppedAbnormally");
-
 }
 
 
@@ -497,7 +478,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 {
     // Properties that we will listen for
     //
-    AudioObjectPropertyAddress overloadPropertyAddress   = { kAudioDeviceProcessorOverload,           kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
     AudioObjectPropertyAddress ioStoppedPropertyAddress  = { kAudioDevicePropertyIOStoppedAbnormally, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
     AudioObjectPropertyAddress changedPropertyAddress    = { kAudioDevicePropertyDeviceHasChanged,    kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
     AudioObjectPropertyAddress sampleRatePropertyAddress = { kAudioDevicePropertyNominalSampleRate,   kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
@@ -506,9 +486,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     // Remove old listeners
     //
     if (_listeningDeviceID) {
-//!graph: FIX
-//        AudioObjectRemovePropertyListener(_listeningDeviceID, &overloadPropertyAddress, sHandleAudioDeviceOverload, &_renderUserInfo);
-
         AudioObjectRemovePropertyListener(_listeningDeviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
         AudioObjectRemovePropertyListener(_listeningDeviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
         AudioObjectRemovePropertyListener(_listeningDeviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
@@ -588,9 +565,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     // Register for new listeners
     //
     if (ok && deviceID) {
-//!graph: FIX
-//        AudioObjectAddPropertyListener(deviceID, &overloadPropertyAddress, sHandleAudioDeviceOverload, &_renderUserInfo);
-
         AudioObjectAddPropertyListener(deviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
         AudioObjectAddPropertyListener(deviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
         AudioObjectAddPropertyListener(deviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
