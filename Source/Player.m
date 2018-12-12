@@ -108,13 +108,9 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
         EmbraceLog(@"Player", @"-init");
 
         _volume = -1;
-        
         _engine = [[HugAudioEngine alloc] init];
         
-        [_engine buildTail];
-
         [self _loadState];
-        [_engine reconnectGraph];
     }
     
     return self;
@@ -488,13 +484,9 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         raiseIssue(PlayerIssueDeviceHoggedByOtherProcess);
     }
 
-    BOOL isRunning = [_engine isRunning];
-    
     _hadChangeDuringPlayback = NO;
     
-    if (isRunning) [_engine stop];
-    
-    [_engine uninitializeAll];
+    [_engine stop];
     
     for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
         WrappedAudioDevice *controller = [device controller];
@@ -560,16 +552,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         HugAudioSettingUseHighestQualityRateConverters: @(useHighestQualityRateConverters)
     }];
     
-    if (ok) {
-        [_engine reconnectGraph];
-
-//!graph: Do we need this?
-//        if (isRunning) {
-//            [self _startGraph];
-//        }
-    }
-
-   
     if (issue != _issue) {
         EmbraceLog(@"Player", @"issue is %ld", (long) issue);
 

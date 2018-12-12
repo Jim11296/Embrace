@@ -8,19 +8,9 @@
 
 #import "HugAudioSettings.h"
 
-
-
-// NSNumber, the desired sampling rate.
 HugAudioSettings const HugAudioSettingSampleRate = @"SampleRate";
-
-// NSNumber, the desired value of kAudioDevicePropertyBufferFrameSize.
 HugAudioSettings const HugAudioSettingFrameSize = @"FrameSize";
-
 HugAudioSettings const HugAudioSettingUseHighestQualityRateConverters = @"UseHighestQualityRateConverters";
-
 HugAudioSettings const HugAudioSettingTakeExclusiveAccess = @"TakeExclusiveAccess";
-
 HugAudioSettings const HugAudioSettingResetDeviceVolume = @"ResetDeviceVolume";
-
-
 

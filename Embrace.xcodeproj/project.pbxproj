@@ -113,7 +113,6 @@
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
-		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
 		558AB90220C8C46800B4BAEE /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AB90120C8C46800B4BAEE /* Theme.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		558DC0BA187785F200C85770 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B7187785F200C85770 /* AppDelegate.m */; };
@@ -400,8 +399,6 @@
 		5583A5971CFC0F1200B8CC4D /* IssueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueManager.m; path = Source/IssueManager.m; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
-		55873FDC18AA1E720081772A /* TrackScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackScheduler.h; path = Source/TrackScheduler.h; sourceTree = "<group>"; };
-		55873FDD18AA1E720081772A /* TrackScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackScheduler.m; path = Source/TrackScheduler.m; sourceTree = "<group>"; };
 		558AB90020C8C46800B4BAEE /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Theme.h; path = Source/Theme.h; sourceTree = "<group>"; };
 		558AB90120C8C46800B4BAEE /* Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Theme.m; path = Source/Theme.m; sourceTree = "<group>"; };
 		558DC07F187785BC00C85770 /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1064,8 +1061,6 @@
 			children = (
 				55F3B7D018779B3000E8FEC8 /* Player.h */,
 				55F3B7D118779B3000E8FEC8 /* Player.m */,
-				55873FDC18AA1E720081772A /* TrackScheduler.h */,
-				55873FDD18AA1E720081772A /* TrackScheduler.m */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -1380,7 +1375,6 @@
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
 				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,
 				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
-				55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */,
 				55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */,
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
 				555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */,
