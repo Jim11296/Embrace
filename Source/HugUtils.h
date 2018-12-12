@@ -18,11 +18,19 @@ extern NSTimeInterval HugGetSecondsWithHostTime(UInt64 hostTime);
 extern UInt64 HugGetHostTimeWithSeconds(NSTimeInterval seconds);
 extern NSTimeInterval HugGetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2);
 
+extern NSString *HugGetStringForFourCharCode(OSStatus fcc);
+
 extern void HugSetLogger(void (^)(NSString *category, NSString *message));
 
 extern void HugLog(NSString *category, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 
 extern void _HugLogMethod(const char *f);
+
+extern BOOL HugCheckError(OSStatus error, NSString *category, NSString *operation);
+extern BOOL HugCheckErrorGroup(void (^block)());
+
+
+
 #define HugLogMethod() _HugLogMethod(__PRETTY_FUNCTION__)
 
 #ifdef __cplusplus

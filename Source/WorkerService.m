@@ -59,7 +59,7 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
 
     HugAudioFile *audioFile = [[HugAudioFile alloc] initWithFileURL:internalURL];
   
-    if ([audioFile prepare]) {
+    if ([audioFile open]) {
         NSInteger fileLengthFrames = [audioFile fileLengthFrames];
         AudioStreamBasicDescription format = [audioFile format];
 
@@ -78,10 +78,10 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
             fillBufferList->mBuffers[i].mData = malloc(format.mBytesPerFrame  * 4096 * 16);
         }
 
-        OSStatus err = noErr;
-        while (1 && (err == noErr)) {
+        BOOL ok = YES;
+        while (ok) {
             UInt32 frameCount = (UInt32)framesRemaining;
-            err = [audioFile readFrames:&frameCount intoBufferList:fillBufferList];
+            ok = [audioFile readFrames:&frameCount intoBufferList:fillBufferList];
 
             if (frameCount) {
                 LoudnessMeasurerScanAudioBuffer(measurer, fillBufferList, frameCount);
@@ -114,7 +114,10 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
         LoudnessMeasurerFree(measurer);
 
     } else {
-        [result setObject:@([audioFile audioFileError]) forKey:TrackKeyError];
+        if ([audioFile error]) {
+            NSData *errorData = [NSKeyedArchiver archivedDataWithRootObject:[audioFile error] requiringSecureCoding:NO error:nil];
+            [result setObject:errorData forKey:TrackKeyError];
+        }
     }
 
     return result;

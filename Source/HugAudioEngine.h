@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "HugAudioSource.h"
 
 @class TrackScheduler, HugMeterData;
 
@@ -15,10 +15,10 @@
 
 - (void) uninitializeAll;
 
-- (void) from_Player_setupAndStartPlayback_1;
-- (BOOL) from_Player_setupAndStartPlayback_2_withTrack:(Track *)track;
-- (BOOL) from_Player_setupAndStartPlayback_3_withPadding:(NSTimeInterval)padding;
-
+- (BOOL) playAudioFile: (HugAudioFile *) file
+             startTime: (NSTimeInterval) startTime
+              stopTime: (NSTimeInterval) stopTime
+               padding: (NSTimeInterval) padding;
 
 - (void) start;
 - (void) stop;
@@ -26,9 +26,7 @@
 - (void) buildTail;
 - (void) reconnectGraph;
 
-- (BOOL) configureWithDeviceID: (AudioDeviceID) deviceID
-                    sampleRate: (double) sampleRate
-                        frames: (UInt32) inFrames;
+- (BOOL) configureWithDeviceID:(AudioDeviceID)deviceID settings:(NSDictionary *)settings;
 
 // Full-scale, linear, 1.0 = 0dBFS
 - (void) updatePreGain:(float)preGain;
@@ -46,12 +44,14 @@
 
 // Graph -> Player
 
-@property (nonatomic, readonly) TrackScheduler *scheduler;
-
 @property (nonatomic, readonly, getter=isRunning) BOOL running;
 
-@property (nonatomic, readonly) HugMeterData *leftMeterData;
-@property (nonatomic, readonly) HugMeterData *rightMeterData;
+@property (nonatomic, readonly) HugPlaybackStatus playbackStatus;
+@property (nonatomic, readonly) NSTimeInterval timeElapsed;
+@property (nonatomic, readonly) NSTimeInterval timeRemaining;
+
+@property (nonatomic, readonly) HugMeterData  *leftMeterData;
+@property (nonatomic, readonly) HugMeterData  *rightMeterData;
 
 @property (nonatomic, readonly) float dangerLevel;
 
