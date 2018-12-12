@@ -8,8 +8,10 @@
 #import "AudioDevice.h"
 #import "Preferences.h"
 #import "WrappedAudioDevice.h"
-#import "TrackScheduler.h"
 #import "HugAudioEngine.h"
+#import "HugAudioSettings.h"
+#import "HugAudioSource.h"
+
 
 #import <pthread.h>
 #import <signal.h>
@@ -191,68 +193,45 @@ volatile NSInteger PlayerShouldUseCrashPad = 0;
 
 - (void) _tick:(NSTimer *)timer
 {
-    TrackStatus status = TrackStatusPlaying;
-
-    TrackScheduler *scheduler = [_engine scheduler];
-
-    if (!scheduler) {
-        return;
-    }
+//    TrackScheduler *scheduler = [_engine scheduler];
+//
+//    if (!scheduler) {
+//        return;
+//    }
+//    
+    HugPlaybackStatus playbackStatus = [_engine playbackStatus];
     
-    NSInteger samplesPlayed = [scheduler samplesPlayed];
-    BOOL done = NO;
-    
+    _timeElapsed      = [_engine timeElapsed];
+    _timeRemaining    = [_engine timeRemaining];
     _leftMeterData    = [_engine leftMeterData];
     _rightMeterData   = [_engine rightMeterData];
     _dangerPeak       = [_engine dangerLevel];
     _lastOverloadTime = [_engine lastOverloadTime];
 
-    _timeElapsed = 0;
+    BOOL done = NO;
+    TrackStatus status = TrackStatusPlaying;
 
-    NSTimeInterval roundedTimeElapsed;
-    NSTimeInterval roundedTimeRemaining;
+    NSTimeInterval roundedTimeElapsed   = floor(_timeElapsed);
+    NSTimeInterval roundedTimeRemaining = round(_timeRemaining);
 
-    char logBranchTaken = 0;
-
-    if (samplesPlayed <= 0) {
-        status = TrackStatusPreparing;
-
-        _timeElapsed = [scheduler timeElapsed];
-        if (_timeElapsed > 0) _timeElapsed = 0;
-
-        _timeRemaining = [_currentTrack playDuration];
-        
-        roundedTimeElapsed = floor(_timeElapsed);
-        roundedTimeRemaining = round([_currentTrack playDuration]);
-
-        logBranchTaken = 'a';
-
-    } else {
-        _timeElapsed = [scheduler timeElapsed];
-        _timeRemaining = [_currentTrack playDuration] - _timeElapsed;
-        
-        roundedTimeElapsed = floor(_timeElapsed);
-        roundedTimeRemaining = round([_currentTrack playDuration]) - roundedTimeElapsed;
-
-        logBranchTaken = 'b';
-    }
-
-    if ([scheduler isDone] || [_currentTrack trackError]) {
-        Float64 sampleRate = [scheduler clientFormat].mSampleRate;
-
-        EmbraceLog(@"Player", @"Marking track as done.  _timeElapsed: %g, _timeRemaining: %g, error: %ld", _timeElapsed, _timeRemaining, (long) [_currentTrack trackError]);
-        EmbraceLog(@"Player", @"Branch taken was: %c.  sampleRate: %g, samplesPlayed: %ld", logBranchTaken, (double)sampleRate, (long)samplesPlayed);
-        
+    if (playbackStatus == HugPlaybackStatusFinished) {
         done = YES;
 
-        status = TrackStatusPlayed;
         _timeElapsed = [_currentTrack playDuration];
         _timeRemaining = 0;
 
         roundedTimeElapsed = round([_currentTrack playDuration]);
         roundedTimeRemaining = 0;
+
+        status = TrackStatusPlayed;
+
+    } else if (playbackStatus == HugPlaybackStatusPreparing) {
+        status = TrackStatusPreparing;
+
+    } else {
+        status = TrackStatusPlaying;
     }
-    
+
     if (!_timeElapsedString || (roundedTimeElapsed != _roundedTimeElapsed)) {
         _roundedTimeElapsed = roundedTimeElapsed;
         [self setTimeElapsedString:GetStringForTime(_roundedTimeElapsed)];
@@ -573,8 +552,13 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         _listeningDeviceID = deviceID;
     }
 
+    BOOL useHighestQualityRateConverters = [[Preferences sharedInstance] usesMasteringComplexitySRC];
 
-    ok = ok && [_engine configureWithDeviceID:deviceID sampleRate:_outputSampleRate frames:_outputFrames];
+    ok = ok && [_engine configureWithDeviceID:deviceID settings:@{
+        HugAudioSettingSampleRate: @(_outputSampleRate),
+        HugAudioSettingFrameSize:  @(_outputFrames),
+        HugAudioSettingUseHighestQualityRateConverters: @(useHighestQualityRateConverters)
+    }];
     
     if (ok) {
         [_engine reconnectGraph];
@@ -623,7 +607,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
 
-    [_engine from_Player_setupAndStartPlayback_1];
+//    [_engine from_Player_setupAndStartPlayback_1];
 
     if ([track isResolvingURLs]) {
         EmbraceLog(@"Player", @"%@ isn't ready due to URL resolution", track);
@@ -631,7 +615,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         return;
     }
 
-    if (![track didAnalyzeLoudness] && ![track trackError]) {
+    if (![track didAnalyzeLoudness] && ![track error]) {
         EmbraceLog(@"Player", @"%@ isn't ready, calling startPriorityAnalysis", track);
 
         [track startPriorityAnalysis];
@@ -645,37 +629,22 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         [self hardStop];
         return;
     }
-
-    PlayerShouldUseCrashPad = 0;
-
-    if ([_engine from_Player_setupAndStartPlayback_2_withTrack:_currentTrack]) {
-        _setupAndStartPlayback_failureCount = 0;
-
-    } else {
-        _setupAndStartPlayback_failureCount++;
-
-        EmbraceLog(@"Player", @"Failure %ld during _buildGraphHeadAndTrackScheduler", (long)_setupAndStartPlayback_failureCount);
-        
-        if (![track trackError] && (_setupAndStartPlayback_failureCount < 20)) {
-            [self performSelector:@selector(_setupAndStartPlayback) withObject:nil afterDelay:0.1];
-        } else {
-            [self hardStop];
-        }
+    
+    HugAudioFile *file = [[HugAudioFile alloc] initWithFileURL:fileURL];
+    if (![file open]) {
+        EmbraceLog(@"Player", @"Couldn't open %@", file);
+        [self hardStop];
+        return;
     }
 
     [self _updateLoudnessAndPreAmp];
 
-    if (padding > 0 && _outputSampleRate > 0) {
-        padding += _outputSampleRate ? (_outputFrames / _outputSampleRate) : 0;
+    if (![_engine playAudioFile:file startTime:[track startTime] stopTime:[track stopTime] padding:padding]) {
+        EmbraceLog(@"Player", @"Couldn't play %@", file);
+        [self hardStop];
     }
 
-    BOOL didScheldule = [_engine from_Player_setupAndStartPlayback_3_withPadding:padding];
-    if (!didScheldule) return;
-
     [self _sendDistributedNotification];
-
-    EmbraceLog(@"Player", @"setup complete, starting graph");
-    [_engine start];
 }
 
 

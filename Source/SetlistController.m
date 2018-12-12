@@ -1163,7 +1163,6 @@ static NSInteger sAutoGapMaximum = 16;
     [[self meterView] setLeftMeterData:[player leftMeterData]
                         rightMeterData:[player rightMeterData]];
     
-
     [self _updatePlayButton];
 }
 
@@ -1191,7 +1190,7 @@ static NSInteger sAutoGapMaximum = 16;
             padding = 1.0;
         }
         
-        if ([currentTrack trackError]) {
+        if ([currentTrack error]) {
             padding = 0;
         }
     }

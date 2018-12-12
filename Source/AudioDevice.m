@@ -2,6 +2,8 @@
 
 #import "AudioDevice.h"
 #import "WrappedAudioDevice.h"
+#import "HugUtils.h"
+
 
 NSString * const AudioDevicesDidRefreshNotification = @"AudioDevicesDidRefresh";
 
@@ -116,18 +118,18 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 
     UInt32 dataSize = 0;
    
-    if (!CheckError(
+    if (!HugCheckError(
         AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &propertyAddress, 0, NULL, &dataSize),
-        "AudioObjectGetPropertyDataSize"
+        @"AudioDevice", @"AudioObjectGetPropertyDataSize"
     )) return;
     
     UInt32 deviceCount = dataSize / sizeof(AudioDeviceID);
 
     AudioDeviceID *audioDevices = (AudioDeviceID *)malloc(dataSize);
 
-    if (!CheckError(
+    if (!HugCheckError(
         AudioObjectGetPropertyData(kAudioObjectSystemObject, &propertyAddress, 0, NULL, &dataSize, audioDevices),
-        "AudioObjectGetPropertyData[kAudioHardwarePropertyDevices]"
+        @"AudioDevice", @"AudioObjectGetPropertyData[kAudioHardwarePropertyDevices]"
     )) {
         free(audioDevices), audioDevices = NULL;
         return;
@@ -140,17 +142,17 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
         
         propertyAddress.mSelector = kAudioDevicePropertyDeviceUID;
         
-        if (!CheckError(
+        if (!HugCheckError(
             AudioObjectGetPropertyData(audioDevices[i], &propertyAddress, 0, NULL, &dataSize, &cfDeviceUID),
-            "AudioObjectGetPropertyData[kAudioDevicePropertyDeviceUID]"
+            @"AudioDevice", @"AudioObjectGetPropertyData[kAudioDevicePropertyDeviceUID]"
         )) continue;
 
         dataSize = 0;
         propertyAddress.mSelector = kAudioDevicePropertyStreams;
         
-        if (!CheckError(
+        if (!HugCheckError(
             AudioObjectGetPropertyDataSize(audioDevices[i], &propertyAddress, 0, NULL, &dataSize),
-            "AudioObjectGetPropertyDataSize[kAudioDevicePropertyStreamConfiguration]"
+            @"AudioDevice", @"AudioObjectGetPropertyDataSize[kAudioDevicePropertyStreamConfiguration]"
         )) continue;
         
         NSInteger streamCount = dataSize / sizeof(AudioStreamID);

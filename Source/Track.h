@@ -30,16 +30,6 @@ typedef NS_ENUM(NSInteger, TrackLabel) {
 };
 
 
-typedef NS_ENUM(NSInteger, TrackError) {
-    TrackErrorNone             = 0,
-
-    TrackErrorProtectedContent = HugAudioFileErrorProtectedContent,
-    TrackErrorConversionFailed = HugAudioFileErrorConversionFailed,
-    TrackErrorOpenFailed       = HugAudioFileErrorOpenFailed,
-    TrackErrorReadTooSlow      = HugAudioFileErrorReadTooSlow
-};
-
-
 @interface Track : NSObject
 
 + (void) clearPersistedState;
@@ -80,7 +70,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic) NSTimeInterval expectedDuration;
 
 @property (nonatomic) NSTimeInterval estimatedEndTime;
-@property (nonatomic) TrackError trackError;
+@property (nonatomic) NSError *error;
 
 @property (nonatomic) TrackLabel trackLabel;
 @property (nonatomic, getter=isDuplicate) BOOL duplicate;

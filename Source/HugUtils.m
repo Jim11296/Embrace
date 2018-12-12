@@ -98,3 +98,58 @@ void _HugLogMethod(const char *f)
     }
 }
 
+static OSStatus sGroupError = noErr;
+
+
+
+extern NSString *HugGetStringForFourCharCode(OSStatus fcc)
+{
+    char str[20] = {0};
+
+    *(UInt32 *)(str + 1) = CFSwapInt32HostToBig(*(UInt32 *)&fcc);
+
+    if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
+        str[0] = str[5] = '\'';
+        str[6] = '\0';
+    } else {
+        return [NSString stringWithFormat:@"%ld", (long)fcc];
+    }
+    
+    return [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
+}
+
+
+BOOL HugCheckError(OSStatus error, NSString *category, NSString *operation)
+{
+    if (error == noErr) {
+        return YES;
+    }
+
+    if (sGroupError != noErr) {
+        sGroupError = error;
+    }
+
+    if (sHugLogger) {
+        sHugLogger(category, [NSString stringWithFormat:@"Error: %@ (%@)",
+            operation,
+            HugGetStringForFourCharCode(error)
+        ]);
+    }
+
+    return NO;
+}
+
+
+BOOL HugCheckErrorGroup(void (^callback)())
+{
+    OSStatus previousGroupError = sGroupError;
+    callback();
+
+    BOOL result = (sGroupError == noErr);
+    
+    sGroupError = previousGroupError;
+    
+    return result;
+}
+
+

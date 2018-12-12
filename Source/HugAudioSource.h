@@ -8,30 +8,42 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, HugAudioSourceStatus) {
-    HugAudioSourceStatusPreparing,
-    HugAudioSourceStatusPlaying,
-    HugAudioSourceStatusFinished,
-    HugAudioSourceStatusError
+typedef NS_ENUM(NSInteger, HugPlaybackStatus) {
+    HugPlaybackStatusPreparing = 0,
+    HugPlaybackStatusWaiting,
+    HugPlaybackStatusPlaying,
+    HugPlaybackStatusFinished
 };
 
-typedef struct HugAudioSourceInfo {
-    HugAudioSourceStatus status;
+typedef struct HugPlaybackInfo {
+    HugPlaybackStatus status;
     NSTimeInterval timeElapsed;
     NSTimeInterval timeRemaining;
-} HugAudioSourceInfo;
+} HugPlaybackInfo;
 
 
-typedef AUAudioUnitStatus (^HugAudioSourcePullInputBlock)(
+typedef void (^HugAudioSourceInputBlock)(
     AUAudioFrameCount frameCount,
     AudioBufferList *inputData,
-    HugAudioSourceStatus *outInfo
+    HugPlaybackInfo *outInfo
 );
 
 
 @interface HugAudioSource : NSObject
 
-@property (nonatomic, readonly) HugAudioSourcePullInputBlock pullInputBlock;
+- (instancetype) initWithAudioFile: (HugAudioFile *) file
+                          settings: (NSDictionary *) settings;
+
+- (BOOL) prepareWithStartTime: (NSTimeInterval) startTime
+                     stopTime: (NSTimeInterval) stopTime
+                      padding: (NSTimeInterval) padding;
+
+@property (nonatomic, readonly) HugAudioFile *audioFile;
+@property (nonatomic, readonly) NSDictionary *settings;
+
+@property (nonatomic, readonly) NSError *error;
+
+@property (nonatomic, readonly) HugAudioSourceInputBlock inputBlock;
 
 @end
 

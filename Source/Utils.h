@@ -40,17 +40,11 @@ typedef NS_ENUM(NSInteger, Tonality) {
 extern "C" {
 #endif
 
-extern BOOL CheckError(OSStatus error, const char *operation);
-extern BOOL CheckErrorGroup(void (^block)());
-
 extern NSArray *GetAvailableAudioFileUTIs(void);
 extern BOOL IsAudioFileAtURL(NSURL *fileURL);
 
 extern BOOL LoadPanelState(NSSavePanel *panel, NSString *name);
 extern void SavePanelState(NSSavePanel *panel, NSString *name);
-
-extern NSString *GetStringForFourCharCode(OSStatus fcc);
-extern NSString *GetStringForFourCharCodeObject(id object);
 
 extern Tonality  GetTonalityForString(NSString *string);
 extern NSString *GetTraditionalStringForTonality(Tonality tonality);

@@ -355,36 +355,10 @@
 
 - (void) displayErrorForTrack:(Track *)track
 {
-    TrackError trackError = [track trackError];
-    if (!trackError) return;
+    NSError *error = [track error];
+    if (!error) return;
 
-    NSString *messageText     = @"";
-    NSString *informativeText = @"";
-    
-    if (trackError == TrackErrorConversionFailed) {
-        messageText = NSLocalizedString(@"The file cannot be read because it is in an unknown format.", nil);
-    
-    } else if (trackError == TrackErrorProtectedContent) {
-        messageText     = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
-        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes.\n\nIf this file was downloaded from Apple Music, you will need to first remove the download and then purchase it from the iTunes Store.", nil);
-
-    } else if (trackError == TrackErrorOpenFailed) {
-        messageText = NSLocalizedString(@"The file cannot be opened.", nil);
-    
-    } else {
-        messageText = NSLocalizedString(@"The file cannot be read.", nil);
-    }
-    
-    if (![messageText length]) {
-        return;
-    }
-    
-    NSAlert *alert = [[NSAlert alloc] init];
-    
-    [alert setMessageText:messageText];
-    [alert setInformativeText:informativeText];
-
-    [alert runModal];
+    [[NSAlert alertWithError:error] runModal];
 }
 
 

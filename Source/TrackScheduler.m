@@ -5,13 +5,15 @@
 #import "HugAudioFile.h"
 #import "Player.h"
 #import "HugProtectedBuffer.h"
+#import "HugError.h"
+#import "HugUtils.h"
 
 
+#if 0
 @interface TrackScheduler ()
-@property (atomic) NSInteger      totalFrames;
-@property (atomic) BOOL           shouldCancelRead;
-@property (atomic) OSStatus       rawError;
-@property (atomic) HugAudioFileError audioFileError;
+@property (atomic) NSInteger totalFrames;
+@property (atomic) BOOL      shouldCancelRead;
+@property (atomic) NSError  *error;
 @end
 
 
@@ -127,10 +129,10 @@ static OSStatus sInputCallback(
 {
     _audioFile = [[HugAudioFile alloc] initWithFileURL:[_track internalURL]];
 
-    if (![_audioFile prepare]) {
-        HugAudioFileError audioFileError = [_audioFile audioFileError];
-        EmbraceLog(@"TrackScheduler", @"%@, Could not open AudioFile. Error %ld", _track, audioFileError);
-        [self setAudioFileError:audioFileError];
+    if (![_audioFile open]) {
+        NSError *error = [_audioFile error];
+        EmbraceLog(@"TrackScheduler", @"%@, Could not open AudioFile. Error %@", _track, error);
+        [self setError:error];
         
         return NO;
     }
@@ -161,12 +163,9 @@ static OSStatus sInputCallback(
         EmbraceLog(@"TrackScheduler", @"%@ fileLengthFrames: %ld, totalFrames: %ld, startFrame: %ld, stopFrame: %ld", _track, (long)fileLengthFrames, (long)totalFrames, (long)startFrame, (long)stopFrame);
 
         if (startFrame) {
-            if (!CheckError(
-                [_audioFile seekToFrame:startFrame],
-                "[_audioFile seekToFrame:]"
-            )) {
+            if (![_audioFile seekToFrame:startFrame]) {
                 EmbraceLog(@"TrackScheduler", @"%@ seekToFrame failed for AudioFile", _track);
-                [self setAudioFileError:[_audioFile audioFileError]];
+                [self setError:[_audioFile error]];
             }
         }
         
@@ -229,10 +228,10 @@ static OSStatus sInputCallback(
     AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * bufferCount);
     fillBufferList->mNumberBuffers = (UInt32)bufferCount;
     
-    OSStatus err = noErr;
+    BOOL ok = YES;
     BOOL needsSignal = YES;
     
-    while (err == noErr) {
+    while (ok) {
         BOOL shouldCancel = [self shouldCancelRead];
         if (shouldCancel) break;
     
@@ -250,7 +249,7 @@ static OSStatus sInputCallback(
         }
 
         if (frameCount > 0) {
-            err = [_audioFile readFrames:&frameCount intoBufferList:fillBufferList];
+            ok = [_audioFile readFrames:&frameCount intoBufferList:fillBufferList];
         }
 
         // ExtAudioFileRead() is documented to return 0 when the end of the file is reached.
@@ -259,9 +258,8 @@ static OSStatus sInputCallback(
             break;
         }
 
-        if (err) {
-            [self setAudioFileError:[_audioFile audioFileError]];
-            [self setRawError:err];
+        if (!ok) {
+            [self setError:[_audioFile error]];
         }
    
         framesAvailable += frameCount;
@@ -338,7 +336,7 @@ static OSStatus sInputCallback(
 
 - (BOOL) startSchedulingWithAudioUnit:(AudioUnit)audioUnit paddingInSeconds:(NSTimeInterval)paddingInSeconds
 {
-    if ([self rawError] || [self audioFileError]) {
+    if ([self error]) {
         return NO;
     }
 
@@ -368,12 +366,12 @@ static OSStatus sInputCallback(
     int64_t fiveSecondsInNs = 5l * 1000 * 1000 * 1000;
     if (dispatch_semaphore_wait(primeSemaphore, dispatch_time(0, fiveSecondsInNs))) {
         EmbraceLog(@"TrackScheduler", @"dispatch_semaphore_wait() timed out for %@", _track);
-        [self setAudioFileError:HugAudioFileErrorReadTooSlow];
+        [self setError:[NSError errorWithDomain:HugErrorDomain code:HugErrorReadTooSlow userInfo:nil]];
     }
-
+    
     EmbraceLog(@"TrackScheduler", @"%@ primed!", _track);
     
-    if ([self rawError] || [self audioFileError]) {
+    if ([self error]) {
         [self setShouldCancelRead:YES];
         return NO;
     }
@@ -382,9 +380,9 @@ static OSStatus sInputCallback(
 
     AURenderCallbackStruct callback = { sInputCallback, _context };
 
-    return CheckError(
+    return HugCheckError(
         AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &callback, sizeof(callback)),
-        "AudioUnitSetProperty[ SetRenderCallback ]"
+        @"TrackScheduler", @"AudioUnitSetProperty[ SetRenderCallback ]"
     );
 }
 
@@ -395,11 +393,13 @@ static OSStatus sInputCallback(
 
     AURenderCallbackStruct callback  = { NULL, NULL };
 
-    CheckError(
+    HugCheckError(
         AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &callback, sizeof(callback)),
-        "AudioUnitSetProperty[ SetRenderCallback ]"
+        @"TrackScheduler", @"AudioUnitSetProperty[ SetRenderCallback ]"
     );
 }
 
 
 @end
+
+#endif

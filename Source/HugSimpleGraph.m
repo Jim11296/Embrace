@@ -29,7 +29,7 @@
             AUAudioUnitStatus status = previousBlock(actionFlags, timestamp, frameCount, inputBusNumber, inputData);
             if (status != noErr) return status;
         }
-
+        
         return inBlock(actionFlags, timestamp, frameCount, inputBusNumber, inputData);
     };
     

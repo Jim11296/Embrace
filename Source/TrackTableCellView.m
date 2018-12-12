@@ -316,6 +316,7 @@
         @"title",
         @"artist",
         @"playDuration",
+        @"error",
         @"estimatedEndTime",
         @"pausesAfterPlaying",
         @"ignoresAutoGap",
@@ -325,7 +326,6 @@
         @"grouping",
         @"beatsPerMinute",
         @"trackStatus",
-        @"trackError",
         @"trackLabel",
         @"duplicate"
     ];
@@ -435,7 +435,7 @@
     [self _adjustConstraintsForLineLayout];
 
     // Update constraints
-    if ([track trackError] != TrackErrorNone) {
+    if ([track error]) {
         [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
     } else {
         [NSLayoutConstraint deactivateConstraints:_errorButtonConstraints];
@@ -877,8 +877,8 @@
     NSTextField *line3Right  = [self lineThreeRightField];
     NSView      *errorButton = [self errorButton];
 
-    BOOL showError = [[self track] trackError] != TrackErrorNone;
-
+    BOOL showError = [[self track] error] != nil;
+    
     [line1Right  setHidden:showError];
     [line2Left   setHidden:(numberOfLines < 2)];
     [line2Right  setHidden:showError || (numberOfLines < 2)];
