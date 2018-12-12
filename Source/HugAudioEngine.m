@@ -22,7 +22,6 @@
 
 //!graph: Awkward
 #import "Player.h"
-#import "TrackScheduler.h"
 #import "MTSEscapePod.h"
 #import "Preferences.h"
 
@@ -44,13 +43,7 @@ static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theVa
 }
 
 
-static BOOL sCheckError(OSStatus err, NSString *operation)
-{
-    return HugCheckError(err, @"HugAudioEngine", operation);
-}
-
-
-enum {
+typedef NS_ENUM(NSInteger, PacketType) {
     PacketTypeUnknown = 0,
 
     // Transmitted via _statusRingBuffer
@@ -172,46 +165,38 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 }
 
 
-- (void) uninitializeAll
+- (instancetype) init
 {
-//    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
-//        sCheckError(AudioUnitUninitialize(unit), @"AudioUnitUninitialize");
-//    }];
-    
-    for (AUAudioUnit *unit in _effectAudioUnits) {
-        [unit deallocateRenderResources];
+    if ((self = [super init])) {
+        HugLogMethod();
+
+        AudioComponentDescription outputCD = {
+            kAudioUnitType_Output,
+            kAudioUnitSubType_HALOutput,
+            kAudioUnitManufacturer_Apple,
+            kAudioComponentFlag_SandboxSafe,
+            0
+        };
+
+        AudioComponent outputComponent = AudioComponentFindNext(NULL, &outputCD);
+
+        HugCheckError(
+            AudioComponentInstanceNew(outputComponent, &_outputAudioUnit),
+            @"HugAudioEngine", @"AudioComponentInstanceNew[ Output ]"
+        );
+
+        _stereoField      = HugStereoFieldCreate();
+        _preGainRamper    = HugLinearRamperCreate();
+        _volumeRamper     = HugLinearRamperCreate();
+        _leftLevelMeter   = HugLevelMeterCreate();
+        _rightLevelMeter  = HugLevelMeterCreate();
+        _emergencyLimiter = HugLimiterCreate();
+        
+        _statusRingBuffer = HugRingBufferCreate(8196);
+        _errorRingBuffer  = HugRingBufferCreate(8196);
     }
-}
 
-
-- (void) buildTail
-{
-    HugLogMethod();
-
-    AudioComponentDescription outputCD = {
-        kAudioUnitType_Output,
-        kAudioUnitSubType_HALOutput,
-        kAudioUnitManufacturer_Apple,
-        kAudioComponentFlag_SandboxSafe,
-        0
-    };
-
-    AudioComponent outputComponent = AudioComponentFindNext(NULL, &outputCD);
-
-    sCheckError( AudioComponentInstanceNew(outputComponent, &_outputAudioUnit), @"AudioComponentInstanceNew[ Output ]" );
-
-    _stereoField      = HugStereoFieldCreate();
-    _preGainRamper    = HugLinearRamperCreate();
-    _volumeRamper     = HugLinearRamperCreate();
-    _leftLevelMeter   = HugLevelMeterCreate();
-    _rightLevelMeter  = HugLevelMeterCreate();
-    _emergencyLimiter = HugLimiterCreate();
-    
-    _statusRingBuffer = HugRingBufferCreate(8196);
-    _errorRingBuffer  = HugRingBufferCreate(8196);
-
-    [self updateVolume:0];
-    [self updateStereoBalance:0];
+    return self;
 }
 
 
@@ -221,7 +206,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     HugAudioSourceInputBlock inputBlock = [source inputBlock];
 
-    if ([self isRunning]) {
+    if ([self _isRunning]) {
         _renderUserInfo.nextInputBlock = inputBlock;
         sMemoryBarrier();
 
@@ -235,7 +220,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
                 break;
             }
         
-            if (![self isRunning]) return;
+            if (![self _isRunning]) return;
 
             if (loopGuard >= 1000) {
                 HugLog(@"HugAudioEngine", @"_sendAudioSourceToRenderThread timed out");
@@ -257,7 +242,92 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 }
 
 
-- (void) reconnectGraph
+- (BOOL) _isRunning
+{
+    if (!_outputAudioUnit) return NO;
+
+    Boolean isRunning = false;
+    UInt32 size = sizeof(isRunning);
+
+    HugCheckError(
+        AudioUnitGetProperty(_outputAudioUnit, kAudioOutputUnitProperty_IsRunning, kAudioUnitScope_Global, 0, &isRunning, &size),
+        @"HugAudioEngine", @"AudioUnitGetProperty[ Output, IsRunning ]"
+    );
+    
+    return isRunning ? YES : NO;
+}
+
+
+- (void) _readRingBuffers
+{
+    uint64_t current = HugGetCurrentHostTime();
+
+    // Process status
+    while (1) {
+        PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_statusRingBuffer, sizeof(PacketDataUnknown));
+        if (!unknown) break;
+        
+        if (unknown->timestamp >= current) {
+            break;
+        }
+        
+        if (unknown->type == PacketTypePlayback) {
+            PacketDataPlayback packet;
+            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataPlayback))) return;
+
+            _playbackStatus = packet.info.status;
+            _timeElapsed    = packet.info.timeElapsed;
+            _timeRemaining  = packet.info.timeRemaining;
+
+        } else if (unknown->type == PacketTypeMeter) {
+            PacketDataMeter packet;
+            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataMeter))) return;
+            
+            _leftMeterData  = [[HugMeterData alloc] initWithStruct:packet.leftMeterData];
+            _rightMeterData = [[HugMeterData alloc] initWithStruct:packet.rightMeterData];
+
+        } else if (unknown->type == PacketTypeDanger) {
+            PacketDataDanger packet;
+            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataDanger))) return;
+            
+            uint64_t renderTime = packet.renderTime;
+
+            double outputSampleRate = [[_outputSettings objectForKey:HugAudioSettingSampleRate] doubleValue];
+            
+            double callbackDuration = packet.frameCount / outputSampleRate;
+            double elapsedDuration  = HugGetSecondsWithHostTime(renderTime);
+            
+            _dangerLevel = elapsedDuration / callbackDuration;
+
+        } else {
+            NSAssert(NO, @"Unknown packet type: %ld", (long)unknown->type);
+        }
+    }
+    
+    // Process error buffer
+    while (1) {
+        PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_errorRingBuffer, sizeof(PacketDataUnknown));
+        if (!unknown) return;
+
+        if (unknown->type == PacketTypeOverload) {
+            PacketDataUnknown packet;
+            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
+
+            _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
+
+            HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected");
+           
+        } else if (unknown->type == PacketTypeStatusBufferFull) {
+            PacketDataUnknown packet;
+            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
+
+            HugLog(@"HugAudioEngine", @"_statusRingBuffer is full");
+        }
+    }
+}
+
+
+- (void) _reconnectGraph
 {
     HugLogMethod();
 
@@ -443,22 +513,26 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 }
 
 
+- (void) _reallyStop
+{
+    HugCheckError(
+        AudioOutputUnitStop(_outputAudioUnit),
+        @"HugAudioEngine", @"AudioOutputUnitStop"
+    );
+}
+
+
+#pragma mark - Public Methods
+
 - (BOOL) configureWithDeviceID:(AudioDeviceID)deviceID settings:(NSDictionary *)settings
 {
-    __block BOOL ok = YES;
-
-    void (^checkError)(OSStatus, NSString *, NSString *) = ^(OSStatus error, NSString *formatString, NSString *unitString) {
-        if (ok) {
-
-            if (!sCheckError(error, [NSString stringWithFormat:formatString, unitString])) {
-                ok = NO;
-            }
-        }
-    };
-
     // Listen for kAudioDeviceProcessorOverload
     {
-        AudioObjectPropertyAddress overloadAddress = { kAudioDeviceProcessorOverload, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+        AudioObjectPropertyAddress overloadAddress = {
+            kAudioDeviceProcessorOverload,
+            kAudioObjectPropertyScopeGlobal,
+            kAudioObjectPropertyElementMaster
+        };
 
         if (_outputDeviceID) {
             AudioObjectRemovePropertyListener(_outputDeviceID, &overloadAddress, sHandleAudioDeviceOverload, (void *)_errorRingBuffer);
@@ -476,82 +550,46 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     AURenderCallbackStruct renderCallback = { &sOutputUnitRenderCallback, &_graphRenderBlock };
 
-    checkError(AudioUnitSetProperty(_outputAudioUnit,
+    BOOL ok = YES;
+
+    ok = ok && HugCheckError(AudioUnitSetProperty(_outputAudioUnit,
         kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0,
         &frames,
         sizeof(frames)
-    ), @"AudioUnitSetProperty[ Output, kAudioDevicePropertyBufferFrameSize]", nil);
+    ), @"HugAudioEngine", @"AudioUnitSetProperty[ Output, kAudioDevicePropertyBufferFrameSize]");
     
-    checkError(AudioUnitSetProperty(_outputAudioUnit,
+    ok = ok && HugCheckError(AudioUnitSetProperty(_outputAudioUnit,
         kAudioOutputUnitProperty_CurrentDevice,
         kAudioUnitScope_Global,
         0,
         &deviceID, sizeof(deviceID)
-    ), @"AudioUnitSetProperty[ Output, CurrentDevice]", nil);
+    ), @"HugAudioEngine", @"AudioUnitSetProperty[ Output, CurrentDevice]");
 
-    checkError(AudioUnitGetProperty(_outputAudioUnit,
+    ok = ok && HugCheckError(AudioUnitGetProperty(_outputAudioUnit,
         kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
         &frames, &framesSize
-    ), @"AudioUnitGetProperty[ Output, MaximumFramesPerSlice ]", nil);
+    ), @"HugAudioEngine", @"AudioUnitGetProperty[ Output, MaximumFramesPerSlice ]");
 
-    checkError(AudioUnitSetProperty(_outputAudioUnit,
+    ok = ok && HugCheckError(AudioUnitSetProperty(_outputAudioUnit,
         kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0,
         &sampleRate, sizeof(sampleRate)
-    ), @"AudioUnitSetProperty[ Output, SampleRate, Input ]", nil);
+    ), @"HugAudioEngine", @"AudioUnitSetProperty[ Output, SampleRate, Input ]");
 
-    checkError(AudioUnitSetProperty(_outputAudioUnit,
+    ok = ok && HugCheckError(AudioUnitSetProperty(_outputAudioUnit,
         kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Global, 0,
         &renderCallback,
         sizeof(renderCallback)
-    ), @"AudioUnitSetProperty[ Output, kAudioDevicePropertyBufferFrameSize]", nil);
+    ), @"HugAudioEngine", @"AudioUnitSetProperty[ Output, SetRenderCallback ]");
 
     _outputDeviceID = deviceID;
     _outputSettings = settings;
 
     HugLog(@"HugAudioEngine", @"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)framesSize);
 
-    checkError(AudioUnitInitialize(_outputAudioUnit), @"AudioUnitInitialize[ Output ]", nil);
-    
-/*
-    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
-        Float64 inputSampleRate  = sampleRate;
-        Float64 outputSampleRate = sampleRate;
-
-//        if (unit == _inputAudioUnit) {
-//            inputSampleRate = 0;
-
-        if (unit == _outputAudioUnit) {
-            outputSampleRate = 0;
-        }
-        
-        if (inputSampleRate) {
-            checkError(AudioUnitSetProperty(
-                unit,
-                kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0,
-                &inputSampleRate, sizeof(inputSampleRate)
-            ), @"AudioUnitSetProperty[ %@, SampleRate, Input ]", unitString);
-        }
-
-        if (outputSampleRate) {
-            checkError(AudioUnitSetProperty(
-                unit,
-                kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0,
-                &outputSampleRate, sizeof(outputSampleRate)
-            ), @"AudioUnitSetProperty[ %@, SampleRate, Output ]", unitString);
-        }
-
-        checkError(AudioUnitSetProperty(
-            unit,
-            kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-            &frames, framesSize
-        ), @"AudioUnitSetProperty[ %@, MaximumFramesPerSlice ]", unitString);
-
-        checkError(AudioUnitInitialize(
-            unit
-        ), @"AudioUnitInitialize[ %@ ]", unitString);
-    }];
-    */
-
+    ok = ok && HugCheckError(
+        AudioUnitInitialize(_outputAudioUnit),
+        @"HugAudioEngine", @"AudioUnitInitialize[ Output ]"
+    );
 
     HugLevelMeterSetSampleRate(_leftLevelMeter, sampleRate);
     HugLevelMeterSetSampleRate(_rightLevelMeter, sampleRate);
@@ -565,6 +603,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     HugLevelMeterSetMaxFrameCount(_leftLevelMeter, meterFrame);
     HugLevelMeterSetMaxFrameCount(_rightLevelMeter, meterFrame);
 
+    [self _reconnectGraph];
+
     return ok;
 }
 
@@ -574,6 +614,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
               stopTime: (NSTimeInterval) stopTime
                padding: (NSTimeInterval) padding
 {
+    HugLogMethod();
+
     // Stop first, this should clear the playing HugAudioSource and
     // release the large HugProtectedBuffer objects for the current track.
     //
@@ -589,35 +631,23 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     [self _sendAudioSourceToRenderThread:source];
 
     EmbraceLog(@"Player", @"setup complete, starting graph");
-    [self start];
     
-    return YES;
-}
-
-
-#pragma mark - Update Methods
-
-- (void) _reallyStop
-{
-    sCheckError(AudioOutputUnitStop(_outputAudioUnit), @"AudioOutputUnitStop");
-}
-
-
-- (void) start
-{
-    HugLogMethod();
-
-    if (![self isRunning]) {
-        sCheckError(AudioOutputUnitStart(_outputAudioUnit), @"AudioOutputUnitStart");
+    if (![self _isRunning]) {
+        HugCheckError(
+            AudioOutputUnitStart(_outputAudioUnit),
+            @"HugAudioEngine", @"AudioOutputUnitStart"
+        );
     }
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyStop) object:nil];
+
+    return YES;
 }
 
 
 - (void) stop
 {
-    if ([self isRunning]) {
+    if ([self _isRunning]) {
         [self _sendAudioSourceToRenderThread:nil];
         [self performSelector:@selector(_reallyStop) withObject:nil afterDelay:30];
     }
@@ -656,96 +686,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 {
     if (_effectAudioUnits != effectAudioUnits || ![_effectAudioUnits isEqual:effectAudioUnits]) {
         _effectAudioUnits = effectAudioUnits;
-        [self reconnectGraph];
-    }
-}
-
-
-#pragma mark - Properties
-
-- (BOOL) isRunning
-{
-    if (!_outputAudioUnit) return NO;
-
-    Boolean isRunning = false;
-    UInt32 size = sizeof(isRunning);
-    sCheckError(
-        AudioUnitGetProperty(_outputAudioUnit, kAudioOutputUnitProperty_IsRunning, kAudioUnitScope_Global, 0, &isRunning, &size),
-        @"sIsOutputUnitRunning"
-    );
-    
-    return isRunning ? YES : NO;
-}
-
-
-- (void) _readRingBuffers
-{
-    uint64_t current = HugGetCurrentHostTime();
-
-    // Process status
-    while (1) {
-        PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_statusRingBuffer, sizeof(PacketDataUnknown));
-        if (!unknown) break;
-        
-        if (unknown->timestamp >= current) {
-            break;
-        }
-        
-        if (unknown->type == PacketTypePlayback) {
-            PacketDataPlayback packet;
-            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataPlayback))) return;
-
-            _playbackStatus = packet.info.status;
-            _timeElapsed    = packet.info.timeElapsed;
-            _timeRemaining  = packet.info.timeRemaining;
-
-        } else if (unknown->type == PacketTypeMeter) {
-            PacketDataMeter packet;
-            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataMeter))) return;
-            
-            _leftMeterData  = [[HugMeterData alloc] initWithStruct:packet.leftMeterData];
-            _rightMeterData = [[HugMeterData alloc] initWithStruct:packet.rightMeterData];
-
-        } else if (unknown->type == PacketTypeDanger) {
-            PacketDataDanger packet;
-            if (!HugRingBufferRead(_statusRingBuffer, &packet, sizeof(PacketDataDanger))) return;
-            
-            uint64_t renderTime = packet.renderTime;
-
-            double outputSampleRate = [[_outputSettings objectForKey:HugAudioSettingSampleRate] doubleValue];
-            
-            double callbackDuration = packet.frameCount / outputSampleRate;
-            double elapsedDuration  = HugGetSecondsWithHostTime(renderTime);
-            
-            _dangerLevel = elapsedDuration / callbackDuration;
-
-        } else {
-            NSAssert(NO, @"Unknown packet type: %ld", (long)unknown->type);
-        }
-    }
-    
-    // Process error buffer
-    while (1) {
-        PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_errorRingBuffer, sizeof(PacketDataUnknown));
-        if (!unknown) return;
-
-        if (unknown->type == PacketTypeOverload) {
-            PacketDataUnknown packet;
-            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
-
-            _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
-
-            HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected");
-           
-        } else if (unknown->type == PacketTypeStatusBufferFull) {
-            PacketDataUnknown packet;
-            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
-
-            HugLog(@"HugAudioEngine", @"_statusRingBuffer is full");
-            
-        } else if (unknown->type == PacketTypeErrorMessage) {
-        
-        }
+        [self _reconnectGraph];
     }
 }
 

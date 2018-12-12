@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#define HugAuto __auto_type
+
 extern UInt64 HugGetCurrentHostTime(void);
 
 extern NSTimeInterval HugGetSecondsWithHostTime(UInt64 hostTime);
