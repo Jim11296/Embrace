@@ -39,6 +39,7 @@ struct HugLevelMeter {
     UInt8  _averageEnabled;
 
     float *_scratch;
+    size_t _scratchSize;
 
     double _averageLevel;
     double _peakLevel;
@@ -74,6 +75,25 @@ void HugLevelMeterFree(HugLevelMeter *meter)
 }
 
 
+#pragma mark - Private Methods
+
+static void sRemakeScratch(HugLevelMeter *self)
+{
+    size_t scratchSize = 0;
+    if (self->_averageEnabled && self->_maxFrameCount) {
+        scratchSize = sizeof(float) * self->_maxFrameCount;
+    }
+
+    if (scratchSize != self->_scratchSize) {
+        free(self->_scratch);
+        self->_scratch = scratchSize ? malloc(scratchSize) : NULL;
+        self->_scratchSize = scratchSize;
+    }
+
+    HugLevelMeterReset(self);
+}
+
+
 #pragma mark - Public Methods
 
 void HugLevelMeterReset(HugLevelMeter *self)
@@ -86,14 +106,6 @@ void HugLevelMeterReset(HugLevelMeter *self)
         self->_heldCount = self->_sampleRate * 0.8;
     } else {
         self->_heldCount = 0;
-    }
-    
-
-    free(self->_scratch);
-    self->_scratch = NULL;
-
-    if (self->_averageEnabled && self->_maxFrameCount) {
-        self->_scratch = malloc(sizeof(float) * self->_maxFrameCount);
     }
 }
 
@@ -164,7 +176,7 @@ extern void HugLevelMeterProcess(HugLevelMeter *self, float *buffer, size_t fram
 void HugLevelMeterSetSampleRate(HugLevelMeter *self, double sampleRate)
 {
     self->_sampleRate = sampleRate;
-    HugLevelMeterReset(self);
+    sRemakeScratch(self);
 }
 
 
@@ -177,7 +189,7 @@ double HugLevelMeterGetSampleRate(const HugLevelMeter *self)
 void HugLevelMeterSetMaxFrameCount(HugLevelMeter *self, size_t maxFrameCount)
 {
     self->_maxFrameCount = maxFrameCount;
-    HugLevelMeterReset(self);
+    sRemakeScratch(self);
 }
 
 
@@ -190,7 +202,7 @@ size_t HugLevelMeterGetMaxFrameCount(const HugLevelMeter *self)
 void HugLevelMeterSetAverageEnabled(HugLevelMeter *self, UInt8 averageEnabled)
 {
     self->_averageEnabled = averageEnabled;
-    HugLevelMeterReset(self);
+    sRemakeScratch(self);
 }
 
 

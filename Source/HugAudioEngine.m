@@ -21,26 +21,10 @@
 #import "HugAudioSettings.h"
 #import "HugAudioSource.h"
 
+#include <stdatomic.h>
 
 extern volatile mach_port_t _HugCrashPadIgnoredThread;
 extern volatile BOOL _HugCrashPadEnabled;
-
-static void sMemoryBarrier()
-{
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    OSMemoryBarrier();
-    #pragma clang diagnostic pop
-}
-
-
-static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theValue)
-{
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    OSAtomicIncrement64Barrier(theValue);
-    #pragma clang diagnostic pop
-}
 
 
 typedef NS_ENUM(NSInteger, PacketType) {
@@ -90,18 +74,15 @@ typedef struct {
 } PacketErrorMessage;
 
 typedef struct {
-    volatile SInt64 inputID;
-    volatile HugAudioSourceInputBlock inputBlock;
+    _Atomic HugAudioSourceInputBlock inputBlock;
+    _Atomic HugAudioSourceInputBlock nextInputBlock;
 
-    volatile SInt64 nextInputID;
-    volatile HugAudioSourceInputBlock nextInputBlock;
+    volatile float stereoWidth;
+    volatile float stereoBalance;
+    volatile float volume;
+    volatile float preGain;
 
-    volatile float     stereoWidth;
-    volatile float     stereoBalance;
-    volatile float     volume;
-    volatile float     preGain;
-
-    volatile UInt64    renderStart;
+    volatile UInt64 renderStart;
 } RenderUserInfo;
 
 
@@ -137,6 +118,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     RenderUserInfo _renderUserInfo;
 
     HugAudioSource *_currentSource;
+    HugAudioSourceInputBlock _currentInputBlock;
     AudioUnit _outputAudioUnit;
 
     HugSimpleGraph *_graph;
@@ -206,19 +188,25 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 {
     HugLog(@"HugAudioEngine", @"Sending %@ to render thread", source);
 
-    HugAudioSourceInputBlock inputBlock = [source inputBlock];
+    HugAudioSourceInputBlock blockToCall = [source inputBlock];
+    
+    // Make a copy of blockToCall. This will change the object pointer
+    // and reset the track even if source is the same as _currentSource
+    //
+    HugAudioSourceInputBlock blockToSend = blockToCall ? [^(
+        AUAudioFrameCount frameCount,
+        AudioBufferList *inputData,
+        HugPlaybackInfo *outInfo
+    ) {
+        return blockToCall(frameCount, inputData, outInfo);
+    } copy] : nil;
 
     if ([self _isRunning]) {
-        _renderUserInfo.nextInputBlock = inputBlock;
-        sMemoryBarrier();
-
-        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+        atomic_store(&_renderUserInfo.nextInputBlock, blockToSend);
 
         NSInteger loopGuard = 0;
         while (1) {
-            sMemoryBarrier();
-
-            if (_renderUserInfo.inputID == _renderUserInfo.nextInputID) {
+            if (blockToSend == atomic_load(&_renderUserInfo.inputBlock)) {
                 break;
             }
         
@@ -232,15 +220,14 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             usleep(1000);
             loopGuard++;
         }
-    } else {
-        _renderUserInfo.inputBlock = nil;
-        _renderUserInfo.nextInputBlock = inputBlock;
-        sMemoryBarrier();
 
-        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
+    } else {
+        atomic_store(&_renderUserInfo.inputBlock,     nil);
+        atomic_store(&_renderUserInfo.nextInputBlock, blockToSend);
     }
     
     _currentSource = source;
+    _currentInputBlock = blockToSend;
 }
 
 
@@ -363,10 +350,12 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     ) {
         userInfo->renderStart = HugGetCurrentHostTime();
 
-        HugAudioSourceInputBlock inputBlock = userInfo->inputBlock;
+        HugAudioSourceInputBlock inputBlock     = atomic_load(&userInfo->inputBlock);
+        HugAudioSourceInputBlock nextInputBlock = atomic_load(&userInfo->nextInputBlock);
+        
         HugPlaybackInfo info = {0};
         
-        BOOL willChangeUnits = (userInfo->nextInputID != userInfo->inputID);
+        BOOL willChangeUnits = (nextInputBlock != inputBlock);
 
         float *leftData  = ioData->mNumberBuffers > 0 ? ioData->mBuffers[0].mData : NULL;
         float *rightData = ioData->mNumberBuffers > 1 ? ioData->mBuffers[1].mData : NULL;
@@ -395,15 +384,11 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         }
 
         if (willChangeUnits) {
-            userInfo->inputBlock = userInfo->nextInputBlock;
-            
             HugLinearRamperReset(preGainRamper, userInfo->preGain);
             HugLinearRamperReset(volumeRamper,  userInfo->volume);
             HugStereoFieldReset(stereoField, userInfo->stereoBalance, userInfo->stereoWidth);
 
-            sMemoryBarrier();
-
-            userInfo->inputID = userInfo->nextInputID;
+            atomic_store(&userInfo->inputBlock, nextInputBlock);
         }
 
         if (timestamp->mFlags & kAudioTimeStampHostTimeValid) {
@@ -425,7 +410,9 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         for (AUAudioUnit *unit in _effectAudioUnits) {
             NSError *error = nil;
 
-            if (![unit renderResourcesAllocated]) {
+            if (![unit renderResourcesAllocated] || ([unit maximumFramesToRender] != frameSize)) {
+                [unit deallocateRenderResources];
+                
                 [unit setMaximumFramesToRender:frameSize];
 
                 AUAudioUnitBus *inputBus  = [[unit inputBusses]  objectAtIndexedSubscript:0];
@@ -438,7 +425,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
                 [inputBus setEnabled:YES];
                 [outputBus setEnabled:YES];
             }
-            
+           
             if (error) {
                 NSLog(@"%@", error);
             } else  {
@@ -454,7 +441,9 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         NSInteger inputBusNumber,
         AudioBufferList *ioData
     ) {
-        uint64_t currentTime = HugGetCurrentHostTime();
+        uint64_t currentTime = (timestamp->mFlags & kAudioTimeStampHostTimeValid) ?
+            timestamp->mHostTime :
+            HugGetCurrentHostTime();
         
         size_t meterFrameCount = HugLevelMeterGetMaxFrameCount(_leftLevelMeter);
         
@@ -471,7 +460,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             NSInteger framesToProcess = MIN(framesRemaining, meterFrameCount);
 
             PacketDataMeter packet = {0};
-            packet.timestamp = currentTime;
+            packet.timestamp = currentTime + HugGetHostTimeWithSeconds(offset / sampleRate);
             packet.type = PacketTypeMeter;
 
             if (leftData) {
@@ -647,7 +636,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     [self _sendAudioSourceToRenderThread:source];
 
     HugLog(@"HugAudioEngine", @"setup complete, starting output");
-    
+
     if (![self _isRunning]) {
         HugCheckError(
             AudioOutputUnitStart(_outputAudioUnit),
@@ -669,6 +658,14 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         [self _sendAudioSourceToRenderThread:nil];
         [self performSelector:@selector(_reallyStop) withObject:nil afterDelay:30];
     }
+    
+    // Clear meter data
+    _leftMeterData = _rightMeterData = nil;
+    _dangerLevel = 0;
+    HugRingBufferConfirmReadAll(_statusRingBuffer);
+
+    HugLevelMeterReset(_leftLevelMeter);
+    HugLevelMeterReset(_rightLevelMeter);
   
     for (AUAudioUnit *unit in _effectAudioUnits) {
         [unit reset];
