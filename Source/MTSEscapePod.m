@@ -21,8 +21,8 @@
 #endif
 
 static NSString *sTelemetryName = @"MTSEscapePod";
-static mach_port_t sIgnoredThread = 0;
 static MTSEscapePodSignalCallback sSignalCallback = NULL;
+static MTSEscapePodIgnoredThreadProvider sIgnoredThreadProvider = NULL;
 
 #define MAX_FILE_SIZE (1024 * 256)
 #define MAX_NUMBER_OF_FRAMES 128
@@ -426,11 +426,13 @@ static void HandleSignal(int signal, siginfo_t *siginfo, void *uapAsVoid)
             threadCount = 0;
         }
 
+        mach_port_t ignoredThread = sIgnoredThreadProvider ? sIgnoredThreadProvider() : 0;
+
         for (mach_msg_type_number_t i = 0; i < threadCount; i++) {
             thread_t thread = threads[i];
             BOOL isSelf = (MACH_PORT_INDEX(thread) == MACH_PORT_INDEX(threadSelf));
 
-            if (!isSelf && (threads[i] != sIgnoredThread)) {
+            if (!isSelf && (ignoredThread != threads[i])) {
                 if (thread_suspend(threads[i]) != KERN_SUCCESS) {
                     continue;
                 }
@@ -865,14 +867,14 @@ MTSEscapePodSignalCallback MTSEscapePodGetSignalCallback(void)
 }
 
 
-void MTSEscapePodSetIgnoredThread(mach_port_t thread)
+void MTSEscapePodSetIgnoredThreadProvider(MTSEscapePodIgnoredThreadProvider provider)
 {
-    sIgnoredThread = thread;
+    sIgnoredThreadProvider = provider;
 }
 
 
-mach_port_t MTSEscapePodGetIgnoredThread(void)
+MTSEscapePodIgnoredThreadProvider MTSEscapePodGetIgnoredThreadProvider()
 {
-    return sIgnoredThread;
+    return sIgnoredThreadProvider;
 }
 

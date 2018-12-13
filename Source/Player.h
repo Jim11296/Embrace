@@ -23,11 +23,6 @@ typedef NS_ENUM(NSInteger, PlayerInterruptionReason) {
     PlayerInterruptionReasonHoggedByOtherProcess
 };
 
-typedef NS_ENUM(NSInteger, PlayerHogStyle) {
-    PlayerHogStyleNone,
-    PlayerHogStyleTakeExclusiveAccess,
-    PlayerHogStyleTakeExclusiveAccessAndResetVolume
-};
 
 extern volatile NSInteger PlayerShouldUseCrashPad;
 

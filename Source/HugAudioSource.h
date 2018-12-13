@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class HugAudioSource;
+
 typedef NS_ENUM(NSInteger, HugPlaybackStatus) {
     HugPlaybackStatusPreparing = 0,
     HugPlaybackStatusWaiting,
@@ -22,21 +24,26 @@ typedef struct HugPlaybackInfo {
 } HugPlaybackInfo;
 
 
-typedef void (^HugAudioSourceInputBlock)(
+typedef OSStatus (^HugAudioSourceInputBlock)(
     AUAudioFrameCount frameCount,
     AudioBufferList *inputData,
     HugPlaybackInfo *outInfo
 );
 
+typedef void (^HugAudioSourceCompletionHandler)(HugAudioSource *source);
 
 @interface HugAudioSource : NSObject
 
 - (instancetype) initWithAudioFile: (HugAudioFile *) file
                           settings: (NSDictionary *) settings;
 
+// Primes the audio buffer. If this returns YES, completionHandler will be invoked
+// after the buffer is completely prepared
+//
 - (BOOL) prepareWithStartTime: (NSTimeInterval) startTime
                      stopTime: (NSTimeInterval) stopTime
-                      padding: (NSTimeInterval) padding;
+                      padding: (NSTimeInterval) padding
+            completionHandler: (HugAudioSourceCompletionHandler) completionHandler;
 
 @property (nonatomic, readonly) HugAudioFile *audioFile;
 @property (nonatomic, readonly) NSDictionary *settings;
