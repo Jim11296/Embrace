@@ -2,6 +2,7 @@
 
 
 typedef void (*MTSEscapePodSignalCallback)(int signal, siginfo_t *info, ucontext_t *uap);
+typedef mach_port_t (*MTSEscapePodIgnoredThreadProvider)(void);
 
 // Telemetry name must be set prior to MTSEscapePodInstall
 extern void MTSEscapePodSetTelemetryName(NSString *telemetryName);
@@ -14,6 +15,6 @@ extern void MTSEscapePodSetCustomString(UInt8 zeroToThree, NSString *string);
 extern void MTSEscapePodSetSignalCallback(MTSEscapePodSignalCallback callback);
 extern MTSEscapePodSignalCallback MTSEscapePodGetSignalCallback(void);
 
-extern void MTSEscapePodSetIgnoredThread(mach_port_t thread);
-extern mach_port_t MTSEscapePodGetIgnoredThread(void);
+extern void MTSEscapePodSetIgnoredThreadProvider(MTSEscapePodIgnoredThreadProvider provider);
+extern MTSEscapePodIgnoredThreadProvider MTSEscapePodGetIgnoredThreadProvider(void);
 

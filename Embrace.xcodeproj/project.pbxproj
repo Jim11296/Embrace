@@ -73,6 +73,7 @@
 		555953FA21BBCEB20032EE54 /* HugError.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F921BBCEB20032EE54 /* HugError.m */; };
 		555953FB21BBD9040032EE54 /* HugError.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F921BBCEB20032EE54 /* HugError.m */; };
 		555953FE21BBEA7D0032EE54 /* HugAudioSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953FD21BBEA7D0032EE54 /* HugAudioSettings.m */; };
+		5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5559540021C0C1FC0032EE54 /* HugCrashPad.m */; };
 		555A701B1890BCBF00305EC6 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 555A701A1890BCBF00305EC6 /* Application.m */; };
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
 		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
@@ -93,7 +94,6 @@
 		556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */; };
 		556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */; };
 		556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */; };
-		55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CC118B97ADB0059110C /* CrashPadClient.m */; };
 		55717BF5187EA65400213213 /* SetlistButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* SetlistButton.m */; };
 		55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* SetlistSlider.m */; };
 		5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SetlistProgressBar.m */; };
@@ -322,6 +322,8 @@
 		555953F921BBCEB20032EE54 /* HugError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugError.m; path = Source/HugError.m; sourceTree = "<group>"; };
 		555953FC21BBEA7D0032EE54 /* HugAudioSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugAudioSettings.h; path = Source/HugAudioSettings.h; sourceTree = "<group>"; };
 		555953FD21BBEA7D0032EE54 /* HugAudioSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugAudioSettings.m; path = Source/HugAudioSettings.m; sourceTree = "<group>"; };
+		555953FF21C0C1FC0032EE54 /* HugCrashPad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugCrashPad.h; path = Source/HugCrashPad.h; sourceTree = "<group>"; };
+		5559540021C0C1FC0032EE54 /* HugCrashPad.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugCrashPad.m; path = Source/HugCrashPad.m; sourceTree = "<group>"; };
 		5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CrashPad-Info.plist"; path = "Resources/CrashPad-Info.plist"; sourceTree = SOURCE_ROOT; };
 		5559E61218DFD42500D61019 /* Crash Pad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Crash Pad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		555A70191890BCBF00305EC6 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = Source/Application.h; sourceTree = SOURCE_ROOT; };
@@ -355,8 +357,6 @@
 		556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Profile.xcconfig; path = Config/Combined/Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
-		55708CC018B97ADB0059110C /* CrashPadClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashPadClient.h; path = Source/CrashPadClient.h; sourceTree = SOURCE_ROOT; };
-		55708CC118B97ADB0059110C /* CrashPadClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPadClient.m; path = Source/CrashPadClient.m; sourceTree = SOURCE_ROOT; };
 		55717BF3187EA65400213213 /* SetlistButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistButton.h; path = Source/SetlistButton.h; sourceTree = SOURCE_ROOT; };
 		55717BF4187EA65400213213 /* SetlistButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistButton.m; path = Source/SetlistButton.m; sourceTree = SOURCE_ROOT; };
 		55717BF6187EAB8C00213213 /* SetlistSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistSlider.h; path = Source/SetlistSlider.h; sourceTree = SOURCE_ROOT; };
@@ -621,6 +621,8 @@
 				555953FD21BBEA7D0032EE54 /* HugAudioSettings.m */,
 				555953F321B8B6FB0032EE54 /* HugAudioSource.h */,
 				555953F421B8B6FB0032EE54 /* HugAudioSource.m */,
+				555953FF21C0C1FC0032EE54 /* HugCrashPad.h */,
+				5559540021C0C1FC0032EE54 /* HugCrashPad.m */,
 				555953F821BBCEB20032EE54 /* HugError.h */,
 				555953F921BBCEB20032EE54 /* HugError.m */,
 				55C24E1318D7D7800057D45E /* HugFastUtils.h */,
@@ -670,8 +672,6 @@
 			isa = PBXGroup;
 			children = (
 				5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */,
-				55708CC018B97ADB0059110C /* CrashPadClient.h */,
-				55708CC118B97ADB0059110C /* CrashPadClient.m */,
 				55708CB618B8AA220059110C /* CrashPad_main.m */,
 			);
 			name = "Crash Pad";
@@ -1372,6 +1372,7 @@
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
 				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
+				5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
 				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,
 				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
@@ -1398,7 +1399,6 @@
 				55F7ABF518B1A18C006B6FBB /* HugLimiter.m in Sources */,
 				557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */,
 				550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */,
-				55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */,
 				55ADE93518815EA8008DC245 /* SetlistPlayBar.m in Sources */,
 				554FCB9D1DFCF0E900DE697E /* MaskView.m in Sources */,
 				5555F5501B4D19220092A8C2 /* HugProtectedBuffer.m in Sources */,

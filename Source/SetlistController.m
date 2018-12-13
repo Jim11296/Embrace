@@ -1141,7 +1141,7 @@ static NSInteger sAutoGapMaximum = 16;
     NSTimeInterval timeElapsed   = [player timeElapsed];
     NSTimeInterval timeRemaining = [player timeRemaining];
 
-    Float32 dangerPeak        = [player dangerPeak];
+    Float32        dangerPeak       = [player dangerPeak];
     NSTimeInterval lastOverloadTime = [player lastOverloadTime];
     
     NSTimeInterval duration = timeElapsed + timeRemaining;

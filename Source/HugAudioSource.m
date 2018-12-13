@@ -6,7 +6,7 @@
 #import "HugProtectedBuffer.h"
 #import "HugError.h"
 #import "HugUtils.h"
-
+#import "HugAudioSettings.h"
 
 typedef struct {
     NSInteger frameIndex;
@@ -16,10 +16,65 @@ typedef struct {
 } RenderContext;
 
 
+static OSStatus sRenderCallback(
+    void *inRefCon,
+    AudioUnitRenderActionFlags *ioActionFlags,
+    const AudioTimeStamp *inTimeStamp,
+    UInt32 inBusNumber,
+    UInt32 frameCount,
+    AudioBufferList *ioData)
+{
+    RenderContext *context = (RenderContext *)inRefCon;
+
+    NSInteger offset = 0;
+
+    // Zero pad if needed
+    if (context->frameIndex < 0) {
+        NSInteger padCount     = -context->frameIndex;
+        NSInteger framesToCopy = MIN(frameCount, padCount);
+    
+        for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
+            memset(ioData->mBuffers[b].mData, 0, sizeof(float) * framesToCopy);
+        }
+
+        offset = framesToCopy;
+        context->frameIndex += framesToCopy;
+    }
+
+    // Copy track data
+    {
+        NSUInteger framesToCopy = MIN(frameCount - offset, context->totalFrames - context->frameIndex);
+        
+        for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
+            float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
+            float *outSamples = (float *)ioData->mBuffers[b].mData;
+            
+            inSamples  += context->frameIndex;
+            outSamples += offset;
+
+            memcpy(outSamples, inSamples, sizeof(float) * framesToCopy);
+            
+            NSInteger remaining = framesToCopy - frameCount;
+            if (remaining > 0) {
+                memset(&outSamples[remaining], 0, sizeof(float) * remaining);
+            }
+        }
+
+        context->frameIndex += framesToCopy;
+    }
+
+    return noErr;
+}
+
+
+
 @implementation HugAudioSource {
     HugAudioFile *_audioFile;
+    AudioUnit _converterUnit;
     RenderContext *_context;
     NSArray<HugProtectedBuffer *> *_protectedBuffers;
+    
+    HugAudioSourceCompletionHandler _completionHandler;
 }
 
 
@@ -36,6 +91,11 @@ typedef struct {
 
 - (void) dealloc
 {
+    if (_converterUnit) {
+        AudioComponentInstanceDispose(_converterUnit);
+        _converterUnit = NULL;
+    }
+
     [_audioFile close];
 
     if (_context) {
@@ -149,6 +209,10 @@ typedef struct {
             [protectedBuffer lock];
         }
     }
+    
+    if (_completionHandler) {
+        _completionHandler(self);
+    }
 }
 
 
@@ -171,10 +235,6 @@ typedef struct {
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-
-//!graph: 
-//        PlayerShouldUseCrashPad = 0;
-
         NSInteger framesRemaining = totalFrames;
         NSInteger bytesRemaining = framesRemaining * bytesPerFrame;
 
@@ -228,9 +288,6 @@ typedef struct {
             bytesRemaining  -= frameCount * bytesPerFrame;
         }
 
-//!graph: 
-//        PlayerShouldUseCrashPad = 1;
-
         if (needsSignal) {
             dispatch_semaphore_signal(primeSemaphore);
         }
@@ -263,11 +320,90 @@ typedef struct {
 }
 
 
+- (BOOL) _makeConverter
+{
+    AudioStreamBasicDescription inputFormat = [_audioFile format];
+
+    double outputSampleRate = [[_settings objectForKey:HugAudioSettingSampleRate] doubleValue];
+    UInt32 frameSize        = [[_settings objectForKey:HugAudioSettingFrameSize] unsignedIntValue];
+    BOOL   usesBestSRC      = [[_settings objectForKey:HugAudioSettingUseHighestQualityRateConverters] boolValue];
+
+    if (inputFormat.mSampleRate == outputSampleRate) return YES;
+
+    AudioComponentDescription converterCD = {0};
+    converterCD.componentType = kAudioUnitType_FormatConverter;
+    converterCD.componentSubType = kAudioUnitSubType_AUConverter;
+    converterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
+    converterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
+
+    AudioUnit converterUnit = NULL;
+
+    AudioComponent converterComponent = AudioComponentFindNext(NULL, &converterCD);
+    BOOL ok = HugCheckError(
+        AudioComponentInstanceNew(converterComponent, &converterUnit),
+        @"HugAudioSource", @"AudioComponentInstanceNew[ Converter ]"
+    );
+
+    HugAuto setPropertyUInt32 = ^(AudioUnitPropertyID propertyID, AudioUnitScope scope, UInt32 value) {
+        return HugCheckError(
+            AudioUnitSetProperty(converterUnit, propertyID, scope, 0, &value, sizeof(value)),
+            @"HugAudioSource", @"AudioUnitSetProperty[ Converter ] (UInt32)"
+        );
+    };
+
+    HugAuto setPropertyFloat64 = ^(AudioUnitPropertyID propertyID, AudioUnitScope scope, Float64 value) {
+        return HugCheckError(
+            AudioUnitSetProperty(converterUnit, propertyID, scope, 0, &value, sizeof(value)),
+            @"HugAudioSource", @"AudioUnitSetProperty[ Converter ] (Float64)"
+        );
+    };
+
+    HugAuto setPropertyStream = ^(AudioUnitPropertyID propertyID, AudioUnitScope scope, AudioStreamBasicDescription *value) {
+        return HugCheckError(
+            AudioUnitSetProperty(converterUnit, propertyID, scope, 0, value, sizeof(*value)),
+            @"HugAudioSource", @"AudioUnitSetProperty[ Converter ] (ASBD)"
+        );
+    };
+
+    UInt32 complexity = usesBestSRC ?
+        kAudioUnitSampleRateConverterComplexity_Mastering :
+        kAudioUnitSampleRateConverterComplexity_Normal;
+
+    AudioStreamBasicDescription outputFormat = inputFormat;
+    outputFormat.mSampleRate = outputSampleRate;
+
+    _converterUnit = converterUnit;
+
+    AURenderCallbackStruct renderCallback = { &sRenderCallback, _context };
+
+    return ok &&
+        setPropertyUInt32(kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity) &&
+        setPropertyUInt32(kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, frameSize) &&
+
+        setPropertyFloat64(kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  inputFormat.mSampleRate) &&
+        setPropertyFloat64(kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, outputSampleRate) &&
+
+        setPropertyStream(kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &inputFormat) &&
+        setPropertyStream(kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputFormat) &&
+        
+        HugCheckError(
+            AudioUnitInitialize(converterUnit),
+            @"HugAudioSource", @"AudioUnitInitialize[ Converter ]"
+        ) &&
+        
+        HugCheckError(
+            AudioUnitSetProperty(converterUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &renderCallback, sizeof(renderCallback)),
+            @"HugAudioSource", @"AudioUnitSetProperty[ Converter, SetRenderCallback ]"
+        );
+}
+
+
 #pragma mark - Public Methods
 
 - (BOOL) prepareWithStartTime: (NSTimeInterval) startTime
                      stopTime: (NSTimeInterval) stopTime
                       padding: (NSTimeInterval) padding
+            completionHandler: (void (^)(HugAudioSource *)) completionHandler
 {
     if (![self _makeContextWithStartTime:startTime stopTime:stopTime padding:padding]) {
         return NO;
@@ -277,50 +413,30 @@ typedef struct {
         return NO;
     }
     
+    if (![self _makeConverter]) {
+        return NO;
+    }
+    
     RenderContext *context = _context;
+    AudioUnit converterUnit = _converterUnit;
 
     _inputBlock = [^(
         AUAudioFrameCount frameCount,
         AudioBufferList *ioData,
         HugPlaybackInfo *outInfo
     ) {
-        NSInteger offset = 0;
+        OSStatus result = noErr;
 
-        // Zero pad if needed
-        if (context->frameIndex < 0) {
-            NSInteger padCount     = -context->frameIndex;
-            NSInteger framesToCopy = MIN(frameCount, padCount);
+        if (!converterUnit) {
+            sRenderCallback(context, 0, NULL, 0, frameCount, ioData);
+
+        } else {
+            AudioTimeStamp timeStamp = {0};
+            AudioUnitRenderActionFlags flags = 0;
         
-            for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
-                memset(ioData->mBuffers[b].mData, 0, sizeof(float) * framesToCopy);
-            }
-
-            offset = framesToCopy;
-            context->frameIndex += framesToCopy;
+            result = AudioUnitRender(converterUnit, &flags, &timeStamp, 0, frameCount, ioData);
         }
 
-        // Copy track data
-        {
-            NSUInteger framesToCopy = MIN(frameCount - offset, context->totalFrames - context->frameIndex);
-            
-            for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
-                float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
-                float *outSamples = (float *)ioData->mBuffers[b].mData;
-                
-                inSamples  += context->frameIndex;
-                outSamples += offset;
-
-                memcpy(outSamples, inSamples, sizeof(float) * framesToCopy);
-                
-                NSInteger remaining = framesToCopy - frameCount;
-                if (remaining > 0) {
-                    memset(&outSamples[remaining], 0, sizeof(float) * remaining);
-                }
-            }
-
-            context->frameIndex += framesToCopy;
-        }
-        
         if (outInfo) {
             double sampleRate  = context->sampleRate;
 
@@ -340,7 +456,12 @@ typedef struct {
                 outInfo->timeRemaining = (context->totalFrames - context->frameIndex) / sampleRate;
             }
         }
+
+        return result;
+
     } copy];
+    
+    _completionHandler = completionHandler;
 
     return YES;
 }

@@ -8,6 +8,7 @@
 
 #import "HugAudioEngine.h"
 
+#import "HugCrashPad.h"
 #import "HugLimiter.h"
 #import "HugLinearRamper.h"
 #import "HugStereoField.h"
@@ -20,10 +21,9 @@
 #import "HugAudioSettings.h"
 #import "HugAudioSource.h"
 
-//!graph: Awkward
-#import "Player.h"
-#import "MTSEscapePod.h"
-#import "Preferences.h"
+
+extern volatile mach_port_t _HugCrashPadIgnoredThread;
+extern volatile BOOL _HugCrashPadEnabled;
 
 static void sMemoryBarrier()
 {
@@ -113,6 +113,8 @@ static OSStatus sOutputUnitRenderCallback(
     UInt32 inNumberFrames,
     AudioBufferList *ioData)
 {
+    _HugCrashPadIgnoredThread = mach_thread_self();
+
     __unsafe_unretained AURenderPullInputBlock block = (__bridge __unsafe_unretained AURenderPullInputBlock) *(void **)inRefCon;
     OSStatus err = block(ioActionFlags, inTimeStamp, inNumberFrames, 0, ioData);
 
@@ -453,8 +455,6 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         AudioBufferList *ioData
     ) {
         uint64_t currentTime = HugGetCurrentHostTime();
-
-        MTSEscapePodSetIgnoredThread(mach_thread_self());
         
         size_t meterFrameCount = HugLevelMeterGetMaxFrameCount(_leftLevelMeter);
         
@@ -521,6 +521,17 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     );
 }
 
+
+- (void) _handleDidPrepareSource:(HugAudioSource *)source
+{
+    if (source == _currentSource) {
+        if ([source error]) {
+            [self stop];
+        } else {
+            _HugCrashPadEnabled = YES;
+        }
+    }
+}
 
 #pragma mark - Public Methods
 
@@ -623,14 +634,19 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     HugAudioSource *source = [[HugAudioSource alloc] initWithAudioFile:file settings:_outputSettings];
     
-    if (![source prepareWithStartTime:startTime stopTime:stopTime padding:padding]) {
+    HugAuto weakSelf = self;
+    BOOL didPrepare = [source prepareWithStartTime:startTime stopTime:stopTime padding:padding completionHandler:^(HugAudioSource *inSource) {
+        [weakSelf _handleDidPrepareSource:inSource];
+    }];
+
+    if (!didPrepare) {
         HugLog(@"HugAudioEngine", @"Couldn't prepare %@", source);
         return NO;
     }
     
     [self _sendAudioSourceToRenderThread:source];
 
-    EmbraceLog(@"Player", @"setup complete, starting graph");
+    HugLog(@"HugAudioEngine", @"setup complete, starting output");
     
     if (![self _isRunning]) {
         HugCheckError(
@@ -647,11 +663,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
 - (void) stop
 {
+    _HugCrashPadEnabled = NO;
+
     if ([self _isRunning]) {
         [self _sendAudioSourceToRenderThread:nil];
         [self performSelector:@selector(_reallyStop) withObject:nil afterDelay:30];
     }
-    
+  
     for (AUAudioUnit *unit in _effectAudioUnits) {
         [unit reset];
     }

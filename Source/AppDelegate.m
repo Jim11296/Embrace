@@ -17,7 +17,6 @@
 #import "Player.h"
 #import "Effect.h"
 #import "Track.h"
-#import "CrashPadClient.h"
 
 #import "IssueManager.h"
 #import "iTunesManager.h"
@@ -26,6 +25,7 @@
 
 #import "WorkerService.h"
 
+#import "HugCrashPad.h"
 #import "CrashReportSender.h"
 #import "MTSEscapePod.h"
 #import "MTSTelemetry.h"
@@ -137,8 +137,19 @@
 
     MTSTelemetryRegisterURL(escapePodTelemetryName, [NSURL URLWithString:@"<redacted>"]);
 
-    if (!CrashPadIsDebuggerAttached()) {
-        SetupCrashPad();
+    if (!HugCrashPadIsDebuggerAttached()) {
+        NSString *helperPath = [[NSBundle mainBundle] sharedSupportPath];
+        
+        helperPath = [helperPath stringByAppendingPathComponent:@"Crash Pad.app"];
+        helperPath = [helperPath stringByAppendingPathComponent:@"Contents"];
+        helperPath = [helperPath stringByAppendingPathComponent:@"MacOS"];
+        helperPath = [helperPath stringByAppendingPathComponent:@"Crash Pad"];
+    
+        HugCrashPadSetHelperPath(helperPath);
+
+        MTSEscapePodSetIgnoredThreadProvider(HugCrashPadGetIgnoredThread);
+        MTSEscapePodSetSignalCallback(HugCrashPadSignalHandler);
+
         MTSEscapePodInstall();
         MTSTelemetrySend(MTSEscapePodGetTelemetryName(), NO);
     }

@@ -29,9 +29,6 @@ static NSString * const sStereoBalanceKey = @"stereo-balance";
 
 static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
-volatile NSInteger PlayerShouldUseCrashPad = 0;
-
-
 
 @interface Player ()
 @property (nonatomic, strong) Track *currentTrack;
@@ -584,12 +581,8 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 {
     EmbraceLogMethod();
     
-    PlayerShouldUseCrashPad = 0;
-
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
-
-//    [_engine from_Player_setupAndStartPlayback_1];
 
     if ([track isResolvingURLs]) {
         EmbraceLog(@"Player", @"%@ isn't ready due to URL resolution", track);
@@ -628,8 +621,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
     [self _sendDistributedNotification];
 }
-
-
 
 
 #pragma mark - Public Methods
