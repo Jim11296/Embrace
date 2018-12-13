@@ -9,6 +9,5 @@
 
 @property (nonatomic, readonly) AURenderPullInputBlock renderBlock;
 
-
 @end
 

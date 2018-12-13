@@ -106,7 +106,7 @@
     leftLimiterFrame.size.width = rightLimiterFrame.size.width = 4;
     leftLimiterFrame.origin.x   = rightLimiterFrame.origin.x = CGRectGetMaxX(leftChannelFrame) + 1;
    
-    void (^layoutPeak)(NSView *, NSRect, float) = ^(NSView *peakDot, NSRect channelFrame, float level) {
+    void (^layoutHeldDot)(NSView *, NSRect, float) = ^(NSView *peakDot, NSRect channelFrame, float level) {
         float power = cbrt(level);
         
         CGFloat peakX = power * (channelFrame.size.width - 2);
@@ -137,8 +137,8 @@
     [_leftLimiterDot  setFrame:leftLimiterFrame];
     [_rightLimiterDot setFrame:rightLimiterFrame];
 
-    layoutPeak(_leftHeldDot,  leftChannelFrame,  [_leftMeterData heldLevel]);
-    layoutPeak(_rightHeldDot, rightChannelFrame, [_rightMeterData heldLevel]);
+    layoutHeldDot(_leftHeldDot,  leftChannelFrame,  [_leftMeterData heldLevel]);
+    layoutHeldDot(_rightHeldDot, rightChannelFrame, [_rightMeterData heldLevel]);
 }
 
 
@@ -193,6 +193,8 @@
 
         [_leftLimiterDot  setOn:NO];
         [_rightLimiterDot setOn:NO];
+
+        [self setNeedsLayout:YES];
     }
 }
 
