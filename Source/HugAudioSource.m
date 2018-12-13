@@ -12,6 +12,7 @@ typedef struct {
     NSInteger frameIndex;
     NSInteger totalFrames;
     double sampleRate;
+    NSInteger bufferCount;
     AudioBufferList *bufferList;
 } RenderContext;
 
@@ -28,12 +29,14 @@ static OSStatus sRenderCallback(
 
     NSInteger offset = 0;
 
+    NSInteger bufferCount = MIN(context->bufferCount, ioData->mNumberBuffers);
+
     // Zero pad if needed
     if (context->frameIndex < 0) {
         NSInteger padCount     = -context->frameIndex;
         NSInteger framesToCopy = MIN(frameCount, padCount);
     
-        for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
+        for (NSInteger b = 0; b < bufferCount; b++) {
             memset(ioData->mBuffers[b].mData, 0, sizeof(float) * framesToCopy);
         }
 
@@ -45,7 +48,7 @@ static OSStatus sRenderCallback(
     {
         NSUInteger framesToCopy = MIN(frameCount - offset, context->totalFrames - context->frameIndex);
         
-        for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
+        for (NSInteger b = 0; b < bufferCount; b++) {
             float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
             float *outSamples = (float *)ioData->mBuffers[b].mData;
             
@@ -189,6 +192,7 @@ static OSStatus sRenderCallback(
         _context->sampleRate = format.mSampleRate;
         _context->frameIndex = format.mSampleRate * -padding;
         _context->totalFrames = (UInt32)totalFrames;
+        _context->bufferCount = bufferCount;
         _context->bufferList = list;
 
         _protectedBuffers = protectedBuffers;
@@ -416,7 +420,7 @@ static OSStatus sRenderCallback(
     if (![self _makeConverter]) {
         return NO;
     }
-    
+
     RenderContext *context = _context;
     AudioUnit converterUnit = _converterUnit;
 
@@ -435,6 +439,11 @@ static OSStatus sRenderCallback(
             AudioUnitRenderActionFlags flags = 0;
         
             result = AudioUnitRender(converterUnit, &flags, &timeStamp, 0, frameCount, ioData);
+        }
+        
+        // If the input file has less channels than our output device, duplicate
+        for (NSInteger b = context->bufferCount; b < ioData->mNumberBuffers; b++) {
+            memcpy(ioData->mBuffers[b].mData, ioData->mBuffers[0].mData, frameCount * sizeof(float));
         }
 
         if (outInfo) {
