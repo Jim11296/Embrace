@@ -10,9 +10,4 @@
 
 EXTERN void RaiseException(void);
 
-EXTERN void PrintStreamBasicDescription(AudioStreamBasicDescription asbd);
-EXTERN NSString *GetStreamBasicDescriptionString(AudioStreamBasicDescription asbd);
-
-EXTERN AudioStreamBasicDescription GetPCMStreamBasicDescription(double inSampleRate, UInt32 inNumChannels, BOOL interleaved);
-
 #undef EXTERN

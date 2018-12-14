@@ -2,7 +2,7 @@
 
 #import "WrappedAudioDevice.h"
 #import "CAHALAudioDevice.h"
-#import "CAHALAudioSystemObject.h"
+#import "CAException.h"
 #import "Utils.h"
 #import "HugUtils.h"
 
@@ -28,7 +28,7 @@ static NSDictionary *sGetStateDictionaryForDevice(CAHALAudioDevice *device, NSAr
     NSMutableDictionary *outPans    = [dictionary objectForKey:sPansKey];
     
     try {
-        channels = device->GetTotalNumberChannels(false);
+        channels = device->GetTotalNumberChannels();
     } catch (...) { }
 
     if (!channels) return nil;
@@ -36,10 +36,8 @@ static NSDictionary *sGetStateDictionaryForDevice(CAHALAudioDevice *device, NSAr
     for (UInt32 i = 0; i < (channels + 1); i++) {
         if (outVolumes) {
             try {
-                if (device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
-                    device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
-                    Float32 outVolume = device->GetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i);
+                if (device->HasSettableVolumeControl(i)) {
+                    Float32 outVolume = device->GetVolumeControlScalarValue(i);
                     [outVolumes setObject:@(outVolume) forKey:@(i)];
                 }
             } catch (...) { }
@@ -47,10 +45,8 @@ static NSDictionary *sGetStateDictionaryForDevice(CAHALAudioDevice *device, NSAr
 
         if (outMutes) {
             try {
-                if (device->HasMuteControl(kAudioDevicePropertyScopeOutput, i) &&
-                    device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
-                    bool outMute = device->GetMuteControlValue(kAudioDevicePropertyScopeOutput, i);
+                if (device->HasSettableMuteControl(i)) {
+                    bool outMute = device->GetMuteControlValue(i);
                     [outMutes setObject:@(outMute) forKey:@(i)];
                 }
             } catch (...) { }
@@ -58,10 +54,8 @@ static NSDictionary *sGetStateDictionaryForDevice(CAHALAudioDevice *device, NSAr
 
         if (outPans) {
             try {
-                if (device->HasStereoPanControl(kAudioDevicePropertyScopeOutput, i) &&
-                    device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
-                    Float32 outPan = device->GetMuteControlValue(kAudioDevicePropertyScopeOutput, i);
+                if (device->HasSettableStereoPanControl(i)) {
+                    Float32 outPan = device->GetStereoPanControlValue(i);
                     [outPans setObject:@(outPan) forKey:@(i)];
                 }
             } catch (...) { }
@@ -77,7 +71,7 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
     UInt32 channels = 0;
     
     try {
-        channels = device->GetTotalNumberChannels(false);
+        channels = device->GetTotalNumberChannels();
     } catch (...) { }
 
     if (!channels) return;
@@ -87,13 +81,11 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
             NSDictionary *inVolumes = [dictionary objectForKey:sVolumesKey];
 
             try {
-                if (device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
-                    device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
+                if (device->HasSettableVolumeControl(i)) {
                     NSNumber *number = [inVolumes objectForKey:@(i)];
                     if (!number) number = [defaults objectForKey:sVolumesKey];
                     
-                    device->SetVolumeControlScalarValue(kAudioDevicePropertyScopeOutput, i, [number floatValue]);
+                    device->SetVolumeControlScalarValue(i, [number floatValue]);
                 }
             } catch (...) { }
         }
@@ -102,13 +94,11 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
             NSDictionary *inMutes = [dictionary objectForKey:sMutesKey];
 
             try {
-                if (device->HasMuteControl(kAudioDevicePropertyScopeOutput, i) &&
-                    device->MuteControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
+                if (device->HasSettableMuteControl(i)) {
                     NSNumber *number = [inMutes objectForKey:@(i)];
                     if (!number) number = [defaults objectForKey:sMutesKey];
                     
-                    device->SetMuteControlValue(kAudioDevicePropertyScopeOutput, i, [number boolValue]);
+                    device->SetMuteControlValue(i, [number boolValue]);
                 }
             } catch (...) { }
         }
@@ -117,13 +107,11 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
             NSDictionary *inPans = [dictionary objectForKey:sPansKey];
 
             try {
-                if (device->HasStereoPanControl(kAudioDevicePropertyScopeOutput, i) &&
-                    device->StereoPanControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
+                if (device->HasSettableStereoPanControl(i)) {
                     NSNumber *number = [inPans objectForKey:@(i)];
                     if (!number) number = [defaults objectForKey:sPansKey];
 
-                    device->SetStereoPanControlValue(kAudioDevicePropertyScopeOutput, i, [number floatValue]);
+                    device->SetStereoPanControlValue(i, [number floatValue]);
                 }
             } catch (...) { }
         }
@@ -317,15 +305,13 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
     UInt32 channels = 0;
 
     try {
-        channels = _device->GetTotalNumberChannels(false);
+        channels = _device->GetTotalNumberChannels();
     } catch (...) { }
 
     if (channels) {
         for (UInt32 i = 0; i < (channels + 1); i++) {
             try {
-                if (_device->HasVolumeControl(kAudioDevicePropertyScopeOutput, i) &&
-                    _device->VolumeControlIsSettable(kAudioDevicePropertyScopeOutput, i))
-                {
+                if (_device->HasSettableVolumeControl(i)) {
                     return YES;
                 }
             } catch (...) { }
@@ -350,8 +336,6 @@ static void sReleaseHogMode(CAHALAudioDevice *device, NSDictionary *prehoggedSta
             } else if (owner == -1) {
                 NSArray *keysToFetch = resetsVolume ? @[ sVolumesKey, sMutesKey, sPansKey ] : @[ sMutesKey ];
 
-                CAHALAudioSystemObject systemObject = CAHALAudioSystemObject();
-                
                 state = sGetStateDictionaryForDevice(_device, keysToFetch);
                 didHog = (BOOL)_device->TakeHogMode();
 
