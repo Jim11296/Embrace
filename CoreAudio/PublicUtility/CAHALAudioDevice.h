@@ -47,21 +47,35 @@
 #if !defined(__CAHALAudioDevice_h__)
 #define __CAHALAudioDevice_h__
 
-//==================================================================================================
-//	Includes
-//==================================================================================================
 
-//	Super Class Includes
-#include "CAHALAudioObject.h"
+//    This is a macro that does a sizeof and casts the result to a UInt32. This is useful for all the
+//    places where -wshorten64-32 catches assigning a sizeof expression to a UInt32.
+//    For want of a better place to park this, we'll park it here.
+#define    SizeOf32(X)    ((UInt32)sizeof(X))
 
-//==================================================================================================
-//	CAHALAudioDevice
-//==================================================================================================
+//    This is a macro that does a offsetof and casts the result to a UInt32. This is useful for all the
+//    places where -wshorten64-32 catches assigning an offsetof expression to a UInt32.
+//    For want of a better place to park this, we'll park it here.
+#define    OffsetOf32(X, Y)    ((UInt32)offsetof(X, Y))
+
+//    This macro casts the expression to a UInt32. It is called out specially to allow us to track casts
+//    that have been added purely to avert -wshorten64-32 warnings on 64 bit platforms.
+//    For want of a better place to park this, we'll park it here.
+#define    ToUInt32(X)    ((UInt32)(X))
+
+//    System Includes
+#if !defined(__COREAUDIO_USE_FLAT_INCLUDES__)
+    #include <CoreAudio/CoreAudio.h>
+    #include <CoreFoundation/CoreFoundation.h>
+#else
+    #include <CoreAudio.h>
+    #include <CoreFoundation.h>
+#endif
 
 class CAHALAudioDevice
-:
-	public	CAHALAudioObject
 {
+private:
+    AudioObjectID                mObjectID;
 
 //	Construction/Destruction
 public:
@@ -71,47 +85,24 @@ public:
 
 //	General Stuff
 public:
-	CFStringRef			CopyDeviceUID() const;
+    AudioObjectID                GetObjectID() const;
+    CFStringRef                    CopyName() const;
+    CFStringRef                    CopyManufacturer() const;
+
 	bool				HasModelUID() const;
 	CFStringRef			CopyModelUID() const;
-	CFStringRef			CopyConfigurationApplicationBundleID() const;
-	CFURLRef			CopyIconLocation() const;
 	UInt32				GetTransportType() const;
-	bool				CanBeDefaultDevice(bool inIsInput, bool inIsSystem) const;
-	bool				HasDevicePlugInStatus() const;
-	OSStatus			GetDevicePlugInStatus() const;
-	bool				IsAlive() const;
-	bool				IsHidden() const;
 	pid_t				GetHogModeOwner() const;
 	bool				IsHogModeSettable() const;
 	bool				TakeHogMode();
 	void				ReleaseHogMode();
-	bool				HasPreferredStereoChannels(bool inIsInput) const;
-	void				GetPreferredStereoChannels(bool inIsInput, UInt32& outLeft, UInt32& outRight) const;
-	void				SetPreferredStereoChannels(bool inIsInput, UInt32 inLeft, UInt32 inRight);
-	bool				HasPreferredChannelLayout(bool inIsInput) const;
-	void				GetPreferredChannelLayout(bool inIsInput, AudioChannelLayout& outChannelLayout) const;
-	void				SetPreferredStereoChannels(bool inIsInput, AudioChannelLayout& inChannelLayout);
-	UInt32				GetNumberRelatedAudioDevices() const;
-	void				GetRelatedAudioDevices(UInt32& ioNumberRelatedDevices, AudioObjectID* outRelatedDevices) const;
-	AudioObjectID		GetRelatedAudioDeviceByIndex(UInt32 inIndex) const;
 
 //	Stream Stuff
 public:
-	UInt32				GetNumberStreams(bool inIsInput) const;
-	void				GetStreams(bool inIsInput, UInt32& ioNumberStreams, AudioObjectID* outStreamList) const;
-	AudioObjectID		GetStreamByIndex(bool inIsInput, UInt32 inIndex) const;
-	UInt32				GetTotalNumberChannels(bool inIsInput) const;
+	UInt32				GetTotalNumberChannels() const;
 	
 //	IO Stuff
 public:
-	bool				IsRunning() const;
-	bool				IsRunningSomewhere() const;
-	UInt32				GetLatency(bool inIsInput) const;
-	UInt32				GetSafetyOffset(bool inIsInput) const;
-	bool				HasClockDomain() const;
-	UInt32				GetClockDomain() const;
-	Float64				GetActualSampleRate() const;
 	Float64				GetNominalSampleRate() const;
 	void				SetNominalSampleRate(Float64 inSampleRate);
 	UInt32				GetNumberAvailableNominalSampleRateRanges() const;
@@ -121,27 +112,36 @@ public:
 	bool				IsIOBufferSizeSettable() const;
 	UInt32				GetIOBufferSize() const;
 	void				SetIOBufferSize(UInt32 inBufferSize);
-	bool				UsesVariableIOBufferSizes() const;
-	UInt32				GetMaximumVariableIOBufferSize() const;
 	bool				HasIOBufferSizeRange() const;
 	void				GetIOBufferSizeRange(UInt32& outMinimum, UInt32& outMaximum) const;
 
 //	Controls
 public:
-	bool				HasVolumeControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				VolumeControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-    Float32             GetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetVolumeControlScalarValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
+	bool				HasSettableVolumeControl(UInt32 inChannel) const;
+    Float32             GetVolumeControlScalarValue(UInt32 inChannel) const;
+	void				SetVolumeControlScalarValue(UInt32 inChannel, Float32 inValue);
 
-	bool				HasMuteControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				MuteControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-    bool                GetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetMuteControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, bool inValue);
+	bool				HasSettableMuteControl(UInt32 inChannel) const;
+    bool                GetMuteControlValue(UInt32 inChannel) const;
+	void				SetMuteControlValue(UInt32 inChannel, bool inValue);
 
-	bool				HasStereoPanControl(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	bool				StereoPanControlIsSettable(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-    Float32             GetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel) const;
-	void				SetStereoPanControlValue(AudioObjectPropertyScope inScope, UInt32 inChannel, Float32 inValue);
+	bool				HasSettableStereoPanControl(UInt32 inChannel) const;
+    Float32             GetStereoPanControlValue(UInt32 inChannel) const;
+	void				SetStereoPanControlValue(UInt32 inChannel, Float32 inValue);
+
+private:
+    bool   HasProperty(const AudioObjectPropertyAddress& inAddress) const;
+    bool   IsPropertySettable(const AudioObjectPropertyAddress& inAddress) const;
+    UInt32 GetPropertyDataSize(const AudioObjectPropertyAddress& inAddress) const;
+    
+    void   GetPropertyData(const AudioObjectPropertyAddress& inAddress, UInt32& ioDataSize, void* outData) const;
+    void   SetPropertyData(const AudioObjectPropertyAddress& inAddress, UInt32 inDataSize, const void* inData);
+    
+    UInt32 GetPropertyData_UInt32(const AudioObjectPropertyAddress& inAddress) const                                        { UInt32 theAnswer = 0; UInt32 theDataSize = SizeOf32(UInt32); GetPropertyData(inAddress, theDataSize, &theAnswer); return theAnswer; }
+
+    CFStringRef GetPropertyData_CFString(const AudioObjectPropertyAddress& inAddress) const                                        { CFStringRef theAnswer = NULL; UInt32 theDataSize = SizeOf32(CFStringRef); GetPropertyData(inAddress, theDataSize, &theAnswer); return theAnswer; }
+
+
 };
 
 #endif

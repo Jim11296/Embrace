@@ -76,8 +76,4 @@ protected:
 	OSStatus		mError;
 };
 
-#define	CATry								try{
-#define CACatch								} catch(...) {}
-#define	CASwallowException(inExpression)	try { inExpression; } catch(...) {}
-
 #endif

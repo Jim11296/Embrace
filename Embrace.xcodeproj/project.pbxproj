@@ -104,11 +104,6 @@
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
 		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
 		557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */; };
-		557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */; };
-		557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */; };
-		557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */; };
-		557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */; };
-		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
 		557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C43991D615CDC000184D8 /* TipArrowFloater.m */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
@@ -279,7 +274,6 @@
 		551CE71921B3CE9500D422E4 /* HugLinearRamper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLinearRamper.m; path = Source/HugLinearRamper.m; sourceTree = "<group>"; };
 		551CE71B21B3E24400D422E4 /* HugStereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugStereoField.h; path = Source/HugStereoField.h; sourceTree = "<group>"; };
 		551CE71C21B3E24400D422E4 /* HugStereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugStereoField.m; path = Source/HugStereoField.m; sourceTree = "<group>"; };
-		55224BE318A7880D00407B46 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = CoreAudio/PublicUtility/CAAutoDisposer.h; sourceTree = "<group>"; };
 		55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedAudioDevice.mm; path = Source/WrappedAudioDevice.mm; sourceTree = "<group>"; };
 		55224BE518A788DA00407B46 /* WrappedAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedAudioDevice.h; path = Source/WrappedAudioDevice.h; sourceTree = "<group>"; };
 		552C9DC118836D2D0041C160 /* AudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioDevice.h; path = Source/AudioDevice.h; sourceTree = "<group>"; };
@@ -368,26 +362,12 @@
 		557ABAB51B68D48C006F69D9 /* TrackLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackLabelView.m; path = Source/TrackLabelView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
-		557C2C591897403E002FAFEA /* CABitOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABitOperations.h; path = CoreAudio/PublicUtility/CABitOperations.h; sourceTree = "<group>"; };
-		557C2C5F1897403E002FAFEA /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = CoreAudio/PublicUtility/CAByteOrder.h; sourceTree = "<group>"; };
 		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Trial.xcconfig; path = Config/Trial.xcconfig; sourceTree = SOURCE_ROOT; };
 		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
 		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
 		557C2C771897403E002FAFEA /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = CoreAudio/PublicUtility/CAException.h; sourceTree = "<group>"; };
 		557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioDevice.cpp; path = CoreAudio/PublicUtility/CAHALAudioDevice.cpp; sourceTree = "<group>"; };
 		557C2C7E1897403E002FAFEA /* CAHALAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioDevice.h; path = CoreAudio/PublicUtility/CAHALAudioDevice.h; sourceTree = "<group>"; };
-		557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioObject.cpp; path = CoreAudio/PublicUtility/CAHALAudioObject.cpp; sourceTree = "<group>"; };
-		557C2C801897403E002FAFEA /* CAHALAudioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioObject.h; path = CoreAudio/PublicUtility/CAHALAudioObject.h; sourceTree = "<group>"; };
-		557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioSystemObject.cpp; path = CoreAudio/PublicUtility/CAHALAudioSystemObject.cpp; sourceTree = "<group>"; };
-		557C2C841897403E002FAFEA /* CAHALAudioSystemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioSystemObject.h; path = CoreAudio/PublicUtility/CAHALAudioSystemObject.h; sourceTree = "<group>"; };
-		557C2C881897403E002FAFEA /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = CoreAudio/PublicUtility/CAMath.h; sourceTree = "<group>"; };
-		557C2C8F1897403E002FAFEA /* CAPropertyAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAPropertyAddress.h; path = CoreAudio/PublicUtility/CAPropertyAddress.h; sourceTree = "<group>"; };
-		557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
-		557C2C9C1897403E002FAFEA /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
-		557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = CoreAudio/PublicUtility/CADebugMacros.cpp; sourceTree = "<group>"; };
-		557C2CDC189740D7002FAFEA /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = CoreAudio/PublicUtility/CADebugMacros.h; sourceTree = "<group>"; };
-		557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = CoreAudio/PublicUtility/CADebugPrintf.cpp; sourceTree = "<group>"; };
-		557C2CDE189740D7002FAFEA /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = CoreAudio/PublicUtility/CADebugPrintf.h; sourceTree = "<group>"; };
 		557C43981D615CDC000184D8 /* TipArrowFloater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TipArrowFloater.h; path = Source/TipArrowFloater.h; sourceTree = SOURCE_ROOT; };
 		557C43991D615CDC000184D8 /* TipArrowFloater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TipArrowFloater.m; path = Source/TipArrowFloater.m; sourceTree = SOURCE_ROOT; };
 		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
@@ -680,24 +660,9 @@
 		557C2C3B18974031002FAFEA /* Public Utility */ = {
 			isa = PBXGroup;
 			children = (
-				55224BE318A7880D00407B46 /* CAAutoDisposer.h */,
-				557C2C591897403E002FAFEA /* CABitOperations.h */,
-				557C2C5F1897403E002FAFEA /* CAByteOrder.h */,
-				557C2CDC189740D7002FAFEA /* CADebugMacros.h */,
-				557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */,
-				557C2CDE189740D7002FAFEA /* CADebugPrintf.h */,
-				557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */,
 				557C2C771897403E002FAFEA /* CAException.h */,
 				557C2C7E1897403E002FAFEA /* CAHALAudioDevice.h */,
 				557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */,
-				557C2C801897403E002FAFEA /* CAHALAudioObject.h */,
-				557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */,
-				557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */,
-				557C2C841897403E002FAFEA /* CAHALAudioSystemObject.h */,
-				557C2C881897403E002FAFEA /* CAMath.h */,
-				557C2C8F1897403E002FAFEA /* CAPropertyAddress.h */,
-				557C2C9C1897403E002FAFEA /* CAStreamBasicDescription.h */,
-				557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */,
 			);
 			name = "Public Utility";
 			sourceTree = "<group>";
@@ -1371,10 +1336,8 @@
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
-				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
 				5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
-				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,
 				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
 				55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */,
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
@@ -1382,7 +1345,6 @@
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
 				55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */,
 				5595A7BC18793B9000A7B996 /* EmbraceWindow.m in Sources */,
-				557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */,
 				555953EC21B762730032EE54 /* HugSimpleGraph.m in Sources */,
 				55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */,
 				555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */,
@@ -1426,7 +1388,6 @@
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,
 				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
 				555953E921B6834D0032EE54 /* HugMeterData.m in Sources */,
-				557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */,
 				55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */,
 				55F6C73119CEAA5B00B22793 /* Compatibility.m in Sources */,
 				553DE143189F107100A355D1 /* ViewTrackController.m in Sources */,
@@ -1434,7 +1395,6 @@
 				55102B431B53564500308F55 /* EffectAdditions.m in Sources */,
 				552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */,
 				55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */,
-				557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */,
 				557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */,
 				550C63C81FE6666E007841BC /* ScriptFile.m in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
