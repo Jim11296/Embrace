@@ -37,6 +37,7 @@
 - (void) updateEffectAudioUnits:(NSArray<AUAudioUnit *> *)effectAudioUnits;
 
 // Graph -> Player
+@property (nonatomic, copy) void (^updateBlock)();
 
 @property (nonatomic, readonly) HugPlaybackStatus playbackStatus;
 @property (nonatomic, readonly) NSTimeInterval timeElapsed;

@@ -191,7 +191,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 //    if (!scheduler) {
 //        return;
 //    }
-//    
+//       
     HugPlaybackStatus playbackStatus = [_engine playbackStatus];
     
     _timeElapsed      = [_engine timeElapsed];
