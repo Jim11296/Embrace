@@ -11,14 +11,27 @@
 
 @implementation HugSimpleGraph {
     AURenderPullInputBlock _renderBlock;
+    NSInteger _errorIndex;
+}
+
+- (instancetype) initWithErrorBlock:(HugSimpleGraphErrorBlock)errorBlock
+{
+    if ((self = [super init])) {
+        _errorBlock = errorBlock;
+    }
+
+    return self;
 }
 
 
 - (void) addBlock:(AURenderPullInputBlock)inBlock
 {
+    HugSimpleGraphErrorBlock errorBlock = _errorBlock;
+    __block NSInteger errorIndex = _errorIndex++;
+
     AURenderPullInputBlock previousBlock = _renderBlock;
     
-    AURenderPullInputBlock newBlock = ^(
+    _renderBlock = [^(
         AudioUnitRenderActionFlags *actionFlags,
         const AudioTimeStamp *timestamp,
         AUAudioFrameCount frameCount,
@@ -30,30 +43,35 @@
             if (status != noErr) return status;
         }
         
-        return inBlock(actionFlags, timestamp, frameCount, inputBusNumber, inputData);
-    };
-    
-    _renderBlock = [newBlock copy];
+        OSStatus err = inBlock(actionFlags, timestamp, frameCount, inputBusNumber, inputData);
+        if (err) errorBlock(err, errorIndex);
+
+        return err;
+    } copy];
 }
 
 
 - (void) addAudioUnit:(AUAudioUnit *)unit
 {
+    HugSimpleGraphErrorBlock errorBlock = _errorBlock;
+    __block NSInteger errorIndex = _errorIndex++;
+
     AURenderPullInputBlock previousBlock = _renderBlock;
 
     AURenderBlock unitRenderBlock = [unit renderBlock];
 
-    AURenderPullInputBlock newBlock = [^(
+    _renderBlock = [^(
         AudioUnitRenderActionFlags *actionFlags,
         const AudioTimeStamp *timestamp,
         AUAudioFrameCount frameCount,
         NSInteger inputBusNumber,
         AudioBufferList *inputData
     ) {
-        return unitRenderBlock(actionFlags, timestamp, frameCount, inputBusNumber, inputData, previousBlock);
-    } copy];
+        OSStatus err = unitRenderBlock(actionFlags, timestamp, frameCount, inputBusNumber, inputData, previousBlock);
+        if (err) errorBlock(err, errorIndex);
 
-    _renderBlock = [newBlock copy];
+        return err;
+    } copy];
 }
 
 

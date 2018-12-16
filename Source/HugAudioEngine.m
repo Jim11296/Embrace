@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger, PacketType) {
     // Transmitted via _errorRingBuffer
     PacketTypeStatusBufferFull = 101, // Uses PacketDataUnknown
     PacketTypeOverload         = 102, // Uses PacketDataUnknown
-    PacketTypeErrorMessage     = 200,
+    PacketTypeRenderError      = 200, // Uses PacketDataError
 };
 
 typedef struct {
@@ -69,9 +69,9 @@ typedef struct {
 typedef struct {
     uint64_t timestamp;
     UInt16 type;
-    UInt16 msgLength;
-    char   message[0];
-} PacketErrorMessage;
+    UInt16 index;
+    OSStatus err;
+} PacketDataError;
 
 typedef struct {
     _Atomic HugAudioSourceInputBlock inputBlock;
@@ -98,9 +98,7 @@ static OSStatus sOutputUnitRenderCallback(
 
     __unsafe_unretained AURenderPullInputBlock block = (__bridge __unsafe_unretained AURenderPullInputBlock) *(void **)inRefCon;
     OSStatus err = block(ioActionFlags, inTimeStamp, inNumberFrames, 0, ioData);
-
-    if (err) NSLog(@"%ld", (long)err);
-    
+   
     return err;
 }
 
@@ -126,6 +124,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     AudioDeviceID _outputDeviceID;
     NSDictionary *_outputSettings;
+
+    BOOL _switchingSources;
 
     HugLimiter      *_emergencyLimiter;
     HugStereoField  *_stereoField;
@@ -186,6 +186,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
 - (void) _sendAudioSourceToRenderThread:(HugAudioSource *)source
 {
+    _switchingSources = YES;
+
     HugLog(@"HugAudioEngine", @"Sending %@ to render thread", source);
 
     HugAudioSourceInputBlock blockToCall = [source inputBlock];
@@ -206,17 +208,19 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
         NSInteger loopGuard = 0;
         while (1) {
+            HugRingBufferConfirmReadAll(_statusRingBuffer);
+
             if (blockToSend == atomic_load(&_renderUserInfo.inputBlock)) {
                 break;
             }
-        
+
             if (![self _isRunning]) return;
 
             if (loopGuard >= 1000) {
                 HugLog(@"HugAudioEngine", @"_sendAudioSourceToRenderThread timed out");
                 break;
             }
-
+            
             usleep(1000);
             loopGuard++;
         }
@@ -228,6 +232,9 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     
     _currentSource = source;
     _currentInputBlock = blockToSend;
+
+    HugRingBufferConfirmReadAll(_statusRingBuffer);
+    _switchingSources = NO;
 }
 
 
@@ -253,6 +260,12 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     // Process status
     while (1) {
+        // If we are switching sources, clear the entire _statusRingBuffer
+        if (_switchingSources) {
+            HugRingBufferConfirmReadAll(_statusRingBuffer);
+            break;
+        }
+
         PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_statusRingBuffer, sizeof(PacketDataUnknown));
         if (!unknown) break;
         
@@ -331,7 +344,10 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     RenderUserInfo *userInfo = &_renderUserInfo;
 
-    HugSimpleGraph *graph = [[HugSimpleGraph alloc] init];
+    HugSimpleGraph *graph = [[HugSimpleGraph alloc] initWithErrorBlock:^(OSStatus err, NSInteger index) {
+        PacketDataError packet = { 0, PacketTypeRenderError, index, err };
+        HugRingBufferWrite(errorRingBuffer, &packet, sizeof(packet));
+    }];
      
     void (^__sendStatusPacket)(void *, CFIndex) = ^(void *buffer, CFIndex length) {
         if (!HugRingBufferWrite(statusRingBuffer, buffer, length)) {
@@ -340,7 +356,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         }
     };
     #define sendStatusPacket(packet) __sendStatusPacket(&(packet), sizeof((packet)));
-    
+     
     [graph addBlock:^(
         AudioUnitRenderActionFlags *ioActionFlags,
         const AudioTimeStamp *timestamp,
@@ -389,11 +405,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             HugStereoFieldReset(stereoField, userInfo->stereoBalance, userInfo->stereoWidth);
 
             atomic_store(&userInfo->inputBlock, nextInputBlock);
-        }
 
-        if (timestamp->mFlags & kAudioTimeStampHostTimeValid) {
-            PacketDataPlayback packet = { timestamp->mHostTime, PacketTypePlayback, info };
-            sendStatusPacket(packet);
+        } else {
+
+            if (inputBlock && (timestamp->mFlags & kAudioTimeStampHostTimeValid)) {
+                PacketDataPlayback packet = { timestamp->mHostTime, PacketTypePlayback, info };
+                sendStatusPacket(packet);
+            }
         }
 
         return noErr;
@@ -427,7 +445,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             }
            
             if (error) {
-                NSLog(@"%@", error);
+                HugLog(@"HugAudioEngine", @"Error when configuring %@: %@", unit, error);
             } else  {
                 [graph addAudioUnit:unit];
             }
@@ -621,6 +639,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     //
     [self stop];
 
+    _playbackStatus = HugPlaybackStatusPreparing;
+
     HugAudioSource *source = [[HugAudioSource alloc] initWithAudioFile:file settings:_outputSettings];
     
     HugAuto weakSelf = self;
@@ -658,15 +678,19 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         [self _sendAudioSourceToRenderThread:nil];
         [self performSelector:@selector(_reallyStop) withObject:nil afterDelay:30];
     }
-    
-    // Clear meter data
-    _leftMeterData = _rightMeterData = nil;
-    _dangerLevel = 0;
+
     HugRingBufferConfirmReadAll(_statusRingBuffer);
 
     HugLevelMeterReset(_leftLevelMeter);
     HugLevelMeterReset(_rightLevelMeter);
-  
+    
+    _playbackStatus = HugPlaybackStatusStopped;
+    _timeElapsed    = 0;
+    _timeRemaining  = 0;
+    _leftMeterData  = nil;
+    _rightMeterData = nil;
+    _dangerLevel    = 0;
+
     for (AUAudioUnit *unit in _effectAudioUnits) {
         [unit reset];
     }

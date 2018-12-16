@@ -11,7 +11,8 @@
 @class HugAudioSource;
 
 typedef NS_ENUM(NSInteger, HugPlaybackStatus) {
-    HugPlaybackStatusPreparing = 0,
+    HugPlaybackStatusStopped = 0,
+    HugPlaybackStatusPreparing,
     HugPlaybackStatusWaiting,
     HugPlaybackStatusPlaying,
     HugPlaybackStatusFinished
