@@ -18,8 +18,6 @@
 #import <Accelerate/Accelerate.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
 
-#define CHECK_RENDER_ERRORS_ON_TICK 0
-
 static NSString * const sEffectsKey       = @"effects";
 static NSString * const sPreAmpKey        = @"pre-amp";
 static NSString * const sMatchLoudnessKey = @"match-loudness";
@@ -58,12 +56,9 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
     NSInteger    _setupAndStartPlayback_failureCount;
 
     id<NSObject> _processActivityToken;
-    IOPMAssertionID _pmAssertionID;
 
     NSHashTable *_listeners;
     
-    NSTimer *_tickTimer;
-
     NSTimeInterval _roundedTimeElapsed;
     NSTimeInterval _roundedTimeRemaining;
 }
@@ -106,6 +101,9 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
         _volume = -1;
         _engine = [[HugAudioEngine alloc] init];
+        
+        __weak id weakSelf = self;
+        [_engine setUpdateBlock:^{ [weakSelf _handleEngineUpdate]; }];
         
         [self _loadState];
     }
@@ -184,14 +182,8 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 }
 
 
-- (void) _tick:(NSTimer *)timer
+- (void) _handleEngineUpdate
 {
-//    TrackScheduler *scheduler = [_engine scheduler];
-//
-//    if (!scheduler) {
-//        return;
-//    }
-//       
     HugPlaybackStatus playbackStatus = [_engine playbackStatus];
     
     _timeElapsed      = [_engine timeElapsed];
@@ -296,7 +288,6 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
     EmbraceLog(@"Player", @"updating preGain to %g, trackLoudness=%g, trackPeak=%g, replayGain=%g", preGain, trackLoudness, trackPeak, replayGain);
 
-
     // Convert from dB to linear
     preGain = pow(10, preGain / 20);
     
@@ -328,32 +319,6 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
         [self _updateFermata];
     }
-
-    if (!_pmAssertionID) {
-        static UInt8 b_DebugDisableLidCloseSensor[] = { 196,229,226,245,231,196,233,243,225,226,236,229,204,233,228,195,236,239,243,229,211,229,238,243,239,242,0 };
-        NSString *DebugDisableLidCloseSensor = EmbraceGetPrivateName(b_DebugDisableLidCloseSensor);
-
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:DebugDisableLidCloseSensor]) {
-            static UInt8 b_UserIsActive[] = { 213,243,229,242,201,243,193,227,244,233,246,229,0 };
-            NSString *UserIsActive = EmbraceGetPrivateName(b_UserIsActive);
-
-            static UInt8 b_AppliesOnLidClose[] = { 193,240,240,236,233,229,243,207,238,204,233,228,195,236,239,243,229,0 };
-            NSString *AppliesOnLidClose = EmbraceGetPrivateName(b_AppliesOnLidClose);
-
-            CFMutableDictionaryRef dict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-
-            CFDictionarySetValue(dict, kIOPMAssertionTypeKey, (__bridge CFStringRef)UserIsActive);
-            CFDictionarySetValue(dict, (__bridge CFStringRef)AppliesOnLidClose, kCFBooleanTrue);
-            CFDictionarySetValue(dict, kIOPMAssertionNameKey, @"Embrace is playing mission-critical audio");
-
-            IOReturn err = IOPMAssertionCreateWithProperties(dict, &_pmAssertionID);
-            if (err) {
-                EmbraceLog(@"Player", @"IOPMAssertionCreateWithProperties returned 0x%lx", (long)err);
-            }
-
-            CFRelease(dict);
-        }
-    }
 }
 
 
@@ -364,11 +329,6 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
         _processActivityToken = nil;
 
         [self _updateFermata];
-    }
-    
-    if (_pmAssertionID) {
-        IOPMAssertionRelease(_pmAssertionID);
-        _pmAssertionID = kIOPMNullAssertionID;
     }
 }
 
@@ -687,11 +647,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     [self playNextTrack];
     
     if (_currentTrack) {
-        _tickTimer = [NSTimer timerWithTimeInterval:(1.0/30.0) target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
-        [_tickTimer setTolerance:(1.0/60.0)];
-
-        [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSRunLoopCommonModes];
-        [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSEventTrackingRunLoopMode];
 
         for (id<PlayerListener> listener in _listeners) {
             [listener player:self didUpdatePlaying:YES];
@@ -762,11 +717,6 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         [listener player:self didFinishTrack:_currentTrack];
     }
     [self setCurrentTrack:nil];
-
-    if (_tickTimer) {
-        [_tickTimer invalidate];
-        _tickTimer = nil;
-    }
 
     [_engine stop];
 
