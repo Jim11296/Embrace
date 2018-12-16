@@ -127,6 +127,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     BOOL _switchingSources;
 
+    NSTimer *_updateTimer;
+
     HugLimiter      *_emergencyLimiter;
     HugStereoField  *_stereoField;
     HugLevelMeter   *_leftLevelMeter;
@@ -407,7 +409,6 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             atomic_store(&userInfo->inputBlock, nextInputBlock);
 
         } else {
-
             if (inputBlock && (timestamp->mFlags & kAudioTimeStampHostTimeValid)) {
                 PacketDataPlayback packet = { timestamp->mHostTime, PacketTypePlayback, info };
                 sendStatusPacket(packet);
@@ -526,6 +527,11 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         AudioOutputUnitStop(_outputAudioUnit),
         @"HugAudioEngine", @"AudioOutputUnitStop"
     );
+
+    if (_updateTimer) {
+        [_updateTimer invalidate];
+        _updateTimer = nil;
+    }
 }
 
 
@@ -539,6 +545,14 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         }
     }
 }
+
+
+- (void) _handleUpdateTimer:(NSTimer *)timer
+{
+    [self _readRingBuffers];
+    if (_updateBlock) _updateBlock();
+}
+
 
 #pragma mark - Public Methods
 
@@ -664,6 +678,14 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         );
     }
 
+    if (!_updateTimer) {
+        _updateTimer = [NSTimer timerWithTimeInterval:(1.0/30.0) target:self selector:@selector(_handleUpdateTimer:) userInfo:nil repeats:YES];
+        [_updateTimer setTolerance:(1.0/60.0)];
+
+        [[NSRunLoop mainRunLoop] addTimer:_updateTimer forMode:NSRunLoopCommonModes];
+        [[NSRunLoop mainRunLoop] addTimer:_updateTimer forMode:NSEventTrackingRunLoopMode];
+    }
+
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyStop) object:nil];
 
     return YES;
@@ -727,57 +749,6 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         _effectAudioUnits = effectAudioUnits;
         [self _reconnectGraph];
     }
-}
-
-
-#pragma mark - Accessors
-
-- (HugPlaybackStatus) playbackStatus
-{
-    [self _readRingBuffers];
-    return _playbackStatus;
-}
-
-
-- (NSTimeInterval) timeElapsed
-{
-    [self _readRingBuffers];
-    return _timeElapsed;
-}
-
-
-- (NSTimeInterval) timeRemaining
-{
-    [self _readRingBuffers];
-    return _timeRemaining;
-}
-
-
-- (HugMeterData *) leftMeterData
-{
-    [self _readRingBuffers];
-    return _leftMeterData;
-}
-
-
-- (HugMeterData *) rightMeterData
-{
-    [self _readRingBuffers];
-    return _rightMeterData;
-}
-
-
-- (float) dangerLevel
-{
-    [self _readRingBuffers];
-    return _dangerLevel;
-}
-
-
-- (NSTimeInterval) lastOverloadTime
-{
-    [self _readRingBuffers];
-    return _lastOverloadTime;
 }
 
 

@@ -12,7 +12,8 @@
 extern "C" {
 #endif
 
-#define HugAuto __auto_type
+#define HugAuto     __auto_type
+#define HugWeakAuto __auto_type __weak
 
 extern UInt64 HugGetCurrentHostTime(void);
 
