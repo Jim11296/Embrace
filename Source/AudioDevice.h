@@ -2,7 +2,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class WrappedAudioDevice;
+@class HugAudioDevice;
 
 extern NSString * const AudioDevicesDidRefreshNotification;
 
@@ -33,6 +33,6 @@ extern NSString * const AudioDevicesDidRefreshNotification;
 @property (nonatomic, readonly, getter=isBuiltIn) BOOL builtIn;
 @property (nonatomic, readonly, getter=isDefaultOutputDevice) BOOL defaultOutputDevice;
 
-- (WrappedAudioDevice *) controller;
+- (HugAudioDevice *) controller;
 
 @end

@@ -3,7 +3,7 @@
 #import "SetlistController.h"
 
 #import "AudioDevice.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 
 #import "Track.h"
 #import "EffectType.h"
