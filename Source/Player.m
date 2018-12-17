@@ -7,7 +7,7 @@
 #import "EffectType.h"
 #import "AudioDevice.h"
 #import "Preferences.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 #import "HugAudioEngine.h"
 #import "HugAudioSettings.h"
 #import "HugAudioSource.h"
@@ -380,7 +380,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
 - (void) _handleAudioDeviceHasChanged
 {
-    WrappedAudioDevice *device = [_outputDevice controller];
+    HugAudioDevice *device = [_outputDevice controller];
     
     PlayerInterruptionReason reason = PlayerInterruptionReasonNone;
     
@@ -446,7 +446,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     [_engine stop];
     
     for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-        WrappedAudioDevice *controller = [device controller];
+        HugAudioDevice *controller = [device controller];
         
         if ([controller isHoggedByMe]) {
             EmbraceLog(@"Player", @"Un-oink");
@@ -455,7 +455,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     }
     
 
-    WrappedAudioDevice *controller = [_outputDevice controller];
+    HugAudioDevice *controller = [_outputDevice controller];
     AudioDeviceID deviceID = [controller objectID];
     
     if (ok) {

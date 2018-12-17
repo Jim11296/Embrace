@@ -6,7 +6,7 @@
 #import "Player.h"
 #import "ScriptFile.h"
 #import "ScriptsManager.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 
 @interface PreferencesController ()
 

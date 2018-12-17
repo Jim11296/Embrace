@@ -21,7 +21,7 @@
 #import "IssueManager.h"
 #import "iTunesManager.h"
 #import "ScriptsManager.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 
 #import "WorkerService.h"
 
@@ -260,7 +260,7 @@
     [[Player sharedInstance] saveEffectState];
     [[Player sharedInstance] hardStop];
     
-    [WrappedAudioDevice releaseHoggedDevices];
+    [HugAudioDevice releaseHoggedDevices];
 }
 
 

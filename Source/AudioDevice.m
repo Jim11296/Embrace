@@ -1,7 +1,7 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "AudioDevice.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 #import "HugUtils.h"
 
 
@@ -41,7 +41,7 @@ static AudioDevice  *sChosenAudioDevice   = nil;
 
 static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 {
-    WrappedAudioDevice *device = [[WrappedAudioDevice alloc] initWithDeviceUID:deviceUID];
+    HugAudioDevice *device = [HugAudioDevice deviceWithUID:deviceUID];
 
     NSString *name             = [device name];
     NSString *manufacturer     = [device manufacturer];
@@ -291,10 +291,10 @@ static NSDictionary *sGetDictionaryForDeviceUID(NSString *deviceUID)
 }
 
 
-- (WrappedAudioDevice *) controller
+- (HugAudioDevice *) controller
 {
     if (_connected) {
-        return [[WrappedAudioDevice alloc] initWithDeviceUID:_deviceUID];
+        return [HugAudioDevice deviceWithUID:_deviceUID];
     }
     
     return nil;
