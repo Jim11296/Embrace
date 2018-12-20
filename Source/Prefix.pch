@@ -5,6 +5,8 @@
 //
 
 #ifdef __OBJC__
+    #define auto __auto_type
+
     #import <Foundation/Foundation.h>
     #import <AppKit/AppKit.h>
 

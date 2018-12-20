@@ -150,79 +150,91 @@
 
 - (void) _rebuildSampleRateMenu
 {
-    NSMenu *menu = [[self sampleRatePopUp] menu];
+    NSNumber *selectedRate = @([[Preferences sharedInstance] mainOutputSampleRate]);
 
-    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    NSNumber *sampleRate = @([[Preferences sharedInstance] mainOutputSampleRate]);
+    __block NSMenuItem *itemToSelect = nil;
 
-    NSArray *deviceSampleRates = [device availableSampleRates];
-    
-    [menu removeAllItems];
-
-    NSMenuItem *itemToSelect = nil;
-
-    NSMutableArray *sampleRates = [deviceSampleRates mutableCopy];
-    
-    if (![sampleRates containsObject:sampleRate]) {
-        [sampleRates insertObject:sampleRate atIndex:0];
-        [sampleRates sortUsingSelector:@selector(compare:)];
-    }
-
-    for (NSNumber *number in sampleRates) {
-        NSString *title = [NSString stringWithFormat:@"%@ Hz", number];
+    auto makeMenu = ^NSMenuItem *(NSNumber *rate, BOOL isNA) {
+        NSString *title = isNA ? @"N/A" : [NSString stringWithFormat:@"%@ Hz", rate];
         
-        BOOL valid = [deviceSampleRates containsObject:number];
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:rate valid:YES useIssueImage:NO];
 
-        NSMenuItem *item = [self _itemWithTitle:title representedObject:number valid:valid useIssueImage:NO];
-
-        if (fabs([number doubleValue] - [sampleRate doubleValue]) < 1) {
+        if (fabs([rate doubleValue] - [selectedRate doubleValue]) < 1) {
             itemToSelect = item;
         }
         
-        [menu addItem:item];
-        if (!valid) [menu addItem:[NSMenuItem separatorItem]];
+        return item;
+    };
+
+    NSMenu *menu = [[self sampleRatePopUp] menu];
+
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+
+    NSArray *availableSampleRates = [device availableSampleRates];
+    
+    if (![availableSampleRates count]) {
+        availableSampleRates = @[ selectedRate ];
+    }
+    
+    [menu removeAllItems];
+    
+    for (NSNumber *number in availableSampleRates) {
+        [menu addItem:makeMenu(number, NO)];
     }
 
-    [[self sampleRatePopUp] selectItem:itemToSelect];
+    if (itemToSelect) {
+        [[self sampleRatePopUp] selectItem:itemToSelect];
+
+    } else {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
+        [menu insertItem:makeMenu(selectedRate, YES) atIndex:0];
+        [[self sampleRatePopUp] selectItemAtIndex:0];
+    }
 }
 
 
 - (void) _rebuildFrameMenu
 {
-    NSMenu *menu = [[self framesPopUp] menu];
-    
-    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    NSNumber *frameSize = @([[Preferences sharedInstance] mainOutputFrames]);
+    NSNumber *selectedFrameSize = @([[Preferences sharedInstance] mainOutputFrames]);
 
-    NSArray *deviceFrameSizes = [device availableFrameSizes];
+    __block NSMenuItem *itemToSelect = nil;
 
-    [menu removeAllItems];
-    
-    NSMenuItem *itemToSelect = nil;
+    auto makeMenu = ^NSMenuItem *(NSNumber *frameSize, BOOL isNA) {
+        NSString *title = isNA ? @"N/A" : [frameSize stringValue];
+        
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:frameSize valid:YES useIssueImage:NO];
 
-    NSMutableArray *popUpFrameSizes = [deviceFrameSizes mutableCopy];
-    
-    if (![deviceFrameSizes containsObject:frameSize]) {
-        [popUpFrameSizes addObject:frameSize];
-        [popUpFrameSizes sortUsingSelector:@selector(compare:)];
-    }
-
-    for (NSNumber *number in popUpFrameSizes) {
-        NSString *title = [number stringValue];
-
-        BOOL valid = [deviceFrameSizes containsObject:number];
-
-        NSMenuItem *item = [self _itemWithTitle:title representedObject:number valid:valid useIssueImage:NO];
-
-        if ([number unsignedIntegerValue] == [frameSize unsignedIntegerValue]) {
+        if ([frameSize integerValue] == [selectedFrameSize integerValue]) {
             itemToSelect = item;
         }
         
-        [menu addItem:item];
-        if (!valid) [menu addItem:[NSMenuItem separatorItem]];
+        return item;
+    };
+
+    NSMenu *menu = [[self sampleRatePopUp] menu];
+
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+
+    NSArray *availableFrameSizes = [device availableFrameSizes];
+    
+    if (![availableFrameSizes count]) {
+        availableFrameSizes = @[ selectedFrameSize ];
     }
     
-    [[self framesPopUp] selectItem:itemToSelect];
+    [menu removeAllItems];
+    
+    for (NSNumber *number in availableFrameSizes) {
+        [menu addItem:makeMenu(number, NO)];
+    }
+
+    if (itemToSelect) {
+        [[self sampleRatePopUp] selectItem:itemToSelect];
+
+    } else {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
+        [menu insertItem:makeMenu(selectedFrameSize, YES) atIndex:0];
+        [[self sampleRatePopUp] selectItemAtIndex:0];
+    }
 }
 
 
