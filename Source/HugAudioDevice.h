@@ -2,15 +2,23 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const HugAudioDevicesDidRefreshNotification;
+
 
 @interface HugAudioDevice : NSObject
 
-+ (void) releaseHoggedDevices;
++ (instancetype) defaultDevice;
++ (NSArray<HugAudioDevice *> *) allDevices; 
 
-+ (instancetype) deviceWithUID:(NSString *)deviceUID;
-+ (instancetype) deviceWithObjectID:(AudioObjectID)objectID;
+- (instancetype) initWithWithDeviceUID:(NSString *)deviceUID name:(NSString *)name;
 
-- (instancetype) initWithObjectID:(AudioObjectID)objectID;
+@property (nonatomic, readonly, getter=isConnected) BOOL connected;
+@property (nonatomic, readonly) AudioObjectID objectID;
+
+@property (nonatomic, readonly, copy) NSString *deviceUID;
+@property (nonatomic, readonly, copy) NSString *name;
+@property (nonatomic, readonly, copy) NSString *manufacturer;
+@property (nonatomic, readonly, copy) NSString *modelUID;
 
 - (BOOL) takeHogModeAndResetVolume:(BOOL)resetsVolume;
 - (void) releaseHogMode;
@@ -20,18 +28,11 @@
 @property (nonatomic, readonly) BOOL isHoggedByAnotherProcess;
 @property (nonatomic, readonly) BOOL isHogModeSettable;
 
-@property (nonatomic, readonly) AudioObjectID objectID;
-
-@property (nonatomic, readonly) UInt32 transportType;
-
-@property (nonatomic, readonly, copy) NSString *name;
-@property (nonatomic, readonly, copy) NSString *manufacturer;
-@property (nonatomic, readonly, copy) NSString *modelUID;
-
-@property (nonatomic, readonly) BOOL hasVolumeControl;
-
 @property (nonatomic) double nominalSampleRate;
 @property (nonatomic) UInt32 frameSize;
+
+@property (nonatomic, readonly) BOOL hasVolumeControl;
+@property (nonatomic, readonly, getter=isBuiltIn) BOOL builtIn;
 
 @property (nonatomic, readonly) NSArray<NSNumber *> *availableFrameSizes;
 @property (nonatomic, readonly) NSArray<NSNumber *> *availableSampleRates;

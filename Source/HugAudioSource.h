@@ -24,12 +24,12 @@ typedef struct HugPlaybackInfo {
     NSTimeInterval timeRemaining;
 } HugPlaybackInfo;
 
-
 typedef OSStatus (^HugAudioSourceInputBlock)(
     AUAudioFrameCount frameCount,
     AudioBufferList *inputData,
     HugPlaybackInfo *outInfo
 );
+
 
 typedef void (^HugAudioSourceCompletionHandler)(HugAudioSource *source);
 

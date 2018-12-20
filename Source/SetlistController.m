@@ -2,7 +2,6 @@
 
 #import "SetlistController.h"
 
-#import "AudioDevice.h"
 #import "HugAudioDevice.h"
 
 #import "Track.h"
@@ -320,10 +319,10 @@ static NSInteger sAutoGapMaximum = 16;
 {
     Preferences *preferences = [Preferences sharedInstance];
     
-    AudioDevice *device       = [preferences mainOutputAudioDevice];
-    double       sampleRate   = [preferences mainOutputSampleRate];
-    UInt32       frames       = [preferences mainOutputFrames];
-    BOOL         hogMode      = [preferences mainOutputUsesHogMode];
+    HugAudioDevice *device       = [preferences mainOutputAudioDevice];
+    double          sampleRate   = [preferences mainOutputSampleRate];
+    UInt32          frames       = [preferences mainOutputFrames];
+    BOOL            hogMode      = [preferences mainOutputUsesHogMode];
 
     BOOL resetsVolume = hogMode && [preferences mainOutputResetsVolume];
     
@@ -686,7 +685,7 @@ static NSInteger sAutoGapMaximum = 16;
     NSString *informativeText = nil;
     NSString *otherButton     = nil;
 
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     NSString *deviceName = [device name];
 
     if (issue == PlayerIssueDeviceMissing) {
@@ -700,10 +699,10 @@ static NSInteger sAutoGapMaximum = 16;
     } else if (issue == PlayerIssueDeviceHoggedByOtherProcess) {
         messageText = NSLocalizedString(@"Another application is using the selected output device.", nil);
 
-        pid_t hogModeOwner = [[device controller] hogModeOwner];
+        pid_t hogModeOwner = [device hogModeOwner];
         NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
         
-        if (owner) {
+        if (owner > 0) {
             NSString *format = NSLocalizedString(@"The application \\U201c%@\\U201d has exclusive access to \\U201c%@\\U201d.", nil);
             NSString *applicationName = [owner localizedName];
             
@@ -1097,12 +1096,12 @@ static NSInteger sAutoGapMaximum = 16;
 {
     NSString *messageText = NSLocalizedString(@"Another application interrupted playback.", nil);
 
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     NSString *deviceName = [device name];
 
     if (reason == PlayerInterruptionReasonHoggedByOtherProcess) {
-        pid_t hogModeOwner = [[device controller] hogModeOwner];
-        NSRunningApplication *owner = [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner];
+        pid_t hogModeOwner = [device hogModeOwner];
+        NSRunningApplication *owner = hogModeOwner > 0 ? [NSRunningApplication runningApplicationWithProcessIdentifier:hogModeOwner] : 0;
         
         if (owner) {
             NSString *format = NSLocalizedString(@"%@ interrupted playback by taking exclusive access to \\U201c%@\\U201d.", nil);

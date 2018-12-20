@@ -46,7 +46,6 @@
 		551CE71321B3A3D800D422E4 /* HugLevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 551CE71221B3A3D800D422E4 /* HugLevelMeter.m */; };
 		551CE71A21B3CE9500D422E4 /* HugLinearRamper.m in Sources */ = {isa = PBXBuildFile; fileRef = 551CE71921B3CE9500D422E4 /* HugLinearRamper.m */; };
 		551CE71D21B3E24400D422E4 /* HugStereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 551CE71C21B3E24400D422E4 /* HugStereoField.m */; };
-		552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9DC218836D2D0041C160 /* AudioDevice.m */; };
 		552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C9E481883856A0041C160 /* PreferencesWindow.xib */; };
 		552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4B1883888E0041C160 /* PreferencesController.m */; };
 		552C9E4F1883EBA40041C160 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4E1883EBA40041C160 /* Preferences.m */; };
@@ -275,8 +274,6 @@
 		551CE71921B3CE9500D422E4 /* HugLinearRamper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLinearRamper.m; path = Source/HugLinearRamper.m; sourceTree = "<group>"; };
 		551CE71B21B3E24400D422E4 /* HugStereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugStereoField.h; path = Source/HugStereoField.h; sourceTree = "<group>"; };
 		551CE71C21B3E24400D422E4 /* HugStereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugStereoField.m; path = Source/HugStereoField.m; sourceTree = "<group>"; };
-		552C9DC118836D2D0041C160 /* AudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioDevice.h; path = Source/AudioDevice.h; sourceTree = "<group>"; };
-		552C9DC218836D2D0041C160 /* AudioDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioDevice.m; path = Source/AudioDevice.m; sourceTree = "<group>"; };
 		552C9E481883856A0041C160 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PreferencesWindow.xib; path = Resources/PreferencesWindow.xib; sourceTree = SOURCE_ROOT; };
 		552C9E4A1883888E0041C160 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = Source/PreferencesController.h; sourceTree = SOURCE_ROOT; };
 		552C9E4B1883888E0041C160 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = SOURCE_ROOT; };
@@ -874,8 +871,6 @@
 		55BC0B1C1878D7FA00D84481 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				552C9DC118836D2D0041C160 /* AudioDevice.h */,
-				552C9DC218836D2D0041C160 /* AudioDevice.m */,
 				55BC0B0B1877F35000D84481 /* EffectType.h */,
 				55BC0B0C1877F35000D84481 /* EffectType.m */,
 				55BC0B041877F19400D84481 /* Effect.h */,
@@ -1330,7 +1325,6 @@
 				5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */,
 				550DDB9121C67E8100769F32 /* HugAudioDevice.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
-				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
 				556098141B47CABD008516C3 /* MenuLabelView.m in Sources */,
 				555953F221B7F6C90032EE54 /* HugUtils.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,

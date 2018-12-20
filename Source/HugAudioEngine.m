@@ -71,7 +71,7 @@ typedef struct {
     UInt16 type;
     UInt16 index;
     OSStatus err;
-} PacketDataError;
+} PacketDataRenderError;
 
 typedef struct {
     _Atomic HugAudioSourceInputBlock inputBlock;
@@ -188,6 +188,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
 - (void) _sendAudioSourceToRenderThread:(HugAudioSource *)source
 {
+    if (_currentSource == source) return;
+
     _switchingSources = YES;
 
     HugLog(@"HugAudioEngine", @"Sending %@ to render thread", source);
@@ -326,6 +328,18 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
 
             HugLog(@"HugAudioEngine", @"_statusRingBuffer is full");
+        
+        } else if (unknown->type == PacketTypeRenderError) {
+            PacketDataRenderError packet;
+            if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataRenderError))) return;
+
+            HugLog(@"HugAudioEngine", @"Render error on audio thread: index=%ld, error=%@",
+                (long)packet.index,
+                HugGetStringForFourCharCode(packet.err)
+            );
+            
+        } else {
+            NSAssert(NO, @"Unknown packet type: %ld", (long)unknown->type);
         }
     }
 }
@@ -347,7 +361,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     RenderUserInfo *userInfo = &_renderUserInfo;
 
     HugSimpleGraph *graph = [[HugSimpleGraph alloc] initWithErrorBlock:^(OSStatus err, NSInteger index) {
-        PacketDataError packet = { 0, PacketTypeRenderError, index, err };
+        PacketDataRenderError packet = { 0, PacketTypeRenderError, index, err };
         HugRingBufferWrite(errorRingBuffer, &packet, sizeof(packet));
     }];
      
@@ -521,8 +535,10 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 }
 
 
-- (void) _reallyStop
+- (void) _reallyStopHardware
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyStopHardware) object:nil];
+
     HugCheckError(
         AudioOutputUnitStop(_outputAudioUnit),
         @"HugAudioEngine", @"AudioOutputUnitStop"
@@ -539,7 +555,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 {
     if (source == _currentSource) {
         if ([source error]) {
-            [self stop];
+            [self stopPlayback];
         } else {
             _HugCrashPadEnabled = YES;
         }
@@ -616,7 +632,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     _outputDeviceID = deviceID;
     _outputSettings = settings;
 
-    HugLog(@"HugAudioEngine", @"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)framesSize);
+    HugLog(@"HugAudioEngine", @"Configuring audio units with %lf sample rate, %ld frame size", sampleRate, (long)frames);
 
     ok = ok && HugCheckError(
         AudioUnitInitialize(_outputAudioUnit),
@@ -651,7 +667,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     // Stop first, this should clear the playing HugAudioSource and
     // release the large HugProtectedBuffer objects for the current track.
     //
-    [self stop];
+    [self stopPlayback];
 
     _playbackStatus = HugPlaybackStatusPreparing;
 
@@ -686,19 +702,19 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         [[NSRunLoop mainRunLoop] addTimer:_updateTimer forMode:NSEventTrackingRunLoopMode];
     }
 
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyStop) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyStopHardware) object:nil];
 
     return YES;
 }
 
 
-- (void) stop
+- (void) stopPlayback
 {
     _HugCrashPadEnabled = NO;
 
     if ([self _isRunning]) {
         [self _sendAudioSourceToRenderThread:nil];
-        [self performSelector:@selector(_reallyStop) withObject:nil afterDelay:30];
+        [self performSelector:@selector(_reallyStopHardware) withObject:nil afterDelay:30];
     }
 
     HugRingBufferConfirmReadAll(_statusRingBuffer);
@@ -716,6 +732,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     for (AUAudioUnit *unit in _effectAudioUnits) {
         [unit reset];
     }
+}
+
+
+- (void) stopHardware
+{
+    [self stopPlayback];
+    [self _reallyStopHardware];
 }
 
 

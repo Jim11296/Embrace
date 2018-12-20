@@ -7,12 +7,26 @@
 #import <CoreAudio/CoreAudio.h>
 
 
-static NSMutableDictionary *sObjectIDToPrehoggedState = nil;
+static NSArray        *sConnectedDevices = nil;
+static NSMapTable     *sUIDToDeviceMap   = nil;
+static HugAudioDevice *sDefaultDevice    = nil;
 
+NSString * const HugAudioDevicesDidRefreshNotification = @"HugAudioDevicesDidRefresh";
+
+
+static const AudioObjectPropertyAddress sAddressDevices = { 
+    kAudioHardwarePropertyDevices, 
+    kAudioObjectPropertyScopeGlobal, 0
+};
 
 static const AudioObjectPropertyAddress sAddressHogMode = {
     kAudioDevicePropertyHogMode,
     kAudioObjectPropertyScopeGlobal, 0
+};
+
+static const AudioObjectPropertyAddress sAddressStreams = {
+    kAudioDevicePropertyStreams,
+    kAudioObjectPropertyScopeOutput, 0
 };
 
 
@@ -21,13 +35,32 @@ static NSString *sMutesKey   = @"mutes";
 static NSString *sPansKey    = @"pans";
 
     
-#pragma mark - Helper Functions
+static void *sCopyProperty(AudioObjectID objectID, const AudioObjectPropertyAddress *address, UInt32 *outDataSize)
+{
+    UInt32 dataSize = 0;
+    
+    if (AudioObjectGetPropertyDataSize(objectID, address, 0, NULL, &dataSize) != noErr) {
+        return NULL;
+    }
+    
+    void *result = malloc(dataSize);
+    
+    if (AudioObjectGetPropertyData(objectID, address, 0, NULL, &dataSize, result) != noErr) {
+        free(result);
+        return NULL;
+    }
+
+    if (outDataSize) *outDataSize = dataSize;
+    
+    return result;
+}
+
 
 static NSString *sGetString(AudioObjectID objectID, AudioObjectPropertySelector selector)
 {
     AudioObjectPropertyAddress address = { selector, kAudioObjectPropertyScopeGlobal, 0 };
 
-    if (AudioObjectHasProperty(objectID, &address)) {
+    if (objectID && AudioObjectHasProperty(objectID, &address)) {
         CFStringRef data = NULL;
         UInt32 dataSize = sizeof(data);
         
@@ -40,6 +73,38 @@ static NSString *sGetString(AudioObjectID objectID, AudioObjectPropertySelector 
 }
 
 
+static NSArray<NSNumber *> *sGetAudioRange(AudioObjectID objectID, const AudioObjectPropertySelector selector, NSArray *inValues)
+{
+    AudioObjectPropertyAddress address = { selector, kAudioObjectPropertyScopeGlobal, 0 };
+
+    UInt32 dataSize = 0;
+    AudioValueRange *ranges = sCopyProperty(objectID, &address, &dataSize);
+    if (!ranges) return nil;
+
+    NSMutableArray *results = [NSMutableArray array];
+
+    UInt32 count = dataSize / sizeof(AudioValueRange);
+    for (NSInteger i = 0; i < count; i++) {
+        AudioValueRange range = ranges[i];
+    
+        for (NSNumber *n in inValues) {
+            double d = [n doubleValue];
+
+            if (range.mMinimum <= d  && d <= range.mMaximum) {
+                if (![results containsObject:n]) {
+                    [results addObject:n];
+                }
+            }
+        }
+    }
+    
+    free(ranges);
+
+    return results;
+}
+
+
+
 static BOOL sCheck(NSString *opName, OSStatus err)
 {
     return HugCheckError(err, @"HugAudioDevice", opName);
@@ -50,8 +115,10 @@ static BOOL sIsSettable(AudioObjectID objectID, const AudioObjectPropertyAddress
 {
     Boolean settable = 0;
     
-    if (AudioObjectHasProperty(objectID, addressPtr) &&
-        AudioObjectIsPropertySettable(objectID, addressPtr, &settable) == noErr) {
+    if (objectID &&
+        AudioObjectHasProperty(objectID, addressPtr) &&
+        AudioObjectIsPropertySettable(objectID, addressPtr, &settable) == noErr
+    ) {
         return settable ? YES : NO;
     }
     
@@ -61,6 +128,8 @@ static BOOL sIsSettable(AudioObjectID objectID, const AudioObjectPropertyAddress
 
 static void sSaveUInt32(NSString *opName, AudioObjectID objectID, AudioObjectPropertySelector selector, UInt32 inValue)
 {
+    if (!objectID) return;
+
     AudioObjectPropertyAddress address = { selector, kAudioObjectPropertyScopeGlobal, 0 };
     sCheck(opName, AudioObjectSetPropertyData(objectID, &address, 0, NULL, sizeof(inValue), &inValue));
 }
@@ -68,6 +137,8 @@ static void sSaveUInt32(NSString *opName, AudioObjectID objectID, AudioObjectPro
 
 static void sSaveDouble(NSString *opName, AudioObjectID objectID, AudioObjectPropertySelector selector, double inValue)
 {
+    if (!objectID) return;
+
     AudioObjectPropertyAddress address = { selector, kAudioObjectPropertyScopeGlobal, 0 };
     sCheck(opName, AudioObjectSetPropertyData(objectID, &address, 0, NULL, sizeof(inValue), &inValue));
 }
@@ -75,6 +146,8 @@ static void sSaveDouble(NSString *opName, AudioObjectID objectID, AudioObjectPro
 
 static void sLoadUInt32(NSString *opName, AudioObjectID objectID, AudioObjectPropertySelector selector, UInt32 *outValue)
 {
+    if (!objectID) return;
+
     AudioObjectPropertyAddress address = { selector, kAudioObjectPropertyScopeGlobal, 0 };
 
     UInt32 value = 0;
@@ -88,6 +161,8 @@ static void sLoadUInt32(NSString *opName, AudioObjectID objectID, AudioObjectPro
 
 static void sLoadDouble(NSString *opName, AudioObjectID objectID, AudioObjectPropertySelector selector, double *outValue)
 {
+    if (!objectID) return;
+
     AudioObjectPropertyAddress address = { selector, kAudioObjectPropertyScopeGlobal, 0 };
 
     double value = 0;
@@ -99,97 +174,234 @@ static void sLoadDouble(NSString *opName, AudioObjectID objectID, AudioObjectPro
 }
 
 
-#pragma mark - State
-
-#if 0
-
-
-static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keysToRestore, NSDictionary *dictionary, NSDictionary *defaults)
-{
-
-}
-
-#endif
-
-
-
 @implementation HugAudioDevice {
     AudioObjectID _objectID;
+    NSString *_deviceUID;
+    NSString *_name;
+
+    NSDictionary *_prehoggedState;
+    UInt32 _transportType;
 }
 
-+ (void) releaseHoggedDevices
+
+#pragma mark - Static
+
++ (void) _refreshAudioDevices
 {
-    for (NSNumber *number in sObjectIDToPrehoggedState) {
-        UInt32 objectID = [number unsignedIntValue];
-        [[HugAudioDevice deviceWithObjectID:objectID] releaseHogMode];
+    static BOOL isRefreshing = NO;
+    
+    if (isRefreshing) return;
+    isRefreshing = YES;
+
+    NSMutableArray *connectedDevices = [NSMutableArray array];
+
+    UInt32 dataSize = 0;
+    AudioDeviceID *audioDevices = sCopyProperty(kAudioObjectSystemObject, &sAddressDevices, &dataSize);
+    
+    if (!audioDevices) {
+        HugLog(@"HugAudioDevice", @"Error when querying kAudioObjectSystemObject for devices");
+        return;
     }
 
-    [sObjectIDToPrehoggedState removeAllObjects];
-}
+    UInt32 deviceCount = dataSize / sizeof(AudioDeviceID);
+    BOOL foundDefaultDevice = NO;
 
+    for (UInt32 i = 0; i < deviceCount; ++i) {
+        AudioObjectID objectID = audioDevices[i];
 
-+ (instancetype) deviceWithObjectID:(AudioObjectID)objectID
-{
-    return [(HugAudioDevice *)[self alloc] initWithObjectID:objectID];
-}
+        NSString *deviceUID = sGetString(objectID, kAudioDevicePropertyDeviceUID);
+        if (!deviceUID) continue;
 
+        dataSize = 0;
+        
+        if (!sCheck(
+            @"AudioObjectGetPropertyDataSize[kAudioDevicePropertyStreamConfiguration]",
+            AudioObjectGetPropertyDataSize(objectID, &sAddressStreams, 0, NULL, &dataSize)
+        )) continue;
+        
+        NSInteger streamCount = dataSize / sizeof(AudioStreamID);
+        if (streamCount < 1) {
+            continue;
+        }
 
-+ (instancetype) deviceWithUID:(NSString *)deviceUID
-{
-    AudioObjectID objectID = kAudioObjectUnknown;
+        UInt32 transportType = kAudioDeviceTransportTypeUnknown;
+        sLoadUInt32(@"-transportType", objectID, kAudioDevicePropertyTransportType, &transportType);
+        
+        HugAudioDevice *device = nil;
 
-    AudioObjectPropertyAddress address = {
-        kAudioHardwarePropertyDeviceForUID,
-        kAudioObjectPropertyScopeGlobal, 0
-    };
+        if (!foundDefaultDevice && (transportType == kAudioDeviceTransportTypeBuiltIn)) {
+            device = sDefaultDevice;
+            foundDefaultDevice = YES;
+        } else {
+            device = [sUIDToDeviceMap objectForKey:deviceUID];
+            if (!device) device = [[HugAudioDevice alloc] init];
+        }
 
-    AudioValueTranslation value = { &deviceUID, sizeof(CFStringRef), &objectID, sizeof(AudioObjectID) };
-    UInt32 size = sizeof(AudioValueTranslation);
+        device->_deviceUID = deviceUID;
+        [device _updateObjectID:objectID];
 
-    if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &address, 0, NULL, &size, &value) == noErr) {
-        return [(HugAudioDevice *)[self alloc] initWithObjectID:objectID];
+        [connectedDevices addObject:device];
+        [sUIDToDeviceMap setObject:device forKey:deviceUID];
     }
     
-    return nil;
+    if (foundDefaultDevice) {
+        [sUIDToDeviceMap removeObjectForKey:@""];
+    } else {
+        [sUIDToDeviceMap setObject:sDefaultDevice forKey:@""];
+    }
+    
+    // Disconnect 
+    for (HugAudioDevice *device in [sUIDToDeviceMap objectEnumerator]) {
+        if (![connectedDevices containsObject:device]) {
+            [device _updateObjectID:0];
+        }
+    }
+
+    sConnectedDevices = connectedDevices;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:HugAudioDevicesDidRefreshNotification object:self];
+
+    free(audioDevices);
+    
+    isRefreshing = NO;
 }
 
 
-- (instancetype) initWithObjectID:(AudioObjectID)objectID
++ (void) initialize
 {
+    AudioObjectAddPropertyListenerBlock(kAudioObjectSystemObject, &sAddressDevices, dispatch_get_main_queue(), ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[]) {
+        [HugAudioDevice _refreshAudioDevices];
+    });
+
+    if (!sUIDToDeviceMap) {
+        sUIDToDeviceMap = [NSMapTable strongToWeakObjectsMapTable]; 
+    }
+    
+    if (!sDefaultDevice) {
+        sDefaultDevice = [[HugAudioDevice alloc] initWithWithDeviceUID:@"" name:nil];
+    }
+
+    [HugAudioDevice _refreshAudioDevices];
+}
+
+
++ (instancetype) defaultDevice
+{
+    return sDefaultDevice;
+}
+
+
++ (NSArray<HugAudioDevice *> *) allDevices
+{
+    NSArray *allDevices = [[sUIDToDeviceMap objectEnumerator] allObjects];
+
+    return [allDevices sortedArrayUsingComparator:^(id objectA, id objectB) {
+        HugAudioDevice *deviceA = (HugAudioDevice *)objectA;
+        HugAudioDevice *deviceB = (HugAudioDevice *)objectB;
+        
+        BOOL isBuiltInA = [deviceA isBuiltIn];
+        BOOL isBuiltInB = [deviceB isBuiltIn];
+        
+        if (isBuiltInA && !isBuiltInB) {
+            return NSOrderedAscending;
+        } else if (!isBuiltInA && isBuiltInB) {
+            return NSOrderedDescending;
+        } else {
+            return [[deviceA name] caseInsensitiveCompare:[deviceB name]];
+        }
+    }];
+}
+
+
+#pragma mark - Lifecycle / Overrides
+
+- (instancetype) initWithWithDeviceUID:(NSString *)deviceUID name:(NSString *)name
+{
+    HugAudioDevice *existing = [sUIDToDeviceMap objectForKey:deviceUID];
+    
+    if (existing) {
+        self = nil;
+        return existing;
+    }
+
     if ((self = [super init])) {
-        _objectID = objectID;
+        _deviceUID = deviceUID;
+        _name = [name copy];
+
+        if (_deviceUID) {
+            [sUIDToDeviceMap setObject:self forKey:_deviceUID];
+        }
     }
     
     return self;
 }
 
 
+- (NSString *) description
+{
+    return [NSString stringWithFormat:@"<%@: %p '%@'>", NSStringFromClass([self class]), self, [self name]];
+}
+
+
 #pragma mark - Private Methods
+
+- (UInt32) _transportType
+{
+    if (_transportType == kAudioDeviceTransportTypeUnknown) {
+        UInt32 transportType = kAudioDeviceTransportTypeUnknown;
+        sLoadUInt32(@"_transportType", _objectID, kAudioDevicePropertyTransportType, &transportType);
+        _transportType = transportType;
+    }
+    
+    return _transportType;
+}
+
 
 - (UInt32) _channelCount
 {
-    UInt32 channelCount = 0;
-
     AudioObjectPropertyAddress address = {
         kAudioDevicePropertyStreamConfiguration,
         kAudioDevicePropertyScopeOutput, 0
     };
 
+    if (![self isConnected]) {
+        return 0;
+    }
+
     UInt32 size = 0;
-    if (!sCheck(@"channelCount", AudioObjectGetPropertyDataSize(_objectID, &address, 0, NULL, &size))) {
-        return 0;
-    }
-    
-    AudioBufferList *bufferList = (AudioBufferList *)alloca(size);
-    if (!sCheck(@"channelCount", AudioObjectGetPropertyData(_objectID, &address, 0, NULL, &size, bufferList))) {
-        return 0;
-    }
-    
+    AudioBufferList *bufferList = sCopyProperty(_objectID, &address, &size);
+    if (!bufferList) return 0;
+
+    UInt32 channelCount = 0;
+
     for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
         channelCount += bufferList->mBuffers[i].mNumberChannels;
     }
     
+    free(bufferList);
+    
     return channelCount;
+}
+
+
+- (void) _updateObjectID:(AudioObjectID)objectID
+{
+    BOOL oldConnected = [self isConnected];
+    BOOL newConnected = objectID > 0;
+
+    if (oldConnected != newConnected) {
+        [self willChangeValueForKey:@"connected"];
+    }
+
+    if (_objectID != objectID) {
+        [self willChangeValueForKey:@"objectID"];
+        _objectID = objectID;
+        [self didChangeValueForKey:@"objectID"];
+    }
+
+    if (oldConnected != newConnected) {
+        [self didChangeValueForKey:@"connected"];
+    }
 }
 
 
@@ -314,6 +526,8 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
    
 - (BOOL) takeHogModeAndResetVolume:(BOOL)resetsVolume
 {
+    if (![self isConnected]) return NO;
+
     BOOL didHog = NO;
     NSDictionary *state = nil;
 
@@ -349,17 +563,8 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
         }
     }
 
-    if (didHog) {
-        if (state) {
-            id key = @( [self objectID] );
-            if (!sObjectIDToPrehoggedState) {
-                sObjectIDToPrehoggedState = [NSMutableDictionary dictionary];
-            }
-
-            if (![sObjectIDToPrehoggedState objectForKey:key]) {
-                [sObjectIDToPrehoggedState setObject:state forKey:key];
-            }
-        }
+    if (didHog && state && !_prehoggedState) {
+        _prehoggedState = state;
     }
     
     return didHog;
@@ -368,11 +573,10 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
 
 - (void) releaseHogMode
 {
-    id key = @( [self objectID] );
-    NSDictionary *prehoggedState = [sObjectIDToPrehoggedState objectForKey:key];
+    if (![self isConnected]) return;
 
-    if (prehoggedState) {
-        [self _restoreState:nil keysToRestore:[prehoggedState allKeys] defaults:@{
+    if (_prehoggedState) {
+        [self _restoreState:nil keysToRestore:[_prehoggedState allKeys] defaults:@{
             sVolumesKey: @(0.0),
             sMutesKey:   @YES,
             sPansKey:    @(0.5)
@@ -386,26 +590,29 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
         sCheck(@"releaseHogMode", AudioObjectSetPropertyData(_objectID, &sAddressHogMode, 0, NULL, size, &pid));
     }
 
-    if (prehoggedState) {
-        [self _restoreState:prehoggedState keysToRestore:[prehoggedState allKeys] defaults:nil];
-        [sObjectIDToPrehoggedState removeObjectForKey:key];
+    if (_prehoggedState) {
+        [self _restoreState:_prehoggedState keysToRestore:[_prehoggedState allKeys] defaults:nil];
+        _prehoggedState = nil;
     }
 }
 
 
 - (pid_t) hogModeOwner
 {
-    pid_t  data = -1;
-    UInt32 size = sizeof(data);
-    
-    if (
-        sCheck(@"hogModeOwner", AudioObjectHasProperty(    _objectID, &sAddressHogMode)) &&
-        sCheck(@"hogModeOwner", AudioObjectGetPropertyData(_objectID, &sAddressHogMode, 0, NULL, &size, &data))
-    ) {
-        return data;
-    } else {
-        return -1;
+    if (_objectID && AudioObjectHasProperty(_objectID, &sAddressHogMode)) {
+        pid_t  data = -1;
+        UInt32 size = sizeof(data);
+
+        if (sCheck(
+            @"hogModeOwner",
+            AudioObjectGetPropertyData(_objectID, &sAddressHogMode, 0, NULL, &size, &data)
+        )) {
+            return data;
+        }
+
     }
+
+    return -1;
 }
 
 
@@ -435,17 +642,23 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
 
 #pragma mark - Accessors
 
-- (UInt32) transportType
+- (NSString *) deviceUID
 {
-    UInt32 transportType = kAudioDeviceTransportTypeUnknown;
-    sLoadUInt32(@"-transportType", _objectID, kAudioDevicePropertyTransportType, &transportType);
-    return transportType;
+    if (!_deviceUID && _objectID) {
+        _deviceUID = sGetString(_objectID, kAudioDevicePropertyDeviceUID);
+    }
+
+    return _deviceUID;
 }
 
 
 - (NSString *) name
 {
-    return sGetString(_objectID, kAudioObjectPropertyName);
+    if (!_name && _objectID) {
+        _name = sGetString(_objectID, kAudioObjectPropertyName);
+    }
+
+    return _name;
 }
 
 
@@ -479,6 +692,14 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
     }
 
     return NO;
+}
+
+
+#pragma mark - Accessors
+
+- (BOOL) isBuiltIn
+{
+    return [self _transportType] == kAudioDeviceTransportTypeBuiltIn;
 }
 
 
@@ -520,76 +741,32 @@ static void sSetStateDictionaryForDevice(CAHALAudioDevice *device, NSArray *keys
 
 - (NSArray<NSNumber *> *) availableFrameSizes
 {
-    NSMutableArray *frameSizes = [NSMutableArray array];
+    if (![self isConnected]) return nil;
 
-    AudioObjectPropertyAddress address = { kAudioDevicePropertyBufferFrameSizeRange, kAudioObjectPropertyScopeGlobal, 0 };
+    NSArray *validFrameSizes = @[
+    #if DEBUG
+        @32, @64, @128, @256,
+    #endif
+        @512, @1024, @2048, @4096, @6144, @8192
+    ];
 
-    if (AudioObjectHasProperty(_objectID, &address)) {
-        AudioValueRange range = { 0, 0 };
-        UInt32 size = sizeof(range);
-        
-        if (sCheck(@"availableFrameSizes", AudioObjectGetPropertyData(_objectID, &address, 0, NULL, &size, &range))) {
-            for (NSNumber *n in @[
-            #if DEBUG
-                @32, @64, @128, @256,
-            #endif
-                @512, @1024, @2048, @4096, @6144, @8192
-            ]) {
-                NSInteger i = [n integerValue];
-
-                if (range.mMinimum <= i  && i <= range.mMaximum) {
-                    [frameSizes addObject:n];
-                }
-            }
-        }
-    
-    } else {
-        UInt32 frameSize = 0;
-        sLoadUInt32(@"availableFrameSizes", _objectID, kAudioDevicePropertyBufferFrameSize, &frameSize);
-        if (frameSize) [frameSizes addObject:@(frameSize)];
-    }
-
-    return frameSizes;
+    return sGetAudioRange(_objectID, kAudioDevicePropertyBufferFrameSizeRange, validFrameSizes);
 }
 
 
 - (NSArray *) availableSampleRates
 {
-    NSMutableArray *sampleRates = [NSMutableArray array];
+    if (![self isConnected]) return nil;
 
-    AudioObjectPropertyAddress address = {
-        kAudioDevicePropertyAvailableNominalSampleRates,
-        kAudioObjectPropertyScopeGlobal, 0
-    };
+    NSArray *validRates = @[ @44100.0, @48000.0, @88200.0, @96000.0, @176400.0, @192000.0 ];
+    
+    return sGetAudioRange(_objectID, kAudioDevicePropertyAvailableNominalSampleRates, validRates);
+}
 
-    UInt32 dataSize = 0;
-    
-    if (!sCheck(@"availableSampleRates", AudioObjectGetPropertyDataSize(_objectID, &address, 0, NULL, &dataSize))) {
-        return sampleRates;
-    }
-    
-    AudioValueRange *ranges = (AudioValueRange *)alloca(dataSize);
-    
-    if (!sCheck(@"availableSampleRates", AudioObjectGetPropertyData(_objectID, &address, 0, NULL, &dataSize, ranges))) {
-        return sampleRates;
-    }
-    
-    UInt32 count = dataSize / sizeof(AudioValueRange);
-    for (NSInteger i = 0; i < count; i++) {
-        AudioValueRange range = ranges[i];
-    
-        for (NSNumber *n in @[ @44100.0, @48000.0, @88200.0, @96000.0, @176400.0, @192000.0 ]) {
-            double d = [n doubleValue];
 
-            if (range.mMinimum <= d  && d <= range.mMaximum) {
-                if (![sampleRates containsObject:n]) {
-                    [sampleRates addObject:n];
-                }
-            }
-        }
-    }
-    
-    return sampleRates;
+- (BOOL) isConnected
+{
+    return _objectID > 0;
 }
 
 
