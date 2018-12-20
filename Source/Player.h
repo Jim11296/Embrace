@@ -3,7 +3,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol PlayerListener, PlayerTrackProvider;
-@class Player, Track, Effect, AudioDevice, HugMeterData;
+@class Player, Track, Effect, HugAudioDevice, HugMeterData;
 
 typedef NS_ENUM(NSInteger, PlayerIssue) {
     PlayerIssueNone = 0,
@@ -47,13 +47,13 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 @property (nonatomic) float stereoLevel;   // -1.0 = Reverse, 0.0 = Mono, +1.0 = Stereo
 @property (nonatomic) float stereoBalance; // -1.0 = Left,                +1.0 = Right
 
-- (void) updateOutputDevice: (AudioDevice *) outputDevice
+- (void) updateOutputDevice: (HugAudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
                resetsVolume: (BOOL) resetsVolume;
                    
-@property (nonatomic, readonly) AudioDevice *outputDevice;
+@property (nonatomic, readonly) HugAudioDevice *outputDevice;
 @property (nonatomic, readonly) double outputSampleRate;
 @property (nonatomic, readonly) UInt32 outputFrames;
 @property (nonatomic, readonly) BOOL outputHogMode;

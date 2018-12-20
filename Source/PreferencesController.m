@@ -2,7 +2,6 @@
 
 #import "PreferencesController.h"
 #import "Preferences.h"
-#import "AudioDevice.h"
 #import "Player.h"
 #import "ScriptFile.h"
 #import "ScriptsManager.h"
@@ -55,7 +54,7 @@
     [self setPlayer:[Player sharedInstance]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)    name:PreferencesDidChangeNotification    object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:)  name:AudioDevicesDidRefreshNotification  object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:)  name:HugAudioDevicesDidRefreshNotification  object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScriptsManagerDidReload:) name:ScriptsManagerDidReloadNotification object:nil];
 
     [self selectPane:0 animated:NO];
@@ -105,32 +104,47 @@
 
 - (void) _rebuildDevicesMenu
 {
-    void (^rebuild)(NSPopUpButton *, AudioDevice *) = ^(NSPopUpButton *popUpButton, AudioDevice *deviceToSelect) {
-        NSMenu *menu = [popUpButton menu];
+    NSPopUpButton  *popUpButton    = [self mainDevicePopUp];
+    NSMenu         *menu           = [popUpButton menu];
+    HugAudioDevice *deviceToSelect = [[Preferences sharedInstance] mainOutputAudioDevice];
 
-        [menu removeAllItems];
-        
-        NSMenuItem *itemToSelect = nil;
+    __block NSMenuItem *itemToSelect = nil;
 
-        for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-            NSString *title = [device name];
-            if (!title) continue;
+    NSMenuItem *(^makeItem)(HugAudioDevice *) = ^(HugAudioDevice *device) {
+        NSMenuItem *item = nil;
 
-            BOOL valid = [device isConnected];
-            NSMenuItem *item = [self _itemWithTitle:title representedObject:device valid:valid useIssueImage:YES];
-            
-            if ([device isEqual:deviceToSelect]) {
-                itemToSelect = item;
-            }
-            
+        NSString *title = [device name];
+        if (!title) return item;
+
+        BOOL valid = [device isConnected];
+        item = [self _itemWithTitle:title representedObject:device valid:valid useIssueImage:YES];
+                
+        return item;
+    };
+
+    [menu removeAllItems];
+    
+    for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
+        NSMenuItem *item = makeItem(device);
+
+        if (item) {
             [menu addItem:item];
         }
 
-        [popUpButton selectItem:itemToSelect];
-    };
+        if ([deviceToSelect isEqual:device]) {
+            itemToSelect = item;
+        }
+    }
     
-    AudioDevice *mainOutputAudioDevice = [[Preferences sharedInstance] mainOutputAudioDevice];
-    rebuild([self mainDevicePopUp], mainOutputAudioDevice);
+    if (!itemToSelect) {
+        itemToSelect = makeItem(deviceToSelect);
+
+        if (itemToSelect) {
+            [menu insertItem:itemToSelect atIndex:0];
+        }
+    }
+
+    [popUpButton selectItem:itemToSelect];
 }
 
 
@@ -138,10 +152,10 @@
 {
     NSMenu *menu = [[self sampleRatePopUp] menu];
 
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     NSNumber *sampleRate = @([[Preferences sharedInstance] mainOutputSampleRate]);
 
-    NSArray *deviceSampleRates = [device sampleRates];
+    NSArray *deviceSampleRates = [device availableSampleRates];
     
     [menu removeAllItems];
 
@@ -177,23 +191,23 @@
 {
     NSMenu *menu = [[self framesPopUp] menu];
     
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     NSNumber *frameSize = @([[Preferences sharedInstance] mainOutputFrames]);
 
-    NSArray *deviceFrameSizes = [device frameSizes];
+    NSArray *deviceFrameSizes = [device availableFrameSizes];
 
     [menu removeAllItems];
     
     NSMenuItem *itemToSelect = nil;
 
-    NSMutableArray *frameSizes = [deviceFrameSizes mutableCopy];
+    NSMutableArray *popUpFrameSizes = [deviceFrameSizes mutableCopy];
     
     if (![deviceFrameSizes containsObject:frameSize]) {
-        [frameSizes addObject:frameSize];
-        [frameSizes sortUsingSelector:@selector(compare:)];
+        [popUpFrameSizes addObject:frameSize];
+        [popUpFrameSizes sortUsingSelector:@selector(compare:)];
     }
 
-    for (NSNumber *number in frameSizes) {
+    for (NSNumber *number in popUpFrameSizes) {
         NSString *title = [number stringValue];
 
         BOOL valid = [deviceFrameSizes containsObject:number];
@@ -271,19 +285,19 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
-    AudioDevice *device = [preferences mainOutputAudioDevice];
+    HugAudioDevice *device = [preferences mainOutputAudioDevice];
     [self _rebuildFrameMenu];
     [self _rebuildSampleRateMenu];
 
     [[self usesMasteringComplexityButton] setState:[preferences usesMasteringComplexitySRC]];
     
     BOOL resetVolumeEnabled = [device hasVolumeControl] &&
-                              [device isHoggable] &&
+                              [device isHogModeSettable] &&
                               [preferences mainOutputUsesHogMode];
 
     [self setResetVolumeEnabled:resetVolumeEnabled];
 
-    if ([device isHoggable]) {
+    if ([device isHogModeSettable]) {
         [self setDeviceHoggable:YES];
         
         BOOL mainOutputUsesHogMode = [preferences mainOutputUsesHogMode];
@@ -309,7 +323,7 @@
 {
     [self _rebuildDevicesMenu];
 
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     [self setDeviceConnected:[device isConnected]];
 }
 
@@ -330,10 +344,8 @@
 
 - (IBAction) changeMainDevice:(id)sender
 {
-    AudioDevice *device = [[sender selectedItem] representedObject];
+    HugAudioDevice *device = [[sender selectedItem] representedObject];
     [[Preferences sharedInstance] setMainOutputAudioDevice:device];
-
-    [AudioDevice selectChosenAudioDevice:device];
 }
 
 

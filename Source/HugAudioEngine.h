@@ -20,7 +20,11 @@
               stopTime: (NSTimeInterval) stopTime
                padding: (NSTimeInterval) padding;
 
-- (void) stop;
+// Stops playback of the audio file
+- (void) stopPlayback;
+
+// Stops the actual audio hardware
+- (void) stopHardware;
 
 // Full-scale, linear, 1.0 = 0dBFS
 - (void) updatePreGain:(float)preGain;

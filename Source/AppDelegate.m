@@ -260,7 +260,9 @@
     [[Player sharedInstance] saveEffectState];
     [[Player sharedInstance] hardStop];
     
-    [HugAudioDevice releaseHoggedDevices];
+    for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
+        [device releaseHogMode];
+    }
 }
 
 

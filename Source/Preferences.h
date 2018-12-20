@@ -2,7 +2,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class AudioDevice;
+@class HugAudioDevice;
 
 typedef NS_ENUM(NSInteger, KeySignatureDisplayMode) {
     KeySignatureDisplayModeRaw,
@@ -72,12 +72,12 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 @property (nonatomic) DuplicateStatusMode duplicateStatusMode;
 
-@property (nonatomic) AudioDevice *mainOutputAudioDevice;
-@property (nonatomic) double       mainOutputSampleRate;
-@property (nonatomic) UInt32       mainOutputFrames;
-@property (nonatomic) BOOL         mainOutputUsesHogMode;
-@property (nonatomic) BOOL         mainOutputResetsVolume;
+@property (nonatomic) HugAudioDevice *mainOutputAudioDevice;
+@property (nonatomic) double          mainOutputSampleRate;
+@property (nonatomic) UInt32          mainOutputFrames;
+@property (nonatomic) BOOL            mainOutputUsesHogMode;
+@property (nonatomic) BOOL            mainOutputResetsVolume;
 
-@property (nonatomic) BOOL         usesMasteringComplexitySRC;
+@property (nonatomic) BOOL usesMasteringComplexitySRC;
 
 @end

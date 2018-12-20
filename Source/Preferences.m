@@ -1,11 +1,13 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import "Preferences.h"
-#import "AudioDevice.h"
+#import "HugAudioDevice.h"
 #import "EffectAdditions.h"
 
 NSString * const PreferencesDidChangeNotification = @"PreferencesDidChange";
 
+static NSString * const sDeviceDictionaryUIDKey  = @"DeviceUID";
+static NSString * const sDeviceDictionaryNameKey = @"Name";
 
 static NSDictionary *sGetDefaultValues()
 {
@@ -42,7 +44,7 @@ static NSDictionary *sGetDefaultValues()
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
         @"duplicateStatusMode":     @( DuplicateStatusModeSameFile ),
         
-        @"mainOutputAudioDevice":  [AudioDevice defaultOutputDevice],
+        @"mainOutputAudioDevice":  [HugAudioDevice defaultDevice],
         @"mainOutputSampleRate":   @(44100),
         @"mainOutputFrames":       @(2048),
         @"mainOutputUsesHogMode":  @(NO),
@@ -68,8 +70,16 @@ static void sSetDefaultObject(id dictionary, NSString *key, id valueToSave, id d
     if ([defaultValue isKindOfClass:[NSNumber class]]) {
         saveObject(valueToSave, key);
 
-    } else if ([defaultValue isKindOfClass:[AudioDevice class]]) {
-        saveObject([valueToSave dictionaryRepresentation], key);
+    } else if ([defaultValue isKindOfClass:[HugAudioDevice class]]) {
+        NSString *deviceUID = [valueToSave deviceUID];
+        NSString *name      = [valueToSave name];
+        
+        if (deviceUID && name) {
+            saveObject(@{
+                sDeviceDictionaryUIDKey:deviceUID, 
+                sDeviceDictionaryNameKey: name
+            }, key);
+        }
 
     } else if ([defaultValue isKindOfClass:[NSData class]]) {
         saveObject(valueToSave, key);
@@ -167,13 +177,17 @@ static void sRegisterDefaults()
         } else if ([defaultValue isKindOfClass:[NSString class]]) {
             [self setValue:[defaults objectForKey:key] forKey:key];
 
-        } else if ([defaultValue isKindOfClass:[AudioDevice class]]) {
+        } else if ([defaultValue isKindOfClass:[HugAudioDevice class]]) {
             NSDictionary *dictionary = [defaults objectForKey:key];
 
             if ([dictionary isKindOfClass:[NSDictionary class]]) {
-                AudioDevice *device = [AudioDevice audioDeviceWithDictionary:dictionary];
-                [AudioDevice selectChosenAudioDevice:device];
-                if (device) [self setValue:device forKey:key];
+                NSString *name      = [dictionary objectForKey:sDeviceDictionaryNameKey];
+                NSString *deviceUID = [dictionary objectForKey:sDeviceDictionaryUIDKey];
+                
+                if (name && deviceUID) {
+                    HugAudioDevice *device = [[HugAudioDevice alloc] initWithWithDeviceUID:deviceUID name:name];
+                    if (device) [self setValue:device forKey:key];
+                }
             }
         }
     }

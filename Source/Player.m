@@ -5,7 +5,6 @@
 #import "Effect.h"
 #import "AppDelegate.h"
 #import "EffectType.h"
-#import "AudioDevice.h"
 #import "Preferences.h"
 #import "HugAudioDevice.h"
 #import "HugAudioEngine.h"
@@ -43,11 +42,11 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
     HugAudioEngine *_engine;
     
-    AudioDevice *_outputDevice;
-    double       _outputSampleRate;
-    UInt32       _outputFrames;
-    BOOL         _outputHogMode;
-    BOOL         _outputResetsVolume;
+    HugAudioDevice *_outputDevice;
+    double          _outputSampleRate;
+    UInt32          _outputFrames;
+    BOOL            _outputHogMode;
+    BOOL            _outputResetsVolume;
     
     AudioDeviceID _listeningDeviceID;
 
@@ -380,17 +379,15 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
 - (void) _handleAudioDeviceHasChanged
 {
-    HugAudioDevice *device = [_outputDevice controller];
-    
     PlayerInterruptionReason reason = PlayerInterruptionReasonNone;
     
-    if ([device isHoggedByAnotherProcess]) {
+    if ([_outputDevice isHoggedByAnotherProcess]) {
         reason = PlayerInterruptionReasonHoggedByOtherProcess;
 
-    } else if ([device nominalSampleRate] != _outputSampleRate) {
+    } else if ([_outputDevice nominalSampleRate] != _outputSampleRate) {
         reason = PlayerInterruptionReasonSampleRateChanged;
 
-    } else if ([device frameSize] != _outputFrames) {
+    } else if ([_outputDevice frameSize] != _outputFrames) {
         reason = PlayerInterruptionReasonFramesChanged;
     }
     
@@ -437,46 +434,43 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     if (![_outputDevice isConnected]) {
         raiseIssue(PlayerIssueDeviceMissing);
 
-    } else if ([[_outputDevice controller] isHoggedByAnotherProcess]) {
+    } else if ([_outputDevice isHoggedByAnotherProcess]) {
         raiseIssue(PlayerIssueDeviceHoggedByOtherProcess);
     }
 
     _hadChangeDuringPlayback = NO;
     
-    [_engine stop];
+    [_engine stopHardware];
     
-    for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-        HugAudioDevice *controller = [device controller];
-        
-        if ([controller isHoggedByMe]) {
+    for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
+        if ([device isHoggedByMe]) {
             EmbraceLog(@"Player", @"Un-oink");
-            [controller releaseHogMode];
+            [device releaseHogMode];
         }
     }
     
 
-    HugAudioDevice *controller = [_outputDevice controller];
-    AudioDeviceID deviceID = [controller objectID];
+    AudioDeviceID deviceID = [_outputDevice objectID];
     
     if (ok) {
-        [controller setNominalSampleRate:_outputSampleRate];
+        [_outputDevice setNominalSampleRate:_outputSampleRate];
 
-        if (!_outputSampleRate || ([controller nominalSampleRate] != _outputSampleRate)) {
+        if (!_outputSampleRate || ([_outputDevice nominalSampleRate] != _outputSampleRate)) {
             raiseIssue(PlayerIssueErrorConfiguringSampleRate);
         }
     }
 
     if (ok) {
-        [controller setFrameSize:_outputFrames];
+        [_outputDevice setFrameSize:_outputFrames];
 
-        if (!_outputFrames || ([controller frameSize] != _outputFrames)) {
+        if (!_outputFrames || ([_outputDevice frameSize] != _outputFrames)) {
             raiseIssue(PlayerIssueErrorConfiguringFrameSize);
         }
     }
 
     if (ok) {
         if (_outputHogMode) {
-            if ([controller takeHogModeAndResetVolume:_outputResetsVolume]) {
+            if ([_outputDevice takeHogModeAndResetVolume:_outputResetsVolume]) {
                 EmbraceLog(@"Player", @"_outputHogMode is YES, took hog mode.");
 
             } else {
@@ -718,7 +712,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     }
     [self setCurrentTrack:nil];
 
-    [_engine stop];
+    [_engine stopPlayback];
 
     _leftMeterData = _rightMeterData = nil;
     
@@ -743,7 +737,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 }
 
 
-- (void) updateOutputDevice: (AudioDevice *) outputDevice
+- (void) updateOutputDevice: (HugAudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
