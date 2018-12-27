@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 
-@class HugAudioSource;
+@class HugAudioFile, HugAudioSource;
 
 typedef NS_ENUM(NSInteger, HugPlaybackStatus) {
     HugPlaybackStatusStopped = 0,

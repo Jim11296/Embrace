@@ -175,7 +175,7 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
     }
     
     if (!playingTextColor) {
-        playingTextColor = [Theme colorNamed:@"SetlistPlayingTextFallback"];
+        playingTextColor = [NSColor colorNamed:@"SetlistPlayingTextFallback"];
     }
 
     _playingTextColor = playingTextColor;

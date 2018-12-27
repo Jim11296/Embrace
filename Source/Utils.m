@@ -2,8 +2,8 @@
 
 #import "Utils.h"
 #import "Track.h"
-#import "Theme.h"
 #import "HugUtils.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 
 static NSArray *sGetTraditionalStringArray()

@@ -38,7 +38,7 @@
         HairlineView *hairlineView = [[HairlineView alloc] initWithFrame:[self bounds]];
         [hairlineView setFrame:hairlineFrame];
         [hairlineView setAutoresizingMask:NSViewWidthSizable];
-        [hairlineView setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+        [hairlineView setBorderColor:[NSColor colorNamed:@"SetlistSeparator"]];
         [hairlineView setLayoutAttribute:NSLayoutAttributeTop];
 
         [self addSubview:hairlineView];

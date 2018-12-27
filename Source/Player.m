@@ -10,7 +10,7 @@
 #import "HugAudioEngine.h"
 #import "HugAudioSettings.h"
 #import "HugAudioSource.h"
-
+#import "HugAudioFile.h"
 
 #import <pthread.h>
 #import <signal.h>

@@ -6,8 +6,7 @@
 #import "EffectType.h"
 #import <objc/runtime.h>
 
-
-#import <AudioUnit/AUCocoaUIView.h>
+#import <CoreAudioKit/CoreAudioKit.h>
 
 @interface EditSystemEffectController ()
 

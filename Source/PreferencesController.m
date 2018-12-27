@@ -82,7 +82,7 @@
             [ps setMaximumLineHeight:18];
         }
         
-        [attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]; 
+        [attributes setObject:[[NSColor textColor] colorWithAlphaComponent:0.5] forKey:NSForegroundColorAttributeName]; 
         if (font) [attributes setObject:font forKey:NSFontAttributeName];
         if (ps)   [attributes setObject:ps   forKey:NSParagraphStyleAttributeName];
 
@@ -166,7 +166,8 @@
         return item;
     };
 
-    NSMenu *menu = [[self sampleRatePopUp] menu];
+    NSPopUpButton *popUpButton = [self sampleRatePopUp];
+    NSMenu *menu = [popUpButton menu];
 
     HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
 
@@ -183,12 +184,12 @@
     }
 
     if (itemToSelect) {
-        [[self sampleRatePopUp] selectItem:itemToSelect];
+        [popUpButton selectItem:itemToSelect];
 
     } else {
         [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         [menu insertItem:makeMenu(selectedRate, YES) atIndex:0];
-        [[self sampleRatePopUp] selectItemAtIndex:0];
+        [popUpButton selectItemAtIndex:0];
     }
 }
 
@@ -211,7 +212,8 @@
         return item;
     };
 
-    NSMenu *menu = [[self sampleRatePopUp] menu];
+    NSPopUpButton *popUpButton = [self framesPopUp];
+    NSMenu *menu = [popUpButton menu];
 
     HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
 
@@ -228,12 +230,12 @@
     }
 
     if (itemToSelect) {
-        [[self sampleRatePopUp] selectItem:itemToSelect];
+        [popUpButton selectItem:itemToSelect];
 
     } else {
         [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         [menu insertItem:makeMenu(selectedFrameSize, YES) atIndex:0];
-        [[self sampleRatePopUp] selectItemAtIndex:0];
+        [popUpButton selectItemAtIndex:0];
     }
 }
 
@@ -366,7 +368,7 @@
     if (sender == [self framesPopUp]) {
         NSNumber *number = [[sender selectedItem] representedObject];
         
-        UInt32 frames =[number unsignedIntValue];
+        UInt32 frames = [number unsignedIntValue];
         [[Preferences sharedInstance] setMainOutputFrames:frames];
         
     } else if (sender == [self sampleRatePopUp]) {
@@ -435,7 +437,7 @@
     NSRect windowFrame = [window frame];
     NSRect newFrame = [window frameRectForContentRect:paneFrame];
     
-    newFrame.origin    = windowFrame.origin;
+    newFrame.origin    =  windowFrame.origin;
     newFrame.origin.y += (windowFrame.size.height - newFrame.size.height);
 
     [pane setFrameOrigin:NSZeroPoint];

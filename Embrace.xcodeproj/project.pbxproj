@@ -106,7 +106,6 @@
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
-		558AB90220C8C46800B4BAEE /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AB90120C8C46800B4BAEE /* Theme.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		558DC0BA187785F200C85770 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B7187785F200C85770 /* AppDelegate.m */; };
 		558DC0BB187785F200C85770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B8187785F200C85770 /* main.m */; };
@@ -125,8 +124,6 @@
 		55ADE93518815EA8008DC245 /* SetlistPlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* SetlistPlayBar.m */; };
 		55ADE93818824338008DC245 /* SetlistMeterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* SetlistMeterView.m */; };
 		55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */; };
-		55B03BA020CE29560055881F /* ColorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B03B9F20CE29560055881F /* ColorCompatibility.m */; };
-		55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B03BA220CE2A7D0055881F /* ColorCompatibilityData.m */; };
 		55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B8587B1FB93ED20095D496 /* ScriptsManager.m */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
 		55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B091877F26300D84481 /* AudioUnit.framework */; };
@@ -365,15 +362,12 @@
 		557C43991D615CDC000184D8 /* TipArrowFloater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TipArrowFloater.m; path = Source/TipArrowFloater.m; sourceTree = SOURCE_ROOT; };
 		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
 		557CF69018C1E14B0066D040 /* TracksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TracksController.m; path = Source/TracksController.m; sourceTree = SOURCE_ROOT; };
-		557ECCB620CE28260042FDF6 /* ColorCompatibilityGenerate.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = ColorCompatibilityGenerate.rb; path = Source/ColorCompatibilityGenerate.rb; sourceTree = "<group>"; };
 		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
 		5583A5961CFC0F1200B8CC4D /* IssueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueManager.h; path = Source/IssueManager.h; sourceTree = "<group>"; };
 		5583A5971CFC0F1200B8CC4D /* IssueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueManager.m; path = Source/IssueManager.m; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
-		558AB90020C8C46800B4BAEE /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Theme.h; path = Source/Theme.h; sourceTree = "<group>"; };
-		558AB90120C8C46800B4BAEE /* Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Theme.m; path = Source/Theme.m; sourceTree = "<group>"; };
 		558DC07F187785BC00C85770 /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		558DC082187785BC00C85770 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		558DC085187785BC00C85770 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -411,9 +405,6 @@
 		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = TargetEmbrace.xcconfig; path = Config/TargetEmbrace.xcconfig; sourceTree = SOURCE_ROOT; };
 		55B03B9B20CDFDBD0055881F /* TrackTableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackTableRowView.h; path = Source/TrackTableRowView.h; sourceTree = "<group>"; };
 		55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackTableRowView.m; path = Source/TrackTableRowView.m; sourceTree = "<group>"; };
-		55B03B9E20CE29560055881F /* ColorCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ColorCompatibility.h; path = Source/ColorCompatibility.h; sourceTree = "<group>"; };
-		55B03B9F20CE29560055881F /* ColorCompatibility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ColorCompatibility.m; path = Source/ColorCompatibility.m; sourceTree = "<group>"; };
-		55B03BA220CE2A7D0055881F /* ColorCompatibilityData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCompatibilityData.m; sourceTree = BUILT_PRODUCTS_DIR; };
 		55B8587A1FB93ED20095D496 /* ScriptsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScriptsManager.h; path = Source/ScriptsManager.h; sourceTree = "<group>"; };
 		55B8587B1FB93ED20095D496 /* ScriptsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScriptsManager.m; path = Source/ScriptsManager.m; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
@@ -857,17 +848,6 @@
 			name = Combined;
 			sourceTree = "<group>";
 		};
-		55B03BA120CE297E0055881F /* NSColor Compatibility */ = {
-			isa = PBXGroup;
-			children = (
-				55B03B9E20CE29560055881F /* ColorCompatibility.h */,
-				55B03B9F20CE29560055881F /* ColorCompatibility.m */,
-				55B03BA220CE2A7D0055881F /* ColorCompatibilityData.m */,
-				557ECCB620CE28260042FDF6 /* ColorCompatibilityGenerate.rb */,
-			);
-			name = "NSColor Compatibility";
-			sourceTree = "<group>";
-		};
 		55BC0B1C1878D7FA00D84481 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -899,8 +879,6 @@
 		55BC0B1E1878D8B700D84481 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				558AB90020C8C46800B4BAEE /* Theme.h */,
-				558AB90120C8C46800B4BAEE /* Theme.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
 				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
@@ -979,7 +957,6 @@
 		55DD53A518B9FC3E0084628D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				55B03BA120CE297E0055881F /* NSColor Compatibility */,
 				550C63BC1FE26F18007841BC /* MTS */,
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
@@ -1057,7 +1034,6 @@
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
 				55224BEC18A855E900407B46 /* rcbump */,
-				557ECCB520CE260F0042FDF6 /* Generate Compatibility Colors */,
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07D187785BC00C85770 /* Resources */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
@@ -1212,23 +1188,6 @@
 			shellPath = /bin/sh;
 			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi\n";
 		};
-		557ECCB520CE260F0042FDF6 /* Generate Compatibility Colors */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Resources/Assets.xcassets/**",
-				"$(SRCROOT)/Source/ColorCompatibilityGenerate.rb",
-			);
-			name = "Generate Compatibility Colors";
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/ColorCompatibilityData.m",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ruby \"${PROJECT_DIR}/Source/ColorCompatibilityGenerate.rb\" \"EmbraceColorCompatibilityData\" \"${SRCROOT}/Resources/Assets.xcassets\" \"${BUILT_PRODUCTS_DIR}/ColorCompatibilityData.m\"\n";
-		};
 		55CD7AE31F8B11920047F073 /* Fix Icon for Trial */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1311,7 +1270,6 @@
 				5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.cpp in Sources */,
 				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
-				55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */,
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
 				555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
@@ -1348,11 +1306,9 @@
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
 				55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */,
-				55B03BA020CE29560055881F /* ColorCompatibility.m in Sources */,
 				55F3B7B61877908900E8FEC8 /* Track.m in Sources */,
 				551CE71D21B3E24400D422E4 /* HugStereoField.m in Sources */,
 				558513C718794A2600C268E3 /* EffectsController.m in Sources */,
-				558AB90220C8C46800B4BAEE /* Theme.m in Sources */,
 				556ACE2F187B901400AED4BC /* WaveformView.m in Sources */,
 				5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */,
 				55ADE93818824338008DC245 /* SetlistMeterView.m in Sources */,

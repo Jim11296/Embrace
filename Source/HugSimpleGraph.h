@@ -1,6 +1,6 @@
 // (c) 2018 Ricci Adams.  All rights reserved.
 
-@class AUAudioUnit;
+#import <AudioToolbox/AudioToolbox.h>
 
 typedef void (^HugSimpleGraphErrorBlock)(OSStatus err, NSInteger index);
 

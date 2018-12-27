@@ -343,7 +343,7 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
         NSRect bounds = CGRectMake(0, 0, 32, 32);
         bounds = CGRectInset(bounds, sBorderLayerPadding + 1, sBorderLayerPadding + 1);
         
-        [[Theme colorNamed:@"ButtonMainGlow"] set];
+        [[NSColor colorNamed:@"ButtonMainGlow"] set];
         
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:3.5 yRadius:3.5];
         [path setLineWidth:2];
@@ -661,22 +661,22 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (NSColor *) _colorWithStyle:(SetlistButtonStyle)style
 {
     if (style == SetlistButtonStyleNormal) {
-        return [Theme colorNamed:@"ButtonNormal"];
+        return [NSColor colorNamed:@"ButtonNormal"];
 
     } else if (style == SetlistButtonStyleDisabled) {
-        return [Theme colorNamed:@"ButtonDisabled"];
+        return [NSColor colorNamed:@"ButtonDisabled"];
 
     } else if (style == SetlistButtonStyleInactive) {
-        return [Theme colorNamed:@"ButtonInactive"];
+        return [NSColor colorNamed:@"ButtonInactive"];
 
     } else if (style == SetlistButtonStylePressed) {
-        return [Theme colorNamed:@"ButtonPressed"];
+        return [NSColor colorNamed:@"ButtonPressed"];
 
     } else if (style == SetlistButtonStyleAlertPressed) {
-        return [Theme colorNamed:@"ButtonAlertPressed"];
+        return [NSColor colorNamed:@"ButtonAlertPressed"];
 
     } else if (style == SetlistButtonStyleAlert) {
-        return [Theme colorNamed:@"ButtonAlert"];
+        return [NSColor colorNamed:@"ButtonAlert"];
     }
     
     return nil;
