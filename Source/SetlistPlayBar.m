@@ -46,7 +46,7 @@
     _playhead     = [[SetlistPlayBarPlayhead alloc] initWithFrame:CGRectZero];
     _hairlineView = [[HairlineView alloc] initWithFrame:CGRectZero];
 
-    [_hairlineView setBorderColor:[Theme colorNamed:@"SetlistSeparator"]];
+    [_hairlineView setBorderColor:[NSColor colorNamed:@"SetlistSeparator"]];
     [_hairlineView setLayoutAttribute:NSLayoutAttributeBottom];
 
     [self setWantsLayer:YES];
@@ -141,7 +141,7 @@
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-    NSColor *markerColor = [Theme colorNamed:@"MeterMarker"];
+    NSColor *markerColor = [NSColor colorNamed:@"MeterMarker"];
 
     CGRect frame = [self bounds];
 

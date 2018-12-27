@@ -1,7 +1,6 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import "HugAudioFile.h"
 
 extern NSString * const TrackDidModifyTitleNotificationName;
 extern NSString * const TrackDidModifyPlayDurationNotificationName;

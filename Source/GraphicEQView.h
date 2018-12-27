@@ -1,5 +1,7 @@
 // (c) 2015-2018 Ricci Adams.  All rights reserved.
 
+@class AUAudioUnit;
+
 @interface GraphicEQView : NSView
 
 - (void) flatten;

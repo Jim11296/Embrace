@@ -9,18 +9,11 @@
 
     #import <Foundation/Foundation.h>
     #import <AppKit/AppKit.h>
-
-    #import <AudioUnit/AudioUnit.h>
-    #import <AudioToolbox/AudioToolbox.h>
-    #import <CoreAudio/CoreAudio.h>
-    #import <CoreAudioKit/CoreAudioKit.h>
     #import <QuartzCore/QuartzCore.h>
 
     #import "Utils.h"
     #import "Compatibility.h"
-    #import "Theme.h"
     #import "Log.h"
-    #import "WrappedUtils.h"
     #import "Application.h"
     #import "URLExtensions.h"
     #import "EmbraceWindow.h"

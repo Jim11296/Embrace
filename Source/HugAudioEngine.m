@@ -21,6 +21,8 @@
 #import "HugAudioSettings.h"
 #import "HugAudioSource.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 #include <stdatomic.h>
 
 extern volatile mach_port_t _HugCrashPadIgnoredThread;

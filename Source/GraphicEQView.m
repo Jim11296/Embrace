@@ -2,6 +2,7 @@
 
 #import "GraphicEQView.h"
 #import "SetlistSlider.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 
 const CGFloat sKnobHeight      = 15;
@@ -227,7 +228,7 @@ const CGFloat sTrackWidth      = 5;
     CGFloat alpha = 1.0;
 
     if (IsAppearanceDarkAqua(self)) {
-        alpha = [[Theme colorNamed:@"EQDarkAlpha"] alphaComponent];
+        alpha = [[NSColor colorNamed:@"EQDarkAlpha"] alphaComponent];
 
         for (GraphicEQBandView *bandView in _bandViews) {
             [bandView setAlphaValue:alpha];
@@ -608,8 +609,8 @@ const CGFloat sTrackWidth      = 5;
     };
 
 
-    NSColor *primaryColor   = [Theme colorNamed:@"EQPrimary"];
-    NSColor *secondaryColor = [Theme colorNamed:@"EQSecondary"];
+    NSColor *primaryColor   = [NSColor colorNamed:@"EQPrimary"];
+    NSColor *secondaryColor = [NSColor colorNamed:@"EQSecondary"];
     
     [secondaryColor set];
     drawTick( 1.00 );

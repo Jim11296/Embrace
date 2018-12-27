@@ -209,7 +209,7 @@
 {
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     
-    [[Theme colorNamed:@"MeterMarker"] set];
+    [[NSColor colorNamed:@"MeterMarker"] set];
     CGContextFillEllipseInRect(context, [self bounds]);
 }
 
@@ -225,13 +225,13 @@
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
     if (_on) {
-        [[Theme colorNamed:@"MeterRed"] set];
+        [[NSColor colorNamed:@"MeterRed"] set];
 
     } else {
-        NSColor *color = [Theme colorNamed:@"MeterUnfilled"];
+        NSColor *color = [NSColor colorNamed:@"MeterUnfilled"];
 
         if (IsAppearanceDarkAqua(self)) {
-            CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+            CGFloat alpha = [[NSColor colorNamed:@"MeterDarkAlpha"] alphaComponent];
             color = GetColorWithMultipliedAlpha(color, alpha);
         }
 

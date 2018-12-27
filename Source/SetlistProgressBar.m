@@ -247,16 +247,16 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
     PerformWithAppearance([self effectiveAppearance], ^{
         BOOL isMainWindow = [[self window] isMainWindow];
 
-        NSColor *unfilledColor = [Theme colorNamed:@"MeterUnfilled"];
-        NSColor *filledColor   = [Theme colorNamed:@"MeterFilled"];
-        NSColor *redColor      = [Theme colorNamed:@"MeterRed"];
+        NSColor *unfilledColor = [NSColor colorNamed:@"MeterUnfilled"];
+        NSColor *filledColor   = [NSColor colorNamed:@"MeterFilled"];
+        NSColor *redColor      = [NSColor colorNamed:@"MeterRed"];
     
         if (isMainWindow) {
-            filledColor = [Theme colorNamed:@"MeterFilledMain"];
+            filledColor = [NSColor colorNamed:@"MeterFilledMain"];
         }
 
         if (IsAppearanceDarkAqua(self)) {
-            CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+            CGFloat alpha = [[NSColor colorNamed:@"MeterDarkAlpha"] alphaComponent];
 
             unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
             filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);

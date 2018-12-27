@@ -578,17 +578,17 @@
     TrackStatus trackStatus = [[self track] trackStatus];
 
     if (trackStatus == TrackStatusPlayed) {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimaryPlayed"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondaryPlayed"];
+        primaryColor   = [NSColor colorNamed:@"SetlistPrimaryPlayed"];
+        secondaryColor = [NSColor colorNamed:@"SetlistSecondaryPlayed"];
     
     } else {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimary"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondary"];
+        primaryColor   = [NSColor colorNamed:@"SetlistPrimary"];
+        secondaryColor = [NSColor colorNamed:@"SetlistSecondary"];
     }
     
     if (rowIsSelected && rowIsEmphasized) {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimaryEmphasized"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondaryEmphasized"];
+        primaryColor   = [NSColor colorNamed:@"SetlistPrimaryEmphasized"];
+        secondaryColor = [NSColor colorNamed:@"SetlistSecondaryEmphasized"];
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
         primaryColor   = [[self _tableView] playingTextColor];
@@ -614,8 +614,8 @@
         [_dotLabelView setNeedsWhiteBorder:YES];
 
     } else {
-        [_errorButton setNormalColor: [Theme colorNamed:@"ButtonAlert"]];
-        [_errorButton setPressedColor:[Theme colorNamed:@"ButtonAlertPressed"]];
+        [_errorButton setNormalColor: [NSColor colorNamed:@"ButtonAlert"]];
+        [_errorButton setPressedColor:[NSColor colorNamed:@"ButtonAlertPressed"]];
 
         [_dotLabelView setNeedsWhiteBorder:NO];
     }
@@ -665,11 +665,11 @@
 
     if ([track trackStatus] != TrackStatusPlayed) {
         if ([track stopsAfterPlaying]) {
-            stripeSolidColor = [Theme colorNamed:@"SetlistStopAfterPlayingStripe2"];
-            stripeDashColor  = [Theme colorNamed:@"SetlistStopAfterPlayingStripe1"];
+            stripeSolidColor = [NSColor colorNamed:@"SetlistStopAfterPlayingStripe2"];
+            stripeDashColor  = [NSColor colorNamed:@"SetlistStopAfterPlayingStripe1"];
 
         } else if ([track ignoresAutoGap]) {
-            stripeSolidColor = [Theme colorNamed:@"SetlistIgnoreAutoGapStripe"];
+            stripeSolidColor = [NSColor colorNamed:@"SetlistIgnoreAutoGapStripe"];
         }
     }
 

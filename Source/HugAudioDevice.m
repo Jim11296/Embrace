@@ -4,9 +4,6 @@
 #import "Utils.h"
 #import "HugUtils.h"
 
-#import <CoreAudio/CoreAudio.h>
-
-
 static NSArray        *sConnectedDevices = nil;
 static NSMapTable     *sUIDToDeviceMap   = nil;
 static HugAudioDevice *sDefaultDevice    = nil;
