@@ -21,28 +21,77 @@
 @end
 
 
-static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferList)
-{
-    TrackScheduler *scheduler = CFBridgingRelease(userData);
-    (void)scheduler;
+typedef struct {
+    NSInteger frameIndex;
+    UInt32    totalFrames;
+    AudioBufferList *bufferList;
+} TrackSchedulerContext;
+
+
+static OSStatus sInputCallback(
+    void *inRefCon, 
+    AudioUnitRenderActionFlags *ioActionFlags, 
+    const AudioTimeStamp *inTimeStamp, 
+    UInt32 inBusNumber, 
+    UInt32 inNumberFrames, 
+    AudioBufferList *ioData
+) {
+    TrackSchedulerContext *context = (TrackSchedulerContext *)inRefCon;
+
+    NSInteger offset = 0;
+
+    // Zero pad if needed
+    if (context->frameIndex < 0) {
+        NSInteger padCount     = -context->frameIndex;
+        NSInteger framesToCopy = MIN(inNumberFrames, padCount);
+    
+        for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
+            memset(ioData->mBuffers[b].mData, 0, sizeof(float) * framesToCopy);
+        }
+
+        offset = framesToCopy;
+        context->frameIndex += framesToCopy;
+    }
+
+    // Copy track data
+    {
+        NSUInteger framesToCopy = MIN(inNumberFrames - offset, context->totalFrames - context->frameIndex);
+        
+        for (NSInteger b = 0; b < ioData->mNumberBuffers; b++) {
+            float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
+            float *outSamples = (float *)ioData->mBuffers[b].mData;
+            
+            inSamples  += context->frameIndex;
+            outSamples += offset;
+
+            memcpy(outSamples, inSamples, sizeof(float) * framesToCopy);
+            
+            NSInteger remaining = framesToCopy - inNumberFrames;
+            if (remaining > 0) {
+                memset(&outSamples[remaining], 0, sizeof(float) * remaining);
+            }
+        }
+
+        context->frameIndex += framesToCopy;
+    }
+
+    return noErr;
 }
 
 
 @implementation TrackScheduler {
     AudioFile *_audioFile;
     AudioStreamBasicDescription _clientFormat;
-    AudioStreamBasicDescription _outputFormat;
 
-    ScheduledAudioSlice *_slice;
+    TrackSchedulerContext *_context;
     NSArray *_protectedBuffers;
 }
 
 
-- (id) initWithTrack:(Track *)track outputFormat:(AudioStreamBasicDescription)outputFormat
+- (id) initWithTrack:(Track *)track
 {
     if ((self = [super init])) {
         _track = track;
-        _outputFormat = outputFormat;
     }
     
     return self;
@@ -53,15 +102,15 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 {
     [self _cleanupAudioFile];
 
-    if (_slice) {
-        AudioBufferList *list = _slice->mBufferList;
+    if (_context) {
+        AudioBufferList *list = _context->bufferList;
 
         for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
             list->mBuffers[i].mData = NULL;
         }
 
-        free(_slice->mBufferList);
-        free(_slice);
+        free(_context->bufferList);
+        free(_context);
     }
 }
 
@@ -203,17 +252,17 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [protectedBuffers addObject:protectedBuffer];
     }
 
-    _slice = calloc(1, sizeof(ScheduledAudioSlice));
-    _slice->mNumberFrames = (UInt32)totalFrames;
-    _slice->mBufferList = list;
-        
+    _context = calloc(1, sizeof(TrackSchedulerContext));
+    _context->totalFrames = (UInt32)totalFrames;
+    _context->bufferList = list;
+
     _protectedBuffers = protectedBuffers;
 }
 
 
-- (void) _readDataInBackgroundIntoSlice: (ScheduledAudioSlice *) slice
-                            primeAmount: (NSInteger) primeAmount
-                         primeSemaphore: (dispatch_semaphore_t) primeSemaphore
+- (void) _readDataInBackgroundIntoContext: (TrackSchedulerContext *) context
+                              primeAmount: (NSInteger) primeAmount
+                           primeSemaphore: (dispatch_semaphore_t) primeSemaphore
 {
     PlayerShouldUseCrashPad = 0;
 
@@ -223,7 +272,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     NSInteger bytesRead = 0;
     NSInteger framesAvailable = 0;
 
-    UInt32 bufferCount = slice->mBufferList->mNumberBuffers;
+    UInt32 bufferCount = context->bufferList->mNumberBuffers;
     
     AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * bufferCount);
     fillBufferList->mNumberBuffers = (UInt32)bufferCount;
@@ -243,7 +292,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
             fillBufferList->mBuffers[i].mNumberChannels = 1;
             fillBufferList->mBuffers[i].mDataByteSize = (UInt32)bytesRemaining;
             
-            UInt8 *data = (UInt8 *)slice->mBufferList->mBuffers[i].mData;
+            UInt8 *data = (UInt8 *)context->bufferList->mBuffers[i].mData;
             data += bytesRead;
             fillBufferList->mBuffers[i].mData = data;
         }
@@ -297,8 +346,45 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     return YES;
 }
 
+- (NSTimeInterval) timeElapsed;
+{   
+    NSInteger samplesPlayed = [self samplesPlayed];
 
-- (BOOL) startSchedulingWithAudioUnit:(AudioUnit)audioUnit timeStamp:(AudioTimeStamp)timeStamp
+    if (_clientFormat.mSampleRate) {
+        return samplesPlayed / _clientFormat.mSampleRate;
+    } else {
+        return 0;
+    }
+}
+
+
+- (NSInteger) samplesPlayed
+{
+    if (_context) {
+        return _context->frameIndex;
+    }
+    
+    return 0;
+}
+
+
+- (BOOL) isDone
+{
+    if (_context) {
+        NSInteger frameIndex = _context->frameIndex;
+        
+        if (frameIndex < 0) {
+            return NO;
+        } else {
+            return ([self totalFrames] - frameIndex) <= 0;
+        }
+    }
+    
+    return 0;
+}
+
+
+- (BOOL) startSchedulingWithAudioUnit:(AudioUnit)audioUnit paddingInSeconds:(NSTimeInterval)paddingInSeconds
 {
     if ([self rawError] || [self audioFileError]) {
         return NO;
@@ -306,7 +392,8 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 
     EmbraceLog(@"TrackScheduler", @"%@ startScheduling called", _track);
     
-    ScheduledAudioSlice *slice = _slice;
+    TrackSchedulerContext *context = _context;
+    context->frameIndex = _clientFormat.mSampleRate * -paddingInSeconds;
 
     NSInteger totalFrames = [self totalFrames];
     NSInteger primeAmount = (_clientFormat.mSampleRate * 10);
@@ -315,7 +402,7 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
     dispatch_semaphore_t primeSemaphore = dispatch_semaphore_create(0);
 
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self _readDataInBackgroundIntoSlice:slice primeAmount:primeAmount primeSemaphore:primeSemaphore];
+        [self _readDataInBackgroundIntoContext:context primeAmount:primeAmount primeSemaphore:primeSemaphore];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self _lockBuffers];
@@ -338,16 +425,14 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
         [self setShouldCancelRead:YES];
         return NO;
     }
-    
-    _slice->mTimeStamp = timeStamp;
-    _slice->mCompletionProc = sReleaseTrackScheduler;
-    _slice->mCompletionProcUserData = (void *)CFBridgingRetain(self);
 
     AudioUnitReset(audioUnit, kAudioUnitScope_Global, 0);
 
+    AURenderCallbackStruct callback = { sInputCallback, _context };
+
     return CheckError(
-        AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ScheduleAudioSlice, kAudioUnitScope_Global, 0, _slice, sizeof(ScheduledAudioSlice)),
-        "AudioUnitSetProperty[ ScheduleAudioSlice ]"
+        AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &callback, sizeof(callback)),
+        "AudioUnitSetProperty[ SetRenderCallback ]"
     );
 }
 
@@ -355,7 +440,13 @@ static void sReleaseTrackScheduler(void *userData, ScheduledAudioSlice *bufferLi
 - (void) stopScheduling:(AudioUnit)audioUnit
 {
     EmbraceLog(@"TrackScheduler", @"%@ stopScheduling called", _track);
-    AudioUnitReset(audioUnit, kAudioUnitScope_Global, 0);
+
+    AURenderCallbackStruct callback  = { NULL, NULL };
+
+    CheckError(
+        AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &callback, sizeof(callback)),
+        "AudioUnitSetProperty[ SetRenderCallback ]"
+    );
 }
 
 
