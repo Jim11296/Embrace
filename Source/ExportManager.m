@@ -36,17 +36,7 @@
     NSSavePanel *savePanel = [NSSavePanel savePanel];
     _savePanel = savePanel; 
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterLongStyle];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    
-    NSDate *date = [[tracks firstObject] playedTimeDate];
-    if (!date) date = [NSDate date];
-    
-    NSString *dateString = [formatter stringFromDate:date];
-
-    NSString *suggestedNameFormat = NSLocalizedString(@"Embrace (%@)", nil);
-    NSString *suggestedName = [NSString stringWithFormat:suggestedNameFormat, dateString];
+    NSString *suggestedName = [self suggestedNameWithTracks:tracks];
     [savePanel setNameFieldStringValue:suggestedName];
 
     [savePanel setTitle:NSLocalizedString(@"Save Set List", nil)];
@@ -204,6 +194,24 @@
     [lines addObject:@""];
 
     return [lines componentsJoinedByString:@"\n"];
+}
+
+
+- (NSString *) suggestedNameWithTracks:(NSArray<Track *> *)tracks
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+
+    NSDate *date = [[tracks firstObject] playedTimeDate];
+    if (!date) date = [NSDate date];
+    
+    NSString *dateString = [formatter stringFromDate:date];
+
+    NSString *suggestedNameFormat = NSLocalizedString(@"Embrace (%@)", nil);
+    NSString *suggestedName = [NSString stringWithFormat:suggestedNameFormat, dateString];
+
+    return suggestedName;
 }
 
 

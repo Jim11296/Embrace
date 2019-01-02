@@ -24,4 +24,6 @@ typedef NS_ENUM(NSInteger, ExportManagerFormat) {
 - (NSInteger) runModalWithTracks:(NSArray<Track *> *)tracks;
 - (NSString *) stringWithFormat:(ExportManagerFormat)format tracks:(NSArray<Track *> *)tracks;
 
+- (NSString *) suggestedNameWithTracks:(NSArray<Track *> *)tracks;
+
 @end
