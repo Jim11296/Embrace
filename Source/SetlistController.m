@@ -604,22 +604,45 @@ static NSInteger sAutoGapMaximum = 16;
 
     NSMutableArray *fileURLs = [NSMutableArray array];
     
-    for (Track *track in [[self tracksController] tracks]) {
-        NSURL *fileURL = [track externalURL];
-        if (fileURL) [fileURLs addObject:fileURL];
-    }
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterLongStyle];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    
-    NSMutableString *name = [NSMutableString string];
-    NSString *dateString = [formatter stringFromDate:[NSDate date]];
-    [name appendFormat:@"%@ (%@)", NSLocalizedString(@"Embrace", nil), dateString];
-    
-    [[iTunesManager sharedInstance] exportPlaylistWithName:name fileURLs:fileURLs];
+    ExportManager *exportManager = [ExportManager sharedInstance];
 
-    [self _markAsSaved];
+    NSArray *tracks = [[self tracksController] tracks];
+    NSString *suggestedName = [exportManager suggestedNameWithTracks:tracks];
+
+    if (@available(macOS 10.14, *)) {
+        NSString *contents = [exportManager stringWithFormat:ExportManagerFormatM3U tracks:tracks];
+
+        NSString *fileName = [suggestedName stringByAppendingPathExtension:@"m3u8"];
+        NSString *UUIDString = [[NSUUID UUID] UUIDString];
+        
+        NSError *error = nil;
+
+        NSString *toPath = [NSTemporaryDirectory() stringByAppendingPathComponent:UUIDString];
+
+        if (!error) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:toPath withIntermediateDirectories:YES attributes:nil error:&error];
+            toPath = [toPath stringByAppendingPathComponent:fileName];
+        }
+
+        if (!error) {
+            [contents writeToFile:toPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        }
+
+        if (!error) {
+            [[NSWorkspace sharedWorkspace] openFile:toPath withApplication:@"iTunes" andDeactivate:YES];
+            [self _markAsSaved];
+        }
+
+    } else {
+        for (Track *track in [[self tracksController] tracks]) {
+            NSURL *fileURL = [track externalURL];
+            if (fileURL) [fileURLs addObject:fileURL];
+        }
+
+        [[iTunesManager sharedInstance] exportPlaylistWithName:suggestedName fileURLs:fileURLs];
+
+        [self _markAsSaved];
+    }
 }
 
 
