@@ -2,11 +2,10 @@
 
 #import "PreferencesController.h"
 #import "Preferences.h"
-#import "AudioDevice.h"
 #import "Player.h"
 #import "ScriptFile.h"
 #import "ScriptsManager.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 
 @interface PreferencesController ()
 
@@ -55,7 +54,7 @@
     [self setPlayer:[Player sharedInstance]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)    name:PreferencesDidChangeNotification    object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:)  name:AudioDevicesDidRefreshNotification  object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:)  name:HugAudioDevicesDidRefreshNotification  object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScriptsManagerDidReload:) name:ScriptsManagerDidReloadNotification object:nil];
 
     [self selectPane:0 animated:NO];
@@ -83,7 +82,7 @@
             [ps setMaximumLineHeight:18];
         }
         
-        [attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]; 
+        [attributes setObject:[[NSColor textColor] colorWithAlphaComponent:0.5] forKey:NSForegroundColorAttributeName]; 
         if (font) [attributes setObject:font forKey:NSFontAttributeName];
         if (ps)   [attributes setObject:ps   forKey:NSParagraphStyleAttributeName];
 
@@ -105,110 +104,139 @@
 
 - (void) _rebuildDevicesMenu
 {
-    void (^rebuild)(NSPopUpButton *, AudioDevice *) = ^(NSPopUpButton *popUpButton, AudioDevice *deviceToSelect) {
-        NSMenu *menu = [popUpButton menu];
+    NSPopUpButton  *popUpButton    = [self mainDevicePopUp];
+    NSMenu         *menu           = [popUpButton menu];
+    HugAudioDevice *deviceToSelect = [[Preferences sharedInstance] mainOutputAudioDevice];
 
-        [menu removeAllItems];
-        
-        NSMenuItem *itemToSelect = nil;
+    __block NSMenuItem *itemToSelect = nil;
 
-        for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-            NSString *title = [device name];
-            if (!title) continue;
+    NSMenuItem *(^makeItem)(HugAudioDevice *) = ^(HugAudioDevice *device) {
+        NSMenuItem *item = nil;
 
-            BOOL valid = [device isConnected];
-            NSMenuItem *item = [self _itemWithTitle:title representedObject:device valid:valid useIssueImage:YES];
-            
-            if ([device isEqual:deviceToSelect]) {
-                itemToSelect = item;
-            }
-            
+        NSString *title = [device name];
+        if (!title) return item;
+
+        BOOL valid = [device isConnected];
+        item = [self _itemWithTitle:title representedObject:device valid:valid useIssueImage:YES];
+                
+        return item;
+    };
+
+    [menu removeAllItems];
+    
+    for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
+        NSMenuItem *item = makeItem(device);
+
+        if (item) {
             [menu addItem:item];
         }
 
-        [popUpButton selectItem:itemToSelect];
-    };
+        if ([deviceToSelect isEqual:device]) {
+            itemToSelect = item;
+        }
+    }
     
-    AudioDevice *mainOutputAudioDevice = [[Preferences sharedInstance] mainOutputAudioDevice];
-    rebuild([self mainDevicePopUp], mainOutputAudioDevice);
+    if (!itemToSelect) {
+        itemToSelect = makeItem(deviceToSelect);
+
+        if (itemToSelect) {
+            [menu insertItem:itemToSelect atIndex:0];
+        }
+    }
+
+    [popUpButton selectItem:itemToSelect];
 }
 
 
 - (void) _rebuildSampleRateMenu
 {
-    NSMenu *menu = [[self sampleRatePopUp] menu];
+    NSNumber *selectedRate = @([[Preferences sharedInstance] mainOutputSampleRate]);
 
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    NSNumber *sampleRate = @([[Preferences sharedInstance] mainOutputSampleRate]);
+    __block NSMenuItem *itemToSelect = nil;
 
-    NSArray *deviceSampleRates = [device sampleRates];
-    
-    [menu removeAllItems];
-
-    NSMenuItem *itemToSelect = nil;
-
-    NSMutableArray *sampleRates = [deviceSampleRates mutableCopy];
-    
-    if (![sampleRates containsObject:sampleRate]) {
-        [sampleRates insertObject:sampleRate atIndex:0];
-        [sampleRates sortUsingSelector:@selector(compare:)];
-    }
-
-    for (NSNumber *number in sampleRates) {
-        NSString *title = [NSString stringWithFormat:@"%@ Hz", number];
+    auto makeMenu = ^NSMenuItem *(NSNumber *rate, BOOL isNA) {
+        NSString *title = isNA ? @"N/A" : [NSString stringWithFormat:@"%@ Hz", rate];
         
-        BOOL valid = [deviceSampleRates containsObject:number];
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:rate valid:YES useIssueImage:NO];
 
-        NSMenuItem *item = [self _itemWithTitle:title representedObject:number valid:valid useIssueImage:NO];
-
-        if (fabs([number doubleValue] - [sampleRate doubleValue]) < 1) {
+        if (fabs([rate doubleValue] - [selectedRate doubleValue]) < 1) {
             itemToSelect = item;
         }
         
-        [menu addItem:item];
-        if (!valid) [menu addItem:[NSMenuItem separatorItem]];
+        return item;
+    };
+
+    NSPopUpButton *popUpButton = [self sampleRatePopUp];
+    NSMenu *menu = [popUpButton menu];
+
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+
+    NSArray *availableSampleRates = [device availableSampleRates];
+    
+    if (![availableSampleRates count]) {
+        availableSampleRates = @[ selectedRate ];
+    }
+    
+    [menu removeAllItems];
+    
+    for (NSNumber *number in availableSampleRates) {
+        [menu addItem:makeMenu(number, NO)];
     }
 
-    [[self sampleRatePopUp] selectItem:itemToSelect];
+    if (itemToSelect) {
+        [popUpButton selectItem:itemToSelect];
+
+    } else {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
+        [menu insertItem:makeMenu(selectedRate, YES) atIndex:0];
+        [popUpButton selectItemAtIndex:0];
+    }
 }
 
 
 - (void) _rebuildFrameMenu
 {
-    NSMenu *menu = [[self framesPopUp] menu];
-    
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
-    NSNumber *frameSize = @([[Preferences sharedInstance] mainOutputFrames]);
+    NSNumber *selectedFrameSize = @([[Preferences sharedInstance] mainOutputFrames]);
 
-    NSArray *deviceFrameSizes = [device frameSizes];
+    __block NSMenuItem *itemToSelect = nil;
 
-    [menu removeAllItems];
-    
-    NSMenuItem *itemToSelect = nil;
+    auto makeMenu = ^NSMenuItem *(NSNumber *frameSize, BOOL isNA) {
+        NSString *title = isNA ? @"N/A" : [frameSize stringValue];
+        
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:frameSize valid:YES useIssueImage:NO];
 
-    NSMutableArray *frameSizes = [deviceFrameSizes mutableCopy];
-    
-    if (![deviceFrameSizes containsObject:frameSize]) {
-        [frameSizes addObject:frameSize];
-        [frameSizes sortUsingSelector:@selector(compare:)];
-    }
-
-    for (NSNumber *number in frameSizes) {
-        NSString *title = [number stringValue];
-
-        BOOL valid = [deviceFrameSizes containsObject:number];
-
-        NSMenuItem *item = [self _itemWithTitle:title representedObject:number valid:valid useIssueImage:NO];
-
-        if ([number unsignedIntegerValue] == [frameSize unsignedIntegerValue]) {
+        if ([frameSize integerValue] == [selectedFrameSize integerValue]) {
             itemToSelect = item;
         }
         
-        [menu addItem:item];
-        if (!valid) [menu addItem:[NSMenuItem separatorItem]];
+        return item;
+    };
+
+    NSPopUpButton *popUpButton = [self framesPopUp];
+    NSMenu *menu = [popUpButton menu];
+
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+
+    NSArray *availableFrameSizes = [device availableFrameSizes];
+    
+    if (![availableFrameSizes count]) {
+        availableFrameSizes = @[ selectedFrameSize ];
     }
     
-    [[self framesPopUp] selectItem:itemToSelect];
+    [menu removeAllItems];
+    
+    for (NSNumber *number in availableFrameSizes) {
+        [menu addItem:makeMenu(number, NO)];
+    }
+
+    if (itemToSelect) {
+        [popUpButton selectItem:itemToSelect];
+
+    } else {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
+        [menu insertItem:makeMenu(selectedFrameSize, YES) atIndex:0];
+        [popUpButton selectItemAtIndex:0];
+    }
 }
 
 
@@ -271,19 +299,19 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
-    AudioDevice *device = [preferences mainOutputAudioDevice];
+    HugAudioDevice *device = [preferences mainOutputAudioDevice];
     [self _rebuildFrameMenu];
     [self _rebuildSampleRateMenu];
 
     [[self usesMasteringComplexityButton] setState:[preferences usesMasteringComplexitySRC]];
     
     BOOL resetVolumeEnabled = [device hasVolumeControl] &&
-                              [device isHoggable] &&
+                              [device isHogModeSettable] &&
                               [preferences mainOutputUsesHogMode];
 
     [self setResetVolumeEnabled:resetVolumeEnabled];
 
-    if ([device isHoggable]) {
+    if ([device isHogModeSettable]) {
         [self setDeviceHoggable:YES];
         
         BOOL mainOutputUsesHogMode = [preferences mainOutputUsesHogMode];
@@ -309,7 +337,7 @@
 {
     [self _rebuildDevicesMenu];
 
-    AudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
+    HugAudioDevice *device = [[Preferences sharedInstance] mainOutputAudioDevice];
     [self setDeviceConnected:[device isConnected]];
 }
 
@@ -330,10 +358,8 @@
 
 - (IBAction) changeMainDevice:(id)sender
 {
-    AudioDevice *device = [[sender selectedItem] representedObject];
+    HugAudioDevice *device = [[sender selectedItem] representedObject];
     [[Preferences sharedInstance] setMainOutputAudioDevice:device];
-
-    [AudioDevice selectChosenAudioDevice:device];
 }
 
 
@@ -342,7 +368,7 @@
     if (sender == [self framesPopUp]) {
         NSNumber *number = [[sender selectedItem] representedObject];
         
-        UInt32 frames =[number unsignedIntValue];
+        UInt32 frames = [number unsignedIntValue];
         [[Preferences sharedInstance] setMainOutputFrames:frames];
         
     } else if (sender == [self sampleRatePopUp]) {
@@ -411,7 +437,7 @@
     NSRect windowFrame = [window frame];
     NSRect newFrame = [window frameRectForContentRect:paneFrame];
     
-    newFrame.origin    = windowFrame.origin;
+    newFrame.origin    =  windowFrame.origin;
     newFrame.origin.y += (windowFrame.size.height - newFrame.size.height);
 
     [pane setFrameOrigin:NSZeroPoint];

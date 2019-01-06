@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 55016BD41CF454E0007A85AE /* HostStatistics.m */; };
 		550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5506802F1887711000441AAE /* TimeStringValueTransformer.m */; };
 		550C63B81FE26EE5007841BC /* MTSEscapePod.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B71FE26EE5007841BC /* MTSEscapePod.m */; };
 		550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */ = {isa = PBXBuildFile; fileRef = 550C63B91FE26F12007841BC /* MTSTelemetry.m */; };
@@ -21,15 +20,16 @@
 		550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882818AC3C5B00CC7E3A /* rate_48.m4a */; };
 		550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 550D882A18AC3C5B00CC7E3A /* rate_96.m4a */; };
 		550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 550D883718ACD5F800CC7E3A /* TrackTableView.m */; };
+		550DDB9121C67E8100769F32 /* HugAudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 550DDB9021C67E8100769F32 /* HugAudioDevice.m */; };
 		55102B431B53564500308F55 /* EffectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B421B53564500308F55 /* EffectAdditions.m */; };
 		55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */; };
 		55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */; };
 		55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55102B4A1B537C2500308F55 /* EditSystemEffectController.m */; };
-		5514B63A1CDD694700F238B7 /* SetlistDangerMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6391CDD694700F238B7 /* SetlistDangerMeter.m */; };
+		5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6391CDD694700F238B7 /* SetlistDangerView.m */; };
 		5514B64A1CDEE64200F238B7 /* EmbraceWorker.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6631CDEE9DE00F238B7 /* TrackKeys.m */; };
 		5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 5514B6631CDEE9DE00F238B7 /* TrackKeys.m */; };
-		5514B6671CDF3BB300F238B7 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
+		5514B6671CDF3BB300F238B7 /* HugAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */; };
 		5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5582F7EC18A385570046A24B /* LoudnessMeasurer.m */; };
 		5514B6691CDF46C700F238B7 /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 559A671518D18EA200AB5918 /* URLExtensions.m */; };
@@ -43,15 +43,16 @@
 		55169D521F9ACBFA003779FA /* test_3s_c4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4D1F9ACBFA003779FA /* test_3s_c4.m4a */; };
 		55169D531F9ACBFA003779FA /* test_3s_g4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4E1F9ACBFA003779FA /* test_3s_g4.m4a */; };
 		55169D541F9ACBFA003779FA /* test_3s_f4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55169D4F1F9ACBFA003779FA /* test_3s_f4.m4a */; };
-		55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */; };
-		552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9DC218836D2D0041C160 /* AudioDevice.m */; };
+		551CE71321B3A3D800D422E4 /* HugLevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 551CE71221B3A3D800D422E4 /* HugLevelMeter.m */; };
+		551CE71A21B3CE9500D422E4 /* HugLinearRamper.m in Sources */ = {isa = PBXBuildFile; fileRef = 551CE71921B3CE9500D422E4 /* HugLinearRamper.m */; };
+		551CE71D21B3E24400D422E4 /* HugStereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 551CE71C21B3E24400D422E4 /* HugStereoField.m */; };
 		552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C9E481883856A0041C160 /* PreferencesWindow.xib */; };
 		552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4B1883888E0041C160 /* PreferencesController.m */; };
 		552C9E4F1883EBA40041C160 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C9E4E1883EBA40041C160 /* Preferences.m */; };
 		552EC02A18DFD527000B82AB /* CrashPad_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CB618B8AA220059110C /* CrashPad_main.m */; };
 		552EC02B18DFD52E000B82AB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
-		553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* AudioFile.m */; };
+		553614CE18B4C3B2007BDAD6 /* HugAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */; };
 		5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */; };
 		553DE143189F107100A355D1 /* ViewTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 553DE142189F107100A355D1 /* ViewTrackController.m */; };
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
@@ -61,7 +62,17 @@
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
 		554FCB9D1DFCF0E900DE697E /* MaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 554FCB9C1DFCF0E900DE697E /* MaskView.m */; };
-		5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */; };
+		5555F5501B4D19220092A8C2 /* HugProtectedBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5555F54F1B4D19220092A8C2 /* HugProtectedBuffer.m */; };
+		555953E921B6834D0032EE54 /* HugMeterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953E821B6834D0032EE54 /* HugMeterData.m */; };
+		555953EC21B762730032EE54 /* HugSimpleGraph.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953EB21B762730032EE54 /* HugSimpleGraph.m */; };
+		555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953EE21B769D40032EE54 /* HugRingBuffer.m */; };
+		555953F221B7F6C90032EE54 /* HugUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F121B7F6C90032EE54 /* HugUtils.m */; };
+		555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F421B8B6FB0032EE54 /* HugAudioSource.m */; };
+		555953F721BA0C300032EE54 /* HugUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F121B7F6C90032EE54 /* HugUtils.m */; };
+		555953FA21BBCEB20032EE54 /* HugError.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F921BBCEB20032EE54 /* HugError.m */; };
+		555953FB21BBD9040032EE54 /* HugError.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953F921BBCEB20032EE54 /* HugError.m */; };
+		555953FE21BBEA7D0032EE54 /* HugAudioSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 555953FD21BBEA7D0032EE54 /* HugAudioSettings.m */; };
+		5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5559540021C0C1FC0032EE54 /* HugCrashPad.m */; };
 		555A701B1890BCBF00305EC6 /* Application.m in Sources */ = {isa = PBXBuildFile; fileRef = 555A701A1890BCBF00305EC6 /* Application.m */; };
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
 		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
@@ -69,7 +80,7 @@
 		55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55698DA71B54ECBE00C9E200 /* GraphicEQView.m */; };
 		556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */; };
 		556ACE2F187B901400AED4BC /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE2E187B901400AED4BC /* WaveformView.m */; };
-		556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE35187BB43A00AED4BC /* WrappedUtils.mm */; };
+		556ACE36187BB43A00AED4BC /* WrappedUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE35187BB43A00AED4BC /* WrappedUtils.cpp */; };
 		556B496420CF772D00A4E83E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556B496320CF772D00A4E83E /* Assets.xcassets */; };
 		556EAEE41FEA013000EF68C3 /* Embrace_Submission.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */; };
 		556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */; };
@@ -82,7 +93,6 @@
 		556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */; };
 		556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */; };
 		556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */; };
-		55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 55708CC118B97ADB0059110C /* CrashPadClient.m */; };
 		55717BF5187EA65400213213 /* SetlistButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* SetlistButton.m */; };
 		55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* SetlistSlider.m */; };
 		5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SetlistProgressBar.m */; };
@@ -92,21 +102,10 @@
 		557ABAB61B68D48C006F69D9 /* TrackLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557ABAB51B68D48C006F69D9 /* TrackLabelView.m */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
 		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
-		557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */; };
-		557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */; };
-		557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */; };
-		557C2CCA1897403E002FAFEA /* CAHostTimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C851897403E002FAFEA /* CAHostTimeBase.cpp */; };
-		557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */; };
-		557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CD9189740D7002FAFEA /* CADebugger.cpp */; };
-		557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */; };
-		557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */; };
 		557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C43991D615CDC000184D8 /* TipArrowFloater.m */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
-		5583A5931CF91C5D00B8CC4D /* FastUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5921CF91C5D00B8CC4D /* FastUtils.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
-		55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 55873FDD18AA1E720081772A /* TrackScheduler.m */; };
-		558AB90220C8C46800B4BAEE /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AB90120C8C46800B4BAEE /* Theme.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		558DC0BA187785F200C85770 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B7187785F200C85770 /* AppDelegate.m */; };
 		558DC0BB187785F200C85770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B8187785F200C85770 /* main.m */; };
@@ -123,10 +122,8 @@
 		55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A708B018A715C1007BD7C0 /* DragSongsHereView.m */; };
 		55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0BC1877861E00C85770 /* MainMenu.xib */; };
 		55ADE93518815EA8008DC245 /* SetlistPlayBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93418815EA8008DC245 /* SetlistPlayBar.m */; };
-		55ADE93818824338008DC245 /* SetlistLevelMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* SetlistLevelMeter.m */; };
+		55ADE93818824338008DC245 /* SetlistMeterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55ADE93718824338008DC245 /* SetlistMeterView.m */; };
 		55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */; };
-		55B03BA020CE29560055881F /* ColorCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B03B9F20CE29560055881F /* ColorCompatibility.m */; };
-		55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B03BA220CE2A7D0055881F /* ColorCompatibilityData.m */; };
 		55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B8587B1FB93ED20095D496 /* ScriptsManager.m */; };
 		55BC0B061877F19400D84481 /* Effect.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B051877F19400D84481 /* Effect.m */; };
 		55BC0B0A1877F26300D84481 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B091877F26300D84481 /* AudioUnit.framework */; };
@@ -136,7 +133,7 @@
 		55BC0B1918780A0200D84481 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1818780A0200D84481 /* CoreAudio.framework */; };
 		55BC0B1B18780D1000D84481 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1A18780D1000D84481 /* AudioToolbox.framework */; };
 		55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC0B2A1878E4EF00D84481 /* Utils.m */; };
-		55C24E1518D7D7800057D45E /* StereoField.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* StereoField.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
+		55C24E1518D7D7800057D45E /* HugFastUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* HugFastUtils.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */; };
 		55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */; };
 		55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55CD7ADB1F8B08870047F073 /* Embrace.icns */; };
@@ -149,6 +146,7 @@
 		55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D7000920DC9F3A002FB978 /* HairlineView.m */; };
 		55D7001020DCA3A8002FB978 /* TrackStripeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D7000D20DCA3A6002FB978 /* TrackStripeView.m */; };
 		55D7001120DCA3A8002FB978 /* TrackErrorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D7000F20DCA3A7002FB978 /* TrackErrorButton.m */; };
+		55D9BDD321A64C1100EBF00C /* HugAudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
 		55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */; };
@@ -163,7 +161,7 @@
 		55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD618AF1B41006B6FBB /* AUHipass.aupreset */; };
 		55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABE818B04D91006B6FBB /* DebugController.m */; };
 		55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */; };
-		55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
+		55F7ABF518B1A18C006B6FBB /* HugLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* HugLimiter.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABF718B21C31006B6FBB /* Localizable.strings */; };
 		55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F81FD21B846E3300E03B5B /* IssuesController.m */; };
 		55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F81FD41B846EE800E03B5B /* IssuesWindow.xib */; };
@@ -224,8 +222,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		55016BD31CF454E0007A85AE /* HostStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HostStatistics.h; path = Source/HostStatistics.h; sourceTree = "<group>"; };
-		55016BD41CF454E0007A85AE /* HostStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HostStatistics.m; path = Source/HostStatistics.m; sourceTree = "<group>"; };
 		5506802E1887711000441AAE /* TimeStringValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeStringValueTransformer.h; path = Source/TimeStringValueTransformer.h; sourceTree = SOURCE_ROOT; };
 		5506802F1887711000441AAE /* TimeStringValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimeStringValueTransformer.m; path = Source/TimeStringValueTransformer.m; sourceTree = SOURCE_ROOT; };
 		550C63B61FE26EE5007841BC /* MTSEscapePod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSEscapePod.h; path = Source/MTSEscapePod.h; sourceTree = "<group>"; };
@@ -247,6 +243,8 @@
 		550D882A18AC3C5B00CC7E3A /* rate_96.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = rate_96.m4a; path = "Resources/Test Sounds/rate_96.m4a"; sourceTree = SOURCE_ROOT; };
 		550D883618ACD5F800CC7E3A /* TrackTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackTableView.h; path = Source/TrackTableView.h; sourceTree = SOURCE_ROOT; };
 		550D883718ACD5F800CC7E3A /* TrackTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackTableView.m; path = Source/TrackTableView.m; sourceTree = SOURCE_ROOT; };
+		550DDB8F21C67E8100769F32 /* HugAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugAudioDevice.h; path = Source/HugAudioDevice.h; sourceTree = "<group>"; };
+		550DDB9021C67E8100769F32 /* HugAudioDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugAudioDevice.m; path = Source/HugAudioDevice.m; sourceTree = "<group>"; };
 		55102B411B53564500308F55 /* EffectAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAdditions.h; path = Source/EffectAdditions.h; sourceTree = "<group>"; };
 		55102B421B53564500308F55 /* EffectAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectAdditions.m; path = Source/EffectAdditions.m; sourceTree = "<group>"; };
 		55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditGraphicEQEffectWindow.xib; path = Resources/EditGraphicEQEffectWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -254,8 +252,8 @@
 		55102B471B537BF000308F55 /* EditGraphicEQEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditGraphicEQEffectController.m; path = Source/EditGraphicEQEffectController.m; sourceTree = SOURCE_ROOT; };
 		55102B491B537C2500308F55 /* EditSystemEffectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditSystemEffectController.h; path = Source/EditSystemEffectController.h; sourceTree = SOURCE_ROOT; };
 		55102B4A1B537C2500308F55 /* EditSystemEffectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditSystemEffectController.m; path = Source/EditSystemEffectController.m; sourceTree = SOURCE_ROOT; };
-		5514B6381CDD694700F238B7 /* SetlistDangerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistDangerMeter.h; path = Source/SetlistDangerMeter.h; sourceTree = SOURCE_ROOT; };
-		5514B6391CDD694700F238B7 /* SetlistDangerMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistDangerMeter.m; path = Source/SetlistDangerMeter.m; sourceTree = SOURCE_ROOT; };
+		5514B6381CDD694700F238B7 /* SetlistDangerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistDangerView.h; path = Source/SetlistDangerView.h; sourceTree = SOURCE_ROOT; };
+		5514B6391CDD694700F238B7 /* SetlistDangerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistDangerView.m; path = Source/SetlistDangerView.m; sourceTree = SOURCE_ROOT; };
 		5514B63F1CDEE64200F238B7 /* EmbraceWorker.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = EmbraceWorker.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		5514B6541CDEE6F000F238B7 /* TargetWorker.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = TargetWorker.xcconfig; path = Config/TargetWorker.xcconfig; sourceTree = SOURCE_ROOT; };
 		5514B6621CDEE9DE00F238B7 /* TrackKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackKeys.h; path = Source/TrackKeys.h; sourceTree = "<group>"; };
@@ -267,18 +265,19 @@
 		55169D4D1F9ACBFA003779FA /* test_3s_c4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_c4.m4a; path = "Resources/Test Sounds/test_3s_c4.m4a"; sourceTree = "<group>"; };
 		55169D4E1F9ACBFA003779FA /* test_3s_g4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_g4.m4a; path = "Resources/Test Sounds/test_3s_g4.m4a"; sourceTree = "<group>"; };
 		55169D4F1F9ACBFA003779FA /* test_3s_f4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_f4.m4a; path = "Resources/Test Sounds/test_3s_f4.m4a"; sourceTree = "<group>"; };
-		55224BE318A7880D00407B46 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = CoreAudio/PublicUtility/CAAutoDisposer.h; sourceTree = "<group>"; };
-		55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedAudioDevice.mm; path = Source/WrappedAudioDevice.mm; sourceTree = "<group>"; };
-		55224BE518A788DA00407B46 /* WrappedAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedAudioDevice.h; path = Source/WrappedAudioDevice.h; sourceTree = "<group>"; };
-		552C9DC118836D2D0041C160 /* AudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioDevice.h; path = Source/AudioDevice.h; sourceTree = "<group>"; };
-		552C9DC218836D2D0041C160 /* AudioDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioDevice.m; path = Source/AudioDevice.m; sourceTree = "<group>"; };
+		551CE71121B3A3D800D422E4 /* HugLevelMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugLevelMeter.h; path = Source/HugLevelMeter.h; sourceTree = "<group>"; };
+		551CE71221B3A3D800D422E4 /* HugLevelMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLevelMeter.m; path = Source/HugLevelMeter.m; sourceTree = "<group>"; };
+		551CE71821B3CE9500D422E4 /* HugLinearRamper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugLinearRamper.h; path = Source/HugLinearRamper.h; sourceTree = "<group>"; };
+		551CE71921B3CE9500D422E4 /* HugLinearRamper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLinearRamper.m; path = Source/HugLinearRamper.m; sourceTree = "<group>"; };
+		551CE71B21B3E24400D422E4 /* HugStereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugStereoField.h; path = Source/HugStereoField.h; sourceTree = "<group>"; };
+		551CE71C21B3E24400D422E4 /* HugStereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugStereoField.m; path = Source/HugStereoField.m; sourceTree = "<group>"; };
 		552C9E481883856A0041C160 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PreferencesWindow.xib; path = Resources/PreferencesWindow.xib; sourceTree = SOURCE_ROOT; };
 		552C9E4A1883888E0041C160 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = Source/PreferencesController.h; sourceTree = SOURCE_ROOT; };
 		552C9E4B1883888E0041C160 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = SOURCE_ROOT; };
 		552C9E4D1883EBA40041C160 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = Source/Preferences.h; sourceTree = "<group>"; };
 		552C9E4E1883EBA40041C160 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preferences.m; path = Source/Preferences.m; sourceTree = "<group>"; };
-		553614CC18B4C3B2007BDAD6 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioFile.h; path = Source/AudioFile.h; sourceTree = "<group>"; };
-		553614CD18B4C3B2007BDAD6 /* AudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioFile.m; path = Source/AudioFile.m; sourceTree = "<group>"; };
+		553614CC18B4C3B2007BDAD6 /* HugAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugAudioFile.h; path = Source/HugAudioFile.h; sourceTree = "<group>"; };
+		553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugAudioFile.m; path = Source/HugAudioFile.m; sourceTree = "<group>"; };
 		5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentTrackController.m; path = Source/CurrentTrackController.m; sourceTree = SOURCE_ROOT; };
 		5537D75D19CEBA7300DE8117 /* CurrentTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentTrackController.h; path = Source/CurrentTrackController.h; sourceTree = SOURCE_ROOT; };
 		55394ED01884C94F00474E20 /* Embrace.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Embrace.entitlements; path = Resources/Embrace.entitlements; sourceTree = "<group>"; };
@@ -294,8 +293,24 @@
 		554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Resources/Acknowledgements.rtf; sourceTree = SOURCE_ROOT; };
 		554FCB9B1DFCF0E900DE697E /* MaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaskView.h; path = Source/MaskView.h; sourceTree = SOURCE_ROOT; };
 		554FCB9C1DFCF0E900DE697E /* MaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MaskView.m; path = Source/MaskView.m; sourceTree = SOURCE_ROOT; };
-		5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProtectedBuffer.h; path = Source/ProtectedBuffer.h; sourceTree = "<group>"; };
-		5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProtectedBuffer.m; path = Source/ProtectedBuffer.m; sourceTree = "<group>"; };
+		5555F54E1B4D19220092A8C2 /* HugProtectedBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugProtectedBuffer.h; path = Source/HugProtectedBuffer.h; sourceTree = "<group>"; };
+		5555F54F1B4D19220092A8C2 /* HugProtectedBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugProtectedBuffer.m; path = Source/HugProtectedBuffer.m; sourceTree = "<group>"; };
+		555953E721B6834D0032EE54 /* HugMeterData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugMeterData.h; path = Source/HugMeterData.h; sourceTree = "<group>"; };
+		555953E821B6834D0032EE54 /* HugMeterData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugMeterData.m; path = Source/HugMeterData.m; sourceTree = "<group>"; };
+		555953EA21B762730032EE54 /* HugSimpleGraph.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugSimpleGraph.h; path = Source/HugSimpleGraph.h; sourceTree = "<group>"; };
+		555953EB21B762730032EE54 /* HugSimpleGraph.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugSimpleGraph.m; path = Source/HugSimpleGraph.m; sourceTree = "<group>"; };
+		555953ED21B769D40032EE54 /* HugRingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugRingBuffer.h; path = Source/HugRingBuffer.h; sourceTree = "<group>"; };
+		555953EE21B769D40032EE54 /* HugRingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugRingBuffer.m; path = Source/HugRingBuffer.m; sourceTree = "<group>"; };
+		555953F021B7F6C90032EE54 /* HugUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugUtils.h; path = Source/HugUtils.h; sourceTree = "<group>"; };
+		555953F121B7F6C90032EE54 /* HugUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugUtils.m; path = Source/HugUtils.m; sourceTree = "<group>"; };
+		555953F321B8B6FB0032EE54 /* HugAudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugAudioSource.h; path = Source/HugAudioSource.h; sourceTree = "<group>"; };
+		555953F421B8B6FB0032EE54 /* HugAudioSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugAudioSource.m; path = Source/HugAudioSource.m; sourceTree = "<group>"; };
+		555953F821BBCEB20032EE54 /* HugError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugError.h; path = Source/HugError.h; sourceTree = "<group>"; };
+		555953F921BBCEB20032EE54 /* HugError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugError.m; path = Source/HugError.m; sourceTree = "<group>"; };
+		555953FC21BBEA7D0032EE54 /* HugAudioSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugAudioSettings.h; path = Source/HugAudioSettings.h; sourceTree = "<group>"; };
+		555953FD21BBEA7D0032EE54 /* HugAudioSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugAudioSettings.m; path = Source/HugAudioSettings.m; sourceTree = "<group>"; };
+		555953FF21C0C1FC0032EE54 /* HugCrashPad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugCrashPad.h; path = Source/HugCrashPad.h; sourceTree = "<group>"; };
+		5559540021C0C1FC0032EE54 /* HugCrashPad.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugCrashPad.m; path = Source/HugCrashPad.m; sourceTree = "<group>"; };
 		5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "CrashPad-Info.plist"; path = "Resources/CrashPad-Info.plist"; sourceTree = SOURCE_ROOT; };
 		5559E61218DFD42500D61019 /* Crash Pad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Crash Pad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		555A70191890BCBF00305EC6 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = Source/Application.h; sourceTree = SOURCE_ROOT; };
@@ -310,7 +325,7 @@
 		556ACE2D187B901400AED4BC /* WaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaveformView.h; path = Source/WaveformView.h; sourceTree = SOURCE_ROOT; };
 		556ACE2E187B901400AED4BC /* WaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaveformView.m; path = Source/WaveformView.m; sourceTree = SOURCE_ROOT; };
 		556ACE34187BB43A00AED4BC /* WrappedUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WrappedUtils.h; path = Source/WrappedUtils.h; sourceTree = "<group>"; };
-		556ACE35187BB43A00AED4BC /* WrappedUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WrappedUtils.mm; path = Source/WrappedUtils.mm; sourceTree = "<group>"; };
+		556ACE35187BB43A00AED4BC /* WrappedUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WrappedUtils.cpp; path = Source/WrappedUtils.cpp; sourceTree = "<group>"; };
 		556B496320CF772D00A4E83E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Worker_Release.xcconfig; path = Config/Combined/Worker_Release.xcconfig; sourceTree = "<group>"; };
 		556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Worker_Debug.xcconfig; path = Config/Combined/Worker_Debug.xcconfig; sourceTree = "<group>"; };
@@ -329,8 +344,6 @@
 		556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Profile.xcconfig; path = Config/Combined/Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
-		55708CC018B97ADB0059110C /* CrashPadClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashPadClient.h; path = Source/CrashPadClient.h; sourceTree = SOURCE_ROOT; };
-		55708CC118B97ADB0059110C /* CrashPadClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPadClient.m; path = Source/CrashPadClient.m; sourceTree = SOURCE_ROOT; };
 		55717BF3187EA65400213213 /* SetlistButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistButton.h; path = Source/SetlistButton.h; sourceTree = SOURCE_ROOT; };
 		55717BF4187EA65400213213 /* SetlistButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistButton.m; path = Source/SetlistButton.m; sourceTree = SOURCE_ROOT; };
 		55717BF6187EAB8C00213213 /* SetlistSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistSlider.h; path = Source/SetlistSlider.h; sourceTree = SOURCE_ROOT; };
@@ -342,50 +355,19 @@
 		557ABAB51B68D48C006F69D9 /* TrackLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackLabelView.m; path = Source/TrackLabelView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
-		557C2C591897403E002FAFEA /* CABitOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABitOperations.h; path = CoreAudio/PublicUtility/CABitOperations.h; sourceTree = "<group>"; };
-		557C2C5F1897403E002FAFEA /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = CoreAudio/PublicUtility/CAByteOrder.h; sourceTree = "<group>"; };
 		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Trial.xcconfig; path = Config/Trial.xcconfig; sourceTree = SOURCE_ROOT; };
 		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
 		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
-		557C2C771897403E002FAFEA /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = CoreAudio/PublicUtility/CAException.h; sourceTree = "<group>"; };
-		557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioDevice.cpp; path = CoreAudio/PublicUtility/CAHALAudioDevice.cpp; sourceTree = "<group>"; };
-		557C2C7E1897403E002FAFEA /* CAHALAudioDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioDevice.h; path = CoreAudio/PublicUtility/CAHALAudioDevice.h; sourceTree = "<group>"; };
-		557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioObject.cpp; path = CoreAudio/PublicUtility/CAHALAudioObject.cpp; sourceTree = "<group>"; };
-		557C2C801897403E002FAFEA /* CAHALAudioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioObject.h; path = CoreAudio/PublicUtility/CAHALAudioObject.h; sourceTree = "<group>"; };
-		557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHALAudioSystemObject.cpp; path = CoreAudio/PublicUtility/CAHALAudioSystemObject.cpp; sourceTree = "<group>"; };
-		557C2C841897403E002FAFEA /* CAHALAudioSystemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHALAudioSystemObject.h; path = CoreAudio/PublicUtility/CAHALAudioSystemObject.h; sourceTree = "<group>"; };
-		557C2C851897403E002FAFEA /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHostTimeBase.cpp; path = CoreAudio/PublicUtility/CAHostTimeBase.cpp; sourceTree = "<group>"; };
-		557C2C861897403E002FAFEA /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHostTimeBase.h; path = CoreAudio/PublicUtility/CAHostTimeBase.h; sourceTree = "<group>"; };
-		557C2C871897403E002FAFEA /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CALogMacros.h; path = CoreAudio/PublicUtility/CALogMacros.h; sourceTree = "<group>"; };
-		557C2C881897403E002FAFEA /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = CoreAudio/PublicUtility/CAMath.h; sourceTree = "<group>"; };
-		557C2C891897403E002FAFEA /* CAMixMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMixMap.h; path = CoreAudio/PublicUtility/CAMixMap.h; sourceTree = "<group>"; };
-		557C2C8F1897403E002FAFEA /* CAPropertyAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAPropertyAddress.h; path = CoreAudio/PublicUtility/CAPropertyAddress.h; sourceTree = "<group>"; };
-		557C2C921897403E002FAFEA /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAReferenceCounted.h; path = CoreAudio/PublicUtility/CAReferenceCounted.h; sourceTree = "<group>"; };
-		557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = CoreAudio/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
-		557C2C9C1897403E002FAFEA /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = CoreAudio/PublicUtility/CAStreamBasicDescription.h; sourceTree = "<group>"; };
-		557C2CD9189740D7002FAFEA /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugger.cpp; path = CoreAudio/PublicUtility/CADebugger.cpp; sourceTree = "<group>"; };
-		557C2CDA189740D7002FAFEA /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugger.h; path = CoreAudio/PublicUtility/CADebugger.h; sourceTree = "<group>"; };
-		557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = CoreAudio/PublicUtility/CADebugMacros.cpp; sourceTree = "<group>"; };
-		557C2CDC189740D7002FAFEA /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = CoreAudio/PublicUtility/CADebugMacros.h; sourceTree = "<group>"; };
-		557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = CoreAudio/PublicUtility/CADebugPrintf.cpp; sourceTree = "<group>"; };
-		557C2CDE189740D7002FAFEA /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = CoreAudio/PublicUtility/CADebugPrintf.h; sourceTree = "<group>"; };
 		557C43981D615CDC000184D8 /* TipArrowFloater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TipArrowFloater.h; path = Source/TipArrowFloater.h; sourceTree = SOURCE_ROOT; };
 		557C43991D615CDC000184D8 /* TipArrowFloater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TipArrowFloater.m; path = Source/TipArrowFloater.m; sourceTree = SOURCE_ROOT; };
 		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
 		557CF69018C1E14B0066D040 /* TracksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TracksController.m; path = Source/TracksController.m; sourceTree = SOURCE_ROOT; };
-		557ECCB620CE28260042FDF6 /* ColorCompatibilityGenerate.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = ColorCompatibilityGenerate.rb; path = Source/ColorCompatibilityGenerate.rb; sourceTree = "<group>"; };
 		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
-		5583A5911CF91C5D00B8CC4D /* FastUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FastUtils.h; path = Source/FastUtils.h; sourceTree = "<group>"; };
-		5583A5921CF91C5D00B8CC4D /* FastUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FastUtils.m; path = Source/FastUtils.m; sourceTree = "<group>"; };
 		5583A5961CFC0F1200B8CC4D /* IssueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueManager.h; path = Source/IssueManager.h; sourceTree = "<group>"; };
 		5583A5971CFC0F1200B8CC4D /* IssueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueManager.m; path = Source/IssueManager.m; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
-		55873FDC18AA1E720081772A /* TrackScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackScheduler.h; path = Source/TrackScheduler.h; sourceTree = "<group>"; };
-		55873FDD18AA1E720081772A /* TrackScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackScheduler.m; path = Source/TrackScheduler.m; sourceTree = "<group>"; };
-		558AB90020C8C46800B4BAEE /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Theme.h; path = Source/Theme.h; sourceTree = "<group>"; };
-		558AB90120C8C46800B4BAEE /* Theme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Theme.m; path = Source/Theme.m; sourceTree = "<group>"; };
 		558DC07F187785BC00C85770 /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		558DC082187785BC00C85770 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		558DC085187785BC00C85770 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -412,8 +394,8 @@
 		55A708B018A715C1007BD7C0 /* DragSongsHereView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DragSongsHereView.m; path = Source/DragSongsHereView.m; sourceTree = SOURCE_ROOT; };
 		55ADE93318815EA8008DC245 /* SetlistPlayBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistPlayBar.h; path = Source/SetlistPlayBar.h; sourceTree = SOURCE_ROOT; };
 		55ADE93418815EA8008DC245 /* SetlistPlayBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistPlayBar.m; path = Source/SetlistPlayBar.m; sourceTree = SOURCE_ROOT; };
-		55ADE93618824338008DC245 /* SetlistLevelMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistLevelMeter.h; path = Source/SetlistLevelMeter.h; sourceTree = SOURCE_ROOT; };
-		55ADE93718824338008DC245 /* SetlistLevelMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistLevelMeter.m; path = Source/SetlistLevelMeter.m; sourceTree = SOURCE_ROOT; };
+		55ADE93618824338008DC245 /* SetlistMeterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistMeterView.h; path = Source/SetlistMeterView.h; sourceTree = SOURCE_ROOT; };
+		55ADE93718824338008DC245 /* SetlistMeterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetlistMeterView.m; path = Source/SetlistMeterView.m; sourceTree = SOURCE_ROOT; };
 		55AF60C918C94BD700BE2212 /* Base.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = Config/Base.xcconfig; sourceTree = "<group>"; };
 		55AF60D318C94BD700BE2212 /* ConfigDebug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ConfigDebug.xcconfig; path = Config/ConfigDebug.xcconfig; sourceTree = SOURCE_ROOT; };
 		55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = ConfigProfile.xcconfig; path = Config/ConfigProfile.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -423,9 +405,6 @@
 		55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = TargetEmbrace.xcconfig; path = Config/TargetEmbrace.xcconfig; sourceTree = SOURCE_ROOT; };
 		55B03B9B20CDFDBD0055881F /* TrackTableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackTableRowView.h; path = Source/TrackTableRowView.h; sourceTree = "<group>"; };
 		55B03B9C20CDFDBD0055881F /* TrackTableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackTableRowView.m; path = Source/TrackTableRowView.m; sourceTree = "<group>"; };
-		55B03B9E20CE29560055881F /* ColorCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ColorCompatibility.h; path = Source/ColorCompatibility.h; sourceTree = "<group>"; };
-		55B03B9F20CE29560055881F /* ColorCompatibility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ColorCompatibility.m; path = Source/ColorCompatibility.m; sourceTree = "<group>"; };
-		55B03BA220CE2A7D0055881F /* ColorCompatibilityData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCompatibilityData.m; sourceTree = BUILT_PRODUCTS_DIR; };
 		55B8587A1FB93ED20095D496 /* ScriptsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScriptsManager.h; path = Source/ScriptsManager.h; sourceTree = "<group>"; };
 		55B8587B1FB93ED20095D496 /* ScriptsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScriptsManager.m; path = Source/ScriptsManager.m; sourceTree = "<group>"; };
 		55BC0B041877F19400D84481 /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effect.h; path = Source/Effect.h; sourceTree = SOURCE_ROOT; };
@@ -440,8 +419,8 @@
 		55BC0B1A18780D1000D84481 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		55BC0B291878E4EF00D84481 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = Source/Utils.h; sourceTree = SOURCE_ROOT; };
 		55BC0B2A1878E4EF00D84481 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utils.m; path = Source/Utils.m; sourceTree = SOURCE_ROOT; };
-		55C24E1318D7D7800057D45E /* StereoField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoField.h; path = Source/StereoField.h; sourceTree = "<group>"; };
-		55C24E1418D7D7800057D45E /* StereoField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StereoField.m; path = Source/StereoField.m; sourceTree = "<group>"; };
+		55C24E1318D7D7800057D45E /* HugFastUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugFastUtils.h; path = Source/HugFastUtils.h; sourceTree = "<group>"; };
+		55C24E1418D7D7800057D45E /* HugFastUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugFastUtils.m; path = Source/HugFastUtils.m; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
 		55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUParametricEQ.aupreset; path = Resources/AUParametricEQ.aupreset; sourceTree = SOURCE_ROOT; };
 		55CD7ADB1F8B08870047F073 /* Embrace.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Embrace.icns; path = Resources/Embrace.icns; sourceTree = SOURCE_ROOT; };
@@ -462,6 +441,8 @@
 		55D7000D20DCA3A6002FB978 /* TrackStripeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackStripeView.m; path = Source/TrackStripeView.m; sourceTree = "<group>"; };
 		55D7000E20DCA3A7002FB978 /* TrackErrorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackErrorButton.h; path = Source/TrackErrorButton.h; sourceTree = "<group>"; };
 		55D7000F20DCA3A7002FB978 /* TrackErrorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackErrorButton.m; path = Source/TrackErrorButton.m; sourceTree = "<group>"; };
+		55D9BDD121A64C1100EBF00C /* HugAudioEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HugAudioEngine.h; path = Source/HugAudioEngine.h; sourceTree = "<group>"; };
+		55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HugAudioEngine.m; path = Source/HugAudioEngine.m; sourceTree = "<group>"; };
 		55DD538C18B99A530084628D /* CrashPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = CrashPad.entitlements; path = Resources/CrashPad.entitlements; sourceTree = "<group>"; };
 		55DD53A618B9FC4A0084628D /* CrashReportSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashReportSender.m; path = Source/CrashReportSender.m; sourceTree = "<group>"; };
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
@@ -490,8 +471,8 @@
 		55F7ABE718B04D91006B6FBB /* DebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugController.h; path = Source/DebugController.h; sourceTree = SOURCE_ROOT; };
 		55F7ABE818B04D91006B6FBB /* DebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DebugController.m; path = Source/DebugController.m; sourceTree = SOURCE_ROOT; };
 		55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DebugWindow.xib; path = Resources/DebugWindow.xib; sourceTree = SOURCE_ROOT; };
-		55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmergencyLimiter.h; path = Source/EmergencyLimiter.h; sourceTree = "<group>"; };
-		55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmergencyLimiter.m; path = Source/EmergencyLimiter.m; sourceTree = "<group>"; };
+		55F7ABF318B1A18C006B6FBB /* HugLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugLimiter.h; path = Source/HugLimiter.h; sourceTree = "<group>"; };
+		55F7ABF418B1A18C006B6FBB /* HugLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLimiter.m; path = Source/HugLimiter.m; sourceTree = "<group>"; };
 		55F7ABF818B21C31006B6FBB /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		55F81FD11B846E3300E03B5B /* IssuesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssuesController.h; path = Source/IssuesController.h; sourceTree = SOURCE_ROOT; };
 		55F81FD21B846E3300E03B5B /* IssuesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssuesController.m; path = Source/IssuesController.m; sourceTree = SOURCE_ROOT; };
@@ -585,8 +566,6 @@
 			children = (
 				554B733D18E402E1001E154E /* Log.h */,
 				554B733E18E402E1001E154E /* Log.m */,
-				553614CC18B4C3B2007BDAD6 /* AudioFile.h */,
-				553614CD18B4C3B2007BDAD6 /* AudioFile.m */,
 				5514B6621CDEE9DE00F238B7 /* TrackKeys.h */,
 				5514B6631CDEE9DE00F238B7 /* TrackKeys.m */,
 				559A671418D18EA200AB5918 /* URLExtensions.h */,
@@ -595,21 +574,52 @@
 			name = Shared;
 			sourceTree = SOURCE_ROOT;
 		};
-		552C9DC418836E480041C160 /* CoreAudio Public Utility */ = {
+		551CE71421B3A3F100D422E4 /* Hug */ = {
 			isa = PBXGroup;
 			children = (
-				557C2C3B18974031002FAFEA /* Public Utility */,
+				553614CC18B4C3B2007BDAD6 /* HugAudioFile.h */,
+				553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */,
+				550DDB8F21C67E8100769F32 /* HugAudioDevice.h */,
+				550DDB9021C67E8100769F32 /* HugAudioDevice.m */,
+				55D9BDD121A64C1100EBF00C /* HugAudioEngine.h */,
+				55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */,
+				555953FC21BBEA7D0032EE54 /* HugAudioSettings.h */,
+				555953FD21BBEA7D0032EE54 /* HugAudioSettings.m */,
+				555953F321B8B6FB0032EE54 /* HugAudioSource.h */,
+				555953F421B8B6FB0032EE54 /* HugAudioSource.m */,
+				555953FF21C0C1FC0032EE54 /* HugCrashPad.h */,
+				5559540021C0C1FC0032EE54 /* HugCrashPad.m */,
+				555953F821BBCEB20032EE54 /* HugError.h */,
+				555953F921BBCEB20032EE54 /* HugError.m */,
+				55C24E1318D7D7800057D45E /* HugFastUtils.h */,
+				55C24E1418D7D7800057D45E /* HugFastUtils.m */,
+				551CE71821B3CE9500D422E4 /* HugLinearRamper.h */,
+				551CE71921B3CE9500D422E4 /* HugLinearRamper.m */,
+				55F7ABF318B1A18C006B6FBB /* HugLimiter.h */,
+				55F7ABF418B1A18C006B6FBB /* HugLimiter.m */,
+				555953E721B6834D0032EE54 /* HugMeterData.h */,
+				555953E821B6834D0032EE54 /* HugMeterData.m */,
+				551CE71121B3A3D800D422E4 /* HugLevelMeter.h */,
+				551CE71221B3A3D800D422E4 /* HugLevelMeter.m */,
+				5555F54E1B4D19220092A8C2 /* HugProtectedBuffer.h */,
+				5555F54F1B4D19220092A8C2 /* HugProtectedBuffer.m */,
+				555953ED21B769D40032EE54 /* HugRingBuffer.h */,
+				555953EE21B769D40032EE54 /* HugRingBuffer.m */,
+				555953EA21B762730032EE54 /* HugSimpleGraph.h */,
+				555953EB21B762730032EE54 /* HugSimpleGraph.m */,
+				551CE71B21B3E24400D422E4 /* HugStereoField.h */,
+				551CE71C21B3E24400D422E4 /* HugStereoField.m */,
+				555953F021B7F6C90032EE54 /* HugUtils.h */,
+				555953F121B7F6C90032EE54 /* HugUtils.m */,
 			);
-			name = "CoreAudio Public Utility";
+			name = Hug;
 			sourceTree = "<group>";
 		};
 		556ACE30187BB3F800AED4BC /* Wrapped C++ */ = {
 			isa = PBXGroup;
 			children = (
-				55224BE518A788DA00407B46 /* WrappedAudioDevice.h */,
-				55224BE418A788DA00407B46 /* WrappedAudioDevice.mm */,
 				556ACE34187BB43A00AED4BC /* WrappedUtils.h */,
-				556ACE35187BB43A00AED4BC /* WrappedUtils.mm */,
+				556ACE35187BB43A00AED4BC /* WrappedUtils.cpp */,
 			);
 			name = "Wrapped C++";
 			sourceTree = "<group>";
@@ -618,43 +628,9 @@
 			isa = PBXGroup;
 			children = (
 				5559E60D18DFCC7900D61019 /* CrashPad-Info.plist */,
-				55708CC018B97ADB0059110C /* CrashPadClient.h */,
-				55708CC118B97ADB0059110C /* CrashPadClient.m */,
 				55708CB618B8AA220059110C /* CrashPad_main.m */,
 			);
 			name = "Crash Pad";
-			sourceTree = "<group>";
-		};
-		557C2C3B18974031002FAFEA /* Public Utility */ = {
-			isa = PBXGroup;
-			children = (
-				55224BE318A7880D00407B46 /* CAAutoDisposer.h */,
-				557C2C591897403E002FAFEA /* CABitOperations.h */,
-				557C2C5F1897403E002FAFEA /* CAByteOrder.h */,
-				557C2CDA189740D7002FAFEA /* CADebugger.h */,
-				557C2CD9189740D7002FAFEA /* CADebugger.cpp */,
-				557C2CDC189740D7002FAFEA /* CADebugMacros.h */,
-				557C2CDB189740D7002FAFEA /* CADebugMacros.cpp */,
-				557C2CDE189740D7002FAFEA /* CADebugPrintf.h */,
-				557C2CDD189740D7002FAFEA /* CADebugPrintf.cpp */,
-				557C2C771897403E002FAFEA /* CAException.h */,
-				557C2C7E1897403E002FAFEA /* CAHALAudioDevice.h */,
-				557C2C7D1897403E002FAFEA /* CAHALAudioDevice.cpp */,
-				557C2C801897403E002FAFEA /* CAHALAudioObject.h */,
-				557C2C7F1897403E002FAFEA /* CAHALAudioObject.cpp */,
-				557C2C831897403E002FAFEA /* CAHALAudioSystemObject.cpp */,
-				557C2C841897403E002FAFEA /* CAHALAudioSystemObject.h */,
-				557C2C861897403E002FAFEA /* CAHostTimeBase.h */,
-				557C2C851897403E002FAFEA /* CAHostTimeBase.cpp */,
-				557C2C871897403E002FAFEA /* CALogMacros.h */,
-				557C2C881897403E002FAFEA /* CAMath.h */,
-				557C2C891897403E002FAFEA /* CAMixMap.h */,
-				557C2C8F1897403E002FAFEA /* CAPropertyAddress.h */,
-				557C2C921897403E002FAFEA /* CAReferenceCounted.h */,
-				557C2C9C1897403E002FAFEA /* CAStreamBasicDescription.h */,
-				557C2C9B1897403E002FAFEA /* CAStreamBasicDescription.cpp */,
-			);
-			name = "Public Utility";
 			sourceTree = "<group>";
 		};
 		557C2C5E1910F933004A6364 /* Crash Pad */ = {
@@ -697,13 +673,13 @@
 				55DD538C18B99A530084628D /* CrashPad.entitlements */,
 				55EF15881D692DCC0021C9A7 /* Worker.entitlements */,
 				55DD53A518B9FC3E0084628D /* Utils */,
-				552C9DC418836E480041C160 /* CoreAudio Public Utility */,
 				556ACE30187BB3F800AED4BC /* Wrapped C++ */,
 				5514B6401CDEE64200F238B7 /* Worker */,
 				5514B6661CDF3B9A00F238B7 /* Shared */,
 				55BC0B1C1878D7FA00D84481 /* Model */,
 				55CF2797187A3DD50042C92A /* iTunes */,
 				55CF849218BF4EF400EF33F7 /* Scripting */,
+				551CE71421B3A3F100D422E4 /* Hug */,
 				55F3B7CF18779B2200E8FEC8 /* Player */,
 				55BC0B1E1878D8B700D84481 /* View */,
 				558DC088187785BC00C85770 /* Controller */,
@@ -872,38 +848,21 @@
 			name = Combined;
 			sourceTree = "<group>";
 		};
-		55B03BA120CE297E0055881F /* NSColor Compatibility */ = {
-			isa = PBXGroup;
-			children = (
-				55B03B9E20CE29560055881F /* ColorCompatibility.h */,
-				55B03B9F20CE29560055881F /* ColorCompatibility.m */,
-				55B03BA220CE2A7D0055881F /* ColorCompatibilityData.m */,
-				557ECCB620CE28260042FDF6 /* ColorCompatibilityGenerate.rb */,
-			);
-			name = "NSColor Compatibility";
-			sourceTree = "<group>";
-		};
 		55BC0B1C1878D7FA00D84481 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				552C9DC118836D2D0041C160 /* AudioDevice.h */,
-				552C9DC218836D2D0041C160 /* AudioDevice.m */,
 				55BC0B0B1877F35000D84481 /* EffectType.h */,
 				55BC0B0C1877F35000D84481 /* EffectType.m */,
 				55BC0B041877F19400D84481 /* Effect.h */,
 				55BC0B051877F19400D84481 /* Effect.m */,
 				55102B411B53564500308F55 /* EffectAdditions.h */,
 				55102B421B53564500308F55 /* EffectAdditions.m */,
-				55016BD31CF454E0007A85AE /* HostStatistics.h */,
-				55016BD41CF454E0007A85AE /* HostStatistics.m */,
 				5583A5961CFC0F1200B8CC4D /* IssueManager.h */,
 				5583A5971CFC0F1200B8CC4D /* IssueManager.m */,
 				55F3B7B41877908900E8FEC8 /* Track.h */,
 				55F3B7B51877908900E8FEC8 /* Track.m */,
 				552C9E4D1883EBA40041C160 /* Preferences.h */,
 				552C9E4E1883EBA40041C160 /* Preferences.m */,
-				5555F54E1B4D19220092A8C2 /* ProtectedBuffer.h */,
-				5555F54F1B4D19220092A8C2 /* ProtectedBuffer.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -920,8 +879,6 @@
 		55BC0B1E1878D8B700D84481 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				558AB90020C8C46800B4BAEE /* Theme.h */,
-				558AB90120C8C46800B4BAEE /* Theme.m */,
 				557C2BF91895F325002FAFEA /* CenteredTextField.h */,
 				557C2BFA1895F325002FAFEA /* CenteredTextField.m */,
 				55A708AF18A715C1007BD7C0 /* DragSongsHereView.h */,
@@ -938,10 +895,10 @@
 				556098131B47CABD008516C3 /* MenuLabelView.m */,
 				55717BF3187EA65400213213 /* SetlistButton.h */,
 				55717BF4187EA65400213213 /* SetlistButton.m */,
-				5514B6381CDD694700F238B7 /* SetlistDangerMeter.h */,
-				5514B6391CDD694700F238B7 /* SetlistDangerMeter.m */,
-				55ADE93618824338008DC245 /* SetlistLevelMeter.h */,
-				55ADE93718824338008DC245 /* SetlistLevelMeter.m */,
+				5514B6381CDD694700F238B7 /* SetlistDangerView.h */,
+				5514B6391CDD694700F238B7 /* SetlistDangerView.m */,
+				55ADE93618824338008DC245 /* SetlistMeterView.h */,
+				55ADE93718824338008DC245 /* SetlistMeterView.m */,
 				55ADE93318815EA8008DC245 /* SetlistPlayBar.h */,
 				55ADE93418815EA8008DC245 /* SetlistPlayBar.m */,
 				5572C17C1F00B743007BE284 /* SetlistProgressBar.h */,
@@ -1000,7 +957,6 @@
 		55DD53A518B9FC3E0084628D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				55B03BA120CE297E0055881F /* NSColor Compatibility */,
 				550C63BC1FE26F18007841BC /* MTS */,
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
@@ -1008,8 +964,6 @@
 				55F6C73019CEAA5B00B22793 /* Compatibility.m */,
 				55BC0B291878E4EF00D84481 /* Utils.h */,
 				55BC0B2A1878E4EF00D84481 /* Utils.m */,
-				5583A5911CF91C5D00B8CC4D /* FastUtils.h */,
-				5583A5921CF91C5D00B8CC4D /* FastUtils.m */,
 				550C63C31FE63B27007841BC /* FileSystemMonitor.h */,
 				550C63C41FE63B27007841BC /* FileSystemMonitor.m */,
 			);
@@ -1021,12 +975,6 @@
 			children = (
 				55F3B7D018779B3000E8FEC8 /* Player.h */,
 				55F3B7D118779B3000E8FEC8 /* Player.m */,
-				55873FDC18AA1E720081772A /* TrackScheduler.h */,
-				55873FDD18AA1E720081772A /* TrackScheduler.m */,
-				55F7ABF318B1A18C006B6FBB /* EmergencyLimiter.h */,
-				55F7ABF418B1A18C006B6FBB /* EmergencyLimiter.m */,
-				55C24E1318D7D7800057D45E /* StereoField.h */,
-				55C24E1418D7D7800057D45E /* StereoField.m */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -1086,7 +1034,6 @@
 			buildConfigurationList = 558DC0B0187785BC00C85770 /* Build configuration list for PBXNativeTarget "Embrace" */;
 			buildPhases = (
 				55224BEC18A855E900407B46 /* rcbump */,
-				557ECCB520CE260F0042FDF6 /* Generate Compatibility Colors */,
 				558DC07B187785BC00C85770 /* Sources */,
 				558DC07D187785BC00C85770 /* Resources */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
@@ -1241,23 +1188,6 @@
 			shellPath = /bin/sh;
 			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi\n";
 		};
-		557ECCB520CE260F0042FDF6 /* Generate Compatibility Colors */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Resources/Assets.xcassets/**",
-				"$(SRCROOT)/Source/ColorCompatibilityGenerate.rb",
-			);
-			name = "Generate Compatibility Colors";
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/ColorCompatibilityData.m",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ruby \"${PROJECT_DIR}/Source/ColorCompatibilityGenerate.rb\" \"EmbraceColorCompatibilityData\" \"${SRCROOT}/Resources/Assets.xcassets\" \"${BUILT_PRODUCTS_DIR}/ColorCompatibilityData.m\"\n";
-		};
 		55CD7AE31F8B11920047F073 /* Fix Icon for Trial */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1296,9 +1226,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */,
+				555953F721BA0C300032EE54 /* HugUtils.m in Sources */,
 				5514B6691CDF46C700F238B7 /* Log.m in Sources */,
-				5514B6671CDF3BB300F238B7 /* AudioFile.m in Sources */,
+				5514B6671CDF3BB300F238B7 /* HugAudioFile.m in Sources */,
 				5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */,
+				555953FB21BBD9040032EE54 /* HugError.m in Sources */,
 				5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */,
 				5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */,
 				550C63EA1FE76AC3007841BC /* WorkerService.m in Sources */,
@@ -1320,85 +1252,81 @@
 				550C63BB1FE26F12007841BC /* MTSTelemetry.m in Sources */,
 				55717BF5187EA65400213213 /* SetlistButton.m in Sources */,
 				55B8587C1FB93ED20095D496 /* ScriptsManager.m in Sources */,
+				555953FA21BBCEB20032EE54 /* HugError.m in Sources */,
 				55CF849118BF459600EF33F7 /* Scripting.m in Sources */,
 				55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */,
+				551CE71A21B3CE9500D422E4 /* HugLinearRamper.m in Sources */,
 				55D7001020DCA3A8002FB978 /* TrackStripeView.m in Sources */,
 				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
 				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
-				55016BD51CF454E0007A85AE /* HostStatistics.m in Sources */,
-				557C2CDF189740D7002FAFEA /* CADebugger.cpp in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
 				55D7001120DCA3A8002FB978 /* TrackErrorButton.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
 				55BC0B2B1878E4EF00D84481 /* Utils.m in Sources */,
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
-				557C2CC71897403E002FAFEA /* CAHALAudioObject.cpp in Sources */,
-				556ACE36187BB43A00AED4BC /* WrappedUtils.mm in Sources */,
-				557C2CC91897403E002FAFEA /* CAHALAudioSystemObject.cpp in Sources */,
+				5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */,
+				556ACE36187BB43A00AED4BC /* WrappedUtils.cpp in Sources */,
 				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
-				55873FDE18AA1E720081772A /* TrackScheduler.m in Sources */,
-				55B03BA320CE2A7D0055881F /* ColorCompatibilityData.m in Sources */,
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
+				555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
 				55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */,
 				5595A7BC18793B9000A7B996 /* EmbraceWindow.m in Sources */,
-				557C2CD31897403E002FAFEA /* CAStreamBasicDescription.cpp in Sources */,
+				555953EC21B762730032EE54 /* HugSimpleGraph.m in Sources */,
 				55B03B9D20CDFDBD0055881F /* TrackTableRowView.m in Sources */,
-				553614CE18B4C3B2007BDAD6 /* AudioFile.m in Sources */,
+				555953EF21B769D40032EE54 /* HugRingBuffer.m in Sources */,
+				553614CE18B4C3B2007BDAD6 /* HugAudioFile.m in Sources */,
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
-				5514B63A1CDD694700F238B7 /* SetlistDangerMeter.m in Sources */,
+				5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */,
+				550DDB9121C67E8100769F32 /* HugAudioDevice.m in Sources */,
 				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
-				552C9DC318836D2D0041C160 /* AudioDevice.m in Sources */,
-				5583A5931CF91C5D00B8CC4D /* FastUtils.m in Sources */,
 				556098141B47CABD008516C3 /* MenuLabelView.m in Sources */,
+				555953F221B7F6C90032EE54 /* HugUtils.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
 				55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */,
-				55F7ABF518B1A18C006B6FBB /* EmergencyLimiter.m in Sources */,
+				55F7ABF518B1A18C006B6FBB /* HugLimiter.m in Sources */,
 				557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */,
 				550680301887711000441AAE /* TimeStringValueTransformer.m in Sources */,
-				55708CC218B97ADB0059110C /* CrashPadClient.m in Sources */,
 				55ADE93518815EA8008DC245 /* SetlistPlayBar.m in Sources */,
 				554FCB9D1DFCF0E900DE697E /* MaskView.m in Sources */,
-				5555F5501B4D19220092A8C2 /* ProtectedBuffer.m in Sources */,
+				5555F5501B4D19220092A8C2 /* HugProtectedBuffer.m in Sources */,
 				557ABAB61B68D48C006F69D9 /* TrackLabelView.m in Sources */,
 				558DC0BA187785F200C85770 /* AppDelegate.m in Sources */,
 				550C63BF1FE2701A007841BC /* MTSBase.m in Sources */,
 				550D883818ACD5F800CC7E3A /* TrackTableView.m in Sources */,
+				551CE71321B3A3D800D422E4 /* HugLevelMeter.m in Sources */,
+				555953FE21BBEA7D0032EE54 /* HugAudioSettings.m in Sources */,
 				550C63B81FE26EE5007841BC /* MTSEscapePod.m in Sources */,
 				55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */,
 				550C63C51FE63B27007841BC /* FileSystemMonitor.m in Sources */,
 				558DC0BB187785F200C85770 /* main.m in Sources */,
 				55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */,
 				55102B481B537BF000308F55 /* EditGraphicEQEffectController.m in Sources */,
-				55B03BA020CE29560055881F /* ColorCompatibility.m in Sources */,
 				55F3B7B61877908900E8FEC8 /* Track.m in Sources */,
+				551CE71D21B3E24400D422E4 /* HugStereoField.m in Sources */,
 				558513C718794A2600C268E3 /* EffectsController.m in Sources */,
-				558AB90220C8C46800B4BAEE /* Theme.m in Sources */,
 				556ACE2F187B901400AED4BC /* WaveformView.m in Sources */,
 				5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */,
-				55ADE93818824338008DC245 /* SetlistLevelMeter.m in Sources */,
+				55ADE93818824338008DC245 /* SetlistMeterView.m in Sources */,
 				554B733F18E402E1001E154E /* Log.m in Sources */,
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,
 				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
-				557C2CCA1897403E002FAFEA /* CAHostTimeBase.cpp in Sources */,
-				557C2CE1189740D7002FAFEA /* CADebugPrintf.cpp in Sources */,
+				555953E921B6834D0032EE54 /* HugMeterData.m in Sources */,
 				55CF2786187A23BD0042C92A /* iTunesManager.m in Sources */,
 				55F6C73119CEAA5B00B22793 /* Compatibility.m in Sources */,
 				553DE143189F107100A355D1 /* ViewTrackController.m in Sources */,
 				55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */,
 				55102B431B53564500308F55 /* EffectAdditions.m in Sources */,
 				552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */,
-				55224BE618A788DA00407B46 /* WrappedAudioDevice.mm in Sources */,
-				557C2CE0189740D7002FAFEA /* CADebugMacros.cpp in Sources */,
-				557C2CC61897403E002FAFEA /* CAHALAudioDevice.cpp in Sources */,
 				550C63C81FE6666E007841BC /* ScriptFile.m in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
-				55C24E1518D7D7800057D45E /* StereoField.m in Sources */,
+				55C24E1518D7D7800057D45E /* HugFastUtils.m in Sources */,
 				55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */,
+				55D9BDD321A64C1100EBF00C /* HugAudioEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

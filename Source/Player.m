@@ -5,21 +5,17 @@
 #import "Effect.h"
 #import "AppDelegate.h"
 #import "EffectType.h"
-#import "AudioDevice.h"
 #import "Preferences.h"
-#import "WrappedAudioDevice.h"
-#import "TrackScheduler.h"
-#import "EmergencyLimiter.h"
-#import "StereoField.h"
-#import "FastUtils.h"
+#import "HugAudioDevice.h"
+#import "HugAudioEngine.h"
+#import "HugAudioSettings.h"
+#import "HugAudioSource.h"
+#import "HugAudioFile.h"
 
 #import <pthread.h>
 #import <signal.h>
 #import <Accelerate/Accelerate.h>
-#import "MTSEscapePod.h"
 #import <IOKit/pwr_mgt/IOPMLib.h>
-
-#define CHECK_RENDER_ERRORS_ON_TICK 0
 
 static NSString * const sEffectsKey       = @"effects";
 static NSString * const sPreAmpKey        = @"pre-amp";
@@ -29,49 +25,6 @@ static NSString * const sStereoLevelKey   = @"stereo-level";
 static NSString * const sStereoBalanceKey = @"stereo-balance";
 
 static double sMaxVolume = 1.0 - (2.0 / 32767.0);
-
-volatile NSInteger PlayerShouldUseCrashPad = 0;
-
-static void sMemoryBarrier()
-{
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    OSMemoryBarrier();
-    #pragma clang diagnostic pop
-}
-
-static void sAtomicIncrement64Barrier(volatile OSAtomic_int64_aligned64_t *theValue)
-{
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    OSAtomicIncrement64Barrier(theValue);
-    #pragma clang diagnostic pop
-}
-
-
-static OSStatus sApplyEmergencyLimiter(
-    void *inRefCon,
-    AudioUnitRenderActionFlags *ioActionFlags,
-    const AudioTimeStamp *inTimeStamp,
-    UInt32 inBusNumber,
-    UInt32 inNumberFrames,
-    AudioBufferList *ioData
-) {
-    MTSEscapePodSetIgnoredThread(mach_thread_self());
-
-    EmergencyLimiter *limiter = (EmergencyLimiter *)inRefCon;
-    
-    if (*ioActionFlags & kAudioUnitRenderAction_PostRender) {
-        EmergencyLimiterProcess(limiter, inNumberFrames, ioData);
-    }
-    
-    return noErr;
-}
-
-
-@interface Effect ()
-- (void) _setAudioUnit:(AudioUnit)unit error:(OSStatus)error;
-@end
 
 
 @interface Player ()
@@ -83,73 +36,30 @@ static OSStatus sApplyEmergencyLimiter(
 @end
 
 
-typedef struct {
-    volatile SInt64    inputID;
-    volatile AudioUnit inputUnit;
-
-    volatile SInt64    nextInputID;
-    volatile AudioUnit nextInputUnit;
-
-    volatile float     stereoLevel;
-    volatile float     previousStereoLevel;
-
-    volatile UInt64    sampleTime;
-    
-    // Worker Thread -> Main Thread
-    volatile SInt32    overloadCount;
-    volatile SInt32    nextOverloadCount;
-} RenderUserInfo;
-
-
 @implementation Player {
     Track         *_currentTrack;
     NSTimeInterval _currentPadding;
 
-    TrackScheduler *_currentScheduler;
-
-    RenderUserInfo _renderUserInfo;
-
-    AUGraph   _graph;
-
-    AUNode    _inputNode;
-    AUNode    _converterNode;
-	AUNode    _limiterNode;
-    AUNode    _mixerNode;
-	AUNode    _outputNode;
-
-    AudioUnit _inputAudioUnit;
-    AudioUnit _converterAudioUnit;
-    AudioUnit _limiterAudioUnit;
-    AudioUnit _mixerAudioUnit;
-    AudioUnit _outputAudioUnit;
+    HugAudioEngine *_engine;
     
-    EmergencyLimiter *_emergencyLimiter;
-    
-    AudioDevice *_outputDevice;
-    double       _outputSampleRate;
-    UInt32       _outputFrames;
-    BOOL         _outputHogMode;
-    BOOL         _outputResetsVolume;
+    HugAudioDevice *_outputDevice;
+    double          _outputSampleRate;
+    UInt32          _outputFrames;
+    BOOL            _outputHogMode;
+    BOOL            _outputResetsVolume;
     
     AudioDeviceID _listeningDeviceID;
 
     BOOL         _hadChangeDuringPlayback;
 
-    NSInteger    _reconnectGraph_failureCount;
     NSInteger    _setupAndStartPlayback_failureCount;
 
     id<NSObject> _processActivityToken;
-    IOPMAssertionID _pmAssertionID;
 
-    NSMutableDictionary *_effectToNodeMap;
     NSHashTable *_listeners;
     
-    NSTimer *_tickTimer;
-
     NSTimeInterval _roundedTimeElapsed;
     NSTimeInterval _roundedTimeRemaining;
-    
-    AUParameterListenerRef _parameterListener;
 }
 
 
@@ -189,10 +99,12 @@ typedef struct {
         EmbraceLog(@"Player", @"-init");
 
         _volume = -1;
-
-        [self _buildTailGraph];
+        _engine = [[HugAudioEngine alloc] init];
+        
+        __weak id weakSelf = self;
+        [_engine setUpdateBlock:^{ [weakSelf _handleEngineUpdate]; }];
+        
         [self _loadState];
-        [self _reconnectGraph];
     }
     
     return self;
@@ -269,191 +181,41 @@ typedef struct {
 }
 
 
-- (void) _updateEffects:(NSArray *)effects
+- (void) _handleEngineUpdate
 {
-    NSMutableDictionary *effectToNodeMap = [NSMutableDictionary dictionary];
+    HugPlaybackStatus playbackStatus = [_engine playbackStatus];
+    
+    _timeElapsed      = [_engine timeElapsed];
+    _timeRemaining    = [_engine timeRemaining];
+    _leftMeterData    = [_engine leftMeterData];
+    _rightMeterData   = [_engine rightMeterData];
+    _dangerPeak       = [_engine dangerLevel];
+    _lastOverloadTime = [_engine lastOverloadTime];
 
-    for (Effect *effect in effects) {
-        NSValue *key = [NSValue valueWithNonretainedObject:effect];
-        AUNode node = 0;
-
-        OSStatus err = noErr;
-
-        AudioComponentDescription acd = [[effect type] AudioComponentDescription];
-
-        NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
-        if (nodeNumber) {
-            node = [nodeNumber intValue];
-
-        } else {
-            err = AUGraphAddNode(_graph, &acd, &node);
-            
-            if (err != noErr) {
-                [effect _setAudioUnit:NULL error:err];
-                continue;
-            }
-
-            UInt32 maxFrames;
-            UInt32 maxFramesSize = sizeof(maxFrames);
-            
-            err = AudioUnitGetProperty(
-                _outputAudioUnit,
-                kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-                &maxFrames, &maxFramesSize
-            );
-            
-            if (err != noErr) {
-                [effect _setAudioUnit:NULL error:err];
-                continue;
-            }
-
-            AudioComponentDescription unused;
-            AudioUnit unit = NULL;
-
-            err = AUGraphNodeInfo(_graph, node, &unused, &unit);
-            
-            if (err != noErr) {
-                [effect _setAudioUnit:NULL error:err];
-                continue;
-            }
-
-            err = AudioUnitSetProperty(
-                unit,
-                kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-                &maxFrames, maxFramesSize
-            );
-            
-            if (err != noErr) {
-                [effect _setAudioUnit:NULL error:err];
-                continue;
-            }
-        }
-        
-        AudioUnit audioUnit;
-        err = AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
-
-        if (err != noErr) {
-            [effect _setAudioUnit:NULL error:err];
-            continue;
-        }
-        
-        AudioUnitParameter changedUnit;
-        changedUnit.mAudioUnit = audioUnit;
-        changedUnit.mParameterID = kAUParameterListener_AnyParameter;
-        AUParameterListenerNotify(NULL, NULL, &changedUnit);
-
-        [effect _setAudioUnit:audioUnit error:noErr];
-
-        [effectToNodeMap setObject:@(node) forKey:key];
-    }
-
-
-    for (NSValue *key in _effectToNodeMap) {
-        if (![effectToNodeMap objectForKey:key]) {
-            AUNode node = [[_effectToNodeMap objectForKey:key] intValue];
-            AUGraphRemoveNode(_graph, node);
-        }
-    }
-
-    _effectToNodeMap = effectToNodeMap;
-
-    [self _reconnectGraph];
-}
-
-
-- (void) _tick:(NSTimer *)timer
-{
+    BOOL done = NO;
     TrackStatus status = TrackStatusPlaying;
 
-    if (!_currentScheduler) {
-        return;
-    }
-    
-    NSInteger samplesPlayed = [_currentScheduler samplesPlayed];
-    BOOL done = NO;
-    
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower,      kAudioUnitScope_Output, 0, &_leftAveragePower);
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostAveragePower + 1,  kAudioUnitScope_Output, 0, &_rightAveragePower);
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel,     kAudioUnitScope_Output, 0, &_leftPeakPower);
-    AudioUnitGetParameter(_mixerAudioUnit, kMultiChannelMixerParam_PostPeakHoldLevel + 1, kAudioUnitScope_Output, 0, &_rightPeakPower);
+    NSTimeInterval roundedTimeElapsed   = floor(_timeElapsed);
+    NSTimeInterval roundedTimeRemaining = round(_timeRemaining);
 
-    AUGraphGetCPULoad(_graph, &_dangerAverage);
-    
-    Float32 dangerPeak = 0;
-    AUGraphGetMaxCPULoad(_graph, &_dangerPeak);
-
-    if (dangerPeak) {
-        _dangerPeak = dangerPeak;
-    } else if (_dangerAverage == 0) {
-        _dangerPeak = 0;
-    }
-
-    _limiterActive = EmergencyLimiterIsActive(_emergencyLimiter);
-
-    if (_renderUserInfo.nextOverloadCount != _renderUserInfo.overloadCount) {
-        _renderUserInfo.overloadCount = _renderUserInfo.nextOverloadCount;
-        _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];    
-
-        EmbraceLog(@"Player", @"kAudioDeviceProcessorOverload detected");
-    }
-
-    
-#if CHECK_RENDER_ERRORS_ON_TICK
-    if (_converterAudioUnit) {
-        OSStatus renderError;
-        UInt32 renderErrorSize = sizeof(renderError);
-
-        AudioUnitGetProperty(_converterAudioUnit, kAudioUnitProperty_LastRenderError, kAudioUnitScope_Global, 0, &renderError, &renderErrorSize);
-        NSLog(@"%ld", (long)renderError);
-    }
-#endif
-
-    _timeElapsed = 0;
-
-    NSTimeInterval roundedTimeElapsed;
-    NSTimeInterval roundedTimeRemaining;
-
-    char logBranchTaken = 0;
-
-    if (samplesPlayed <= 0) {
-        status = TrackStatusPreparing;
-
-        _timeElapsed = [_currentScheduler timeElapsed];
-        if (_timeElapsed > 0) _timeElapsed = 0;
-
-        _timeRemaining = [_currentTrack playDuration];
-        
-        roundedTimeElapsed = floor(_timeElapsed);
-        roundedTimeRemaining = round([_currentTrack playDuration]);
-
-        logBranchTaken = 'a';
-
-    } else {
-        _timeElapsed = [_currentScheduler timeElapsed];
-        _timeRemaining = [_currentTrack playDuration] - _timeElapsed;
-        
-        roundedTimeElapsed = floor(_timeElapsed);
-        roundedTimeRemaining = round([_currentTrack playDuration]) - roundedTimeElapsed;
-
-        logBranchTaken = 'b';
-    }
-
-    if ([_currentScheduler isDone] || [_currentTrack trackError]) {
-        Float64 sampleRate = [_currentScheduler clientFormat].mSampleRate;
-
-        EmbraceLog(@"Player", @"Marking track as done.  _timeElapsed: %g, _timeRemaining: %g, error: %ld", _timeElapsed, _timeRemaining, (long) [_currentTrack trackError]);
-        EmbraceLog(@"Player", @"Branch taken was: %c.  sampleRate: %g, samplesPlayed: %ld", logBranchTaken, (double)sampleRate, (long)samplesPlayed);
-        
+    if (playbackStatus == HugPlaybackStatusFinished) {
         done = YES;
 
-        status = TrackStatusPlayed;
         _timeElapsed = [_currentTrack playDuration];
         _timeRemaining = 0;
 
         roundedTimeElapsed = round([_currentTrack playDuration]);
         roundedTimeRemaining = 0;
+
+        status = TrackStatusPlayed;
+
+    } else if (playbackStatus == HugPlaybackStatusPreparing) {
+        status = TrackStatusPreparing;
+
+    } else {
+        status = TrackStatusPlaying;
     }
-    
+
     if (!_timeElapsedString || (roundedTimeElapsed != _roundedTimeElapsed)) {
         _roundedTimeElapsed = roundedTimeElapsed;
         [self setTimeElapsedString:GetStringForTime(_roundedTimeElapsed)];
@@ -525,14 +287,10 @@ typedef struct {
 
     EmbraceLog(@"Player", @"updating preGain to %g, trackLoudness=%g, trackPeak=%g, replayGain=%g", preGain, trackLoudness, trackPeak, replayGain);
 
-    AudioUnitParameter parameter = {
-        _limiterAudioUnit,
-        kLimiterParam_PreGain,
-        kAudioUnitScope_Global,
-        0
-    };
+    // Convert from dB to linear
+    preGain = pow(10, preGain / 20);
     
-    CheckError(AUParameterSet(NULL, NULL, &parameter, preGain, 0), "AUParameterSet");
+    [_engine updatePreGain:preGain];
 }
 
 
@@ -560,32 +318,6 @@ typedef struct {
 
         [self _updateFermata];
     }
-
-    if (!_pmAssertionID) {
-        static UInt8 b_DebugDisableLidCloseSensor[] = { 196,229,226,245,231,196,233,243,225,226,236,229,204,233,228,195,236,239,243,229,211,229,238,243,239,242,0 };
-        NSString *DebugDisableLidCloseSensor = EmbraceGetPrivateName(b_DebugDisableLidCloseSensor);
-
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:DebugDisableLidCloseSensor]) {
-            static UInt8 b_UserIsActive[] = { 213,243,229,242,201,243,193,227,244,233,246,229,0 };
-            NSString *UserIsActive = EmbraceGetPrivateName(b_UserIsActive);
-
-            static UInt8 b_AppliesOnLidClose[] = { 193,240,240,236,233,229,243,207,238,204,233,228,195,236,239,243,229,0 };
-            NSString *AppliesOnLidClose = EmbraceGetPrivateName(b_AppliesOnLidClose);
-
-            CFMutableDictionaryRef dict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-
-            CFDictionarySetValue(dict, kIOPMAssertionTypeKey, (__bridge CFStringRef)UserIsActive);
-            CFDictionarySetValue(dict, (__bridge CFStringRef)AppliesOnLidClose, kCFBooleanTrue);
-            CFDictionarySetValue(dict, kIOPMAssertionNameKey, @"Embrace is playing mission-critical audio");
-
-            IOReturn err = IOPMAssertionCreateWithProperties(dict, &_pmAssertionID);
-            if (err) {
-                EmbraceLog(@"Player", @"IOPMAssertionCreateWithProperties returned 0x%lx", (long)err);
-            }
-
-            CFRelease(dict);
-        }
-    }
 }
 
 
@@ -597,30 +329,10 @@ typedef struct {
 
         [self _updateFermata];
     }
-    
-    if (_pmAssertionID) {
-        IOPMAssertionRelease(_pmAssertionID);
-        _pmAssertionID = kIOPMNullAssertionID;
-    }
 }
 
 
 #pragma mark - Audio Device Notifications
-
-
-static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
-{
-    // This is "usually sent from the AudioDevice's IO thread".  Hence, we cannot call dispatch_async()
-    RenderUserInfo *userInfo = (RenderUserInfo *)inClientData;
-
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    OSAtomicIncrement32(&userInfo->nextOverloadCount);
-    #pragma clang diagnostic pop
-    
-    return noErr;
-}
-
 
 static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[], void *inClientData)
 {
@@ -662,23 +374,20 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 - (void) _handleAudioDeviceIOStoppedAbnormally
 {
     NSLog(@"_handleAudioDeviceIOStoppedAbnormally");
-
 }
 
 
 - (void) _handleAudioDeviceHasChanged
 {
-    WrappedAudioDevice *device = [_outputDevice controller];
-    
     PlayerInterruptionReason reason = PlayerInterruptionReasonNone;
     
-    if ([device isHoggedByAnotherProcess]) {
+    if ([_outputDevice isHoggedByAnotherProcess]) {
         reason = PlayerInterruptionReasonHoggedByOtherProcess;
 
-    } else if ([device nominalSampleRate] != _outputSampleRate) {
+    } else if ([_outputDevice nominalSampleRate] != _outputSampleRate) {
         reason = PlayerInterruptionReasonSampleRateChanged;
 
-    } else if ([device frameSize] != _outputFrames) {
+    } else if ([_outputDevice frameSize] != _outputFrames) {
         reason = PlayerInterruptionReasonFramesChanged;
     }
     
@@ -694,445 +403,10 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
 #pragma mark - Graph
 
-static OSStatus sInputRenderCallback(
-    void *inRefCon,
-    AudioUnitRenderActionFlags *ioActionFlags,
-    const AudioTimeStamp *inTimeStamp,
-    UInt32 inBusNumber,
-    UInt32 inNumberFrames,
-    AudioBufferList *ioData)
-{
-    RenderUserInfo *userInfo = (RenderUserInfo *)inRefCon;
-    
-    AudioUnit unit  = userInfo->inputUnit;
-    OSStatus result = noErr;
-    
-    BOOL willChangeUnits = (userInfo->nextInputID != userInfo->inputID);
-
-    if (!unit) {
-        *ioActionFlags |= kAudioUnitRenderAction_OutputIsSilence;
-        ApplySilenceToAudioBuffer(inNumberFrames, ioData);
-
-    } else {
-        AudioTimeStamp timestampToUse = {0};
-        timestampToUse.mSampleTime = userInfo->sampleTime;
-        timestampToUse.mHostTime   = GetCurrentHostTime();
-        timestampToUse.mFlags      = kAudioTimeStampSampleTimeValid|kAudioTimeStampHostTimeValid;
-
-        result = AudioUnitRender(unit, ioActionFlags, &timestampToUse, 0, inNumberFrames, ioData);
-
-        userInfo->sampleTime += inNumberFrames;
-
-//        if (rand() % 100 == 0) {
-//            usleep(50000);
-//        }
-
-        // Process stereo field
-        {
-            BOOL canSkipStereoField = (userInfo->previousStereoLevel) == 1.0 && (userInfo->stereoLevel == 1.0);
-
-            if (!canSkipStereoField) {
-                ApplyStereoField(inNumberFrames, ioData, userInfo->previousStereoLevel, userInfo->stereoLevel);
-                userInfo->previousStereoLevel = userInfo->stereoLevel;
-            }
-        }
-
-        if (willChangeUnits) {
-            ApplyFadeToAudioBuffer(inNumberFrames, ioData, 1.0, 0.0);
-        }
-    }
-
-    if (willChangeUnits) {
-        userInfo->inputUnit = userInfo->nextInputUnit;
-        userInfo->previousStereoLevel = userInfo->stereoLevel;
-        userInfo->sampleTime = 0;
-        sMemoryBarrier();
-
-        userInfo->inputID = userInfo->nextInputID;
-    }
-
-    return result;
-}
-
-
-- (void) _sendHeadUnitToRenderThread:(AudioUnit)audioUnit
-{
-    EmbraceLog(@"Player", @"Sending %p to render thread", audioUnit);
-
-    Boolean isRunning;
-    AUGraphIsRunning(_graph, &isRunning);
-
-    if (isRunning) {
-        _renderUserInfo.nextInputUnit = audioUnit;
-        sMemoryBarrier();
-
-        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
-
-        NSInteger loopGuard = 0;
-        while (1) {
-            sMemoryBarrier();
-
-            if (_renderUserInfo.inputID == _renderUserInfo.nextInputID) {
-                break;
-            }
-        
-            AUGraphIsRunning(_graph, &isRunning);
-            
-            if (!isRunning) return;
-
-            if (loopGuard >= 1000) {
-                EmbraceLog(@"Player", @"_sendHeadUnitToRenderThread timed out");
-                break;
-            }
-
-            usleep(1000);
-            loopGuard++;
-        }
-    } else {
-        _renderUserInfo.inputUnit = NULL;
-        _renderUserInfo.nextInputUnit = audioUnit;
-        sMemoryBarrier();
-
-        sAtomicIncrement64Barrier(&_renderUserInfo.nextInputID);
-    }
-}
-
-
-- (BOOL) _buildGraphHeadAndTrackScheduler
-{
-    EmbraceLogMethod();
-
-    [self _teardownGraphHead];
-
-    BOOL ok = CheckErrorGroup(^{
-        UInt32 (^getPropertyUInt32)(AudioUnit, AudioUnitPropertyID, AudioUnitScope) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope) {
-            UInt32 result = 0;
-            UInt32 resultSize = sizeof(result);
-
-            CheckError(
-                AudioUnitGetProperty(unit, propertyID, scope, 0, &result, &resultSize),
-                "AudioUnitGetProperty UInt32"
-            );
-            
-            return result;
-        };
-
-        void (^setPropertyUInt32)(AudioUnit, AudioUnitPropertyID, AudioUnitScope, UInt32) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope, UInt32 value) {
-            CheckError(
-                AudioUnitSetProperty(unit, propertyID, scope, 0, &value, sizeof(value)),
-                "AudioUnitSetProperty Float64"
-            );
-        };
-
-        void (^setPropertyFloat64)(AudioUnit, AudioUnitPropertyID, AudioUnitScope, Float64) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope, Float64 value) {
-            CheckError(
-                AudioUnitSetProperty(unit, propertyID, scope, 0, &value, sizeof(value)),
-                "AudioUnitSetProperty Float64"
-            );
-        };
-
-        void (^getPropertyStream)(AudioUnit, AudioUnitPropertyID, AudioUnitScope, AudioStreamBasicDescription *) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope, AudioStreamBasicDescription *value) {
-            UInt32 size = sizeof(AudioStreamBasicDescription);
-
-            CheckError(
-                AudioUnitGetProperty(unit, propertyID, scope, 0, value, &size),
-                "AudioUnitGetProperty Stream"
-            );
-        };
-        
-        void (^setPropertyStream)(AudioUnit, AudioUnitPropertyID, AudioUnitScope, AudioStreamBasicDescription *) = ^(AudioUnit unit, AudioUnitPropertyID propertyID, AudioUnitScope scope, AudioStreamBasicDescription *value) {
-            AudioUnitSetProperty(unit, propertyID, scope, 0, value, sizeof(*value));
-
-            CheckError(
-                AudioUnitSetProperty(unit, propertyID, scope, 0, value, sizeof(*value)),
-                "AudioUnitSetProperty Stream"
-            );
-        };
-
-        _currentScheduler = [[TrackScheduler alloc] initWithTrack:_currentTrack];
-        
-        if (![_currentScheduler setup]) {
-            EmbraceLog(@"Player", @"TrackScheduler setup failed: %ld", (long)[_currentScheduler audioFileError]);
-            [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
-            return;
-        }
-
-        UInt32 maxFrames = getPropertyUInt32(_outputAudioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
-        UInt32 maxFramesForInput = maxFrames;
-
-        AudioStreamBasicDescription outputFormat;
-        getPropertyStream(_outputAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, &outputFormat);
-        
-        AudioStreamBasicDescription fileFormat = [_currentScheduler clientFormat];
-
-        AudioStreamBasicDescription inputFormat = outputFormat;
-        inputFormat.mSampleRate = fileFormat.mSampleRate;
-
-        AudioUnit inputUnit     = 0;
-        AudioUnit converterUnit = NULL;
-
-        if (fileFormat.mSampleRate != _outputSampleRate) {
-            AudioComponentDescription converterCD = {0};
-            converterCD.componentType = kAudioUnitType_FormatConverter;
-            converterCD.componentSubType = kAudioUnitSubType_AUConverter;
-            converterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-            converterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-            AUNode converterNode = 0;
-            CheckError(AUGraphAddNode( _graph, &converterCD,  &converterNode),  "AUGraphAddNode[ Converter ]");
-
-            CheckError(AUGraphNodeInfo(_graph, converterNode,  NULL, &converterUnit),  "AUGraphNodeInfo[ Converter ]");
-
-            UInt32 complexity = [[Preferences sharedInstance] usesMasteringComplexitySRC] ?
-                kAudioUnitSampleRateConverterComplexity_Mastering :
-                kAudioUnitSampleRateConverterComplexity_Normal;
-
-            setPropertyUInt32(converterUnit, kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity);
-            setPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFrames);
-
-            setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  inputFormat.mSampleRate);
-            setPropertyFloat64(converterUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, _outputSampleRate);
-
-            AudioStreamBasicDescription unitFormat = inputFormat;
-            unitFormat.mSampleRate = _outputSampleRate;
-
-            setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &inputFormat);
-            setPropertyStream(converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &unitFormat);
-
-            CheckError(AudioUnitInitialize(converterUnit), "AudioUnitInitialize[ Converter ]");
-
-            // maxFrames will be different when going through a SRC
-            maxFramesForInput = getPropertyUInt32(converterUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global);
-
-            _converterNode = converterNode;
-            _converterAudioUnit = converterUnit;
-        }
-
-        // Make input node
-        {
-            AudioComponentDescription inputCD = {0};
-            inputCD.componentType = kAudioUnitType_Mixer;
-            inputCD.componentSubType = kAudioUnitSubType_StereoMixer;
-            inputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-            inputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-            AUNode inputNode = 0;
-            CheckError(AUGraphAddNode(_graph, &inputCD, &inputNode), "AUGraphAddNode[ Input ]");
-            CheckError(AUGraphNodeInfo(_graph, inputNode, NULL, &inputUnit),  "AUGraphNodeInfo[ Input ]");
-
-            setPropertyUInt32( inputUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, maxFramesForInput);
-
-            setPropertyStream(inputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &fileFormat);
-            setPropertyStream(inputUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &inputFormat);
-            
-            CheckError(AudioUnitInitialize(inputUnit), "AudioUnitInitialize[ Input ]");
-
-            _inputNode = inputNode;
-            _inputAudioUnit = inputUnit;
-        }
-
-        [self _sendHeadUnitToRenderThread:(converterUnit ? converterUnit : inputUnit)];
-    });
-    
-    if (ok) {
-        [self _reconnectGraph];
-    }
-
-    return ok;
-}
-
-
-- (void) _teardownGraphHead
-{
-    EmbraceLogMethod();
-
-    if (_inputAudioUnit) {
-        CheckError(AudioUnitUninitialize(_inputAudioUnit), "AudioUnitUninitialize[ Input ]");
-        CheckError(AUGraphRemoveNode(_graph, _inputNode), "AUGraphRemoveNode[ Input ]" );
-        
-        _inputAudioUnit = NULL;
-        _inputNode = 0;
-    }
-
-    if (_converterAudioUnit) {
-        CheckError(AudioUnitUninitialize(_converterAudioUnit), "AudioUnitUninitialize[ Converter ]");
-        CheckError(AUGraphRemoveNode(_graph, _converterNode), "AUGraphRemoveNode[ Converter ]" );
-        
-        _converterAudioUnit = NULL;
-        _converterNode = 0;
-    }
-}
-
-
-- (void) _buildTailGraph
-{
-    EmbraceLogMethod();
-
-    CheckError(NewAUGraph(&_graph), "NewAUGraph");
-	
-    AudioComponentDescription limiterCD = {0};
-    limiterCD.componentType = kAudioUnitType_Effect;
-    limiterCD.componentSubType = kAudioUnitSubType_PeakLimiter;
-    limiterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    limiterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-    AudioComponentDescription mixerCD = {0};
-    mixerCD.componentType = kAudioUnitType_Mixer;
-    mixerCD.componentSubType = kAudioUnitSubType_StereoMixer;
-    mixerCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    mixerCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-    AudioComponentDescription outputCD = {0};
-    outputCD.componentType = kAudioUnitType_Output;
-    outputCD.componentSubType = kAudioUnitSubType_HALOutput;
-    outputCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    outputCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-    CheckError(AUGraphAddNode(_graph, &limiterCD,    &_limiterNode),    "AUGraphAddNode[ Limiter ]");
-    CheckError(AUGraphAddNode(_graph, &mixerCD,      &_mixerNode),      "AUGraphAddNode[ Mixer ]");
-    CheckError(AUGraphAddNode(_graph, &outputCD,     &_outputNode),     "AUGraphAddNode[ Output ]");
-
-	CheckError(AUGraphOpen(_graph), "AUGraphOpen");
-
-    CheckError(AUGraphNodeInfo(_graph, _limiterNode, NULL, &_limiterAudioUnit), "AUGraphNodeInfo[ Limiter ]");
-	CheckError(AUGraphNodeInfo(_graph, _mixerNode,   NULL, &_mixerAudioUnit),   "AUGraphNodeInfo[ Mixer ]");
-	CheckError(AUGraphNodeInfo(_graph, _outputNode,  NULL, &_outputAudioUnit),  "AUGraphNodeInfo[ Output ]");
-
-	CheckError(AUGraphInitialize(_graph), "AUGraphInitialize");
-
-    UInt32 on = 1;
-    CheckError(AudioUnitSetProperty(_mixerAudioUnit,
-        kAudioUnitProperty_MeteringMode, kAudioUnitScope_Global, 0,
-        &on,
-        sizeof(on)
-    ), "AudioUnitSetProperty[kAudioUnitProperty_MeteringMode]");
-
-    CheckError(AudioUnitSetParameter(_mixerAudioUnit,
-        kStereoMixerParam_Volume, kAudioUnitScope_Output, 0,
-        _volume, 0
-    ), "AudioUnitSetParameter[Volume]");
-
-    CheckError(AudioUnitSetParameter(_mixerAudioUnit,
-        kStereoMixerParam_Pan, kAudioUnitScope_Input, 0,
-        _stereoBalance, 0
-    ), "AudioUnitSetParameter[Volume]");
-
-    _emergencyLimiter = EmergencyLimiterCreate();
-
-    AUGraphAddRenderNotify(_graph, sApplyEmergencyLimiter, _emergencyLimiter);
-}
-
-
-- (void) _iterateGraphNodes:(void (^)(AUNode, NSString *))callback
-{
-    if (_inputNode)     callback(_inputNode,     @"Input");
-    if (_converterNode) callback(_converterNode, @"Converter");
-    callback(_limiterNode, @"Limiter");
-    
-    for (Effect *effect in _effects) {
-        NSValue  *key        = [NSValue valueWithNonretainedObject:effect];
-        NSNumber *nodeNumber = [_effectToNodeMap objectForKey:key];
-
-        if (!nodeNumber) continue;
-        callback([nodeNumber intValue], [[effect type] name]);
-    }
-
-    callback(_mixerNode,  @"Mixer");
-    callback(_outputNode, @"Output");
-}
-
-
-- (void) _iterateGraphAudioUnits:(void (^)(AudioUnit, NSString *))callback
-{
-    [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
-        AudioComponentDescription acd;
-        AudioUnit audioUnit;
-
-        AUGraphNodeInfo(_graph, node, &acd, &audioUnit);
-
-        callback(audioUnit, unitString);
-    }];
-}
-
-
-- (void) _reconnectGraph_attempt
-{
-    BOOL (^doReconnect)() = ^{
-        if (!CheckError(
-            AUGraphClearConnections(_graph),
-            "AUGraphClearConnections"
-        )) {
-            return NO;
-        }
-        
-        __block AUNode lastNode = 0;
-        __block NSInteger index = 0;
-        __block BOOL didConnectAll = YES;
-
-        AURenderCallbackStruct inputCallbackStruct;
-        inputCallbackStruct.inputProc        = &sInputRenderCallback;
-        inputCallbackStruct.inputProcRefCon  = &_renderUserInfo;
-
-        if (!CheckError(
-            AUGraphSetNodeInputCallback(_graph, _limiterNode, 0, &inputCallbackStruct),
-            "AUGraphSetNodeInputCallback"
-        )) {
-            return NO;
-        }
-        
-        [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
-            if (lastNode && (node != _limiterNode)) {
-                if (!CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput")) {
-                    didConnectAll = NO;
-                }
-            }
-
-            lastNode = node;
-            index++;
-        }];
-        
-        if (!didConnectAll) {
-            return NO;
-        }
-        
-        if (!CheckError(AUGraphUpdate(_graph, NULL), "AUGraphUpdate")) {
-            return NO;
-        }
-        
-        return YES;
-    };
-    
-    if (!doReconnect()) {
-        _reconnectGraph_failureCount++;
-        
-        if (_reconnectGraph_failureCount > 200) {
-            EmbraceLog(@"Player", @"doReconnect() still failing after 1 second.  Stopping.");
-            [self hardStop];
-        }
-
-        EmbraceLog(@"Player", @"doReconnect() failed, calling again in 5ms");
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
-            [self _reconnectGraph_attempt];
-        });
-    }
-}
-
-
-- (void) _reconnectGraph
-{
-    EmbraceLogMethod();
-
-    _reconnectGraph_failureCount = 0;
-    [self _reconnectGraph_attempt];
-}
-
-
 - (void) _reconfigureOutput_attempt
 {
     // Properties that we will listen for
     //
-    AudioObjectPropertyAddress overloadPropertyAddress   = { kAudioDeviceProcessorOverload,           kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
     AudioObjectPropertyAddress ioStoppedPropertyAddress  = { kAudioDevicePropertyIOStoppedAbnormally, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
     AudioObjectPropertyAddress changedPropertyAddress    = { kAudioDevicePropertyDeviceHasChanged,    kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
     AudioObjectPropertyAddress sampleRatePropertyAddress = { kAudioDevicePropertyNominalSampleRate,   kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
@@ -1141,8 +415,6 @@ static OSStatus sInputRenderCallback(
     // Remove old listeners
     //
     if (_listeningDeviceID) {
-        AudioObjectRemovePropertyListener(_listeningDeviceID, &overloadPropertyAddress, sHandleAudioDeviceOverload, &_renderUserInfo);
-
         AudioObjectRemovePropertyListener(_listeningDeviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
         AudioObjectRemovePropertyListener(_listeningDeviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
         AudioObjectRemovePropertyListener(_listeningDeviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
@@ -1158,71 +430,47 @@ static OSStatus sInputRenderCallback(
         if (issue == PlayerIssueNone) issue = i;
         ok = NO;
     };
-    
-    void (^checkError)(OSStatus, NSString *, NSString *) = ^(OSStatus error, NSString *formatString, NSString *unitString) {
-        if (ok) {
-            const char *errorString = NULL;
-
-            if (error != noErr) {
-                errorString = [[NSString stringWithFormat:formatString, unitString] UTF8String];
-            }
-
-            if (!CheckError(error, errorString)) {
-                raiseIssue(PlayerIssueErrorConfiguringOutputDevice);
-            }
-        }
-    };
-   
+       
     if (![_outputDevice isConnected]) {
         raiseIssue(PlayerIssueDeviceMissing);
 
-    } else if ([[_outputDevice controller] isHoggedByAnotherProcess]) {
+    } else if ([_outputDevice isHoggedByAnotherProcess]) {
         raiseIssue(PlayerIssueDeviceHoggedByOtherProcess);
     }
 
-    Boolean isRunning = 0;
-    AUGraphIsRunning(_graph, &isRunning);
-    
     _hadChangeDuringPlayback = NO;
     
-    if (isRunning) AUGraphStop(_graph);
+    [_engine stopHardware];
     
-    CheckError(AUGraphUninitialize(_graph), "AUGraphUninitialize");
-
-    AUGraphClearConnections(_graph);
-
-    for (AudioDevice *device in [AudioDevice outputAudioDevices]) {
-        WrappedAudioDevice *controller = [device controller];
-        
-        if ([controller isHoggedByMe]) {
+    for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
+        if ([device isHoggedByMe]) {
             EmbraceLog(@"Player", @"Un-oink");
-            [controller releaseHogMode];
+            [device releaseHogMode];
         }
     }
     
 
-    WrappedAudioDevice *controller = [_outputDevice controller];
-    AudioDeviceID deviceID = [controller objectID];
+    AudioDeviceID deviceID = [_outputDevice objectID];
     
     if (ok) {
-        [controller setNominalSampleRate:_outputSampleRate];
+        [_outputDevice setNominalSampleRate:_outputSampleRate];
 
-        if (!_outputSampleRate || ([controller nominalSampleRate] != _outputSampleRate)) {
+        if (!_outputSampleRate || ([_outputDevice nominalSampleRate] != _outputSampleRate)) {
             raiseIssue(PlayerIssueErrorConfiguringSampleRate);
         }
     }
 
     if (ok) {
-        [controller setFrameSize:_outputFrames];
+        [_outputDevice setFrameSize:_outputFrames];
 
-        if (!_outputFrames || ([controller frameSize] != _outputFrames)) {
+        if (!_outputFrames || ([_outputDevice frameSize] != _outputFrames)) {
             raiseIssue(PlayerIssueErrorConfiguringFrameSize);
         }
     }
 
     if (ok) {
         if (_outputHogMode) {
-            if ([controller takeHogModeAndResetVolume:_outputResetsVolume]) {
+            if ([_outputDevice takeHogModeAndResetVolume:_outputResetsVolume]) {
                 EmbraceLog(@"Player", @"_outputHogMode is YES, took hog mode.");
 
             } else {
@@ -1235,89 +483,26 @@ static OSStatus sInputRenderCallback(
         }
     }
     
-    if (ok) {
-        checkError(AudioUnitSetProperty(_outputAudioUnit,
-            kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, 0,
-            &_outputFrames,
-            sizeof(_outputFrames)
-        ), @"AudioUnitSetProperty[ Output, kAudioDevicePropertyBufferFrameSize]", nil);
+ 
+    // Register for new listeners
+    //
+    if (ok && deviceID) {
+        AudioObjectAddPropertyListener(deviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+        AudioObjectAddPropertyListener(deviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+        AudioObjectAddPropertyListener(deviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
+        AudioObjectAddPropertyListener(deviceID, &hogModePropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
 
-        checkError(AudioUnitSetProperty(_outputAudioUnit,
-            kAudioOutputUnitProperty_CurrentDevice,
-            kAudioUnitScope_Global,
-            0,
-            &deviceID, sizeof(deviceID)
-        ), @"AudioUnitSetProperty[ Output, CurrentDevice]", nil);
-
-        // Register for new listeners
-        //
-        if (deviceID) {
-            AudioObjectAddPropertyListener(deviceID, &overloadPropertyAddress, sHandleAudioDeviceOverload, &_renderUserInfo);
-
-            AudioObjectAddPropertyListener(deviceID, &ioStoppedPropertyAddress,  sHandleAudioDevicePropertyChanged, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &changedPropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &sampleRatePropertyAddress, sHandleAudioDevicePropertyChanged, (__bridge void *)self);
-            AudioObjectAddPropertyListener(deviceID, &hogModePropertyAddress,    sHandleAudioDevicePropertyChanged, (__bridge void *)self);
-
-            _listeningDeviceID = deviceID;
-        }
+        _listeningDeviceID = deviceID;
     }
 
-    UInt32 maxFrames;
-    UInt32 maxFramesSize = sizeof(maxFrames);
-    
-    checkError(AudioUnitGetProperty(
-        _outputAudioUnit,
-        kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-        &maxFrames, &maxFramesSize
-    ), @"AudioUnitGetProperty[ Output, MaximumFramesPerSlice ]", nil);
-    
-    EmbraceLog(@"Player", @"Configuring audio units with %lf sample rate, %ld frame size", _outputSampleRate, (long)maxFrames);
-    
-    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
-        Float64 inputSampleRate  = _outputSampleRate;
-        Float64 outputSampleRate = _outputSampleRate;
+    BOOL useHighestQualityRateConverters = [[Preferences sharedInstance] usesMasteringComplexitySRC];
 
-        if (unit == _inputAudioUnit) {
-            inputSampleRate = 0;
-
-        } else if (unit == _outputAudioUnit) {
-            outputSampleRate = 0;
-        }
-        
-        if (inputSampleRate) {
-            checkError(AudioUnitSetProperty(
-                unit,
-                kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0,
-                &inputSampleRate, sizeof(inputSampleRate)
-            ), @"AudioUnitSetProperty[ %@, SampleRate, Input ]", unitString);
-        }
-
-        if (outputSampleRate) {
-            checkError(AudioUnitSetProperty(
-                unit,
-                kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0,
-                &outputSampleRate, sizeof(outputSampleRate)
-            ), @"AudioUnitSetProperty[ %@, SampleRate, Output ]", unitString);
-        }
-
-        checkError(AudioUnitSetProperty(
-            unit,
-            kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-            &maxFrames, maxFramesSize
-        ), @"AudioUnitSetProperty[ %@, MaximumFramesPerSlice ]", unitString);
+    ok = ok && [_engine configureWithDeviceID:deviceID settings:@{
+        HugAudioSettingSampleRate: @(_outputSampleRate),
+        HugAudioSettingFrameSize:  @(_outputFrames),
+        HugAudioSettingUseHighestQualityRateConverters: @(useHighestQualityRateConverters)
     }];
-
-    checkError(AUGraphInitialize(_graph), @"AUGraphInitialize", nil);
-
-    if (ok) {
-        [self _reconnectGraph];
-
-        if (isRunning) {
-            [self _startGraph];
-        }
-    }
-   
+    
     if (issue != _issue) {
         EmbraceLog(@"Player", @"issue is %ld", (long) issue);
 
@@ -1350,15 +535,8 @@ static OSStatus sInputRenderCallback(
 {
     EmbraceLogMethod();
     
-    PlayerShouldUseCrashPad = 0;
-
     Track *track = _currentTrack;
     NSTimeInterval padding = _currentPadding;
-
-    [self _sendHeadUnitToRenderThread:NULL];
-
-    [_currentScheduler stopScheduling:_inputAudioUnit];
-    _currentScheduler = nil;
 
     if ([track isResolvingURLs]) {
         EmbraceLog(@"Player", @"%@ isn't ready due to URL resolution", track);
@@ -1366,7 +544,7 @@ static OSStatus sInputRenderCallback(
         return;
     }
 
-    if (![track didAnalyzeLoudness] && ![track trackError]) {
+    if (![track didAnalyzeLoudness] && ![track error]) {
         EmbraceLog(@"Player", @"%@ isn't ready, calling startPriorityAnalysis", track);
 
         [track startPriorityAnalysis];
@@ -1380,85 +558,26 @@ static OSStatus sInputRenderCallback(
         [self hardStop];
         return;
     }
-
-    PlayerShouldUseCrashPad = 0;
-
-    if ([self _buildGraphHeadAndTrackScheduler]) {
-        _setupAndStartPlayback_failureCount = 0;
-
-    } else {
-        _setupAndStartPlayback_failureCount++;
-
-        EmbraceLog(@"Player", @"Failure %ld during _buildGraphHeadAndTrackScheduler", (long)_setupAndStartPlayback_failureCount);
-        
-        if (![track trackError] && (_setupAndStartPlayback_failureCount < 20)) {
-            [self performSelector:@selector(_setupAndStartPlayback) withObject:nil afterDelay:0.1];
-        } else {
-            [self hardStop];
-        }
+    
+    HugAudioFile *file = [[HugAudioFile alloc] initWithFileURL:fileURL];
+    if (![file open]) {
+        EmbraceLog(@"Player", @"Couldn't open %@", file);
+        [self hardStop];
+        return;
     }
 
     [self _updateLoudnessAndPreAmp];
 
-    if (padding > 0 && _outputSampleRate > 0) {
-        padding += _outputSampleRate ? (_outputFrames / _outputSampleRate) : 0;
+    if (![_engine playAudioFile:file startTime:[track startTime] stopTime:[track stopTime] padding:padding]) {
+        EmbraceLog(@"Player", @"Couldn't play %@", file);
+        [self hardStop];
     }
-
-    EmbraceLog(@"Player", @"Calling startSchedulingWithAudioUnit. audioUnit=%p, padding=%lf", _inputAudioUnit, padding);
-        
-    BOOL didScheldule = [_currentScheduler startSchedulingWithAudioUnit:_inputAudioUnit paddingInSeconds:padding];
-    if (!didScheldule) {
-        EmbraceLog(@"Player", @"startSchedulingWithAudioUnit failed: %ld", (long)[_currentScheduler audioFileError]);
-        [_currentTrack setTrackError:(TrackError)[_currentScheduler audioFileError]];
-        return;
-    }
-
-    EmergencyLimiterSetSampleRate(_emergencyLimiter, _outputSampleRate);
 
     [self _sendDistributedNotification];
-
-    EmbraceLog(@"Player", @"setup complete, starting graph");
-    [self _startGraph];
-}
-
-
-- (void) _startGraph
-{
-    EmbraceLogMethod();
-
-    Boolean isRunning = 0;
-    AUGraphIsRunning(_graph, &isRunning);
-
-    if (!isRunning) {
-        CheckError(AUGraphStart(_graph), "AUGraphStart");
-    }
-
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_stopGraph) object:nil];
-}
-
-
-- (void) _stopGraph
-{
-    EmbraceLogMethod();
-    CheckError(AUGraphStop(_graph), "AUGraphStop");
 }
 
 
 #pragma mark - Public Methods
-
-- (AudioUnit) audioUnitForEffect:(Effect *)effect
-{
-    NSValue *key = [NSValue valueWithNonretainedObject:effect];
-    AUNode node = [[_effectToNodeMap objectForKey:key] intValue];
-
-    AudioUnit audioUnit;
-    AudioComponentDescription acd;
-
-    CheckError(AUGraphNodeInfo(_graph, node, &acd, &audioUnit), "AUGraphNodeInfo");
-
-    return audioUnit;
-}
-
 
 - (void) saveEffectState
 {
@@ -1522,11 +641,6 @@ static OSStatus sInputRenderCallback(
     [self playNextTrack];
     
     if (_currentTrack) {
-        _tickTimer = [NSTimer timerWithTimeInterval:(1.0/30.0) target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
-        [_tickTimer setTolerance:(1.0/60.0)];
-
-        [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSRunLoopCommonModes];
-        [[NSRunLoop mainRunLoop] addTimer:_tickTimer forMode:NSEventTrackingRunLoopMode];
 
         for (id<PlayerListener> listener in _listeners) {
             [listener player:self didUpdatePlaying:YES];
@@ -1598,37 +712,9 @@ static OSStatus sInputRenderCallback(
     }
     [self setCurrentTrack:nil];
 
-    if (_tickTimer) {
-        [_tickTimer invalidate];
-        _tickTimer = nil;
-    }
+    [_engine stopPlayback];
 
-    Boolean isRunning = 0;
-    CheckError(
-        AUGraphIsRunning(_graph, &isRunning),
-        "AUGraphIsRunning"
-    );
-
-    if (isRunning) {
-        [self _sendHeadUnitToRenderThread:NULL];
-        [self performSelector:@selector(_stopGraph) withObject:nil afterDelay:30];
-    }
-
-    [self _iterateGraphAudioUnits:^(AudioUnit unit, NSString *unitString) {
-        OSStatus err = AudioUnitReset(unit, kAudioUnitScope_Global, 0);
-        
-        if (err != noErr) {
-            CheckError(err, [[NSString stringWithFormat:@"%@, AudioUnitReset", unitString] UTF8String]);
-        }
-    }];
-
-    [_currentScheduler stopScheduling:_inputAudioUnit];
-    _currentScheduler = nil;
-    
-    _leftAveragePower = _rightAveragePower = _leftPeakPower = _rightPeakPower = -INFINITY;
-    _limiterActive = NO;
-
-    [self _teardownGraphHead];
+    _leftMeterData = _rightMeterData = nil;
     
     for (id<PlayerListener> listener in _listeners) {
         [listener player:self didUpdatePlaying:NO];
@@ -1651,7 +737,7 @@ static OSStatus sInputRenderCallback(
 }
 
 
-- (void) updateOutputDevice: (AudioDevice *) outputDevice
+- (void) updateOutputDevice: (HugAudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
@@ -1734,38 +820,37 @@ static OSStatus sInputRenderCallback(
         _stereoLevel = stereoLevel;
         [[NSUserDefaults standardUserDefaults] setObject:@(stereoLevel) forKey:sStereoLevelKey];
 
-        _renderUserInfo.stereoLevel = stereoLevel;
+        [_engine updateStereoWidth:stereoLevel];
     }
 }
 
 
 - (void) setStereoBalance:(float)stereoBalance
 {
-    if (stereoBalance < -1.0f) stereoBalance = -1.0f;
-    if (stereoBalance >  1.0f) stereoBalance =  1.0f;
-
     if (_stereoBalance != stereoBalance) {
         _stereoBalance = stereoBalance;
         [[NSUserDefaults standardUserDefaults] setObject:@(stereoBalance) forKey:sStereoBalanceKey];
 
-        Float32 value = _stereoBalance;
-
-        CheckError(AudioUnitSetParameter(_mixerAudioUnit,
-            kStereoMixerParam_Pan, kAudioUnitScope_Input, 0,
-            value, 0
-        ), "AudioUnitSetParameter[Volume]");
+        // Convert input range of [ 0.0, 1.0 ] to [ -1.0, 1.0 ]
+        [_engine updateStereoBalance:((stereoBalance * 2) - 1.0)];
     }
 }
 
 
 - (void) setEffects:(NSArray *)effects
 {
-    if (_effects != effects) {
-        _effects = effects;
+    if (_effects == effects) return;
 
-        [self _updateEffects:effects];
-        [self saveEffectState];
+    NSMutableArray *audioUnits = [NSMutableArray array];
+    for (Effect *effect in effects) {
+        [audioUnits addObject:[effect audioUnit]];
     }
+
+    _effects = effects;
+
+    [_engine updateEffectAudioUnits:audioUnits];
+
+    [self saveEffectState];
 }
 
 
@@ -1776,13 +861,13 @@ static OSStatus sInputRenderCallback(
 
     if (_volume != volume) {
         _volume = volume;
-
         [[NSUserDefaults standardUserDefaults] setDouble:_volume forKey:sVolumeKey];
+
+        double graphVolume = volume * sMaxVolume;
+        if (graphVolume > sMaxVolume) graphVolume = sMaxVolume;
         
-        CheckError(AudioUnitSetParameter(_mixerAudioUnit,
-            kStereoMixerParam_Volume, kAudioUnitScope_Output, 0,
-            volume, 0
-        ), "AudioUnitSetParameter[Volume]");
+        graphVolume = graphVolume * graphVolume * graphVolume;
+        [_engine updateVolume:graphVolume];
         
         for (id<PlayerListener> listener in _listeners) {
             [listener player:self didUpdateVolume:_volume];

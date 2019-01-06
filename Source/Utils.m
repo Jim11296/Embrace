@@ -2,7 +2,8 @@
 
 #import "Utils.h"
 #import "Track.h"
-#import "Theme.h"
+#import "HugUtils.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 
 static NSArray *sGetTraditionalStringArray()
@@ -140,38 +141,6 @@ static NSString *sFindOrCreateDirectory(
 }
 
 
-static OSStatus sGroupError = noErr;
-
-BOOL CheckError(OSStatus error, const char *operation)
-{
-	if (error == noErr) {
-        return YES;
-	}
-
-    if (sGroupError != noErr) {
-        sGroupError = error;
-    }
-
-	NSLog(@"Error: %s (%@)\n", operation, GetStringForFourCharCode(error));
-    EmbraceLog(@"CheckError", @"Error: %s (%@)", operation, GetStringForFourCharCode(error));
-
-    return NO;
-}
-
-
-BOOL CheckErrorGroup(void (^callback)())
-{
-    OSStatus previousGroupError = sGroupError;
-    callback();
-
-    BOOL result = (sGroupError == noErr);
-    
-    sGroupError = previousGroupError;
-    
-    return result;
-}
-
-
 NSArray *GetAvailableAudioFileUTIs()
 {
     CFArrayRef *cfArray = NULL;
@@ -243,36 +212,6 @@ void SavePanelState(NSSavePanel *panel, NSString *name)
     [[NSUserDefaults standardUserDefaults] setObject:path forKey:name];
 }
 
-
-extern NSString *GetStringForFourCharCode(OSStatus fcc)
-{
-	char str[20] = {0};
-
-	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(*(UInt32 *)&fcc);
-
-	if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
-		str[0] = str[5] = '\'';
-		str[6] = '\0';
-    } else {
-        return [NSString stringWithFormat:@"%ld", (long)fcc];
-    }
-    
-    return [NSString stringWithCString:str encoding:NSUTF8StringEncoding];
-}
-
-
-extern NSString *GetStringForFourCharCodeObject(id object)
-{
-    if ([object isKindOfClass:[NSString class]]) {
-        return GetStringForFourCharCode((UInt32)[object longLongValue]);
-        
-    } else if ([object isKindOfClass:[NSNumber class]]) {
-        return GetStringForFourCharCode([object intValue]);
-
-    } else {
-        return @"????";
-    }
-}
 
 
 extern Tonality GetTonalityForString(NSString *string)

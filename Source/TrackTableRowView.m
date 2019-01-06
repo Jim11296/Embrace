@@ -41,7 +41,7 @@
     rect.size.height = onePixel;
     
     NSRectClip(dirtyRect);
-    [[Theme colorNamed:@"SetlistSeparator"] set];
+    [[NSColor colorNamed:@"SetlistSeparator"] set];
     NSRectFillUsingOperation(rect, NSCompositingOperationSourceOver);
 }
 

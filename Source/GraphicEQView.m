@@ -2,6 +2,7 @@
 
 #import "GraphicEQView.h"
 #import "SetlistSlider.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 
 const CGFloat sKnobHeight      = 15;
@@ -227,7 +228,7 @@ const CGFloat sTrackWidth      = 5;
     CGFloat alpha = 1.0;
 
     if (IsAppearanceDarkAqua(self)) {
-        alpha = [[Theme colorNamed:@"EQDarkAlpha"] alphaComponent];
+        alpha = [[NSColor colorNamed:@"EQDarkAlpha"] alphaComponent];
 
         for (GraphicEQBandView *bandView in _bandViews) {
             [bandView setAlphaValue:alpha];
@@ -253,17 +254,16 @@ const CGFloat sTrackWidth      = 5;
         return;
     }
 
+    AUParameterTree *tree = [_audioUnit parameterTree];
+
     void (^sendValue)() = ^{
         NSInteger bandIndex = [_bandViews indexOfObject:_selectedBandView];
         
         if (bandIndex != NSNotFound) {
-            AudioUnitParameter parameter = {0};
-            parameter.mAudioUnit   = _audioUnit;
-            parameter.mParameterID = (AudioUnitParameterID)index;
-            parameter.mScope       = kAudioUnitScope_Global;
-            parameter.mElement     = 0;
+            AUParameter *parameter = [tree parameterWithID:(AudioUnitParameterID)bandIndex scope:kAudioUnitScope_Global element:0];
 
-            AUParameterSet(NULL, NULL, &parameter, [_selectedBandView value] * 12.0, 0);
+            AUValue value = [_selectedBandView value] * 12.0;
+            [parameter setValue:value originator:NULL];
         }
     };
     
@@ -349,11 +349,11 @@ const CGFloat sTrackWidth      = 5;
 - (void) reloadData
 {
     AudioUnitParameterID parameterID = 0;
+    AUParameterTree *tree = [_audioUnit parameterTree];
 
     for (GraphicEQBandView *bandView in _bandViews) {
-        AudioUnitParameterValue value = 0;
-        AudioUnitGetParameter(_audioUnit, parameterID, kAudioUnitScope_Global, 0, &value);
-        [bandView setValue:(value / 12.0)];
+        AUParameter *parameter = [tree parameterWithID:parameterID scope:kAudioUnitScope_Global element:0];
+        [bandView setValue:([parameter value] / 12.0)];
 
         parameterID++;
     }
@@ -363,9 +363,12 @@ const CGFloat sTrackWidth      = 5;
 - (void) flatten
 {
     AudioUnitParameterID parameterID = 0;
+    AUParameterTree *tree = [_audioUnit parameterTree];
 
     for (GraphicEQBandView *bandView in _bandViews) {
-        AudioUnitSetParameter(_audioUnit, parameterID, kAudioUnitScope_Global, 0, 0, 0);
+        AUParameter *parameter = [tree parameterWithID:parameterID scope:kAudioUnitScope_Global element:0];
+
+        [parameter setValue:0];
         [bandView setValue:0];
 
         parameterID++;
@@ -375,8 +378,11 @@ const CGFloat sTrackWidth      = 5;
 
 - (void) _rebuild
 {
-    AudioUnitParameterValue parameterValue;
-    AudioUnitGetParameter(_audioUnit, kGraphicEQParam_NumberOfBands, kAudioUnitScope_Global, 0, &parameterValue);
+    AUParameterTree *tree = [_audioUnit parameterTree];
+    AUParameter *parameter = [tree parameterWithID:kGraphicEQParam_NumberOfBands scope:kAudioUnitScope_Global element:0];
+
+    AUValue parameterValue = [parameter value];
+    
     NSInteger numberOfBands = parameterValue > 0 ? 31 : 10;
     if (numberOfBands == _numberOfBands) return;
 
@@ -483,7 +489,7 @@ const CGFloat sTrackWidth      = 5;
 }
 
 
-- (void) setAudioUnit:(AudioUnit)audioUnit
+- (void) setAudioUnit:(AUAudioUnit *)audioUnit
 {
     if (_audioUnit != audioUnit) {
         _audioUnit = audioUnit;
@@ -603,8 +609,8 @@ const CGFloat sTrackWidth      = 5;
     };
 
 
-    NSColor *primaryColor   = [Theme colorNamed:@"EQPrimary"];
-    NSColor *secondaryColor = [Theme colorNamed:@"EQSecondary"];
+    NSColor *primaryColor   = [NSColor colorNamed:@"EQPrimary"];
+    NSColor *secondaryColor = [NSColor colorNamed:@"EQSecondary"];
     
     [secondaryColor set];
     drawTick( 1.00 );

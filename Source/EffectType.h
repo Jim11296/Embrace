@@ -1,11 +1,12 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 @class Effect;
 
 
-typedef void (^MappedEffectTypeConfigurator)(AudioUnit unit);
+typedef void (^MappedEffectTypeConfigurator)(AUAudioUnit *unit);
 
 @interface EffectType : NSObject
 

@@ -1,5 +1,0 @@
-// (c) 2014-2018 Ricci Adams.  All rights reserved.
-
-#import <Foundation/Foundation.h>
-
-extern void ApplyStereoField(UInt32 inNumberFrames, AudioBufferList *ioData, float previousStereoLevel, float newStereoLevel);

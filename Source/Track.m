@@ -6,6 +6,7 @@
 #import "AppDelegate.h"
 #import "ScriptsManager.h"
 #import "WorkerService.h"
+#import "HugError.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -15,13 +16,10 @@ NSString * const TrackDidModifyExpectedDurationNotificationName = @"TrackDidModi
 
 #define DUMP_UNKNOWN_TAGS 0
 
-static NSString * const sTypeKey              = @"trackType";
 static NSString * const sLabelKey             = @"trackLabel";
 static NSString * const sStopsAfterPlayingKey = @"stopsAfterPlaying";
 static NSString * const sIgnoresAutoGapKey    = @"ignoresAutoGap";
 static NSString * const sStatusKey            = @"trackStatus";
-static NSString * const sTrackErrorKey        = @"trackError";
-static NSString * const sBookmarkKey          = @"bookmark";
 static NSString * const sPlayedTimeKey        = @"playedTime";
 
 
@@ -285,7 +283,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     for (NSString *key in state) {
         id oldValue = [self valueForKey:key];
         id newValue = [state objectForKey:key];
-
+        
+        if ([key isEqualToString:TrackKeyError] && [newValue isKindOfClass:[NSData class]]) {
+            NSError *unarchiveError = nil;
+            newValue = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSError class] fromData:newValue error:&unarchiveError];
+        }
+        
         if (![oldValue isEqual:newValue]) {
             // Transform NSNumbers to NSDates for various keys
             if ([@[ @"startDate" ] containsObject:key] && [newValue isKindOfClass:[NSNumber class]]) {
@@ -346,7 +349,11 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     // This track is dead
     if (_cleared) return;
 
-    if (_trackError)     [state setObject:@(_trackError)        forKey:TrackKeyError];
+    if (_error) {
+        NSData *errorData = [NSKeyedArchiver archivedDataWithRootObject:_error requiringSecureCoding:NO error:nil];
+        [state setObject:errorData forKey:TrackKeyError];
+    }
+
     if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
     if (_playedTime)     [state setObject:@(_playedTime)        forKey:sPlayedTimeKey];
@@ -475,6 +482,10 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     dispatch_async(sResolverQueue, ^{
         NSURL *internalURL;
 
+        void (^setErrorToOpenFailed)() = ^{ 
+           [self setError:[NSError errorWithDomain:HugErrorDomain code:HugErrorOpenFailed userInfo:nil]];
+        };
+
         @try {
             if (!bookmark) {
                 [externalURL embrace_startAccessingResourceWithKey:@"bookmark"];
@@ -492,7 +503,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             if (!bookmark) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self setTitle:[inURL lastPathComponent]];
-                    [self setTrackError:TrackErrorOpenFailed];
+                    setErrorToOpenFailed();
                 });
 
                 return;
@@ -511,7 +522,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             if (!externalURL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     _isResolvingURLs = NO;
-                    [self setTrackError:TrackErrorOpenFailed];
+                    setErrorToOpenFailed();
                 });
 
                 return;
@@ -557,7 +568,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 _isResolvingURLs = NO;
-                [self setTrackError:TrackErrorOpenFailed];
+                setErrorToOpenFailed();
             });
         }
     });
@@ -852,12 +863,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 }
 
 
-- (void) setTrackError:(TrackError)trackError
+- (void) setError:(NSError *)error
 {
-    if (_trackError != trackError) {
-        EmbraceLog(@"Track", @"%@ setting error to %ld", self, trackError);
+    if (_error != error) {
+        EmbraceLog(@"Track", @"%@ setting error to %@", self, error);
 
-        _trackError = trackError;
+        _error = error;
         _dirty = YES;
         [self _saveStateImmediately:NO];
     }

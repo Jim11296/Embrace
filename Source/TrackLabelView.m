@@ -14,7 +14,7 @@ static NSColor *sGetBorderColorForTrackLabel(TrackLabel trackLabel)
     else if (trackLabel == TrackLabelBlue)   name = @"TrackLabelBlueBorder";
     else if (trackLabel == TrackLabelPurple) name = @"TrackLabelPurpleBorder";
     
-    return name ? [Theme colorNamed:name] : nil;
+    return name ? [NSColor colorNamed:name] : nil;
 }
 
 
@@ -29,7 +29,7 @@ static NSColor *sGetFillColorForTrackLabel(TrackLabel trackLabel)
     else if (trackLabel == TrackLabelBlue)   name = @"TrackLabelBlueFill";
     else if (trackLabel == TrackLabelPurple) name = @"TrackLabelPurpleFill";
     
-    return name ? [Theme colorNamed:name] : nil;
+    return name ? [NSColor colorNamed:name] : nil;
 }
 
 

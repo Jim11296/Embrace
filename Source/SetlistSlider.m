@@ -46,16 +46,16 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
     }
 
     if (highlighted) {
-        start = [Theme colorNamed:@"KnobPressed1"];
-        end   = [Theme colorNamed:@"KnobPressed2"];
+        start = [NSColor colorNamed:@"KnobPressed1"];
+        end   = [NSColor colorNamed:@"KnobPressed2"];
 
     } else if (isMainWindow) {
-        start = [Theme colorNamed:@"KnobMain1"];
-        end   = [Theme colorNamed:@"KnobMain2"];
+        start = [NSColor colorNamed:@"KnobMain1"];
+        end   = [NSColor colorNamed:@"KnobMain2"];
 
     } else {
-        start = [Theme colorNamed:@"KnobResigned1"];
-        end   = [Theme colorNamed:@"KnobResigned2"];
+        start = [NSColor colorNamed:@"KnobResigned1"];
+        end   = [NSColor colorNamed:@"KnobResigned2"];
     }
 
     [shadow1 set];
@@ -143,7 +143,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext saveGraphicsState];
   
-    NSColor *activeColor = [Theme colorNamed:isMainWindow ? @"MeterFilledMain" : @"MeterFilled"];
+    NSColor *activeColor = [NSColor colorNamed:isMainWindow ? @"MeterFilledMain" : @"MeterFilled"];
     [activeColor set];
 
     [[NSBezierPath bezierPathWithRect:leftRect] addClip];
@@ -151,7 +151,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
     
     [NSGraphicsContext restoreGraphicsState];
     
-    [[Theme colorNamed:@"MeterUnfilled"] set];
+    [[NSColor colorNamed:@"MeterUnfilled"] set];
     [[NSBezierPath bezierPathWithRect:rightRect] addClip];
     [roundedPath fill];
     
@@ -170,7 +170,7 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
     BOOL inTransparencyLayer = NO;
 
     if (IsAppearanceDarkAqua(controlView)) {
-        CGFloat alpha = [[Theme colorNamed:@"MeterDarkAlpha"] alphaComponent];
+        CGFloat alpha = [[NSColor colorNamed:@"MeterDarkAlpha"] alphaComponent];
         
         CGContextSetAlpha(context, alpha);
         CGContextBeginTransparencyLayer(context, NULL);

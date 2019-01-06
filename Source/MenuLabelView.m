@@ -2,7 +2,6 @@
 
 #import "MenuLabelView.h"
 
-
 static NSString *sTagKey = @"tag";
 static NSInteger sTagCount = 7;
 
@@ -43,8 +42,8 @@ static CGFloat sDotHeight         = 14;
         MenuLabelViewPiece *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
             MenuLabelViewPiece *dotView = [[MenuLabelViewPiece alloc] initWithFrame:dotFrame];
             
-            [dotView setBorderColor:[Theme colorNamed:borderName]];
-            [dotView setFillColor:  [Theme colorNamed:fillName  ]];
+            [dotView setBorderColor:[NSColor colorNamed:borderName]];
+            [dotView setFillColor:  [NSColor colorNamed:fillName  ]];
             [dotView setDotIndex:trackLabel];
             
             [self addSubview:dotView];
@@ -55,8 +54,8 @@ static CGFloat sDotHeight         = 14;
         };
         
         _ringView = [[MenuLabelViewPiece alloc] initWithFrame:CGRectMake(0, 0, sDotWidth + 8, sDotHeight + 8)];
-        [_ringView setBorderColor:[Theme colorNamed:@"MenuLabelRingBorder"]];
-        [_ringView setFillColor:  [Theme colorNamed:@"MenuLabelRingFill"  ]];
+        [_ringView setBorderColor:[NSColor colorNamed:@"MenuLabelRingBorder"]];
+        [_ringView setFillColor:  [NSColor colorNamed:@"MenuLabelRingFill"  ]];
         [_ringView setDotIndex:NSNotFound];
         [self addSubview:_ringView];
         
