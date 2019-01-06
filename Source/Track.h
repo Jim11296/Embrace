@@ -1,7 +1,6 @@
 // (c) 2014-2018 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import "AudioFile.h"
 
 extern NSString * const TrackDidModifyTitleNotificationName;
 extern NSString * const TrackDidModifyPlayDurationNotificationName;
@@ -27,16 +26,6 @@ typedef NS_ENUM(NSInteger, TrackLabel) {
     TrackLabelPurple,
         
     TrackLabelMultiple = NSNotFound
-};
-
-
-typedef NS_ENUM(NSInteger, TrackError) {
-    TrackErrorNone             = 0,
-
-    TrackErrorProtectedContent = AudioFileErrorProtectedContent,
-    TrackErrorConversionFailed = AudioFileErrorConversionFailed,
-    TrackErrorOpenFailed       = AudioFileErrorOpenFailed,
-    TrackErrorReadTooSlow      = AudioFileErrorReadTooSlow
 };
 
 
@@ -80,7 +69,7 @@ typedef NS_ENUM(NSInteger, TrackError) {
 @property (nonatomic) NSTimeInterval expectedDuration;
 
 @property (nonatomic) NSTimeInterval estimatedEndTime;
-@property (nonatomic) TrackError trackError;
+@property (nonatomic) NSError *error;
 
 @property (nonatomic) TrackLabel trackLabel;
 @property (nonatomic, getter=isDuplicate) BOOL duplicate;

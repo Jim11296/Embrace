@@ -2,7 +2,7 @@
 
 #import "WorkerService.h"
 
-#import "AudioFile.h"
+#import "HugAudioFile.h"
 #import "TrackKeys.h"
 #import "LoudnessMeasurer.h"
 #import "MetadataParser.h"
@@ -57,71 +57,31 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
 {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
 
-    AudioFile *audioFile = [[AudioFile alloc] initWithFileURL:internalURL];
+    HugAudioFile *audioFile = [[HugAudioFile alloc] initWithFileURL:internalURL];
+  
+    if ([audioFile open]) {
+        NSInteger fileLengthFrames = [audioFile fileLengthFrames];
+        AudioStreamBasicDescription format = [audioFile format];
 
-    OSStatus err = noErr;
-
-    // Open file
-    if (err == noErr) {
-        err = [audioFile open];
-        if (err) NSLog(@"AudioFile -open: %ld", (long)err);
-    }
-
-    AudioStreamBasicDescription fileFormat = {0};
-    if (err == noErr) {
-        err = [audioFile getFileDataFormat:&fileFormat];
-    }
-
-
-    AudioStreamBasicDescription clientFormat = {0};
-
-    if (err == noErr) {
-        UInt32 channels = fileFormat.mChannelsPerFrame;
-        
-        clientFormat.mSampleRate       = fileFormat.mSampleRate;
-        clientFormat.mFormatID         = kAudioFormatLinearPCM;
-        clientFormat.mFormatFlags      = kAudioFormatFlagIsFloat | kAudioFormatFlagIsNonInterleaved | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked;
-        clientFormat.mBytesPerPacket   = sizeof(float);
-        clientFormat.mFramesPerPacket  = 1;
-        clientFormat.mBytesPerFrame    = clientFormat.mFramesPerPacket * clientFormat.mBytesPerPacket;
-        clientFormat.mChannelsPerFrame = channels;
-        clientFormat.mBitsPerChannel   = sizeof(float) * 8;
-
-        err = [audioFile setClientDataFormat:&clientFormat];
-    }
-    
-    if (![audioFile canRead] &&
-        ![audioFile convert] &&
-        ![audioFile canRead])
-    {
-        err = 1;
-    }
-    
-    
-    SInt64 fileLengthFrames = 0;
-    if (err == noErr) {
-        err = [audioFile getFileLengthFrames:&fileLengthFrames];
-    }
-    
-    if (err == noErr) {
         NSInteger framesRemaining = fileLengthFrames;
-        NSInteger bytesRemaining = framesRemaining * clientFormat.mBytesPerFrame;
+        NSInteger bytesRemaining  = framesRemaining * format.mBytesPerFrame;
         NSInteger bytesRead = 0;
 
-        LoudnessMeasurer *measurer = LoudnessMeasurerCreate(clientFormat.mChannelsPerFrame, clientFormat.mSampleRate, framesRemaining);
+        LoudnessMeasurer *measurer = LoudnessMeasurerCreate(format.mChannelsPerFrame, format.mSampleRate, framesRemaining);
 
-        AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * clientFormat.mChannelsPerFrame);
-        fillBufferList->mNumberBuffers = clientFormat.mChannelsPerFrame;
+        AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * format.mChannelsPerFrame);
+        fillBufferList->mNumberBuffers = format.mChannelsPerFrame;
         
-        for (NSInteger i = 0; i < clientFormat.mChannelsPerFrame; i++) {
-            fillBufferList->mBuffers[i].mNumberChannels = clientFormat.mChannelsPerFrame;
-            fillBufferList->mBuffers[i].mDataByteSize = clientFormat.mBytesPerFrame * 4096 * 16;
-            fillBufferList->mBuffers[i].mData = malloc(clientFormat.mBytesPerFrame  * 4096 * 16);
+        for (NSInteger i = 0; i < format.mChannelsPerFrame; i++) {
+            fillBufferList->mBuffers[i].mNumberChannels = format.mChannelsPerFrame;
+            fillBufferList->mBuffers[i].mDataByteSize = format.mBytesPerFrame * 4096 * 16;
+            fillBufferList->mBuffers[i].mData = malloc(format.mBytesPerFrame  * 4096 * 16);
         }
 
-        while (1 && (err == noErr)) {
+        BOOL ok = YES;
+        while (ok) {
             UInt32 frameCount = (UInt32)framesRemaining;
-            err = [audioFile readFrames:&frameCount intoBufferList:fillBufferList];
+            ok = [audioFile readFrames:&frameCount intoBufferList:fillBufferList];
 
             if (frameCount) {
                 LoudnessMeasurerScanAudioBuffer(measurer, fillBufferList, frameCount);
@@ -131,19 +91,19 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
             
             framesRemaining -= frameCount;
         
-            bytesRead       += frameCount * clientFormat.mBytesPerFrame;
-            bytesRemaining  -= frameCount * clientFormat.mBytesPerFrame;
+            bytesRead      += frameCount * format.mBytesPerFrame;
+            bytesRemaining -= frameCount * format.mBytesPerFrame;
 
             if (framesRemaining == 0) {
                 break;
             }
         }
 
-        for (NSInteger i = 0; i < clientFormat.mChannelsPerFrame; i++) {
+        for (NSInteger i = 0; i < format.mChannelsPerFrame; i++) {
             free(fillBufferList->mBuffers[i].mData);
         }
         
-        NSTimeInterval decodedDuration = fileLengthFrames / fileFormat.mSampleRate;
+        NSTimeInterval decodedDuration = fileLengthFrames / format.mSampleRate;
         
         [result setObject:@(decodedDuration)                       forKey:TrackKeyDecodedDuration];
         [result setObject:LoudnessMeasurerGetOverview(measurer)    forKey:TrackKeyOverviewData];
@@ -154,7 +114,10 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
         LoudnessMeasurerFree(measurer);
 
     } else {
-        [result setObject:@([audioFile audioFileError]) forKey:TrackKeyError];
+        if ([audioFile error]) {
+            NSData *errorData = [NSKeyedArchiver archivedDataWithRootObject:[audioFile error] requiringSecureCoding:NO error:nil];
+            [result setObject:errorData forKey:TrackKeyError];
+        }
     }
 
     return result;

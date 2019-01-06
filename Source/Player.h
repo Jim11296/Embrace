@@ -3,7 +3,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol PlayerListener, PlayerTrackProvider;
-@class Player, Track, Effect, AudioDevice;
+@class Player, Track, Effect, HugAudioDevice, HugMeterData;
 
 typedef NS_ENUM(NSInteger, PlayerIssue) {
     PlayerIssueNone = 0,
@@ -23,11 +23,6 @@ typedef NS_ENUM(NSInteger, PlayerInterruptionReason) {
     PlayerInterruptionReasonHoggedByOtherProcess
 };
 
-typedef NS_ENUM(NSInteger, PlayerHogStyle) {
-    PlayerHogStyleNone,
-    PlayerHogStyleTakeExclusiveAccess,
-    PlayerHogStyleTakeExclusiveAccessAndResetVolume
-};
 
 extern volatile NSInteger PlayerShouldUseCrashPad;
 
@@ -41,8 +36,7 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 
 @property (nonatomic) double volume;
 
-@property (nonatomic, strong) NSArray *effects;
-- (AudioUnit) audioUnitForEffect:(Effect *)effect;
+@property (nonatomic, strong) NSArray<Effect *> *effects;
 - (void) saveEffectState;
 
 @property (nonatomic) BOOL preventNextTrack;
@@ -53,13 +47,13 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 @property (nonatomic) float stereoLevel;   // -1.0 = Reverse, 0.0 = Mono, +1.0 = Stereo
 @property (nonatomic) float stereoBalance; // -1.0 = Left,                +1.0 = Right
 
-- (void) updateOutputDevice: (AudioDevice *) outputDevice
+- (void) updateOutputDevice: (HugAudioDevice *) outputDevice
                  sampleRate: (double) sampleRate
                      frames: (UInt32) frames
                     hogMode: (BOOL) hogMode
                resetsVolume: (BOOL) resetsVolume;
                    
-@property (nonatomic, readonly) AudioDevice *outputDevice;
+@property (nonatomic, readonly) HugAudioDevice *outputDevice;
 @property (nonatomic, readonly) double outputSampleRate;
 @property (nonatomic, readonly) UInt32 outputFrames;
 @property (nonatomic, readonly) BOOL outputHogMode;
@@ -75,16 +69,13 @@ extern volatile NSInteger PlayerShouldUseCrashPad;
 // Playback properties
 @property (nonatomic, readonly) NSTimeInterval timeElapsed;
 @property (nonatomic, readonly) NSTimeInterval timeRemaining;
-@property (nonatomic, readonly) Float32 leftAveragePower;
-@property (nonatomic, readonly) Float32 rightAveragePower;
-@property (nonatomic, readonly) Float32 leftPeakPower;
-@property (nonatomic, readonly) Float32 rightPeakPower;
+
+@property (nonatomic, readonly) HugMeterData *leftMeterData;
+@property (nonatomic, readonly) HugMeterData *rightMeterData;
 
 @property (nonatomic, readonly) Float32 dangerAverage;
 @property (nonatomic, readonly) Float32 dangerPeak;
 @property (nonatomic, readonly) NSTimeInterval lastOverloadTime;
-
-@property (nonatomic, readonly, getter=isLimiterActive) BOOL limiterActive;
 
 - (void) addListener:(id<PlayerListener>)listener;
 - (void) removeListener:(id<PlayerListener>)listener;

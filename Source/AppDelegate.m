@@ -17,18 +17,19 @@
 #import "Player.h"
 #import "Effect.h"
 #import "Track.h"
-#import "CrashPadClient.h"
 
 #import "IssueManager.h"
 #import "iTunesManager.h"
 #import "ScriptsManager.h"
-#import "WrappedAudioDevice.h"
+#import "HugAudioDevice.h"
 
 #import "WorkerService.h"
 
+#import "HugCrashPad.h"
 #import "CrashReportSender.h"
 #import "MTSEscapePod.h"
 #import "MTSTelemetry.h"
+#import "HugUtils.h"
 
 @interface AppDelegate ()
 
@@ -110,6 +111,10 @@
 
     EmbraceCheckCompatibility();
 
+    HugSetLogger(^(NSString *category, NSString *message) {
+        EmbraceLog(category, @"%@", message);
+    });
+
     // Load preferences
     [Preferences sharedInstance];
 
@@ -132,8 +137,19 @@
 
     MTSTelemetryRegisterURL(escapePodTelemetryName, [NSURL URLWithString:@"<redacted>"]);
 
-    if (!CrashPadIsDebuggerAttached()) {
-        SetupCrashPad();
+    if (!HugCrashPadIsDebuggerAttached()) {
+        NSString *helperPath = [[NSBundle mainBundle] sharedSupportPath];
+        
+        helperPath = [helperPath stringByAppendingPathComponent:@"Crash Pad.app"];
+        helperPath = [helperPath stringByAppendingPathComponent:@"Contents"];
+        helperPath = [helperPath stringByAppendingPathComponent:@"MacOS"];
+        helperPath = [helperPath stringByAppendingPathComponent:@"Crash Pad"];
+    
+        HugCrashPadSetHelperPath(helperPath);
+
+        MTSEscapePodSetIgnoredThreadProvider(HugCrashPadGetIgnoredThread);
+        MTSEscapePodSetSignalCallback(HugCrashPadSignalHandler);
+
         MTSEscapePodInstall();
         MTSTelemetrySend(MTSEscapePodGetTelemetryName(), NO);
     }
@@ -244,7 +260,9 @@
     [[Player sharedInstance] saveEffectState];
     [[Player sharedInstance] hardStop];
     
-    [WrappedAudioDevice releaseHoggedDevices];
+    for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
+        [device releaseHogMode];
+    }
 }
 
 
@@ -350,36 +368,10 @@
 
 - (void) displayErrorForTrack:(Track *)track
 {
-    TrackError trackError = [track trackError];
-    if (!trackError) return;
+    NSError *error = [track error];
+    if (!error) return;
 
-    NSString *messageText     = @"";
-    NSString *informativeText = @"";
-    
-    if (trackError == TrackErrorConversionFailed) {
-        messageText = NSLocalizedString(@"The file cannot be read because it is in an unknown format.", nil);
-    
-    } else if (trackError == TrackErrorProtectedContent) {
-        messageText     = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
-        informativeText = NSLocalizedString(@"Protected content can only be played with iTunes.\n\nIf this file was downloaded from Apple Music, you will need to first remove the download and then purchase it from the iTunes Store.", nil);
-
-    } else if (trackError == TrackErrorOpenFailed) {
-        messageText = NSLocalizedString(@"The file cannot be opened.", nil);
-    
-    } else {
-        messageText = NSLocalizedString(@"The file cannot be read.", nil);
-    }
-    
-    if (![messageText length]) {
-        return;
-    }
-    
-    NSAlert *alert = [[NSAlert alloc] init];
-    
-    [alert setMessageText:messageText];
-    [alert setInformativeText:informativeText];
-
-    [alert runModal];
+    [[NSAlert alertWithError:error] runModal];
 }
 
 

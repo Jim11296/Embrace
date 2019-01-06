@@ -170,11 +170,9 @@
     [_timeMaskView setGradientLength:32];
     [_timeMaskView setGradientLayoutAttribute:NSLayoutAttributeLeft];
 
-    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        NSFont *font = [[self durationField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
-        [[self durationField] setFont:font];
-    }
+    NSFont *font = [[self durationField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+    [[self durationField] setFont:font];
 
 #if 0
     [_titleField setBackgroundColor:[NSColor yellowColor]];
@@ -318,6 +316,7 @@
         @"title",
         @"artist",
         @"playDuration",
+        @"error",
         @"estimatedEndTime",
         @"pausesAfterPlaying",
         @"ignoresAutoGap",
@@ -327,7 +326,6 @@
         @"grouping",
         @"beatsPerMinute",
         @"trackStatus",
-        @"trackError",
         @"trackLabel",
         @"duplicate"
     ];
@@ -437,7 +435,7 @@
     [self _adjustConstraintsForLineLayout];
 
     // Update constraints
-    if ([track trackError] != TrackErrorNone) {
+    if ([track error]) {
         [NSLayoutConstraint activateConstraints:_errorButtonConstraints];
     } else {
         [NSLayoutConstraint deactivateConstraints:_errorButtonConstraints];
@@ -580,17 +578,17 @@
     TrackStatus trackStatus = [[self track] trackStatus];
 
     if (trackStatus == TrackStatusPlayed) {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimaryPlayed"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondaryPlayed"];
+        primaryColor   = [NSColor colorNamed:@"SetlistPrimaryPlayed"];
+        secondaryColor = [NSColor colorNamed:@"SetlistSecondaryPlayed"];
     
     } else {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimary"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondary"];
+        primaryColor   = [NSColor colorNamed:@"SetlistPrimary"];
+        secondaryColor = [NSColor colorNamed:@"SetlistSecondary"];
     }
     
     if (rowIsSelected && rowIsEmphasized) {
-        primaryColor   = [Theme colorNamed:@"SetlistPrimaryEmphasized"];
-        secondaryColor = [Theme colorNamed:@"SetlistSecondaryEmphasized"];
+        primaryColor   = [NSColor colorNamed:@"SetlistPrimaryEmphasized"];
+        secondaryColor = [NSColor colorNamed:@"SetlistSecondaryEmphasized"];
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
         primaryColor   = [[self _tableView] playingTextColor];
@@ -616,8 +614,8 @@
         [_dotLabelView setNeedsWhiteBorder:YES];
 
     } else {
-        [_errorButton setNormalColor: [Theme colorNamed:@"ButtonAlert"]];
-        [_errorButton setPressedColor:[Theme colorNamed:@"ButtonAlertPressed"]];
+        [_errorButton setNormalColor: [NSColor colorNamed:@"ButtonAlert"]];
+        [_errorButton setPressedColor:[NSColor colorNamed:@"ButtonAlertPressed"]];
 
         [_dotLabelView setNeedsWhiteBorder:NO];
     }
@@ -667,11 +665,11 @@
 
     if ([track trackStatus] != TrackStatusPlayed) {
         if ([track stopsAfterPlaying]) {
-            stripeSolidColor = [Theme colorNamed:@"SetlistStopAfterPlayingStripe2"];
-            stripeDashColor  = [Theme colorNamed:@"SetlistStopAfterPlayingStripe1"];
+            stripeSolidColor = [NSColor colorNamed:@"SetlistStopAfterPlayingStripe2"];
+            stripeDashColor  = [NSColor colorNamed:@"SetlistStopAfterPlayingStripe1"];
 
         } else if ([track ignoresAutoGap]) {
-            stripeSolidColor = [Theme colorNamed:@"SetlistIgnoreAutoGapStripe"];
+            stripeSolidColor = [NSColor colorNamed:@"SetlistIgnoreAutoGapStripe"];
         }
     }
 
@@ -852,14 +850,9 @@
         timeString = [NSString stringWithFormat:timeStringFormat, [formatter stringFromDate:date]];
     }
 
-    if ([[NSFont class] respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        NSFont *font = [[self lineTwoLeftField] font];
-        font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
-        [_timeField setFont:font];
-
-    } else {
-        [_timeField setFont:[[self lineTwoLeftField] font]];
-    }
+    NSFont *font = [[self lineTwoLeftField] font];
+    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
+    [_timeField setFont:font];
         
     [_timeField setStringValue:timeString];
     
@@ -884,8 +877,8 @@
     NSTextField *line3Right  = [self lineThreeRightField];
     NSView      *errorButton = [self errorButton];
 
-    BOOL showError = [[self track] trackError] != TrackErrorNone;
-
+    BOOL showError = [[self track] error] != nil;
+    
     [line1Right  setHidden:showError];
     [line2Left   setHidden:(numberOfLines < 2)];
     [line2Right  setHidden:showError || (numberOfLines < 2)];

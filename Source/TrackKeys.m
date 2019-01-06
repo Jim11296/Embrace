@@ -5,7 +5,7 @@
 NSString * const TrackKeyType             = @"trackType";
 NSString * const TrackKeyStatus           = @"trackStatus";
 NSString * const TrackKeyLabel            = @"trackLabel";
-NSString * const TrackKeyError            = @"trackError";
+NSString * const TrackKeyError            = @"error";
 
 NSString * const TrackKeyBookmark         = @"bookmark";
 NSString * const TrackKeyIgnoresAutoGap   = @"ignoresAutoGap";

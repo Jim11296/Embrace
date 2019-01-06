@@ -18,24 +18,14 @@ NSString * const EmbraceMappedEffect31BandEQ = @"EmbraceGraphicEQ31";
     acd.componentFlags = kAudioComponentFlag_SandboxSafe;
     acd.componentFlagsMask = 0;
 
-    [self registerMappedTypeWithName:EmbraceMappedEffect10BandEQ audioComponentDescription:&acd configurator:^(AudioUnit unit) {
-        AudioUnitParameter parameter = {0};
-        parameter.mAudioUnit   = unit;
-        parameter.mParameterID = kGraphicEQParam_NumberOfBands;
-        parameter.mScope = kAudioUnitScope_Global;
-        parameter.mElement = 0;
-
-        AUParameterSet(NULL, NULL, &parameter, 0.0, 0);
+    [self registerMappedTypeWithName:EmbraceMappedEffect10BandEQ audioComponentDescription:&acd configurator:^(AUAudioUnit *unit) {
+        AUParameter *parameter = [[unit parameterTree] parameterWithID:kGraphicEQParam_NumberOfBands scope:kAudioUnitScope_Global element:0];
+        [parameter setValue:0];
     }];
 
-    [self registerMappedTypeWithName:EmbraceMappedEffect31BandEQ audioComponentDescription:&acd configurator:^(AudioUnit unit) {
-        AudioUnitParameter parameter = {0};
-        parameter.mAudioUnit   = unit;
-        parameter.mParameterID = kGraphicEQParam_NumberOfBands;
-        parameter.mScope = kAudioUnitScope_Global;
-        parameter.mElement = 0;
-
-        AUParameterSet(NULL, NULL, &parameter, 1.0, 0);
+    [self registerMappedTypeWithName:EmbraceMappedEffect31BandEQ audioComponentDescription:&acd configurator:^(AUAudioUnit *unit) {
+        AUParameter *parameter = [[unit parameterTree] parameterWithID:kGraphicEQParam_NumberOfBands scope:kAudioUnitScope_Global element:0];
+        [parameter setValue:1.0];
     }];
 }
 
