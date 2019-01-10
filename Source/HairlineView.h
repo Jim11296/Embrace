@@ -1,4 +1,4 @@
-// (c) 2018 Ricci Adams.  All rights reserved.
+// (c) 2018-2019 Ricci Adams.  All rights reserved.
 
 #import <AppKit/AppKit.h>
 

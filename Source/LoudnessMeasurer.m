@@ -1,6 +1,6 @@
 /*
     LoudnessMeasurer
-    Copyright (c) 2014-2018 Ricci Adams
+    Copyright (c) 2014-2019 Ricci Adams
 
     Heavily based on libebur128
     Copyright (c) 2011 Jan Kokemüller
