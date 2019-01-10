@@ -1,10 +1,4 @@
-//
-//  HugError.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2018-12-08.
-//  Copyright © 2018 Ricci Adams. All rights reserved.
-//
+// (c) 2018-2019 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
 

@@ -1,4 +1,4 @@
-// (c) 2015-2018 Ricci Adams.  All rights reserved.
+// (c) 2015-2019 Ricci Adams.  All rights reserved.
 
 #import "GraphicEQView.h"
 #import "SetlistSlider.h"

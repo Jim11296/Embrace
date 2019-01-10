@@ -1,11 +1,4 @@
-//
-//  HugCrashPad.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2018-12-11.
-//  Copyright © 2018 Ricci Adams. All rights reserved.
-//
-
+// (c) 2018-2019 Ricci Adams.  All rights reserved.
 
 /*
     Wiring up a crash pad:

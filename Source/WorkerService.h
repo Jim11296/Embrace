@@ -1,4 +1,4 @@
-// (c) 2016-2018 Ricci Adams.  All rights reserved.
+// (c) 2016-2019 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
 
