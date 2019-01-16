@@ -228,7 +228,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 
     // Waiting for analysis
     if (![_currentTrack didAnalyzeLoudness]) {
-        [self setTimeElapsedString:@""];
+        [self setTimeElapsedString:nil];
     }
 
     NSTimeInterval duration = _timeElapsed + _timeRemaining;

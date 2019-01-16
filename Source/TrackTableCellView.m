@@ -591,7 +591,7 @@
         secondaryColor = [NSColor colorNamed:@"SetlistSecondaryEmphasized"];
 
     } else if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
-        primaryColor   = [[self _tableView] playingTextColor];
+        primaryColor   = TrackTableViewGetPlayingTextColor();
         secondaryColor = primaryColor;
     }
    
@@ -624,29 +624,16 @@
     NSVisualEffectMaterial material = 0;
     NSColor *color = nil;
 
-    if (@available(macOS 10.14, *)) {
-        if (rowIsSelected) {
-            if (rowIsEmphasized) {
-                color = [NSColor selectedContentBackgroundColor];
-            } else {
-                color = [NSColor unemphasizedSelectedContentBackgroundColor];
-            }
-        } else {
-            material = NSVisualEffectMaterialContentBackground;
-        }
-
+    if (rowIsSelected) {
+        color = TrackTableViewGetRowHighlightColor(rowIsEmphasized);
     } else {
-        if (rowIsSelected) {
-            if (rowIsEmphasized) {
-                color = [NSColor alternateSelectedControlColor];
-            } else {
-                color = [NSColor secondarySelectedControlColor];
-            } 
+        if (@available(macOS 10.14, *)) {
+            material = NSVisualEffectMaterialContentBackground;
         } else {
             color = [NSColor controlBackgroundColor];
         }
     }
-    
+
     [_timeMaskView setColor:color];
     [_timeMaskView setMaterial:material];
     [_timeMaskView setEmphasized:rowIsEmphasized];

@@ -560,7 +560,10 @@ NSString *GetApplicationSupportDirectory()
 BOOL IsAppearanceDarkAqua(NSView *view)
 {
     if (@available(macOS 10.14, *)) {
-        NSAppearance *effectiveAppearance =[view effectiveAppearance];
+        NSAppearance *effectiveAppearance = view ?
+            [view  effectiveAppearance] :
+            [NSApp effectiveAppearance];
+
         NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
        
         NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];

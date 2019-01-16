@@ -169,6 +169,10 @@
     [[self debugMenuItem] setHidden:NO];
 #endif
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+
+    [self _handlePreferencesDidChange:nil];
+
     EmbraceLog(@"Hello", @"Embrace finished launching at %@", [NSDate date]);
 
     EmbraceLog(@"Migration", @"Current build is %@, latest build is %@.",
@@ -320,6 +324,25 @@
         [controller showWindow:self];
     } else {
         [[controller window] orderOut:self];
+    }
+}
+
+
+- (void) _handlePreferencesDidChange:(NSNotification *)note
+{
+    Preferences *preferences = [Preferences sharedInstance];
+
+    if (@available(macOS 10.14, *)) {
+        ThemeType themeType = [preferences themeType];
+        NSAppearance *appearance = nil;
+    
+        if (themeType == ThemeTypeLight) {
+            appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+        } else if (themeType == ThemeTypeDark) {
+            appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+        }
+        
+        [[NSApplication sharedApplication] setAppearance:appearance];
     }
 }
 

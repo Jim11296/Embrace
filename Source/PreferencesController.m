@@ -13,10 +13,12 @@
 - (IBAction) changeMainDeviceAttributes:(id)sender;
 
 @property (nonatomic, strong) IBOutlet NSView *generalPane;
+@property (nonatomic, strong) IBOutlet NSView *appearancePane;
 @property (nonatomic, strong) IBOutlet NSView *advancedPane;
 
 @property (nonatomic, weak)   IBOutlet NSToolbar     *toolbar;
 @property (nonatomic, weak)   IBOutlet NSToolbarItem *generalItem;
+@property (nonatomic, weak)   IBOutlet NSToolbarItem *appearanceItem;
 @property (nonatomic, weak)   IBOutlet NSToolbarItem *advancedItem;
 
 @property (nonatomic, weak)   IBOutlet NSPopUpButton *mainDevicePopUp;
@@ -52,6 +54,17 @@
     
     [self setPreferences:[Preferences sharedInstance]];
     [self setPlayer:[Player sharedInstance]];
+    
+    if (@available(macOS 10.14, *)) {
+        // Do nothing on 10.14+
+    } else {
+        // On 10.13, remove Appearance toolbar item
+        NSInteger index = [[_toolbar items] indexOfObject:_appearanceItem];
+
+        if (index != NSNotFound) {
+            [_toolbar removeItemAtIndex:index];
+        }
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)    name:PreferencesDidChangeNotification    object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:)  name:HugAudioDevicesDidRefreshNotification  object:nil];
@@ -416,10 +429,14 @@
     NSToolbarItem *item;
     NSView *pane;
 
-    if (tag == 1) {
+    if (tag == 2) {
         item = _advancedItem;
         pane = _advancedPane;
 
+    } else if (tag == 1) {
+        item = _appearanceItem;
+        pane = _appearancePane;
+    
     } else {
         item = _generalItem;
         pane = _generalPane;

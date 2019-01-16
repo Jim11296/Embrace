@@ -21,6 +21,9 @@ static NSDictionary *sGetDefaultValues()
         @"shortensPlayedTracks": @NO,
     
         @"floatsOnTop":          @NO,
+        
+        @"themeType": @( ThemeTypeSystem ),
+        @"highlightColorType": @( HighlightColorTypeSystem ),
 
         @"showsAlbumArtist":     @NO,
         @"showsArtist":          @YES,
