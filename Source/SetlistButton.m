@@ -2,6 +2,7 @@
 
 #import "SetlistButton.h"
 #import "NoDropImageView.h"
+#import "Preferences.h"
 
 static CGFloat sBorderLayerPadding = 2;
 
@@ -255,6 +256,8 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
         [self setWantsLayer:YES];
         [self setLayer:[CALayer layer]];
         [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
         CALayer *selfLayer = [self layer];
 
@@ -263,6 +266,12 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     }
 
     return self;
+}
+
+
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -335,6 +344,26 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (void) updateLayer { }
 
 
+- (NSColor *) _glowColor
+{
+    if ([[Preferences sharedInstance] highlightColorType] == HighlightColorTypeSystem) {
+        if (@available(macOS 10.14, *)) {
+            BOOL darkAqua = IsAppearanceDarkAqua(nil);
+
+            NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
+            
+            if (darkAqua) {
+                return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
+            } else {
+                return color;
+            }
+        }
+    }
+
+    return [NSColor colorNamed:@"ButtonMainGlow"];
+}
+
+
 - (void) _updateMainLayerContentsWithScale:(CGFloat)scale
 {
     CGSize imageSize = CGSizeMake(32, 32);
@@ -342,8 +371,8 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     CGImageRef mainImage = CreateImage(imageSize, NO, scale, ^(CGContextRef context) {
         NSRect bounds = CGRectMake(0, 0, 32, 32);
         bounds = CGRectInset(bounds, sBorderLayerPadding + 1, sBorderLayerPadding + 1);
-        
-        [[NSColor colorNamed:@"ButtonMainGlow"] set];
+                
+        [[self _glowColor] set];
         
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:3.5 yRadius:3.5];
         [path setLineWidth:2];
@@ -359,6 +388,18 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 
 
 - (void) viewDidMoveToWindow
+{
+    [self _updateMainLayerContentsWithScale:[[self window] backingScaleFactor]];
+}
+
+
+- (void) viewDidChangeEffectiveAppearance
+{
+    [self _updateMainLayerContentsWithScale:[[self window] backingScaleFactor]];
+}
+
+
+- (void) _handlePreferencesDidChange:(NSNotification *)note
 {
     [self _updateMainLayerContentsWithScale:[[self window] backingScaleFactor]];
 }

@@ -328,7 +328,6 @@ static NSInteger sAutoGapMaximum = 16;
     
     [[Player sharedInstance] updateOutputDevice:device sampleRate:sampleRate frames:frames hogMode:hogMode resetsVolume:resetsVolume];
     
-    
     NSWindow *window = [self window];
     if ([preferences floatsOnTop]) {
         [window setLevel:NSFloatingWindowLevel];
@@ -338,6 +337,8 @@ static NSInteger sAutoGapMaximum = 16;
         [window setLevel:NSNormalWindowLevel];
         [window setCollectionBehavior:NSWindowCollectionBehaviorDefault];
     }
+    
+    [window display];
 }
 
 

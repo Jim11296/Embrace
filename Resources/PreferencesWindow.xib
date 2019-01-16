@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,6 +10,8 @@
             <connections>
                 <outlet property="advancedItem" destination="Sd7-ph-OZb" id="q9h-vj-Vna"/>
                 <outlet property="advancedPane" destination="EW9-yV-OXP" id="piC-nY-GTp"/>
+                <outlet property="appearanceItem" destination="X9F-cn-Knh" id="f8Z-LE-czr"/>
+                <outlet property="appearancePane" destination="UoV-Kb-Ud2" id="oq1-pW-PrU"/>
                 <outlet property="framesPopUp" destination="hcU-l9-txy" id="2EJ-HM-jmP"/>
                 <outlet property="generalItem" destination="anK-jv-iEB" id="HEp-mR-kV8"/>
                 <outlet property="generalPane" destination="wiI-3h-8ky" id="F5y-do-1I9"/>
@@ -37,7 +39,7 @@
             <toolbar key="toolbar" implicitIdentifier="38BFB752-B595-4AB6-8241-959620DD59FE" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="hoP-hc-kjO">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="e0s-ax-GFW"/>
-                    <toolbarItem implicitItemIdentifier="BBF88B26-3D55-4A44-8B32-FCDA1244F834" label="Advanced" paletteLabel="Advanced" tag="1" image="NSAdvanced" selectable="YES" id="Sd7-ph-OZb">
+                    <toolbarItem implicitItemIdentifier="BBF88B26-3D55-4A44-8B32-FCDA1244F834" label="Advanced" paletteLabel="Advanced" tag="2" image="NSAdvanced" selectable="YES" id="Sd7-ph-OZb">
                         <connections>
                             <action selector="selectPane:" target="-2" id="31x-1i-l1J"/>
                         </connections>
@@ -49,9 +51,17 @@
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="v5U-07-fgt"/>
+                    <toolbarItem implicitItemIdentifier="0158C887-6CE4-4F1D-855E-03A984EEA45C" label="Appearance" paletteLabel="Appearance" tag="1" image="AppearanceToolbar" selectable="YES" id="X9F-cn-Knh">
+                        <size key="minSize" width="32" height="32"/>
+                        <size key="maxSize" width="32" height="32"/>
+                        <connections>
+                            <action selector="selectPane:" target="-2" id="k8c-4v-YNV"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="anK-jv-iEB"/>
+                    <toolbarItem reference="X9F-cn-Knh"/>
                     <toolbarItem reference="Sd7-ph-OZb"/>
                     <toolbarItem reference="v5U-07-fgt"/>
                 </defaultToolbarItems>
@@ -363,9 +373,73 @@
             </subviews>
             <point key="canvasLocation" x="156" y="716.5"/>
         </view>
+        <view id="UoV-Kb-Ud2" userLabel="Appearance Pane">
+            <rect key="frame" x="0.0" y="0.0" width="420" height="99"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="0Nh-8K-Hn0">
+                    <rect key="frame" x="18" y="57" width="128" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Theme:" id="FLf-NS-NoQ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" id="Zfx-AX-XUt">
+                    <rect key="frame" x="150" y="51" width="231" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Match System Appearance" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="X6r-UE-OF4" id="0tP-4K-Yxt">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="1eo-0E-xZF">
+                            <items>
+                                <menuItem title="Match System Appearance" state="on" id="X6r-UE-OF4"/>
+                                <menuItem isSeparatorItem="YES" id="HNx-k7-I7B"/>
+                                <menuItem title="Light" tag="1" id="3hY-f7-Rv5"/>
+                                <menuItem title="Dark" tag="2" id="MyZ-tb-142"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="handleScriptHandlerPopUp:" target="-2" id="UWH-sg-7wB"/>
+                        <binding destination="-2" name="selectedTag" keyPath="self.preferences.themeType" id="nUW-Uw-8HV"/>
+                    </connections>
+                </popUpButton>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="g1A-L8-xRB">
+                    <rect key="frame" x="18" y="27" width="128" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Highlight color:" id="diX-8M-Pgw">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" id="tWH-BO-w8A">
+                    <rect key="frame" x="150" y="21" width="231" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Match System Appearance" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="dBl-U1-iOI" id="js2-zQ-4ax">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="Ait-QJ-yWf">
+                            <items>
+                                <menuItem title="Match System Appearance" state="on" id="dBl-U1-iOI"/>
+                                <menuItem title="Match iTunes" tag="1" id="UMU-lI-8Yy"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="handleScriptHandlerPopUp:" target="-2" id="GNO-JN-upl"/>
+                        <binding destination="-2" name="selectedTag" keyPath="self.preferences.highlightColorType" id="GKu-GR-CYU"/>
+                    </connections>
+                </popUpButton>
+            </subviews>
+            <point key="canvasLocation" x="156" y="701.5"/>
+        </view>
     </objects>
     <resources>
-        <image name="NSAdvanced" width="128" height="128"/>
-        <image name="NSPreferencesGeneral" width="128" height="128"/>
+        <image name="AppearanceToolbar" width="32" height="32"/>
+        <image name="NSAdvanced" width="32" height="32"/>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
     </resources>
 </document>

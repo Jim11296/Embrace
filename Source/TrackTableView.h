@@ -6,10 +6,12 @@
 extern NSString * const EmbraceLockedTrackPasteboardType;
 extern NSString * const EmbraceQueuedTrackPasteboardType;
 
+extern NSColor * const TrackTableViewGetPlayingTextColor(void);
+extern NSColor * const TrackTableViewGetRowHighlightColor(BOOL emphasized);
+
 
 @interface TrackTableView : NSTableView
 @property (nonatomic, readonly) NSInteger rowWithMouseInside;
-@property (nonatomic, readonly) NSColor *playingTextColor;
 @end
 
 

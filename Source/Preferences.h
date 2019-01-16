@@ -18,6 +18,19 @@ typedef NS_OPTIONS(NSUInteger, DuplicateStatusMode) {
 };
 
 
+typedef NS_OPTIONS(NSUInteger, ThemeType) {
+    ThemeTypeSystem = 0,
+    ThemeTypeLight  = 1,
+    ThemeTypeDark   = 2
+};
+
+
+typedef NS_OPTIONS(NSUInteger, HighlightColorType) {
+    HighlightColorTypeSystem = 0,
+    HighlightColorTypeBlue   = 1,
+};
+
+
 typedef NS_ENUM(NSInteger, TrackViewAttribute) {
     TrackViewAttributeArtist          = 0,
     TrackViewAttributeBeatsPerMinute  = 1,
@@ -46,6 +59,9 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic) NSInteger numberOfLayoutLines;
 @property (nonatomic) BOOL shortensPlayedTracks;
+
+@property (nonatomic) ThemeType themeType;
+@property (nonatomic) HighlightColorType highlightColorType;
 
 - (void) setTrackViewAttribute:(TrackViewAttribute)attribute selected:(BOOL)selected;
 - (BOOL) isTrackViewAttributeSelected:(TrackViewAttribute)attribute;

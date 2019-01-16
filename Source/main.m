@@ -28,5 +28,5 @@ int main(int argc, const char * argv[])
     EmbraceLogSetDirectory(logPath);
     sLogHello();
     
-    return NSApplicationMain(argc,  (const char **) argv);
+    return NSApplicationMain(argc, (const char **) argv);
 }

@@ -1,6 +1,7 @@
 // (c) 2014-2019 Ricci Adams.  All rights reserved.
 
 #import "TrackTableRowView.h"
+#import "TrackTableView.h"
 
 
 @implementation TrackTableRowView
@@ -8,20 +9,9 @@
 
 - (void) drawSelectionInRect:(NSRect)dirtyRect
 {
-    if ([self interiorBackgroundStyle] == NSBackgroundStyleEmphasized) {
-        if (@available(macOS 10.14, *)) {
-            [[NSColor selectedContentBackgroundColor] set];
-        } else {
-            [[NSColor alternateSelectedControlColor] set];
-        }
-    } else {
-        if (@available(macOS 10.14, *)) {
-            [[NSColor unemphasizedSelectedContentBackgroundColor] set];
-        } else {
-            [[NSColor secondarySelectedControlColor] set];
-        }
+    BOOL emphasized = ([self interiorBackgroundStyle] == NSBackgroundStyleEmphasized);
 
-    }
+    [TrackTableViewGetRowHighlightColor(emphasized) set];
 
     NSRectFillUsingOperation([self bounds], NSCompositingOperationSourceOver);
 }

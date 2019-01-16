@@ -42,8 +42,8 @@ static CGFloat sDotHeight         = 14;
         MenuLabelViewPiece *(^makeDot)(TrackLabel, NSColorName, NSColorName) = ^(TrackLabel trackLabel, NSColorName borderName, NSColorName fillName) {
             MenuLabelViewPiece *dotView = [[MenuLabelViewPiece alloc] initWithFrame:dotFrame];
             
-            [dotView setBorderColor:[NSColor colorNamed:borderName]];
-            [dotView setFillColor:  [NSColor colorNamed:fillName  ]];
+            if (borderName) [dotView setBorderColor:[NSColor colorNamed:borderName]];
+            if (fillName)   [dotView setFillColor:  [NSColor colorNamed:fillName  ]];
             [dotView setDotIndex:trackLabel];
             
             [self addSubview:dotView];
