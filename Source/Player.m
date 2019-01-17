@@ -1058,6 +1058,8 @@ static OSStatus sInputRenderCallback(
 - (void) _reconnectGraph_attempt
 {
     BOOL (^doReconnect)() = ^{
+        EmbraceLog(@"Graph", @"Clearing connections");
+        
         if (!CheckError(
             AUGraphClearConnections(_graph),
             "AUGraphClearConnections"
@@ -1066,12 +1068,13 @@ static OSStatus sInputRenderCallback(
         }
         
         __block AUNode lastNode = 0;
-        __block NSInteger index = 0;
         __block BOOL didConnectAll = YES;
 
         AURenderCallbackStruct inputCallbackStruct;
         inputCallbackStruct.inputProc        = &sInputRenderCallback;
         inputCallbackStruct.inputProcRefCon  = &_renderUserInfo;
+
+        EmbraceLog(@"Graph", @"Connecting sInputRenderCallback -> %ld", (long)_limiterNode);
 
         if (!CheckError(
             AUGraphSetNodeInputCallback(_graph, _limiterNode, 0, &inputCallbackStruct),
@@ -1082,13 +1085,13 @@ static OSStatus sInputRenderCallback(
         
         [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
             if (lastNode && (node != _limiterNode)) {
+                EmbraceLog(@"Graph", @"Connecting %ld -> %ld", (long)lastNode, (long)node);
                 if (!CheckError(AUGraphConnectNodeInput(_graph, lastNode, 0, node, 0), "AUGraphConnectNodeInput")) {
                     didConnectAll = NO;
                 }
             }
 
             lastNode = node;
-            index++;
         }];
         
         if (!didConnectAll) {
@@ -1098,11 +1101,54 @@ static OSStatus sInputRenderCallback(
         if (!CheckError(AUGraphUpdate(_graph, NULL), "AUGraphUpdate")) {
             return NO;
         }
+
+        lastNode = 0;
+        __block BOOL didCheckAll = YES;
+
+        [self _iterateGraphNodes:^(AUNode node, NSString *unitString) {
+            if (lastNode && (node != _limiterNode)) {
+                UInt32 interactionCount = 0;
+                if (!CheckError(AUGraphCountNodeInteractions(_graph, node, &interactionCount), "AUGraphCountNodeInteractions")) {
+                    didCheckAll = NO;
+                    return;
+                }
+            
+                AUNodeInteraction *interactions = calloc(interactionCount, sizeof(AUNodeInteraction));
+
+                CheckError(AUGraphGetNodeInteractions(_graph, node, &interactionCount, interactions), "AUGraphGetNodeInteractions");
+                                
+                BOOL foundConnection = NO;
+
+                for (NSInteger i = 0; i < interactionCount; i++) {
+                    AUNodeInteraction *interaction = &interactions[i];
+                    
+                    if (interaction->nodeInteractionType == kAUNodeInteraction_Connection &&
+                        interaction->nodeInteraction.connection.destNode   == node &&
+                        interaction->nodeInteraction.connection.sourceNode == lastNode
+                    ) {
+                        foundConnection = YES;
+                    }
+                }
+                
+                if (!foundConnection) {
+                    EmbraceLog(@"Graph", @"Could not find connection from %ld -> %ld", (long)lastNode, (long)node);
+                    didCheckAll = NO;
+                }
+ 
+                free(interactions);
+            }
+
+            lastNode = node;
+        }];
+
+        if (!didCheckAll) {
+            return NO;
+        }
         
         return YES;
     };
     
-    if (!doReconnect()) {
+    if (!doReconnect() && !doReconnect()) {
         _reconnectGraph_failureCount++;
         
         if (_reconnectGraph_failureCount > 200) {
