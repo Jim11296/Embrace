@@ -256,13 +256,13 @@ static NSInteger sAutoGapMaximum = 16;
 
 #pragma mark - Private Methods
 
+
 - (void) _updatePlayButton
 {
     PlaybackAction action  = [self preferredPlaybackAction];
     BOOL           enabled = [self isPreferredPlaybackActionEnabled];
     
     Player *player = [Player sharedInstance];
-    BOOL isVolumeZero = ([player volume] == 0);
 
     NSString *tooltip  = nil;
     BOOL      outlined = NO;
@@ -291,7 +291,7 @@ static NSInteger sAutoGapMaximum = 16;
         }
 
     } else if (action == PlaybackActionStop) {
-        if ([player isPlaying] && isVolumeZero && (_volumeBeforeDrag || _volumeBeforeKeyboard)) {
+        if ([player isPlaying] && [self _shouldVolumeInvokeFadeStop] && (_volumeBeforeDrag || _volumeBeforeKeyboard)) {
             outlined = YES;
         }
 
@@ -415,6 +415,13 @@ static NSInteger sAutoGapMaximum = 16;
 }
 
 
+- (BOOL) _shouldVolumeInvokeFadeStop
+{
+    double volume = [[Player sharedInstance] volume];
+    return volume < 0.025; // around -96dBFS
+}
+
+
 - (void) _doFadeStopIfNeededWithBeforeVolume:(double)beforeVolume
 {
     EmbraceLogMethod();
@@ -423,10 +430,9 @@ static NSInteger sAutoGapMaximum = 16;
     SetlistButton *playButton = [self playButton];
     
     if ([playButton isEnabled] && beforeVolume) {
-        Player *player = [Player sharedInstance];
-        BOOL isVolumeZero = [player volume] == 0;
-
-        if (action == PlaybackActionStop && isVolumeZero) {
+        BOOL shouldInvokeFadeStop = [self _shouldVolumeInvokeFadeStop];
+        
+        if (action == PlaybackActionStop && shouldInvokeFadeStop) {
             [[self playButton] setIcon:SetlistButtonIconPlay animated:YES];
             [[Player sharedInstance] hardStop];
             [[Player sharedInstance] setVolume:beforeVolume];
@@ -508,7 +514,7 @@ static NSInteger sAutoGapMaximum = 16;
             if (lastTrack) {
                 NSTimeInterval padding = 0;
 
-                NSTimeInterval minimumSilence =  [self minimumSilenceBetweenTracks];
+                NSTimeInterval minimumSilence = [self minimumSilenceBetweenTracks];
 
                 NSTimeInterval totalSilence = [lastTrack silenceAtEnd] + [track silenceAtStart];
                 padding = minimumSilence - totalSilence;
