@@ -8,9 +8,9 @@
 
 
 typedef NS_ENUM(NSInteger, CurrentTrackAppearance) {
-    CurrentTrackAppearanceWhite = 0,
-    CurrentTrackAppearanceLight = 1,
-    CurrentTrackAppearanceDark  = 2
+    CurrentTrackAppearanceDefault = 0,
+    CurrentTrackAppearanceLight   = 1,
+    CurrentTrackAppearanceDark    = 2
 };
 
 
@@ -100,7 +100,12 @@ static void sSetCurrentTrackPinning(BOOL yn)
 - (void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [[Player sharedInstance] removeObserver:self forKeyPath:@"currentTrack"];
+
+    if (@available(macOS 10.14, *)) {
+        [NSApp removeObserver:self forKeyPath:@"effectiveAppearance"];
+    }
 }
 
 
@@ -109,6 +114,11 @@ static void sSetCurrentTrackPinning(BOOL yn)
     if (object == _player) {
         if ([keyPath isEqualToString:@"currentTrack"]) {
             [self _updateTrack];
+        }
+
+    } else if (object == NSApp) {
+        if ([keyPath isEqualToString:@"effectiveAppearance"]) {
+            [self _updateAppearance];
         }
     }
 }
@@ -144,40 +154,34 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
     NSWindow *window = [self window];
 
-    if (appearance == CurrentTrackAppearanceWhite) {
-        [window setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+    if (appearance == CurrentTrackAppearanceDefault) {
+        if (IsAppearanceDarkAqua(nil)) {
+            appearance = CurrentTrackAppearanceDark;
+        } else {
+            appearance = CurrentTrackAppearanceLight;
+        }
+    }
 
-        [[self effectView] setState:NSVisualEffectStateInactive];
-    
-        [[self leftLabel]  setTextColor:[NSColor blackColor]];
-        [[self rightLabel] setTextColor:[NSColor blackColor]];
-        [[self noTrackLabel] setTextColor:GetRGBColor(0x909090, 1.0)];
-    
-        [[self waveformView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-        [[self waveformView] setActiveWaveformColor:  GetRGBColor(0x202020, 1.0)];
-        [[self waveformView] setInactiveWaveformColor:GetRGBColor(0xababab, 1.0)];
+    NSColor *secondaryLabelColor = [NSColor secondaryLabelColor];
+    NSColor *tertiaryLabelColor  = [NSColor tertiaryLabelColor];
 
-    } else if (appearance == CurrentTrackAppearanceLight) {
+    [[self leftLabel]  setTextColor:secondaryLabelColor];
+    [[self rightLabel] setTextColor:secondaryLabelColor];
+    [[self noTrackLabel] setTextColor:secondaryLabelColor];
+
+    if (appearance == CurrentTrackAppearanceLight) {
         [window setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantLight]];
 
         [[self effectView] setState:NSVisualEffectStateActive];
 
-        [[self leftLabel]  setTextColor:[NSColor secondaryLabelColor]];
-        [[self rightLabel] setTextColor:[NSColor secondaryLabelColor]];
-        [[self noTrackLabel] setTextColor:[NSColor secondaryLabelColor]];
-
         [[self waveformView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantLight]];
-        [[self waveformView] setActiveWaveformColor:  [NSColor secondaryLabelColor]];
-        [[self waveformView] setInactiveWaveformColor:[NSColor tertiaryLabelColor]];
+        [[self waveformView] setActiveWaveformColor:secondaryLabelColor];
+        [[self waveformView] setInactiveWaveformColor:tertiaryLabelColor];
     
     } else if (appearance == CurrentTrackAppearanceDark) {
         [window setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
 
         [[self effectView] setState:NSVisualEffectStateActive];
-
-        [[self leftLabel]  setTextColor:[NSColor secondaryLabelColor]];
-        [[self rightLabel] setTextColor:[NSColor secondaryLabelColor]];
-        [[self noTrackLabel] setTextColor:[NSColor secondaryLabelColor]];
 
         [[self waveformView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
 
@@ -312,6 +316,10 @@ static void sSetCurrentTrackPinning(BOOL yn)
     [self setPlayer:[Player sharedInstance]];
 
     [player addObserver:self forKeyPath:@"currentTrack" options:0 context:NULL];
+    
+    if (@available(macOS 10.14, *)) {
+        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:NULL];
+    }
 
     [self _updateTrack];
     

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,7 +23,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="520" height="68"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="320" height="48"/>
             <view key="contentView" wantsLayer="YES" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="520" height="68"/>
@@ -109,23 +109,31 @@
         </customView>
         <menu id="mJ2-Qb-Tfh">
             <items>
-                <menuItem title="White" id="q4K-or-2LK">
+                <menuItem title="Theme" id="Enl-Cn-kaS">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="changeAppearance:" target="-2" id="pNQ-tJ-eeM"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Light" tag="1" id="PsN-a9-Agz">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="changeAppearance:" target="-2" id="GaQ-yW-qaH"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Dark" tag="2" id="1Jq-ld-qZG">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="changeAppearance:" target="-2" id="Xgr-db-2Ws"/>
-                    </connections>
+                    <menu key="submenu" title="Theme" id="yGC-Jq-8Ql">
+                        <items>
+                            <menuItem title="Match Set List" id="YPr-9Z-gtV">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAppearance:" target="-2" id="fTM-RI-XOL"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="6Zb-Zn-G8e"/>
+                            <menuItem title="Light" tag="1" id="GdG-8b-eF6">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAppearance:" target="-2" id="7We-wn-Dgc"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Dark" tag="2" id="fPm-ju-3zJ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="changeAppearance:" target="-2" id="HO5-pm-1cp"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="BmB-32-8tC"/>
                 <menuItem title="Pin to Bottom" id="1TU-nx-aZK">
