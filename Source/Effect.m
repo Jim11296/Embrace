@@ -106,6 +106,31 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
+#pragma mark - Private Methods
+
+- (void) _setFullState:(NSDictionary *)fullState
+{
+    [_audioUnit setFullState:fullState];
+
+    // As of 10.14, -setFullState: appears to not update the AUParameter's -value, which
+    // is likely a caching bug in Apple's code. To get around this, create a fake AUAudioUnit
+    // of the same componentDescription, call -setFullState: on it, and then send -setValue:
+    // to our real AUParameter objects
+    //
+    NSError *error = nil;
+    AUAudioUnit *fakeUnit = [[AUAudioUnit alloc] initWithComponentDescription:[_audioUnit componentDescription] error:&error];
+
+    if (!error) {
+        [fakeUnit setFullState:fullState];
+        
+        for (AUParameter *fakeParameter in [[fakeUnit parameterTree] allParameters]) {
+            AUParameter *realParameter = [[_audioUnit parameterTree] parameterWithAddress:[fakeParameter address]];
+            [realParameter setValue:[fakeParameter value] originator:NULL];
+        }
+    }
+}
+
+
 #pragma mark - Public Methods
 
 - (void) loadAudioPresetAtFileURL:(NSURL *)fileURL
@@ -113,7 +138,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfURL:fileURL];
     if (!dictionary) return;
 
-    [_audioUnit setFullState:dictionary];
+    [self _setFullState:dictionary];
 }
 
 
@@ -125,7 +150,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
 - (void) restoreDefaultValues
 {
-    [_audioUnit setFullState:_defaultFullState];
+    [self _setFullState:_defaultFullState];
 }
 
 
@@ -147,7 +172,7 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (BOOL) hasCustomView
 {
