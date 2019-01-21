@@ -14,19 +14,13 @@ typedef struct {
     double sampleRate;
     NSInteger bufferCount;
     AudioBufferList *bufferList;
+    AudioBufferList *scratch;
+    UInt32 scratchFrameSize;
 } RenderContext;
 
 
-static OSStatus sRenderCallback(
-    void *inRefCon,
-    AudioUnitRenderActionFlags *ioActionFlags,
-    const AudioTimeStamp *inTimeStamp,
-    UInt32 inBusNumber,
-    UInt32 frameCount,
-    AudioBufferList *ioData)
+static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBufferList *ioData)
 {
-    RenderContext *context = (RenderContext *)inRefCon;
-
     NSInteger offset = 0;
 
     NSInteger bufferCount = MIN(context->bufferCount, ioData->mNumberBuffers);
@@ -65,15 +59,41 @@ static OSStatus sRenderCallback(
 
         context->frameIndex += framesToCopy;
     }
+}
+
+
+static OSStatus sConverterInputCallback(
+    AudioConverterRef inAudioConverter,
+    UInt32 *ioNumberDataPackets,
+    AudioBufferList *ioData,
+    AudioStreamPacketDescription **unused,
+    void *inUserData
+) {
+    RenderContext *context = (RenderContext *)inUserData;
+
+    UInt32 frameSize = *ioNumberDataPackets;
+    if (frameSize > context->scratchFrameSize) {
+        frameSize = context->scratchFrameSize;
+    }
+
+    AudioBufferList *scratch = context->scratch;
+
+    sFillBufferList(context, frameSize, scratch);
+
+    for (NSInteger i = 0; i < scratch->mNumberBuffers; i++) {
+        ioData->mBuffers[i].mDataByteSize = frameSize * sizeof(float);
+        ioData->mBuffers[i].mData = scratch->mBuffers[i].mData;
+    }
+
+    *ioNumberDataPackets = frameSize;
 
     return noErr;
 }
 
 
-
 @implementation HugAudioSource {
     HugAudioFile *_audioFile;
-    AudioUnit _converterUnit;
+    AudioConverterRef _converter;
     RenderContext *_context;
     NSArray<HugProtectedBuffer *> *_protectedBuffers;
     
@@ -94,21 +114,37 @@ static OSStatus sRenderCallback(
 
 - (void) dealloc
 {
-    if (_converterUnit) {
-        AudioComponentInstanceDispose(_converterUnit);
-        _converterUnit = NULL;
+    if (_converter) {
+        AudioConverterDispose(_converter);
+        _converter = NULL;
     }
 
     [_audioFile close];
 
     if (_context) {
-        AudioBufferList *list = _context->bufferList;
+        AudioBufferList *bufferList = _context->bufferList;
+        AudioBufferList *scratch    = _context->scratch;
 
-        for (NSInteger i = 0; i < list->mNumberBuffers; i++) {
-            list->mBuffers[i].mData = NULL;
+        if (bufferList) {
+            for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
+                // bufferList->mBuffers[i].mData points to memory we don't own, just clear it
+                bufferList->mBuffers[i].mData = NULL;
+            }
+
+            free(bufferList);
+            _context->bufferList = NULL;
+        }
+    
+        if (scratch) {
+            for (NSInteger i = 0; i < scratch->mNumberBuffers; i++) {
+                free(scratch->mBuffers[i].mData);
+                scratch->mBuffers[i].mData = NULL;
+            }
+
+            free(scratch);
+            _context->scratch = NULL;
         }
 
-        free(_context->bufferList);
         free(_context);
     }
 }
@@ -332,73 +368,58 @@ static OSStatus sRenderCallback(
     UInt32 frameSize        = [[_settings objectForKey:HugAudioSettingFrameSize] unsignedIntValue];
     BOOL   usesBestSRC      = [[_settings objectForKey:HugAudioSettingUseHighestQualityRateConverters] boolValue];
 
+    UInt32 frameSizeSize    = sizeof(frameSize);
+
     if (inputFormat.mSampleRate == outputSampleRate) return YES;
 
-    AudioComponentDescription converterCD = {0};
-    converterCD.componentType = kAudioUnitType_FormatConverter;
-    converterCD.componentSubType = kAudioUnitSubType_AUConverter;
-    converterCD.componentManufacturer = kAudioUnitManufacturer_Apple;
-    converterCD.componentFlags = kAudioComponentFlag_SandboxSafe;
-
-    AudioUnit converterUnit = NULL;
-
-    AudioComponent converterComponent = AudioComponentFindNext(NULL, &converterCD);
-    BOOL ok = HugCheckError(
-        AudioComponentInstanceNew(converterComponent, &converterUnit),
-        @"HugAudioSource", @"AudioComponentInstanceNew[ Converter ]"
-    );
-
-    HugAuto setPropertyUInt32 = ^(AudioUnitPropertyID propertyID, AudioUnitScope scope, UInt32 value) {
-        return HugCheckError(
-            AudioUnitSetProperty(converterUnit, propertyID, scope, 0, &value, sizeof(value)),
-            @"HugAudioSource", @"AudioUnitSetProperty[ Converter ] (UInt32)"
-        );
-    };
-
-    HugAuto setPropertyFloat64 = ^(AudioUnitPropertyID propertyID, AudioUnitScope scope, Float64 value) {
-        return HugCheckError(
-            AudioUnitSetProperty(converterUnit, propertyID, scope, 0, &value, sizeof(value)),
-            @"HugAudioSource", @"AudioUnitSetProperty[ Converter ] (Float64)"
-        );
-    };
-
-    HugAuto setPropertyStream = ^(AudioUnitPropertyID propertyID, AudioUnitScope scope, AudioStreamBasicDescription *value) {
-        return HugCheckError(
-            AudioUnitSetProperty(converterUnit, propertyID, scope, 0, value, sizeof(*value)),
-            @"HugAudioSource", @"AudioUnitSetProperty[ Converter ] (ASBD)"
-        );
-    };
-
-    UInt32 complexity = usesBestSRC ?
-        kAudioUnitSampleRateConverterComplexity_Mastering :
-        kAudioUnitSampleRateConverterComplexity_Normal;
+    UInt32 channelCount = inputFormat.mChannelsPerFrame;
 
     AudioStreamBasicDescription outputFormat = inputFormat;
     outputFormat.mSampleRate = outputSampleRate;
+    
+//    UInt32 quality    = kAudioConverterQuality_High;
+    UInt32 quality    = kAudioConverterQuality_Medium;
+    UInt32 complexity = usesBestSRC ?
+        kAudioConverterSampleRateConverterComplexity_Mastering :
+        kAudioConverterSampleRateConverterComplexity_Normal;
+    
+    BOOL ok = YES;
 
-    _converterUnit = converterUnit;
+    ok = ok && HugCheckError(
+        AudioConverterNew(&inputFormat, &outputFormat, &_converter),
+        @"HugAudioSource", @"AudioConverterNew"
+    );
+    
+    ok = ok && HugCheckError(
+        AudioConverterSetProperty(_converter, kAudioConverterSampleRateConverterQuality, sizeof(quality), &quality),
+        @"HugAudioSource", @"AudioConverterSetProperty[ Quality ]"
+    );
 
-    AURenderCallbackStruct renderCallback = { &sRenderCallback, _context };
+    ok = ok && HugCheckError(
+        AudioConverterSetProperty(_converter, kAudioConverterSampleRateConverterComplexity, sizeof(complexity), &complexity),
+        @"HugAudioSource", @"AudioConverterSetProperty[ Complexity ]"
+    );
 
-    return ok &&
-        setPropertyUInt32(kAudioUnitProperty_SampleRateConverterComplexity, kAudioUnitScope_Global, complexity) &&
-        setPropertyUInt32(kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, frameSize) &&
+    ok = ok && HugCheckError(
+        AudioConverterGetProperty(_converter, kAudioConverterPropertyCalculateInputBufferSize, &frameSizeSize, &frameSize),
+        @"HugAudioSource", @"AudioConverterSetProperty[ CalculateInputBufferSize ]"
+    );
+    
+    AudioBufferList *scratch = calloc(channelCount, sizeof(AudioBufferList));
 
-        setPropertyFloat64(kAudioUnitProperty_SampleRate, kAudioUnitScope_Input,  inputFormat.mSampleRate) &&
-        setPropertyFloat64(kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, outputSampleRate) &&
-
-        setPropertyStream(kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,  &inputFormat) &&
-        setPropertyStream(kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, &outputFormat) &&
+    scratch->mNumberBuffers = channelCount;
+  
+    for (NSInteger i = 0; i < channelCount; i++) {
+        AudioBuffer *buffer = &scratch->mBuffers[i];
         
-        HugCheckError(
-            AudioUnitInitialize(converterUnit),
-            @"HugAudioSource", @"AudioUnitInitialize[ Converter ]"
-        ) &&
-        
-        HugCheckError(
-            AudioUnitSetProperty(converterUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &renderCallback, sizeof(renderCallback)),
-            @"HugAudioSource", @"AudioUnitSetProperty[ Converter, SetRenderCallback ]"
-        );
+        buffer->mNumberChannels = 1;
+        buffer->mData = malloc(frameSize * sizeof(float));
+    }
+
+    _context->scratch = scratch;
+    _context->scratchFrameSize = frameSize;
+
+    return ok;
 }
 
 
@@ -421,8 +442,8 @@ static OSStatus sRenderCallback(
         return NO;
     }
 
-    RenderContext *context = _context;
-    AudioUnit converterUnit = _converterUnit;
+    RenderContext    *context   = _context;
+    AudioConverterRef converter = _converter;
 
     _inputBlock = [^(
         AUAudioFrameCount frameCount,
@@ -431,14 +452,10 @@ static OSStatus sRenderCallback(
     ) {
         OSStatus result = noErr;
 
-        if (!converterUnit) {
-            sRenderCallback(context, 0, NULL, 0, frameCount, ioData);
-
+        if (!converter) {
+            sFillBufferList(context, frameCount, ioData);
         } else {
-            AudioTimeStamp timeStamp = {0};
-            AudioUnitRenderActionFlags flags = 0;
-        
-            result = AudioUnitRender(converterUnit, &flags, &timeStamp, 0, frameCount, ioData);
+            AudioConverterFillComplexBuffer(converter, sConverterInputCallback, context, &frameCount, ioData, NULL);
         }
         
         // If the input file has less channels than our output device, duplicate

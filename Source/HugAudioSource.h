@@ -34,7 +34,7 @@ typedef void (^HugAudioSourceCompletionHandler)(HugAudioSource *source);
                           settings: (NSDictionary *) settings;
 
 // Primes the audio buffer. If this returns YES, completionHandler will be invoked
-// after the buffer is completely prepared
+// after the buffer is completely prepared.
 //
 - (BOOL) prepareWithStartTime: (NSTimeInterval) startTime
                      stopTime: (NSTimeInterval) stopTime
