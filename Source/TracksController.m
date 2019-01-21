@@ -1204,9 +1204,8 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 {
     NSUInteger tracksCount = [_tracks count];
 
-    NSMutableDictionary *urlToTrackMap        = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
-    NSMutableDictionary *databaseIDToTrackMap = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
-    NSMutableDictionary *titleToTrackMap      = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
+    NSMutableDictionary *urlToTrackMap   = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
+    NSMutableDictionary *titleToTrackMap = [NSMutableDictionary dictionaryWithCapacity:tracksCount];
 
     DuplicateStatusMode duplicateStatusMode = [[Preferences sharedInstance] duplicateStatusMode];
 
@@ -1233,11 +1232,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
         } else if (duplicateStatusMode == DuplicateStatusModeSimilarTitle) {
             isDuplicate = isDuplicate || check(titleToTrackMap, [track titleForSimilarTitleDetection], track);
-        }
-
-        NSInteger databaseID = [track databaseID];
-        if (databaseID) {
-            isDuplicate = isDuplicate || check(databaseIDToTrackMap, @(databaseID), track);
         }
 
         isDuplicate = isDuplicate || check(urlToTrackMap, [track externalURL], track);

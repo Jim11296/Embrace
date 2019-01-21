@@ -152,9 +152,9 @@ static NSInteger sAutoGapMaximum = 16;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)            name:PreferencesDidChangeNotification                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTracksControllerDidModifyTracks:) name:TracksControllerDidModifyTracksNotificationName object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyPlayDurationNotificationName      object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyExpectedDurationNotificationName  object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyDuration:)          name:TrackDidModifyDurationNotificationName  object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyTitle:)             name:TrackDidModifyTitleNotificationName             object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleTrackDidModifyExternalURL:)       name:TrackDidModifyExternalURLNotificationName       object:nil];
 
     [self _handlePreferencesDidChange:nil];
 
@@ -358,6 +358,14 @@ static NSInteger sAutoGapMaximum = 16;
         [self detectDuplicates];
     }
 }
+
+
+
+- (void) _handleTrackDidModifyExternalURL:(NSNotification *)note
+{
+    [self detectDuplicates];
+}
+
 
 
 - (void) _handleTrackDidModifyDuration:(NSNotification *)note

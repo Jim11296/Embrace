@@ -3,8 +3,8 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const TrackDidModifyTitleNotificationName;
-extern NSString * const TrackDidModifyPlayDurationNotificationName;
-extern NSString * const TrackDidModifyExpectedDurationNotificationName;
+extern NSString * const TrackDidModifyExternalURLNotificationName;
+extern NSString * const TrackDidModifyDurationNotificationName;
 
 @class TrackAnalyzer;
 
