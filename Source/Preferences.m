@@ -39,8 +39,6 @@ static NSDictionary *sGetDefaultValues()
         @"showsLabelStripes":    @YES,
         @"showsYear":            @NO,
 
-        @"usesMasteringComplexitySRC": @YES,
-
         @"scriptHandlerName": @"",
         @"allowsAllEffects":     @NO,
 

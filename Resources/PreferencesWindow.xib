@@ -21,7 +21,6 @@
                 <outlet property="sampleRatePopUp" destination="GT5-ag-OUL" id="hoQ-Us-F3D"/>
                 <outlet property="scriptHandlerPopUp" destination="MVK-di-o8T" id="W6U-Sd-Zc4"/>
                 <outlet property="toolbar" destination="hoP-hc-kjO" id="9bo-RQ-u21"/>
-                <outlet property="usesMasteringComplexityButton" destination="SlT-qX-AJD" id="RNU-CE-a0O"/>
                 <outlet property="window" destination="1" id="CXg-pP-XyZ"/>
             </connections>
         </customObject>
@@ -70,11 +69,11 @@
         </window>
         <userDefaultsController representsSharedInstance="YES" id="QcB-lQ-hRp"/>
         <view id="wiI-3h-8ky" userLabel="General Pane">
-            <rect key="frame" x="0.0" y="0.0" width="420" height="180"/>
+            <rect key="frame" x="0.0" y="0.0" width="420" height="145"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" id="ZQs-XX-Hj2">
-                    <rect key="frame" x="128" y="132" width="253" height="26"/>
+                    <rect key="frame" x="128" y="97" width="253" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="T4g-j7-z0f" id="W7w-oo-bz2">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -97,7 +96,7 @@
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" id="GT5-ag-OUL">
-                    <rect key="frame" x="128" y="103" width="112" height="26"/>
+                    <rect key="frame" x="128" y="68" width="112" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="192000 Hz" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="cka-jn-Ymt" id="CLD-WG-ehZ">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -128,7 +127,7 @@
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" id="hcU-l9-txy">
-                    <rect key="frame" x="309" y="103" width="72" height="26"/>
+                    <rect key="frame" x="309" y="68" width="72" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="4096" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="cHK-ea-ou0" id="f6B-GZ-gcm">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -162,7 +161,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="DwI-z5-J5x">
-                    <rect key="frame" x="32" y="109" width="92" height="17"/>
+                    <rect key="frame" x="32" y="74" width="92" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sample Rate:" id="JFU-pt-5ye">
                         <font key="font" metaFont="system"/>
@@ -180,7 +179,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="A82-J6-b36">
-                    <rect key="frame" x="10" y="138" width="114" height="17"/>
+                    <rect key="frame" x="10" y="103" width="114" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Main Output:" id="xts-21-jLd">
                         <font key="font" metaFont="system"/>
@@ -252,32 +251,8 @@
                         </binding>
                     </connections>
                 </button>
-                <button id="SlT-qX-AJD">
-                    <rect key="frame" x="128" y="82" width="237" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Use highest-quality rate converters" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ApO-sm-KFc">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="changeMainDeviceAttributes:" target="-2" id="XvA-Dc-oyW"/>
-                        <binding destination="-2" name="enabled2" keyPath="self.deviceConnected" previousBinding="pqY-4L-hoe" id="3k5-Hs-uNG">
-                            <dictionary key="options">
-                                <integer key="NSMultipleValuesPlaceholder" value="-1"/>
-                                <integer key="NSNoSelectionPlaceholder" value="-1"/>
-                                <integer key="NSNotApplicablePlaceholder" value="-1"/>
-                                <integer key="NSNullPlaceholder" value="-1"/>
-                            </dictionary>
-                        </binding>
-                        <binding destination="-2" name="enabled" keyPath="self.player.playing" id="pqY-4L-hoe">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">NSNegateBoolean</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
-                </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="FNK-A3-Tfj">
-                    <rect key="frame" x="-4" y="161" width="428" height="14"/>
+                    <rect key="frame" x="-4" y="126" width="428" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to modify the output device." id="Kve-QP-Jom">
                         <font key="font" metaFont="smallSystem"/>
@@ -293,7 +268,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="8wU-sq-Hw0">
-                    <rect key="frame" x="244" y="109" width="61" height="17"/>
+                    <rect key="frame" x="244" y="74" width="61" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Frames:" id="nbH-VG-HNv">
                         <font key="font" metaFont="system"/>
@@ -302,7 +277,7 @@
                     </textFieldCell>
                 </textField>
             </subviews>
-            <point key="canvasLocation" x="2" y="457"/>
+            <point key="canvasLocation" x="2" y="437.5"/>
         </view>
         <view id="EW9-yV-OXP" userLabel="Advanced Pane">
             <rect key="frame" x="0.0" y="0.0" width="420" height="133"/>

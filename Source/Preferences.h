@@ -94,6 +94,4 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) BOOL            mainOutputUsesHogMode;
 @property (nonatomic) BOOL            mainOutputResetsVolume;
 
-@property (nonatomic) BOOL usesMasteringComplexitySRC;
-
 @end

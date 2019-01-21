@@ -10,9 +10,6 @@ extern HugAudioSettings const HugAudioSettingSampleRate;
 // NSNumber, the desired value of kAudioDevicePropertyBufferFrameSize.
 extern HugAudioSettings const HugAudioSettingFrameSize;
 
-// If @YES, Hug uses the highest-quality sample rate converters.
-extern HugAudioSettings const HugAudioSettingUseHighestQualityRateConverters;
-
 // If @YES, Hug attempts to take exclusive access of the device (Hog Mode) upon playback.
 extern HugAudioSettings const HugAudioSettingTakeExclusiveAccess;
 
