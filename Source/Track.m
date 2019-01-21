@@ -10,9 +10,9 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-NSString * const TrackDidModifyTitleNotificationName            = @"TrackDidModifyTitleNotificationName";
-NSString * const TrackDidModifyPlayDurationNotificationName     = @"TrackDidModifyPlayDurationNotification";
-NSString * const TrackDidModifyExpectedDurationNotificationName = @"TrackDidModifyExpectedDurationNotification";
+NSString * const TrackDidModifyTitleNotificationName       = @"TrackDidModifyTitleNotificationName";
+NSString * const TrackDidModifyExternalURLNotificationName = @"TrackDidModifyExternalURLNotificationName";
+NSString * const TrackDidModifyDurationNotificationName    = @"TrackDidModifyDurationNotificationName";
 
 #define DUMP_UNKNOWN_TAGS 0
 
@@ -278,7 +278,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 - (void) _updateState:(NSDictionary *)state initialLoad:(BOOL)initialLoad
 {
     BOOL postTitleChanged = NO;
-    BOOL postPlayDurationChanged = NO;
+    BOOL postDurationChanged = NO;
 
     for (NSString *key in state) {
         id oldValue = [self valueForKey:key];
@@ -306,7 +306,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
             }
             
             if ([@[ @"duration", @"decodedDuration", @"startTime", @"endTime" ] containsObject:key]) {
-                postPlayDurationChanged = YES;
+                postDurationChanged = YES;
             }
         }
     }
@@ -334,9 +334,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         });
     }
 
-    if (postPlayDurationChanged) {
+    if (postDurationChanged) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyPlayDurationNotificationName object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyDurationNotificationName object:self];
         });
     }
 }
@@ -444,6 +444,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         _dirty = YES;
     }
 
+    BOOL postDidModifyExternalURL = (externalURL != _externalURL || (![externalURL isEqual:_externalURL]));
+
     _internalURL = internalURL;
     _externalURL = externalURL;
 
@@ -460,6 +462,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
      
     if (_dirty) {
         [self _saveStateImmediately:YES];
+    }
+    
+    if (postDidModifyExternalURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyExternalURLNotificationName object:self];
+        });
     }
 }
 
@@ -882,7 +890,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [self _saveStateImmediately:NO];
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyPlayDurationNotificationName object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:TrackDidModifyDurationNotificationName object:self];
         });
     }
 }
