@@ -12,7 +12,7 @@ typedef struct {
     NSInteger frameIndex;
     NSInteger totalFrames;
     double sampleRate;
-    NSInteger bufferCount;
+    UInt32 bufferCount;
     AudioBufferList *bufferList;
     AudioBufferList *scratch;
     UInt32 scratchFrameSize;
@@ -23,7 +23,7 @@ static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBuff
 {
     NSInteger offset = 0;
 
-    NSInteger bufferCount = MIN(context->bufferCount, ioData->mNumberBuffers);
+    UInt32 bufferCount = ioData->mNumberBuffers;
 
     // Zero pad if needed
     if (context->frameIndex < 0) {
@@ -447,20 +447,27 @@ static OSStatus sConverterInputCallback(
         HugPlaybackInfo *outInfo
     ) {
         OSStatus result = noErr;
+        
+        UInt32 inBufferCount = ioData->mNumberBuffers;
+        if (context->bufferCount < inBufferCount) {
+            ioData->mNumberBuffers = context->bufferCount;
+        }
 
         if (!converter) {
             sFillBufferList(context, frameCount, ioData);
         } else {
-            AudioConverterFillComplexBuffer(converter, sConverterInputCallback, context, &frameCount, ioData, NULL);
+            result = AudioConverterFillComplexBuffer(converter, sConverterInputCallback, context, &frameCount, ioData, NULL);
         }
-        
+
+        ioData->mNumberBuffers = inBufferCount;
+
         // If the input file has less channels than our output device, duplicate
         for (NSInteger b = context->bufferCount; b < ioData->mNumberBuffers; b++) {
             memcpy(ioData->mBuffers[b].mData, ioData->mBuffers[0].mData, frameCount * sizeof(float));
         }
 
         if (outInfo) {
-            double sampleRate  = context->sampleRate;
+            double sampleRate = context->sampleRate;
 
             if (context->frameIndex < 0) {
                 outInfo->status = HugPlaybackStatusWaiting;
