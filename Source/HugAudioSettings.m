@@ -4,7 +4,6 @@
 
 HugAudioSettings const HugAudioSettingSampleRate = @"SampleRate";
 HugAudioSettings const HugAudioSettingFrameSize = @"FrameSize";
-HugAudioSettings const HugAudioSettingUseHighestQualityRateConverters = @"UseHighestQualityRateConverters";
 HugAudioSettings const HugAudioSettingTakeExclusiveAccess = @"TakeExclusiveAccess";
 HugAudioSettings const HugAudioSettingResetDeviceVolume = @"ResetDeviceVolume";
 

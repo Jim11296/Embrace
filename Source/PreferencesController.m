@@ -25,9 +25,7 @@
 @property (nonatomic, weak)   IBOutlet NSPopUpButton *sampleRatePopUp;
 @property (nonatomic, weak)   IBOutlet NSPopUpButton *framesPopUp;
 @property (nonatomic, weak)   IBOutlet NSButton      *hogModeButton;
-
 @property (nonatomic, weak)   IBOutlet NSButton      *resetVolumeButton;
-@property (nonatomic, weak)   IBOutlet NSButton      *usesMasteringComplexityButton;
 
 @property (nonatomic, weak)   IBOutlet NSPopUpButton *scriptHandlerPopUp;
 
@@ -316,8 +314,6 @@
     [self _rebuildFrameMenu];
     [self _rebuildSampleRateMenu];
 
-    [[self usesMasteringComplexityButton] setState:[preferences usesMasteringComplexitySRC]];
-    
     BOOL resetVolumeEnabled = [device hasVolumeControl] &&
                               [device isHogModeSettable] &&
                               [preferences mainOutputUsesHogMode];
@@ -387,7 +383,7 @@
     } else if (sender == [self sampleRatePopUp]) {
         NSNumber *number = [[sender selectedItem] representedObject];
 
-        double sampleRate =[number doubleValue];
+        double sampleRate = [number doubleValue];
         [[Preferences sharedInstance] setMainOutputSampleRate:sampleRate];
         
     } else if (sender == [self hogModeButton]) {
@@ -397,10 +393,6 @@
     } else if (sender == [self resetVolumeButton]) {
         BOOL resetsVolume = [[self resetVolumeButton] state] == NSControlStateValueOn;
         [[Preferences sharedInstance] setMainOutputResetsVolume:resetsVolume];
-
-    } else if (sender == [self usesMasteringComplexityButton]) {
-        BOOL usesMasteringComplexitySRC = [[self usesMasteringComplexityButton] state] == NSControlStateValueOn;
-        [[Preferences sharedInstance] setUsesMasteringComplexitySRC:usesMasteringComplexitySRC];
     }
 }
 

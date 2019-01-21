@@ -366,9 +366,8 @@ static OSStatus sConverterInputCallback(
 
     double outputSampleRate = [[_settings objectForKey:HugAudioSettingSampleRate] doubleValue];
     UInt32 frameSize        = [[_settings objectForKey:HugAudioSettingFrameSize] unsignedIntValue];
-    BOOL   usesBestSRC      = [[_settings objectForKey:HugAudioSettingUseHighestQualityRateConverters] boolValue];
 
-    UInt32 frameSizeSize    = sizeof(frameSize);
+    UInt32 frameSizeSize = sizeof(frameSize);
 
     if (inputFormat.mSampleRate == outputSampleRate) return YES;
 
@@ -377,11 +376,8 @@ static OSStatus sConverterInputCallback(
     AudioStreamBasicDescription outputFormat = inputFormat;
     outputFormat.mSampleRate = outputSampleRate;
     
-//    UInt32 quality    = kAudioConverterQuality_High;
-    UInt32 quality    = kAudioConverterQuality_Medium;
-    UInt32 complexity = usesBestSRC ?
-        kAudioConverterSampleRateConverterComplexity_Mastering :
-        kAudioConverterSampleRateConverterComplexity_Normal;
+    UInt32 quality    = kAudioConverterQuality_Max;
+    UInt32 complexity = kAudioConverterSampleRateConverterComplexity_Normal;
     
     BOOL ok = YES;
 

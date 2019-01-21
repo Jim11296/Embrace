@@ -495,12 +495,9 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         _listeningDeviceID = deviceID;
     }
 
-    BOOL useHighestQualityRateConverters = [[Preferences sharedInstance] usesMasteringComplexitySRC];
-
     ok = ok && [_engine configureWithDeviceID:deviceID settings:@{
         HugAudioSettingSampleRate: @(_outputSampleRate),
-        HugAudioSettingFrameSize:  @(_outputFrames),
-        HugAudioSettingUseHighestQualityRateConverters: @(useHighestQualityRateConverters)
+        HugAudioSettingFrameSize:  @(_outputFrames)
     }];
     
     if (issue != _issue) {
