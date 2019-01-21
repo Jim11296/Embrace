@@ -16,10 +16,18 @@ extern NSColor * const TrackTableViewGetPlayingTextColor(void)
 
             NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
             
-            if (darkAqua) {
-                return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
-            } else {
-                return [[NSColor blackColor] blendedColorWithFraction:0.9 ofColor:color];
+            CGFloat saturation = 0;
+            
+            if ([[color colorSpace] colorSpaceModel] == NSColorSpaceModelRGB) {
+                [color getHue:NULL saturation:&saturation brightness:NULL alpha:NULL];
+            }
+
+            if (saturation > 0.1) {
+                if (darkAqua) {
+                    return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
+                } else {
+                    return [[NSColor blackColor] blendedColorWithFraction:0.9 ofColor:color];
+                }
             }
         }
     }
