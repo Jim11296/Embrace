@@ -382,6 +382,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         HugAudioSourceInputBlock nextInputBlock = atomic_load(&userInfo->nextInputBlock);
         
         HugPlaybackInfo info = {0};
+        OSStatus err = noErr;
         
         BOOL willChangeUnits = (nextInputBlock != inputBlock);
 
@@ -394,7 +395,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             HugApplySilence(rightData, inNumberFrames);
 
         } else {
-            inputBlock(inNumberFrames, ioData, &info);
+            err = inputBlock(inNumberFrames, ioData, &info);
             
             // Do something with status
 
@@ -425,7 +426,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             }
         }
 
-        return noErr;
+        return err;
     }];
 
     double sampleRate = [[_outputSettings objectForKey:HugAudioSettingSampleRate] doubleValue];
