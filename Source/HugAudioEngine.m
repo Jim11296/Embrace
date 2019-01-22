@@ -257,6 +257,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 - (void) _readRingBuffers
 {
     uint64_t current = HugGetCurrentHostTime();
+    uint64_t tooFar  = current + HugGetHostTimeWithSeconds(1.0);
 
     // Process status
     while (1) {
@@ -268,8 +269,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
         PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_statusRingBuffer, sizeof(PacketDataUnknown));
         if (!unknown) break;
-        
-        if (unknown->timestamp >= current) {
+               
+        if ((unknown->timestamp >= current) && (unknown->timestamp < tooFar)) {
             break;
         }
         
