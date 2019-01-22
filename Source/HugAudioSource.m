@@ -12,10 +12,13 @@ typedef struct {
     NSInteger frameIndex;
     NSInteger totalFrames;
     double sampleRate;
-    UInt32 bufferCount;
     AudioBufferList *bufferList;
-    AudioBufferList *scratch;
-    UInt32 scratchFrameSize;
+
+    AudioBufferList *inputScratch;
+    UInt32           inputScratchFrameSize;
+
+    AudioBufferList *converterScratch;
+    UInt32           converterScratchFrameSize;
 } RenderContext;
 
 
@@ -72,11 +75,11 @@ static OSStatus sConverterInputCallback(
     RenderContext *context = (RenderContext *)inUserData;
 
     UInt32 frameSize = *ioNumberDataPackets;
-    if (frameSize > context->scratchFrameSize) {
-        frameSize = context->scratchFrameSize;
+    if (frameSize > context->converterScratchFrameSize) {
+        frameSize = context->converterScratchFrameSize;
     }
 
-    AudioBufferList *scratch = context->scratch;
+    AudioBufferList *scratch = context->converterScratch;
 
     sFillBufferList(context, frameSize, scratch);
 
@@ -122,29 +125,15 @@ static OSStatus sConverterInputCallback(
     [_audioFile close];
 
     if (_context) {
-        AudioBufferList *bufferList = _context->bufferList;
-        AudioBufferList *scratch    = _context->scratch;
+        HugAudioBufferListFree(_context->bufferList, NO);
+        _context->bufferList = NULL;
 
-        if (bufferList) {
-            for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
-                // bufferList->mBuffers[i].mData points to memory we don't own, just clear it
-                bufferList->mBuffers[i].mData = NULL;
-            }
+        HugAudioBufferListFree(_context->converterScratch, YES);
+        _context->converterScratch = NULL;
 
-            free(bufferList);
-            _context->bufferList = NULL;
-        }
-    
-        if (scratch) {
-            for (NSInteger i = 0; i < scratch->mNumberBuffers; i++) {
-                free(scratch->mBuffers[i].mData);
-                scratch->mBuffers[i].mData = NULL;
-            }
-
-            free(scratch);
-            _context->scratch = NULL;
-        }
-
+        HugAudioBufferListFree(_context->inputScratch, YES);
+        _context->inputScratch = NULL;
+        
         free(_context);
     }
 }
@@ -205,16 +194,14 @@ static OSStatus sConverterInputCallback(
 
     // Setup _context and _protectedBuffers
     {
-        UInt32 bufferCount = format.mChannelsPerFrame;
-        UInt32 totalBytes  = (UInt32)totalFrames * format.mBytesPerFrame;
+        UInt32 channelCount = format.mChannelsPerFrame;
+        UInt32 totalBytes   = (UInt32)totalFrames * format.mBytesPerFrame;
 
-        AudioBufferList *list = malloc(sizeof(AudioBufferList) * MAX(bufferCount, 2));
-
-        list->mNumberBuffers = bufferCount;
-
+        AudioBufferList *list = HugAudioBufferListCreate(channelCount, 0, NO);
+        
         NSMutableArray *protectedBuffers = [NSMutableArray array];
 
-        for (NSInteger i = 0; i < bufferCount; i++) {
+        for (NSInteger i = 0; i < channelCount; i++) {
             HugProtectedBuffer *protectedBuffer = [[HugProtectedBuffer alloc] initWithCapacity:totalBytes];
         
             list->mBuffers[i].mNumberChannels = 1;
@@ -224,12 +211,15 @@ static OSStatus sConverterInputCallback(
             [protectedBuffers addObject:protectedBuffer];
         }
 
+        UInt32 outputFrameSize = [[_settings objectForKey:HugAudioSettingFrameSize] unsignedIntValue];
+        AudioBufferList *inputScratch = HugAudioBufferListCreate(channelCount, outputFrameSize, YES);
+
         _context = calloc(1, sizeof(RenderContext));
-        _context->sampleRate = format.mSampleRate;
-        _context->frameIndex = format.mSampleRate * -padding;
-        _context->totalFrames = (UInt32)totalFrames;
-        _context->bufferCount = bufferCount;
-        _context->bufferList = list;
+        _context->sampleRate   = format.mSampleRate;
+        _context->frameIndex   = format.mSampleRate * -padding;
+        _context->totalFrames  = (UInt32)totalFrames;
+        _context->bufferList   = list;
+        _context->inputScratch = inputScratch;
 
         _protectedBuffers = protectedBuffers;
     }
@@ -283,8 +273,7 @@ static OSStatus sConverterInputCallback(
 
         UInt32 bufferCount = context->bufferList->mNumberBuffers;
         
-        AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * bufferCount);
-        fillBufferList->mNumberBuffers = (UInt32)bufferCount;
+        AudioBufferList *fillBufferList = HugAudioBufferListCreate(bufferCount, 0, NO);
         
         BOOL ok = YES;
         BOOL needsSignal = YES;
@@ -331,6 +320,8 @@ static OSStatus sConverterInputCallback(
         if (needsSignal) {
             dispatch_semaphore_signal(primeSemaphore);
         }
+        
+        HugAudioBufferListFree(fillBufferList, NO);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
@@ -401,19 +392,8 @@ static OSStatus sConverterInputCallback(
         @"HugAudioSource", @"AudioConverterSetProperty[ CalculateInputBufferSize ]"
     );
     
-    AudioBufferList *scratch = calloc(channelCount, sizeof(AudioBufferList));
-
-    scratch->mNumberBuffers = channelCount;
-  
-    for (NSInteger i = 0; i < channelCount; i++) {
-        AudioBuffer *buffer = &scratch->mBuffers[i];
-        
-        buffer->mNumberChannels = 1;
-        buffer->mData = malloc(frameSize * sizeof(float));
-    }
-
-    _context->scratch = scratch;
-    _context->scratchFrameSize = frameSize;
+    _context->converterScratch = HugAudioBufferListCreate(channelCount, frameSize, YES);
+    _context->converterScratchFrameSize = frameSize;
 
     return ok;
 }
@@ -447,23 +427,23 @@ static OSStatus sConverterInputCallback(
         HugPlaybackInfo *outInfo
     ) {
         OSStatus result = noErr;
-        
-        UInt32 inBufferCount = ioData->mNumberBuffers;
-        if (context->bufferCount < inBufferCount) {
-            ioData->mNumberBuffers = context->bufferCount;
-        }
+
+        UInt32 sourceChannelCount = context->bufferList->mNumberBuffers;
+        UInt32 outputChannelCount = ioData->mNumberBuffers;
+
+        AudioBufferList *bufferToFill = (sourceChannelCount == outputChannelCount) ? ioData : context->inputScratch;
 
         if (!converter) {
-            sFillBufferList(context, frameCount, ioData);
+            sFillBufferList(context, frameCount, bufferToFill);
         } else {
-            result = AudioConverterFillComplexBuffer(converter, sConverterInputCallback, context, &frameCount, ioData, NULL);
+            result = AudioConverterFillComplexBuffer(converter, sConverterInputCallback, context, &frameCount, bufferToFill, NULL);
         }
-
-        ioData->mNumberBuffers = inBufferCount;
-
-        // If the input file has less channels than our output device, duplicate
-        for (NSInteger b = context->bufferCount; b < ioData->mNumberBuffers; b++) {
-            memcpy(ioData->mBuffers[b].mData, ioData->mBuffers[0].mData, frameCount * sizeof(float));
+        
+        if (sourceChannelCount != outputChannelCount) {
+            for (NSInteger o = 0; o < outputChannelCount; o++) {
+                NSInteger s = o % sourceChannelCount;
+                memcpy(ioData->mBuffers[o].mData, bufferToFill->mBuffers[s].mData, frameCount * sizeof(float));
+            }
         }
 
         if (outInfo) {
