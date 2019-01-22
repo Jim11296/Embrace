@@ -49,6 +49,38 @@ NSTimeInterval HugGetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2)
 }
 
 
+AudioBufferList *HugAudioBufferListCreate(UInt32 channelCount, UInt32 frameCount, BOOL allocateData)
+{
+    AudioBufferList *bufferList = calloc(channelCount, sizeof(AudioBufferList));
+
+    bufferList->mNumberBuffers = channelCount;
+
+    for (NSInteger i = 0; i < channelCount; i++) {
+        bufferList->mBuffers[i].mNumberChannels = 1;
+        
+        if (allocateData) {
+            bufferList->mBuffers[i].mDataByteSize = frameCount * sizeof(float);
+            bufferList->mBuffers[i].mData = calloc(frameCount, sizeof(float));
+        }
+    }
+    
+    return bufferList;
+}
+
+
+void HugAudioBufferListFree(AudioBufferList *bufferList, BOOL freeData)
+{
+    if (!bufferList) return;
+
+    for (NSInteger i = 0; i < bufferList->mNumberBuffers; i++) {
+        if (freeData) free(bufferList->mBuffers[i].mData);
+        bufferList->mBuffers[i].mData = NULL;
+    }
+    
+    free(bufferList);
+}
+
+
 static void (^sHugLogger)(NSString *, NSString *) = NULL;
 
 
