@@ -97,18 +97,9 @@ static NSError *sMakeError(NSInteger code)
     UInt32 channelCount = clientDataFormat.mChannelsPerFrame;
     if (!channelCount) return NO;
 
-    AudioBufferList *bufferList = alloca(sizeof(AudioBufferList) * channelCount);
-
-    bufferList->mNumberBuffers = channelCount;
-
     UInt32 framesToRead = 1024;
-
-    for (NSInteger i = 0; i < channelCount; i++) {
-        bufferList->mBuffers[i].mNumberChannels = 1;
-        bufferList->mBuffers[i].mDataByteSize = framesToRead * sizeof(float);
-        bufferList->mBuffers[i].mData = alloca(framesToRead * sizeof(float));
-    }
-
+    AudioBufferList *bufferList = HugAudioBufferListCreate(channelCount, framesToRead, YES);
+    
     OSStatus err = noErr;
 
     SInt64 frameOffset = 0;
@@ -123,6 +114,8 @@ static NSError *sMakeError(NSInteger code)
     if (err == noErr) {
         err = ExtAudioFileSeek(_extAudioFile, frameOffset);
     }
+    
+    HugAudioBufferListFree(bufferList, YES);
 
     return err == noErr;
 }

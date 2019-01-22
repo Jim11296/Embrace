@@ -1,6 +1,7 @@
 // (c) 2018-2019 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,6 +15,9 @@ extern UInt64 HugGetCurrentHostTime(void);
 extern NSTimeInterval HugGetSecondsWithHostTime(UInt64 hostTime);
 extern UInt64 HugGetHostTimeWithSeconds(NSTimeInterval seconds);
 extern NSTimeInterval HugGetDeltaInSecondsForHostTimes(UInt64 time1, UInt64 time2);
+
+extern AudioBufferList *HugAudioBufferListCreate(UInt32 channelCount, UInt32 frameCount, BOOL allocateData);
+extern void HugAudioBufferListFree(AudioBufferList *bufferList, BOOL freeData);
 
 extern NSString *HugGetStringForFourCharCode(OSStatus fcc);
 

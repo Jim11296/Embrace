@@ -3,6 +3,7 @@
 #import "WorkerService.h"
 
 #import "HugAudioFile.h"
+#import "HugUtils.h"
 #import "TrackKeys.h"
 #import "LoudnessMeasurer.h"
 #import "MetadataParser.h"
@@ -69,14 +70,7 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
 
         LoudnessMeasurer *measurer = LoudnessMeasurerCreate(format.mChannelsPerFrame, format.mSampleRate, framesRemaining);
 
-        AudioBufferList *fillBufferList = alloca(sizeof(AudioBufferList) * format.mChannelsPerFrame);
-        fillBufferList->mNumberBuffers = format.mChannelsPerFrame;
-        
-        for (NSInteger i = 0; i < format.mChannelsPerFrame; i++) {
-            fillBufferList->mBuffers[i].mNumberChannels = format.mChannelsPerFrame;
-            fillBufferList->mBuffers[i].mDataByteSize = format.mBytesPerFrame * 4096 * 16;
-            fillBufferList->mBuffers[i].mData = malloc(format.mBytesPerFrame  * 4096 * 16);
-        }
+        AudioBufferList *fillBufferList = HugAudioBufferListCreate(format.mChannelsPerFrame, 4096 * 16, YES);
 
         BOOL ok = YES;
         while (ok) {
@@ -98,11 +92,7 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
                 break;
             }
         }
-
-        for (NSInteger i = 0; i < format.mChannelsPerFrame; i++) {
-            free(fillBufferList->mBuffers[i].mData);
-        }
-        
+       
         NSTimeInterval decodedDuration = fileLengthFrames / format.mSampleRate;
         
         [result setObject:@(decodedDuration)                       forKey:TrackKeyDecodedDuration];
@@ -111,6 +101,7 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
         [result setObject:@(LoudnessMeasurerGetLoudness(measurer)) forKey:TrackKeyTrackLoudness];
         [result setObject:@(LoudnessMeasurerGetPeak(measurer))     forKey:TrackKeyTrackPeak];
 
+        HugAudioBufferListFree(fillBufferList, YES);
         LoudnessMeasurerFree(measurer);
 
     } else {
