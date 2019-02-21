@@ -11,6 +11,15 @@
 NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesManagerDidUpdateLibraryMetadata";
 
 
+static NSString *sGetExpandedPath(NSString *inPath)
+{
+    inPath = [inPath stringByStandardizingPath];
+    inPath = [inPath stringByResolvingSymlinksInPath];
+    
+    return inPath;
+}
+
+
 @implementation iTunesManager {
     NSTimer             *_libraryCheckTimer;
     NSTimeInterval       _lastLibraryParseTime;
@@ -100,7 +109,7 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
                     [metadata setStartTime:[[trackData objectForKey:TrackKeyStartTime] doubleValue]];
                     [metadata setStopTime: [[trackData objectForKey:TrackKeyStopTime]  doubleValue]];
 
-                    [pathToLibraryMetadataMap setObject:metadata forKey:path];
+                    [pathToLibraryMetadataMap setObject:metadata forKey:sGetExpandedPath(path)];
                 }
 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -119,7 +128,8 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
 
 - (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url
 {
-    return [_pathToLibraryMetadataMap objectForKey:[url path]];
+    NSString *path = sGetExpandedPath([url path]);
+    return [_pathToLibraryMetadataMap objectForKey:path];
 }
 
 
@@ -182,7 +192,7 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
         
         if (location) {
             if (!_pathToTrackIDMap) _pathToTrackIDMap = [NSMutableDictionary dictionary];
-            [_pathToTrackIDMap setObject:@(trackID) forKey:location];
+            [_pathToTrackIDMap setObject:@(trackID) forKey:sGetExpandedPath(location)];
         }
     };
 
@@ -213,7 +223,8 @@ NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesMan
 
 - (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url
 {
-    NSInteger trackID = [[_pathToTrackIDMap objectForKey:[url path]] integerValue];
+    NSString *path = sGetExpandedPath([url path]);
+    NSInteger trackID = [[_pathToTrackIDMap objectForKey:path] integerValue];
     return [_trackIDToPasteboardMetadataMap objectForKey:@(trackID)];
 }
 
