@@ -54,6 +54,10 @@
             NSEventModifierFlagCommand;
 
         if ((([event modifierFlags] & commonModifiers) == 0) && ([event keyCode] == 49)) {
+            if (![[Preferences sharedInstance] allowsPlaybackShortcuts]) {
+                return;
+            }
+            
             if ([event isARepeat]) {
                 EmbraceLog(@"Application", @"Not sending space bar due to isARepeat=YES");
                 return;

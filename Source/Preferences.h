@@ -84,6 +84,7 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic) NSString *scriptHandlerName;
 @property (nonatomic) BOOL allowsAllEffects;
+@property (nonatomic) BOOL allowsPlaybackShortcuts;
 
 @property (nonatomic) KeySignatureDisplayMode keySignatureDisplayMode;
 @property (nonatomic) DuplicateStatusMode duplicateStatusMode;

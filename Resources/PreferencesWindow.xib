@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -280,11 +280,11 @@
             <point key="canvasLocation" x="2" y="437.5"/>
         </view>
         <view id="EW9-yV-OXP" userLabel="Advanced Pane">
-            <rect key="frame" x="0.0" y="0.0" width="420" height="133"/>
+            <rect key="frame" x="0.0" y="0.0" width="420" height="167"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="khf-AK-51B">
-                    <rect key="frame" x="18" y="28" width="128" height="17"/>
+                    <rect key="frame" x="18" y="62" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="AppleScript handler:" id="5Fc-fL-uac">
                         <font key="font" metaFont="system"/>
@@ -293,7 +293,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="FNt-B8-HCr">
-                    <rect key="frame" x="37" y="91" width="109" height="17"/>
+                    <rect key="frame" x="37" y="125" width="109" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Allow addition of:" id="rKB-Kd-bmk">
                         <font key="font" metaFont="system"/>
@@ -302,7 +302,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" id="MVK-di-o8T">
-                    <rect key="frame" x="150" y="21" width="231" height="26"/>
+                    <rect key="frame" x="150" y="55" width="231" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="c9k-T9-BjO" id="xxy-2I-vX9">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -320,7 +320,7 @@
                     </connections>
                 </popUpButton>
                 <button verticalHuggingPriority="750" id="zPI-84-7nx">
-                    <rect key="frame" x="151" y="90" width="251" height="18"/>
+                    <rect key="frame" x="151" y="124" width="251" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="radio" title="Built-in and safe system effects" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="8M4-UR-ZeM">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -335,7 +335,7 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" id="ldN-kD-qk1">
-                    <rect key="frame" x="151" y="68" width="138" height="18"/>
+                    <rect key="frame" x="151" y="102" width="138" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="radio" title="All installed effects" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="m9n-fc-paT">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -345,8 +345,20 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.allowsAllEffects" id="fA8-JI-XX7"/>
                     </connections>
                 </button>
+                <button id="Ym0-Nq-TMg">
+                    <rect key="frame" x="65" y="18" width="291" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Enable keyboard shortcuts for Play and Stop" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Lh4-aJ-JGq">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="changeMainDeviceAttributes:" target="-2" id="nTg-ak-LSz"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.allowsPlaybackShortcuts" id="rWc-aU-8T1"/>
+                    </connections>
+                </button>
             </subviews>
-            <point key="canvasLocation" x="156" y="716.5"/>
+            <point key="canvasLocation" x="156" y="733.5"/>
         </view>
         <view id="UoV-Kb-Ud2" userLabel="Appearance Pane">
             <rect key="frame" x="0.0" y="0.0" width="420" height="99"/>
