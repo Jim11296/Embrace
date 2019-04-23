@@ -39,8 +39,9 @@ static NSDictionary *sGetDefaultValues()
         @"showsLabelStripes":    @YES,
         @"showsYear":            @NO,
 
-        @"scriptHandlerName": @"",
-        @"allowsAllEffects":     @NO,
+        @"scriptHandlerName":       @"",
+        @"allowsAllEffects":        @NO,
+        @"allowsPlaybackShortcuts": @NO,
 
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
         @"duplicateStatusMode":     @( DuplicateStatusModeSameFile ),

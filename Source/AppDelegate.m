@@ -518,7 +518,12 @@
         [menuItem setState:state];
         [menuItem setTitle:title];
         [menuItem setEnabled:enabled];
-        [menuItem setKeyEquivalent:@" "];
+        
+        if ([[Preferences sharedInstance] allowsPlaybackShortcuts]) {
+            [menuItem setKeyEquivalent:@" "];
+        } else {
+            [menuItem setKeyEquivalent:@""];
+        }
 
     } else if (action == @selector(clearSetlist:)) {
         if ([_setlistController shouldPromptForClear]) {
