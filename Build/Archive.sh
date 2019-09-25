@@ -13,8 +13,8 @@ ZIP_TO="$HOME/Desktop"
 UPLOAD_TO="<redacted>"
 BUILD_STRING=""
 #
-#ARCHIVE_PATH='/Users/iccir/Library/Developer/Xcode/Archives/2019-09-25/Embrace 2019-09-25, 1.34 AM.xcarchive'
-#FULL_PRODUCT_NAME='Embrace.app'
+ARCHIVE_PATH="$1"
+FULL_PRODUCT_NAME="$2"
 
 # ----------------------------------
 
