@@ -123,14 +123,12 @@ do
     fi
 
     add_log "${NOTARY_OUTPUT}"
-
     set_status "Waiting for notary response." "${NOTARY_OUTPUT}"
     
     if [[ "${NOTARY_OUTPUT}" =~ "Invalid" ]] ; then
         add_log "altool --notarization-info results invalid"
         break
     fi
-
 
     if [[ "${NOTARY_OUTPUT}" =~ "success" ]]; then
         NOTARY_SUCCESS=1
