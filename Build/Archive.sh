@@ -12,9 +12,6 @@ NOTARY_PASSWORD="<redacted>"
 ZIP_TO="$HOME/Desktop"
 UPLOAD_TO="<redacted>"
 BUILD_STRING=""
-#
-ARCHIVE_PATH="$1"
-FULL_PRODUCT_NAME="$2"
 
 # ----------------------------------
 
