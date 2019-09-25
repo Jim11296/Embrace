@@ -22,11 +22,8 @@ show_notification ()
 
 set_status ()
 {
-    chmod +w "${STATUS_MD}"
-    
     THE_TIME=$(date +"%I:%M:%S %p")
     
-    chmod -w 
     echo "# $BUILD_STRING"   > "${STATUS_MD}"
     echo                    >> "${STATUS_MD}"
     echo "\`$THE_TIME\`"    >> "${STATUS_MD}"
@@ -38,10 +35,6 @@ set_status ()
         echo "$2"               >> "${STATUS_MD}"
         echo "\`\`\`"           >> "${STATUS_MD}"
     fi
-
-    open -b com.apple.dt.Xcode "$STATUS_MD"
-
-    chmod -w "${STATUS_MD}"
 }
 
 add_log ()
@@ -78,7 +71,7 @@ add_log "BUILD_STRING = '$BUILD_STRING'"
 add_log "APP_FILE = '$APP_FILE'"
 
 touch "$STATUS_MD"
-chmod -w "$STATUS_MD"
+open -b com.apple.dt.Xcode "$STATUS_MD"
 
 pushd "$APP_FILE"/.. > /dev/null
 
@@ -144,13 +137,12 @@ done
 if [ $NOTARY_SUCCESS -eq 1 ] ; then
     set_status "Stapling file."
     xcrun stapler staple "$APP_FILE"
-
     
-    
-
 else
     set_status "Error during notarization."
 fi
+
+# 5. Z
 
 #
 #
