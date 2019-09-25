@@ -12,6 +12,9 @@ NOTARY_PASSWORD="<redacted>"
 ZIP_TO="$HOME/Desktop"
 UPLOAD_TO="<redacted>"
 BUILD_STRING=""
+#
+#ARCHIVE_PATH='/Library/Developer/Xcode/Archives/2019-09-25/Embrace 2019-09-25, 1.34 AM.xcarchive'
+#FULL_PRODUCT_NAME='Embrace.app'
 
 # ----------------------------------
 
@@ -60,12 +63,12 @@ zip --symlinks -r App.zip $(basename "$APP_FILE")
 show_notification "Uploading to Apple notary service."
 
 NOTARY_UUID=$(
-    xcrun altool --notarize-app \
-    --file App.zip --type osx \
+    xcrun altool \
+    --notarize-app --file App.zip --type osx \
     --primary-bundle-id "$NOTARY_BUNDLE_ID" \
     --username "$NOTARY_APPLE_ID" \
     --password "$NOTARY_PASSWORD" \
-    --asc_provider "$NOTARY_ASC_PROVIDER" \
+    --asc-provider "$NOTARY_ASC_PROVIDER" \
     2>&1 | grep RequestUUID | awk '{print $3}'
 )
 
@@ -76,23 +79,34 @@ add_log "NOTARY_UUID = '$NOTARY_UUID'"
 
 NOTARY_SUCCESS=0
 
-while :
+while true
 do
 show_notification "Waiting for notary response."
-    progress=$(xcrun altool --notarization-info "${NOTARY_UUID}" -u "${NOTARY_APPLE_ID}" -p "${NOTARY_PASSWORD}" 2>&1)
+    NOTARY_OUTPUT=$(
+        xcrun altool \
+        --notarization-info "${NOTARY_UUID}" \
+        --username "$NOTARY_APPLE_ID" \
+        --password "$NOTARY_PASSWORD" \
+        2>&1
+    )
 
-    if [ $? -ne 0 ] || [[  "${progress}" =~ "Invalid" ]] ; then
+    if [ $? -ne 0 ]; then
+        add_log "altool --notarization-info returned $?"
+    fi
+
+    add_log "${NOTARY_OUTPUT}"
+    
+    if [[ "${NOTARY_OUTPUT}" =~ "Invalid" ]] ; then
+        add_log "altool --notarization-info results invalid"
         break
     fi
 
-    add_log "${progress}"
-
-    if [[  "${progress}" =~ "success" ]]; then
+    if [[ "${NOTARY_OUTPUT}" =~ "success" ]]; then
         NOTARY_SUCCESS=1
         break
     fi
 
-    sleep 4
+    sleep 10
 done
 
 
