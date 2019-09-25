@@ -128,7 +128,7 @@ do
         break
     fi
 
-    sleep 10
+    sleep 2
 done
 
 
@@ -142,46 +142,14 @@ else
     set_status "Error during notarization."
 fi
 
-# 5. Z
+# 5. Re-zip file and upload
 
-#
-#
-#
-#
-#
-#success=0
-#for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
-#    echo "Checking progress..."
-#    progress=$(xcrun altool --notarization-info "${notarize_uuid}"  -u "${app_store_id}" -p "${app_store_password}" 2>&amp;1 )
-#    Echo "${progress}"
-# 
-#    if [ $? -ne 0 ] || [[  "${progress}" =~ "Invalid" ]] ; then
-#        echo "Error with notarization. Exiting"
-#        break
-#    fi
-# 
-#    if [[  "${progress}" =~ "success" ]]; then
-#        success=1
-#        break
-#    else
-#        echo "Not completed yet. Sleeping for 30 seconds"
-#    fi
-#    sleep 30
-#done
+if [ $NOTARY_SUCCESS -eq 1 ] ; then
+    FINAL_ZIP_FILE="$ZIP_TO/$BUILD_STRING".zip
+    zip --symlinks -r "$FINAL_ZIP_FILE" $(basename "$APP_FILE")
+    scp "$FINAL_ZIP_FILE" "$UPLOAD_TO"
 
-# 4. Poll until we see a "
-
+    set_status "Uploaded '$BUILD_STRING.zip' to server." "*confetti*"
+fi
 
 popd > /dev/null
-
-#
-#EXPORTED_FILE
-#
-#
-#
-#pushd "$APP_FILE"/.. > /dev/null
-#APP_ZIP_FILE="$OPTARG-$build_number.zip"
-#zip --symlinks -r "$APP_ZIP_FILE" $(basename "$LAST_FILE")
-#LAST_FILE="$APP_ZIP_FILE"
-#popd > /dev/null
-#
