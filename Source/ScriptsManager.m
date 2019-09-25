@@ -46,6 +46,8 @@ static NSArray *sGetScriptFileTypes()
         [self _reloadScripts];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+
+        [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePlayerUpdate:) name:@"com.iccir.Embrace.playerUpdate" object:nil];
     }
     
     return self;
@@ -211,6 +213,12 @@ static NSArray *sGetScriptFileTypes()
 }
 
 
+- (void) _handlePlayerUpdate:(NSNotification *)note
+{
+    [self callCurrentTrackChanged];
+}
+
+
 #pragma mark - Public Methods
 
 - (void) callMetadataAvailableWithTrack:(Track *)track
@@ -228,6 +236,27 @@ static NSArray *sGetScriptFileTypes()
     if (!appleEvent) return;
 
     [appleEvent setParamDescriptor:param forKeyword:'hetr'];
+
+    NSDictionary *errorInfo = nil;
+    
+    [handlerScript executeAppleEvent:appleEvent error:&errorInfo];
+    
+    if (errorInfo) {
+        [self _logErrorInfo:errorInfo when:@"running" scriptFile:_handlerScriptFile];
+    }
+}
+
+
+- (void) callCurrentTrackChanged
+{
+    NSAppleScript *handlerScript = [self _handlerScript];
+    if (!handlerScript) return;
+    
+    NSAppleEventDescriptor *target = [NSAppleEventDescriptor nullDescriptor];
+    if (!target) return;
+
+    NSAppleEventDescriptor *appleEvent = [[NSAppleEventDescriptor alloc] initWithEventClass:'embr' eventID:'he01' targetDescriptor:target returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
+    if (!appleEvent) return;
 
     NSDictionary *errorInfo = nil;
     

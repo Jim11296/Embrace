@@ -25,6 +25,7 @@ extern NSString * const EffectDidDeallocNotification;
 @property (nonatomic) AUAudioUnit *audioUnit;
 @property (nonatomic) NSError *audioUnitError;
 
+@property (nonatomic, readonly) NSUUID *UUID;
 @property (nonatomic, readonly) EffectType *type;
 @property (nonatomic, readonly) BOOL hasCustomView;
 @property (nonatomic) BOOL bypass;
