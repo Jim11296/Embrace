@@ -17,7 +17,7 @@ BUILD_STRING=""
 
 show_notification ()
 {
-    osascript -e 'display notification "$1" with title "Archiving ${BUILD_STRING}"'
+    osascript -e "display notification \"$1\" with title \"Archiving ${BUILD_STRING}\""
 }
 
 TMP_DIR=`mktemp -d /tmp/Embrace-Archive.XXXXXX`
@@ -26,6 +26,8 @@ TMP_DIR=`mktemp -d /tmp/Embrace-Archive.XXXXXX`
 mkdir -p "${TMP_DIR}"
 defaults write "${TMP_DIR}/options.plist" method developer-id
 defaults write "${TMP_DIR}/options.plist" teamID "$TEAM_ID"
+
+echo "$ARCHIVE_PATH|$FULL_PRODUCT_NAME" > "${TMP_DIR}/Log"
 
 xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${TMP_DIR}/options.plist" -exportPath "${TMP_DIR}"
 
