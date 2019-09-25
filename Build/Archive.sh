@@ -39,9 +39,9 @@ set_status ()
         echo "\`\`\`"           >> "${STATUS_MD}"
     fi
 
-    chmod -w "${STATUS_MD}"
-
     open -b com.apple.dt.Xcode "$STATUS_MD"
+
+    chmod -w "${STATUS_MD}"
 }
 
 add_log ()
@@ -61,6 +61,8 @@ STATUS_MD="${TMP_DIR}/status.md"
 mkdir -p "${TMP_DIR}"
 defaults write "${TMP_DIR}/options.plist" method developer-id
 defaults write "${TMP_DIR}/options.plist" teamID "$TEAM_ID"
+
+set_status "Exporting archive from Xcode."
 
 xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${TMP_DIR}/options.plist" -exportPath "${TMP_DIR}"
 
@@ -104,6 +106,8 @@ add_log "NOTARY_UUID = '$NOTARY_UUID'"
 
 NOTARY_SUCCESS=0
 
+set_status "Finished sending to Apple notary service"
+
 while true
 do
     NOTARY_OUTPUT=$(
@@ -140,11 +144,14 @@ done
 # 4. Staple
 
 if [ $NOTARY_SUCCESS -eq 1 ] ; then
+    set_status "Stapling file."
     xcrun stapler staple "$APP_FILE"
 
+    
+    
 
 else
-    show_notification "Error during notarization."
+    set_status "Error during notarization."
 fi
 
 #
