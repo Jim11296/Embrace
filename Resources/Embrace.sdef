@@ -103,27 +103,31 @@
         </command>
       
         <class-extension extends="application" description="The Embrace application.">
-            <element access="r" description="The tracks in the set list." type="track">
+            <element access="r" description="The tracks in the set list" type="track">
                 <cocoa key="scriptingTracks"/>
             </element>
+
+            <element access="r" description="The list of Additional Effects" type="effect">
+                <cocoa key="scriptingEffects"/>
+            </element>
             
-			<property name="current track" access="r" code="curt" type="track" description="the currently playing track">
+			<property name="current track" access="r" code="curt" type="track" description="The currently playing track">
             	<cocoa key="scriptingCurrentTrack"/>
             </property>
 
-			<property name="current index" access="r" code="curi" type="integer" description="the index of the currently playing track">
+			<property name="current index" access="r" code="curi" type="integer" description="The index of the currently playing track">
             	<cocoa key="scriptingCurrentIndex"/>
             </property>
 
-			<property name="elapsed time" access="r" code="elps" type="real" description="the elapsed time in seconds.  Negative when Auto Gap is active.">
+			<property name="elapsed time" access="r" code="elps" type="real" description="The elapsed time in seconds. Negative when Auto Gap is active.">
             	<cocoa key="scriptingElapsedTime"/>
             </property>
 
-			<property name="remaining time" access="r" code="rems" type="real" description="the remaining time in seconds">
+			<property name="remaining time" access="r" code="rems" type="real" description="The remaining time in seconds.">
             	<cocoa key="scriptingRemainingTime"/>
             </property>
 
-            <property name="volume" access="rw" code="volm" type="real" description="the volume">
+            <property name="volume" access="rw" code="volm" type="real" description="The volume.">
                 <cocoa key="scriptingVolume"/>
             </property>
 
@@ -193,7 +197,7 @@
                 <cocoa key="scriptingID" />
             </property>
 
-			<property name="aggregate" access="r" code="aggr" type="text" description="A tab-delimited string containing ( title, artist, album, genre, comments, album artist, composer, grouping ).  Additional fields may be added in future versions, order of existing fields will not change.">
+			<property name="aggregate" access="r" code="aggr" type="text" description="A tab-delimited string containing ( title, artist, album, genre, comments, album artist, composer, grouping ). Additional fields may be added in future versions, order of existing fields will not change.">
 				<cocoa key="scriptingAggregate"/>
             </property>
 
@@ -274,6 +278,26 @@
             </property>
 
 		</class>
+
+        <class name="effect" code="fxfx" description="An effect in the Additional Effects list.">
+            <cocoa class="Effect"/>
+
+            <property name="id" code="ID  " description="A unique identifier for this effect." type="text" access="r">
+                <cocoa key="scriptingID" />
+            </property>
+
+            <property name="name" access="r" code="pnam" type="text" description="The name of the effect.">
+                <cocoa key="scriptingName"/>
+            </property>
+
+            <property name="manufacturer" access="r" code="fxmn" type="text" description="The manufacturer of the effect.">
+                <cocoa key="scriptingManufacturer"/>
+            </property>
+
+            <property name="bypassed" code="fxby" type="boolean" description="Is the effect bypassed?">
+                <cocoa key="scriptingBypass"/>
+            </property>
+        </class>
 	</suite>
 
     <suite name="Embrace Event Handler Suite" code="embr" description="Commands that are executed as Embrace event handlers.">
@@ -281,6 +305,10 @@
             <cocoa name="MetadataAvailable" class="EventHandlerCommand"/>
             <parameter code="hetr" name="for" description="The track that was parsed." type="track">
             </parameter>
+        </event>
+
+        <event name="current track changed" code="embrhe01" description="This handler is called when Embrace changes the current track.">
+            <cocoa name="CurrentTrackChanged" class="EventHandlerCommand"/>
         </event>
     </suite>
 </dictionary>

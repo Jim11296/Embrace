@@ -14,6 +14,7 @@ extern NSString * const ScriptsManagerDidReloadNotification;
 - (void) revealScriptsFolder;
 
 - (void) callMetadataAvailableWithTrack:(Track *)track;
+- (void) callCurrentTrackChanged;
 
 @property (nonatomic, readonly) NSArray<ScriptFile *> *allScriptFiles;
 @property (nonatomic, readonly) ScriptFile *handlerScriptFile;

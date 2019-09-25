@@ -7,6 +7,7 @@
 
 static NSString *sNameKey = @"name";
 static NSString *sInfoKey = @"info";
+static NSString *sUUIDKey = @"UUID";
 
 NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
@@ -28,14 +29,15 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 
 + (instancetype) effectWithEffectType:(EffectType *)effectType
 {
-    return [[self alloc] initWithEffectType:effectType];
+    return [[self alloc] _initWithEffectType:effectType UUID:nil];
 }
 
 
-- (id) initWithEffectType:(EffectType *)effectType
+- (id) _initWithEffectType:(EffectType *)effectType UUID:(NSUUID *)UUID
 {
     if ((self = [super init])) {
         _type = effectType;
+        _UUID = UUID ? UUID : [NSUUID UUID];
         
         NSError *error = nil;
         _audioUnit = [[AUAudioUnit alloc] initWithComponentDescription:[effectType AudioComponentDescription] error:&error];
@@ -59,12 +61,23 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
 }
 
 
+- (id) initWithEffectType:(EffectType *)effectType
+{
+    return [self _initWithEffectType:effectType UUID:nil];
+}
+
+
 - (id) initWithStateDictionary:(NSDictionary *)dictionary
 {
-    NSString *name = [dictionary objectForKey:sNameKey];
-    NSData   *info = [dictionary objectForKey:sInfoKey];
+    NSString *name       = [dictionary objectForKey:sNameKey];
+    NSData   *info       = [dictionary objectForKey:sInfoKey];
+    NSString *UUIDString = [dictionary objectForKey:sUUIDKey];
 
-    if (![name isKindOfClass:[NSString class]] || (info && ![info isKindOfClass:[NSData class]])) {
+    if (
+                       ![name isKindOfClass:[NSString class]] ||
+        (info       && ![info isKindOfClass:[NSData class]]) ||
+        (UUIDString && ![UUIDString isKindOfClass:[NSString class]])
+    ) {
         self = nil;
         return nil;
     }
@@ -82,7 +95,9 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
         return nil;
     }
     
-    self = [self initWithEffectType:typeToUse];
+    NSUUID *UUID = UUIDString ? [[NSUUID alloc] initWithUUIDString:UUIDString] : nil;
+    
+    self = [self _initWithEffectType:typeToUse UUID:UUID];
  
     if (info) {
         NSError *error = nil;
@@ -167,7 +182,8 @@ NSString * const EffectDidDeallocNotification = @"EffectDidDealloc";
     
     return @{
         sNameKey: name,
-        sInfoKey: info
+        sInfoKey: info,
+        sUUIDKey: [_UUID UUIDString]
     };
 }
 

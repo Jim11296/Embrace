@@ -11,7 +11,7 @@ extern void HugLevelMeterReset(HugLevelMeter *meter);
 extern void HugLevelMeterProcess(HugLevelMeter *meter, float *buffer, size_t frameCount);
 
 extern void HugLevelMeterSetSampleRate(HugLevelMeter *meter, double sampleRate);
-extern double  HugLevelMeterGetSampleRate(const HugLevelMeter *meter);
+extern double HugLevelMeterGetSampleRate(const HugLevelMeter *meter);
 
 extern void HugLevelMeterSetMaxFrameCount(HugLevelMeter *meter, size_t maxFrameCount);
 extern size_t HugLevelMeterGetMaxFrameCount(const HugLevelMeter *meter);

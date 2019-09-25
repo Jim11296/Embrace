@@ -8,6 +8,8 @@
 
 #import "Scripting.h"
 #import "Track.h"
+#import "Effect.h"
+#import "EffectType.h"
 #import "SetlistController.h"
 #import "TracksController.h"
 #import "AppDelegate.h"
@@ -22,11 +24,21 @@
 @end
 
 
+@interface Effect (Scripting)
+@end
+
+
 @implementation NSApplication (Scripting)
 
 - (NSNumber *) scriptingPlayerState
 {
     return [[Player sharedInstance] isPlaying] ? @1 : @0;
+}
+
+
+- (NSArray *) scriptingEffects
+{
+    return [[Player sharedInstance] effects];
 }
 
 
@@ -291,5 +303,49 @@
     return @([self year]);
 }
 
+
+@end
+
+
+
+
+@implementation Effect (Scripting)
+
+
+- (NSScriptObjectSpecifier *) objectSpecifier
+{
+    NSScriptClassDescription *containerDescription = (NSScriptClassDescription *)[NSApp classDescription];
+    return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:containerDescription containerSpecifier:nil key:@"scriptingEffects" uniqueID:[self scriptingID]];
+}
+
+
+- (NSString *) scriptingID
+{
+    return [[self UUID] UUIDString];
+}
+
+
+- (NSString *) scriptingName
+{
+    return [[self type] name];
+}
+
+
+- (NSString *) scriptingManufacturer
+{
+    return [[self type] manufacturer];
+}
+
+
+- (void) setScriptingBypass:(BOOL)bypass
+{
+    [self setBypass:bypass];
+}
+
+
+- (BOOL) scriptingBypass
+{
+    return [self bypass];
+}
 
 @end
