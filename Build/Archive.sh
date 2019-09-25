@@ -1,8 +1,8 @@
 #!/bin/sh
 
 TEAM_ID="XXXXXXXXXX"
-BUNDLE_ID="com.iccir.Embrace"
 
+NOTARY_BUNDLE_ID="com.iccir.Embrace"
 NOTARY_APPLE_ID="<redacted>"
 NOTARY_ITC_PROVIDER="RicciAdams1115211120"
 NOTARY_PASSWORD="<redacted>"
