@@ -27,7 +27,7 @@ set_status ()
     THE_TIME=$(date +"%I:%M:%S %p")
     
     chmod -w 
-    echo "# $BUILD_STRING"  >> "${STATUS_MD}"
+    echo "# $BUILD_STRING"   > "${STATUS_MD}"
     echo                    >> "${STATUS_MD}"
     echo "\`$THE_TIME\`"    >> "${STATUS_MD}"
     echo "$1"               >> "${STATUS_MD}"
@@ -39,9 +39,9 @@ set_status ()
         echo "\`\`\`"           >> "${STATUS_MD}"
     fi
 
-    touch "${STATUS_MD}"
-
     chmod -w "${STATUS_MD}"
+
+    open -b com.apple.dt.Xcode "$STATUS_MD"
 }
 
 add_log ()
@@ -77,7 +77,6 @@ add_log "APP_FILE = '$APP_FILE'"
 
 touch "$STATUS_MD"
 chmod -w "$STATUS_MD"
-open -b com.apple.dt.Xcode "$STATUS_MD"
 
 pushd "$APP_FILE"/.. > /dev/null
 
