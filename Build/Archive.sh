@@ -24,14 +24,16 @@ set_status ()
 {
     chmod +w "${STATUS_MD}"
     
+    THE_TIME=$(date +"%I:%M:%S %p")
+    
     chmod -w 
-    echo "# $BUILD_STRING" >> "${STATUS_MD}"
-    echo       >> "${STATUS_MD}"
-    echo "$1"  >> "${STATUS_MD}"
-    echo       >> "${STATUS_MD}"
-    echo "```" >> "${STATUS_MD}"
-    echo "$2"  >> "${STATUS_MD}"
-    echo "```" >> "${STATUS_MD}"
+    echo "# $BUILD_STRING"  >> "${STATUS_MD}"
+    echo                    >> "${STATUS_MD}"
+    echo "\`$THE_TIME\` $1" >> "${STATUS_MD}"
+    echo                    >> "${STATUS_MD}"
+    echo "\`\`\`"           >> "${STATUS_MD}"
+    echo "$2"               >> "${STATUS_MD}"
+    echo "\`\`\`"           >> "${STATUS_MD}"
 
     chmod -w "${STATUS_MD}"
 }
@@ -78,7 +80,7 @@ pushd "$APP_FILE"/.. > /dev/null
 
 zip --symlinks -r App.zip $(basename "$APP_FILE")
 
-set_status "Uploading to Apple notary service."
+set_status "Uploading to Apple notary service. This may take several minutes."
 
 NOTARY_UUID=$(
     xcrun altool \
