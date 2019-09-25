@@ -20,6 +20,16 @@ show_notification ()
     osascript -e "display notification \"$1\" with title \"Archiving ${BUILD_STRING}\""
 }
 
+add_log ()
+{
+    echo $1 >> "${TMP_DIR}/log.txt"
+}
+
+get_plist_build ()
+{
+    printf $(defaults read "$1" CFBundleVersion | sed 's/\s//g' )
+}
+
 TMP_DIR=`mktemp -d /tmp/Embrace-Archive.XXXXXX`
 
 # 1. Export archive to tmp location and set APP_FILE, push to parent directory
@@ -27,14 +37,18 @@ mkdir -p "${TMP_DIR}"
 defaults write "${TMP_DIR}/options.plist" method developer-id
 defaults write "${TMP_DIR}/options.plist" teamID "$TEAM_ID"
 
-echo "$ARCHIVE_PATH|$FULL_PRODUCT_NAME" > "${TMP_DIR}/Log"
-
 xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${TMP_DIR}/options.plist" -exportPath "${TMP_DIR}"
 
 APP_FILE=$(find "${TMP_DIR}" -name "$FULL_PRODUCT_NAME" | head -1)
 
-BUILD_NUMBER=$(echo -n $(defaults read "$APP_FILE"/Contents/Info.plist CFBundleVersion | sed 's/\s//g' ))
+BUILD_NUMBER=$(get_plist_build "$APP_FILE"/Contents/Info.plist)
 BUILD_STRING="${APP_NAME}-${BUILD_NUMBER}"
+
+add_log "ARCHIVE_PATH = '$ARCHIVE_PATH'"
+add_log "FULL_PRODUCT_NAME = '$FULL_PRODUCT_NAME'"
+add_log "BUILD_NUMBER = '$BUILD_NUMBER'"
+add_log "BUILD_STRING = '$BUILD_STRING'"
+add_log "APP_FILE = '$APP_FILE'"
 
 pushd "$APP_FILE"/.. > /dev/null
 
@@ -56,6 +70,8 @@ NOTARY_UUID=$(
 )
 
 
+add_log "NOTARY_UUID = '$NOTARY_UUID'"
+
 # 3. Wait for notarization
 
 NOTARY_SUCCESS=0
@@ -64,6 +80,7 @@ while :
 do
 show_notification "Waiting for notary response."
     progress=$(xcrun altool --notarization-info "${NOTARY_UUID}" -u "${NOTARY_APPLE_ID}" -p "${NOTARY_PASSWORD}" 2>&1)
+    add_log "${progress}"
 
     if [ $? -ne 0 ] || [[  "${progress}" =~ "Invalid" ]] ; then
         break
