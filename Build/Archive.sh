@@ -15,13 +15,12 @@ UPLOAD_TO="<redacted>"
 
 TMP_DIR=`mktemp -d /tmp/Embrace-Archive.XXXXXX`
 
-
 # 1. Export archive to tmp location and set EXPORTED_FILE
 mkdir -p "${TMP_DIR}"
 defaults write "${TMP_DIR}/options.plist" method developer-id
 defaults write "${TMP_DIR}/options.plist" teamID "$TEAM_ID"
 
-xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${tmp_dir}/options.plist" -exportPath "${TMP_DIR}"
+xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${TMP_DIR}/options.plist" -exportPath "${TMP_DIR}"
 
 APP_FILE=$(find "${TMP_DIR}" -name "$FULL_PRODUCT_NAME" | head -1)
 
