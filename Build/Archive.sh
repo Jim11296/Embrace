@@ -80,18 +80,19 @@ while :
 do
 show_notification "Waiting for notary response."
     progress=$(xcrun altool --notarization-info "${NOTARY_UUID}" -u "${NOTARY_APPLE_ID}" -p "${NOTARY_PASSWORD}" 2>&1)
-    add_log "${progress}"
 
     if [ $? -ne 0 ] || [[  "${progress}" =~ "Invalid" ]] ; then
         break
     fi
+
+    add_log "${progress}"
 
     if [[  "${progress}" =~ "success" ]]; then
         NOTARY_SUCCESS=1
         break
     fi
 
-    sleep 5
+    sleep 4
 done
 
 
