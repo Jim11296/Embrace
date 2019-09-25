@@ -23,6 +23,22 @@ show_notification ()
     osascript -e "display notification \"$1\" with title \"Archiving ${BUILD_STRING}\""
 }
 
+set_status ()
+{
+    chmod +w "${STATUS_MD}"
+    
+    chmod -w 
+    echo "# $BUILD_STRING" >> "${STATUS_MD}"
+    echo       >> "${STATUS_MD}"
+    echo "$1"  >> "${STATUS_MD}"
+    echo       >> "${STATUS_MD}"
+    echo "```" >> "${STATUS_MD}"
+    echo "$2"  >> "${STATUS_MD}"
+    echo "```" >> "${STATUS_MD}"
+
+    chmod -w "${STATUS_MD}"
+}
+
 add_log ()
 {
     echo $1 >> "${TMP_DIR}/log.txt"
@@ -34,6 +50,7 @@ get_plist_build ()
 }
 
 TMP_DIR=`mktemp -d /tmp/Embrace-Archive.XXXXXX`
+STATUS_MD="${TMP_DIR}/status.md"
 
 # 1. Export archive to tmp location and set APP_FILE, push to parent directory
 mkdir -p "${TMP_DIR}"
@@ -53,6 +70,10 @@ add_log "BUILD_NUMBER = '$BUILD_NUMBER'"
 add_log "BUILD_STRING = '$BUILD_STRING'"
 add_log "APP_FILE = '$APP_FILE'"
 
+touch "$STATUS_MD"
+chmod -w "$STATUS_MD"
+open -b com.apple.dt.Xcode "$STATUS_MD"
+
 pushd "$APP_FILE"/.. > /dev/null
 
 
@@ -60,7 +81,7 @@ pushd "$APP_FILE"/.. > /dev/null
 
 zip --symlinks -r App.zip $(basename "$APP_FILE")
 
-show_notification "Uploading to Apple notary service."
+set_status "Uploading to Apple notary service."
 
 NOTARY_UUID=$(
     xcrun altool \
@@ -81,7 +102,6 @@ NOTARY_SUCCESS=0
 
 while true
 do
-show_notification "Waiting for notary response."
     NOTARY_OUTPUT=$(
         xcrun altool \
         --notarization-info "${NOTARY_UUID}" \
@@ -95,11 +115,14 @@ show_notification "Waiting for notary response."
     fi
 
     add_log "${NOTARY_OUTPUT}"
+
+    set_status "Waiting for notary response." "${NOTARY_OUTPUT}"
     
     if [[ "${NOTARY_OUTPUT}" =~ "Invalid" ]] ; then
         add_log "altool --notarization-info results invalid"
         break
     fi
+
 
     if [[ "${NOTARY_OUTPUT}" =~ "success" ]]; then
         NOTARY_SUCCESS=1
@@ -115,7 +138,6 @@ done
 if [ $NOTARY_SUCCESS -eq 1 ] ; then
     xcrun stapler staple "$APP_FILE"
 
-    show_notification "Uploading stapled application."
 
 else
     show_notification "Error during notarization."
