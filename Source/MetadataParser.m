@@ -106,6 +106,16 @@ static NSInteger sGetYear(NSString *yearString)
 
 - (void) _parseUsingAVAsset:(AVAsset *)asset intoDictionary:(NSMutableDictionary *)intoDictionary
 {
+    __auto_type getSanitizedString = ^NSString *(NSString *inString, NSCharacterSet *characterSet, NSString *replacement) {
+        if ([inString rangeOfCharacterFromSet:characterSet].location == NSNotFound) {
+            return inString;
+        }
+
+        NSArray *components = [inString componentsSeparatedByCharactersInSet:characterSet];
+        
+        return [components componentsJoinedByString:replacement];
+    };
+
     void (^parseMetadataItem)(AVMetadataItem *, NSMutableDictionary *) = ^(AVMetadataItem *item, NSMutableDictionary *dictionary) {
         id commonKey = [item commonKey];
         id key       = [item key];
@@ -155,6 +165,13 @@ static NSInteger sGetYear(NSString *yearString)
         if (!stringValue) {
             stringValue = [dictionaryValue objectForKey:@"text"];
         }
+
+        // Sanitize string
+        if (stringValue) {
+            stringValue = getSanitizedString(stringValue, [NSCharacterSet controlCharacterSet], @"");
+            stringValue = getSanitizedString(stringValue, [NSCharacterSet illegalCharacterSet], @"");
+            stringValue = getSanitizedString(stringValue, [NSCharacterSet newlineCharacterSet], @" ");
+        }
         
         if (!numberValue) {
             if ([value isKindOfClass:[NSData class]]) {
@@ -171,16 +188,16 @@ static NSInteger sGetYear(NSString *yearString)
         }
         
         if (([commonKey isEqual:@"artist"] || [key isEqual:@"artist"]) && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:TrackKeyArtist];
+            [dictionary setObject:stringValue forKey:TrackKeyArtist];
 
         } else if (([commonKey isEqual:@"title"] || [key isEqual:@"title"]) && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:TrackKeyTitle];
+            [dictionary setObject:stringValue forKey:TrackKeyTitle];
 
         } else if ([commonKey isEqual:@"albumName"] && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:TrackKeyAlbum];
+            [dictionary setObject:stringValue forKey:TrackKeyAlbum];
 
         } else if ([key isEqual:@"com.apple.iTunes.initialkey"] && stringValue) {
-            [dictionary setObject:[item stringValue] forKey:TrackKeyInitialKey];
+            [dictionary setObject:stringValue forKey:TrackKeyInitialKey];
 
         } else if ([key isEqual:@"com.apple.iTunes.energylevel"] && numberValue) {
             [dictionary setObject:numberValue forKey:TrackKeyEnergyLevel];
