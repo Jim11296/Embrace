@@ -67,10 +67,19 @@ static NSString *sGetExpandedPath(NSString *inPath)
         NSArray  *musicPaths = NSSearchPathForDirectoriesInDomains(NSMusicDirectory, NSUserDomainMask, YES);
         NSString *musicPath  = [musicPaths firstObject];
         
-        NSString *iTunesPath = [musicPath  stringByAppendingPathComponent:@"iTunes"];
-        NSString *itlPath    = [iTunesPath stringByAppendingPathComponent:@"iTunes Library.itl"];
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath:itlPath]) {
+        NSString *itlPath = musicPath;
+        itlPath = [itlPath stringByAppendingPathComponent:@"iTunes"];
+        itlPath = [itlPath stringByAppendingPathComponent:@"iTunes Library.itl"];
+
+        NSString *musicdbPath = musicPath;
+        musicdbPath = [musicdbPath stringByAppendingPathComponent:@"Music"];
+        musicdbPath = [musicdbPath stringByAppendingPathComponent:@"Music Library.musiclibrary"];
+        musicdbPath = [musicdbPath stringByAppendingPathComponent:@"Library.musicdb"];
+
+        if ([[NSFileManager defaultManager] fileExistsAtPath:musicdbPath]) {
+            libraryURL = [NSURL fileURLWithPath:musicdbPath];
+
+        } else if ([[NSFileManager defaultManager] fileExistsAtPath:itlPath]) {
             libraryURL = [NSURL fileURLWithPath:itlPath];
         }
     }
@@ -212,8 +221,11 @@ static NSString *sGetExpandedPath(NSString *inPath)
     };
 
     for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+        NSLog(@"item is: %@ %@", item, [item types]);
         for (NSString *type in [item types]) {
-            if ([type isEqualToString:@"com.apple.itunes.metadata"]) {
+        
+        
+            if ([type hasPrefix:@"com.apple."] && [type hasSuffix:@".metadata"]) {
                 parseRoot([item propertyListForType:type]);
             }
         }
