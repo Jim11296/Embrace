@@ -17,7 +17,7 @@ static id sUserInfoValueProvider(NSError *error, NSErrorUserInfoKey userInfoKey)
 
     } else if (code == HugErrorProtectedContent) {
         description = NSLocalizedString(@"The file cannot be read because it is protected.", nil);
-        suggestion  = NSLocalizedString(@"Protected content can only be played with iTunes.\n\nIf this file was downloaded from Apple Music, you will need to first remove the download and then purchase it from the iTunes Store.", nil);
+        suggestion  = NSLocalizedString(@"Protected content can only be played with Apple Music.\n\nTo play this content, you will need to first remove the download and then purchase it from the iTunes Store.", nil);
 
     } else if (code ==  HugErrorConversionFailed) {
         description = NSLocalizedString(@"The file cannot be read because it is in an unknown format.", nil);
