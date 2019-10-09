@@ -19,7 +19,7 @@
 #import "Track.h"
 
 #import "IssueManager.h"
-#import "iTunesManager.h"
+#import "MusicAppManager.h"
 #import "ScriptsManager.h"
 #import "HugAudioDevice.h"
 
@@ -121,8 +121,8 @@
     // Load issue manager
     [IssueManager sharedInstance];
 
-    // Start parsing iTunes XML
-    [iTunesManager sharedInstance];
+    // Start parsing Music.app XML
+    [MusicAppManager sharedInstance];
     
     // Load scripts
     [ScriptsManager sharedInstance];
@@ -625,6 +625,15 @@
         [[self crashReportMenuItem]  setHidden:!hasCrashReports];
         [[self crashReportSeparator] setHidden:!hasCrashReports];
 
+        return YES;
+
+    } else if (action == @selector(exportSetlist:)) {
+        if (@available(macOS 10.15, *)) {
+            [menuItem setTitle:NSLocalizedString(@"Export to Music\\U2026", nil)];
+        } else {
+            [menuItem setTitle:NSLocalizedString(@"Export to iTunes\\U2026", nil)];
+        }
+        
         return YES;
 
     } else if (action == @selector(openSupportFolder:)){

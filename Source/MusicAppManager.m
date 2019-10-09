@@ -1,6 +1,6 @@
 // (c) 2014-2019 Ricci Adams.  All rights reserved.
 
-#import "iTunesManager.h"
+#import "MusicAppManager.h"
 
 #import "Utils.h"
 #import "AppDelegate.h"
@@ -8,7 +8,7 @@
 #import "WorkerService.h"
 
 
-NSString * const iTunesManagerDidUpdateLibraryMetadataNotification = @"iTunesManagerDidUpdateLibraryMetadata";
+NSString * const MusicAppManagerDidUpdateLibraryMetadataNotification = @"MusicAppManagerDidUpdateLibraryMetadata";
 
 
 static NSString *sGetExpandedPath(NSString *inPath)
@@ -20,7 +20,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
 }
 
 
-@implementation iTunesManager {
+@implementation MusicAppManager {
     NSTimer             *_libraryCheckTimer;
     NSTimeInterval       _lastLibraryParseTime;
     NSMutableDictionary *_pathToLibraryMetadataMap;
@@ -32,11 +32,11 @@ static NSString *sGetExpandedPath(NSString *inPath)
 
 + (id) sharedInstance
 {
-    static iTunesManager *sSharedInstance = nil;
+    static MusicAppManager *sSharedInstance = nil;
     static dispatch_once_t onceToken;
 
     dispatch_once(&onceToken, ^{
-        sSharedInstance = [[iTunesManager alloc] init];
+        sSharedInstance = [[MusicAppManager alloc] init];
     });
 
     return sSharedInstance;
@@ -84,14 +84,14 @@ static NSString *sGetExpandedPath(NSString *inPath)
         }
     }
 
-    EmbraceLog(@"iTunesManager", @"libraryURL is: %@", libraryURL);
+    EmbraceLog(@"MusicAppManager", @"libraryURL is: %@", libraryURL);
     
     NSDate *modificationDate = nil;
     NSError *error = nil;
 
     [libraryURL getResourceValue:&modificationDate forKey:NSURLContentModificationDateKey error:&error];
     if (error) {
-        EmbraceLog(@"iTunesManager", @"Could not get modification date for %@: error: %@", libraryURL, error);
+        EmbraceLog(@"MusicAppManager", @"Could not get modification date for %@: error: %@", libraryURL, error);
     }
 
     if (!error && [modificationDate isKindOfClass:[NSDate class]]) {
@@ -99,11 +99,11 @@ static NSString *sGetExpandedPath(NSString *inPath)
         
         if (timeInterval > _lastLibraryParseTime) {
             if (_lastLibraryParseTime) {
-                EmbraceLog(@"iTunesManager", @"iTunes Library modified!");
+                EmbraceLog(@"MusicAppManager", @"Music.app Library modified!");
             }
 
             id<WorkerProtocol> worker = [GetAppDelegate() workerProxyWithErrorHandler:^(NSError *proxyError) {
-                EmbraceLog(@"iTunesManager", @"Received error for worker fetch: %@", proxyError);
+                EmbraceLog(@"MusicAppManager", @"Received error for worker fetch: %@", proxyError);
             }];
 
             _lastLibraryParseTime = timeInterval;
@@ -112,7 +112,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
                 NSMutableDictionary *pathToLibraryMetadataMap = [NSMutableDictionary dictionaryWithCapacity:[dictionary count]];
 
                 for (NSString *path in dictionary) {
-                    iTunesLibraryMetadata *metadata = [[iTunesLibraryMetadata alloc] init];
+                    MusicAppLibraryMetadata *metadata = [[MusicAppLibraryMetadata alloc] init];
                     
                     NSDictionary *trackData = [dictionary objectForKey:path];
                     [metadata setStartTime:[[trackData objectForKey:TrackKeyStartTime] doubleValue]];
@@ -126,7 +126,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
 
                     if (![_pathToLibraryMetadataMap isEqualToDictionary:pathToLibraryMetadataMap]) {
                         _pathToLibraryMetadataMap = pathToLibraryMetadataMap;
-                        [[NSNotificationCenter defaultCenter] postNotificationName:iTunesManagerDidUpdateLibraryMetadataNotification object:self];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:MusicAppManagerDidUpdateLibraryMetadataNotification object:self];
                     }
                 });
             }];
@@ -135,7 +135,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
 }
 
 
-- (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url
+- (MusicAppLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url
 {
     NSString *path = sGetExpandedPath([url path]);
     return [_pathToLibraryMetadataMap objectForKey:path];
@@ -189,7 +189,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
         
         if (!trackID) return;
 
-        iTunesPasteboardMetadata *metadata = [[iTunesPasteboardMetadata alloc] init];
+        MusicAppPasteboardMetadata *metadata = [[MusicAppPasteboardMetadata alloc] init];
         [metadata setDuration:totalTime];
         [metadata setTitle:name];
         [metadata setArtist:artist];
@@ -230,7 +230,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
 }
 
 
-- (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url
+- (MusicAppPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url
 {
     NSString *path = sGetExpandedPath([url path]);
     NSInteger trackID = [[_pathToTrackIDMap objectForKey:path] integerValue];
@@ -243,15 +243,15 @@ static NSString *sGetExpandedPath(NSString *inPath)
 
 #pragma mark - Other Classes
 
-@implementation iTunesLibraryMetadata
+@implementation MusicAppLibraryMetadata
 
 - (BOOL) isEqual:(id)otherObject
 {
-    if (![otherObject isKindOfClass:[iTunesLibraryMetadata class]]) {
+    if (![otherObject isKindOfClass:[MusicAppLibraryMetadata class]]) {
         return NO;
     }
 
-    iTunesLibraryMetadata *otherMetadata = (iTunesLibraryMetadata *)otherObject;
+    MusicAppLibraryMetadata *otherMetadata = (MusicAppLibraryMetadata *)otherObject;
 
     return _startTime == otherMetadata->_startTime &&
            _stopTime  == otherMetadata->_stopTime;
@@ -270,6 +270,6 @@ static NSString *sGetExpandedPath(NSString *inPath)
 @end
 
 
-@implementation iTunesPasteboardMetadata
+@implementation MusicAppPasteboardMetadata
 @end
 

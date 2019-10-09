@@ -1,7 +1,7 @@
 // (c) 2014-2019 Ricci Adams.  All rights reserved.
 
 #import "Track.h"
-#import "iTunesManager.h"
+#import "MusicAppManager.h"
 #import "TrackKeys.h"
 #import "AppDelegate.h"
 #import "ScriptsManager.h"
@@ -704,7 +704,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         return;
     }
 
-    iTunesPasteboardMetadata *pasteboardMetadata = [[iTunesManager sharedInstance] pasteboardMetadataForFileURL:fileURL];
+    MusicAppPasteboardMetadata *pasteboardMetadata = [[MusicAppManager sharedInstance] pasteboardMetadataForFileURL:fileURL];
     
     if (pasteboardMetadata) {
         NSString      *title      = [pasteboardMetadata title];
@@ -720,8 +720,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         if (!_databaseID) [self setDatabaseID:databaseID];
     }
 
-    if ([[iTunesManager sharedInstance] didParseLibrary]) {
-        iTunesLibraryMetadata *libraryMetadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:fileURL];
+    if ([[MusicAppManager sharedInstance] didParseLibrary]) {
+        MusicAppLibraryMetadata *libraryMetadata = [[MusicAppManager sharedInstance] libraryMetadataForFileURL:fileURL];
 
         NSTimeInterval startTime = [libraryMetadata startTime];
         NSTimeInterval stopTime  = [libraryMetadata stopTime];
@@ -732,13 +732,13 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [self setStopTime: stopTime];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidUpdateLibraryMetadata:) name:iTunesManagerDidUpdateLibraryMetadataNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidUpdateLibraryMetadata:) name:MusicAppManagerDidUpdateLibraryMetadataNotification object:nil];
 }
 
 
 - (void) _handleDidUpdateLibraryMetadata:(NSNotification *)note
 {
-    iTunesLibraryMetadata *metadata = [[iTunesManager sharedInstance] libraryMetadataForFileURL:[self externalURL]];
+    MusicAppLibraryMetadata *metadata = [[MusicAppManager sharedInstance] libraryMetadataForFileURL:[self externalURL]];
     
     NSTimeInterval startTime = [metadata startTime];
     NSTimeInterval stopTime  = [metadata stopTime];

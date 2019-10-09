@@ -2,32 +2,32 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * const iTunesManagerDidUpdateLibraryMetadataNotification;
+extern NSString * const MusicAppManagerDidUpdateLibraryMetadataNotification;
 
-@class iTunesLibraryMetadata, iTunesPasteboardMetadata;
+@class MusicAppLibraryMetadata, MusicAppPasteboardMetadata;
 
 
-@interface iTunesManager : NSObject
+@interface MusicAppManager : NSObject
 
 + (id) sharedInstance;
 
-- (iTunesLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
+- (MusicAppLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
 @property (nonatomic, readonly) BOOL didParseLibrary;
 
 - (void) clearPasteboardMetadata;
 - (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard;
-- (iTunesPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;
+- (MusicAppPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;
 
 @end
 
 
-@interface iTunesLibraryMetadata : NSObject
+@interface MusicAppLibraryMetadata : NSObject
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic) NSTimeInterval stopTime;
 @end
 
 
-@interface iTunesPasteboardMetadata : NSObject
+@interface MusicAppPasteboardMetadata : NSObject
 @property (nonatomic) NSInteger databaseID;
 @property (nonatomic, copy) NSString *location;
 @property (nonatomic, copy) NSString *title;
