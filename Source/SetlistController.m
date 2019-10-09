@@ -637,17 +637,35 @@ static NSInteger sAutoGapMaximum = 16;
 
     NSString *toPath = [NSTemporaryDirectory() stringByAppendingPathComponent:UUIDString];
 
-    if (!error) {
+    if (!error && toPath) {
         [[NSFileManager defaultManager] createDirectoryAtPath:toPath withIntermediateDirectories:YES attributes:nil error:&error];
         toPath = [toPath stringByAppendingPathComponent:fileName];
     }
 
-    if (!error) {
+    if (!error && toPath) {
         [contents writeToFile:toPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
     }
 
-    if (!error) {
-        [[NSWorkspace sharedWorkspace] openFile:toPath withApplication:@"iTunes" andDeactivate:YES];
+    if (!error && toPath) {
+        if (@available(macOS 10.15, *)) {
+            NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+
+            NSURL *musicAppURL = [workspace URLForApplicationWithBundleIdentifier:@"com.apple.Music"];
+            NSURL *toPathURL = [NSURL fileURLWithPath:toPath];
+
+            NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+            
+            [configuration setAddsToRecentItems:NO];
+            [configuration setActivates:NO];
+            
+            if (toPathURL) {
+                [workspace openURLs:@[ toPathURL ] withApplicationAtURL:musicAppURL configuration:configuration completionHandler:nil];
+            }
+
+        } else {
+            [[NSWorkspace sharedWorkspace] openFile:toPath withApplication:@"iTunes" andDeactivate:YES];
+        }
+        
         [self _markAsSaved];
     }
 }

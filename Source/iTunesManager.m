@@ -221,10 +221,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
     };
 
     for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
-        NSLog(@"item is: %@ %@", item, [item types]);
         for (NSString *type in [item types]) {
-        
-        
             if ([type hasPrefix:@"com.apple."] && [type hasSuffix:@".metadata"]) {
                 parseRoot([item propertyListForType:type]);
             }
