@@ -221,7 +221,7 @@
 				<cocoa key="scriptingComposer"/>
             </property>
 
-			<property name="database ID" access="r" code="dbid" type="integer" description="The iTunes database ID of the track, if available.">
+			<property name="database ID" access="r" code="dbid" type="integer" description="The Music database ID of the track, if available.">
 				<cocoa key="scriptingDatabaseID"/>
             </property>
 

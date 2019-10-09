@@ -13,7 +13,7 @@
 #import "SetlistController.h"
 #import "TracksController.h"
 #import "AppDelegate.h"
-#import "iTunesManager.h"
+#import "MusicAppManager.h"
 #import "Preferences.h"
 
 @interface Track (Scripting)

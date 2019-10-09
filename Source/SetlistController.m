@@ -10,7 +10,7 @@
 #import "Player.h"
 #import "AppDelegate.h"
 #import "ExportManager.h"
-#import "iTunesManager.h"
+#import "MusicAppManager.h"
 #import "TrackTableCellView.h"
 #import "WaveformView.h"
 #import "HairlineView.h"

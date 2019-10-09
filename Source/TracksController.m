@@ -9,7 +9,7 @@
 #import "Preferences.h"
 #import "TrackTableView.h"
 #import "TrackTableRowView.h"
-#import "iTunesManager.h"
+#import "MusicAppManager.h"
 #import "ExportManager.h"
 
 
@@ -559,7 +559,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
             }
         }
     
-        // Always accept a drag from iTunes, target end of table in this case
+        // Always accept a drag from Music.app, target end of table in this case
         [tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
         return NSDragOperationCopy;
     }
@@ -584,7 +584,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
 
     // Let manager extract any metadata from the pasteboard 
-    [[iTunesManager sharedInstance] extractMetadataFromPasteboard:pboard];
+    [[MusicAppManager sharedInstance] extractMetadataFromPasteboard:pboard];
 
     if ([pboard dataForType:EmbraceQueuedTrackPasteboardType] ||
         [pboard dataForType:EmbraceLockedTrackPasteboardType])
