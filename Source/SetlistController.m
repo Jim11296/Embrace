@@ -203,8 +203,6 @@ static NSInteger sAutoGapMaximum = 16;
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
-    [window registerForDraggedTypes:[NSFilePromiseReceiver readableDraggedTypes]];
-    [window registerForDraggedTypes:@[ (__bridge NSString *)kPasteboardTypeFileURLPromise] ];
 }
 
 
@@ -252,9 +250,6 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (BOOL) performDragOperation:(id <NSDraggingInfo>)sender
 {
-    NSArray *filePromises = [[sender draggingPasteboard] readObjectsForClasses:@[[NSFilePromiseReceiver class]] options:@{}];
-    NSLog(@"%@", filePromises);
-    
     return [[self tracksController] acceptDrop:sender row:-1 dropOperation:NSTableViewDropOn];
 }
 
