@@ -61,6 +61,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
+    [[self tableView] registerForDraggedTypes:[NSFilePromiseReceiver readableDraggedTypes]];
     [[self tableView] registerForDraggedTypes:@[
         (__bridge NSString *)kUTTypeFileURL,
         (__bridge NSString *)kPasteboardTypeFileURLPromise,
@@ -593,9 +594,11 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
     NSString *fileURLPromiseType = (__bridge NSString *)kPasteboardTypeFileURLPromise;
 
-    // Let manager extract any metadata from the pasteboard 
-    [[MusicAppManager sharedInstance] extractMetadataFromPasteboard:pboard];
-
+    // Let manager extract any metadata from the pasteboard
+    NSArray *metadataArray = [MusicAppPasteboardMetadata pasteboardMetadataArrayWithPasteboard:pboard];
+    
+    [[MusicAppManager sharedInstance] addPasteboardMetadataArray:metadataArray];
+    
     if ([pboard dataForType:EmbraceQueuedTrackPasteboardType] ||
         [pboard dataForType:EmbraceLockedTrackPasteboardType])
     {
@@ -680,42 +683,19 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     // kPasteboardTypeFileURLPromise but without a kPasteboardTypeFilePromiseContent.
     // Hence, we can't rely on higher-level APIs like NSFilePromiseReceiver
     //
-    } else if ([pboard availableTypeFromArray:@[ fileURLPromiseType ]]) {
-        NSURL *fileURL = nil;
-        static NSURL *sPromiseReceiverURL = nil;
-        
-        // Technically, using PasteboardSetPasteLocation() isn't needed in the buggy case, but follow
-        // the API contract on our end.
-        //
-        if (!sPromiseReceiverURL) {
-            NSString *toPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
-            NSError *error = nil;
+    } else {
+        NSMutableArray *fileURLs = [NSMutableArray array];
 
-            if (toPath) {
-                [[NSFileManager defaultManager] createDirectoryAtPath:toPath withIntermediateDirectories:YES attributes:nil error:&error];
-                if (error) toPath = nil;
-            }
-            
-            sPromiseReceiverURL = [NSURL fileURLWithPath:toPath];
-        }
+        for (MusicAppPasteboardMetadata *metadata in metadataArray) {
+            NSString *location = [metadata location];
 
-        if (sPromiseReceiverURL) {
-            PasteboardRef pboardRef = NULL;
-
-            PasteboardCreate((__bridge CFStringRef)[pboard name], &pboardRef);
-            
-            if (pboardRef) {
-                PasteboardSetPasteLocation(pboardRef, (__bridge CFURLRef)sPromiseReceiverURL);
-                
-                NSString *path = [pboard stringForType:fileURLPromiseType];
-                fileURL = path ? [NSURL fileURLWithPath:path] : nil;
-
-                CFRelease(pboardRef);
+            if ([[NSFileManager defaultManager] fileExistsAtPath:location]) {
+                [fileURLs addObject:[NSURL fileURLWithPath:location]];
             }
         }
         
-        if (fileURL) {
-            return [self _addTracksWithURLs:@[ fileURL ] atIndex:row];
+        if ([fileURLs count]) {
+            return [self _addTracksWithURLs:fileURLs atIndex:row];
         }
     }
  
