@@ -150,51 +150,11 @@ static NSString *sGetExpandedPath(NSString *inPath)
 }
 
 
-- (void) extractMetadataFromPasteboard:(NSPasteboard *)pasteboard
+- (void) addPasteboardMetadataArray:(NSArray *)array
 {
-    void (^parseTrack)(NSString *, NSDictionary *) = ^(NSString *key, NSDictionary *track) {
-        if (![key isKindOfClass:[NSString class]]) {
-            return;
-        }
-
-        if (![track isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-
-        NSString *artist = [track objectForKey:@"Artist"];
-        if (![artist isKindOfClass:[NSString class]]) artist = nil;
-
-        NSString *name = [track objectForKey:@"Name"];
-        if (![name isKindOfClass:[NSString class]]) name = nil;
-
-        NSString *location = [track objectForKey:@"Location"];
-        if (![location isKindOfClass:[NSString class]]) location = nil;
-        
-        if ([location hasPrefix:@"file:"]) {
-            location = [[NSURL URLWithString:location] path];
-        }
-
-        id totalTimeObject = [track objectForKey:@"Total Time"];
-        if (![totalTimeObject respondsToSelector:@selector(doubleValue)]) {
-            totalTimeObject = nil;
-        }
-
-        id trackIDObject = [track objectForKey:@"Track ID"];
-        if (![trackIDObject respondsToSelector:@selector(integerValue)]) {
-            trackIDObject = nil;
-        }
-        
-        NSTimeInterval totalTime = [totalTimeObject doubleValue] / 1000.0;
-        NSTimeInterval trackID   = [trackIDObject integerValue];
-        
-        if (!trackID) return;
-
-        MusicAppPasteboardMetadata *metadata = [[MusicAppPasteboardMetadata alloc] init];
-        [metadata setDuration:totalTime];
-        [metadata setTitle:name];
-        [metadata setArtist:artist];
-        [metadata setLocation:location];
-        [metadata setDatabaseID:[key integerValue]];
+    for (MusicAppPasteboardMetadata *metadata in array) {
+        NSInteger trackID  = [metadata trackID];
+        NSString *location = [metadata location];
 
         if (!_trackIDToPasteboardMetadataMap) _trackIDToPasteboardMetadataMap = [NSMutableDictionary dictionary];
         [_trackIDToPasteboardMetadataMap setObject:metadata forKey:@(trackID)];
@@ -202,29 +162,6 @@ static NSString *sGetExpandedPath(NSString *inPath)
         if (location) {
             if (!_pathToTrackIDMap) _pathToTrackIDMap = [NSMutableDictionary dictionary];
             [_pathToTrackIDMap setObject:@(trackID) forKey:sGetExpandedPath(location)];
-        }
-    };
-
-    void (^parseRoot)(NSDictionary *) = ^(NSDictionary *dictionary) {
-        if (![dictionary isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-        
-        NSDictionary *trackMap = [dictionary objectForKey:@"Tracks"];
-        if (![trackMap isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-        
-        for (NSString *key in trackMap) {
-            parseTrack(key, [trackMap objectForKey:key]);
-        }
-    };
-
-    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
-        for (NSString *type in [item types]) {
-            if ([type hasPrefix:@"com.apple."] && [type hasSuffix:@".metadata"]) {
-                parseRoot([item propertyListForType:type]);
-            }
         }
     }
 }
@@ -271,5 +208,84 @@ static NSString *sGetExpandedPath(NSString *inPath)
 
 
 @implementation MusicAppPasteboardMetadata
+
++ (NSArray *) pasteboardMetadataArrayWithPasteboard:(NSPasteboard *)pasteboard
+{
+    NSMutableArray *result = [NSMutableArray array];
+
+    void (^parseTrack)(NSString *, NSDictionary *) = ^(NSString *key, NSDictionary *track) {
+        if (![key isKindOfClass:[NSString class]]) {
+            return;
+        }
+
+        if (![track isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+
+        NSString *artist = [track objectForKey:@"Artist"];
+        if (![artist isKindOfClass:[NSString class]]) artist = nil;
+
+        NSString *name = [track objectForKey:@"Name"];
+        if (![name isKindOfClass:[NSString class]]) name = nil;
+
+        NSString *location = [track objectForKey:@"Location"];
+        if (![location isKindOfClass:[NSString class]]) location = nil;
+        
+        if ([location hasPrefix:@"file:"]) {
+            location = [[NSURL URLWithString:location] path];
+        }
+
+        id totalTimeObject = [track objectForKey:@"Total Time"];
+        if (![totalTimeObject respondsToSelector:@selector(doubleValue)]) {
+            totalTimeObject = nil;
+        }
+
+        id trackIDObject = [track objectForKey:@"Track ID"];
+        if (![trackIDObject respondsToSelector:@selector(integerValue)]) {
+            trackIDObject = nil;
+        }
+        
+        NSTimeInterval totalTime = [totalTimeObject doubleValue] / 1000.0;
+        NSInteger trackID   = [trackIDObject integerValue];
+        
+        if (!trackID) return;
+
+        MusicAppPasteboardMetadata *metadata = [[MusicAppPasteboardMetadata alloc] init];
+        [metadata setDuration:totalTime];
+        [metadata setTitle:name];
+        [metadata setArtist:artist];
+        [metadata setLocation:location];
+        [metadata setTrackID:trackID];
+        [metadata setDatabaseID:[key integerValue]];
+        
+        [result addObject:metadata];
+    };
+
+    void (^parseRoot)(NSDictionary *) = ^(NSDictionary *dictionary) {
+        if (![dictionary isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        
+        NSDictionary *trackMap = [dictionary objectForKey:@"Tracks"];
+        if (![trackMap isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        
+        for (NSString *key in trackMap) {
+            parseTrack(key, [trackMap objectForKey:key]);
+        }
+    };
+
+    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+        for (NSString *type in [item types]) {
+            if ([type hasPrefix:@"com.apple."] && [type hasSuffix:@".metadata"]) {
+                parseRoot([item propertyListForType:type]);
+            }
+        }
+    }
+    
+    return result;
+}
+
 @end
 
