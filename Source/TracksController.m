@@ -61,7 +61,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
-    [[self tableView] registerForDraggedTypes:[NSFilePromiseReceiver readableDraggedTypes]];
     [[self tableView] registerForDraggedTypes:@[
         (__bridge NSString *)kUTTypeFileURL,
         (__bridge NSString *)kPasteboardTypeFileURLPromise,
