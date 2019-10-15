@@ -64,6 +64,7 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[self tableView] registerForDraggedTypes:@[
         (__bridge NSString *)kUTTypeFileURL,
         (__bridge NSString *)kPasteboardTypeFileURLPromise,
+        @"com.apple.tv.metadata",
         NSURLPboardType,
         NSFilenamesPboardType,
         EmbraceQueuedTrackPasteboardType,
@@ -683,6 +684,17 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     // Hence, we can't rely on higher-level APIs like NSFilePromiseReceiver
     //
     } else {
+        EmbraceLog(@"Pasteboard", @"+++ Start Pasteboard Dump");
+    
+        for (NSPasteboardItem *item in [pboard pasteboardItems]) {
+            EmbraceLog(@"Pasteboard", @"Pasteboard item: %@", item);
+            
+            for (NSString *type in [item types]) {
+                EmbraceLog(@"Pasteboard", @"Type: %@\n%@", type, [pboard propertyListForType:type]);
+            }
+        }
+        EmbraceLog(@"Pasteboard", @"--- End Pasteboard Dump");
+
         NSMutableArray *fileURLs = [NSMutableArray array];
 
         for (MusicAppPasteboardMetadata *metadata in metadataArray) {
