@@ -202,7 +202,7 @@ static NSInteger sAutoGapMaximum = 16;
 
     [window setExcludedFromWindowsMenu:YES];
 
-    [window registerForDraggedTypes:@[ NSURLPboardType, NSFilenamesPboardType ]];
+    [window registerForDraggedTypes:[[self tracksController] readableDraggedTypes]];
 }
 
 
@@ -244,7 +244,7 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender
 {
-    return NSDragOperationCopy;
+    return [[self tracksController] validateDrop:sender proposedRow:-1 proposedDropOperation:NSTableViewDropOn];
 }
 
 

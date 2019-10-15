@@ -30,6 +30,8 @@ extern NSString * const TracksControllerDidModifyTracksNotificationName;
 
 - (void) detectDuplicates;
 
+- (NSArray<NSString *> *) readableDraggedTypes;
+- (NSDragOperation) validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation;
 - (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
 
 - (void) didFinishTrack:(Track *)finishedTrack;

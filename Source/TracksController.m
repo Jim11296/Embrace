@@ -50,8 +50,14 @@ static NSString * const sModifiedAtKey = @"modified-at";
 @implementation TracksController {
     BOOL _didInit;
     NSMutableArray *_tracks;
+
     NSIndexSet *_draggedIndexSet;
     BOOL _draggedIndexSetIsContiguous;
+
+    BOOL       _dragCacheIsExternal;
+    NSArray   *_dragCacheMetadataArray;
+    NSArray   *_dragCacheFileURLs;
+    NSInteger  _dragCacheChangeCount;
 }
 
 
@@ -62,14 +68,11 @@ static NSString * const sModifiedAtKey = @"modified-at";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
 
     [[self tableView] registerForDraggedTypes:@[
-        (__bridge NSString *)kUTTypeFileURL,
-        (__bridge NSString *)kPasteboardTypeFileURLPromise,
-        @"com.apple.tv.metadata",
-        NSURLPboardType,
-        NSFilenamesPboardType,
         EmbraceQueuedTrackPasteboardType,
         EmbraceLockedTrackPasteboardType
     ]];
+
+    [[self tableView] registerForDraggedTypes:[self readableDraggedTypes]];
 
 #if DEBUG
     [[self tableView] setDoubleAction:@selector(viewClickedTrack:)];
@@ -376,6 +379,269 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 #endif
 
 
+#pragma mark - Dragging
+
+- (void) _updateDragCacheWithPasteboard:(NSPasteboard *)pasteboard
+{
+    if ([pasteboard changeCount] == _dragCacheChangeCount) {
+        return;
+    }
+    
+    NSArray *metadataArray = [MusicAppPasteboardMetadata pasteboardMetadataArrayWithPasteboard:pasteboard];
+
+    NSMutableArray *fileURLs = nil;
+
+    BOOL isQueuedTrack = ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
+    BOOL isLockedTrack = ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
+    BOOL isExternalTrack = !isQueuedTrack && !isLockedTrack;
+
+    if (isExternalTrack) {
+        fileURLs = [NSMutableArray array];
+
+        for (MusicAppPasteboardMetadata *metadata in metadataArray) {
+            NSString *location = [metadata location];
+
+            if (location) {
+                EmbraceLog(@"TracksController", @"Found location in Music metadata: %@", location);
+                [fileURLs addObject:[NSURL fileURLWithPath:location]];
+            }
+        }
+        
+        for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+            NSArray *types = [item types];
+              
+            BOOL hasPromise        = [types containsObject:(id)kPasteboardTypeFileURLPromise];
+            BOOL hasPromiseContent = [types containsObject:(id)kPasteboardTypeFilePromiseContent];
+              
+            NSString *fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+
+            // In macOS Catalina 10.15.0, the new Music app likes to write a real URL
+            // as a kPasteboardTypeFileURLPromise without kPasteboardTypeFilePromiseContent
+            //
+            if (!fileURLString && hasPromise && !hasPromiseContent) {
+                fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+            }
+
+            NSURL *fileURL = fileURLString ? [NSURL URLWithString:fileURLString] : nil;
+            
+            fileURL = [fileURL URLByStandardizingPath];
+            fileURL = [fileURL URLByResolvingSymlinksInPath];
+              
+            if (fileURL && ![fileURLs containsObject:fileURL]) {
+                EmbraceLog(@"TracksController", @"Found fileURL in pasteboard: %@", fileURL);
+                [fileURLs addObject:fileURL];
+            }
+        }
+        
+        // Check legacy NSFilenamesPboardType
+        if ([fileURLs count] == 0) {
+            NSArray *filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
+
+            if (filenames) {
+                for (NSString *filename in filenames) {
+                    NSURL *fileURL = [NSURL fileURLWithPath:filename];
+                    if (fileURL) [fileURLs addObject:fileURL];
+                }
+            }
+        }
+    }
+
+    _dragCacheIsExternal    = isExternalTrack;
+    _dragCacheMetadataArray = metadataArray;
+    _dragCacheFileURLs      = fileURLs;
+    _dragCacheChangeCount   = [pasteboard changeCount];
+}
+
+
+- (NSArray<NSString *> *) readableDraggedTypes
+{
+    return @[
+        (__bridge NSString *)kUTTypeFileURL,
+        (__bridge NSString *)kPasteboardTypeFileURLPromise,
+        @"com.apple.music.metadata",
+        @"com.apple.tv.metadata",
+        NSURLPboardType,
+        NSFilenamesPboardType,
+    ];
+}
+
+
+- (NSDragOperation) validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
+{
+    NSPasteboard *pasteboard = [info draggingPasteboard];
+
+    [self _updateDragCacheWithPasteboard:pasteboard];
+
+    BOOL isQueuedTrack   =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
+    BOOL isExternalTrack = _dragCacheIsExternal;
+
+    NSDragOperation mask = [info draggingSourceOperationMask];
+    BOOL isCopy = (mask & (NSDragOperationGeneric|NSDragOperationCopy)) == NSDragOperationCopy;
+    
+    if (isExternalTrack) {
+        if (![_dragCacheFileURLs count]) {
+            return NSDragOperationNone;
+        }
+
+        isCopy = YES;
+        
+        [info setNumberOfValidItemsForDrop:[_dragCacheFileURLs count]];
+    }
+    
+    if (dropOperation == NSTableViewDropAbove) {
+        Track *track = [self trackAtIndex:row];
+
+        if (!track || [track trackStatus] == TrackStatusQueued) {
+            if (isCopy) {
+                return NSDragOperationCopy;
+
+            } else if (!_draggedIndexSetIsContiguous) {
+                return NSDragOperationGeneric;
+
+            } else if (isQueuedTrack) {
+                if ((row >= [_draggedIndexSet firstIndex]) && (row <= ([_draggedIndexSet lastIndex] + 1))) {
+                    return NSDragOperationNone;
+                } else {
+                    if (isCopy) {
+                        return NSDragOperationCopy;
+                    } else {
+                        return NSDragOperationGeneric;
+                    }
+                }
+
+            } else {
+                return NSDragOperationNone;
+            }
+        }
+    }
+
+    if (isExternalTrack) {
+        if (dropOperation == NSTableViewDropOn) {
+            Track *track = [self trackAtIndex:row];
+
+            if (!track || [track trackStatus] == TrackStatusQueued) {
+                [_tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
+                return NSDragOperationCopy;
+            }
+        }
+    
+        // Always accept a drag from Music.app, target end of table in this case
+        [_tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
+        return NSDragOperationCopy;
+    }
+
+    return NSDragOperationNone;
+}
+
+
+- (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
+{
+    EmbraceLog(@"TracksController", @"Accepting drop: %@ -> %ld, %ld", _draggedIndexSet, (long)row, (long)dropOperation);
+
+    NSPasteboard *pboard = [info draggingPasteboard];
+    BOOL result = NO;
+
+    // Dump pasteboard to log:
+    {
+        EmbraceLog(@"TracksController", @"Pasteboard contains %ld items", (long)[[pboard pasteboardItems] count]);
+        NSInteger index = 0;
+
+        for (NSPasteboardItem *item in [pboard pasteboardItems]) {
+            EmbraceLog(@"Pasteboard", @"Pasteboard item %ld: %@", (long)index, item);
+            
+            for (NSString *type in [item types]) {
+                EmbraceLog(@"Pasteboard", @"Type: %@\n%@", type, [pboard propertyListForType:type]);
+            }
+            
+            index++;
+        }
+    }
+
+    [self _updateDragCacheWithPasteboard:pboard];
+
+    if (_dragCacheMetadataArray) {
+        [[MusicAppManager sharedInstance] addPasteboardMetadataArray:_dragCacheMetadataArray];
+    }
+
+    NSDragOperation dragOperation = [self validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
+
+    if ((row == -1) && (dropOperation == NSTableViewDropOn)) {
+        row = [_tracks count];
+    }
+    
+    if (_dragCacheIsExternal) {
+        EmbraceLog(@"TracksController", @"adding tracks at row %ld: %@", (long)row, _dragCacheFileURLs);
+        result = [self _addTracksWithURLs:_dragCacheFileURLs atIndex:row];
+
+    } else {
+        [[self tableView] beginUpdates];
+
+        if (dragOperation == NSDragOperationCopy) {
+            EmbraceLog(@"TracksController", @"Duplicating track from %@ to %ld", _draggedIndexSet, row);
+
+            NSMutableArray *duplicatedTracks = [NSMutableArray array];
+            
+            for (Track *oldTrack in [_tracks objectsAtIndexes:_draggedIndexSet]) {
+                [duplicatedTracks addObject:[oldTrack duplicatedTrack]];
+            }
+            
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row, [duplicatedTracks count])];
+            
+            [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+            [_tracks insertObjects:duplicatedTracks atIndexes:indexSet];
+
+        } else if (dragOperation == NSDragOperationGeneric) {
+            EmbraceLog(@"TracksController", @"Moving track from %@ to %ld", _draggedIndexSet, row);
+
+            __block NSInteger oldIndexOffset = 0;
+            __block NSInteger newIndexOffset = 0;
+
+            [_draggedIndexSet enumerateIndexesUsingBlock:^(NSUInteger oldIndex, BOOL *stop) {
+                Track *track = [self trackAtIndex:(oldIndex + oldIndexOffset)];
+                
+                if (track) {
+                    NSInteger toIndex, fromIndex;
+
+                    if (oldIndex < row) {
+                        fromIndex = oldIndex + oldIndexOffset;
+                        toIndex   = row - 1;
+                        oldIndexOffset--;
+                    } else {
+                        fromIndex = oldIndex;
+                        toIndex = row + newIndexOffset;
+                        newIndexOffset++;
+                    }
+
+                    [_tableView moveRowAtIndex:fromIndex toIndex:toIndex];
+                    [_tracks removeObjectAtIndex:fromIndex];
+                    [_tracks insertObject:track atIndex:toIndex];
+                }
+            }];
+        }
+
+        TrackTrialCheck(^{
+            [self _didModifyTracks];
+        });
+
+        [[self tableView] endUpdates];
+        
+#if TRIAL
+        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _displayTrialAlert];
+            });
+        }
+#endif
+
+        result = YES;
+    } 
+
+    EmbraceLog(@"TracksController", @"acceptDrop:... returning %ld", (long)result);
+    
+    return result;
+}
+
+
 #pragma mark - Table View Delegate
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *)tableView
@@ -423,6 +689,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     }
     
     [pboard setData:[NSData data] forType:(hasQueued ? EmbraceQueuedTrackPasteboardType : EmbraceLockedTrackPasteboardType)];
+
     _draggedIndexSet = rowIndexes;
     _draggedIndexSetIsContiguous = [self _isIndexSetContiguous:_draggedIndexSet];
     
@@ -513,204 +780,15 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
     _draggedIndexSet = nil;
     _draggedIndexSetIsContiguous = NO;
+
+    _dragCacheFileURLs = nil;
+    _dragCacheMetadataArray = nil;
 }
 
 
 - (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
-    NSPasteboard *pasteboard = [info draggingPasteboard];
-
-    BOOL isLockedTrack   =  ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
-    BOOL isQueuedTrack   =  ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
-    BOOL isExternalTrack = !isLockedTrack && !isQueuedTrack;
-
-    NSDragOperation mask = [info draggingSourceOperationMask];
-    BOOL isCopy = (mask & (NSDragOperationGeneric|NSDragOperationCopy)) == NSDragOperationCopy;
-    
-    if (isExternalTrack) {
-        isCopy = YES;
-    }
-    
-    if (dropOperation == NSTableViewDropAbove) {
-        Track *track = [self trackAtIndex:row];
-
-        if (!track || [track trackStatus] == TrackStatusQueued) {
-            if (isCopy) {
-                return NSDragOperationCopy;
-
-            } else if (!_draggedIndexSetIsContiguous) {
-                return NSDragOperationGeneric;
-
-            } else if (isQueuedTrack) {
-                if ((row >= [_draggedIndexSet firstIndex]) && (row <= ([_draggedIndexSet lastIndex] + 1))) {
-                    return NSDragOperationNone;
-                } else {
-                    if (isCopy) {
-                        return NSDragOperationCopy;
-                    } else {
-                        return NSDragOperationGeneric;
-                    }
-                }
-
-            } else {
-                return NSDragOperationNone;
-            }
-        }
-    }
-
-    if (!isQueuedTrack && !isLockedTrack) {
-        if (dropOperation == NSTableViewDropOn) {
-            Track *track = [self trackAtIndex:row];
-
-            if (!track || [track trackStatus] == TrackStatusQueued) {
-                [_tableView setDropRow:(row + 1) dropOperation:NSTableViewDropAbove];
-                return NSDragOperationCopy;
-            }
-        }
-    
-        // Always accept a drag from Music.app, target end of table in this case
-        [tableView setDropRow:-1 dropOperation:NSTableViewDropOn];
-        return NSDragOperationCopy;
-    }
-
-    return NSDragOperationNone;
-}
-
-
-- (BOOL) acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation;
-{
-    EmbraceLog(@"TracksController", @"Accepting drop: %@ -> %ld, %ld", _draggedIndexSet, (long)row, (long)dropOperation);
-
-    NSDragOperation dragOperation = [self tableView:_tableView validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
-
-    NSPasteboard *pboard = [info draggingPasteboard];
-
-    if ((row == -1) && (dropOperation == NSTableViewDropOn)) {
-        row = [_tracks count];
-    }
-
-    NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];
-    NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
-
-    NSString *fileURLPromiseType = (__bridge NSString *)kPasteboardTypeFileURLPromise;
-
-    // Let manager extract any metadata from the pasteboard
-    NSArray *metadataArray = [MusicAppPasteboardMetadata pasteboardMetadataArrayWithPasteboard:pboard];
-    
-    [[MusicAppManager sharedInstance] addPasteboardMetadataArray:metadataArray];
-    
-    if ([pboard dataForType:EmbraceQueuedTrackPasteboardType] ||
-        [pboard dataForType:EmbraceLockedTrackPasteboardType])
-    {
-        [[self tableView] beginUpdates];
-
-        if (dragOperation == NSDragOperationCopy) {
-            EmbraceLog(@"TracksController", @"Duplicating track from %@ to %ld", _draggedIndexSet, row);
-
-            NSMutableArray *duplicatedTracks = [NSMutableArray array];
-            
-            for (Track *oldTrack in [_tracks objectsAtIndexes:_draggedIndexSet]) {
-                [duplicatedTracks addObject:[oldTrack duplicatedTrack]];
-            }
-            
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(row, [duplicatedTracks count])];
-            
-            [[self tableView] insertRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
-            [_tracks insertObjects:duplicatedTracks atIndexes:indexSet];
-
-        } else if (dragOperation == NSDragOperationGeneric) {
-            EmbraceLog(@"TracksController", @"Moving track from %@ to %ld", _draggedIndexSet, row);
-
-            __block NSInteger oldIndexOffset = 0;
-            __block NSInteger newIndexOffset = 0;
-
-            [_draggedIndexSet enumerateIndexesUsingBlock:^(NSUInteger oldIndex, BOOL *stop) {
-                Track *track = [self trackAtIndex:(oldIndex + oldIndexOffset)];
-                
-                if (track) {
-                    NSInteger toIndex, fromIndex;
-
-                    if (oldIndex < row) {
-                        fromIndex = oldIndex + oldIndexOffset;
-                        toIndex   = row - 1;
-                        oldIndexOffset--;
-                    } else {
-                        fromIndex = oldIndex;
-                        toIndex = row + newIndexOffset;
-                        newIndexOffset++;
-                    }
-
-                    [_tableView moveRowAtIndex:fromIndex toIndex:toIndex];
-                    [_tracks removeObjectAtIndex:fromIndex];
-                    [_tracks insertObject:track atIndex:toIndex];
-                }
-            }];
-        }
-
-        TrackTrialCheck(^{
-            [self _didModifyTracks];
-        });
-
-        [[self tableView] endUpdates];
-        
-#if TRIAL
-        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self _displayTrialAlert];
-            });
-        }
-#endif
-
-        return YES;
-
-    } else if ([filenames count] >= 2) {
-        NSMutableArray *fileURLs = [NSMutableArray array];
-
-        for (NSString *filename in filenames) {
-            NSURL *fileURL = [NSURL fileURLWithPath:filename];
-            if (fileURL) [fileURLs addObject:fileURL];
-        }
-        
-        return [self _addTracksWithURLs:fileURLs atIndex:row];
-
-    } else if (URLString) {
-        NSURL *fileURL = [NSURL URLWithString:URLString];
-        NSArray *fileURLs = fileURL ? @[ fileURL ] : nil;
-
-        return [self _addTracksWithURLs:fileURLs atIndex:row];
-
-    // In macOS Catalina 10.15.0 GM, the Music app occasionally writes a track as a
-    // kPasteboardTypeFileURLPromise but without a kPasteboardTypeFilePromiseContent.
-    // Hence, we can't rely on higher-level APIs like NSFilePromiseReceiver
-    //
-    } else {
-        EmbraceLog(@"Pasteboard", @"+++ Start Pasteboard Dump");
-    
-        for (NSPasteboardItem *item in [pboard pasteboardItems]) {
-            EmbraceLog(@"Pasteboard", @"Pasteboard item: %@", item);
-            
-            for (NSString *type in [item types]) {
-                EmbraceLog(@"Pasteboard", @"Type: %@\n%@", type, [pboard propertyListForType:type]);
-            }
-        }
-        EmbraceLog(@"Pasteboard", @"--- End Pasteboard Dump");
-
-        NSMutableArray *fileURLs = [NSMutableArray array];
-
-        for (MusicAppPasteboardMetadata *metadata in metadataArray) {
-            NSString *location = [metadata location];
-
-            if ([[NSFileManager defaultManager] fileExistsAtPath:location]) {
-                [fileURLs addObject:[NSURL fileURLWithPath:location]];
-            }
-        }
-        
-        if ([fileURLs count]) {
-            return [self _addTracksWithURLs:fileURLs atIndex:row];
-        }
-    }
- 
-    return NO;
+    return [self validateDrop:info proposedRow:row proposedDropOperation:dropOperation];
 }
 
 
