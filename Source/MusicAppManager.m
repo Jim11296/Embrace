@@ -254,7 +254,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
         [metadata setDuration:totalTime];
         [metadata setTitle:name];
         [metadata setArtist:artist];
-        [metadata setLocation:location];
+        [metadata setLocation:sGetExpandedPath(location)];
         [metadata setTrackID:trackID];
         [metadata setDatabaseID:[key integerValue]];
         

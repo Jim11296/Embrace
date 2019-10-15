@@ -169,7 +169,10 @@ extern NSColor * const TrackTableViewGetRowHighlightColor(BOOL emphasized)
 
 - (void) drawGridInClipRect:(NSRect)clipRect
 {
-    // Do nothing
+    PerformWithAppearance([self effectiveAppearance], ^{
+        [[NSColor controlBackgroundColor] set];
+        [[NSBezierPath bezierPathWithRect:clipRect] fill];
+    });
 }
 
 
