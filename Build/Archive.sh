@@ -82,16 +82,15 @@ zip --symlinks -r App.zip $(basename "$APP_FILE")
 
 set_status "Sending to Apple notary service. This may take several minutes."
 
-NOTARY_UUID=$(
-    xcrun altool \
+xcrun altool \
     --notarize-app --file App.zip --type osx \
     --primary-bundle-id "$NOTARY_BUNDLE_ID" \
     --username "$NOTARY_APPLE_ID" \
     --password "$NOTARY_PASSWORD" \
     --asc-provider "$NOTARY_ASC_PROVIDER" \
-    2>&1 | grep RequestUUID | awk '{print $3}'
-)
+    2>&1 > "${TMP_DIR}/output-notarize-app.txt"
 
+NOTARY_UUID=$(grep RequestUUID "${TMP_DIR}/output-notarize-app.txt" | awk '{print $3}')
 
 add_log "NOTARY_UUID = '$NOTARY_UUID'"
 
