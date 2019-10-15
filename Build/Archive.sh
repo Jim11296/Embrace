@@ -88,7 +88,7 @@ xcrun altool \
     --username "$NOTARY_APPLE_ID" \
     --password "$NOTARY_PASSWORD" \
     --asc-provider "$NOTARY_ASC_PROVIDER" \
-    2>&1 > "${TMP_DIR}/output-notarize-app.txt"
+    > "${TMP_DIR}/output-notarize-app.txt" 2>&1 
 
 NOTARY_UUID=$(grep RequestUUID "${TMP_DIR}/output-notarize-app.txt" | awk '{print $3}')
 
