@@ -4,7 +4,7 @@
 
 extern NSString * const MusicAppManagerDidUpdateLibraryMetadataNotification;
 
-@class MusicAppLibraryMetadata, MusicAppPasteboardMetadata;
+@class MusicAppLibraryMetadata, MusicAppPasteboardMetadata, MusicAppPasteboardParseResult;
 
 
 @interface MusicAppManager : NSObject
@@ -14,9 +14,19 @@ extern NSString * const MusicAppManagerDidUpdateLibraryMetadataNotification;
 - (MusicAppLibraryMetadata *) libraryMetadataForFileURL:(NSURL *)url;
 @property (nonatomic, readonly) BOOL didParseLibrary;
 
+- (MusicAppPasteboardParseResult *) parsePasteboard:(NSPasteboard *)pasteboard;
+
 - (void) clearPasteboardMetadata;
 - (void) addPasteboardMetadataArray:(NSArray *)array;
 - (MusicAppPasteboardMetadata *) pasteboardMetadataForFileURL:(NSURL *)url;
+
+@end
+
+
+@interface MusicAppPasteboardParseResult : NSObject
+
+@property (nonatomic) NSArray<MusicAppPasteboardMetadata *> *metadataArray;
+@property (nonatomic) NSArray<NSURL *> *fileURLs;
 
 @end
 
@@ -28,8 +38,6 @@ extern NSString * const MusicAppManagerDidUpdateLibraryMetadataNotification;
 
 
 @interface MusicAppPasteboardMetadata : NSObject
-
-+ (NSArray *) pasteboardMetadataArrayWithPasteboard:(NSPasteboard *)pasteboard;
 
 @property (nonatomic) NSInteger trackID;
 @property (nonatomic) NSInteger databaseID;

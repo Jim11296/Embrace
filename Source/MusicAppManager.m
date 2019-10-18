@@ -142,6 +142,206 @@ static NSString *sGetExpandedPath(NSString *inPath)
 }
 
 
+#pragma mark - Pasteboard Parsing
+
+- (MusicAppPasteboardParseResult *) parsePasteboard:(NSPasteboard *)pasteboard
+{
+    NSMutableDictionary *trackIDToMetadataMap = [NSMutableDictionary dictionary];
+    NSMutableArray *orderedTrackIDs = [NSMutableArray array];
+    NSMutableArray *fileURLs = [NSMutableArray array];
+
+    auto addFileURL = ^(NSURL *fileURL) {
+        if (fileURL && ![fileURLs containsObject:fileURL]) {
+            [fileURLs addObject:fileURL];
+        }
+    };
+
+    auto parsePlaylist = ^(NSDictionary *playlist) {
+        if (![playlist isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+
+        NSArray *items = [playlist objectForKey:@"Playlist Items"];
+        if (![items isKindOfClass:[NSArray class]]) {
+            return;
+        }
+        
+        for (NSDictionary *item in items) {
+            if (![item isKindOfClass:[NSDictionary class]]) {
+                continue;
+            }
+        
+            id trackIDObject = [item objectForKey:@"Track ID"];
+            if (![trackIDObject respondsToSelector:@selector(integerValue)]) {
+                trackIDObject = nil;
+            }
+
+            NSInteger trackID = [trackIDObject integerValue];
+            if (trackID) [orderedTrackIDs addObject:@(trackID)];
+        }
+    };
+
+    auto parsePlaylists = ^(NSArray *playlists) {
+        if (![playlists isKindOfClass:[NSArray class]]) {
+            return;
+        }
+        
+        for (NSDictionary *playlist in playlists) {
+            parsePlaylist(playlist);
+        }
+    };
+
+    auto parseTrack = ^(NSString *key, NSDictionary *track) {
+        if (![key isKindOfClass:[NSString class]]) {
+            return;
+        }
+
+        if (![track isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+
+        NSString *artist = [track objectForKey:@"Artist"];
+        if (![artist isKindOfClass:[NSString class]]) artist = nil;
+
+        NSString *name = [track objectForKey:@"Name"];
+        if (![name isKindOfClass:[NSString class]]) name = nil;
+
+        NSString *location = [track objectForKey:@"Location"];
+        if (![location isKindOfClass:[NSString class]]) location = nil;
+        
+        if ([location hasPrefix:@"file:"]) {
+            location = [[NSURL URLWithString:location] path];
+        }
+
+        id totalTimeObject = [track objectForKey:@"Total Time"];
+        if (![totalTimeObject respondsToSelector:@selector(doubleValue)]) {
+            totalTimeObject = nil;
+        }
+
+        id trackIDObject = [track objectForKey:@"Track ID"];
+        if (![trackIDObject respondsToSelector:@selector(integerValue)]) {
+            trackIDObject = nil;
+        }
+        
+        NSTimeInterval totalTime = [totalTimeObject doubleValue] / 1000.0;
+        NSInteger trackID   = [trackIDObject integerValue];
+        
+        if (!trackID) return;
+
+        MusicAppPasteboardMetadata *metadata = [[MusicAppPasteboardMetadata alloc] init];
+        [metadata setDuration:totalTime];
+        [metadata setTitle:name];
+        [metadata setArtist:artist];
+        [metadata setLocation:sGetExpandedPath(location)];
+        [metadata setTrackID:trackID];
+        [metadata setDatabaseID:[key integerValue]];
+        
+        [trackIDToMetadataMap setObject:metadata forKey:@(trackID)];
+    };
+
+    auto parseTracks = ^(NSDictionary *tracks) {
+        if (![tracks isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+        
+        for (NSString *key in tracks) {
+            NSDictionary *track = [tracks objectForKey:key];
+            parseTrack(key, track);
+        }
+    };
+
+    auto parseMetadataRoot = ^(NSDictionary *root) {
+        if (![root isKindOfClass:[NSDictionary class]]) {
+            return;
+        }
+
+        parsePlaylists( [root objectForKey:@"Playlists"] );
+        parseTracks(    [root objectForKey:@"Tracks"]    );
+    };
+    
+    auto parsePasteboardItem = ^(NSPasteboardItem *item) {
+        for (NSString *type in [item types]) {
+            if ([type hasPrefix:@"com.apple."] && [type hasSuffix:@".metadata"]) {
+                parseMetadataRoot([item propertyListForType:type]);
+            }
+        }
+    };
+
+    // Parse com.apple.*.metadata 
+    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+        parsePasteboardItem(item);
+    }
+    
+    // Sort trackIDToMetadataMap/orderedTrackIDs into metadataArray
+    NSArray *metadataArray = [[trackIDToMetadataMap allValues] sortedArrayUsingComparator:^(id objectA, id objectB) {
+        NSInteger indexA = [orderedTrackIDs indexOfObject:@([objectA trackID])];
+        NSInteger indexB = [orderedTrackIDs indexOfObject:@([objectB trackID])];
+
+        if (indexB > indexA) {
+            return NSOrderedAscending;
+        } else if (indexB < indexA) {
+            return NSOrderedDescending;
+        } else {
+            return NSOrderedSame;
+        }
+    }];
+    
+
+    for (MusicAppPasteboardMetadata *metadata in metadataArray) {
+        NSString *location = [metadata location];
+        NSURL    *fileURL  = location ? [NSURL fileURLWithPath:location] : nil;
+
+        addFileURL(fileURL);
+    }
+
+    // Add any unseen NSPasteboardTypeFileURL entries
+    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+        NSArray *types = [item types];
+
+        BOOL hasPromise        = [types containsObject:(id)kPasteboardTypeFileURLPromise];
+        BOOL hasPromiseContent = [types containsObject:(id)kPasteboardTypeFilePromiseContent];
+          
+        NSString *fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+
+        // In macOS Catalina 10.15.0, the new Music app likes to write a real URL
+        // as a kPasteboardTypeFileURLPromise without kPasteboardTypeFilePromiseContent
+        //
+        if (!fileURLString && hasPromise && !hasPromiseContent) {
+            fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+        }
+
+        NSURL *fileURL = fileURLString ? [NSURL URLWithString:fileURLString] : nil;
+        
+        fileURL = [fileURL URLByStandardizingPath];
+        fileURL = [fileURL URLByResolvingSymlinksInPath];
+          
+        addFileURL(fileURL);
+    }
+
+    // Check legacy NSFilenamesPboardType and add unseen
+    if ([fileURLs count] == 0) {
+        NSArray *filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
+
+        if (filenames) {
+            for (NSString *filename in filenames) {
+                addFileURL([NSURL fileURLWithPath:sGetExpandedPath(filename)]);
+            }
+        }
+    }
+
+    MusicAppPasteboardParseResult *result = nil;
+
+    if ([fileURLs count] > 0 || [metadataArray count] > 0) {
+        result = [[MusicAppPasteboardParseResult alloc] init];
+
+        [result setMetadataArray:metadataArray];
+        [result setFileURLs:fileURLs];
+    }
+
+    return result;
+}
+
+
 #pragma mark - Pasteboard Metadata
 
 - (void) clearPasteboardMetadata
@@ -207,85 +407,10 @@ static NSString *sGetExpandedPath(NSString *inPath)
 @end
 
 
+@implementation MusicAppPasteboardParseResult
+@end
+
+
 @implementation MusicAppPasteboardMetadata
-
-+ (NSArray *) pasteboardMetadataArrayWithPasteboard:(NSPasteboard *)pasteboard
-{
-    NSMutableArray *result = [NSMutableArray array];
-
-    void (^parseTrack)(NSString *, NSDictionary *) = ^(NSString *key, NSDictionary *track) {
-        if (![key isKindOfClass:[NSString class]]) {
-            return;
-        }
-
-        if (![track isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-
-        NSString *artist = [track objectForKey:@"Artist"];
-        if (![artist isKindOfClass:[NSString class]]) artist = nil;
-
-        NSString *name = [track objectForKey:@"Name"];
-        if (![name isKindOfClass:[NSString class]]) name = nil;
-
-        NSString *location = [track objectForKey:@"Location"];
-        if (![location isKindOfClass:[NSString class]]) location = nil;
-        
-        if ([location hasPrefix:@"file:"]) {
-            location = [[NSURL URLWithString:location] path];
-        }
-
-        id totalTimeObject = [track objectForKey:@"Total Time"];
-        if (![totalTimeObject respondsToSelector:@selector(doubleValue)]) {
-            totalTimeObject = nil;
-        }
-
-        id trackIDObject = [track objectForKey:@"Track ID"];
-        if (![trackIDObject respondsToSelector:@selector(integerValue)]) {
-            trackIDObject = nil;
-        }
-        
-        NSTimeInterval totalTime = [totalTimeObject doubleValue] / 1000.0;
-        NSInteger trackID   = [trackIDObject integerValue];
-        
-        if (!trackID) return;
-
-        MusicAppPasteboardMetadata *metadata = [[MusicAppPasteboardMetadata alloc] init];
-        [metadata setDuration:totalTime];
-        [metadata setTitle:name];
-        [metadata setArtist:artist];
-        [metadata setLocation:sGetExpandedPath(location)];
-        [metadata setTrackID:trackID];
-        [metadata setDatabaseID:[key integerValue]];
-        
-        [result addObject:metadata];
-    };
-
-    void (^parseRoot)(NSDictionary *) = ^(NSDictionary *dictionary) {
-        if (![dictionary isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-        
-        NSDictionary *trackMap = [dictionary objectForKey:@"Tracks"];
-        if (![trackMap isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-        
-        for (NSString *key in trackMap) {
-            parseTrack(key, [trackMap objectForKey:key]);
-        }
-    };
-
-    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
-        for (NSString *type in [item types]) {
-            if ([type hasPrefix:@"com.apple."] && [type hasSuffix:@".metadata"]) {
-                parseRoot([item propertyListForType:type]);
-            }
-        }
-    }
-    
-    return result;
-}
-
 @end
 

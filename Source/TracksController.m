@@ -387,68 +387,15 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         return;
     }
     
-    NSArray *metadataArray = [MusicAppPasteboardMetadata pasteboardMetadataArrayWithPasteboard:pasteboard];
-
-    NSMutableArray *fileURLs = nil;
+    MusicAppPasteboardParseResult *parseResult = [[MusicAppManager sharedInstance] parsePasteboard:pasteboard];
 
     BOOL isQueuedTrack = ([pasteboard dataForType:EmbraceQueuedTrackPasteboardType] != nil);
     BOOL isLockedTrack = ([pasteboard dataForType:EmbraceLockedTrackPasteboardType] != nil);
     BOOL isExternalTrack = !isQueuedTrack && !isLockedTrack;
 
-    if (isExternalTrack) {
-        fileURLs = [NSMutableArray array];
-
-        for (MusicAppPasteboardMetadata *metadata in metadataArray) {
-            NSString *location = [metadata location];
-
-            if (location) {
-                EmbraceLog(@"TracksController", @"Found location in Music metadata: %@", location);
-                [fileURLs addObject:[NSURL fileURLWithPath:location]];
-            }
-        }
-        
-        for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
-            NSArray *types = [item types];
-              
-            BOOL hasPromise        = [types containsObject:(id)kPasteboardTypeFileURLPromise];
-            BOOL hasPromiseContent = [types containsObject:(id)kPasteboardTypeFilePromiseContent];
-              
-            NSString *fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
-
-            // In macOS Catalina 10.15.0, the new Music app likes to write a real URL
-            // as a kPasteboardTypeFileURLPromise without kPasteboardTypeFilePromiseContent
-            //
-            if (!fileURLString && hasPromise && !hasPromiseContent) {
-                fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
-            }
-
-            NSURL *fileURL = fileURLString ? [NSURL URLWithString:fileURLString] : nil;
-            
-            fileURL = [fileURL URLByStandardizingPath];
-            fileURL = [fileURL URLByResolvingSymlinksInPath];
-              
-            if (fileURL && ![fileURLs containsObject:fileURL]) {
-                EmbraceLog(@"TracksController", @"Found fileURL in pasteboard: %@", fileURL);
-                [fileURLs addObject:fileURL];
-            }
-        }
-        
-        // Check legacy NSFilenamesPboardType
-        if ([fileURLs count] == 0) {
-            NSArray *filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
-
-            if (filenames) {
-                for (NSString *filename in filenames) {
-                    NSURL *fileURL = [NSURL fileURLWithPath:filename];
-                    if (fileURL) [fileURLs addObject:fileURL];
-                }
-            }
-        }
-    }
-
     _dragCacheIsExternal    = isExternalTrack;
-    _dragCacheMetadataArray = metadataArray;
-    _dragCacheFileURLs      = fileURLs;
+    _dragCacheMetadataArray = isExternalTrack ? [parseResult metadataArray] : nil;
+    _dragCacheFileURLs      = isExternalTrack ? [parseResult fileURLs]      : nil;
     _dragCacheChangeCount   = [pasteboard changeCount];
 }
 
@@ -1070,8 +1017,12 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     [[self tableView] selectRowIndexes:[NSIndexSet indexSetWithIndex:indexToSelect] byExtendingSelection:NO];
 
     [[self tableView] endUpdates];
-
-    [self _didModifyTracks];
+    
+    if ([_tracks count] == 0) {
+        [self removeAllTracks];
+    } else {
+        [self _didModifyTracks];
+    }
 }
 
 
