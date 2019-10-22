@@ -840,7 +840,8 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
 
     NSMutableArray *audioUnits = [NSMutableArray array];
     for (Effect *effect in effects) {
-        [audioUnits addObject:[effect audioUnit]];
+        AUAudioUnit *audioUnit = [effect audioUnit];
+        if (audioUnit) [audioUnits addObject:audioUnit];
     }
 
     _effects = effects;

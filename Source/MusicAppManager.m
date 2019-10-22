@@ -147,15 +147,11 @@ static NSString *sGetExpandedPath(NSString *inPath)
 - (MusicAppPasteboardParseResult *) parsePasteboard:(NSPasteboard *)pasteboard
 {
     NSMutableDictionary *trackIDToMetadataMap = [NSMutableDictionary dictionary];
-    NSMutableArray *orderedTrackIDs = [NSMutableArray array];
-    NSMutableArray *fileURLs = [NSMutableArray array];
+    NSMutableArray *orderedTrackIDs  = [NSMutableArray array];
 
-    auto addFileURL = ^(NSURL *fileURL) {
-        if (fileURL && ![fileURLs containsObject:fileURL]) {
-            [fileURLs addObject:fileURL];
-        }
-    };
-
+    NSMutableArray *metadataFileURLs = [NSMutableArray array];
+    NSMutableArray *otherFileURLs    = [NSMutableArray array];
+    
     auto parsePlaylist = ^(NSDictionary *playlist) {
         if (![playlist isKindOfClass:[NSDictionary class]]) {
             return;
@@ -267,78 +263,73 @@ static NSString *sGetExpandedPath(NSString *inPath)
         }
     };
 
-    // Parse com.apple.*.metadata 
-    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
-        parsePasteboardItem(item);
-    }
-    
-    // Sort trackIDToMetadataMap/orderedTrackIDs into metadataArray
-    NSArray *metadataArray = [[trackIDToMetadataMap allValues] sortedArrayUsingComparator:^(id objectA, id objectB) {
-        NSInteger indexA = [orderedTrackIDs indexOfObject:@([objectA trackID])];
-        NSInteger indexB = [orderedTrackIDs indexOfObject:@([objectB trackID])];
-
-        if (indexB > indexA) {
-            return NSOrderedAscending;
-        } else if (indexB < indexA) {
-            return NSOrderedDescending;
-        } else {
-            return NSOrderedSame;
-        }
-    }];
-    
-
-    for (MusicAppPasteboardMetadata *metadata in metadataArray) {
-        NSString *location = [metadata location];
-        NSURL    *fileURL  = location ? [NSURL fileURLWithPath:location] : nil;
-
-        addFileURL(fileURL);
-    }
-
-    // Add any unseen NSPasteboardTypeFileURL entries
-    for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
-        NSArray *types = [item types];
-
-        BOOL hasPromise        = [types containsObject:(id)kPasteboardTypeFileURLPromise];
-        BOOL hasPromiseContent = [types containsObject:(id)kPasteboardTypeFilePromiseContent];
-          
-        NSString *fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
-
-        // In macOS Catalina 10.15.0, the new Music app likes to write a real URL
-        // as a kPasteboardTypeFileURLPromise without kPasteboardTypeFilePromiseContent
-        //
-        if (!fileURLString && hasPromise && !hasPromiseContent) {
-            fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+    // Step 1, Fill metadataFileURLs from com.apple.*.metadata 
+    {
+        for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+            parsePasteboardItem(item);
         }
 
-        NSURL *fileURL = fileURLString ? [NSURL URLWithString:fileURLString] : nil;
-        
-        fileURL = [fileURL URLByStandardizingPath];
-        fileURL = [fileURL URLByResolvingSymlinksInPath];
-          
-        addFileURL(fileURL);
+        for (NSNumber *trackID in orderedTrackIDs) {
+            MusicAppPasteboardMetadata *metadata = [trackIDToMetadataMap objectForKey:trackID];
+            
+            NSString *location = [metadata location];
+            NSURL    *fileURL  = location ? [NSURL fileURLWithPath:location] : nil;
+
+            if (fileURL) [metadataFileURLs addObject:fileURL];
+        }
     }
 
-    // Check legacy NSFilenamesPboardType and add unseen
-    if ([fileURLs count] == 0) {
+    // Step 2, Fill otherFileURLs with NSPasteboardTypeFileURL/kPasteboardTypeFileURLPromise
+    {
+        for (NSPasteboardItem *item in [pasteboard pasteboardItems]) {
+            NSArray *types = [item types];
+
+            BOOL hasPromise        = [types containsObject:(id)kPasteboardTypeFileURLPromise];
+            BOOL hasPromiseContent = [types containsObject:(id)kPasteboardTypeFilePromiseContent];
+              
+            NSString *fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+
+            // In macOS Catalina 10.15.0, the new Music app likes to write a real URL
+            // as a kPasteboardTypeFileURLPromise without kPasteboardTypeFilePromiseContent
+            //
+            if (!fileURLString && hasPromise && !hasPromiseContent) {
+                fileURLString = [item propertyListForType:NSPasteboardTypeFileURL];
+            }
+
+            NSURL *fileURL = fileURLString ? [NSURL URLWithString:fileURLString] : nil;
+            
+            fileURL = [fileURL URLByStandardizingPath];
+            fileURL = [fileURL URLByResolvingSymlinksInPath];
+            
+            if (fileURL) [otherFileURLs addObject:fileURL];
+        }
+    }
+
+    // Step 3, Fill otherFileURLs with legacy NSFilenamesPboardType
+    if ([otherFileURLs count] == 0) {
         NSArray *filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 
         if (filenames) {
             for (NSString *filename in filenames) {
-                addFileURL([NSURL fileURLWithPath:sGetExpandedPath(filename)]);
+                NSURL *url = [NSURL fileURLWithPath:sGetExpandedPath(filename)];
+                if (url) [otherFileURLs addObject:url];
             }
         }
     }
-
-    MusicAppPasteboardParseResult *result = nil;
+    
+    NSArray *fileURLs = [metadataFileURLs count] > [otherFileURLs count] ? metadataFileURLs : otherFileURLs;
+    NSArray *metadataArray = [trackIDToMetadataMap allValues];
 
     if ([fileURLs count] > 0 || [metadataArray count] > 0) {
-        result = [[MusicAppPasteboardParseResult alloc] init];
+        MusicAppPasteboardParseResult *result = [[MusicAppPasteboardParseResult alloc] init];
 
         [result setMetadataArray:metadataArray];
         [result setFileURLs:fileURLs];
+        
+        return result;
     }
 
-    return result;
+    return nil;
 }
 
 
