@@ -16,6 +16,8 @@
 	<true/>
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<key>com.apple.security.temporary-exception.audio-unit-host</key>
+	<true/>
 	<key>com.apple.security.scripting-targets</key>
 	<dict>
 		<key>com.apple.iTunes</key>
