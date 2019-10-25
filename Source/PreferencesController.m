@@ -86,7 +86,7 @@
 
         NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
         
-        [attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]; 
+        [attributes setObject:[NSColor colorNamed:@"InvalidMenuItem"] forKey:NSForegroundColorAttributeName]; 
         if (font) [attributes setObject:font forKey:NSFontAttributeName];
 
         NSAttributedString *as = [[NSAttributedString alloc] initWithString:title attributes:attributes];
