@@ -8,10 +8,14 @@ extern NSString * const HugAudioDevicesDidRefreshNotification;
 
 @interface HugAudioDevice : NSObject
 
-+ (instancetype) defaultDevice;
++ (instancetype) placeholderDevice;
++ (instancetype) archivedDeviceWithDeviceUID:(NSString *)deviceUID name:(NSString *)name;
++ (instancetype) bestDefaultDevice;
+
+
 + (NSArray<HugAudioDevice *> *) allDevices; 
 
-- (instancetype) initWithWithDeviceUID:(NSString *)deviceUID name:(NSString *)name;
+- (instancetype) initWithDeviceUID:(NSString *)deviceUID name:(NSString *)name;
 
 @property (nonatomic, readonly, getter=isConnected) BOOL connected;
 @property (nonatomic, readonly) AudioObjectID objectID;

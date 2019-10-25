@@ -4,9 +4,7 @@
 #import "Utils.h"
 #import "HugUtils.h"
 
-static NSArray        *sConnectedDevices = nil;
-static NSMapTable     *sUIDToDeviceMap   = nil;
-static HugAudioDevice *sDefaultDevice    = nil;
+static NSArray *sAllDevices = nil;
 
 NSString * const HugAudioDevicesDidRefreshNotification = @"HugAudioDevicesDidRefresh";
 
@@ -183,116 +181,107 @@ static void sLoadDouble(NSString *opName, AudioObjectID objectID, AudioObjectPro
 
 #pragma mark - Static
 
+
 + (void) _refreshAudioDevices
 {
+    auto getConnectedDevices = ^{
+        NSMutableArray *result = [NSMutableArray array];
+
+        UInt32 dataSize = 0;
+        AudioDeviceID *audioDevices = sCopyProperty(kAudioObjectSystemObject, &sAddressDevices, &dataSize);
+        
+        if (!audioDevices) {
+            HugLog(@"HugAudioDevice", @"Error when querying kAudioObjectSystemObject for devices");
+            return result;
+        }
+
+        UInt32 deviceCount = dataSize / sizeof(AudioDeviceID);
+
+        for (UInt32 i = 0; i < deviceCount; ++i) {
+            AudioObjectID objectID = audioDevices[i];
+
+            NSString *deviceUID = sGetString(objectID, kAudioDevicePropertyDeviceUID);
+            if (!deviceUID) continue;
+
+            dataSize = 0;
+            
+            if (!sCheck(
+                @"AudioObjectGetPropertyDataSize[kAudioDevicePropertyStreamConfiguration]",
+                AudioObjectGetPropertyDataSize(objectID, &sAddressStreams, 0, NULL, &dataSize)
+            )) continue;
+            
+            NSInteger streamCount = dataSize / sizeof(AudioStreamID);
+            if (streamCount < 1) {
+                continue;
+            }
+
+            UInt32 transportType = kAudioDeviceTransportTypeUnknown;
+            sLoadUInt32(@"-transportType", objectID, kAudioDevicePropertyTransportType, &transportType);
+            
+            HugAudioDevice *device = [[HugAudioDevice alloc] initWithDeviceUID:deviceUID name:nil];
+            
+            [device _updateObjectID:objectID];
+
+            [result addObject:device];
+        }
+
+        free(audioDevices);
+
+        return result;
+    };
+
+    auto makeDeviceMap = ^(NSArray *inArray, BOOL useDeviceUID) {
+        NSMutableDictionary *result = [NSMutableDictionary dictionary];
+
+        for (HugAudioDevice *device in inArray) {
+            NSString *key = useDeviceUID ? [device deviceUID] : [device name];
+            if (key) [result setObject:device forKey:key];
+        }
+        
+        return result;
+    };
+    
+    auto mergeDevices = ^(NSMutableArray *oldArray, NSMutableArray *newArray, NSMutableArray *outArray, BOOL useDeviceUID) {
+        NSMutableDictionary *oldMap = makeDeviceMap(oldArray, useDeviceUID);
+        NSMutableDictionary *newMap = makeDeviceMap(newArray, useDeviceUID);
+        
+        for (NSString *key in [newMap allKeys]) {
+            HugAudioDevice *oldDevice = [oldMap objectForKey:key];
+            HugAudioDevice *newDevice = [newMap objectForKey:key];
+            
+            if (oldDevice) {
+                [oldDevice _updateObjectID:[newDevice objectID]];
+
+                [outArray addObject:oldDevice];
+                
+                [oldArray removeObject:oldDevice];
+                [newArray removeObject:newDevice];
+            }
+        }
+    };
+
     static BOOL isRefreshing = NO;
     
     if (isRefreshing) return;
     isRefreshing = YES;
 
-    NSMutableArray *connectedDevices = [NSMutableArray array];
-
-    UInt32 dataSize = 0;
-    AudioDeviceID *audioDevices = sCopyProperty(kAudioObjectSystemObject, &sAddressDevices, &dataSize);
+    NSMutableArray *oldDevices = [sAllDevices mutableCopy];
+    NSMutableArray *newDevices = [getConnectedDevices() mutableCopy];
     
-    if (!audioDevices) {
-        HugLog(@"HugAudioDevice", @"Error when querying kAudioObjectSystemObject for devices");
-        return;
-    }
+    NSMutableArray *outDevices = [NSMutableArray array];
+    
+    mergeDevices(oldDevices, newDevices, outDevices, YES);
+    mergeDevices(oldDevices, newDevices, outDevices, NO);
 
-    UInt32 deviceCount = dataSize / sizeof(AudioDeviceID);
-    BOOL foundDefaultDevice = NO;
-
-    for (UInt32 i = 0; i < deviceCount; ++i) {
-        AudioObjectID objectID = audioDevices[i];
-
-        NSString *deviceUID = sGetString(objectID, kAudioDevicePropertyDeviceUID);
-        if (!deviceUID) continue;
-
-        dataSize = 0;
-        
-        if (!sCheck(
-            @"AudioObjectGetPropertyDataSize[kAudioDevicePropertyStreamConfiguration]",
-            AudioObjectGetPropertyDataSize(objectID, &sAddressStreams, 0, NULL, &dataSize)
-        )) continue;
-        
-        NSInteger streamCount = dataSize / sizeof(AudioStreamID);
-        if (streamCount < 1) {
-            continue;
-        }
-
-        UInt32 transportType = kAudioDeviceTransportTypeUnknown;
-        sLoadUInt32(@"-transportType", objectID, kAudioDevicePropertyTransportType, &transportType);
-        
-        HugAudioDevice *device = nil;
-
-        if (!foundDefaultDevice && (transportType == kAudioDeviceTransportTypeBuiltIn)) {
-            device = sDefaultDevice;
-            foundDefaultDevice = YES;
-        } else {
-            device = [sUIDToDeviceMap objectForKey:deviceUID];
-            if (!device) device = [[HugAudioDevice alloc] init];
-        }
-
-        device->_deviceUID = deviceUID;
-        [device _updateObjectID:objectID];
-
-        [connectedDevices addObject:device];
-        [sUIDToDeviceMap setObject:device forKey:deviceUID];
+    // Disconnect old devices but remember them
+    for (HugAudioDevice *device in oldDevices) {
+        [device _updateObjectID:0];
     }
     
-    if (foundDefaultDevice) {
-        [sUIDToDeviceMap removeObjectForKey:@""];
-    } else {
-        [sUIDToDeviceMap setObject:sDefaultDevice forKey:@""];
-    }
-    
-    // Disconnect 
-    for (HugAudioDevice *device in [sUIDToDeviceMap objectEnumerator]) {
-        if (![connectedDevices containsObject:device]) {
-            [device _updateObjectID:0];
-        }
-    }
+    if (newDevices) [outDevices addObjectsFromArray:newDevices];
+    if (oldDevices) [outDevices addObjectsFromArray:oldDevices];
 
-    sConnectedDevices = connectedDevices;
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:HugAudioDevicesDidRefreshNotification object:self];
-
-    free(audioDevices);
-    
-    isRefreshing = NO;
-}
-
-
-+ (void) initialize
-{
-    AudioObjectAddPropertyListenerBlock(kAudioObjectSystemObject, &sAddressDevices, dispatch_get_main_queue(), ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[]) {
-        [HugAudioDevice _refreshAudioDevices];
-    });
-
-    if (!sUIDToDeviceMap) {
-        sUIDToDeviceMap = [NSMapTable strongToWeakObjectsMapTable]; 
-    }
-    
-    if (!sDefaultDevice) {
-        sDefaultDevice = [[HugAudioDevice alloc] initWithWithDeviceUID:@"" name:nil];
-    }
-
-    [HugAudioDevice _refreshAudioDevices];
-}
-
-
-+ (instancetype) defaultDevice
-{
-    return sDefaultDevice;
-}
-
-
-+ (NSArray<HugAudioDevice *> *) allDevices
-{
-    NSArray *allDevices = [[sUIDToDeviceMap objectEnumerator] allObjects];
-
-    return [allDevices sortedArrayUsingComparator:^(id objectA, id objectB) {
+    sAllDevices = [outDevices sortedArrayUsingComparator:^(id objectA, id objectB) {
         HugAudioDevice *deviceA = (HugAudioDevice *)objectA;
         HugAudioDevice *deviceB = (HugAudioDevice *)objectB;
         
@@ -307,27 +296,103 @@ static void sLoadDouble(NSString *opName, AudioObjectID objectID, AudioObjectPro
             return [[deviceA name] caseInsensitiveCompare:[deviceB name]];
         }
     }];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:HugAudioDevicesDidRefreshNotification object:self];
+   
+    isRefreshing = NO;
+}
+
+
++ (void) initialize
+{
+    AudioObjectAddPropertyListenerBlock(kAudioObjectSystemObject, &sAddressDevices, dispatch_get_main_queue(), ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress inAddresses[]) {
+        [HugAudioDevice _refreshAudioDevices];
+    });
+    
+    [HugAudioDevice _refreshAudioDevices];
+}
+
+
++ (instancetype) placeholderDevice
+{
+    static id sPlaceholder = nil;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sPlaceholder = [[HugAudioDevice alloc] initWithDeviceUID:nil name:nil];
+    });
+
+    return sPlaceholder;
+}
+
+
++ (instancetype) archivedDeviceWithDeviceUID:(NSString *)deviceUID name:(NSString *)name
+{
+    for (HugAudioDevice *device in sAllDevices) {
+        if ([[device deviceUID] isEqualToString:deviceUID]) {
+            return device;
+        }
+    }
+
+    for (HugAudioDevice *device in sAllDevices) {
+        if ([[device name] isEqualToString:name]) {
+            return device;
+        }
+    }
+    
+    HugAudioDevice *device = [[HugAudioDevice alloc] initWithDeviceUID:deviceUID name:name];
+    
+    if (deviceUID) {
+        sAllDevices = sAllDevices ? [sAllDevices arrayByAddingObject:device] : @[ device ];
+    }
+
+    return device;
+}
+
+
++ (instancetype) bestDefaultDevice
+{
+    NSArray *allDevices = [HugAudioDevice allDevices];
+    NSMutableArray *builtInDevices = [NSMutableArray array];
+
+    for (HugAudioDevice *device in allDevices) {
+        if ([device isBuiltIn]) {
+            [builtInDevices addObject:device];
+        }
+    }
+    
+    // If we have multiple built-in devices, return the speakers
+    if ([builtInDevices count] > 1) {
+        for (HugAudioDevice *device in builtInDevices) {
+            if ([[device deviceUID] containsString:@"Speaker"]) {
+                return device;
+            }
+        }
+    }
+
+    // Return the last built-in device
+    if ([builtInDevices count] > 0) {
+        return [builtInDevices lastObject];
+    }
+    
+    // Return any device
+    return [allDevices firstObject];
+}
+
+
++ (NSArray<HugAudioDevice *> *) allDevices
+{
+    return sAllDevices;
 }
 
 
 #pragma mark - Lifecycle / Overrides
 
-- (instancetype) initWithWithDeviceUID:(NSString *)deviceUID name:(NSString *)name
+- (instancetype) initWithDeviceUID:(NSString *)deviceUID name:(NSString *)name
 {
-    HugAudioDevice *existing = [sUIDToDeviceMap objectForKey:deviceUID];
-    
-    if (existing) {
-        self = nil;
-        return existing;
-    }
-
     if ((self = [super init])) {
         _deviceUID = deviceUID;
         _name = [name copy];
-
-        if (_deviceUID) {
-            [sUIDToDeviceMap setObject:self forKey:_deviceUID];
-        }
     }
     
     return self;

@@ -74,7 +74,7 @@
 
 #pragma mark - Private Methods
 
-- (NSMenuItem *) _itemWithTitle:(NSString *)title representedObject:(id)representedObject valid:(BOOL)valid useIssueImage:(BOOL)useIssueImage
+- (NSMenuItem *) _itemWithTitle:(NSString *)title representedObject:(id)representedObject valid:(BOOL)valid
 {
     NSMenuItem *item = [[NSMenuItem alloc] init];
 
@@ -85,25 +85,13 @@
         NSFont *font = [[self mainDevicePopUp] font];
 
         NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-
-        NSMutableParagraphStyle *ps = nil;
-        if (!useIssueImage) {
-            [[NSParagraphStyle defaultParagraphStyle] mutableCopy]; 
-            [ps setMinimumLineHeight:18];
-            [ps setMaximumLineHeight:18];
-        }
         
-        [attributes setObject:[[NSColor textColor] colorWithAlphaComponent:0.5] forKey:NSForegroundColorAttributeName]; 
+        [attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName]; 
         if (font) [attributes setObject:font forKey:NSFontAttributeName];
-        if (ps)   [attributes setObject:ps   forKey:NSParagraphStyleAttributeName];
 
         NSAttributedString *as = [[NSAttributedString alloc] initWithString:title attributes:attributes];
 
         [item setAttributedTitle:as];
-
-        if (useIssueImage) {
-            [item setImage:[NSImage imageNamed:@"IssueSmall"]];
-        }
 
     } else {
         [item setImage:nil];
@@ -128,7 +116,9 @@
         if (!title) return item;
 
         BOOL valid = [device isConnected];
-        item = [self _itemWithTitle:title representedObject:device valid:valid useIssueImage:YES];
+        if (!valid) title = [title stringByAppendingString:NSLocalizedString(@" ?", nil)];
+        
+        item = [self _itemWithTitle:title representedObject:device valid:valid];
                 
         return item;
     };
@@ -168,7 +158,7 @@
     auto makeMenu = ^NSMenuItem *(NSNumber *rate, BOOL isNA) {
         NSString *title = isNA ? @"N/A" : [NSString stringWithFormat:@"%@ Hz", rate];
         
-        NSMenuItem *item = [self _itemWithTitle:title representedObject:rate valid:YES useIssueImage:NO];
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:rate valid:YES];
 
         if (fabs([rate doubleValue] - [selectedRate doubleValue]) < 1) {
             itemToSelect = item;
@@ -214,7 +204,7 @@
     auto makeMenu = ^NSMenuItem *(NSNumber *frameSize, BOOL isNA) {
         NSString *title = isNA ? @"N/A" : [frameSize stringValue];
         
-        NSMenuItem *item = [self _itemWithTitle:title representedObject:frameSize valid:YES useIssueImage:NO];
+        NSMenuItem *item = [self _itemWithTitle:title representedObject:frameSize valid:YES];
 
         if ([frameSize integerValue] == [selectedFrameSize integerValue]) {
             itemToSelect = item;

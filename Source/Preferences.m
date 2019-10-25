@@ -46,7 +46,7 @@ static NSDictionary *sGetDefaultValues()
         @"keySignatureDisplayMode": @( KeySignatureDisplayModeRaw ),
         @"duplicateStatusMode":     @( DuplicateStatusModeSameFile ),
         
-        @"mainOutputAudioDevice":  [HugAudioDevice defaultDevice],
+        @"mainOutputAudioDevice":  [HugAudioDevice placeholderDevice],
         @"mainOutputSampleRate":   @(44100),
         @"mainOutputFrames":       @(2048),
         @"mainOutputUsesHogMode":  @(NO),
@@ -187,9 +187,13 @@ static void sRegisterDefaults()
                 NSString *deviceUID = [dictionary objectForKey:sDeviceDictionaryUIDKey];
                 
                 if (name && deviceUID) {
-                    HugAudioDevice *device = [[HugAudioDevice alloc] initWithWithDeviceUID:deviceUID name:name];
+                    HugAudioDevice *device = [HugAudioDevice archivedDeviceWithDeviceUID:deviceUID name:name];
                     if (device) [self setValue:device forKey:key];
                 }
+
+            } else {
+                HugAudioDevice *device = [HugAudioDevice bestDefaultDevice];
+                if (device) [self setValue:device forKey:key];
             }
         }
     }
