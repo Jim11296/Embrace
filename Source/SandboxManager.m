@@ -131,12 +131,11 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
 
     [openPanel setTitle:NSLocalizedString(@"Grant Sandbox Access", nil)];
 
-    [openPanel setMessage:@"Moo"];
     [openPanel setPrompt:NSLocalizedString(@"Grant Access", nil)];
     [openPanel setAllowedFileTypes:@[ NSFileTypeDirectory ]];
     [openPanel setAllowsMultipleSelection:NO];
     [openPanel setCanChooseDirectories:YES];
-    [openPanel setDirectoryURL:[NSURL fileURLWithPath:@""]];
+    [openPanel setDirectoryURL:[NSURL fileURLWithPath:@"/"]];
 
     if ([openPanel runModal] == NSModalResponseOK) {
         NSURL *fileURL = [openPanel URL];
@@ -154,7 +153,7 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
 
     [alert setMessageText:NSLocalizedString(@"Reset sandbox access?", nil)];
     [alert setInformativeText:NSLocalizedString(@"All previously granted sandbox permissions will be cleared.", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Reset",   nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Reset",  nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     [alert setAlertStyle:NSAlertStyleWarning];
 
