@@ -32,7 +32,6 @@
 		5514B6671CDF3BB300F238B7 /* HugAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */; };
 		5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5582F7EC18A385570046A24B /* LoudnessMeasurer.m */; };
 		5514B6691CDF46C700F238B7 /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
-		5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 559A671518D18EA200AB5918 /* URLExtensions.m */; };
 		5514B6741CDF4A4900F238B7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A0B16C188F6FD700866F04 /* Accelerate.framework */; };
 		5514B6751CDF4A4B00F238B7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55F3B7B91877955C00E8FEC8 /* AVFoundation.framework */; };
 		5514B6761CDF4A5200F238B7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55BC0B1A18780D1000D84481 /* AudioToolbox.framework */; };
@@ -78,6 +77,7 @@
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
 		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
 		556098141B47CABD008516C3 /* MenuLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556098131B47CABD008516C3 /* MenuLabelView.m */; };
+		55632332237CDC1C00E1505F /* SandboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55632331237CDC1C00E1505F /* SandboxManager.m */; };
 		55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55698DA71B54ECBE00C9E200 /* GraphicEQView.m */; };
 		556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */; };
 		556ACE2F187B901400AED4BC /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE2E187B901400AED4BC /* WaveformView.m */; };
@@ -112,7 +112,6 @@
 		558DC0BB187785F200C85770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B8187785F200C85770 /* main.m */; };
 		558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
 		5595A7BC18793B9000A7B996 /* EmbraceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5595A7BB18793B9000A7B996 /* EmbraceWindow.m */; };
-		559A671618D18EA200AB5918 /* URLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 559A671518D18EA200AB5918 /* URLExtensions.m */; };
 		55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A0B167188F447100866F04 /* CurrentTrackWindow.xib */; };
 		55A0B16D188F6FD700866F04 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A0B16C188F6FD700866F04 /* Accelerate.framework */; };
 		55A0B1741890A81900866F04 /* test_g.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 55A0B16F1890A81900866F04 /* test_g.m4a */; };
@@ -323,6 +322,8 @@
 		5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TrackTableCellView.xib; path = Resources/TrackTableCellView.xib; sourceTree = SOURCE_ROOT; };
 		556098121B47CABD008516C3 /* MenuLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuLabelView.h; path = Source/MenuLabelView.h; sourceTree = SOURCE_ROOT; };
 		556098131B47CABD008516C3 /* MenuLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuLabelView.m; path = Source/MenuLabelView.m; sourceTree = SOURCE_ROOT; };
+		55632330237CDC1C00E1505F /* SandboxManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SandboxManager.h; path = Source/SandboxManager.h; sourceTree = "<group>"; };
+		55632331237CDC1C00E1505F /* SandboxManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SandboxManager.m; path = Source/SandboxManager.m; sourceTree = "<group>"; };
 		55698DA61B54ECBE00C9E200 /* GraphicEQView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphicEQView.h; path = Source/GraphicEQView.h; sourceTree = SOURCE_ROOT; };
 		55698DA71B54ECBE00C9E200 /* GraphicEQView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphicEQView.m; path = Source/GraphicEQView.m; sourceTree = SOURCE_ROOT; };
 		556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditSystemEffectWindow.xib; path = Resources/EditSystemEffectWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -385,8 +386,6 @@
 		558DC0CA1877868400C85770 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		5595A7BA18793B9000A7B996 /* EmbraceWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmbraceWindow.h; path = Source/EmbraceWindow.h; sourceTree = SOURCE_ROOT; };
 		5595A7BB18793B9000A7B996 /* EmbraceWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmbraceWindow.m; path = Source/EmbraceWindow.m; sourceTree = SOURCE_ROOT; };
-		559A671418D18EA200AB5918 /* URLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URLExtensions.h; path = Source/URLExtensions.h; sourceTree = "<group>"; };
-		559A671518D18EA200AB5918 /* URLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = URLExtensions.m; path = Source/URLExtensions.m; sourceTree = "<group>"; };
 		55A0B167188F447100866F04 /* CurrentTrackWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CurrentTrackWindow.xib; path = Resources/CurrentTrackWindow.xib; sourceTree = SOURCE_ROOT; };
 		55A0B16C188F6FD700866F04 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		55A0B16F1890A81900866F04 /* test_g.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_g.m4a; path = "Resources/Test Sounds/test_g.m4a"; sourceTree = SOURCE_ROOT; };
@@ -572,8 +571,6 @@
 				554B733E18E402E1001E154E /* Log.m */,
 				5514B6621CDEE9DE00F238B7 /* TrackKeys.h */,
 				5514B6631CDEE9DE00F238B7 /* TrackKeys.m */,
-				559A671418D18EA200AB5918 /* URLExtensions.h */,
-				559A671518D18EA200AB5918 /* URLExtensions.m */,
 			);
 			name = Shared;
 			sourceTree = SOURCE_ROOT;
@@ -775,6 +772,8 @@
 				55F81FD21B846E3300E03B5B /* IssuesController.m */,
 				552C9E4A1883888E0041C160 /* PreferencesController.h */,
 				552C9E4B1883888E0041C160 /* PreferencesController.m */,
+				55632330237CDC1C00E1505F /* SandboxManager.h */,
+				55632331237CDC1C00E1505F /* SandboxManager.m */,
 				55F3B7AF1877885800E8FEC8 /* SetlistController.h */,
 				55F3B7B01877885800E8FEC8 /* SetlistController.m */,
 				557CF68F18C1E14B0066D040 /* TracksController.h */,
@@ -1246,7 +1245,6 @@
 				5514B6671CDF3BB300F238B7 /* HugAudioFile.m in Sources */,
 				5514B6681CDF46AA00F238B7 /* LoudnessMeasurer.m in Sources */,
 				555953FB21BBD9040032EE54 /* HugError.m in Sources */,
-				5514B6721CDF485400F238B7 /* URLExtensions.m in Sources */,
 				5514B6651CDEEAAF00F238B7 /* TrackKeys.m in Sources */,
 				550C63EA1FE76AC3007841BC /* WorkerService.m in Sources */,
 			);
@@ -1276,7 +1274,6 @@
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
-				559A671618D18EA200AB5918 /* URLExtensions.m in Sources */,
 				55F7ABE918B04D91006B6FBB /* DebugController.m in Sources */,
 				55D7001120DCA3A8002FB978 /* TrackErrorButton.m in Sources */,
 				55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */,
@@ -1337,6 +1334,7 @@
 				55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */,
 				55102B431B53564500308F55 /* EffectAdditions.m in Sources */,
 				552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */,
+				55632332237CDC1C00E1505F /* SandboxManager.m in Sources */,
 				550C63C81FE6666E007841BC /* ScriptFile.m in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
 				55C24E1518D7D7800057D45E /* HugFastUtils.m in Sources */,

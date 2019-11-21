@@ -116,7 +116,7 @@
         if (!title) return item;
 
         BOOL valid = [device isConnected];
-        if (!valid) title = [title stringByAppendingString:NSLocalizedString(@" ?", nil)];
+        if (!valid) title = [NSString stringWithFormat:@"? %@", title];
         
         item = [self _itemWithTitle:title representedObject:device valid:valid];
                 

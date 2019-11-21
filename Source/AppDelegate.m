@@ -10,6 +10,7 @@
 #import "CurrentTrackController.h"
 #import "ViewTrackController.h"
 #import "TracksController.h"
+#import "SandboxManager.h"
 #import "Preferences.h"
 #import "DebugController.h"
 #import "EffectAdditions.h"
@@ -34,6 +35,8 @@
 @interface AppDelegate ()
 
 - (IBAction) openFile:(id)sender;
+
+- (IBAction) grantSandboxAccess:(id)sender;
 
 - (IBAction) clearSetlist:(id)sender;
 - (IBAction) resetPlayedTracks:(id)sender;
@@ -730,10 +733,23 @@
 }
 
 
+- (IBAction) grantSandboxAccess:(id)sender
+{
+    EmbraceLogMethod();
+    [[SandboxManager sharedInstance] showAddGrantDialog];
+}
+
+
+- (IBAction) resetSandboxAccess:(id)sender
+{
+    EmbraceLogMethod();
+    [[SandboxManager sharedInstance] showResetGrantsDialog];
+}
+
+
 - (IBAction) copySetlist:(id)sender
 {
     EmbraceLogMethod();
-
     [_setlistController copyToPasteboard:[NSPasteboard generalPasteboard]];
 }
 

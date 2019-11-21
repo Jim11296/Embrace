@@ -15,6 +15,5 @@
     #import "Compatibility.h"
     #import "Log.h"
     #import "Application.h"
-    #import "URLExtensions.h"
     #import "EmbraceWindow.h"
 #endif
