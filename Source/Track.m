@@ -7,6 +7,7 @@
 #import "ScriptsManager.h"
 #import "WorkerService.h"
 #import "HugError.h"
+#import "SandboxManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -496,7 +497,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
         @try {
             if (!bookmark) {
-                [externalURL embrace_startAccessingResourceWithKey:@"bookmark"];
+                [[SandboxManager sharedInstance] startAccessToURL:externalURL];
                 
                 NSError *error = nil;
                 bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
@@ -505,7 +506,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                     EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, externalURL, error);
                 }
 
-                [externalURL embrace_stopAccessingResourceWithKey:@"bookmark"];
+                [[SandboxManager sharedInstance] stopAccessToURL:externalURL];
             }
 
             if (!bookmark) {
@@ -535,10 +536,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
                 return;
             }
-
-            if (![externalURL embrace_startAccessingResourceWithKey:@"resolve"]) {
-                EmbraceLog(@"Track", @"%@, -embrace_startAccessingResource failed for %@", self, externalURL);
-            }
+          
+            [[SandboxManager sharedInstance] startAccessToURL:externalURL];
 
             if (isStale) {
                 EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
@@ -563,7 +562,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 }
             }
 
-            [externalURL embrace_stopAccessingResourceWithKey:@"resolve"];
+            [[SandboxManager sharedInstance] stopAccessToURL:externalURL];
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 _isResolvingURLs = NO;

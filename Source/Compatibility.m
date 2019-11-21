@@ -6,13 +6,15 @@
 #include <dlfcn.h>
 
 
-#define class_getInstanceMethod        _s0
-#define class_addMethod                _s1
-#define method_exchangeImplementations _s2
-#define class_getMethodImplementation  _s3
-#define method_getTypeEncoding         _s4
-#define NSSelectorFromString           _s5
+#define __dlsym                        _s0
+#define class_getInstanceMethod        _s1
+#define class_addMethod                _s2
+#define method_exchangeImplementations _s3
+#define class_getMethodImplementation  _s4
+#define method_getTypeEncoding         _s5
+#define NSSelectorFromString           _s6
 
+static void * (*__dlsym)(void * __handle, const char * __symbol);
 static Method (*class_getInstanceMethod)(Class cls, SEL name);
 static BOOL   (*class_addMethod)(Class cls, SEL name, IMP imp, const char *types);
 static void   (*method_exchangeImplementations)(Method m1, Method m2);
@@ -31,7 +33,11 @@ static inline void *sCompatibilityLookup(const UInt8 *inName)
     while (*i) { *o = (*i - 128); i++; o++; }
     *o = 0;
 
-    return dlsym(RTLD_NEXT, (char *)buffer);
+    if (__dlsym) {
+        return __dlsym(RTLD_NEXT, (char *)buffer);
+    } else {
+        return NULL;
+    }
 }
 
 @interface NSObject (EmbraceCompatibility)
@@ -58,6 +64,8 @@ static void sInit()
     UInt8 d[] = { 206,211,211,229,236,229,227,244,239,242,198,242,239,237,211,244,242,233,238,231,0 };
     UInt8 e[] = { 227,236,225,243,243,223,231,229,244,205,229,244,232,239,228,201,237,240,236,229,237,229,238,244,225,244,233,239,238,0 };
     UInt8 f[] = { 237,229,244,232,239,228,223,231,229,244,212,249,240,229,197,238,227,239,228,233,238,231,0 };
+
+    __dlsym = dlsym(RTLD_NEXT, "dlsym");
 
     class_getInstanceMethod = sCompatibilityLookup(a);
     class_addMethod = sCompatibilityLookup(b);
