@@ -488,7 +488,7 @@ static NSInteger sAutoGapMaximum = 16;
     NSTimeInterval now = [player isPlaying] ? [NSDate timeIntervalSinceReferenceDate] : 0.0;
     NSTimeInterval time = 0;
 
-    Track  *lastTrack = nil;
+    Track *lastTrack = nil;
 
     for (Track *track in [[self tracksController] tracks]) {
         NSTimeInterval endTime = 0;
@@ -501,8 +501,8 @@ static NSInteger sAutoGapMaximum = 16;
         } else if (status == TrackStatusPreparing || status == TrackStatusPlaying) {
             if ([track isEqual:[player currentTrack]]) {
                 NSTimeInterval expectedDuration = [track expectedDuration];
-                NSTimeInterval remaining = [player timeRemaining];
-
+                NSTimeInterval remaining = (status == TrackStatusPreparing) ? [track playDuration] : [player timeRemaining];
+                
                 if (expectedDuration) {
                     remaining = expectedDuration - [player timeElapsed];
                     if (remaining < 0) remaining = 0;
@@ -515,7 +515,7 @@ static NSInteger sAutoGapMaximum = 16;
         } else if (status == TrackStatusQueued) {
             NSTimeInterval duration = [track expectedDuration];
             if (!duration) duration = [track playDuration];
-        
+
             time += duration;
             endTime = now + time;
             
