@@ -299,7 +299,9 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
             if (track) [tracks addObject:track];
             
-            if ([track trackStatus] == TrackStatusPlaying) {
+            TrackStatus trackStatus = [track trackStatus];
+            
+            if ((trackStatus == TrackStatusPreparing) || (trackStatus == TrackStatusPlaying)) {
                 [track setTrackStatus:TrackStatusPlayed];
             }
         }
