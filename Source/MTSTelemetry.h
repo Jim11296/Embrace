@@ -1,4 +1,4 @@
-// (c) 2017 musictheory.net, LLC
+// (c) 2017-2020 musictheory.net, LLC
 
 typedef NS_ENUM(NSInteger, MTSTelemetryStringKey) {
     MTSTelemetryStringNoneKey,
