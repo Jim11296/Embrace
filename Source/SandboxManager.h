@@ -1,10 +1,4 @@
-//
-//  SandboxManager.h
-//  Embrace
-//
-//  Created by Ricci Adams on 11/13/19.
-//  Copyright © 2019 Ricci Adams. All rights reserved.
-//
+// (c) 2019-2020 Ricci Adams.  All rights reserved.
 
 #import <Foundation/Foundation.h>
 

@@ -1,10 +1,5 @@
-//
-//  IssueManager.h
-//  Embrace
-//
-//  Created by Ricci Adams on 2016-05-29.
-//  (c) 2016-2017 Ricci Adams.  All rights reserved.
-//
+// (c) 2016-2020 Ricci Adams.  All rights reserved.
+
 
 #import <Foundation/Foundation.h>
 

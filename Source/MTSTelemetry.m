@@ -1,4 +1,4 @@
-// (c) 2017 musictheory.net, LLC
+// (c) 2017-2020 musictheory.net, LLC
 
 #import "MTSTelemetry.h"
 #import "MTSBase.h"

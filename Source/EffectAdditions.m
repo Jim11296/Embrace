@@ -1,4 +1,4 @@
-// (c) 2015-2019 Ricci Adams.  All rights reserved.
+// (c) 2015-2020 Ricci Adams.  All rights reserved.
 
 #import "EffectAdditions.h"
 

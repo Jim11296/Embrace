@@ -1,4 +1,4 @@
-// (c) 2017-2019 Ricci Adams.  All rights reserved.
+// (c) 2017-2020 Ricci Adams.  All rights reserved.
 
 #import "ScriptsManager.h"
 #import "FileSystemMonitor.h"
