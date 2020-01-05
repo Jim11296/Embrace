@@ -57,6 +57,7 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic, readonly) NSString *latestBuildString;
 
+@property (nonatomic) BOOL usesLargerText;
 @property (nonatomic) NSInteger numberOfLayoutLines;
 @property (nonatomic) BOOL shortensPlayedTracks;
 

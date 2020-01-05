@@ -33,6 +33,10 @@
 
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *speakerLeftConstraint;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *firstLineTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *secondLineTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *thirdLineTopConstraint;
+
 @property (nonatomic, strong)          TrackLabelView *dotLabelView;
 @property (nonatomic, weak)   IBOutlet TrackLabelView *edgeLabelView;
 
@@ -169,10 +173,6 @@
     [_timeMaskView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_timeMaskView setGradientLength:32];
     [_timeMaskView setGradientLayoutAttribute:NSLayoutAttributeLeft];
-
-    NSFont *font = [[self durationField] font];
-    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
-    [[self durationField] setFont:font];
 
 #if 0
     [_titleField setBackgroundColor:[NSColor yellowColor]];
@@ -433,6 +433,8 @@
     [self _updateSpeakerIconAnimated:NO];
     
     [self _adjustConstraintsForLineLayout];
+    
+    [self _updateFieldFonts];
 
     // Update constraints
     if ([track error]) {
@@ -836,11 +838,7 @@
 
         timeString = [NSString stringWithFormat:timeStringFormat, [formatter stringFromDate:date]];
     }
-
-    NSFont *font = [[self lineTwoLeftField] font];
-    font = [NSFont monospacedDigitSystemFontOfSize:[font pointSize] weight:NSFontWeightRegular];
-    [_timeField setFont:font];
-        
+       
     [_timeField setStringValue:timeString];
     
     NSString *titleString = [track title];
@@ -906,6 +904,33 @@
     [_timeField setContentCompressionResistancePriority:(_showsTime ? (NSLayoutPriorityDefaultHigh + 1) : 1) forOrientation:NSLayoutConstraintOrientationHorizontal];
 }
 
+
+- (void) _updateFieldFonts
+{
+    BOOL usesLargerText = [[Preferences sharedInstance] usesLargerText];
+    
+    CGFloat primaryFontSize   = usesLargerText ? 16.0 : 13.0;
+    CGFloat secondaryFontSize = usesLargerText ? 14.0 : 11.0;
+
+    NSFont *titleFont     = [NSFont systemFontOfSize:primaryFontSize                  weight:NSFontWeightRegular];
+    NSFont *secondaryFont = [NSFont systemFontOfSize:secondaryFontSize                weight:NSFontWeightRegular];
+    NSFont *durationFont  = [NSFont monospacedDigitSystemFontOfSize:primaryFontSize   weight:NSFontWeightRegular];
+    NSFont *timeFont      = [NSFont monospacedDigitSystemFontOfSize:secondaryFontSize weight:NSFontWeightRegular];
+
+    [[self titleField]    setFont:titleFont];
+    [[self durationField] setFont:durationFont];
+
+    [[self lineTwoLeftField]    setFont:secondaryFont];
+    [[self lineTwoRightField]   setFont:secondaryFont];
+    [[self lineThreeLeftField]  setFont:secondaryFont];
+    [[self lineThreeRightField] setFont:secondaryFont];
+    
+    [[self firstLineTopConstraint]  setConstant:(usesLargerText ? 6 : 2)];
+    [[self secondLineTopConstraint] setConstant:2];
+    [[self thirdLineTopConstraint]  setConstant:2];
+        
+    [_timeField setFont:timeFont];
+}
 
 
 #pragma mark - Public Methods
