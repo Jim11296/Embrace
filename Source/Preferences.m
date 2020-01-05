@@ -18,6 +18,7 @@ static NSDictionary *sGetDefaultValues()
 
     sDefaultValues = @{
         @"numberOfLayoutLines":  @2,
+        @"usesLargerText":       @NO,
         @"shortensPlayedTracks": @NO,
     
         @"floatsOnTop":          @NO,

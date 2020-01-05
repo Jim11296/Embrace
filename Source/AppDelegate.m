@@ -611,6 +611,10 @@
         NSInteger yn = ([[Preferences sharedInstance] numberOfLayoutLines] == [menuItem tag]);
         [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
 
+    } else if (action == @selector(changeUsesLargerText:)) {
+        NSInteger yn = [[Preferences sharedInstance] usesLargerText];
+        [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
+
     } else if (action == @selector(changeShortensPlayedTracks:)) {
         NSInteger yn = [[Preferences sharedInstance] shortensPlayedTracks];
         [menuItem setState:(yn ? NSControlStateValueOn : NSControlStateValueOff)];
@@ -765,6 +769,15 @@
 {
     EmbraceLogMethod();
     [[Preferences sharedInstance] setNumberOfLayoutLines:[sender tag]];
+}
+
+
+- (IBAction) changeUsesLargerText:(id)sender
+{
+    EmbraceLogMethod();
+
+    Preferences *preferences = [Preferences sharedInstance];
+    [preferences setUsesLargerText:![preferences usesLargerText]];
 }
 
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,7 +30,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="312" height="60"/>
                     <subviews>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="0mJ-te-wAf">
-                            <rect key="frame" x="23" y="41" width="247" height="17"/>
+                            <rect key="frame" x="23" y="42" width="247" height="16"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Title" usesSingleLineMode="YES" id="7sP-hf-Z5h">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -38,39 +38,39 @@
                             </textFieldCell>
                         </textField>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="KYa-Yb-9f5">
-                            <rect key="frame" x="23" y="25" width="213" height="14"/>
+                            <rect key="frame" x="23" y="26" width="213" height="14"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 2 Left" usesSingleLineMode="YES" id="bc4-y0-9mN">
-                                <font key="font" metaFont="smallSystem"/>
+                                <font key="font" metaFont="menu" size="11"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Cd2-5a-ZGp">
-                            <rect key="frame" x="23" y="9" width="213" height="14"/>
+                            <rect key="frame" x="23" y="10" width="213" height="14"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Line 3 Left" usesSingleLineMode="YES" id="WvC-6Z-80D">
-                                <font key="font" metaFont="smallSystem"/>
+                                <font key="font" metaFont="menu" size="11"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
                         <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" translatesAutoresizingMaskIntoConstraints="NO" id="vHN-Td-1li">
-                            <rect key="frame" x="240" y="25" width="67" height="14"/>
+                            <rect key="frame" x="240" y="26" width="67" height="14"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingMiddle" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" alignment="right" title="Line 2 Right" usesSingleLineMode="YES" id="rJn-DL-0hx">
-                                <font key="font" metaFont="smallSystem"/>
+                                <font key="font" metaFont="menu" size="11"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
                         <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9DW-9o-kn1">
-                            <rect key="frame" x="240" y="9" width="67" height="14"/>
+                            <rect key="frame" x="240" y="10" width="67" height="14"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Line 3 Right" usesSingleLineMode="YES" id="OYz-2S-INr">
-                                <font key="font" metaFont="smallSystem"/>
+                                <font key="font" metaFont="menu" size="11"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
                         </textField>
                         <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oJ2-ys-Q1u">
-                            <rect key="frame" x="274" y="41" width="33" height="17"/>
+                            <rect key="frame" x="274" y="42" width="33" height="16"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="0:00" usesSingleLineMode="YES" id="KKa-4i-CRW">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -133,14 +133,17 @@
                 <outlet property="durationField" destination="oJ2-ys-Q1u" id="XEM-Dt-grU"/>
                 <outlet property="edgeLabelView" destination="nkF-z6-beo" id="sc9-Z5-DMm"/>
                 <outlet property="errorButton" destination="NGb-9e-QcY" id="Gas-vi-M0y"/>
+                <outlet property="firstLineTopConstraint" destination="Ai0-ce-Skr" id="d3w-Tv-zu6"/>
                 <outlet property="lineThreeLeftField" destination="Cd2-5a-ZGp" id="3uN-uw-VVf"/>
                 <outlet property="lineThreeRightField" destination="9DW-9o-kn1" id="f9o-fT-Hg5"/>
                 <outlet property="lineTwoLeftField" destination="KYa-Yb-9f5" id="GUb-YJ-aFB"/>
                 <outlet property="lineTwoRightField" destination="vHN-Td-1li" id="PFc-IX-QTx"/>
+                <outlet property="secondLineTopConstraint" destination="5sF-AG-aO0" id="X45-Rw-SvJ"/>
                 <outlet property="speakerImageView" destination="gtl-mJ-WxD" id="6o6-bq-HKJ"/>
                 <outlet property="speakerLeftConstraint" destination="WDB-ms-m2b" id="07a-Fc-tSY"/>
                 <outlet property="stripeView" destination="eIS-U0-iuH" id="M5O-f3-bub"/>
                 <outlet property="textField" destination="0mJ-te-wAf" id="jYX-ZW-Q3G"/>
+                <outlet property="thirdLineTopConstraint" destination="smP-qt-wt7" id="J5S-5j-QpF"/>
                 <outlet property="titleDurationConstraint" destination="uC8-Wo-BEi" id="ULH-w0-8dO"/>
                 <outlet property="titleField" destination="0mJ-te-wAf" id="WAS-mx-TmR"/>
             </connections>

@@ -673,36 +673,28 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (CGFloat) tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-    __block CGFloat result = 0;
+    Preferences *preferences = [Preferences sharedInstance];
 
-    const CGFloat kOneLineHeight   = 24;
-    const CGFloat kTwoLineHeight   = 39;
-    const CGFloat kThreeLineHeight = 56;
+    NSInteger numberOfLines = [preferences numberOfLayoutLines];
+    BOOL shortensPlayedTracks = [preferences shortensPlayedTracks];
+    BOOL usesLargerText = [preferences usesLargerText];
     
-    TrackTrialCheck(^{
-        Preferences *preferences = [Preferences sharedInstance];
-        NSInteger numberOfLines = [preferences numberOfLayoutLines];
-        BOOL shortensPlayedTracks = [preferences shortensPlayedTracks];
-        
-        Track *track = [self trackAtIndex:row];
-        if (shortensPlayedTracks && ([track trackStatus] == TrackStatusPlayed)) {
-        
-            if (row != [[self tableView] rowWithMouseInside]) {
-                result = kOneLineHeight;
-                return;
-            }
+    BOOL usesOneLine = (numberOfLines == 1);
+    
+    Track *track = [self trackAtIndex:row];
+    if (shortensPlayedTracks && ([track trackStatus] == TrackStatusPlayed)) {
+        if (row != [[self tableView] rowWithMouseInside]) {
+            usesOneLine = YES;
         }
-        
-        if (numberOfLines == 1) {
-            result = kOneLineHeight;
-        } else if (numberOfLines == 3) {
-            result = kThreeLineHeight;
-        } else {
-            result = kTwoLineHeight;
-        }
-    });
-
-    return result;
+    }
+    
+    if (usesOneLine) {
+        return usesLargerText ? 32 : 24;
+    } else if (numberOfLines == 2) {
+        return usesLargerText ? 52 : 39;
+    } else {
+        return usesLargerText ? 74 : 56;
+    }
 }
 
 
