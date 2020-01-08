@@ -5,6 +5,8 @@
 #import "SetlistController.h"
 #import "EffectsController.h"
 #import "PreferencesController.h"
+#import "MusicLocationsController.h"
+
 #import "EditGraphicEQEffectController.h"
 #import "EditSystemEffectController.h"
 #import "CurrentTrackController.h"
@@ -35,8 +37,6 @@
 @interface AppDelegate ()
 
 - (IBAction) openFile:(id)sender;
-
-- (IBAction) grantSandboxAccess:(id)sender;
 
 - (IBAction) clearSetlist:(id)sender;
 - (IBAction) resetPlayedTracks:(id)sender;
@@ -90,6 +90,7 @@
     EffectsController      *_effectsController;
     NSWindowController     *_currentTrackController;
     PreferencesController  *_preferencesController;
+    MusicLocationsController  *_musicLocationsController;
 
 #if DEBUG
     DebugController        *_debugController;
@@ -419,6 +420,12 @@
 }
 
 
+- (void) showMusicLocations
+{
+    [self showMusicLocations:self];
+}
+
+
 - (EditEffectController *) editControllerForEffect:(Effect *)effect
 {
     if (!_editEffectControllers) {
@@ -737,20 +744,6 @@
 }
 
 
-- (IBAction) grantSandboxAccess:(id)sender
-{
-    EmbraceLogMethod();
-    [[SandboxManager sharedInstance] showAddGrantDialog];
-}
-
-
-- (IBAction) resetSandboxAccess:(id)sender
-{
-    EmbraceLogMethod();
-    [[SandboxManager sharedInstance] showResetGrantsDialog];
-}
-
-
 - (IBAction) copySetlist:(id)sender
 {
     EmbraceLogMethod();
@@ -1011,6 +1004,18 @@
     }
 
     [_preferencesController showWindow:self];
+}
+
+
+- (IBAction) showMusicLocations:(id)sender
+{
+    EmbraceLogMethod();
+
+    if (!_musicLocationsController) {
+        _musicLocationsController = [[MusicLocationsController alloc] init];
+    }
+
+    [_musicLocationsController showWindow:self];
 }
 
 

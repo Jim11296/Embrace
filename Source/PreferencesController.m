@@ -6,6 +6,8 @@
 #import "ScriptFile.h"
 #import "ScriptsManager.h"
 #import "HugAudioDevice.h"
+#import "AppDelegate.h"
+
 
 @interface PreferencesController ()
 
@@ -405,6 +407,12 @@
 
 
 #pragma mark - Public Methods
+
+- (IBAction) editMusicLocations:(id)sender
+{
+    [GetAppDelegate() showMusicLocations];
+}
+
 
 - (void) selectPane:(NSInteger)tag animated:(BOOL)animated
 {

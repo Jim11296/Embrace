@@ -97,21 +97,6 @@
                                     <action selector="openFile:" target="494" id="4JA-P4-kgz"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="79">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Grant Sandbox Access…" id="wDa-eC-RAy">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="grantSandboxAccess:" target="494" id="MSZ-ue-230"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Reset Sandbox Access…" alternate="YES" id="07o-2y-MT9">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES"/>
-                                <connections>
-                                    <action selector="resetSandboxAccess:" target="494" id="wcD-Ff-5MO"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="QCK-xW-qaZ"/>
                             <menuItem title="Close" keyEquivalent="w" id="73">
                                 <connections>

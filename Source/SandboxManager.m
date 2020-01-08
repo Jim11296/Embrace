@@ -3,18 +3,6 @@
 #import "SandboxManager.h"
 
 
-@interface SandboxPersistentGrant : NSObject
-
-- (instancetype) initWithBookmarkData:(NSData *)bookmarkData;
-
-@property (nonatomic, readonly) NSData *bookmarkData;
-
-- (void) startAccessingSecurityScopedResource;
-- (void) stopAccessingSecurityScopedResource;
-
-@end
-
-
 static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
 {
     NSURLBookmarkCreationOptions options = NSURLBookmarkCreationWithSecurityScope;
@@ -22,7 +10,7 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
     NSError *error = nil;
     
     NSData *bookmark = [fileURL bookmarkDataWithOptions: options
-                         includingResourceValuesForKeys:  @[ NSURLNameKey ]
+                         includingResourceValuesForKeys:  @[ NSURLNameKey, NSURLPathKey ]
                                           relativeToURL: nil
                                                   error: &error];
 
@@ -35,7 +23,7 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
 
 
 @implementation SandboxManager {
-    NSMutableArray<SandboxPersistentGrant *> *_grants;
+    NSArray<SandboxPersistentGrant *> *_grants;
 }
 
 
@@ -62,33 +50,26 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
 }
 
 
-- (void) _addGrantWithBookmarkData:(NSData *)bookmarkData
-{
-    if (!bookmarkData) return;
-
-    SandboxPersistentGrant *grant = [[SandboxPersistentGrant alloc] initWithBookmarkData:bookmarkData];
-    if (!grant) return;
-
-    if (!_grants) _grants = [NSMutableArray array];
-    [_grants addObject:grant];
-}
-
-
 - (void) _loadState
 {
-    NSArray *dataArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"sandbox-grants"];
+    NSMutableArray *grants = [NSMutableArray array];
 
-    if (![dataArray isKindOfClass:[NSArray class]]) {
-        return;
-    }
+    NSArray *dataArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"sandbox-persistent-grants"];
 
-    for (NSData *bookmarkData in dataArray) {
-        if (![bookmarkData isKindOfClass:[NSData class]]) {
-            continue;
+    if ([dataArray isKindOfClass:[NSArray class]]) {
+        for (NSData *bookmarkData in dataArray) {
+            if (![bookmarkData isKindOfClass:[NSData class]]) {
+                continue;
+            }
+
+            SandboxPersistentGrant *grant = [[SandboxPersistentGrant alloc] initWithBookmarkData:bookmarkData];
+            if (!grant) continue;
+
+            [grants addObject:grant];
         }
-        
-        [self _addGrantWithBookmarkData:bookmarkData];
-    }
+    } 
+       
+    [self setGrants:grants];
 }
 
 
@@ -101,59 +82,7 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
         if (data) [dataArray addObject:data];
     }
     
-    [[NSUserDefaults standardUserDefaults] setObject:dataArray forKey:@"sandbox-grants"];
-}
-
-
-- (void) addPersistentGrantToURL:(NSURL *)fileURL
-{
-    [self _addGrantWithBookmarkData:sGetBookmarkDataWithFileURL(fileURL)];
-    [self _saveState];
-}
-
-
-- (void) removeAllPersistentGrants
-{
-    _grants = nil;
-    [self _saveState];
-}
-
-
-- (void) showAddGrantDialog
-{
-    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-
-    [openPanel setTitle:NSLocalizedString(@"Grant Sandbox Access", nil)];
-
-    [openPanel setPrompt:NSLocalizedString(@"Grant Access", nil)];
-    [openPanel setAllowedFileTypes:@[ NSFileTypeDirectory ]];
-    [openPanel setAllowsMultipleSelection:NO];
-    [openPanel setCanChooseDirectories:YES];
-    [openPanel setDirectoryURL:[NSURL fileURLWithPath:@"/"]];
-
-    if ([openPanel runModal] == NSModalResponseOK) {
-        NSURL *fileURL = [openPanel URL];
-
-        if (fileURL) {
-            [self addPersistentGrantToURL:fileURL];
-        }
-    }
-}
-
-
-- (void) showResetGrantsDialog
-{
-    NSAlert *alert = [[NSAlert alloc] init];
-
-    [alert setMessageText:NSLocalizedString(@"Reset sandbox access?", nil)];
-    [alert setInformativeText:NSLocalizedString(@"All previously granted sandbox permissions will be cleared.", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Reset",  nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-    [alert setAlertStyle:NSAlertStyleWarning];
-
-    if ([alert runModal] == NSAlertFirstButtonReturn) {
-        [self removeAllPersistentGrants];
-    }
+    [[NSUserDefaults standardUserDefaults] setObject:dataArray forKey:@"sandbox-persistent-grants"];
 }
 
 
@@ -177,12 +106,29 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
 }
 
 
+
+- (void) setGrants:(NSArray<SandboxPersistentGrant *> *)grants
+{
+    if (_grants != grants) {
+        _grants = grants;
+        [self _saveState];
+    }
+}
+
+
 @end
 
 
 @implementation SandboxPersistentGrant {
     NSURL  *_accessedFileURL;
     NSData *_bookmarkData;
+    NSString *_displayName;
+}
+
+
+- (instancetype) initWithFileURL:(NSURL *)fileURL
+{
+    return [self initWithBookmarkData:sGetBookmarkDataWithFileURL(fileURL)];
 }
 
 
@@ -193,6 +139,26 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
     }
 
     return self;
+}
+
+
+- (void) dealloc
+{
+    [self stopAccessingSecurityScopedResource];
+}
+
+
+- (NSString *) displayName
+{
+    if (!_displayName) {
+        NSDictionary *values = [NSURL resourceValuesForKeys:@[ NSURLNameKey, NSURLPathKey ] fromBookmarkData:_bookmarkData];
+        NSString     *path   = [values objectForKey:NSURLPathKey];
+        NSString     *name   = [values objectForKey:NSURLNameKey];
+
+        _displayName = path ? path : name;
+    }
+    
+    return _displayName;
 }
 
 
@@ -219,6 +185,10 @@ static NSData *sGetBookmarkDataWithFileURL(NSURL *fileURL)
     if (fileURL && isStale) {
         EmbraceLog(@"SandboxManager", @"Remaking bookmark for %@", originalFileName);
         _bookmarkData = sGetBookmarkDataWithFileURL(fileURL);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[SandboxManager sharedInstance] _saveState];
+        });
     }
     
     if ([fileURL startAccessingSecurityScopedResource]) {
