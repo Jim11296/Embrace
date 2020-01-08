@@ -58,6 +58,8 @@
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
 		553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 553E77901E6ABF4800DA988B /* MetadataParser.m */; };
+		5543F72F23C41DC100213A9A /* MusicLocationsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5543F72E23C41DC100213A9A /* MusicLocationsWindow.xib */; };
+		5543F73223C42CCF00213A9A /* MusicLocationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5543F73123C42CCF00213A9A /* MusicLocationsController.m */; };
 		5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5549FCA51F8AF767009006D2 /* CoreServices.framework */; };
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
@@ -290,6 +292,9 @@
 		553E44E118C5D23400E8D7B9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		553E778F1E6ABF4800DA988B /* MetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataParser.h; path = Source/MetadataParser.h; sourceTree = SOURCE_ROOT; };
 		553E77901E6ABF4800DA988B /* MetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataParser.m; path = Source/MetadataParser.m; sourceTree = SOURCE_ROOT; };
+		5543F72E23C41DC100213A9A /* MusicLocationsWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MusicLocationsWindow.xib; path = Resources/MusicLocationsWindow.xib; sourceTree = "<group>"; };
+		5543F73023C42CCF00213A9A /* MusicLocationsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MusicLocationsController.h; path = Source/MusicLocationsController.h; sourceTree = "<group>"; };
+		5543F73123C42CCF00213A9A /* MusicLocationsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MusicLocationsController.m; path = Source/MusicLocationsController.m; sourceTree = "<group>"; };
 		5549FCA51F8AF767009006D2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = Source/Log.h; sourceTree = "<group>"; };
 		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = Source/Log.m; sourceTree = "<group>"; };
@@ -770,6 +775,8 @@
 				55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */,
 				55F81FD11B846E3300E03B5B /* IssuesController.h */,
 				55F81FD21B846E3300E03B5B /* IssuesController.m */,
+				5543F73023C42CCF00213A9A /* MusicLocationsController.h */,
+				5543F73123C42CCF00213A9A /* MusicLocationsController.m */,
 				552C9E4A1883888E0041C160 /* PreferencesController.h */,
 				552C9E4B1883888E0041C160 /* PreferencesController.m */,
 				55632330237CDC1C00E1505F /* SandboxManager.h */,
@@ -803,6 +810,7 @@
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
 				55F81FD41B846EE800E03B5B /* IssuesWindow.xib */,
+				5543F72E23C41DC100213A9A /* MusicLocationsWindow.xib */,
 				55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */,
 				556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */,
 				55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */,
@@ -1149,6 +1157,7 @@
 				55169D501F9ACBFA003779FA /* test_3s_d4.m4a in Resources */,
 				55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
+				5543F72F23C41DC100213A9A /* MusicLocationsWindow.xib in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
 				55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */,
 				550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */,
@@ -1327,6 +1336,7 @@
 				554B733F18E402E1001E154E /* Log.m in Sources */,
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,
 				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
+				5543F73223C42CCF00213A9A /* MusicLocationsController.m in Sources */,
 				555953E921B6834D0032EE54 /* HugMeterData.m in Sources */,
 				55CF2786187A23BD0042C92A /* MusicAppManager.m in Sources */,
 				55F6C73119CEAA5B00B22793 /* Compatibility.m in Sources */,
