@@ -38,7 +38,7 @@ static NSInteger sAutoGapMinimum = 0;
 static NSInteger sAutoGapMaximum = 16;
 
 
-@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, SetlistSliderDragDelegate>
+@interface SetlistController () <NSTableViewDelegate, NSTableViewDataSource, PlayerListener, PlayerTrackProvider, ApplicationEventListener, SetlistSliderDragDelegate>
 
 @property (nonatomic, strong, readwrite) IBOutlet TracksController *tracksController;
 
@@ -203,13 +203,13 @@ static NSInteger sAutoGapMaximum = 16;
     [window setExcludedFromWindowsMenu:YES];
 
     [window registerForDraggedTypes:[[self tracksController] readableDraggedTypes]];
+
+    [(Application *)NSApp registerEventListener:self];
 }
 
 
-- (void) flagsChanged:(NSEvent *)event
+- (void) application:(Application *)application flagsChanged:(NSEvent *)event
 {
-    [super flagsChanged:event];
-
     BOOL commandDown = ([event modifierFlags] & NSEventModifierFlagCommand) == NSEventModifierFlagCommand;
     
     if (_commandDown != commandDown) {
