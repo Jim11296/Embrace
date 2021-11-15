@@ -93,9 +93,6 @@
 		556EAEED1FEA013C00EF68C3 /* CrashPad_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */; };
 		556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */; };
 		556EAEEF1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */; };
-		556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */; };
-		556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */; };
-		556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */; };
 		55717BF5187EA65400213213 /* SetlistButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* SetlistButton.m */; };
 		55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* SetlistSlider.m */; };
 		5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SetlistProgressBar.m */; };
@@ -104,7 +101,6 @@
 		55779D6120CA0B2500DB660F /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */; };
 		557ABAB61B68D48C006F69D9 /* TrackLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557ABAB51B68D48C006F69D9 /* TrackLabelView.m */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
-		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
 		557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C43991D615CDC000184D8 /* TipArrowFloater.m */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
@@ -349,9 +345,6 @@
 		556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Profile.xcconfig; path = Config/Combined/CrashPad_Profile.xcconfig; sourceTree = "<group>"; };
 		556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Release.xcconfig; path = Config/Combined/CrashPad_Release.xcconfig; sourceTree = "<group>"; };
 		556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Debug.xcconfig; path = Config/Combined/CrashPad_Debug.xcconfig; sourceTree = "<group>"; };
-		556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Release.xcconfig; path = Config/Combined/Embrace_Trial_Release.xcconfig; sourceTree = "<group>"; };
-		556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Debug.xcconfig; path = Config/Combined/Embrace_Trial_Debug.xcconfig; sourceTree = "<group>"; };
-		556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Profile.xcconfig; path = Config/Combined/Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
 		55717BF3187EA65400213213 /* SetlistButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistButton.h; path = Source/SetlistButton.h; sourceTree = SOURCE_ROOT; };
@@ -365,9 +358,6 @@
 		557ABAB51B68D48C006F69D9 /* TrackLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackLabelView.m; path = Source/TrackLabelView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
-		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Trial.xcconfig; path = Config/Trial.xcconfig; sourceTree = SOURCE_ROOT; };
-		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
-		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
 		557C43981D615CDC000184D8 /* TipArrowFloater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TipArrowFloater.h; path = Source/TipArrowFloater.h; sourceTree = SOURCE_ROOT; };
 		557C43991D615CDC000184D8 /* TipArrowFloater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TipArrowFloater.m; path = Source/TipArrowFloater.m; sourceTree = SOURCE_ROOT; };
 		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
@@ -669,16 +659,6 @@
 			name = Embrace;
 			sourceTree = "<group>";
 		};
-		557C2C601910F944004A6364 /* Embrace Trial */ = {
-			isa = PBXGroup;
-			children = (
-				556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */,
-				556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */,
-				556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */,
-			);
-			name = "Embrace Trial";
-			sourceTree = "<group>";
-		};
 		558DC076187785BC00C85770 = {
 			isa = PBXGroup;
 			children = (
@@ -849,7 +829,6 @@
 				55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */,
 				55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */,
 				55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */,
-				557C2C671910F9CD004A6364 /* Trial.xcconfig */,
 				5514B6541CDEE6F000F238B7 /* TargetWorker.xcconfig */,
 				55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */,
 				55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */,
@@ -863,7 +842,6 @@
 				5514B6561CDEE6FA00F238B7 /* Worker */,
 				557C2C5F1910F93C004A6364 /* Embrace */,
 				557C2C5E1910F933004A6364 /* Crash Pad */,
-				557C2C601910F944004A6364 /* Embrace Trial */,
 			);
 			name = Combined;
 			sourceTree = "<group>";
@@ -945,8 +923,6 @@
 				55E0B34118CBFA6900B4087C /* NoDropImageView.m */,
 				557C43981D615CDC000184D8 /* TipArrowFloater.h */,
 				557C43991D615CDC000184D8 /* TipArrowFloater.m */,
-				557C2C7319138994004A6364 /* TrialBottomView.h */,
-				557C2C7419138994004A6364 /* TrialBottomView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1147,8 +1123,6 @@
 				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
 				55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */,
 				550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */,
-				556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */,
-				556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */,
 				55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */,
 				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
@@ -1180,7 +1154,6 @@
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
-				556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */,
 				550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */,
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
@@ -1303,7 +1276,6 @@
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
 				5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */,
 				550DDB9121C67E8100769F32 /* HugAudioDevice.m in Sources */,
-				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				556098141B47CABD008516C3 /* MenuLabelView.m in Sources */,
 				555953F221B7F6C90032EE54 /* HugUtils.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
@@ -1497,8 +1469,8 @@
 		};
 		557C2C6A1910F9FB004A6364 /* Trial Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Debug";
@@ -1520,8 +1492,8 @@
 		};
 		557C2C6D1910FA13004A6364 /* Trial Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Profile";
@@ -1543,8 +1515,8 @@
 		};
 		557C2C701910FA1D004A6364 /* Trial Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = "Trial Release";
@@ -1576,6 +1548,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Debug;
@@ -1584,6 +1557,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Profile;
@@ -1598,6 +1572,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Release;
@@ -1612,6 +1587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
 			name = Submission;

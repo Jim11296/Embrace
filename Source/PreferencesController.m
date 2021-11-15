@@ -54,18 +54,7 @@
     
     [self setPreferences:[Preferences sharedInstance]];
     [self setPlayer:[Player sharedInstance]];
-    
-    if (@available(macOS 10.14, *)) {
-        // Do nothing on 10.14+
-    } else {
-        // On 10.13, remove Appearance toolbar item
-        NSInteger index = [[_toolbar items] indexOfObject:_appearanceItem];
-
-        if (index != NSNotFound) {
-            [_toolbar removeItemAtIndex:index];
-        }
-    }
-    
+        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)    name:PreferencesDidChangeNotification    object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleAudioDevicesDidRefresh:)  name:HugAudioDevicesDidRefreshNotification  object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScriptsManagerDidReload:) name:ScriptsManagerDidReloadNotification object:nil];

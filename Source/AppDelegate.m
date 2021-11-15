@@ -34,7 +34,7 @@
 #import "MTSTelemetry.h"
 #import "HugUtils.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () <NSMenuItemValidation>
 
 - (IBAction) openFile:(id)sender;
 
@@ -336,18 +336,16 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
-    if (@available(macOS 10.14, *)) {
-        ThemeType themeType = [preferences themeType];
-        NSAppearance *appearance = nil;
-    
-        if (themeType == ThemeTypeLight) {
-            appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-        } else if (themeType == ThemeTypeDark) {
-            appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
-        }
-        
-        [[NSApplication sharedApplication] setAppearance:appearance];
+    ThemeType themeType = [preferences themeType];
+    NSAppearance *appearance = nil;
+
+    if (themeType == ThemeTypeLight) {
+        appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    } else if (themeType == ThemeTypeDark) {
+        appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
     }
+    
+    [[NSApplication sharedApplication] setAppearance:appearance];
 }
 
 
@@ -368,9 +366,6 @@
         NSXPCInterface *interface = [NSXPCInterface interfaceWithProtocol:@protocol(WorkerProtocol)];
 
         NSString *serviceName = @"com.iccir.Embrace.EmbraceWorker";
-#if TRIAL
-        serviceName = @"com.iccir.Embrace-Trial.EmbraceWorker";
-#endif
     
         NSXPCConnection *connection = [[NSXPCConnection alloc] initWithServiceName:serviceName];
         [connection setRemoteObjectInterface:interface];
@@ -542,11 +537,6 @@
             [menuItem setTitle:NSLocalizedString(@"Clear Set List", nil)];
         }
 
-// Disable this when playing in the trial version.  Else it's too easy to DJ with the trial.
-#if TRIAL
-        return ![[Player sharedInstance] isPlaying];
-#endif
-
         return YES;
     
     } else if (action == @selector(resetPlayedTracks:)) {
@@ -642,12 +632,6 @@
         return YES;
 
     } else if (action == @selector(exportSetlist:)) {
-        if (@available(macOS 10.15, *)) {
-            [menuItem setTitle:NSLocalizedString(@"Export to Music\\U2026", nil)];
-        } else {
-            [menuItem setTitle:NSLocalizedString(@"Export to iTunes\\U2026", nil)];
-        }
-        
         return YES;
 
     } else if (action == @selector(openSupportFolder:)){
