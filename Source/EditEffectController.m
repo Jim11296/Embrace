@@ -5,6 +5,10 @@
 #import "EffectAdditions.h"
 
 
+@interface EditEffectController () <NSMenuItemValidation>
+@end
+
+
 @implementation EditEffectController {
     NSInteger _index;
 }

@@ -13,35 +13,13 @@
 #import "ExportManager.h"
 
 
-#if TRIAL
-#define MAXIMUM_TRACK_COUNT_FOR_TRIAL 5
-
-#define TrackTrialCheck(A) {                                                            \
-    (A)();                                                                              \
-    dispatch_async(dispatch_get_main_queue(), ^{                                        \
-        NSTableView *TV = [self tableView];                                             \
-        NSIndexSet  *IS = [NSIndexSet indexSetWithIndex:MAXIMUM_TRACK_COUNT_FOR_TRIAL]; \
-        while ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {                       \
-            [TV beginUpdates];                                                          \
-            [TV removeRowsAtIndexes:IS withAnimation:NSTableViewAnimationEffectNone];   \
-            [_tracks removeObjectsAtIndexes:IS];                                        \
-            [TV endUpdates];                                                            \
-        }                                                                               \
-    });                                                                                 \
-}
-
-#else
-#define TrackTrialCheck(A) (A)()
-#endif
-
-
 NSString * const TracksControllerDidModifyTracksNotificationName = @"TracksControllerDidModifyTracks";
 
 static NSString * const sTrackUUIDsKey = @"track-uuids";
 static NSString * const sModifiedAtKey = @"modified-at";
 
 
-@interface TracksController ()
+@interface TracksController () <NSMenuItemValidation>
 @property (nonatomic) NSUInteger count;
 @property (nonatomic, weak) IBOutlet TrackTableView *tableView;
 @end
@@ -250,17 +228,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
             [[self tableView] endUpdates];
             
-#if TRIAL
-            if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self _displayTrialAlert];
-                });
-            }
-#endif
-            
-            TrackTrialCheck(^{
-                [self _didModifyTracks];
-            });
+            [self _didModifyTracks];
 
             return YES;
         }
@@ -313,24 +281,20 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
-    TrackTrialCheck(^{
-        [[self tableView] reloadData];
-    });
+    [[self tableView] reloadData];
 }
 
 
 - (void) _didModifyTracks
 {
-    TrackTrialCheck(^{
-        [self detectDuplicates];
+    [self detectDuplicates];
 
-        NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
-        [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
+    NSTimeInterval t = [NSDate timeIntervalSinceReferenceDate];
+    [[NSUserDefaults standardUserDefaults] setObject:@(t) forKey:sModifiedAtKey];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:TracksControllerDidModifyTracksNotificationName object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:TracksControllerDidModifyTracksNotificationName object:self];
 
-        [self _saveState];
-    });
+    [self _saveState];
 }
 
 
@@ -351,34 +315,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
     return YES;
 }
-
-
-#if TRIAL
-
-- (void) _reallyDisplayTrialAlert
-{
-    NSAlert *alert = [[NSAlert alloc] init];
-    
-    [alert setMessageText:NSLocalizedString(@"You can only add five songs to the Set List in your trial of Embrace.", nil)];
-    [alert setInformativeText:NSLocalizedString(@"To add more, purchase Embrace from the App Store.", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"View in App Store", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-    [alert setAlertStyle:NSInformationalAlertStyle];
-    
-	if ([alert runModal] == NSAlertFirstButtonReturn) {
-        NSURL *url = [NSURL URLWithString:@"macappstore://itunes.apple.com/us/app/embrace/id817962217?mt=12"];
-        [[NSWorkspace sharedWorkspace] openURL:url];
-    }
-}
-
-
-- (void) _displayTrialAlert
-{
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reallyDisplayTrialAlert) object:nil];
-    [self performSelector:@selector(_reallyDisplayTrialAlert) withObject:nil afterDelay:0.1];
-}
-
-#endif
 
 
 #pragma mark - Dragging
@@ -568,20 +504,10 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
             }];
         }
 
-        TrackTrialCheck(^{
-            [self _didModifyTracks];
-        });
+        [self _didModifyTracks];
 
         [[self tableView] endUpdates];
         
-#if TRIAL
-        if ([_tracks count] > MAXIMUM_TRACK_COUNT_FOR_TRIAL) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self _displayTrialAlert];
-            });
-        }
-#endif
-
         result = YES;
     } 
 
@@ -595,25 +521,13 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *)tableView
 {
-    __block NSInteger result = 0;
-    
-    TrackTrialCheck(^{
-        result = [_tracks count];
-    });
-    
-    return result;
+    return [_tracks count];
 }
 
 
 - (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    __block id result = nil;
-
-    TrackTrialCheck(^{
-        result = [_tracks objectAtIndex:row];
-    });
-    
-    return result;
+    return [_tracks objectAtIndex:row];
 }
 
 
@@ -661,13 +575,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (NSView *) tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    __block NSView *result = nil;
-
-    TrackTrialCheck(^{
-        result = [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
-    });
-    
-    return result;
+    return [tableView makeViewWithIdentifier:@"TrackCell" owner:self];
 }
 
 
@@ -1024,19 +932,17 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 {
     EmbraceLogMethod();
 
-    TrackTrialCheck(^{
-        for (Track *track in [self selectedTracks]) {
-            NSInteger index = [_tracks indexOfObject:track];
+    for (Track *track in [self selectedTracks]) {
+        NSInteger index = [_tracks indexOfObject:track];
+        
+        if (index != NSNotFound) {
+            id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
             
-            if (index != NSNotFound) {
-                id view = [[self tableView] viewAtColumn:0 row:index makeIfNecessary:NO];
-                
-                if ([view respondsToSelector:@selector(revealTime)]) {
-                    [view revealTime];
-                }
+            if ([view respondsToSelector:@selector(revealTime)]) {
+                [view revealTime];
             }
         }
-    });
+    }
 }
 
 
@@ -1157,16 +1063,14 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (Track *) firstQueuedTrack
 {
-    __block Track *result = nil;
+    Track *result = nil;
 
-    TrackTrialCheck(^{
-        for (Track *track in _tracks) {
-            if ([track trackStatus] == TrackStatusQueued) {
-                result = track;
-                break;
-            }
+    for (Track *track in _tracks) {
+        if ([track trackStatus] == TrackStatusQueued) {
+            result = track;
+            break;
         }
-    });
+    }
 
     return result;
 }
@@ -1174,14 +1078,9 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (NSArray *) selectedTracks
 {
-    __block NSArray *result;
+    NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
     
-    TrackTrialCheck(^{
-        NSIndexSet *selectedRows = [[self tableView] selectedRowIndexes];
-        result = selectedRows ? [_tracks objectsAtIndexes:selectedRows] : nil;
-    });
-
-    return result;
+    return selectedRows ? [_tracks objectsAtIndexes:selectedRows] : nil;
 }
 
 
@@ -1231,9 +1130,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 {
     EmbraceLogMethod();
 
-    TrackTrialCheck(^{
-        [[self tableView] deselectAll:nil];
-    });
+    [[self tableView] deselectAll:nil];
 }
 
 
@@ -1254,15 +1151,11 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 
 - (Track *) trackAtIndex:(NSUInteger)index
 {
-    __block Track *result = nil;
-    
-    TrackTrialCheck(^{
-        if (index < [_tracks count]) {
-            result = [_tracks objectAtIndex:index];
-        }
-    });
+    if (index < [_tracks count]) {
+        return [_tracks objectAtIndex:index];
+    }
 
-    return result;
+    return nil;
 }
 
 

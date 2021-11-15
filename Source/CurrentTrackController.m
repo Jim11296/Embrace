@@ -39,7 +39,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
 
 
-@interface CurrentTrackController () <PlayerListener, NSWindowDelegate>
+@interface CurrentTrackController () <PlayerListener, NSWindowDelegate, NSMenuItemValidation>
 
 - (IBAction) changeAppearance:(id)sender;
 - (IBAction) changePinning:(id)sender;
@@ -103,9 +103,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
     [[Player sharedInstance] removeObserver:self forKeyPath:@"currentTrack"];
 
-    if (@available(macOS 10.14, *)) {
-        [NSApp removeObserver:self forKeyPath:@"effectiveAppearance"];
-    }
+    [NSApp removeObserver:self forKeyPath:@"effectiveAppearance"];
 }
 
 
@@ -317,9 +315,7 @@ static void sSetCurrentTrackPinning(BOOL yn)
 
     [player addObserver:self forKeyPath:@"currentTrack" options:0 context:NULL];
     
-    if (@available(macOS 10.14, *)) {
-        [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:NULL];
-    }
+    [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:NULL];
 
     [self _updateTrack];
     

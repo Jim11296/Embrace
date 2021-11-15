@@ -347,16 +347,14 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (NSColor *) _glowColor
 {
     if ([[Preferences sharedInstance] highlightColorType] == HighlightColorTypeSystem) {
-        if (@available(macOS 10.14, *)) {
-            BOOL darkAqua = IsAppearanceDarkAqua(nil);
+        BOOL darkAqua = IsAppearanceDarkAqua(nil);
 
-            NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
-            
-            if (darkAqua) {
-                return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
-            } else {
-                return color;
-            }
+        NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
+        
+        if (darkAqua) {
+            return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
+        } else {
+            return color;
         }
     }
 

@@ -11,23 +11,21 @@ NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Qu
 extern NSColor * const TrackTableViewGetPlayingTextColor(void)
 {
     if ([[Preferences sharedInstance] highlightColorType] == HighlightColorTypeSystem) {
-        if (@available(macOS 10.14, *)) {
-            BOOL darkAqua = IsAppearanceDarkAqua(nil);
+        BOOL darkAqua = IsAppearanceDarkAqua(nil);
 
-            NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
-            
-            CGFloat saturation = 0;
-            
-            if ([[color colorSpace] colorSpaceModel] == NSColorSpaceModelRGB) {
-                [color getHue:NULL saturation:&saturation brightness:NULL alpha:NULL];
-            }
+        NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
+        
+        CGFloat saturation = 0;
+        
+        if ([[color colorSpace] colorSpaceModel] == NSColorSpaceModelRGB) {
+            [color getHue:NULL saturation:&saturation brightness:NULL alpha:NULL];
+        }
 
-            if (saturation > 0.1) {
-                if (darkAqua) {
-                    return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
-                } else {
-                    return [[NSColor blackColor] blendedColorWithFraction:0.9 ofColor:color];
-                }
+        if (saturation > 0.1) {
+            if (darkAqua) {
+                return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
+            } else {
+                return [[NSColor blackColor] blendedColorWithFraction:0.9 ofColor:color];
             }
         }
     }
@@ -40,21 +38,13 @@ extern NSColor * const TrackTableViewGetRowHighlightColor(BOOL emphasized)
 {
     if (emphasized) {
         if ([[Preferences sharedInstance] highlightColorType] == HighlightColorTypeSystem) {
-            if (@available(macOS 10.14, *)) {
-                return [NSColor selectedContentBackgroundColor];
-            } else {
-                return [NSColor secondarySelectedControlColor];
-            }
+            return [NSColor selectedContentBackgroundColor];
         }
 
         return [NSColor colorNamed:@"SetlistHighlightBackground"];
 
     } else {
-        if (@available(macOS 10.14, *)) {
-            return [NSColor unemphasizedSelectedContentBackgroundColor];
-        } else {
-            return [NSColor alternateSelectedControlColor];
-        }
+        return [NSColor unemphasizedSelectedContentBackgroundColor];
     }
 }
 
