@@ -156,7 +156,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
             kAudioUnitType_Output,
             kAudioUnitSubType_HALOutput,
             kAudioUnitManufacturer_Apple,
-            kAudioComponentFlag_SandboxSafe,
+            0,
             0
         };
 

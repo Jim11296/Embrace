@@ -5,6 +5,9 @@
 
 #import <Accelerate/Accelerate.h>
 
+@interface WaveformView () <NSViewLayerContentScaleDelegate>
+@end
+
 
 @implementation WaveformView {
     CALayer   *_inactiveLayer;

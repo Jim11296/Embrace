@@ -58,8 +58,6 @@
 		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
 		553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 553E77901E6ABF4800DA988B /* MetadataParser.m */; };
-		5543F72F23C41DC100213A9A /* MusicLocationsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5543F72E23C41DC100213A9A /* MusicLocationsWindow.xib */; };
-		5543F73223C42CCF00213A9A /* MusicLocationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5543F73123C42CCF00213A9A /* MusicLocationsController.m */; };
 		5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5549FCA51F8AF767009006D2 /* CoreServices.framework */; };
 		554B733F18E402E1001E154E /* Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 554B733E18E402E1001E154E /* Log.m */; };
 		554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */; };
@@ -79,20 +77,11 @@
 		555B3C831880EFD20088C15C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 555B3C821880EFD20088C15C /* QuartzCore.framework */; };
 		5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */; };
 		556098141B47CABD008516C3 /* MenuLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556098131B47CABD008516C3 /* MenuLabelView.m */; };
-		55632332237CDC1C00E1505F /* SandboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55632331237CDC1C00E1505F /* SandboxManager.m */; };
 		55698DA81B54ECBE00C9E200 /* GraphicEQView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55698DA71B54ECBE00C9E200 /* GraphicEQView.m */; };
 		556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */; };
 		556ACE2F187B901400AED4BC /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE2E187B901400AED4BC /* WaveformView.m */; };
 		556ACE36187BB43A00AED4BC /* WrappedUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 556ACE35187BB43A00AED4BC /* WrappedUtils.cpp */; };
 		556B496420CF772D00A4E83E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556B496320CF772D00A4E83E /* Assets.xcassets */; };
-		556EAEE41FEA013000EF68C3 /* Embrace_Submission.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */; };
-		556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */; };
-		556EAEE61FEA013000EF68C3 /* Embrace_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */; };
-		556EAEE71FEA013000EF68C3 /* Embrace_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */; };
-		556EAEEC1FEA013C00EF68C3 /* CrashPad_Submission.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */; };
-		556EAEED1FEA013C00EF68C3 /* CrashPad_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */; };
-		556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */; };
-		556EAEEF1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */; };
 		55717BF5187EA65400213213 /* SetlistButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* SetlistButton.m */; };
 		55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* SetlistSlider.m */; };
 		5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SetlistProgressBar.m */; };
@@ -134,7 +123,6 @@
 		55C24E1518D7D7800057D45E /* HugFastUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C24E1418D7D7800057D45E /* HugFastUtils.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */; };
 		55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */; };
-		55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55CD7ADB1F8B08870047F073 /* Embrace.icns */; };
 		55CF2786187A23BD0042C92A /* MusicAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2785187A23BD0042C92A /* MusicAppManager.m */; };
 		55CF2788187A241A0042C92A /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55CF2787187A241A0042C92A /* ScriptingBridge.framework */; };
 		55CF279A187A464B0042C92A /* TrackTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF2799187A464B0042C92A /* TrackTableCellView.m */; };
@@ -147,6 +135,7 @@
 		55D9BDD321A64C1100EBF00C /* HugAudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
+		55E9932D274A2BA100112370 /* Embrace.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55E9932C274A2ACA00112370 /* Embrace.icns */; };
 		55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */; };
 		55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B01877885800E8FEC8 /* SetlistController.m */; };
 		55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */; };
@@ -288,9 +277,6 @@
 		553E44E118C5D23400E8D7B9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		553E778F1E6ABF4800DA988B /* MetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataParser.h; path = Source/MetadataParser.h; sourceTree = SOURCE_ROOT; };
 		553E77901E6ABF4800DA988B /* MetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataParser.m; path = Source/MetadataParser.m; sourceTree = SOURCE_ROOT; };
-		5543F72E23C41DC100213A9A /* MusicLocationsWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MusicLocationsWindow.xib; path = Resources/MusicLocationsWindow.xib; sourceTree = "<group>"; };
-		5543F73023C42CCF00213A9A /* MusicLocationsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MusicLocationsController.h; path = Source/MusicLocationsController.h; sourceTree = "<group>"; };
-		5543F73123C42CCF00213A9A /* MusicLocationsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MusicLocationsController.m; path = Source/MusicLocationsController.m; sourceTree = "<group>"; };
 		5549FCA51F8AF767009006D2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		554B733D18E402E1001E154E /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Log.h; path = Source/Log.h; sourceTree = "<group>"; };
 		554B733E18E402E1001E154E /* Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Log.m; path = Source/Log.m; sourceTree = "<group>"; };
@@ -323,8 +309,6 @@
 		5560980D1B45EEF8008516C3 /* TrackTableCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TrackTableCellView.xib; path = Resources/TrackTableCellView.xib; sourceTree = SOURCE_ROOT; };
 		556098121B47CABD008516C3 /* MenuLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuLabelView.h; path = Source/MenuLabelView.h; sourceTree = SOURCE_ROOT; };
 		556098131B47CABD008516C3 /* MenuLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuLabelView.m; path = Source/MenuLabelView.m; sourceTree = SOURCE_ROOT; };
-		55632330237CDC1C00E1505F /* SandboxManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SandboxManager.h; path = Source/SandboxManager.h; sourceTree = "<group>"; };
-		55632331237CDC1C00E1505F /* SandboxManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SandboxManager.m; path = Source/SandboxManager.m; sourceTree = "<group>"; };
 		55698DA61B54ECBE00C9E200 /* GraphicEQView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphicEQView.h; path = Source/GraphicEQView.h; sourceTree = SOURCE_ROOT; };
 		55698DA71B54ECBE00C9E200 /* GraphicEQView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphicEQView.m; path = Source/GraphicEQView.m; sourceTree = SOURCE_ROOT; };
 		556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = EditSystemEffectWindow.xib; path = Resources/EditSystemEffectWindow.xib; sourceTree = SOURCE_ROOT; };
@@ -421,8 +405,6 @@
 		55C24E1418D7D7800057D45E /* HugFastUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugFastUtils.m; path = Source/HugFastUtils.m; sourceTree = "<group>"; };
 		55C82A9D1B57423F0067DEBC /* AUBandpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUBandpass.aupreset; path = Resources/AUBandpass.aupreset; sourceTree = SOURCE_ROOT; };
 		55C82A9F1B5742EB0067DEBC /* AUParametricEQ.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUParametricEQ.aupreset; path = Resources/AUParametricEQ.aupreset; sourceTree = SOURCE_ROOT; };
-		55CD7ADB1F8B08870047F073 /* Embrace.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Embrace.icns; path = Resources/Embrace.icns; sourceTree = SOURCE_ROOT; };
-		55CD7AE11F8B10830047F073 /* Embrace-trial.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "Embrace-trial.icns"; path = "Resources/Embrace-trial.icns"; sourceTree = "<group>"; };
 		55CF2784187A23BD0042C92A /* MusicAppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicAppManager.h; path = Source/MusicAppManager.h; sourceTree = SOURCE_ROOT; };
 		55CF2785187A23BD0042C92A /* MusicAppManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicAppManager.m; path = Source/MusicAppManager.m; sourceTree = SOURCE_ROOT; };
 		55CF2787187A241A0042C92A /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
@@ -446,6 +428,7 @@
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
 		55E0B34018CBFA6900B4087C /* NoDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoDropImageView.h; path = Source/NoDropImageView.h; sourceTree = SOURCE_ROOT; };
 		55E0B34118CBFA6900B4087C /* NoDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoDropImageView.m; path = Source/NoDropImageView.m; sourceTree = SOURCE_ROOT; };
+		55E9932C274A2ACA00112370 /* Embrace.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Embrace.icns; path = Resources/Embrace.icns; sourceTree = "<group>"; };
 		55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportManager.m; path = Source/ExportManager.m; sourceTree = SOURCE_ROOT; };
 		55EE45A51CE1D1CA00ECDF13 /* ExportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportManager.h; path = Source/ExportManager.h; sourceTree = SOURCE_ROOT; };
 		55EF15881D692DCC0021C9A7 /* Worker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Worker.entitlements; path = Resources/Worker.entitlements; sourceTree = "<group>"; };
@@ -755,12 +738,8 @@
 				55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */,
 				55F81FD11B846E3300E03B5B /* IssuesController.h */,
 				55F81FD21B846E3300E03B5B /* IssuesController.m */,
-				5543F73023C42CCF00213A9A /* MusicLocationsController.h */,
-				5543F73123C42CCF00213A9A /* MusicLocationsController.m */,
 				552C9E4A1883888E0041C160 /* PreferencesController.h */,
 				552C9E4B1883888E0041C160 /* PreferencesController.m */,
-				55632330237CDC1C00E1505F /* SandboxManager.h */,
-				55632331237CDC1C00E1505F /* SandboxManager.m */,
 				55F3B7AF1877885800E8FEC8 /* SetlistController.h */,
 				55F3B7B01877885800E8FEC8 /* SetlistController.m */,
 				557CF68F18C1E14B0066D040 /* TracksController.h */,
@@ -774,9 +753,8 @@
 		558DC089187785BC00C85770 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				55E9932C274A2ACA00112370 /* Embrace.icns */,
 				556B496320CF772D00A4E83E /* Assets.xcassets */,
-				55CD7ADB1F8B08870047F073 /* Embrace.icns */,
-				55CD7AE11F8B10830047F073 /* Embrace-trial.icns */,
 				554F3C7318BA08B900E9EA7E /* Acknowledgements.rtf */,
 				55A0B16E1890A80400866F04 /* Test Sounds */,
 				55F7ABDB18AF1BE8006B6FBB /* Safe Presets */,
@@ -790,7 +768,6 @@
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
 				55F81FD41B846EE800E03B5B /* IssuesWindow.xib */,
-				5543F72E23C41DC100213A9A /* MusicLocationsWindow.xib */,
 				55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */,
 				556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */,
 				55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */,
@@ -1034,7 +1011,6 @@
 				558DC07D187785BC00C85770 /* Resources */,
 				55DD53A118B9A2160084628D /* Copy Crash Pad */,
 				55E1F6BB18AB146C00CF847C /* Remove Debug Files */,
-				55CD7AE31F8B11920047F073 /* Fix Icon for Trial */,
 				558DC07C187785BC00C85770 /* Frameworks */,
 				5514B6531CDEE64200F238B7 /* Embed XPC Services */,
 			);
@@ -1118,7 +1094,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				55A7B60918C942B3005A76AC /* MainMenu.xib in Resources */,
-				556EAEEF1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig in Resources */,
 				55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */,
 				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
 				55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */,
@@ -1127,41 +1102,33 @@
 				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
 				55169D511F9ACBFA003779FA /* test_3s_e4.m4a in Resources */,
-				556EAEEC1FEA013C00EF68C3 /* CrashPad_Submission.xcconfig in Resources */,
 				55169D501F9ACBFA003779FA /* test_3s_d4.m4a in Resources */,
 				55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */,
 				55A0B1781890A81900866F04 /* test_d.m4a in Resources */,
-				5543F72F23C41DC100213A9A /* MusicLocationsWindow.xib in Resources */,
 				55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */,
 				55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */,
 				550D882C18AC3C6200CC7E3A /* rate_88.m4a in Resources */,
 				55A0B1741890A81900866F04 /* test_g.m4a in Resources */,
 				554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */,
-				556EAEE61FEA013000EF68C3 /* Embrace_Debug.xcconfig in Resources */,
 				55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */,
 				553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */,
 				5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */,
 				55169D531F9ACBFA003779FA /* test_3s_g4.m4a in Resources */,
-				556EAEE71FEA013000EF68C3 /* Embrace_Profile.xcconfig in Resources */,
 				556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */,
 				55169D541F9ACBFA003779FA /* test_3s_f4.m4a in Resources */,
 				55169D521F9ACBFA003779FA /* test_3s_c4.m4a in Resources */,
 				558DC0C61877861E00C85770 /* InfoPlist.strings in Resources */,
-				556EAEED1FEA013C00EF68C3 /* CrashPad_Profile.xcconfig in Resources */,
 				55A0B1751890A81900866F04 /* test_f.m4a in Resources */,
-				55CD7ADC1F8B08880047F073 /* Embrace.icns in Resources */,
 				552C9E491883856A0041C160 /* PreferencesWindow.xib in Resources */,
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
-				556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */,
+				55E9932D274A2BA100112370 /* Embrace.icns in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
 				550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */,
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
-				556EAEE41FEA013000EF68C3 /* Embrace_Submission.xcconfig in Resources */,
 				5517B470233B3F6C00FB45A4 /* Archive.sh in Resources */,
 				55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */,
 				55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */,
-				556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */,
 				556B496420CF772D00A4E83E /* Assets.xcassets in Resources */,
 				55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */,
 			);
@@ -1183,21 +1150,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "which rcbump\n\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi\n";
-		};
-		55CD7AE31F8B11920047F073 /* Fix Icon for Trial */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Fix Icon for Trial";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ \"$PRODUCT_NAME\" = \"Embrace Trial\" ]; then\n    cp \"$PROJECT_DIR/Resources/Embrace-trial.icns\" \"$BUILT_PRODUCTS_DIR\"/\"$UNLOCALIZED_RESOURCES_FOLDER_PATH\"/Embrace.icns\nfi\n\n";
-			showEnvVarsInLog = 0;
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1308,7 +1260,6 @@
 				554B733F18E402E1001E154E /* Log.m in Sources */,
 				5514B6641CDEE9DE00F238B7 /* TrackKeys.m in Sources */,
 				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
-				5543F73223C42CCF00213A9A /* MusicLocationsController.m in Sources */,
 				555953E921B6834D0032EE54 /* HugMeterData.m in Sources */,
 				55CF2786187A23BD0042C92A /* MusicAppManager.m in Sources */,
 				55F6C73119CEAA5B00B22793 /* Compatibility.m in Sources */,
@@ -1316,7 +1267,6 @@
 				55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */,
 				55102B431B53564500308F55 /* EffectAdditions.m in Sources */,
 				552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */,
-				55632332237CDC1C00E1505F /* SandboxManager.m in Sources */,
 				550C63C81FE6666E007841BC /* ScriptFile.m in Sources */,
 				5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */,
 				55C24E1518D7D7800057D45E /* HugFastUtils.m in Sources */,
@@ -1376,14 +1326,6 @@
 			};
 			name = Debug;
 		};
-		5514B64D1CDEE64200F238B7 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
-			};
-			name = "Trial Debug";
-		};
 		5514B64E1CDEE64200F238B7 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
@@ -1392,14 +1334,6 @@
 			};
 			name = Profile;
 		};
-		5514B64F1CDEE64200F238B7 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
-			};
-			name = "Trial Profile";
-		};
 		5514B6501CDEE64200F238B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
@@ -1407,14 +1341,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Release;
-		};
-		5514B6511CDEE64200F238B7 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
-			};
-			name = "Trial Release";
 		};
 		5514B6521CDEE64200F238B7 /* Submission */ = {
 			isa = XCBuildConfiguration;
@@ -1459,76 +1385,6 @@
 				SKIP_INSTALL = YES;
 			};
 			name = Submission;
-		};
-		557C2C691910F9FB004A6364 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ENABLE_TESTABILITY = YES;
-			};
-			name = "Trial Debug";
-		};
-		557C2C6A1910F9FB004A6364 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MARKETING_VERSION = 4.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
-			};
-			name = "Trial Debug";
-		};
-		557C2C6B1910F9FB004A6364 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
-				SKIP_INSTALL = YES;
-			};
-			name = "Trial Debug";
-		};
-		557C2C6C1910FA13004A6364 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = "Trial Profile";
-		};
-		557C2C6D1910FA13004A6364 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MARKETING_VERSION = 4.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
-			};
-			name = "Trial Profile";
-		};
-		557C2C6E1910FA13004A6364 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
-				SKIP_INSTALL = YES;
-			};
-			name = "Trial Profile";
-		};
-		557C2C6F1910FA1D004A6364 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = "Trial Release";
-		};
-		557C2C701910FA1D004A6364 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				MARKETING_VERSION = 4.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
-			};
-			name = "Trial Release";
-		};
-		557C2C711910FA1D004A6364 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
-				SKIP_INSTALL = YES;
-			};
-			name = "Trial Release";
 		};
 		558DC0AE187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1599,11 +1455,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5514B64C1CDEE64200F238B7 /* Debug */,
-				5514B64D1CDEE64200F238B7 /* Trial Debug */,
 				5514B64E1CDEE64200F238B7 /* Profile */,
-				5514B64F1CDEE64200F238B7 /* Trial Profile */,
 				5514B6501CDEE64200F238B7 /* Release */,
-				5514B6511CDEE64200F238B7 /* Trial Release */,
 				5514B6521CDEE64200F238B7 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1613,11 +1466,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5559E63A18DFD42600D61019 /* Debug */,
-				557C2C6B1910F9FB004A6364 /* Trial Debug */,
 				5559E63B18DFD42600D61019 /* Profile */,
-				557C2C6E1910FA13004A6364 /* Trial Profile */,
 				5559E63C18DFD42600D61019 /* Release */,
-				557C2C711910FA1D004A6364 /* Trial Release */,
 				5559E63D18DFD42600D61019 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1627,11 +1477,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0AE187785BC00C85770 /* Debug */,
-				557C2C691910F9FB004A6364 /* Trial Debug */,
 				558DC0AF187785BC00C85770 /* Profile */,
-				557C2C6C1910FA13004A6364 /* Trial Profile */,
 				55AF60A118C94ACD00BE2212 /* Release */,
-				557C2C6F1910FA1D004A6364 /* Trial Release */,
 				55AF60A418C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1641,11 +1488,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0B1187785BC00C85770 /* Debug */,
-				557C2C6A1910F9FB004A6364 /* Trial Debug */,
 				558DC0B2187785BC00C85770 /* Profile */,
-				557C2C6D1910FA13004A6364 /* Trial Profile */,
 				55AF60A218C94ACD00BE2212 /* Release */,
-				557C2C701910FA1D004A6364 /* Trial Release */,
 				55AF60A518C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;

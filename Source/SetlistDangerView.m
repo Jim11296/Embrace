@@ -3,7 +3,7 @@
 #import "SetlistDangerView.h"
 #import "SetlistProgressBar.h"
 
-@interface SetlistDangerView () <CALayerDelegate>
+@interface SetlistDangerView () <CALayerDelegate, NSViewLayerContentScaleDelegate>
 @end
 
 

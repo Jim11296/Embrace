@@ -18,7 +18,6 @@ NSString * const TracksControllerDidModifyTracksNotificationName = @"TracksContr
 static NSString * const sTrackUUIDsKey = @"track-uuids";
 static NSString * const sModifiedAtKey = @"modified-at";
 
-
 @interface TracksController () <NSMenuItemValidation>
 @property (nonatomic) NSUInteger count;
 @property (nonatomic, weak) IBOutlet TrackTableView *tableView;
@@ -345,8 +344,8 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         (__bridge NSString *)kPasteboardTypeFileURLPromise,
         @"com.apple.music.metadata",
         @"com.apple.tv.metadata",
-        NSURLPboardType,
-        NSFilenamesPboardType,
+        NSPasteboardTypeURL,
+        @"NSFilenamesPboardType",
     ];
 }
 
@@ -660,7 +659,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
     SEL action = [menuItem action];
 
     if (action == @selector(paste:)) {
-        return [[NSPasteboard generalPasteboard] canReadItemWithDataConformingToTypes:@[ (__bridge NSString *)kUTTypeFileURL, NSFilenamesPboardType ]];
+        return [[NSPasteboard generalPasteboard] canReadItemWithDataConformingToTypes:@[ (__bridge NSString *)kUTTypeFileURL, @"NSFilenamesPboardType" ]];
 
     } else if (action == @selector(copy:)) {
         return [[self selectedTracks] count] > 0;
@@ -1032,7 +1031,7 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 {
     NSPasteboard *pboard = [NSPasteboard generalPasteboard];
 
-    NSArray  *filenames = [pboard propertyListForType:NSFilenamesPboardType];
+    NSArray  *filenames = [pboard propertyListForType:@"NSFilenamesPboardType"];
     NSString *URLString = [pboard stringForType:(__bridge NSString *)kUTTypeFileURL];
 
     if (filenames) {

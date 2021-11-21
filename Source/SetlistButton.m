@@ -19,12 +19,12 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 
 
 
-@interface SetlistButtonBorderView : NSView <CALayerDelegate> 
+@interface SetlistButtonBorderView : NSView <CALayerDelegate, NSViewLayerContentScaleDelegate> 
 - (void) performAnimate:(BOOL)orderIn;
 @end
 
 
-@interface SetlistButtonIconView : NSView <CALayerDelegate> 
+@interface SetlistButtonIconView : NSView <CALayerDelegate, NSViewLayerContentScaleDelegate> 
 
 - (void) performZoomAnimationToIcon:(SetlistButtonIcon)toIcon style:(SetlistButtonStyle)toStyle;
 - (void) performJumpAnimationToIcon:(SetlistButtonIcon)toIcon style:(SetlistButtonStyle)toStyle;
@@ -346,19 +346,15 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 
 - (NSColor *) _glowColor
 {
-    if ([[Preferences sharedInstance] highlightColorType] == HighlightColorTypeSystem) {
-        BOOL darkAqua = IsAppearanceDarkAqua(nil);
+    BOOL darkAqua = IsAppearanceDarkAqua(nil);
 
-        NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
-        
-        if (darkAqua) {
-            return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
-        } else {
-            return color;
-        }
+    NSColor *color = [[NSColor selectedContentBackgroundColor] colorUsingType:NSColorTypeComponentBased];
+    
+    if (darkAqua) {
+        return [[NSColor whiteColor] blendedColorWithFraction:0.5 ofColor:color];
+    } else {
+        return color;
     }
-
-    return [NSColor colorNamed:@"ButtonMainGlow"];
 }
 
 
