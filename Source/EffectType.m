@@ -49,7 +49,7 @@ static BOOL sIsBlacklistedComponent(AudioComponent component)
         description.componentType = componentType;
         description.componentSubType = 0;
         description.componentManufacturer = 0;
-        description.componentFlags = kAudioComponentFlag_SandboxSafe;
+        description.componentFlags = 0;
         description.componentFlagsMask = 0;
 
         UInt32 componentCount = AudioComponentCount(&description);

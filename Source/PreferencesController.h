@@ -10,8 +10,6 @@
 
 - (IBAction) selectPane:(id)sender;
 
-- (IBAction) editMusicLocations:(id)sender;
-
 
 // For bindings
 @property (nonatomic, weak) Preferences *preferences;

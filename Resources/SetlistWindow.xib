@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -111,29 +110,29 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="533" y="338" width="320" height="424"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="240" height="280"/>
             <view key="contentView" wantsLayer="YES" id="eL9-9a-De5">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="424"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView id="gZt-Xz-QI9">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZt-Xz-QI9">
                         <rect key="frame" x="0.0" y="353" width="320" height="71"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <customView wantsLayer="YES" id="rwv-u7-urb" userLabel="Inner Container">
+                            <customView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rwv-u7-urb" userLabel="Inner Container">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="71"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <customView id="9x2-yQ-Jbg" customClass="SetlistMeterView">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9x2-yQ-Jbg" customClass="SetlistMeterView">
                                         <rect key="frame" x="57" y="37" width="210" height="16"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     </customView>
-                                    <customView id="pkk-ZT-czS" customClass="SetlistPlayBar">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pkk-ZT-czS" customClass="SetlistPlayBar">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     </customView>
-                                    <slider wantsLayer="YES" verticalHuggingPriority="750" id="1QF-Cc-1Ru" customClass="SetlistSlider">
+                                    <slider wantsLayer="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1QF-Cc-1Ru" customClass="SetlistSlider">
                                         <rect key="frame" x="55" y="18" width="210" height="20"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="dzt-ic-LNA" customClass="SetlistSliderCell"/>
@@ -142,7 +141,7 @@
                                             <binding destination="-2" name="value" keyPath="self.player.volume" id="3uc-Gp-2Fc"/>
                                         </connections>
                                     </slider>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="rvF-zp-fPR">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="rvF-zp-fPR">
                                         <rect key="frame" x="269" y="6" width="46" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="bzx-s7-q9E">
@@ -154,14 +153,14 @@
                                             <binding destination="-2" name="value" keyPath="self.player.timeRemainingString" id="i6Y-Pj-o86"/>
                                         </connections>
                                     </textField>
-                                    <customView id="Twn-WM-C4J" customClass="SetlistButton">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Twn-WM-C4J" customClass="SetlistButton">
                                         <rect key="frame" x="7" y="22" width="42" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <connections>
                                             <action selector="performPreferredPlaybackAction:" target="-2" id="t6J-qN-Gqa"/>
                                         </connections>
                                     </customView>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.5" id="Ceq-EF-rHK">
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ceq-EF-rHK">
                                         <rect key="frame" x="5" y="6" width="46" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0:00" id="whE-u4-lTK">
@@ -173,7 +172,7 @@
                                             <binding destination="-2" name="value" keyPath="self.player.timeElapsedString" id="dWc-pW-dBy"/>
                                         </connections>
                                     </textField>
-                                    <customView id="4bi-5W-Bp7" customClass="SetlistButton">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4bi-5W-Bp7" customClass="SetlistButton">
                                         <rect key="frame" x="271" y="22" width="42" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <connections>
@@ -181,7 +180,7 @@
                                             <outlet property="menu" destination="Kdj-dO-hkZ" id="T24-T0-ZAZ"/>
                                         </connections>
                                     </customView>
-                                    <customView id="yvU-8G-5CX" customClass="SetlistDangerView">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yvU-8G-5CX" customClass="SetlistDangerView">
                                         <rect key="frame" x="271" y="54" width="42" height="11"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                         <connections>
@@ -192,26 +191,25 @@
                             </customView>
                         </subviews>
                     </customView>
-                    <customView id="kmP-AQ-nuK">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kmP-AQ-nuK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="355"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="9qw-rj-zd3">
+                            <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qw-rj-zd3">
                                 <rect key="frame" x="0.0" y="28" width="320" height="325"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="2Bw-N9-fI8">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" tableStyle="plain" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="QHa-mz-rIH" customClass="TrackTableView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="325"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
                                                 <tableColumn identifier="SongCell" width="320" minWidth="40" maxWidth="3200" id="1q8-uL-zIt">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                        <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
                                                     </tableHeaderCell>
@@ -232,7 +230,7 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="csK-JI-TFk">
-                                    <rect key="frame" x="0.0" y="307" width="320" height="16"/>
+                                    <rect key="frame" x="0.0" y="309" width="320" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="gLr-mq-zGm">
@@ -240,15 +238,15 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <visualEffectView wantsLayer="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" id="fTB-k8-Bmg">
+                            <visualEffectView wantsLayer="YES" fixedFrame="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="fTB-k8-Bmg">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="28"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <customView id="KlC-Os-yxn" customClass="HairlineView">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KlC-Os-yxn" customClass="HairlineView">
                                         <rect key="frame" x="0.0" y="26" width="320" height="2"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     </customView>
-                                    <textField toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" alphaValue="0.5" id="27g-A4-whb">
+                                    <textField toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" fixedFrame="YES" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="27g-A4-whb">
                                         <rect key="frame" x="281" y="3" width="36" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="center" title="0:00" id="kXQ-cJ-H9c">
@@ -260,7 +258,7 @@
                                             <binding destination="-2" name="value" keyPath="self.autoGapTimeString" id="tqy-WQ-Uo9"/>
                                         </connections>
                                     </textField>
-                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" id="Cip-py-M5e" customClass="SetlistSlider">
+                                    <slider toolTip="Adjust the silence between tracks" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cip-py-M5e" customClass="SetlistSlider">
                                         <rect key="frame" x="29" y="1" width="254" height="25"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="16" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="17" allowsTickMarkValuesOnly="YES" sliderType="linear" id="lM1-Gy-hfX" customClass="SetlistSliderCell"/>
@@ -268,7 +266,7 @@
                                             <binding destination="-2" name="value" keyPath="self.minimumSilenceBetweenTracks" id="bCE-5W-8Vd"/>
                                         </connections>
                                     </slider>
-                                    <imageView toolTip="Adjust the silence between tracks" horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.5" id="rx0-fs-t7a" customClass="NoDropImageView">
+                                    <imageView toolTip="Adjust the silence between tracks" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="rx0-fs-t7a" customClass="NoDropImageView">
                                         <rect key="frame" x="8" y="8" width="15" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="PaddingTemplate" id="k41-UM-ODJ"/>
@@ -348,7 +346,7 @@
             <rect key="frame" x="0.0" y="0.0" width="128" height="193"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="iYl-EI-wzq">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iYl-EI-wzq">
                     <rect key="frame" x="-2" y="20" width="132" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Drag Songs Here" id="Ilb-M9-emE">
@@ -357,7 +355,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <customView id="e4W-3r-ROx" customClass="DragSongsHereView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e4W-3r-ROx" customClass="DragSongsHereView">
                     <rect key="frame" x="0.0" y="45" width="128" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                 </customView>
@@ -365,6 +363,6 @@
         </customView>
     </objects>
     <resources>
-        <image name="PaddingTemplate" width="15.104894638061523" height="12.083915710449219"/>
+        <image name="PaddingTemplate" width="15" height="12"/>
     </resources>
 </document>

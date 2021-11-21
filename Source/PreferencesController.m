@@ -397,12 +397,6 @@
 
 #pragma mark - Public Methods
 
-- (IBAction) editMusicLocations:(id)sender
-{
-    [GetAppDelegate() showMusicLocations];
-}
-
-
 - (void) selectPane:(NSInteger)tag animated:(BOOL)animated
 {
     NSToolbarItem *item;

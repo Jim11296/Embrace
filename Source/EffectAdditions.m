@@ -15,7 +15,7 @@ NSString * const EmbraceMappedEffect31BandEQ = @"EmbraceGraphicEQ31";
     acd.componentType = kAudioUnitType_Effect;
     acd.componentSubType = kAudioUnitSubType_GraphicEQ;
     acd.componentManufacturer = kAudioUnitManufacturer_Apple;
-    acd.componentFlags = kAudioComponentFlag_SandboxSafe;
+    acd.componentFlags = 0;
     acd.componentFlagsMask = 0;
 
     [self registerMappedTypeWithName:EmbraceMappedEffect10BandEQ audioComponentDescription:&acd configurator:^(AUAudioUnit *unit) {

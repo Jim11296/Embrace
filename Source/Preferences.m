@@ -24,7 +24,6 @@ static NSDictionary *sGetDefaultValues()
         @"floatsOnTop":          @NO,
         
         @"themeType": @( ThemeTypeSystem ),
-        @"highlightColorType": @( HighlightColorTypeSystem ),
 
         @"showsAlbumArtist":     @NO,
         @"showsArtist":          @YES,

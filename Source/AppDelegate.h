@@ -18,7 +18,6 @@
 - (void) showEffectsWindow;
 - (void) showCurrentTrack;
 - (void) showPreferences;
-- (void) showMusicLocations;
 
 @property (nonatomic, readonly) SetlistController *setlistController;
 

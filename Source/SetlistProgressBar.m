@@ -18,7 +18,7 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
 }
 
 
-@interface SetlistProgressBar () <CALayerDelegate>
+@interface SetlistProgressBar () <CALayerDelegate, NSViewLayerContentScaleDelegate>
 @end
 
 

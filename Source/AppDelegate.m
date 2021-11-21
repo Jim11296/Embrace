@@ -5,14 +5,12 @@
 #import "SetlistController.h"
 #import "EffectsController.h"
 #import "PreferencesController.h"
-#import "MusicLocationsController.h"
 
 #import "EditGraphicEQEffectController.h"
 #import "EditSystemEffectController.h"
 #import "CurrentTrackController.h"
 #import "ViewTrackController.h"
 #import "TracksController.h"
-#import "SandboxManager.h"
 #import "Preferences.h"
 #import "DebugController.h"
 #import "EffectAdditions.h"
@@ -90,7 +88,6 @@
     EffectsController      *_effectsController;
     NSWindowController     *_currentTrackController;
     PreferencesController  *_preferencesController;
-    MusicLocationsController  *_musicLocationsController;
 
 #if DEBUG
     DebugController        *_debugController;
@@ -412,12 +409,6 @@
 - (void) showPreferences
 {
     [self showPreferences:self];
-}
-
-
-- (void) showMusicLocations
-{
-    [self showMusicLocations:self];
 }
 
 
@@ -975,7 +966,9 @@
 - (IBAction) openSupportFolder:(id)sender
 {
     EmbraceLogMethod();
-    [[NSWorkspace sharedWorkspace] openFile:GetApplicationSupportDirectory()];
+    
+    NSURL *fileURL = [NSURL fileURLWithPath:GetApplicationSupportDirectory() isDirectory:YES];
+    [[NSWorkspace sharedWorkspace] openURL:fileURL];
 }
 
 
@@ -988,18 +981,6 @@
     }
 
     [_preferencesController showWindow:self];
-}
-
-
-- (IBAction) showMusicLocations:(id)sender
-{
-    EmbraceLogMethod();
-
-    if (!_musicLocationsController) {
-        _musicLocationsController = [[MusicLocationsController alloc] init];
-    }
-
-    [_musicLocationsController showWindow:self];
 }
 
 
@@ -1071,7 +1052,8 @@
         NSFilePosixPermissions: @0444
     } ofItemAtPath:toPath error:&error];
     
-    [[NSWorkspace sharedWorkspace] openFile:toPath];
+    NSURL *toPathURL = [NSURL fileURLWithPath:toPath];
+    [[NSWorkspace sharedWorkspace] openURL:toPathURL];
 }
 
 

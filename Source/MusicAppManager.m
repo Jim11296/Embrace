@@ -307,7 +307,7 @@ static NSString *sGetExpandedPath(NSString *inPath)
 
     // Step 3, Fill otherFileURLs with legacy NSFilenamesPboardType
     if ([otherFileURLs count] == 0) {
-        NSArray *filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
+        NSArray *filenames = [pasteboard propertyListForType:@"NSFilenamesPboardType"];
 
         if (filenames) {
             for (NSString *filename in filenames) {

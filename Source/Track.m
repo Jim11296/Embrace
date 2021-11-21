@@ -7,7 +7,6 @@
 #import "ScriptsManager.h"
 #import "WorkerService.h"
 #import "HugError.h"
-#import "SandboxManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -497,7 +496,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
         @try {
             if (!bookmark) {
-                [[SandboxManager sharedInstance] startAccessToURL:externalURL];
+                [externalURL startAccessingSecurityScopedResource];
                 
                 NSError *error = nil;
                 bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
@@ -505,8 +504,8 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 if (error) {
                     EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, externalURL, error);
                 }
-
-                [[SandboxManager sharedInstance] stopAccessToURL:externalURL];
+                
+                [externalURL stopAccessingSecurityScopedResource];
             }
 
             if (!bookmark) {
@@ -537,7 +536,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 return;
             }
           
-            [[SandboxManager sharedInstance] startAccessToURL:externalURL];
+            [externalURL startAccessingSecurityScopedResource];
 
             if (isStale) {
                 EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
@@ -562,7 +561,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 }
             }
 
-            [[SandboxManager sharedInstance] stopAccessToURL:externalURL];
+            [externalURL stopAccessingSecurityScopedResource];
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 _isResolvingURLs = NO;

@@ -66,8 +66,11 @@
         }
 
         if (restart && bundleURL) {
-            NSError *error = nil;
-            [[NSWorkspace sharedWorkspace] launchApplicationAtURL:bundleURL options:NSWorkspaceLaunchNewInstance configuration:@{ } error:&error];
+            NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+            [configuration setCreatesNewApplicationInstance:YES];
+            [configuration setAllowsRunningApplicationSubstitution:NO];
+
+            [[NSWorkspace sharedWorkspace] openApplicationAtURL:bundleURL configuration:configuration completionHandler:nil];
         }
 
         [NSApp terminate:self];
