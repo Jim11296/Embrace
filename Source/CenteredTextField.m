@@ -13,16 +13,13 @@
 {
 	NSRect newRect = [super drawingRectForBounds:theRect];
 
-    NSSize textSize = [self cellSizeForBounds:theRect];
+    CGFloat ascender  = [[self font] ascender];
+    CGFloat descender = [[self font] descender];
 
-    // Center that in the proposed rect
-    float heightDelta = newRect.size.height - textSize.height;	
-    if (heightDelta > 0)
-    {
-        newRect.size.height -= heightDelta;
-        newRect.origin.y += (heightDelta / 2) - 2;
-    }
-	
+    CGFloat offset = NSHeight(theRect) - (ascender - descender);
+
+    newRect.origin.y += round(offset / 2);
+ 
 	return newRect;
 }
 @end
