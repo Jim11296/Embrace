@@ -101,7 +101,6 @@
 		55779D6120CA0B2500DB660F /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55779D5F20CA0ADA00DB660F /* iTunesLibrary.framework */; };
 		557ABAB61B68D48C006F69D9 /* TrackLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557ABAB51B68D48C006F69D9 /* TrackLabelView.m */; };
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
-		557C2C7519138994004A6364 /* TrialBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2C7419138994004A6364 /* TrialBottomView.m */; };
 		557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C43991D615CDC000184D8 /* TipArrowFloater.m */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
 		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
@@ -359,8 +358,6 @@
 		557ABAB51B68D48C006F69D9 /* TrackLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackLabelView.m; path = Source/TrackLabelView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
-		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
-		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
 		557C43981D615CDC000184D8 /* TipArrowFloater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TipArrowFloater.h; path = Source/TipArrowFloater.h; sourceTree = SOURCE_ROOT; };
 		557C43991D615CDC000184D8 /* TipArrowFloater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TipArrowFloater.m; path = Source/TipArrowFloater.m; sourceTree = SOURCE_ROOT; };
 		557CF68F18C1E14B0066D040 /* TracksController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracksController.h; path = Source/TracksController.h; sourceTree = SOURCE_ROOT; };
@@ -926,8 +923,6 @@
 				55E0B34118CBFA6900B4087C /* NoDropImageView.m */,
 				557C43981D615CDC000184D8 /* TipArrowFloater.h */,
 				557C43991D615CDC000184D8 /* TipArrowFloater.m */,
-				557C2C7319138994004A6364 /* TrialBottomView.h */,
-				557C2C7419138994004A6364 /* TrialBottomView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1284,7 +1279,6 @@
 				55CF27AA187AB2650042C92A /* EditEffectController.m in Sources */,
 				5514B63A1CDD694700F238B7 /* SetlistDangerView.m in Sources */,
 				550DDB9121C67E8100769F32 /* HugAudioDevice.m in Sources */,
-				557C2C7519138994004A6364 /* TrialBottomView.m in Sources */,
 				556098141B47CABD008516C3 /* MenuLabelView.m in Sources */,
 				555953F221B7F6C90032EE54 /* HugUtils.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,

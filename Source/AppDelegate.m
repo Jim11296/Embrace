@@ -66,7 +66,6 @@
 - (IBAction) showCurrentTrack:(id)sender;
 
 - (IBAction) sendFeedback:(id)sender;
-- (IBAction) viewOnAppStore:(id)sender;
 
 - (IBAction) openAcknowledgements:(id)sender;
 
@@ -368,9 +367,6 @@
         NSXPCInterface *interface = [NSXPCInterface interfaceWithProtocol:@protocol(WorkerProtocol)];
 
         NSString *serviceName = @"com.iccir.Embrace.EmbraceWorker";
-#if TRIAL
-        serviceName = @"com.iccir.Embrace-Trial.EmbraceWorker";
-#endif
     
         NSXPCConnection *connection = [[NSXPCConnection alloc] initWithServiceName:serviceName];
         [connection setRemoteObjectInterface:interface];
@@ -541,11 +537,6 @@
         } else {
             [menuItem setTitle:NSLocalizedString(@"Clear Set List", nil)];
         }
-
-// Disable this when playing in the trial version.  Else it's too easy to DJ with the trial.
-#if TRIAL
-        return ![[Player sharedInstance] isPlaying];
-#endif
 
         return YES;
     
@@ -1054,16 +1045,6 @@
     EmbraceLogMethod();
 
     NSURL *url = [NSURL URLWithString:@"https://www.facebook.com/groups/embrace.users"];
-    [[NSWorkspace sharedWorkspace] openURL:url];
-}
-
-
-
-- (IBAction) viewOnAppStore:(id)sender
-{
-    EmbraceLogMethod();
-
-    NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/buy/embrace"];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
