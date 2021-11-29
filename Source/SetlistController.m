@@ -26,7 +26,6 @@
 #import "TipArrowFloater.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
-#import "TrialBottomView.h"
 #import "ViewTrackController.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -158,30 +157,6 @@ static NSInteger sAutoGapMaximum = 16;
 
     [self _handlePreferencesDidChange:nil];
 
-#if TRIAL
-    {
-        NSScrollView *scrollView = [self scrollView];
-        NSView       *footerView = [self footerView];
-    
-        NSRect footerFrame = [footerView frame];
-        
-        NSRect trialFrame = footerFrame;
-        trialFrame.origin.y += footerFrame.size.height;
-        trialFrame.size.height = 42;
-       
-        NSRect scrollFrame = [scrollView frame];
-        scrollFrame.size.height -= 42;
-        scrollFrame.origin.y += 42;
-        [scrollView setFrame:scrollFrame];
-        
-        [footerView setFrame:footerFrame];
-
-        TrialBottomView *trialView = [[TrialBottomView alloc] initWithFrame:trialFrame];
-        [trialView setAutoresizingMask:NSViewMaxXMargin|NSViewWidthSizable];
-        [[footerView superview] addSubview:trialView];
-    }
-#endif
-
     [self setPlayer:[Player sharedInstance]];
     [self _setupPlayer];
 
@@ -229,16 +204,6 @@ static NSInteger sAutoGapMaximum = 16;
     }
 }
 
-
-#if TRIAL
-
-- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector
-{
-    NSLog(@"%@", NSStringFromSelector(commandSelector));
-    return YES;
-}
-
-#endif
 
 #pragma mark - Private Methods
 
