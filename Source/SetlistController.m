@@ -26,7 +26,6 @@
 #import "TipArrowFloater.h"
 #import "TrackTableView.h"
 #import "TracksController.h"
-#import "ViewTrackController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -62,8 +61,6 @@ static NSInteger sAutoGapMaximum = 16;
 @property (nonatomic, weak)   IBOutlet SetlistPlayBar    *playBar;
 @property (nonatomic, weak)   IBOutlet SetlistSlider     *volumeSlider;
 
-@property (nonatomic, weak)   IBOutlet NSView          *headerView;
-@property (nonatomic, weak)   IBOutlet NSView          *mainView;
 @property (nonatomic, weak)   IBOutlet NSScrollView    *scrollView;
 @property (nonatomic, weak)   IBOutlet NSView          *footerView;
 @property (nonatomic, weak)   IBOutlet HairlineView    *bottomSeparator;
@@ -124,7 +121,6 @@ static NSInteger sAutoGapMaximum = 16;
     [window addListener:[self gearButton]];
     [window addListener:[self playButton]];
     [window addListener:[self volumeSlider]];
-    [window addListener:[self autoGapSlider]];
     [window addListener:[self playBar]];
 
     [[self playButton] setIcon:SetlistButtonIconPlay];
@@ -132,18 +128,25 @@ static NSInteger sAutoGapMaximum = 16;
 
     [[self autoGapIcon] setTintColor:[NSColor labelColor]];
 
-    NSView *headerView = [self headerView];
 
-    CGRect headerEffectFrame = [headerView bounds];
-    headerEffectFrame.origin.y -= 1.0;
-    headerEffectFrame.size.height += 1.0;
-    
-    NSVisualEffectView *effectView = [[NSVisualEffectView alloc] initWithFrame:headerEffectFrame];
-    [effectView setMaterial:NSVisualEffectMaterialTitlebar];
-    [effectView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-    [effectView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    // Add titlebar visual effect view
+    {
+        NSView *contentView = [[self window] contentView];
+        NSScrollView *scrollView = [self scrollView];
+        
+        NSRect scrollFrame = [scrollView convertRect:[scrollView bounds] toView:contentView];
+        
+        NSRect headerFrame = [contentView bounds];
+        headerFrame.origin.y = NSMaxY(scrollFrame);
+        headerFrame.size.height = headerFrame.size.height - headerFrame.origin.y;
+        
+        NSVisualEffectView *effectView = [[NSVisualEffectView alloc] initWithFrame:headerFrame];
+        [effectView setMaterial:NSVisualEffectMaterialTitlebar];
+        [effectView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
+        [effectView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
 
-    [headerView addSubview:effectView positioned:NSWindowBelow relativeTo:[[headerView subviews] firstObject]];
+        [contentView addSubview:effectView positioned:NSWindowBelow relativeTo:nil];
+    }
 
     // Match PlayBar inactive color (used for top separator)
     [[self bottomSeparator] setBorderColor:[NSColor colorNamed:@"SetlistSeparator"]];

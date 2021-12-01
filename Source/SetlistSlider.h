@@ -7,8 +7,6 @@
 
 @interface SetlistSlider : NSSlider <EmbraceWindowListener>
 
-+ (void) drawKnobWithView:(NSView *)view rect:(CGRect)rect highlighted:(BOOL)highlighted;
-
 @property (nonatomic, weak) id<SetlistSliderDragDelegate> dragDelegate;
 @property (readonly) NSRect knobRect;
 

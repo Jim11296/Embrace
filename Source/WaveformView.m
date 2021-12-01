@@ -254,7 +254,10 @@
     
     CGContextClosePath(context);
 
-    CGContextSetFillColorWithColor(context, [color CGColor]);
+    PerformWithAppearance([self effectiveAppearance], ^{
+        CGContextSetFillColorWithColor(context, [color CGColor]);
+    });
+
     CGContextFillPath(context);
 }
 

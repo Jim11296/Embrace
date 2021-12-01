@@ -54,8 +54,6 @@
 		552EC03118DFDAEB000B82AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558DC0C01877861E00C85770 /* InfoPlist.strings */; };
 		553614CE18B4C3B2007BDAD6 /* HugAudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 553614CD18B4C3B2007BDAD6 /* HugAudioFile.m */; };
 		5537D75E19CEBA7300DE8117 /* CurrentTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */; };
-		553DE143189F107100A355D1 /* ViewTrackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 553DE142189F107100A355D1 /* ViewTrackController.m */; };
-		553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 553DE144189F10D600A355D1 /* ViewTrackWindow.xib */; };
 		553E44E218C5D23400E8D7B9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 553E44E118C5D23400E8D7B9 /* IOKit.framework */; };
 		553E77921E6ABF4E00DA988B /* MetadataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 553E77901E6ABF4800DA988B /* MetadataParser.m */; };
 		5549FCA61F8AF767009006D2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5549FCA51F8AF767009006D2 /* CoreServices.framework */; };
@@ -92,7 +90,6 @@
 		557C2BFB1895F325002FAFEA /* CenteredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C2BFA1895F325002FAFEA /* CenteredTextField.m */; };
 		557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 557C43991D615CDC000184D8 /* TipArrowFloater.m */; };
 		557CF69118C1E14B0066D040 /* TracksController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557CF69018C1E14B0066D040 /* TracksController.m */; };
-		5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5583A5971CFC0F1200B8CC4D /* IssueManager.m */; };
 		558513C718794A2600C268E3 /* EffectsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558513C618794A2600C268E3 /* EffectsController.m */; };
 		558DC083187785BC00C85770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558DC082187785BC00C85770 /* Cocoa.framework */; };
 		558DC0BA187785F200C85770 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558DC0B7187785F200C85770 /* AppDelegate.m */; };
@@ -141,7 +138,6 @@
 		55F3B7B3187788B500E8FEC8 /* SetlistWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F3B7B2187788B500E8FEC8 /* SetlistWindow.xib */; };
 		55F3B7B61877908900E8FEC8 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B51877908900E8FEC8 /* Track.m */; };
 		55F3B7D218779B3000E8FEC8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7D118779B3000E8FEC8 /* Player.m */; };
-		55F6C73119CEAA5B00B22793 /* Compatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F6C73019CEAA5B00B22793 /* Compatibility.m */; };
 		55F7ABD718AF1B41006B6FBB /* AUMultibandCompressor.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD318AF1B41006B6FBB /* AUMultibandCompressor.aupreset */; };
 		55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD418AF1B41006B6FBB /* AUDynamicsProcessor.aupreset */; };
 		55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABD518AF1B41006B6FBB /* AULowpass.aupreset */; };
@@ -150,8 +146,6 @@
 		55F7ABEB18B04EB0006B6FBB /* DebugWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */; };
 		55F7ABF518B1A18C006B6FBB /* HugLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ABF418B1A18C006B6FBB /* HugLimiter.m */; settings = {COMPILER_FLAGS = "-Ofast"; }; };
 		55F7ABFA18B21C31006B6FBB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ABF718B21C31006B6FBB /* Localizable.strings */; };
-		55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F81FD21B846E3300E03B5B /* IssuesController.m */; };
-		55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F81FD41B846EE800E03B5B /* IssuesWindow.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -271,9 +265,6 @@
 		5537D75C19CEBA7300DE8117 /* CurrentTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentTrackController.m; path = Source/CurrentTrackController.m; sourceTree = SOURCE_ROOT; };
 		5537D75D19CEBA7300DE8117 /* CurrentTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentTrackController.h; path = Source/CurrentTrackController.h; sourceTree = SOURCE_ROOT; };
 		55394ED01884C94F00474E20 /* Embrace.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Embrace.entitlements; path = Resources/Embrace.entitlements; sourceTree = "<group>"; };
-		553DE141189F107100A355D1 /* ViewTrackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewTrackController.h; path = Source/ViewTrackController.h; sourceTree = SOURCE_ROOT; };
-		553DE142189F107100A355D1 /* ViewTrackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewTrackController.m; path = Source/ViewTrackController.m; sourceTree = SOURCE_ROOT; };
-		553DE144189F10D600A355D1 /* ViewTrackWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ViewTrackWindow.xib; path = Resources/ViewTrackWindow.xib; sourceTree = SOURCE_ROOT; };
 		553E44E118C5D23400E8D7B9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		553E778F1E6ABF4800DA988B /* MetadataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataParser.h; path = Source/MetadataParser.h; sourceTree = SOURCE_ROOT; };
 		553E77901E6ABF4800DA988B /* MetadataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataParser.m; path = Source/MetadataParser.m; sourceTree = SOURCE_ROOT; };
@@ -348,8 +339,6 @@
 		557CF69018C1E14B0066D040 /* TracksController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TracksController.m; path = Source/TracksController.m; sourceTree = SOURCE_ROOT; };
 		5582F7EC18A385570046A24B /* LoudnessMeasurer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoudnessMeasurer.m; path = Source/LoudnessMeasurer.m; sourceTree = "<group>"; };
 		5582F7ED18A385570046A24B /* LoudnessMeasurer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoudnessMeasurer.h; path = Source/LoudnessMeasurer.h; sourceTree = "<group>"; };
-		5583A5961CFC0F1200B8CC4D /* IssueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssueManager.h; path = Source/IssueManager.h; sourceTree = "<group>"; };
-		5583A5971CFC0F1200B8CC4D /* IssueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssueManager.m; path = Source/IssueManager.m; sourceTree = "<group>"; };
 		558513C518794A2600C268E3 /* EffectsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectsController.h; path = Source/EffectsController.h; sourceTree = SOURCE_ROOT; };
 		558513C618794A2600C268E3 /* EffectsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EffectsController.m; path = Source/EffectsController.m; sourceTree = SOURCE_ROOT; };
 		558DC07F187785BC00C85770 /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -443,8 +432,6 @@
 		55F3B7D018779B3000E8FEC8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = Source/Player.h; sourceTree = "<group>"; };
 		55F3B7D118779B3000E8FEC8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Player.m; path = Source/Player.m; sourceTree = "<group>"; };
 		55F3B7D61877A20B00E8FEC8 /* MediaToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaToolbox.framework; path = System/Library/Frameworks/MediaToolbox.framework; sourceTree = SDKROOT; };
-		55F6C72F19CEAA5B00B22793 /* Compatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Compatibility.h; path = Source/Compatibility.h; sourceTree = "<group>"; };
-		55F6C73019CEAA5B00B22793 /* Compatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Compatibility.m; path = Source/Compatibility.m; sourceTree = "<group>"; };
 		55F7ABD318AF1B41006B6FBB /* AUMultibandCompressor.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUMultibandCompressor.aupreset; path = Resources/AUMultibandCompressor.aupreset; sourceTree = SOURCE_ROOT; };
 		55F7ABD418AF1B41006B6FBB /* AUDynamicsProcessor.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AUDynamicsProcessor.aupreset; path = Resources/AUDynamicsProcessor.aupreset; sourceTree = SOURCE_ROOT; };
 		55F7ABD518AF1B41006B6FBB /* AULowpass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AULowpass.aupreset; path = Resources/AULowpass.aupreset; sourceTree = SOURCE_ROOT; };
@@ -455,9 +442,6 @@
 		55F7ABF318B1A18C006B6FBB /* HugLimiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugLimiter.h; path = Source/HugLimiter.h; sourceTree = "<group>"; };
 		55F7ABF418B1A18C006B6FBB /* HugLimiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLimiter.m; path = Source/HugLimiter.m; sourceTree = "<group>"; };
 		55F7ABF818B21C31006B6FBB /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		55F81FD11B846E3300E03B5B /* IssuesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IssuesController.h; path = Source/IssuesController.h; sourceTree = SOURCE_ROOT; };
-		55F81FD21B846E3300E03B5B /* IssuesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IssuesController.m; path = Source/IssuesController.m; sourceTree = SOURCE_ROOT; };
-		55F81FD41B846EE800E03B5B /* IssuesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IssuesWindow.xib; path = Resources/IssuesWindow.xib; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -736,16 +720,12 @@
 				55102B4A1B537C2500308F55 /* EditSystemEffectController.m */,
 				55EE45A51CE1D1CA00ECDF13 /* ExportManager.h */,
 				55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */,
-				55F81FD11B846E3300E03B5B /* IssuesController.h */,
-				55F81FD21B846E3300E03B5B /* IssuesController.m */,
 				552C9E4A1883888E0041C160 /* PreferencesController.h */,
 				552C9E4B1883888E0041C160 /* PreferencesController.m */,
 				55F3B7AF1877885800E8FEC8 /* SetlistController.h */,
 				55F3B7B01877885800E8FEC8 /* SetlistController.m */,
 				557CF68F18C1E14B0066D040 /* TracksController.h */,
 				557CF69018C1E14B0066D040 /* TracksController.m */,
-				553DE141189F107100A355D1 /* ViewTrackController.h */,
-				553DE142189F107100A355D1 /* ViewTrackController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -767,11 +747,9 @@
 				55A0B167188F447100866F04 /* CurrentTrackWindow.xib */,
 				552C9E481883856A0041C160 /* PreferencesWindow.xib */,
 				55BC0B131878014E00D84481 /* EffectsWindow.xib */,
-				55F81FD41B846EE800E03B5B /* IssuesWindow.xib */,
 				55F7ABEA18B04EB0006B6FBB /* DebugWindow.xib */,
 				556ACE23187ABB8100AED4BC /* EditSystemEffectWindow.xib */,
 				55102B441B537AF400308F55 /* EditGraphicEQEffectWindow.xib */,
-				553DE144189F10D600A355D1 /* ViewTrackWindow.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -832,8 +810,6 @@
 				55BC0B051877F19400D84481 /* Effect.m */,
 				55102B411B53564500308F55 /* EffectAdditions.h */,
 				55102B421B53564500308F55 /* EffectAdditions.m */,
-				5583A5961CFC0F1200B8CC4D /* IssueManager.h */,
-				5583A5971CFC0F1200B8CC4D /* IssueManager.m */,
 				55F3B7B41877908900E8FEC8 /* Track.h */,
 				55F3B7B51877908900E8FEC8 /* Track.m */,
 				552C9E4D1883EBA40041C160 /* Preferences.h */,
@@ -933,8 +909,6 @@
 				550C63BC1FE26F18007841BC /* MTS */,
 				55DD53A718B9FC4A0084628D /* CrashReportSender.h */,
 				55DD53A618B9FC4A0084628D /* CrashReportSender.m */,
-				55F6C72F19CEAA5B00B22793 /* Compatibility.h */,
-				55F6C73019CEAA5B00B22793 /* Compatibility.m */,
 				55BC0B291878E4EF00D84481 /* Utils.h */,
 				55BC0B2A1878E4EF00D84481 /* Utils.m */,
 				550C63C31FE63B27007841BC /* FileSystemMonitor.h */,
@@ -1111,7 +1085,6 @@
 				55A0B1741890A81900866F04 /* test_g.m4a in Resources */,
 				554F3C7418BA08B900E9EA7E /* Acknowledgements.rtf in Resources */,
 				55F7ABDA18AF1B41006B6FBB /* AUHipass.aupreset in Resources */,
-				553DE145189F10D600A355D1 /* ViewTrackWindow.xib in Resources */,
 				5560980E1B45EEF8008516C3 /* TrackTableCellView.xib in Resources */,
 				55169D531F9ACBFA003779FA /* test_3s_g4.m4a in Resources */,
 				556ACE24187ABB8100AED4BC /* EditSystemEffectWindow.xib in Resources */,
@@ -1128,7 +1101,6 @@
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
 				5517B470233B3F6C00FB45A4 /* Archive.sh in Resources */,
 				55CF848E18BF27AC00EF33F7 /* Embrace.sdef in Resources */,
-				55F81FD51B846EE800E03B5B /* IssuesWindow.xib in Resources */,
 				556B496420CF772D00A4E83E /* Assets.xcassets in Resources */,
 				55C82A9E1B57423F0067DEBC /* AUBandpass.aupreset in Resources */,
 			);
@@ -1204,7 +1176,6 @@
 				55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */,
 				551CE71A21B3CE9500D422E4 /* HugLinearRamper.m in Sources */,
 				55D7001020DCA3A8002FB978 /* TrackStripeView.m in Sources */,
-				5583A5981CFC0F1200B8CC4D /* IssueManager.m in Sources */,
 				55102B4B1B537C2500308F55 /* EditSystemEffectController.m in Sources */,
 				55BC0B061877F19400D84481 /* Effect.m in Sources */,
 				55BC0B0D1877F35000D84481 /* EffectType.m in Sources */,
@@ -1215,7 +1186,6 @@
 				557CF69118C1E14B0066D040 /* TracksController.m in Sources */,
 				5559540121C0C1FC0032EE54 /* HugCrashPad.m in Sources */,
 				556ACE36187BB43A00AED4BC /* WrappedUtils.cpp in Sources */,
-				55F81FD31B846E3300E03B5B /* IssuesController.m in Sources */,
 				557C439A1D615CDC000184D8 /* TipArrowFloater.m in Sources */,
 				555953F521B8B6FB0032EE54 /* HugAudioSource.m in Sources */,
 				552C9E4F1883EBA40041C160 /* Preferences.m in Sources */,
@@ -1262,8 +1232,6 @@
 				55D7000B20DC9F3B002FB978 /* HairlineView.m in Sources */,
 				555953E921B6834D0032EE54 /* HugMeterData.m in Sources */,
 				55CF2786187A23BD0042C92A /* MusicAppManager.m in Sources */,
-				55F6C73119CEAA5B00B22793 /* Compatibility.m in Sources */,
-				553DE143189F107100A355D1 /* ViewTrackController.m in Sources */,
 				55A708B118A715C1007BD7C0 /* DragSongsHereView.m in Sources */,
 				55102B431B53564500308F55 /* EffectAdditions.m in Sources */,
 				552C9E4C1883888E0041C160 /* PreferencesController.m in Sources */,

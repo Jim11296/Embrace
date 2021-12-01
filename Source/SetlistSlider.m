@@ -3,76 +3,8 @@
 #import "SetlistSlider.h"
 
 
-static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
-{
-    NSShadow *shadow = [[NSShadow alloc] init];
-    
-    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:alpha]];
-    [shadow setShadowOffset:NSMakeSize(0, -yOffset)];
-    [shadow setShadowBlurRadius:blurRadius];
-
-    return shadow;
-}
-
 
 @implementation SetlistSlider
-
-+ (void) drawKnobWithView:(NSView *)view rect:(CGRect)rect highlighted:(BOOL)highlighted
-{
-    BOOL isMainWindow = [[view window] isMainWindow];
-    
-    NSColor *start = nil;
-    NSColor *end   = nil;
-    
-    NSShadow *shadow1 = nil;
-    NSShadow *shadow2 = nil;
-    
-    if (IsAppearanceDarkAqua(view)) {
-        if (isMainWindow) {
-            shadow1 = sShadow( 0.6, 1, 2 );
-            shadow2 = sShadow( 0.8, 0, 1 );
-        } else {
-            shadow1 = sShadow( 0.9, 0, 1 );
-        }
-
-    } else {
-        if (isMainWindow) {
-            shadow1 = sShadow( 0.4, 1, 2 );
-            shadow2 = sShadow( 0.6, 0, 1 );
-        } else {
-            shadow1 = sShadow( 0.45, 0, 1 );
-        }
-
-    }
-
-    if (highlighted) {
-        start = [NSColor colorNamed:@"KnobPressed1"];
-        end   = [NSColor colorNamed:@"KnobPressed2"];
-
-    } else if (isMainWindow) {
-        start = [NSColor colorNamed:@"KnobMain1"];
-        end   = [NSColor colorNamed:@"KnobMain2"];
-
-    } else {
-        start = [NSColor colorNamed:@"KnobResigned1"];
-        end   = [NSColor colorNamed:@"KnobResigned2"];
-    }
-
-    [shadow1 set];
-    [start set];
-
-    [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
-    
-    if (shadow2 && start && end) {
-        [shadow2 set];
-
-        NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
-        
-        CGFloat angle = [view isFlipped] ? 90 : -90;
-        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:rect] angle:angle];
-    }
-}
-
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
@@ -108,32 +40,37 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 }
 
 
-- (NSRect) knobRectFlipped:(BOOL)flipped
-{
-    NSRect result = [super knobRectFlipped:flipped];
-
-    result = NSInsetRect(result, 4, 4);
-
-    return result;
-}
-
-
-- (void) drawKnob:(NSRect)knobRect
-{
-    [SetlistSlider drawKnobWithView:[self controlView] rect:knobRect highlighted:[self isHighlighted]];
-}
-
+//
+//- (void) drawKnob:(NSRect)inKnobRect
+//{
+//    CGFloat knobThickness = [self knobThickness];
+//
+//    CGRect outKnobRect = CGRectMake(
+//        inKnobRect.origin.x + ((inKnobRect.size.width  - knobThickness) / 2.0),
+//        inKnobRect.origin.y + ((inKnobRect.size.height - knobThickness) / 2.0),
+//        knobThickness,
+//        knobThickness
+//    );
+//    
+////    outKnobRect.origin.y -= 2.0;
+//
+//    [SetlistSlider drawKnobWithView:[self controlView] rect:outKnobRect highlighted:[self isHighlighted]];
+//}
+//*/
 
 - (void) drawBarInside:(NSRect)aRect flipped:(BOOL)flipped
 {
     BOOL isMainWindow = [[[self controlView] window] isMainWindow];
+//
+//    aRect = NSInsetRect(aRect, 4, 0);
+//    aRect.origin.y += 2.0;
 
     NSRect knobRect = [self knobRectFlipped:flipped];
-    
+        
     CGFloat midX = NSMidX(knobRect);
     
     NSRect leftRect, rightRect;
-    NSDivideRect(_cellFrame, &leftRect, &rightRect, midX - _cellFrame.origin.x, NSMinXEdge);
+    NSDivideRect(aRect, &leftRect, &rightRect, midX - aRect.origin.x, NSMinXEdge);
     
     CGFloat radius = aRect.size.height > aRect.size.width ? aRect.size.width : aRect.size.height;
     radius /= 2;
@@ -161,30 +98,15 @@ static NSShadow *sShadow(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius)
 
 - (void) drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    _cellFrame = cellFrame;
-    
     NSInteger numberOfTickMarks = [self numberOfTickMarks];
     [self setNumberOfTickMarks:0];
-    
-    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
-    BOOL inTransparencyLayer = NO;
 
-    if (IsAppearanceDarkAqua(controlView)) {
-        CGFloat alpha = [[NSColor colorNamed:@"MeterDarkAlpha"] alphaComponent];
-        
-        CGContextSetAlpha(context, alpha);
-        CGContextBeginTransparencyLayer(context, NULL);
-        inTransparencyLayer = YES;
-    }
-    
     [super drawWithFrame:cellFrame inView:controlView];
-    
-    if (inTransparencyLayer) {
-        CGContextEndTransparencyLayer(context);
-    }
-    
+        
     [self setNumberOfTickMarks:numberOfTickMarks];
 }
+
+
 
 
 @end

@@ -4,7 +4,7 @@
 
 @protocol WorkerProtocol;
 
-@class EditEffectController, ViewTrackController, Effect;
+@class EditEffectController, Effect;
 @class SetlistController, Track;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
@@ -23,9 +23,5 @@
 
 - (EditEffectController *) editControllerForEffect:(Effect *)effect;
 - (void) closeEditControllerForEffect:(Effect *)effect;
-
-- (ViewTrackController *) viewTrackControllerForTrack:(Track *)track;
-- (void) closeViewTrackControllerForEffect:(Track *)track;
-
 
 @end

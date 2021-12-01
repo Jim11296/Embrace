@@ -87,15 +87,15 @@
 {
     NSRect bounds = [self bounds];
     CGFloat barHeight = 4;
-
+    
     bounds = NSInsetRect(bounds, 1, 0);
 
     NSRect leftChannelFrame = bounds;
     leftChannelFrame.size.height = barHeight;
-    leftChannelFrame.origin.y = round((bounds.size.height - leftChannelFrame.size.height) / 2);
+    leftChannelFrame.origin.y = 6;
 
     NSRect rightChannelFrame = leftChannelFrame;
-    rightChannelFrame.origin.y -= 6;
+    rightChannelFrame.origin.y = 0;
 
     leftChannelFrame.size.width  -= 4;
     rightChannelFrame.size.width -= 4;

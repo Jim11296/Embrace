@@ -12,7 +12,6 @@
     #import <QuartzCore/QuartzCore.h>
 
     #import "Utils.h"
-    #import "Compatibility.h"
     #import "Log.h"
     #import "Application.h"
     #import "EmbraceWindow.h"

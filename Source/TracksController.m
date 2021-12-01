@@ -2,7 +2,6 @@
 
 #import "TracksController.h"
 #import "Track.h"
-#import "ViewTrackController.h"
 #import "TrackTableCellView.h"
 #import "AppDelegate.h"
 #import "Player.h"
@@ -50,10 +49,6 @@ static NSString * const sModifiedAtKey = @"modified-at";
     ]];
 
     [[self tableView] registerForDraggedTypes:[self readableDraggedTypes]];
-
-#if DEBUG
-    [[self tableView] setDoubleAction:@selector(viewClickedTrack:)];
-#endif
 
     [[self tableView] setGridStyleMask:NSTableViewSolidHorizontalGridLineMask];
     
@@ -350,6 +345,35 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
+- (BOOL) writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
+{
+    NSArray *tracksToDrag = [_tracks objectsAtIndexes:rowIndexes];
+
+    BOOL hasQueued    = NO;
+    BOOL hasNotQueued = NO;
+
+    for (Track *track in tracksToDrag) {
+        if ([track trackStatus] != TrackStatusQueued) {
+            hasNotQueued = YES;
+        } else {
+            hasQueued = YES;
+        }
+    }
+    
+    // Don't allow queued and non-queued
+    if (hasNotQueued && hasQueued) {
+        return NO;
+    }
+    
+    [pboard setData:[NSData data] forType:(hasQueued ? EmbraceQueuedTrackPasteboardType : EmbraceLockedTrackPasteboardType)];
+
+    _draggedIndexSet = rowIndexes;
+    _draggedIndexSetIsContiguous = [self _isIndexSetContiguous:_draggedIndexSet];
+    
+    return YES;
+}
+
+
 - (NSDragOperation) validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation
 {
     NSPasteboard *pasteboard = [info draggingPasteboard];
@@ -530,33 +554,15 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
 }
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 - (BOOL) tableView:(NSTableView *)tableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
-    NSArray *tracksToDrag = [_tracks objectsAtIndexes:rowIndexes];
-
-    BOOL hasQueued    = NO;
-    BOOL hasNotQueued = NO;
-
-    for (Track *track in tracksToDrag) {
-        if ([track trackStatus] != TrackStatusQueued) {
-            hasNotQueued = YES;
-        } else {
-            hasQueued = YES;
-        }
-    }
-    
-    // Don't allow queued and non-queued
-    if (hasNotQueued && hasQueued) {
-        return NO;
-    }
-    
-    [pboard setData:[NSData data] forType:(hasQueued ? EmbraceQueuedTrackPasteboardType : EmbraceLockedTrackPasteboardType)];
-
-    _draggedIndexSet = rowIndexes;
-    _draggedIndexSetIsContiguous = [self _isIndexSetContiguous:_draggedIndexSet];
-    
-    return YES;
+    return [self writeRowsWithIndexes:rowIndexes toPasteboard:pboard];
 }
+
+#pragma clang diagnostic pop
 
 
 - (NSView *) tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row
@@ -1195,19 +1201,6 @@ static void sCollectM3UPlaylistURL(NSURL *inURL, NSMutableArray *results, NSInte
         isDuplicate = isDuplicate || check(urlToTrackMap, [track externalURL], track);
     
         [track setDuplicate:isDuplicate];
-    }
-}
-
-
-- (IBAction) viewClickedTrack:(id)sender
-{
-    NSInteger clickedRow = [[self tableView] clickedRow];
-
-    if (clickedRow >= 0 && clickedRow <= [_tracks count]) {
-        Track *track = [_tracks objectAtIndex:clickedRow];
-        ViewTrackController *controller = [GetAppDelegate() viewTrackControllerForTrack:track];
-
-        [controller showWindow:self];
     }
 }
 
