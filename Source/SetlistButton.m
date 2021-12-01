@@ -18,7 +18,6 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 };
 
 
-
 @interface SetlistButtonBorderView : NSView <CALayerDelegate, NSViewLayerContentScaleDelegate> 
 - (void) performAnimate:(BOOL)orderIn;
 @end
@@ -41,9 +40,6 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     BOOL                     _highlighted;
     SetlistButtonIconView   *_iconView;
     SetlistButtonBorderView *_borderView;
-
-    NSImageView        *_backgroundView;
-    SetlistButtonStyle  _backgroundStyle;
 }
 
 
@@ -72,11 +68,6 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSWindowDidBecomeMainNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_update:) name:NSApplicationDidResignActiveNotification object:nil];
-
-    _backgroundView = [[NoDropImageView alloc] initWithFrame:[self bounds]];
-    [self addSubview:_backgroundView];
-    
-    [_backgroundView setImageScaling:NSImageScaleNone];
     
     CGRect bounds = [self bounds];
     
@@ -142,45 +133,30 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 
 - (void) _update:(NSNotification *)note
 {
-    SetlistButtonStyle iconStyle       = SetlistButtonStyleNormal;
-    SetlistButtonStyle backgroundStyle = SetlistButtonStyleNormal;
+    SetlistButtonStyle style = SetlistButtonStyleNormal;
 
     SetlistButtonIcon icon = _icon;
     BOOL isInactive = ![[self window] isMainWindow] || ![NSApp isActive];
 
     if (![self isEnabled]) {
-        iconStyle = SetlistButtonStyleDisabled;
+        style = SetlistButtonStyleDisabled;
 
     } else if (isInactive) {
-        iconStyle = SetlistButtonStyleInactive;
+        style = SetlistButtonStyleInactive;
 
     } else if (icon == SetlistButtonIconDeviceIssue || icon == SetlistButtonIconReallyStop) {
-        iconStyle = _highlighted ? SetlistButtonStyleAlertPressed : SetlistButtonStyleAlert;
+        style = _highlighted ? SetlistButtonStyleAlertPressed : SetlistButtonStyleAlert;
 
     } else if (_highlighted) {
-        iconStyle = SetlistButtonStylePressed;
+        style = SetlistButtonStylePressed;
     }
     
     if (isInactive) {
-        iconStyle = SetlistButtonStyleInactive;
-    } else if (_highlighted) {
-        backgroundStyle = SetlistButtonStylePressed;
+        style = SetlistButtonStyleInactive;
     }
 
     [_iconView setIcon:[self icon]];
-    [_iconView setStyle:iconStyle];
-    
-    if (_backgroundStyle != backgroundStyle) {
-        if (backgroundStyle == SetlistButtonStyleInactive) {
-            [_backgroundView setImage:[NSImage imageNamed:@"ButtonInactiveBackground"]];
-        } else if (backgroundStyle == SetlistButtonStylePressed) {
-            [_backgroundView setImage:[NSImage imageNamed:@"ButtonPressedBackground"]];
-        } else {
-            [_backgroundView setImage:[NSImage imageNamed:@"ButtonNormalBackground"]];
-        }
-        
-        _backgroundStyle = backgroundStyle;
-    }
+    [_iconView setStyle:style];
 }
 
 
@@ -368,7 +344,7 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
                 
         [[self _glowColor] set];
         
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:3.5 yRadius:3.5];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:bounds xRadius:4.5 yRadius:4.5];
         [path setLineWidth:2];
         [path stroke];
     });
@@ -412,8 +388,8 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 @end
 
 
-
 @implementation SetlistButtonIconView {
+    CALayer *_backgroundLayer;
     CALayer *_mainLayer;
     CALayer *_auxLayer;
 
@@ -425,18 +401,25 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (id) initWithFrame:(NSRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
+        _backgroundLayer = [CALayer layer];
         _mainLayer = [CALayer layer];
         _auxLayer  = [CALayer layer];
         
+        [_backgroundLayer setBackgroundColor:[[NSColor redColor] CGColor]];
+        [_backgroundLayer setCornerCurve:kCACornerCurveContinuous];
+        [_backgroundLayer setCornerRadius:6];
+        
+        [_backgroundLayer setMasksToBounds:NO];
         [_mainLayer setMasksToBounds:NO];
         [_auxLayer  setMasksToBounds:NO];
 
+        [_backgroundLayer setDelegate:self];
         [_mainLayer setDelegate:self];
         [_auxLayer  setDelegate:self];
         
         [_mainLayer setContentsGravity:kCAGravityLeft];
         [_auxLayer  setContentsGravity:kCAGravityLeft];
-        
+
         [_mainLayer setNeedsDisplayOnBoundsChange:YES];
         [_auxLayer  setNeedsDisplayOnBoundsChange:YES];
         
@@ -445,8 +428,17 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
         [self setWantsLayer:YES];
         [self setLayerContentsRedrawPolicy:NSViewLayerContentsRedrawNever];
         
+        [[self layer] addSublayer:_backgroundLayer];
         [[self layer] addSublayer:_mainLayer];
         [[self layer] setMasksToBounds:NO];
+
+        NSTrackingAreaOptions options = 
+            NSTrackingMouseEnteredAndExited |
+            NSTrackingActiveInKeyWindow     |
+            NSTrackingInVisibleRect;
+        
+        NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[self bounds] options:options owner:self userInfo:nil];
+        [self addTrackingArea:area];
     }
 
     return self;
@@ -462,8 +454,22 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
 - (void) updateLayer { }
 
 
+
+- (void) mouseEntered:(NSEvent *)event
+{
+    [self _updateBackgroundLayer];
+}
+
+
+- (void) mouseExited:(NSEvent *)event
+{
+    [self _updateBackgroundLayer];
+}
+
+
 - (void) viewDidChangeEffectiveAppearance
 {
+    [self _updateBackgroundLayer];
     [_mainLayer setNeedsDisplay];
 }
 
@@ -473,6 +479,8 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     [super layout];
     
     NSRect bounds = [self bounds];
+    
+    [_backgroundLayer setFrame:bounds];
     
     NSRect mainFrame = bounds;
     NSRect auxFrame  = bounds;
@@ -523,8 +531,37 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     CGFloat scale = [window backingScaleFactor];
     
     if (scale) {
+        [_backgroundLayer setContentsScale:scale];
         [_mainLayer setContentsScale:scale];
         [_auxLayer  setContentsScale:scale];
+    }
+}
+
+
+- (void) _updateBackgroundLayer
+{
+    NSColor *color = nil;
+    BOOL mouseInside = NO;
+
+    NSWindow *window = [self window];
+    if ([window isMainWindow]) {
+        NSPoint mouseLocation = [window mouseLocationOutsideOfEventStream];
+        mouseLocation = [self convertPoint:mouseLocation fromView:nil];
+        mouseInside = [self mouse:mouseLocation inRect:[self bounds]];
+    }
+
+    if (_style == SetlistButtonStylePressed) {
+        color = [NSColor colorNamed:@"ButtonBackgroundPressed"];
+    } else if (mouseInside && (_style != SetlistButtonStyleDisabled)) {
+        color = [NSColor colorNamed:@"ButtonBackgroundHover"];
+    }
+
+    if (color) {
+        [_backgroundLayer setBackgroundColor:[color CGColor]];
+        [_backgroundLayer setHidden:NO];
+    } else {
+        [_backgroundLayer setBackgroundColor:nil];
+        [_backgroundLayer setHidden:YES];
     }
 }
 
@@ -733,7 +770,7 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
         return [NSImage imageNamed:@"DeviceIssueTemplate"];
 
     } else if (icon == SetlistButtonIconGear) {
-        return [NSImage imageNamed:@"GearTemplate"];
+        return [NSImage imageNamed:@"ActionTemplate"];
     }
     
     return nil;
@@ -770,6 +807,8 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     if (_icon != icon) {
         _icon = icon;
         [self setNeedsLayout:YES];
+
+        [self _updateBackgroundLayer];
         [_mainLayer setNeedsDisplay];
     }
 }
@@ -780,6 +819,8 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
     if (_style != style) {
         _style = style;
         [self setNeedsLayout:YES];
+
+        [self _updateBackgroundLayer];
         [_mainLayer setNeedsDisplay];
     }
 }

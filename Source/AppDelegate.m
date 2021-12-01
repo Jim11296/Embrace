@@ -9,7 +9,6 @@
 #import "EditGraphicEQEffectController.h"
 #import "EditSystemEffectController.h"
 #import "CurrentTrackController.h"
-#import "ViewTrackController.h"
 #import "TracksController.h"
 #import "Preferences.h"
 #import "DebugController.h"
@@ -19,7 +18,6 @@
 #import "Effect.h"
 #import "Track.h"
 
-#import "IssueManager.h"
 #import "MusicAppManager.h"
 #import "ScriptsManager.h"
 #import "HugAudioDevice.h"
@@ -94,7 +92,6 @@
 #endif
 
     NSMutableArray    *_editEffectControllers;
-    NSMutableArray    *_viewTrackControllers;
     
     NSXPCConnection   *_connectionToWorker;
 }
@@ -110,17 +107,12 @@
 {
     EmbraceLogMethod();
 
-    EmbraceCheckCompatibility();
-
     HugSetLogger(^(NSString *category, NSString *message) {
         EmbraceLog(category, @"%@", message);
     });
 
     // Load preferences
     [Preferences sharedInstance];
-
-    // Load issue manager
-    [IssueManager sharedInstance];
 
     // Start parsing Music.app XML
     [MusicAppManager sharedInstance];
@@ -455,39 +447,6 @@
     }
     
     [_editEffectControllers removeObjectsInArray:toRemove];
-}
-
-
-- (ViewTrackController *) viewTrackControllerForTrack:(Track *)track
-{
-    if (!_viewTrackControllers) {
-        _viewTrackControllers = [NSMutableArray array];
-    }
-
-    for (ViewTrackController *controller in _viewTrackControllers) {
-        if ([[controller track] isEqual:track]) {
-            return controller;
-        }
-    }
-    
-    ViewTrackController *controller = [[ViewTrackController alloc] initWithTrack:track];
-    if (controller) [_viewTrackControllers addObject:controller];
-    return controller;
-}
-
-
-- (void) closeViewTrackControllerForEffect:(Track *)track
-{
-    NSMutableArray *toRemove = [NSMutableArray array];
-
-    for (ViewTrackController *controller in _viewTrackControllers) {
-        if ([controller track] == track) {
-            [controller close];
-            if (controller) [toRemove addObject:controller];
-        }
-    }
-    
-    [_viewTrackControllers removeObjectsInArray:toRemove];
 }
 
 

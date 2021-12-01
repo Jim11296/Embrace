@@ -596,7 +596,7 @@ const CGFloat sTrackWidth      = 5;
     CGRect bounds    = [self bounds];
     CGRect trackRect = [self trackRect];
 
-    void (^drawTick)(Float32) = ^(Float32 value) {
+    CGRect (^getTickRect)(Float32) = ^(Float32 value) {
         CGRect valueRect = [self knobRectWithValue:value];
 
         CGRect lineRect = bounds;
@@ -605,30 +605,109 @@ const CGFloat sTrackWidth      = 5;
         
         lineRect.origin.y += (valueRect.size.height - 1.0) / 2.0;
         
-        NSRectFill(lineRect);
+        return lineRect;
     };
 
+    NSBezierPath *secondaryPath = [NSBezierPath bezierPath];
 
-    NSColor *primaryColor   = [NSColor colorNamed:@"EQPrimary"];
-    NSColor *secondaryColor = [NSColor colorNamed:@"EQSecondary"];
+    void (^appendTick)(Float32) = ^(Float32 value) {
+        NSBezierPath *tickPath = [NSBezierPath bezierPathWithRect:getTickRect(value)];
+        [secondaryPath appendBezierPath:tickPath];
+    };
+   
+    appendTick( 1.00 );
+    appendTick(-1.00 );
+    appendTick( 0.50 );
+    appendTick(-0.50 );
+
+    appendTick( 0.75 );
+    appendTick( 0.25 );
+    appendTick(-0.25 );
+    appendTick(-0.75 );
+
+    NSBezierPath *trackPath = [NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.5 yRadius:2.5];
+    [secondaryPath appendBezierPath:trackPath];
+
+    [[NSColor colorNamed:@"EQSecondary"] set];
+    [secondaryPath fill];
+
+    [[NSColor colorNamed:@"EQPrimary"] set];
+    [[NSBezierPath bezierPathWithRect:getTickRect(0)] fill];
     
-    [secondaryColor set];
-    drawTick( 1.00 );
-    drawTick(-1.00 );
-    drawTick( 0.50 );
-    drawTick(-0.50 );
-
-    drawTick( 0.75 );
-    drawTick( 0.25 );
-    drawTick(-0.25 );
-    drawTick(-0.75 );
-
-    [primaryColor set];
-    drawTick( 0.00 );
-    [[NSBezierPath bezierPathWithRoundedRect:trackRect xRadius:2.5 yRadius:2.5] fill];
-
     CGRect knobRect  = [self knobRectWithValue:_value];
-    [SetlistSlider drawKnobWithView:self rect:knobRect highlighted:_selected];
+
+    NSRect filledRect = NSUnionRect(getTickRect(0), getTickRect(_value));
+    filledRect.origin.x = trackRect.origin.x;
+    filledRect.size.width = trackRect.size.width;
+
+    [[NSBezierPath bezierPathWithRect:filledRect] fill];
+
+    [self _drawKnobWithRect:knobRect highlighted:_selected];
+}
+
+- (void) _drawKnobWithRect:(CGRect)rect highlighted:(BOOL)highlighted
+{   
+    NSShadow *(^makeShadow)(CGFloat, CGFloat, CGFloat) = ^(CGFloat alpha, CGFloat yOffset, CGFloat blurRadius) {
+        NSShadow *shadow = [[NSShadow alloc] init];
+        
+        [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0 alpha:alpha]];
+        [shadow setShadowOffset:NSMakeSize(0, -yOffset)];
+        [shadow setShadowBlurRadius:blurRadius];
+
+        return shadow;
+    };
+
+    BOOL isMainWindow = [[self window] isMainWindow];
+    
+    NSColor *start = nil;
+    NSColor *end   = nil;
+    
+    NSShadow *shadow1 = nil;
+    NSShadow *shadow2 = nil;
+    
+    if (IsAppearanceDarkAqua(self)) {
+        if (isMainWindow) {
+            shadow1 = makeShadow( 0.6, 1, 2 );
+            shadow2 = makeShadow( 0.8, 0, 1 );
+        } else {
+            shadow1 = makeShadow( 0.9, 0, 1 );
+        }
+
+    } else {
+        if (isMainWindow) {
+            shadow1 = makeShadow( 0.4, 1, 1 );
+            shadow2 = makeShadow( 0.6, 0, 1 );
+        } else {
+            shadow1 = makeShadow( 0.45, 0, 1 );
+        }
+    }
+
+    if (highlighted) {
+        start = [NSColor colorNamed:@"EQKnobPressed1"];
+        end   = [NSColor colorNamed:@"EQKnobPressed2"];
+
+    } else if (isMainWindow) {
+        start = [NSColor colorNamed:@"EQKnobMain1"];
+        end   = [NSColor colorNamed:@"EQKnobMain2"];
+
+    } else {
+        start = [NSColor colorNamed:@"EQKnobResigned1"];
+        end   = [NSColor colorNamed:@"EQKnobResigned2"];
+    }
+
+    [shadow1 set];
+    [start set];
+   
+    [[NSBezierPath bezierPathWithOvalInRect:rect] fill];
+    
+    if (shadow2 && start && end) {
+        [shadow2 set];
+
+        NSGradient *g = [[NSGradient alloc] initWithColors:@[ start, end ]];
+        
+        CGFloat angle = [self isFlipped] ? 90 : -90;
+        [g drawInBezierPath:[NSBezierPath bezierPathWithOvalInRect:rect] angle:angle];
+    }
 }
 
 
