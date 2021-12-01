@@ -330,8 +330,8 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
 {
     if (_rounded != rounded) {
         _rounded = rounded;
-        [_leftBarLayer  setNeedsDisplay];
-        [_rightBarLayer setNeedsDisplay];
+        [_leftCapLayer  setNeedsDisplay];
+        [_rightCapLayer setNeedsDisplay];
     }
 }
 
