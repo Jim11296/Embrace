@@ -250,13 +250,6 @@ static void sBlendComponents(CGFloat *a, CGFloat *b, CGFloat fraction, CGFloat *
             filledColor = [NSColor colorNamed:@"MeterFilledMain"];
         }
 
-        if (IsAppearanceDarkAqua(self)) {
-            CGFloat alpha = [[NSColor colorNamed:@"MeterDarkAlpha"] alphaComponent];
-
-            unfilledColor = GetColorWithMultipliedAlpha(unfilledColor, alpha);
-            filledColor   = GetColorWithMultipliedAlpha(filledColor,   alpha);
-        }
-
         NSColorSpace *sRGBColorSpace = [NSColorSpace sRGBColorSpace];
         unfilledColor = [unfilledColor colorUsingColorSpace:sRGBColorSpace];
         filledColor   = [filledColor   colorUsingColorSpace:sRGBColorSpace];

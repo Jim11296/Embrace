@@ -556,13 +556,15 @@ typedef NS_ENUM(NSInteger, SetlistButtonStyle) {
         color = [NSColor colorNamed:@"ButtonBackgroundHover"];
     }
 
-    if (color) {
-        [_backgroundLayer setBackgroundColor:[color CGColor]];
-        [_backgroundLayer setHidden:NO];
-    } else {
-        [_backgroundLayer setBackgroundColor:nil];
-        [_backgroundLayer setHidden:YES];
-    }
+    PerformWithAppearance([self effectiveAppearance], ^{
+        if (color) {
+            [_backgroundLayer setBackgroundColor:[color CGColor]];
+            [_backgroundLayer setHidden:NO];
+        } else {
+            [_backgroundLayer setBackgroundColor:nil];
+            [_backgroundLayer setHidden:YES];
+        }
+    });
 }
 
 
