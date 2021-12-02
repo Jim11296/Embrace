@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,7 +18,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="159" width="240" height="160"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" wantsLayer="YES" id="wIn-2X-2Cg">
                 <rect key="frame" x="0.0" y="0.0" width="240" height="160"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,19 +39,19 @@
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="j3h-Sd-0YN"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="bdy-3L-3eu"/>
-                    <toolbarItem implicitItemIdentifier="12143151-CE77-4187-84E7-DB3A780E3783" label="Custom View" paletteLabel="Custom View" image="GearTemplate" id="zKn-WL-hdI">
+                    <toolbarItem implicitItemIdentifier="12143151-CE77-4187-84E7-DB3A780E3783" label="Custom View" paletteLabel="Custom View" image="NSActionTemplate" title="Item 1" id="zKn-WL-hdI">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="48" height="28"/>
+                        <size key="minSize" width="48" height="25"/>
                         <size key="maxSize" width="48" height="28"/>
                         <popUpButton key="view" verticalHuggingPriority="750" id="6ys-R7-mYB">
                             <rect key="frame" x="14" y="14" width="48" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" arrowPosition="noArrow" selectedItem="1LY-sW-YUT" id="REY-1F-ppS">
+                            <popUpButtonCell key="cell" type="roundTextured" title="Item 1" bezelStyle="texturedRounded" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" arrowPosition="arrowAtCenter" selectedItem="1LY-sW-YUT" id="REY-1F-ppS">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" metaFont="menu"/>
                                 <menu key="menu" title="OtherViews" id="OhG-da-Xk9">
                                     <items>
-                                        <menuItem title="Item 1" state="on" image="GearTemplate" hidden="YES" id="1LY-sW-YUT"/>
+                                        <menuItem title="Item 1" state="on" image="NSActionTemplate" hidden="YES" id="1LY-sW-YUT"/>
                                         <menuItem title="Load Preset…" id="EjV-RG-VVD">
                                             <connections>
                                                 <action selector="loadPreset:" target="-2" id="F7J-Kl-Ep1"/>
@@ -76,7 +75,7 @@
                             </popUpButtonCell>
                         </popUpButton>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="B9DC7C8E-77A8-4AF9-9B62-5D0C32C83D22" label="Custom View" paletteLabel="Custom View" image="FlattenTemplate" id="xjk-sh-TCU">
+                    <toolbarItem implicitItemIdentifier="B9DC7C8E-77A8-4AF9-9B62-5D0C32C83D22" label="Custom View" paletteLabel="Custom View" image="FlattenTemplate" title="Button" id="xjk-sh-TCU">
                         <nil key="toolTip"/>
                         <size key="minSize" width="48" height="28"/>
                         <size key="maxSize" width="48" height="28"/>
@@ -105,6 +104,6 @@
     </objects>
     <resources>
         <image name="FlattenTemplate" width="18" height="18"/>
-        <image name="GearTemplate" width="28" height="14"/>
+        <image name="NSActionTemplate" width="15" height="15"/>
     </resources>
 </document>

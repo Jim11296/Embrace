@@ -228,14 +228,7 @@
         [[NSColor colorNamed:@"MeterRed"] set];
 
     } else {
-        NSColor *color = [NSColor colorNamed:@"MeterUnfilled"];
-
-        if (IsAppearanceDarkAqua(self)) {
-            CGFloat alpha = [[NSColor colorNamed:@"MeterDarkAlpha"] alphaComponent];
-            color = GetColorWithMultipliedAlpha(color, alpha);
-        }
-
-        [color set];
+        [[NSColor colorNamed:@"MeterUnfilled"] set];
     }
     
     CGContextFillEllipseInRect(context, [self bounds]);
