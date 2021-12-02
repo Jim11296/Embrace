@@ -28,5 +28,7 @@
 	<string>Copyright © 2014-2021 Ricci Adams.  All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.music</string>
 </dict>
 </plist>
