@@ -401,21 +401,35 @@ static NSInteger sGetYear(NSString *yearString)
 
 - (void) _parseAIFFWithBytes:(const UInt8 *)bytes length:(NSUInteger)length
 {
-    NSInteger i = 0;
-    
-    while ((i + 8) <= length) {
-        OSType chunkID = OSSwapBigToHostInt(*(OSType *)(bytes + i));
-        i += 4;
-        
-        SInt32 chunkSize = OSSwapBigToHostInt(*(SInt32 *)(bytes + i));
-        i += 4;
 
-        if (chunkID == 'ID3 ' && ((i + chunkSize) <= length)) {
-            [self _parseID3WithBytes:(bytes + i) length:chunkSize];
+    BOOL (^scan)(BOOL) = ^(BOOL usePadByte) {
+        BOOL found = NO;
+
+        NSInteger i = 0;
+        
+        while ((i + 8) <= length) {
+            OSType chunkID = OSSwapBigToHostInt(*(OSType *)(bytes + i));
+            i += 4;
+            
+            SInt32 chunkSize = OSSwapBigToHostInt(*(SInt32 *)(bytes + i));
+            i += 4;
+
+            if (chunkID == 'ID3 ' && ((i + chunkSize) <= length)) {
+                [self _parseID3WithBytes:(bytes + i) length:chunkSize];
+                found = YES;
+            }
+
+            if (usePadByte && (chunkSize % 2 == 1)) {
+                chunkSize++;
+            }
+
+            i += chunkSize;
         }
 
-        i += chunkSize;
-    }
+        return found;
+    };
+    
+    scan(YES) || scan(NO);
 }
 
 
