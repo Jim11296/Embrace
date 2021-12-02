@@ -62,7 +62,6 @@
 - (IBAction) showCurrentTrack:(id)sender;
 
 - (IBAction) sendFeedback:(id)sender;
-- (IBAction) viewOnAppStore:(id)sender;
 
 - (IBAction) openAcknowledgements:(id)sender;
 
@@ -978,16 +977,6 @@
     EmbraceLogMethod();
 
     NSURL *url = [NSURL URLWithString:@"https://www.facebook.com/groups/embrace.users"];
-    [[NSWorkspace sharedWorkspace] openURL:url];
-}
-
-
-
-- (IBAction) viewOnAppStore:(id)sender
-{
-    EmbraceLogMethod();
-
-    NSURL *url = [NSURL URLWithString:@"http://www.ricciadams.com/buy/embrace"];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
