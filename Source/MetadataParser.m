@@ -12,13 +12,13 @@
 
 static NSString *sGetStringForFourCharCode(OSStatus fcc)
 {
-	char str[20] = {0};
+    char str[20] = {0};
 
-	*(UInt32 *)(str + 1) = CFSwapInt32HostToBig(*(UInt32 *)&fcc);
+    *(UInt32 *)(str + 1) = CFSwapInt32HostToBig(*(UInt32 *)&fcc);
 
-	if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
-		str[0] = str[5] = '\'';
-		str[6] = '\0';
+    if (isprint(str[1]) && isprint(str[2]) && isprint(str[3]) && isprint(str[4])) {
+        str[0] = str[5] = '\'';
+        str[6] = '\0';
     } else {
         return [NSString stringWithFormat:@"%ld", (long)fcc];
     }
@@ -401,21 +401,34 @@ static NSInteger sGetYear(NSString *yearString)
 
 - (void) _parseAIFFWithBytes:(const UInt8 *)bytes length:(NSUInteger)length
 {
-    NSInteger i = 0;
-    
-    while ((i + 8) <= length) {
-        OSType chunkID = OSSwapBigToHostInt(*(OSType *)(bytes + i));
-        i += 4;
-        
-        SInt32 chunkSize = OSSwapBigToHostInt(*(SInt32 *)(bytes + i));
-        i += 4;
+    BOOL (^scan)(BOOL) = ^(BOOL usePadByte) {
+        BOOL found = NO;
 
-        if (chunkID == 'ID3 ' && ((i + chunkSize) <= length)) {
-            [self _parseID3WithBytes:(bytes + i) length:chunkSize];
+        NSInteger i = 0;
+        
+        while ((i + 8) <= length) {
+            OSType chunkID = OSSwapBigToHostInt(*(OSType *)(bytes + i));
+            i += 4;
+            
+            SInt32 chunkSize = OSSwapBigToHostInt(*(SInt32 *)(bytes + i));
+            i += 4;
+
+            if (chunkID == 'ID3 ' && ((i + chunkSize) <= length)) {
+                [self _parseID3WithBytes:(bytes + i) length:chunkSize];
+                found = YES;
+            }
+
+            if (usePadByte && (chunkSize % 2 == 1)) {
+                chunkSize++;
+            }
+
+            i += chunkSize;
         }
 
-        i += chunkSize;
-    }
+        return found;
+    };
+
+    scan(YES) || scan(NO);
 }
 
 
