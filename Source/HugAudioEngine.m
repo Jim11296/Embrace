@@ -270,8 +270,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     uint64_t current = HugGetCurrentHostTime();
     uint64_t tooFar  = current + HugGetHostTimeWithSeconds(1.0);
 
+    NSInteger loopGuard = HugRingBufferGetCapacity(_statusRingBuffer) / sizeof(PacketDataUnknown);
+
+    NSInteger overloadCount   = 0;
+    NSInteger statusFullCount = 0;
+
     // Process status
-    while (1) {
+    for (NSInteger i = 0; i < loopGuard; i++) {
         // If we are switching sources, clear the entire _statusRingBuffer
         if (_switchingSources) {
             HugRingBufferConfirmReadAll(_statusRingBuffer);
@@ -319,7 +324,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     }
     
     // Process error buffer
-    while (1) {
+    for (NSInteger i = 0; i < loopGuard; i++) {
         PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_errorRingBuffer, sizeof(PacketDataUnknown));
         if (!unknown) return;
 
@@ -329,13 +334,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
             _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
 
-            HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected");
+            overloadCount++;
            
         } else if (unknown->type == PacketTypeStatusBufferFull) {
             PacketDataUnknown packet;
             if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
 
-            HugLog(@"HugAudioEngine", @"_statusRingBuffer is full");
+            statusFullCount++;
         
         } else if (unknown->type == PacketTypeRenderError) {
             PacketDataRenderError packet;
@@ -349,6 +354,17 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         } else {
             NSAssert(NO, @"Unknown packet type: %ld", (long)unknown->type);
         }
+    }
+    
+    // Aggregate logging for overloads and "buffer full" errors. Else, we can spend
+    // too much time in HugLog while _statusRingBuffer continues to fill.
+    //
+    if (overloadCount > 0) {
+        HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected (%ld)", overloadCount);
+    }
+    
+    if (statusFullCount > 0) {
+        HugLog(@"HugAudioEngine", @"_statusRingBuffer is full (%ld)", statusFullCount);
     }
 }
 
@@ -409,12 +425,6 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         } else {
             err = inputBlock(inNumberFrames, ioData, &info);
             
-            // Do something with status
-
-    //        if (rand() % 100 == 0) {
-    //            usleep(50000);
-    //        }
-
             HugStereoFieldProcess(stereoField, leftData, rightData, inNumberFrames, userInfo->stereoBalance, userInfo->stereoWidth);
             HugLinearRamperProcess(preGainRamper, leftData, rightData, inNumberFrames, userInfo->preGain);
 
