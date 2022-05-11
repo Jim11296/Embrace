@@ -93,9 +93,6 @@
 		556EAEED1FEA013C00EF68C3 /* CrashPad_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */; };
 		556EAEEE1FEA013C00EF68C3 /* CrashPad_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */; };
 		556EAEEF1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */; };
-		556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */; };
-		556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */; };
-		556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */; };
 		55717BF5187EA65400213213 /* SetlistButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF4187EA65400213213 /* SetlistButton.m */; };
 		55717BF8187EAB8C00213213 /* SetlistSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 55717BF7187EAB8C00213213 /* SetlistSlider.m */; };
 		5572C17E1F00B743007BE284 /* SetlistProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5572C17D1F00B743007BE284 /* SetlistProgressBar.m */; };
@@ -349,9 +346,6 @@
 		556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Profile.xcconfig; path = Config/Combined/CrashPad_Profile.xcconfig; sourceTree = "<group>"; };
 		556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Release.xcconfig; path = Config/Combined/CrashPad_Release.xcconfig; sourceTree = "<group>"; };
 		556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CrashPad_Debug.xcconfig; path = Config/Combined/CrashPad_Debug.xcconfig; sourceTree = "<group>"; };
-		556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Release.xcconfig; path = Config/Combined/Embrace_Trial_Release.xcconfig; sourceTree = "<group>"; };
-		556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Debug.xcconfig; path = Config/Combined/Embrace_Trial_Debug.xcconfig; sourceTree = "<group>"; };
-		556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Embrace_Trial_Profile.xcconfig; path = Config/Combined/Embrace_Trial_Profile.xcconfig; sourceTree = "<group>"; };
 		55708C8518B8A98D0059110C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		55708CB618B8AA220059110C /* CrashPad_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrashPad_main.m; path = Source/CrashPad_main.m; sourceTree = SOURCE_ROOT; };
 		55717BF3187EA65400213213 /* SetlistButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetlistButton.h; path = Source/SetlistButton.h; sourceTree = SOURCE_ROOT; };
@@ -365,7 +359,6 @@
 		557ABAB51B68D48C006F69D9 /* TrackLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrackLabelView.m; path = Source/TrackLabelView.m; sourceTree = SOURCE_ROOT; };
 		557C2BF91895F325002FAFEA /* CenteredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenteredTextField.h; path = Source/CenteredTextField.h; sourceTree = SOURCE_ROOT; };
 		557C2BFA1895F325002FAFEA /* CenteredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenteredTextField.m; path = Source/CenteredTextField.m; sourceTree = SOURCE_ROOT; };
-		557C2C671910F9CD004A6364 /* Trial.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Trial.xcconfig; path = Config/Trial.xcconfig; sourceTree = SOURCE_ROOT; };
 		557C2C7319138994004A6364 /* TrialBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrialBottomView.h; path = Source/TrialBottomView.h; sourceTree = SOURCE_ROOT; };
 		557C2C7419138994004A6364 /* TrialBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrialBottomView.m; path = Source/TrialBottomView.m; sourceTree = SOURCE_ROOT; };
 		557C43981D615CDC000184D8 /* TipArrowFloater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TipArrowFloater.h; path = Source/TipArrowFloater.h; sourceTree = SOURCE_ROOT; };
@@ -669,16 +662,6 @@
 			name = Embrace;
 			sourceTree = "<group>";
 		};
-		557C2C601910F944004A6364 /* Embrace Trial */ = {
-			isa = PBXGroup;
-			children = (
-				556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */,
-				556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */,
-				556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */,
-			);
-			name = "Embrace Trial";
-			sourceTree = "<group>";
-		};
 		558DC076187785BC00C85770 = {
 			isa = PBXGroup;
 			children = (
@@ -849,7 +832,6 @@
 				55AF60D418C94BD700BE2212 /* ConfigProfile.xcconfig */,
 				55AF60D518C94BD700BE2212 /* ConfigRelease.xcconfig */,
 				55AF60D618C94BD700BE2212 /* ConfigSubmission.xcconfig */,
-				557C2C671910F9CD004A6364 /* Trial.xcconfig */,
 				5514B6541CDEE6F000F238B7 /* TargetWorker.xcconfig */,
 				55AF60D718C94BD700BE2212 /* TargetCrashPad.xcconfig */,
 				55AF60D818C94BD700BE2212 /* TargetEmbrace.xcconfig */,
@@ -863,7 +845,6 @@
 				5514B6561CDEE6FA00F238B7 /* Worker */,
 				557C2C5F1910F93C004A6364 /* Embrace */,
 				557C2C5E1910F933004A6364 /* Crash Pad */,
-				557C2C601910F944004A6364 /* Embrace Trial */,
 			);
 			name = Combined;
 			sourceTree = "<group>";
@@ -1080,18 +1061,21 @@
 		558DC077187785BC00C85770 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Ricci Adams";
 				TargetAttributes = {
 					5514B63E1CDEE64200F238B7 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = XXXXXXXXXX;
+						ProvisioningStyle = Automatic;
 					};
 					5559E61118DFD42500D61019 = {
 						DevelopmentTeam = XXXXXXXXXX;
+						ProvisioningStyle = Automatic;
 					};
 					558DC07E187785BC00C85770 = {
 						DevelopmentTeam = XXXXXXXXXX;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -1147,8 +1131,6 @@
 				55F7ABD818AF1B41006B6FBB /* AUDynamicsProcessor.aupreset in Resources */,
 				55102B451B537AF400308F55 /* EditGraphicEQEffectWindow.xib in Resources */,
 				550D882D18AC3C6400CC7E3A /* rate_48.m4a in Resources */,
-				556EAEF51FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig in Resources */,
-				556EAEF41FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig in Resources */,
 				55C82AA01B5742EB0067DEBC /* AUParametricEQ.aupreset in Resources */,
 				55F7ABD918AF1B41006B6FBB /* AULowpass.aupreset in Resources */,
 				550D882E18AC3C6600CC7E3A /* rate_96.m4a in Resources */,
@@ -1180,7 +1162,6 @@
 				55A0B1771890A81900866F04 /* test_c.m4a in Resources */,
 				556EAEE51FEA013000EF68C3 /* Embrace_Release.xcconfig in Resources */,
 				55A0B168188F447100866F04 /* CurrentTrackWindow.xib in Resources */,
-				556EAEF31FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig in Resources */,
 				550D882B18AC3C6000CC7E3A /* rate_44.m4a in Resources */,
 				55BC0B141878014E00D84481 /* EffectsWindow.xib in Resources */,
 				55A0B1761890A81900866F04 /* test_e.m4a in Resources */,
@@ -1400,55 +1381,47 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
-		};
-		5514B64D1CDEE64200F238B7 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
-			};
-			name = "Trial Debug";
 		};
 		5514B64E1CDEE64200F238B7 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Profile;
-		};
-		5514B64F1CDEE64200F238B7 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
-			};
-			name = "Trial Profile";
 		};
 		5514B6501CDEE64200F238B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
-		};
-		5514B6511CDEE64200F238B7 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.EmbraceWorker";
-			};
-			name = "Trial Release";
 		};
 		5514B6521CDEE64200F238B7 /* Submission */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDB1FEA011B00EF68C3 /* Worker_Submission.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Submission;
 		};
@@ -1456,7 +1429,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1465,7 +1442,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Profile;
@@ -1474,7 +1455,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -1483,80 +1468,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Submission;
-		};
-		557C2C691910F9FB004A6364 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ENABLE_TESTABILITY = YES;
-			};
-			name = "Trial Debug";
-		};
-		557C2C6A1910F9FB004A6364 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEF11FEA014700EF68C3 /* Embrace_Trial_Debug.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
-			};
-			name = "Trial Debug";
-		};
-		557C2C6B1910F9FB004A6364 /* Trial Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
-				SKIP_INSTALL = YES;
-			};
-			name = "Trial Debug";
-		};
-		557C2C6C1910FA13004A6364 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = "Trial Profile";
-		};
-		557C2C6D1910FA13004A6364 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEF21FEA014700EF68C3 /* Embrace_Trial_Profile.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
-			};
-			name = "Trial Profile";
-		};
-		557C2C6E1910FA13004A6364 /* Trial Profile */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
-				SKIP_INSTALL = YES;
-			};
-			name = "Trial Profile";
-		};
-		557C2C6F1910FA1D004A6364 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = "Trial Release";
-		};
-		557C2C701910FA1D004A6364 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEF01FEA014700EF68C3 /* Embrace_Trial_Release.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
-			};
-			name = "Trial Release";
-		};
-		557C2C711910FA1D004A6364 /* Trial Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
-			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.Embrace-Trial.CrashPad";
-				SKIP_INSTALL = YES;
-			};
-			name = "Trial Release";
 		};
 		558DC0AE187785BC00C85770 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1576,7 +1495,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -1584,7 +1507,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Profile;
 		};
@@ -1598,7 +1525,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */;
 			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -1612,7 +1543,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Submission;
 		};
@@ -1623,11 +1558,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5514B64C1CDEE64200F238B7 /* Debug */,
-				5514B64D1CDEE64200F238B7 /* Trial Debug */,
 				5514B64E1CDEE64200F238B7 /* Profile */,
-				5514B64F1CDEE64200F238B7 /* Trial Profile */,
 				5514B6501CDEE64200F238B7 /* Release */,
-				5514B6511CDEE64200F238B7 /* Trial Release */,
 				5514B6521CDEE64200F238B7 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1637,11 +1569,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5559E63A18DFD42600D61019 /* Debug */,
-				557C2C6B1910F9FB004A6364 /* Trial Debug */,
 				5559E63B18DFD42600D61019 /* Profile */,
-				557C2C6E1910FA13004A6364 /* Trial Profile */,
 				5559E63C18DFD42600D61019 /* Release */,
-				557C2C711910FA1D004A6364 /* Trial Release */,
 				5559E63D18DFD42600D61019 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1651,11 +1580,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0AE187785BC00C85770 /* Debug */,
-				557C2C691910F9FB004A6364 /* Trial Debug */,
 				558DC0AF187785BC00C85770 /* Profile */,
-				557C2C6C1910FA13004A6364 /* Trial Profile */,
 				55AF60A118C94ACD00BE2212 /* Release */,
-				557C2C6F1910FA1D004A6364 /* Trial Release */,
 				55AF60A418C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1665,11 +1591,8 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				558DC0B1187785BC00C85770 /* Debug */,
-				557C2C6A1910F9FB004A6364 /* Trial Debug */,
 				558DC0B2187785BC00C85770 /* Profile */,
-				557C2C6D1910FA13004A6364 /* Trial Profile */,
 				55AF60A218C94ACD00BE2212 /* Release */,
-				557C2C701910FA1D004A6364 /* Trial Release */,
 				55AF60A518C94AD100BE2212 /* Submission */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -165,6 +165,8 @@ static void sSetCurrentTrackPinning(BOOL yn)
     NSColor *secondaryLabelColor = [NSColor secondaryLabelColor];
     NSColor *tertiaryLabelColor  = [NSColor tertiaryLabelColor];
 
+    [[self leftLabel] setDrawsBackground:NO];
+    
     [[self leftLabel]  setTextColor:secondaryLabelColor];
     [[self rightLabel] setTextColor:secondaryLabelColor];
     [[self noTrackLabel] setTextColor:secondaryLabelColor];
