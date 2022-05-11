@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,7 +23,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="520" height="68"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="320" height="48"/>
             <view key="contentView" wantsLayer="YES" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="520" height="68"/>
@@ -50,14 +50,13 @@
             <rect key="frame" x="0.0" y="0.0" width="520" height="54"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="3Er-jp-xjF" customClass="WaveformView">
+                <customView id="3Er-jp-xjF" customClass="WaveformView">
                     <rect key="frame" x="96" y="2" width="328" height="50"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </customView>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AO9-lc-SHt" customClass="CenteredTextField">
-                    <rect key="frame" x="-2" y="13" width="100" height="29"/>
-                    <constraints>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="mLw-Lt-7El"/>
-                    </constraints>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="AO9-lc-SHt" customClass="CenteredTextField">
+                    <rect key="frame" x="0.0" y="0.0" width="100" height="54"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="XX:00" id="Rb8-yq-6q3" customClass="CenteredTextFieldCell">
                         <font key="font" metaFont="system" size="24"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -68,18 +67,16 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vU8-Lz-QA3" customClass="CenteredTextField">
-                    <rect key="frame" x="170" y="13" width="181" height="29"/>
+                    <rect key="frame" x="170" y="13" width="181" height="28"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="No Track Playing" id="cci-Yv-j4d" customClass="CenteredTextFieldCell">
                         <font key="font" metaFont="system" size="24"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MXh-dj-c92" customClass="CenteredTextField">
-                    <rect key="frame" x="422" y="13" width="100" height="29"/>
-                    <constraints>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="96" id="fcb-q2-7Ks"/>
-                    </constraints>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="MXh-dj-c92" customClass="CenteredTextField">
+                    <rect key="frame" x="422" y="0.0" width="100" height="54"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="XX:00" id="vRK-Xm-K7r" customClass="CenteredTextFieldCell">
                         <font key="font" metaFont="system" size="24"/>
                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -91,15 +88,7 @@
                 </textField>
             </subviews>
             <constraints>
-                <constraint firstItem="MXh-dj-c92" firstAttribute="leading" secondItem="3Er-jp-xjF" secondAttribute="trailing" id="59a-mN-Hw6"/>
-                <constraint firstItem="3Er-jp-xjF" firstAttribute="top" secondItem="Mjy-qK-rWI" secondAttribute="top" constant="2" id="77P-oc-YUz"/>
-                <constraint firstItem="MXh-dj-c92" firstAttribute="centerY" secondItem="Mjy-qK-rWI" secondAttribute="centerY" id="AuC-1t-lXd"/>
-                <constraint firstAttribute="trailing" secondItem="MXh-dj-c92" secondAttribute="trailing" id="Cb6-Ka-OVH"/>
-                <constraint firstItem="AO9-lc-SHt" firstAttribute="centerY" secondItem="Mjy-qK-rWI" secondAttribute="centerY" id="FC7-zI-lPn"/>
                 <constraint firstItem="vU8-Lz-QA3" firstAttribute="centerX" secondItem="Mjy-qK-rWI" secondAttribute="centerX" id="IBE-vn-JUZ"/>
-                <constraint firstAttribute="bottom" secondItem="3Er-jp-xjF" secondAttribute="bottom" constant="2" id="UBo-dd-H9C"/>
-                <constraint firstItem="AO9-lc-SHt" firstAttribute="leading" secondItem="Mjy-qK-rWI" secondAttribute="leading" id="WHq-KJ-fdu"/>
-                <constraint firstItem="3Er-jp-xjF" firstAttribute="leading" secondItem="AO9-lc-SHt" secondAttribute="trailing" id="amT-7D-yKp"/>
                 <constraint firstItem="vU8-Lz-QA3" firstAttribute="centerY" secondItem="Mjy-qK-rWI" secondAttribute="centerY" id="mDZ-aq-wYd"/>
             </constraints>
             <connections>
