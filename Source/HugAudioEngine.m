@@ -72,6 +72,9 @@ typedef struct {
 typedef struct {
     _Atomic HugAudioSourceInputBlock inputBlock;
     _Atomic HugAudioSourceInputBlock nextInputBlock;
+    
+    _Atomic AURenderPullInputBlock renderBlock;
+    _Atomic AURenderPullInputBlock nextRenderBlock;
 
     volatile float stereoWidth;
     volatile float stereoBalance;
@@ -92,9 +95,17 @@ static OSStatus sOutputUnitRenderCallback(
 {
     _HugCrashPadIgnoredThread = mach_thread_self();
 
-    __unsafe_unretained AURenderPullInputBlock block = (__bridge __unsafe_unretained AURenderPullInputBlock) *(void **)inRefCon;
-    OSStatus err = block(ioActionFlags, inTimeStamp, inNumberFrames, 0, ioData);
-   
+    RenderUserInfo *userInfo = (RenderUserInfo *)inRefCon;
+    
+    __unsafe_unretained AURenderPullInputBlock renderBlock     = atomic_load(&userInfo->renderBlock);
+    __unsafe_unretained AURenderPullInputBlock nextRenderBlock = atomic_load(&userInfo->nextRenderBlock);
+
+    OSStatus err = renderBlock(ioActionFlags, inTimeStamp, inNumberFrames, 0, ioData);
+
+    if (renderBlock != nextRenderBlock) {
+        atomic_store(&userInfo->renderBlock, nextRenderBlock);
+    }
+
     return err;
 }
 
@@ -259,8 +270,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     uint64_t current = HugGetCurrentHostTime();
     uint64_t tooFar  = current + HugGetHostTimeWithSeconds(1.0);
 
+    NSInteger loopGuard = HugRingBufferGetCapacity(_statusRingBuffer) / sizeof(PacketDataUnknown);
+
+    NSInteger overloadCount   = 0;
+    NSInteger statusFullCount = 0;
+
     // Process status
-    while (1) {
+    for (NSInteger i = 0; i < loopGuard; i++) {
         // If we are switching sources, clear the entire _statusRingBuffer
         if (_switchingSources) {
             HugRingBufferConfirmReadAll(_statusRingBuffer);
@@ -308,7 +324,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     }
     
     // Process error buffer
-    while (1) {
+    for (NSInteger i = 0; i < loopGuard; i++) {
         PacketDataUnknown *unknown = HugRingBufferGetReadPtr(_errorRingBuffer, sizeof(PacketDataUnknown));
         if (!unknown) return;
 
@@ -318,13 +334,13 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
             _lastOverloadTime = [NSDate timeIntervalSinceReferenceDate];
 
-            HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected");
+            overloadCount++;
            
         } else if (unknown->type == PacketTypeStatusBufferFull) {
             PacketDataUnknown packet;
             if (!HugRingBufferRead(_errorRingBuffer, &packet, sizeof(PacketDataUnknown))) return;
 
-            HugLog(@"HugAudioEngine", @"_statusRingBuffer is full");
+            statusFullCount++;
         
         } else if (unknown->type == PacketTypeRenderError) {
             PacketDataRenderError packet;
@@ -338,6 +354,17 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         } else {
             NSAssert(NO, @"Unknown packet type: %ld", (long)unknown->type);
         }
+    }
+    
+    // Aggregate logging for overloads and "buffer full" errors. Else, we can spend
+    // too much time in HugLog while _statusRingBuffer continues to fill.
+    //
+    if (overloadCount > 0) {
+        HugLog(@"HugAudioEngine", @"kAudioDeviceProcessorOverload detected (%ld)", overloadCount);
+    }
+    
+    if (statusFullCount > 0) {
+        HugLog(@"HugAudioEngine", @"_statusRingBuffer is full (%ld)", statusFullCount);
     }
 }
 
@@ -379,8 +406,8 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     ) {
         userInfo->renderStart = HugGetCurrentHostTime();
 
-        HugAudioSourceInputBlock inputBlock     = atomic_load(&userInfo->inputBlock);
-        HugAudioSourceInputBlock nextInputBlock = atomic_load(&userInfo->nextInputBlock);
+        __unsafe_unretained HugAudioSourceInputBlock inputBlock     = atomic_load(&userInfo->inputBlock);
+        __unsafe_unretained HugAudioSourceInputBlock nextInputBlock = atomic_load(&userInfo->nextInputBlock);
         
         HugPlaybackInfo info = {0};
         OSStatus err = noErr;
@@ -398,12 +425,6 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         } else {
             err = inputBlock(inNumberFrames, ioData, &info);
             
-            // Do something with status
-
-    //        if (rand() % 100 == 0) {
-    //            usleep(50000);
-    //        }
-
             HugStereoFieldProcess(stereoField, leftData, rightData, inNumberFrames, userInfo->stereoBalance, userInfo->stereoWidth);
             HugLinearRamperProcess(preGainRamper, leftData, rightData, inNumberFrames, userInfo->preGain);
 
@@ -528,8 +549,37 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         return noErr;
     }];
 
+    AURenderPullInputBlock blockToSend = [graph renderBlock];
+    
+    if ([self _isRunning]) {
+        atomic_store(&_renderUserInfo.nextRenderBlock, blockToSend);
+
+        NSInteger loopGuard = 0;
+        while (1) {
+            HugRingBufferConfirmReadAll(_statusRingBuffer);
+
+            if (blockToSend == atomic_load(&_renderUserInfo.renderBlock)) {
+                break;
+            }
+
+            if (![self _isRunning]) return;
+
+            if (loopGuard >= 1000) {
+                HugLog(@"HugAudioEngine", @"_reconnectGraph timed out");
+                break;
+            }
+            
+            usleep(1000);
+            loopGuard++;
+        }
+
+    } else {
+        atomic_store(&_renderUserInfo.renderBlock,     blockToSend);
+        atomic_store(&_renderUserInfo.nextRenderBlock, blockToSend);
+    }
+
     _graph = graph;
-    _graphRenderBlock = [graph renderBlock];
+    _graphRenderBlock = blockToSend;
 }
 
 
@@ -542,6 +592,10 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
         @"HugAudioEngine", @"AudioOutputUnitStop"
     );
 
+    for (AUAudioUnit *unit in _effectAudioUnits) {
+        [unit reset];
+    }
+    
     if (_updateTimer) {
         [_updateTimer invalidate];
         _updateTimer = nil;
@@ -594,7 +648,7 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 
     double sampleRate = [[settings objectForKey:HugAudioSettingSampleRate] doubleValue];
 
-    AURenderCallbackStruct renderCallback = { &sOutputUnitRenderCallback, &_graphRenderBlock };
+    AURenderCallbackStruct renderCallback = { &sOutputUnitRenderCallback, &_renderUserInfo };
 
     BOOL ok = YES;
 
@@ -726,10 +780,6 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
     _leftMeterData  = nil;
     _rightMeterData = nil;
     _dangerLevel    = 0;
-
-    for (AUAudioUnit *unit in _effectAudioUnits) {
-        [unit reset];
-    }
 }
 
 
@@ -767,8 +817,27 @@ static OSStatus sHandleAudioDeviceOverload(AudioObjectID inObjectID, UInt32 inNu
 - (void) updateEffectAudioUnits:(NSArray<AUAudioUnit *> *)effectAudioUnits
 {
     if (_effectAudioUnits != effectAudioUnits || ![_effectAudioUnits isEqual:effectAudioUnits]) {
+        NSMutableArray *effectsToAdd    = [NSMutableArray array];
+        NSMutableArray *effectsToRemove = [NSMutableArray array];
+
+        for (AUAudioUnit *effect in _effectAudioUnits) {
+            if (![effectAudioUnits containsObject:effect]) {
+                [effectsToAdd addObject:effect];
+            }
+        }
+
+        for (AUAudioUnit *effect in effectAudioUnits) {
+            if (![_effectAudioUnits containsObject:effect]) {
+                [effectsToRemove addObject:effect];
+            }
+        }
+    
         _effectAudioUnits = effectAudioUnits;
         [self _reconnectGraph];
+        
+        for (AUAudioUnit *unit in effectsToRemove) {
+            [unit reset];
+        }
     }
 }
 

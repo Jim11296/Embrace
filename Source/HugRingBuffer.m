@@ -174,3 +174,9 @@ BOOL HugRingBufferWrite(HugRingBuffer *self, void *buffer, CFIndex length)
     return YES;
 }
 
+
+extern CFIndex HugRingBufferGetCapacity(HugRingBuffer *buffer)
+{
+    return buffer->_capacity;
+}
+

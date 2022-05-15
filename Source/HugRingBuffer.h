@@ -22,6 +22,8 @@ extern void  HugRingBufferConfirmWrite(HugRingBuffer *buffer, CFIndex length);
 extern BOOL HugRingBufferRead( HugRingBuffer *self, void *buffer, CFIndex length);
 extern BOOL HugRingBufferWrite(HugRingBuffer *self, void *buffer, CFIndex length);
 
+extern CFIndex HugRingBufferGetCapacity(HugRingBuffer *buffer);
+
 #ifdef __cplusplus
 }
 #endif
