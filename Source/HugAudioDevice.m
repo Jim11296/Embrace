@@ -636,6 +636,9 @@ static void sLoadDouble(NSString *opName, AudioObjectID objectID, AudioObjectPro
 - (void) releaseHogMode
 {
     if (![self isConnected]) return;
+    if (![self isHoggedByMe]) return;
+
+    HugLog(@"HugAudioDevice", @"Device connected and hogged, attempting to release hog mode.");
 
     if (_prehoggedState) {
         [self _restoreState:nil keysToRestore:[_prehoggedState allKeys] defaults:@{

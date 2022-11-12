@@ -443,10 +443,7 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
     [_engine stopHardware];
     
     for (HugAudioDevice *device in [HugAudioDevice allDevices]) {
-        if ([device isHoggedByMe]) {
-            EmbraceLog(@"Player", @"Un-oink");
-            [device releaseHogMode];
-        }
+        [device releaseHogMode];
     }
     
 
