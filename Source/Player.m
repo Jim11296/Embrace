@@ -492,11 +492,15 @@ static OSStatus sHandleAudioDevicePropertyChanged(AudioObjectID inObjectID, UInt
         _listeningDeviceID = deviceID;
     }
 
-    ok = ok && [_engine configureWithDeviceID:deviceID settings:@{
-        HugAudioSettingSampleRate: @(_outputSampleRate),
-        HugAudioSettingFrameSize:  @(_outputFrames)
-    }];
-    
+    if (ok && deviceID) {
+        ok = [_engine configureWithDeviceID:deviceID settings:@{
+            HugAudioSettingSampleRate: @(_outputSampleRate),
+            HugAudioSettingFrameSize:  @(_outputFrames)
+        }];
+        
+        if (!ok) raiseIssue(PlayerIssueErrorConfiguringOutputDevice);
+    }
+
     if (issue != _issue) {
         EmbraceLog(@"Player", @"issue is %ld", (long) issue);
 
