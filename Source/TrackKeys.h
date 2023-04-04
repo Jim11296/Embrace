@@ -2,6 +2,7 @@
 
 extern NSString * const TrackKeyError;
 
+extern NSString * const TrackKeyURL;
 extern NSString * const TrackKeyBookmark;
 extern NSString * const TrackKeyTitle;
 extern NSString * const TrackKeyArtist;

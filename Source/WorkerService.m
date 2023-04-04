@@ -138,13 +138,9 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
 
     if (command == WorkerTrackCommandReadMetadata) {
         dispatch_async(sMetadataQueue, ^{ @autoreleasepool {
-            [internalURL startAccessingSecurityScopedResource];
-        
             if (![sCancelledUUIDs containsObject:UUID]) {
                 reply(sReadMetadata(internalURL, originalFilename));
             }
-
-            [internalURL stopAccessingSecurityScopedResource];
         } });
 
     } else if (command == WorkerTrackCommandReadLoudness || command == WorkerTrackCommandReadLoudnessImmediate) {
@@ -152,8 +148,6 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
         dispatch_queue_t queue       = isImmediate ? sLoudnessImmediateQueue : sLoudnessBackgroundQueue;
 
         dispatch_async(queue, ^{ @autoreleasepool {
-            [internalURL startAccessingSecurityScopedResource];
-
             if (![sCancelledUUIDs containsObject:UUID] && ![sLoudnessUUIDs containsObject:UUID]) {
                 [sLoudnessUUIDs addObject:UUID];
 
@@ -163,8 +157,6 @@ static NSDictionary *sReadLoudness(NSURL *internalURL)
                     reply(dictionary);
                 });
             }
-
-            [internalURL stopAccessingSecurityScopedResource];
         } });
     }
 }

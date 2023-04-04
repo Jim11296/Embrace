@@ -156,15 +156,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
 + (instancetype) trackWithUUID:(NSUUID *)UUID
 {
-    NSURL *url = sGetStateURLForUUID(UUID);
-    NSDictionary *state = url ? [NSDictionary dictionaryWithContentsOfURL:url] : nil;
+    NSURL *stateURL = sGetStateURLForUUID(UUID);
+    NSDictionary *state = stateURL ? [NSDictionary dictionaryWithContentsOfURL:stateURL] : nil;
     
-    if (!state) {
-        return nil;
-    }
+    if (!state) return nil;
 
-    NSData *bookmark = [state objectForKey:TrackKeyBookmark];
-    Track  *track    = [[Track alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
+    Track *track = [[Track alloc] _initWithUUID:UUID state:state];
 
     return track;
 }
@@ -207,6 +204,17 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     }
 
     return self;
+}
+
+
+- (id) _initWithUUID:(NSUUID *)UUID state:(NSDictionary *)state
+{
+    NSString *urlString = [state objectForKey:TrackKeyURL];
+    NSData   *bookmark  = [state objectForKey:TrackKeyBookmark];
+    
+    NSURL *url = urlString ? [NSURL URLWithString:urlString] : nil;
+
+    return [self _initWithUUID:UUID fileURL:url bookmark:bookmark state:state];
 }
 
 
@@ -262,9 +270,7 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     NSMutableDictionary *state = [NSMutableDictionary dictionary];
     [self _writeStateToDictionary:state];
 
-    NSData *bookmark = [state objectForKey:TrackKeyBookmark];
-
-    Track *result = [[[self class] alloc] _initWithUUID:UUID fileURL:nil bookmark:bookmark state:state];
+    Track *result = [[[self class] alloc] _initWithUUID:UUID state:state];
     result->_dirty = YES;
     
     [result setTrackStatus:TrackStatusQueued];
@@ -354,6 +360,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
         [state setObject:errorData forKey:TrackKeyError];
     }
 
+    NSString *externalURLString = [_externalURL absoluteString];
+    if (externalURLString) [state setObject:externalURLString forKey:TrackKeyURL];
+
     if (_trackLabel)     [state setObject:@(_trackLabel)        forKey:sLabelKey];
     if (_trackStatus)    [state setObject:@(_trackStatus)       forKey:sStatusKey];
     if (_playedTime)     [state setObject:@(_playedTime)        forKey:sPlayedTimeKey];
@@ -389,7 +398,6 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
     if (_trackLoudness)    [state setObject:@(_trackLoudness)     forKey:TrackKeyTrackLoudness];
     if (_trackPeak)        [state setObject:@(_trackPeak)         forKey:TrackKeyTrackPeak];
     if (_year)             [state setObject:@(_year)              forKey:TrackKeyYear];
-
 }
 
 
@@ -496,16 +504,16 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
 
         @try {
             if (!bookmark) {
-                [externalURL startAccessingSecurityScopedResource];
-                
                 NSError *error = nil;
-                bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+
+                bookmark = [externalURL bookmarkDataWithOptions: 0
+                                 includingResourceValuesForKeys: nil
+                                                  relativeToURL: nil
+                                                          error: &error];
 
                 if (error) {
                     EmbraceLog(@"Track", @"%@.  Error creating bookmark for %@: %@", self, externalURL, error);
                 }
-                
-                [externalURL stopAccessingSecurityScopedResource];
             }
 
             if (!bookmark) {
@@ -517,15 +525,19 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 return;
             }
 
-            NSURLBookmarkResolutionOptions options = NSURLBookmarkResolutionWithoutUI|NSURLBookmarkResolutionWithSecurityScope;
-            
             BOOL isStale = NO;
             NSError *error = nil;
-            externalURL = [NSURL URLByResolvingBookmarkData: bookmark
-                                                    options: options
-                                              relativeToURL: nil
-                                        bookmarkDataIsStale: &isStale
-                                                      error: &error];
+            NSURL *resolvedExternalURL = [NSURL URLByResolvingBookmarkData: bookmark
+                                                                   options: 0
+                                                             relativeToURL: nil
+                                                       bookmarkDataIsStale: &isStale
+                                                                     error: &error];
+
+            if (error) {
+                EmbraceLog(@"Track", @"%@.  Error resolving bookmark: %@", self, error);
+            }
+
+            if (resolvedExternalURL) externalURL = resolvedExternalURL;
 
             if (!externalURL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -536,12 +548,13 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 return;
             }
           
-            [externalURL startAccessingSecurityScopedResource];
-
             if (isStale) {
                 EmbraceLog(@"Track", @"%@ bookmark is stale, refreshing", self);
 
-                bookmark = [externalURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope|NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+                bookmark = [externalURL bookmarkDataWithOptions:0
+                                 includingResourceValuesForKeys: nil
+                                                  relativeToURL: nil
+                                                          error: &error];
 
                 if (error) {
                     EmbraceLog(@"Track", @"%@ error refreshing bookmark: %@", self, error);
@@ -555,13 +568,12 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 if (externalURL) {
                     if (![[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
                         EmbraceLog(@"Track", @"%@, failed to copy to internal location: %@", self, error);
+                        setErrorToOpenFailed();
                     } else {
                         EmbraceLog(@"Track", @"%@, copied %@ to internal location: %@", self, externalURL, internalURL);
                     }
                 }
             }
-
-            [externalURL stopAccessingSecurityScopedResource];
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 _isResolvingURLs = NO;
