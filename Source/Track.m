@@ -537,7 +537,9 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 EmbraceLog(@"Track", @"%@.  Error resolving bookmark: %@", self, error);
             }
 
-            if (resolvedExternalURL) externalURL = resolvedExternalURL;
+            if (resolvedExternalURL) {
+                externalURL = resolvedExternalURL;
+            }
 
             if (!externalURL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -568,7 +570,11 @@ static NSURL *sGetInternalURLForUUID(NSUUID *UUID, NSString *extension)
                 if (externalURL) {
                     if (![[NSFileManager defaultManager] copyItemAtURL:externalURL toURL:internalURL error:&error]) {
                         EmbraceLog(@"Track", @"%@, failed to copy to internal location: %@", self, error);
-                        setErrorToOpenFailed();
+
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            setErrorToOpenFailed();
+                        });
+
                     } else {
                         EmbraceLog(@"Track", @"%@, copied %@ to internal location: %@", self, externalURL, internalURL);
                     }
