@@ -243,10 +243,13 @@ static NSInteger sGetYear(NSString *yearString)
         } else if ((key4cc == '\251grp') && stringValue) { // Grouping, '?grp'
             [dictionary setObject:stringValue forKey:TrackKeyGrouping];
 
-        } else if ((key4cc == 'TIT1') && stringValue) { // Grouping as ID3v2.3 TIT1 tag
+        } else if ((key4cc == 'GRP1') && stringValue) { // Grouping, iTunes 12.5 non-standard GRP1 tag
             [dictionary setObject:stringValue forKey:TrackKeyGrouping];
 
-        } else if ((key4cc == '\00TT1') && stringValue) { // Grouping as ID3v2.2 TT1 tag
+        } else if ((key4cc == 'TIT1') && stringValue) { // Grouping, ID3v2.3 TIT1 tag
+            [dictionary setObject:stringValue forKey:TrackKeyGrouping];
+
+        } else if ((key4cc == '\00TT1') && stringValue) { // Grouping, ID3v2.2 TT1 tag
             [dictionary setObject:stringValue forKey:TrackKeyGrouping];
 
         } else if (((key4cc == '\251day') || (key4cc == 'TDRC') || (key4cc == 'TYER') || (key4cc == '\00TYE')) && stringValue) { // Year, M4A '?day', MP3 'TDRC'/'TYER'/'TYE'
