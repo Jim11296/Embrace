@@ -6,7 +6,7 @@ TEAM_ID="XXXXXXXXXX"
 KEYCHAIN_PROFILE="<redacted>"
 
 ZIP_TO="$HOME/Desktop"
-UPLOAD_TO="<redacted>/"
+UPLOAD_TO="<redacted>"
 PUBLIC_URL="<redacted>"
 
 # ----------------------------------
