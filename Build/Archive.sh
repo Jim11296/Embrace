@@ -92,7 +92,7 @@ xcrun notarytool submit "$ZIP_FILE" \
     2> "${TMP_DIR}/output-notarytool-submit-err.txt"
 
 if [ $? != 0 ]; then
-    ERROR_LOG=$(cat "${TMP_DIR}/output-notarytool-submit-err.txt" | fold -w 60 -s)
+    ERROR_LOG=$(fold -w 60 -s "${TMP_DIR}/output-notarytool-submit-err.txt")
     set_status "Error during submission." "$ERROR_LOG"
     exit
 fi
