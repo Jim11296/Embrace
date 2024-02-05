@@ -7,6 +7,9 @@
 #import "HugError.h"
 #import "HugUtils.h"
 #import "HugAudioSettings.h"
+#import "HugDebugFile.h"
+
+#define DEBUG_AUDIO_SOURCE_BUFFERS 0
 
 typedef struct {
     NSInteger frameIndex;
@@ -44,7 +47,8 @@ static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBuff
     // Copy track data
     {
         NSUInteger framesToCopy = MIN(frameCount - offset, context->totalFrames - context->frameIndex);
-        
+        NSInteger framesRemaining = frameCount - framesToCopy;
+
         for (NSInteger b = 0; b < bufferCount; b++) {
             float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
             float *outSamples = (float *)ioData->mBuffers[b].mData;
@@ -54,9 +58,8 @@ static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBuff
 
             memcpy(outSamples, inSamples, sizeof(float) * framesToCopy);
             
-            NSInteger remaining = framesToCopy - frameCount;
-            if (remaining > 0) {
-                memset(&outSamples[remaining], 0, sizeof(float) * remaining);
+            if (framesRemaining > 0) {
+                memset(&outSamples[framesToCopy], 0, sizeof(float) * framesRemaining);
             }
         }
 
@@ -140,6 +143,7 @@ static OSStatus sConverterInputCallback(
 
 
 #pragma mark - Private Methods
+
 
 - (BOOL) _makeContextWithStartTime: (NSTimeInterval) startTime
                           stopTime: (NSTimeInterval) stopTime
@@ -239,7 +243,13 @@ static OSStatus sConverterInputCallback(
             [protectedBuffer lock];
         }
     }
-    
+
+#if DEBUG_AUDIO_SOURCE_BUFFERS
+    [HugDebugFile writeWithSampleRate: _context->sampleRate
+                          totalFrames: _context->totalFrames
+                           bufferList: _context->bufferList];
+#endif
+
     if (_completionHandler) {
         _completionHandler(self);
     }
