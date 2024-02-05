@@ -291,17 +291,10 @@ static BOOL get_thread_state_safe(thread_t thread, _STRUCT_MCONTEXT *context)
     mach_msg_type_number_t stateCount = ARM_THREAD_STATE64_COUNT;
     kr = thread_get_state(thread, ARM_THREAD_STATE64, (thread_state_t)&context->__ss, &stateCount);
 
-#elif defined(__arm__)
-    mach_msg_type_number_t stateCount = ARM_THREAD_STATE_COUNT;
-    kr = thread_get_state(thread, ARM_THREAD_STATE, (thread_state_t)&context->__ss, &stateCount);
-
 #elif defined(__x86_64__)
     mach_msg_type_number_t stateCount = x86_THREAD_STATE64_COUNT;
     kr = thread_get_state(thread, x86_THREAD_STATE64, (thread_state_t) &context->__ss, &stateCount);
 
-#elif defined(__i386__)
-    mach_msg_type_number_t stateCount = x86_THREAD_STATE32_COUNT;
-    kr = thread_get_state(thread, x86_THREAD_STATE32, (thread_state_t) &context->__ss, &stateCount);
 #else
     #warning MTSEscapePod - get_thread_state_safe() not implemented for architecture
 #endif
@@ -314,12 +307,8 @@ static void *cursor_get_frame_pointer_safe(Cursor *cursor)
 {
 #if defined(__arm64__)
     return (void *)cursor->uap->uc_mcontext->__ss.__fp;
-#elif defined(__arm__)
-    return (void *)cursor->uap->uc_mcontext->__ss.__r[7];
 #elif defined(__x86_64__)
     return (void *)cursor->uap->uc_mcontext->__ss.__rbp;
-#elif defined(__i386__)
-    return (void *)cursor->uap->uc_mcontext->__ss.__ebp;
 #else
     #warning MTSEscapePod - cursor_get_frame_pointer_safe() not implemented for architecture
     return NULL;
@@ -331,17 +320,25 @@ static void *cursor_get_program_counter_safe(Cursor *cursor)
 {
 #if defined(__arm64__)
     return (void *)cursor->uap->uc_mcontext->__ss.__pc;
-#elif defined(__arm__)
-    return (void *)cursor->uap->uc_mcontext->__ss.__pc;
 #elif defined(__x86_64__)
-    return (void *)cursor->uap->uc_mcontext->__ss.__rbp;
-#elif defined(__i386__)
-    return (void *)cursor->uap->uc_mcontext->__ss.__eip;
+    return (void *)cursor->uap->uc_mcontext->__ss.__rip;
 #else
     #warning MTSEscapePod - cursor_get_program_counter_safe() not implemented for architecture
     return NULL;
 #endif
+}
 
+
+static void *cursor_get_link_register_safe(Cursor *cursor)
+{
+#if defined(__arm64__)
+    return (void *)cursor->uap->uc_mcontext->__ss.__lr;
+#elif defined(__x86_64__)
+    return NULL;
+#else
+    #warning MTSEscapePod - cursor_get_link_register_safe() not implemented for architecture
+    return NULL;
+#endif
 }
 
 
@@ -450,6 +447,11 @@ static void HandleSignal(int signal, siginfo_t *siginfo, void *uapAsVoid)
             }
             
             file_writef_safe(file, "%x", cursor_get_program_counter_safe(cursor));
+            
+            void *lr = cursor_get_link_register_safe(cursor);
+            if (lr) {
+                file_writef_safe(file, "%x", lr);
+            }
 
             int frameCount = MAX_NUMBER_OF_FRAMES;
             while (cursor_next_safe(cursor) && (--frameCount >= 0)) {
