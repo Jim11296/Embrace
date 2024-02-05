@@ -44,7 +44,8 @@ static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBuff
     // Copy track data
     {
         NSUInteger framesToCopy = MIN(frameCount - offset, context->totalFrames - context->frameIndex);
-        
+        NSInteger framesRemaining = frameCount - framesToCopy;
+
         for (NSInteger b = 0; b < bufferCount; b++) {
             float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
             float *outSamples = (float *)ioData->mBuffers[b].mData;
@@ -54,9 +55,8 @@ static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBuff
 
             memcpy(outSamples, inSamples, sizeof(float) * framesToCopy);
             
-            NSInteger remaining = framesToCopy - frameCount;
-            if (remaining > 0) {
-                memset(&outSamples[remaining], 0, sizeof(float) * remaining);
+            if (framesRemaining > 0) {
+                memset(&outSamples[framesToCopy], 0, sizeof(float) * framesRemaining);
             }
         }
 
