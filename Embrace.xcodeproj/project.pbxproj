@@ -132,6 +132,7 @@
 		55D9BDD321A64C1100EBF00C /* HugAudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D9BDD221A64C1100EBF00C /* HugAudioEngine.m */; };
 		55DD53AA18B9FC4A0084628D /* CrashReportSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 55DD53A618B9FC4A0084628D /* CrashReportSender.m */; };
 		55E0B34218CBFA6900B4087C /* NoDropImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E0B34118CBFA6900B4087C /* NoDropImageView.m */; };
+		55E5B8ED2B7093F4009B0A0F /* HugDebugFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E5B8EB2B7093F4009B0A0F /* HugDebugFile.m */; };
 		55E9932D274A2BA100112370 /* Embrace.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55E9932C274A2ACA00112370 /* Embrace.icns */; };
 		55EE45A61CE1D1CA00ECDF13 /* ExportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */; };
 		55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F3B7B01877885800E8FEC8 /* SetlistController.m */; };
@@ -417,6 +418,8 @@
 		55DD53A718B9FC4A0084628D /* CrashReportSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrashReportSender.h; path = Source/CrashReportSender.h; sourceTree = "<group>"; };
 		55E0B34018CBFA6900B4087C /* NoDropImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoDropImageView.h; path = Source/NoDropImageView.h; sourceTree = SOURCE_ROOT; };
 		55E0B34118CBFA6900B4087C /* NoDropImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NoDropImageView.m; path = Source/NoDropImageView.m; sourceTree = SOURCE_ROOT; };
+		55E5B8EB2B7093F4009B0A0F /* HugDebugFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugDebugFile.m; path = Source/HugDebugFile.m; sourceTree = "<group>"; };
+		55E5B8EC2B7093F4009B0A0F /* HugDebugFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugDebugFile.h; path = Source/HugDebugFile.h; sourceTree = "<group>"; };
 		55E9932C274A2ACA00112370 /* Embrace.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Embrace.icns; path = Resources/Embrace.icns; sourceTree = "<group>"; };
 		55EE45A41CE1D1CA00ECDF13 /* ExportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportManager.m; path = Source/ExportManager.m; sourceTree = SOURCE_ROOT; };
 		55EE45A51CE1D1CA00ECDF13 /* ExportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportManager.h; path = Source/ExportManager.h; sourceTree = SOURCE_ROOT; };
@@ -560,6 +563,8 @@
 				555953F421B8B6FB0032EE54 /* HugAudioSource.m */,
 				555953FF21C0C1FC0032EE54 /* HugCrashPad.h */,
 				5559540021C0C1FC0032EE54 /* HugCrashPad.m */,
+				55E5B8EC2B7093F4009B0A0F /* HugDebugFile.h */,
+				55E5B8EB2B7093F4009B0A0F /* HugDebugFile.m */,
 				555953F821BBCEB20032EE54 /* HugError.h */,
 				555953F921BBCEB20032EE54 /* HugError.m */,
 				55C24E1318D7D7800057D45E /* HugFastUtils.h */,
@@ -1011,13 +1016,13 @@
 				TargetAttributes = {
 					5514B63E1CDEE64200F238B7 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = XXXXXXXXXX;
+						DevelopmentTeam = PH428LJ997;
 					};
 					5559E61118DFD42500D61019 = {
-						DevelopmentTeam = XXXXXXXXXX;
+						DevelopmentTeam = PH428LJ997;
 					};
 					558DC07E187785BC00C85770 = {
-						DevelopmentTeam = XXXXXXXXXX;
+						DevelopmentTeam = PH428LJ997;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -1200,6 +1205,7 @@
 				550DDB9121C67E8100769F32 /* HugAudioDevice.m in Sources */,
 				556098141B47CABD008516C3 /* MenuLabelView.m in Sources */,
 				555953F221B7F6C90032EE54 /* HugUtils.m in Sources */,
+				55E5B8ED2B7093F4009B0A0F /* HugDebugFile.m in Sources */,
 				55F3B7D218779B3000E8FEC8 /* Player.m in Sources */,
 				555A701B1890BCBF00305EC6 /* Application.m in Sources */,
 				55F3B7B11877885800E8FEC8 /* SetlistController.m in Sources */,
@@ -1290,6 +1296,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Debug;
@@ -1298,6 +1305,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Profile;
@@ -1306,6 +1314,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Release;
@@ -1314,6 +1323,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDB1FEA011B00EF68C3 /* Worker_Submission.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Submission;
@@ -1322,6 +1332,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1331,6 +1342,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1340,6 +1352,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1349,6 +1362,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1372,6 +1386,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1381,6 +1396,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1396,6 +1412,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1411,6 +1428,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
