@@ -45,6 +45,9 @@ get_plist_build ()
     printf $(defaults read "$1" CFBundleVersion | sed 's/\s//g' )
 }
 
+# Prevent error log spam
+unset XCODE_DEVELOPER_DIR_PATH
+
 TMP_DIR=$(mktemp -d /tmp/"${BUILD_PREFIX}"-Archive.XXXXXX)
 STATUS_MD="${TMP_DIR}/status.md"
 
@@ -87,6 +90,12 @@ xcrun notarytool submit "$ZIP_FILE" \
     --wait \
     1> "${TMP_DIR}/output-notarytool-submit.plist" \
     2> "${TMP_DIR}/output-notarytool-submit-err.txt"
+
+if [ $? != 0 ]; then
+    ERROR_LOG=$(cat "${TMP_DIR}/output-notarytool-submit-err.txt")
+    set_status "Error during submission." "$ERROR_LOG"
+    exit
+fi
 
 SUBMIT_ID=$(    defaults read "${TMP_DIR}/output-notarytool-submit.plist" id)
 SUBMIT_STATUS=$(defaults read "${TMP_DIR}/output-notarytool-submit.plist" status)
