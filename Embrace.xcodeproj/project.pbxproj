@@ -1016,13 +1016,13 @@
 				TargetAttributes = {
 					5514B63E1CDEE64200F238B7 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = PH428LJ997;
+						DevelopmentTeam = XXXXXXXXXX;
 					};
 					5559E61118DFD42500D61019 = {
-						DevelopmentTeam = PH428LJ997;
+						DevelopmentTeam = XXXXXXXXXX;
 					};
 					558DC07E187785BC00C85770 = {
-						DevelopmentTeam = PH428LJ997;
+						DevelopmentTeam = XXXXXXXXXX;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -1296,7 +1296,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED91FEA011B00EF68C3 /* Worker_Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Debug;
@@ -1305,7 +1304,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDA1FEA011B00EF68C3 /* Worker_Profile.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Profile;
@@ -1314,7 +1312,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAED81FEA011B00EF68C3 /* Worker_Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Release;
@@ -1323,7 +1320,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEDB1FEA011B00EF68C3 /* Worker_Submission.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.EmbraceWorker;
 			};
 			name = Submission;
@@ -1332,7 +1328,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEEB1FEA013C00EF68C3 /* CrashPad_Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1342,7 +1337,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE91FEA013C00EF68C3 /* CrashPad_Profile.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1352,7 +1346,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEEA1FEA013C00EF68C3 /* CrashPad_Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1362,7 +1355,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE81FEA013C00EF68C3 /* CrashPad_Submission.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				PRODUCT_BUNDLE_IDENTIFIER = com.iccir.Embrace.CrashPad;
 				SKIP_INSTALL = YES;
 			};
@@ -1386,7 +1378,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE21FEA013000EF68C3 /* Embrace_Debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1396,7 +1387,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE31FEA013000EF68C3 /* Embrace_Profile.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1412,7 +1402,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE11FEA013000EF68C3 /* Embrace_Release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
@@ -1428,7 +1417,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 556EAEE01FEA013000EF68C3 /* Embrace_Submission.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = PH428LJ997;
 				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iccir.${PRODUCT_NAME:rfc1034identifier}";
 			};
