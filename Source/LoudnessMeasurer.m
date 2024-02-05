@@ -30,7 +30,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <xmmintrin.h>
 
 #include <Accelerate/Accelerate.h>
 #include <AudioToolbox/AudioToolbox.h>
