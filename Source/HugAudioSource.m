@@ -25,8 +25,9 @@ typedef struct {
 } RenderContext;
 
 
-static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBufferList *ioData)
+static void sFillBufferList(RenderContext *context, UInt32 rawFrameCount, AudioBufferList *ioData)
 {
+    NSInteger frameCount = rawFrameCount;
     NSInteger offset = 0;
 
     UInt32 bufferCount = ioData->mNumberBuffers;
@@ -47,7 +48,7 @@ static void sFillBufferList(RenderContext *context, UInt32 frameCount, AudioBuff
     // Copy track data
     {
         NSUInteger framesToCopy = MIN(frameCount - offset, context->totalFrames - context->frameIndex);
-        NSInteger framesRemaining = frameCount - framesToCopy;
+        NSInteger framesRemaining = (frameCount - offset) - framesToCopy;
 
         for (NSInteger b = 0; b < bufferCount; b++) {
             float *inSamples  = (float *)context->bufferList->mBuffers[b].mData;
