@@ -141,10 +141,11 @@ static NSInteger sAutoGapMaximum = 16;
         headerFrame.size.height = headerFrame.size.height - headerFrame.origin.y;
         
         NSVisualEffectView *effectView = [[NSVisualEffectView alloc] initWithFrame:headerFrame];
+        
         [effectView setMaterial:NSVisualEffectMaterialTitlebar];
         [effectView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
-        [effectView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-
+        [effectView setAutoresizingMask:NSViewWidthSizable|NSViewMinYMargin];
+        
         [contentView addSubview:effectView positioned:NSWindowBelow relativeTo:nil];
     }
 
@@ -1205,6 +1206,9 @@ static NSInteger sAutoGapMaximum = 16;
 
 - (void) setMinimumSilenceBetweenTracks:(NSInteger)minimumSilenceBetweenTracks
 {
+    if (minimumSilenceBetweenTracks > sAutoGapMaximum) minimumSilenceBetweenTracks = sAutoGapMaximum;
+    if (minimumSilenceBetweenTracks < sAutoGapMinimum) minimumSilenceBetweenTracks = sAutoGapMinimum;
+
     if (_minimumSilenceBetweenTracks != minimumSilenceBetweenTracks) {
         [self willChangeValueForKey:@"autoGapTimeString"];
 
