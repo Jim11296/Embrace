@@ -131,6 +131,10 @@
                 <cocoa key="scriptingVolume"/>
             </property>
 
+            <property name="minimum silence" access="rw" code="mslc" type="real" description="The minimum silence between tracks in seconds.">
+                <cocoa key="scriptingMinimumSilence"/>
+            </property>
+
             <property name="player state" access="r" code="plst" type="playerState" description="Is Embrace playing or stopped?">
                 <cocoa key="scriptingPlayerState"/>
             </property>

@@ -91,6 +91,18 @@
 }
 
 
+- (void) setScriptingMinimumSilence:(NSNumber *)number
+{
+    return [[GetAppDelegate() setlistController] setMinimumSilenceBetweenTracks:[number integerValue]];
+}
+
+
+- (NSNumber *) scriptingMinimumSilence
+{
+    return @([[GetAppDelegate() setlistController] minimumSilenceBetweenTracks]);
+}
+
+
 - (void) handlePlayScriptCommand:(NSScriptCommand *)command
 {
     Player *player = [Player sharedInstance];
