@@ -1,4 +1,7 @@
 /*
+    This file is not available under a 1-clause BSD License.
+    SPDX-License-Identifier: MIT
+
     LoudnessMeasurer
     Copyright (c) 2014-2020 Ricci Adams
 
