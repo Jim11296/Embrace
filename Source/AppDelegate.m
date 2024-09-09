@@ -139,13 +139,13 @@
     TelemetryRegisterURL(
         escapePodTelemetryName,
         [NSURL URLWithString:EmbraceEscapePodEndpoint],
-        [NSData dataWithBytes:EmbraceEscapePodKey length:12]
+        [NSData dataWithBytes:EmbraceEndpointKey length:12]
     );
 
     TelemetryRegisterURL(
         [CrashReportSender logsTelemetryName],
         [NSURL URLWithString:EmbraceLogsEndpoint],
-        [NSData dataWithBytes:EmbraceLogsKey length:12]
+        [NSData dataWithBytes:EmbraceEndpointKey length:12]
     );
 
 #else
