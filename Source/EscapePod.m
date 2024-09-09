@@ -1,9 +1,9 @@
-// (c) 2012-2020 musictheory.net, LLC
+// (c) 2012-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
+#import "EscapePod.h"
 
-#import "MTSEscapePod.h"
-
-#import "MTSTelemetry.h"
+#import "Telemetry.h"
 
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -16,13 +16,10 @@
 
 #include <stdatomic.h>
 
-#if TARGET_OS_IPHONE
-#import <UIKit/UIDevice.h>
-#endif
 
-static NSString *sTelemetryName = @"MTSEscapePod";
-static MTSEscapePodSignalCallback sSignalCallback = NULL;
-static MTSEscapePodIgnoredThreadProvider sIgnoredThreadProvider = NULL;
+static NSString *sTelemetryName = @"EscapePod";
+static EscapePodSignalCallback sSignalCallback = NULL;
+static EscapePodIgnoredThreadProvider sIgnoredThreadProvider = NULL;
 
 #define MAX_FILE_SIZE (1024 * 256)
 #define MAX_NUMBER_OF_FRAMES 128
@@ -296,7 +293,7 @@ static BOOL get_thread_state_safe(thread_t thread, _STRUCT_MCONTEXT *context)
     kr = thread_get_state(thread, x86_THREAD_STATE64, (thread_state_t) &context->__ss, &stateCount);
 
 #else
-    #warning MTSEscapePod - get_thread_state_safe() not implemented for architecture
+    #warning EscapePod - get_thread_state_safe() not implemented for architecture
 #endif
 
     return (kr == KERN_SUCCESS);
@@ -310,7 +307,7 @@ static void *cursor_get_frame_pointer_safe(Cursor *cursor)
 #elif defined(__x86_64__)
     return (void *)cursor->uap->uc_mcontext->__ss.__rbp;
 #else
-    #warning MTSEscapePod - cursor_get_frame_pointer_safe() not implemented for architecture
+    #warning EscapePod - cursor_get_frame_pointer_safe() not implemented for architecture
     return NULL;
 #endif
 }
@@ -323,7 +320,7 @@ static void *cursor_get_program_counter_safe(Cursor *cursor)
 #elif defined(__x86_64__)
     return (void *)cursor->uap->uc_mcontext->__ss.__rip;
 #else
-    #warning MTSEscapePod - cursor_get_program_counter_safe() not implemented for architecture
+    #warning EscapePod - cursor_get_program_counter_safe() not implemented for architecture
     return NULL;
 #endif
 }
@@ -336,7 +333,7 @@ static void *cursor_get_link_register_safe(Cursor *cursor)
 #elif defined(__x86_64__)
     return NULL;
 #else
-    #warning MTSEscapePod - cursor_get_link_register_safe() not implemented for architecture
+    #warning EscapePod - cursor_get_link_register_safe() not implemented for architecture
     return NULL;
 #endif
 }
@@ -728,23 +725,17 @@ static void sSetupHeader()
 {
     NSString *header = [NSString stringWithFormat:
         @"arch: %@\n"
-        @"uuid: %@\n"
+        @"uidn: %@\n"
         @"name: %@\n"
-        @"path: %@\n"
         @"bund: %@\n"
         @"vers: %@ (%@)\n"
-        @"soft: %@ (%@)\n"
-        @"hard: %@\n"
-        @"hwmd: %@\n",
-        MTSTelemetryGetString(MTSTelemetryStringArchitectureKey),
-        MTSTelemetryGetUUIDString(),
-        MTSTelemetryGetString(MTSTelemetryStringApplicationNameKey),
-        MTSTelemetryGetString(MTSTelemetryStringApplicationPathKey),
-        MTSTelemetryGetString(MTSTelemetryStringBundleIdentifierKey),
-        MTSTelemetryGetString(MTSTelemetryStringApplicationVersionKey), MTSTelemetryGetString(MTSTelemetryStringApplicationBuildKey),
-        MTSTelemetryGetString(MTSTelemetryStringOSVersionKey), MTSTelemetryGetString(MTSTelemetryStringOSBuildKey),
-        MTSTelemetryGetString(MTSTelemetryStringHardwareMachineKey),
-        MTSTelemetryGetString(MTSTelemetryStringHardwareModelKey)
+        @"soft: %@ %@\n",
+        TelemetryGetString(TelemetryStringDeviceArchitectureKey),
+        TelemetryGetUIDNumber(),
+        TelemetryGetString(TelemetryStringApplicationNameKey),
+        TelemetryGetString(TelemetryStringBundleIdentifierKey),
+        TelemetryGetString(TelemetryStringApplicationVersionKey), TelemetryGetString(TelemetryStringApplicationBuildKey),
+        TelemetryGetString(TelemetryStringOSNameKey), TelemetryGetString(TelemetryStringOSVersionKey)
     ];
 
     sStorage.headerString = strdup([header cStringUsingEncoding:NSASCIIStringEncoding]);
@@ -753,7 +744,7 @@ static void sSetupHeader()
 
 #pragma mark - Public Functions
 
-void MTSEscapePodSetCustomString(UInt8 zeroToThree, NSString *string)
+void EscapePodSetCustomString(UInt8 zeroToThree, NSString *string)
 {
     if (zeroToThree >= CUSTOM_STRING_COUNT || !sDispatchQueue) {
         return;
@@ -769,13 +760,13 @@ void MTSEscapePodSetCustomString(UInt8 zeroToThree, NSString *string)
 }
 
 
-OSStatus MTSEscapePodInstall()
+OSStatus EscapePodInstall()
 {
     __block OSStatus result = noErr;
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sDispatchQueue = dispatch_queue_create("MTSEscapePod", DISPATCH_QUEUE_SERIAL);
+        sDispatchQueue = dispatch_queue_create("EscapePod", DISPATCH_QUEUE_SERIAL);
 
         @autoreleasepool {
             NSMutableString *randomString = [NSMutableString stringWithCapacity:64];
@@ -783,7 +774,7 @@ OSStatus MTSEscapePodInstall()
                 [randomString appendFormat:@"%08x", arc4random()];
             }
 
-            NSString *basePath   = [MTSTelemetryGetBasePath() stringByAppendingPathComponent:sTelemetryName];
+            NSString *basePath   = [TelemetryGetBasePath() stringByAppendingPathComponent:sTelemetryName];
             NSString *activePath = [basePath stringByAppendingPathComponent:randomString];
             NSUInteger length = [activePath length] + 1;
 
@@ -845,37 +836,37 @@ OSStatus MTSEscapePodInstall()
 }
 
 
-void MTSEscapePodSetTelemetryName(NSString *telemetryName)
+void EscapePodSetTelemetryName(NSString *telemetryName)
 {
     sTelemetryName = telemetryName;
 }
 
 
-NSString *MTSEscapePodGetTelemetryName()
+NSString *EscapePodGetTelemetryName()
 {
     return sTelemetryName;
 }
 
 
-void MTSEscapePodSetSignalCallback(MTSEscapePodSignalCallback callback)
+void EscapePodSetSignalCallback(EscapePodSignalCallback callback)
 {
     sSignalCallback = callback;
 }
 
 
-MTSEscapePodSignalCallback MTSEscapePodGetSignalCallback(void)
+EscapePodSignalCallback EscapePodGetSignalCallback(void)
 {
     return sSignalCallback;
 }
 
 
-void MTSEscapePodSetIgnoredThreadProvider(MTSEscapePodIgnoredThreadProvider provider)
+void EscapePodSetIgnoredThreadProvider(EscapePodIgnoredThreadProvider provider)
 {
     sIgnoredThreadProvider = provider;
 }
 
 
-MTSEscapePodIgnoredThreadProvider MTSEscapePodGetIgnoredThreadProvider()
+EscapePodIgnoredThreadProvider EscapePodGetIgnoredThreadProvider()
 {
     return sIgnoredThreadProvider;
 }

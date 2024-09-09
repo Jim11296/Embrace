@@ -1,12 +1,13 @@
-// (c) 2014-2020 Ricci Adams.  All rights reserved.
+// (c) 2014-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 #import "CrashReportSender.h"
 
 #import <sys/sysctl.h>
 #import <objc/runtime.h>
 
-#import "MTSTelemetry.h"
-#import "MTSEscapePod.h"
+#import "Telemetry.h"
+#import "EscapePod.h"
 
 
 @implementation CrashReportSender
@@ -96,12 +97,12 @@
 
 + (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL))completionHandler
 {
-    NSString *telemetryName = MTSEscapePodGetTelemetryName();
+    NSString *telemetryName = EscapePodGetTelemetryName();
     
-    if (MTSTelemetryHasContents(telemetryName)) {
-        MTSTelemetrySendWithCallback(telemetryName, ^{
+    if (TelemetryHasContents(telemetryName)) {
+        TelemetrySendWithCallback(telemetryName, ^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                completionHandler(!MTSTelemetryHasContents(telemetryName));
+                completionHandler(!TelemetryHasContents(telemetryName));
             });
         });
     }
@@ -119,11 +120,9 @@
         NSBundle *bundle            = [NSBundle mainBundle];
 
         NSString *deviceName        = [[NSHost currentHost] localizedName];
-        NSString *deviceModel       = MTSTelemetryGetString(MTSTelemetryStringHardwareMachineKey);
 
-        NSString *osFamily          = MTSTelemetryGetString(MTSTelemetryStringOSFamilyKey);
-        NSString *osVersion         = MTSTelemetryGetString(MTSTelemetryStringOSVersionKey);
-        NSString *osBuild           = MTSTelemetryGetString(MTSTelemetryStringOSBuildKey);
+        NSString *osName            = TelemetryGetString(TelemetryStringOSNameKey);
+        NSString *osVersion         = TelemetryGetString(TelemetryStringOSVersionKey);
 
         NSString *bundleName        = [bundle objectForInfoDictionaryKey:(id)kCFBundleNameKey];
         NSString *bundleIdentifier  = [bundle objectForInfoDictionaryKey:(id)kCFBundleIdentifierKey];
@@ -134,17 +133,15 @@
         if (!fileData) return;
 
         NSURLRequest *request = [self _urlRequestWithSnapshot:@{
-            @"GUID":    MTSTelemetryGetUUIDString(),
+            @"uidn":    TelemetryGetUIDNumber(),
             
             @"fn":      @"Logs.zip",
             @"fd":      fileData,
 
             @"dn":      deviceName        ?: @"",
-            @"dm":      deviceModel       ?: @"",
 
-            @"dsn":     osFamily          ?: @"",
+            @"dsn":     osName            ?: @"",
             @"dsv":     osVersion         ?: @"",
-            @"dsb":     osBuild           ?: @"",
 
             @"bn":      bundleName        ?: @"",
             @"bi":      bundleIdentifier  ?: @"",

@@ -1,4 +1,5 @@
-// (c) 2017-2020 Ricci Adams.  All rights reserved.
+// (c) 2017-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 
 @interface SetlistProgressBar : NSView <EmbraceWindowListener>
