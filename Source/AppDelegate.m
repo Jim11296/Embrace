@@ -31,6 +31,13 @@
 #import "Telemetry.h"
 #import "HugUtils.h"
 
+/*
+    EmbracePrivate.m defines endpoints and access keys for telemetry.
+*/
+#if __has_include("../Private/EmbracePrivate.m")
+#include "../Private/EmbracePrivate.m"
+#endif
+
 @interface AppDelegate () <NSMenuItemValidation>
 
 - (IBAction) openFile:(id)sender;
@@ -128,7 +135,22 @@
     
     EscapePodSetTelemetryName(escapePodTelemetryName);
 
-    TelemetryRegisterURL(escapePodTelemetryName, [NSURL URLWithString:@"<redacted>"]);
+#if EmbraceEnableTelemetry
+    TelemetryRegisterURL(
+        escapePodTelemetryName,
+        [NSURL URLWithString:EmbraceEscapePodEndpoint],
+        [NSData dataWithBytes:EmbraceEscapePodKey length:12]
+    );
+
+    TelemetryRegisterURL(
+        [CrashReportSender logsTelemetryName],
+        [NSURL URLWithString:EmbraceLogsEndpoint],
+        [NSData dataWithBytes:EmbraceLogsKey length:12]
+    );
+
+#else
+    #warning EmbracePrivate.m not found, telemetry is disabled
+#endif
 
     if (!HugCrashPadIsDebuggerAttached()) {
         NSString *helperPath = [[NSBundle mainBundle] sharedSupportPath];

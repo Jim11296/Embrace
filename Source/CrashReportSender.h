@@ -6,6 +6,8 @@
 
 @interface CrashReportSender : NSObject
 
++ (NSString *) logsTelemetryName;
+
 + (BOOL) isDebuggerAttached;
 
 + (void) sendCrashReportsWithCompletionHandler:(void (^)(BOOL didSend))completionHandler;

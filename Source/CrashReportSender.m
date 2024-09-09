@@ -12,6 +12,12 @@
 
 @implementation CrashReportSender
 
++ (NSString *) logsTelemetryName
+{
+    return @"Logs";
+}
+
+
 + (BOOL) isDebuggerAttached
 {
     static BOOL sIsAttached = NO;
@@ -46,9 +52,7 @@
 
 + (NSURLRequest *) _urlRequestWithSnapshot:(NSDictionary *)snapshot
 {
-    NSURL               *url     = [NSURL URLWithString:@"<redacted>"];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60];
-    NSMutableData       *body    = [[NSMutableData alloc] init];
+    NSMutableData *body = [[NSMutableData alloc] init];
 
     void (^encodeData)(NSData *) = ^(NSData *data) {
         NSUInteger length = [data length];
@@ -88,10 +92,7 @@
         }
     }
 
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:body];
-    
-    return request;
+    return TelemetryMakeURLRequest([CrashReportSender logsTelemetryName], body);
 }
 
 
