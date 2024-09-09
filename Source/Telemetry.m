@@ -27,6 +27,7 @@ static dispatch_queue_t sTelemetryQueue = nil;
 static NSMutableDictionary *sURLMap = nil;
 static NSMutableDictionary *sSendingFilesMap = nil;
 static NSDictionary *sStringMap = nil;
+static NSMutableDictionary *sKeyMap = nil;
 
 static BOOL sDidInitBasePath = NO;
 static NSString *sBasePath = nil;
@@ -69,7 +70,8 @@ static void sSendContents(NSString *name, BOOL force, void (^callback)())
 {
     BOOL shouldSend = NO;
 
-    NSURL    *URL = [sURLMap objectForKey:name];
+    NSURL *URL = [sURLMap objectForKey:name];
+    if (!URL) return;
 
     NSString *basePath = [TelemetryGetBasePath() stringByAppendingPathComponent:name];
     NSArray  *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:basePath error:NULL];
@@ -112,12 +114,8 @@ static void sSendContents(NSString *name, BOOL force, void (^callback)())
             
             [sendingFilesSet addObject:filename];
             
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:60];
-
             NSString *path = [basePath stringByAppendingPathComponent:filename];
-
-            [request setHTTPMethod:@"POST"];
-            [request setHTTPBody:[NSData dataWithContentsOfFile:path]];
+            NSURLRequest *request = TelemetryMakeURLRequest(name, [NSData dataWithContentsOfFile:path]);
 
             NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 NSHTTPURLResponse *httpResponse = nil;
@@ -183,10 +181,17 @@ BOOL TelemetryHasContents(NSString *name)
 }
 
 
-void TelemetryRegisterURL(NSString *name, NSURL *url)
+void TelemetryRegisterURL(NSString *name, NSURL *url, NSData *key)
 {
-    if (!sURLMap) sURLMap = [NSMutableDictionary dictionary];
-    [sURLMap setObject:url forKey:name];
+    if (url) {
+        if (!sURLMap) sURLMap = [NSMutableDictionary dictionary];
+        [sURLMap setObject:url forKey:name];
+    }
+
+    if (key) {
+        if (!sKeyMap) sKeyMap = [NSMutableDictionary dictionary];
+        [sKeyMap setObject:key forKey:name];
+    }
 }
 
 
@@ -219,6 +224,29 @@ void TelemetrySendAll(BOOL force)
 extern void TelemetrySendWithCallback(NSString *name, void (^callback)())
 {
     _TelemetrySend(name, YES, callback);
+}
+
+
+NSURLRequest *TelemetryMakeURLRequest(NSString *name, NSData *data)
+{
+    NSURL  *URL = [sURLMap objectForKey:name];
+    NSData *key = [sKeyMap objectForKey:name];
+    
+    if (!URL) return nil;
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL: URL
+                                                           cachePolicy: NSURLRequestReloadIgnoringCacheData
+                                                       timeoutInterval: 60];
+
+    if (key) {
+        NSString *encoded = [key base64EncodedStringWithOptions:0];
+        [request setValue:encoded forHTTPHeaderField:@"X-Key"];
+    }
+
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:data];
+
+    return request;
 }
 
 

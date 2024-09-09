@@ -1,13 +1,27 @@
 #!/bin/sh
 
 BUILD_PREFIX="Embrace"
-
-TEAM_ID="XXXXXXXXXX"
-KEYCHAIN_PROFILE="<redacted>"
-
 ZIP_TO="$HOME/Desktop"
-UPLOAD_TO="<redacted>"
-PUBLIC_URL="<redacted>"
+
+# ----------------------------------
+# Fill variables from Private/Archive.plist
+
+PRIVATE_PLIST=$(dirname $0)/../Private/Archive.plist
+
+if [ ! -f "$PRIVATE_PLIST" ]; then
+    echo "Private/Archive.plist is missing, cannot archive." >&2
+    exit 1
+fi
+
+get_private_setting ()
+{
+    defaults read "$PRIVATE_PLIST" "$1"
+}
+
+TEAM_ID=$(          get_private_setting "team-id"          )
+KEYCHAIN_PROFILE=$( get_private_setting "keychain-profile" )
+UPLOAD_TO=$(        get_private_setting "upload-to"        )
+PUBLIC_URL=$(       get_private_setting "public-url"       )
 
 # ----------------------------------
 
@@ -43,6 +57,11 @@ add_log ()
 get_plist_build ()
 {
     printf $(defaults read "$1" CFBundleVersion | sed 's/\s//g' )
+}
+
+get_private_setting ()
+{
+    defaults read "$1"
 }
 
 # Prevent error log spam

@@ -21,11 +21,13 @@ extern void TelemetrySetBasePath(NSString *basePath);
 extern NSString *TelemetryGetBasePath(void);
 
 extern BOOL TelemetryHasContents(NSString *name);
-extern void TelemetryRegisterURL(NSString *name, NSURL *url);
+extern void TelemetryRegisterURL(NSString *name, NSURL *url, NSData *key);
 extern void TelemetrySend(NSString *name, BOOL force);
 extern void TelemetrySendAll(BOOL force);
 
 extern void TelemetrySendWithCallback(NSString *name, void (^callback)());
+
+extern NSURLRequest *TelemetryMakeURLRequest(NSString *name, NSData *data);
 
 extern NSNumber *TelemetryGetUIDNumber(void);
 extern NSString *TelemetryGetString(TelemetryStringKey key);

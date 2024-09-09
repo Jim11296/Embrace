@@ -1,8 +1,7 @@
+#include? "../Private/Private.xcconfig"
+
 SDKROOT = macosx
 MACOSX_DEPLOYMENT_TARGET = 11.0
-
-CODE_SIGN_IDENTITY = Mac Developer
-DEVELOPMENT_TEAM = XXXXXXXXXX
 
 CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
 CLANG_CXX_LIBRARY = libc++

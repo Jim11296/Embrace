@@ -247,6 +247,9 @@
 		55169D4E1F9ACBFA003779FA /* test_3s_g4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_g4.m4a; path = "Resources/Test Sounds/test_3s_g4.m4a"; sourceTree = "<group>"; };
 		55169D4F1F9ACBFA003779FA /* test_3s_f4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = test_3s_f4.m4a; path = "Resources/Test Sounds/test_3s_f4.m4a"; sourceTree = "<group>"; };
 		5517B46F233B3F6C00FB45A4 /* Archive.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = Archive.sh; path = Build/Archive.sh; sourceTree = "<group>"; };
+		551A794A2C8F8C23006BB34A /* EmbracePrivate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = EmbracePrivate.m; path = Private/EmbracePrivate.m; sourceTree = "<group>"; };
+		551A794B2C8F9D45006BB34A /* Archive.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Archive.plist; path = Private/Archive.plist; sourceTree = "<group>"; };
+		551A794D2C8FA1FE006BB34A /* Private.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Private.xcconfig; path = Private/Private.xcconfig; sourceTree = "<group>"; };
 		551CE71121B3A3D800D422E4 /* HugLevelMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugLevelMeter.h; path = Source/HugLevelMeter.h; sourceTree = "<group>"; };
 		551CE71221B3A3D800D422E4 /* HugLevelMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HugLevelMeter.m; path = Source/HugLevelMeter.m; sourceTree = "<group>"; };
 		551CE71821B3CE9500D422E4 /* HugLinearRamper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HugLinearRamper.h; path = Source/HugLinearRamper.h; sourceTree = "<group>"; };
@@ -545,6 +548,16 @@
 			name = "Crash Report";
 			sourceTree = "<group>";
 		};
+		551A794F2C8FA453006BB34A /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				551A794B2C8F9D45006BB34A /* Archive.plist */,
+				551A794D2C8FA1FE006BB34A /* Private.xcconfig */,
+				551A794A2C8F8C23006BB34A /* EmbracePrivate.m */,
+			);
+			name = Private;
+			sourceTree = "<group>";
+		};
 		551CE71421B3A3F100D422E4 /* Hug */ = {
 			isa = PBXGroup;
 			children = (
@@ -633,6 +646,7 @@
 			children = (
 				5517B46E233B3F6500FB45A4 /* Build */,
 				55AF60C818C94BD700BE2212 /* Config */,
+				551A794F2C8FA453006BB34A /* Private */,
 				55394ED01884C94F00474E20 /* Embrace.entitlements */,
 				55DD538C18B99A530084628D /* CrashPad.entitlements */,
 				55EF15881D692DCC0021C9A7 /* Worker.entitlements */,
