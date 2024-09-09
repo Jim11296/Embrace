@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,10 +14,10 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5mm-8W-u52">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
+        <window title="Effects" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="5mm-8W-u52">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="131" y="498" width="340" height="157"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1127"/>
             <view key="contentView" id="wIn-2X-2Cg">
                 <rect key="frame" x="0.0" y="0.0" width="340" height="157"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -25,10 +26,8 @@
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="F2a-ag-Lat"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Djo-0R-cRX"/>
-                    <toolbarItem implicitItemIdentifier="7073E97C-63B1-42C7-80C0-D9513F38356A" explicitItemIdentifier="Gear" label="Actions" paletteLabel="Actions" image="NSActionTemplate" title="Item 1" visibilityPriority="2000" id="V7A-fq-fJ9">
+                    <toolbarItem implicitItemIdentifier="7073E97C-63B1-42C7-80C0-D9513F38356A" explicitItemIdentifier="Gear" label="Actions" paletteLabel="Actions" image="NSActionTemplate" title="Item 1" visibilityPriority="2000" sizingBehavior="auto" id="V7A-fq-fJ9">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="48" height="25"/>
-                        <size key="maxSize" width="55" height="30"/>
                         <popUpButton key="view" verticalHuggingPriority="750" id="Vhz-Hc-1lJ">
                             <rect key="frame" x="0.0" y="14" width="55" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -82,6 +81,6 @@
         <userDefaultsController representsSharedInstance="YES" id="Rzj-OB-R5q"/>
     </objects>
     <resources>
-        <image name="NSActionTemplate" width="15" height="15"/>
+        <image name="NSActionTemplate" width="20" height="20"/>
     </resources>
 </document>

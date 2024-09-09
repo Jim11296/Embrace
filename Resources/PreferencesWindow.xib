@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,7 +30,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="498" y="766" width="420" height="180"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1127"/>
             <view key="contentView" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="420" height="180"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -37,25 +38,19 @@
             <toolbar key="toolbar" implicitIdentifier="38BFB752-B595-4AB6-8241-959620DD59FE" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="hoP-hc-kjO">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="e0s-ax-GFW"/>
-                    <toolbarItem implicitItemIdentifier="BBF88B26-3D55-4A44-8B32-FCDA1244F834" label="Advanced" paletteLabel="Advanced" tag="2" image="gearshape.2" catalog="system" selectable="YES" id="Sd7-ph-OZb">
-                        <size key="minSize" width="48" height="33"/>
-                        <size key="maxSize" width="48" height="33"/>
+                    <toolbarItem implicitItemIdentifier="BBF88B26-3D55-4A44-8B32-FCDA1244F834" label="Advanced" paletteLabel="Advanced" tag="2" image="gearshape.2" catalog="system" sizingBehavior="auto" selectable="YES" id="Sd7-ph-OZb">
                         <connections>
                             <action selector="selectPane:" target="-2" id="31x-1i-l1J"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="9DE293EF-469E-4CF5-A0DC-48EF9383E77E" label="General" paletteLabel="General" image="gearshape" catalog="system" selectable="YES" id="anK-jv-iEB">
+                    <toolbarItem implicitItemIdentifier="9DE293EF-469E-4CF5-A0DC-48EF9383E77E" label="General" paletteLabel="General" image="gearshape" catalog="system" sizingBehavior="auto" selectable="YES" id="anK-jv-iEB">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="39" height="32"/>
-                        <size key="maxSize" width="39" height="32"/>
                         <connections>
                             <action selector="selectPane:" target="-2" id="qkQ-y4-wdY"/>
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="v5U-07-fgt"/>
-                    <toolbarItem implicitItemIdentifier="0158C887-6CE4-4F1D-855E-03A984EEA45C" label="Appearance" paletteLabel="Appearance" tag="1" image="macwindow.on.rectangle" catalog="system" selectable="YES" id="X9F-cn-Knh">
-                        <size key="minSize" width="32" height="32"/>
-                        <size key="maxSize" width="32" height="32"/>
+                    <toolbarItem implicitItemIdentifier="0158C887-6CE4-4F1D-855E-03A984EEA45C" label="Appearance" paletteLabel="Appearance" tag="1" image="macwindow.on.rectangle" catalog="system" sizingBehavior="auto" selectable="YES" id="X9F-cn-Knh">
                         <connections>
                             <action selector="selectPane:" target="-2" id="k8c-4v-YNV"/>
                         </connections>
@@ -163,7 +158,7 @@
                         </binding>
                     </connections>
                 </popUpButton>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DwI-z5-J5x">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DwI-z5-J5x">
                     <rect key="frame" x="32" y="74" width="92" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sample Rate:" id="JFU-pt-5ye">
@@ -172,7 +167,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bHk-mt-zRP">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bHk-mt-zRP">
                     <rect key="frame" x="10" y="45" width="114" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Playback:" id="kju-xZ-p4W">
@@ -181,7 +176,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A82-J6-b36">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A82-J6-b36">
                     <rect key="frame" x="10" y="103" width="114" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Main Output:" id="xts-21-jLd">
@@ -254,7 +249,7 @@
                         </binding>
                     </connections>
                 </button>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FNK-A3-Tfj">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FNK-A3-Tfj">
                     <rect key="frame" x="-4" y="126" width="428" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="center" title="Stop playback to modify the output device." id="Kve-QP-Jom">
@@ -270,7 +265,7 @@
                         </binding>
                     </connections>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8wU-sq-Hw0">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8wU-sq-Hw0">
                     <rect key="frame" x="244" y="74" width="61" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Frames:" id="nbH-VG-HNv">
@@ -286,7 +281,7 @@
             <rect key="frame" x="0.0" y="0.0" width="420" height="166"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="khf-AK-51B">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="khf-AK-51B">
                     <rect key="frame" x="18" y="57" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="AppleScript handler:" id="5Fc-fL-uac">
@@ -295,7 +290,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FNt-B8-HCr">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FNt-B8-HCr">
                     <rect key="frame" x="37" y="124" width="109" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Allow addition of:" id="rKB-Kd-bmk">
@@ -367,7 +362,7 @@
             <rect key="frame" x="0.0" y="0.0" width="420" height="64"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Nh-8K-Hn0">
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Nh-8K-Hn0">
                     <rect key="frame" x="18" y="22" width="128" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Theme:" id="FLf-NS-NoQ">
@@ -403,6 +398,6 @@
     <resources>
         <image name="gearshape" catalog="system" width="16" height="16"/>
         <image name="gearshape.2" catalog="system" width="20" height="16"/>
-        <image name="macwindow.on.rectangle" catalog="system" width="20" height="16"/>
+        <image name="macwindow.on.rectangle" catalog="system" width="19" height="15"/>
     </resources>
 </document>

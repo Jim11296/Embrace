@@ -1,4 +1,5 @@
-// (c) 2014-2020 Ricci Adams.  All rights reserved.
+// (c) 2014-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 #import "AppDelegate.h"
 
@@ -26,8 +27,8 @@
 
 #import "HugCrashPad.h"
 #import "CrashReportSender.h"
-#import "MTSEscapePod.h"
-#import "MTSTelemetry.h"
+#import "EscapePod.h"
+#import "Telemetry.h"
 #import "HugUtils.h"
 
 @interface AppDelegate () <NSMenuItemValidation>
@@ -121,13 +122,13 @@
     
     [EffectType embrace_registerMappedEffects];
 
-    MTSTelemetrySetBasePath(GetApplicationSupportDirectory());
+    TelemetrySetBasePath(GetApplicationSupportDirectory());
     
     NSString *escapePodTelemetryName = @"Crashes";
     
-    MTSEscapePodSetTelemetryName(escapePodTelemetryName);
+    EscapePodSetTelemetryName(escapePodTelemetryName);
 
-    MTSTelemetryRegisterURL(escapePodTelemetryName, [NSURL URLWithString:@"<redacted>"]);
+    TelemetryRegisterURL(escapePodTelemetryName, [NSURL URLWithString:@"<redacted>"]);
 
     if (!HugCrashPadIsDebuggerAttached()) {
         NSString *helperPath = [[NSBundle mainBundle] sharedSupportPath];
@@ -139,11 +140,11 @@
     
         HugCrashPadSetHelperPath(helperPath);
 
-        MTSEscapePodSetIgnoredThreadProvider(HugCrashPadGetIgnoredThread);
-        MTSEscapePodSetSignalCallback(HugCrashPadSignalHandler);
+        EscapePodSetIgnoredThreadProvider(HugCrashPadGetIgnoredThread);
+        EscapePodSetSignalCallback(HugCrashPadSignalHandler);
 
-        MTSEscapePodInstall();
-        MTSTelemetrySend(MTSEscapePodGetTelemetryName(), NO);
+        EscapePodInstall();
+        TelemetrySend(EscapePodGetTelemetryName(), NO);
     }
 
     _setlistController      = [[SetlistController alloc] init];
@@ -152,7 +153,7 @@
 
     [self _showPreviouslyVisibleWindows];
 
-    BOOL hasCrashReports = MTSTelemetryHasContents(MTSEscapePodGetTelemetryName());
+    BOOL hasCrashReports = TelemetryHasContents(EscapePodGetTelemetryName());
     
     [[self crashReportMenuItem] setHidden:!hasCrashReports];
     [[self crashReportSeparator] setHidden:!hasCrashReports];
@@ -573,7 +574,7 @@
         return [_setlistController validateMenuItem:menuItem];
 
     } else if (action == @selector(sendCrashReports:)){
-        BOOL hasCrashReports = MTSTelemetryHasContents(MTSEscapePodGetTelemetryName());
+        BOOL hasCrashReports = TelemetryHasContents(EscapePodGetTelemetryName());
 
         [[self crashReportMenuItem]  setHidden:!hasCrashReports];
         [[self crashReportSeparator] setHidden:!hasCrashReports];

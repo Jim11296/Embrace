@@ -1,7 +1,7 @@
-// (c) 2017-2020 musictheory.net, LLC
+// (c) 2017-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
-#import "MTSTelemetry.h"
-#import "MTSBase.h"
+#import "Telemetry.h"
 
 #include <mach/mach.h>
 #include <mach-o/dyld.h>
@@ -17,33 +17,10 @@ static const char *sArch = "x86_64";
 #elif defined(__i386__)
 static const char *sArch = "i386";
 #else
-#warning MTSEscapePod - Unknown architecture
+#warning EscapePod - Unknown architecture
 static const char *sArch = "unknown";
 #endif
 
-static const uint8_t s_encoded_0[] = { 232,247,174,237,225,227,232,233,238,229,0 };
-static const uint8_t s_encoded_1[] = { 232,247,174,237,239,228,229,236,0         };
-static const uint8_t s_encoded_2[] = { 235,229,242,238,174,239,243,246,229,242,243,233,239,238,0 };
-
-#define hw_machine_string     s_encoded_0
-#define hw_model_string       s_encoded_1
-#define kern_osversion_string s_encoded_2
-
-static void sDecodeString(char *destination, const uint8_t *source)
-{
-    uint8_t *s = (uint8_t *)source;
-    uint8_t *d = (uint8_t *)destination;
-
-    while (1) {
-        uint8_t c = *s++;
-        if (c == 0) {
-            *d++ = 0;
-            break;
-        } else {
-            *d++ = c - 128;
-        }
-    }
-}
 
 static dispatch_queue_t sTelemetryQueue = nil;
 
@@ -58,11 +35,6 @@ static void sSetupStringMap()
 {
     if (sStringMap) return;
 
-    char  hwmachine[256];
-    char  hwmodel[256];
-    char  kernosversion[256];
-    char  path[256];
-
     NSMutableDictionary *stringMap = [NSMutableDictionary dictionary];
 
     CFBundleRef bundle             = CFBundleGetMainBundle();
@@ -71,50 +43,6 @@ static void sSetupStringMap()
     CFStringRef bundleVersion      = CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleVersionKey);
     CFStringRef bundleIdentifier   = CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleIdentifierKey);
 
-    // Get sysctlbyname() strings (hwmachine, hwmodel, and osversion)
-    //
-    // Note:
-    // "{ProductName}{Major},{Minor}" string is "hwmodel" on macOS and "hwmachine" on iOS
-    // "{Codename}" is "hwmachine" on iOS 
-    //
-    {
-        const uint8_t *names[3]  = { hw_machine_string, hw_model_string, kern_osversion_string };
-        char          *values[3] = { hwmachine,         hwmodel,         kernosversion         };
-
-        for (int i = 0; i < 3; i++) {
-            char name[256];
-            sDecodeString(name, names[i]);
-
-            size_t length = 256;
-
-            if (sysctlbyname(name, values[i], &length, NULL, 0) != noErr) {
-                values[i][0] = 0;
-            }
-        }
-    }
-
-    // Get path
-    {
-        uint32_t size = sizeof(path);
-        if (_NSGetExecutablePath(path, &size) != 0) {
-            path[0] = 0;
-        }
-    }
-
-#if TARGET_OS_IPHONE
-    UIDevice *device = [UIDevice currentDevice];
-    if (![[device systemVersion] getCString:osversion maxLength:256 encoding:NSUTF8StringEncoding]) {
-        osversion[0] = 0;
-    }
-
-    [stringMap setObject:@(hwmachine)     forKey:@(MTSTelemetryStringHardwareMachineKey)];
-    [stringMap setObject:@(hwmodel)       forKey:@(MTSTelemetryStringHardwareModelKey)];
-
-    [stringMap setObject:@"iOS"           forKey:@(MTSTelemetryStringOSFamilyKey)];
-    [stringMap setObject:@(osversion)     forKey:@(MTSTelemetryStringOSVersionKey)];
-    [stringMap setObject:@(kernosversion) forKey:@(MTSTelemetryStringOSBuildKey)];
-    
-#else
     NSOperatingSystemVersion operatingSystemVersion = [[NSProcessInfo processInfo] operatingSystemVersion];
 
     NSString *osVersion = [NSString stringWithFormat:@"%ld.%ld.%ld",
@@ -122,22 +50,15 @@ static void sSetupStringMap()
         (long) operatingSystemVersion.minorVersion,
         (long) operatingSystemVersion.patchVersion];
 
-    [stringMap setObject:@(hwmodel)       forKey:@(MTSTelemetryStringHardwareMachineKey)];
+    [stringMap setObject:@"macOS"  forKey:@(TelemetryStringOSNameKey)];
+    [stringMap setObject:osVersion forKey:@(TelemetryStringOSVersionKey)];
 
-    [stringMap setObject:@"macOS"         forKey:@(MTSTelemetryStringOSFamilyKey)];
-    [stringMap setObject:osVersion        forKey:@(MTSTelemetryStringOSVersionKey)];
-    [stringMap setObject:@(kernosversion) forKey:@(MTSTelemetryStringOSBuildKey)];
+    if (bundleName)         [stringMap setObject:(__bridge id)bundleName         forKey:@(TelemetryStringApplicationNameKey)];
+    if (bundleIdentifier)   [stringMap setObject:(__bridge id)bundleIdentifier   forKey:@(TelemetryStringBundleIdentifierKey)];
+    if (bundleShortVersion) [stringMap setObject:(__bridge id)bundleShortVersion forKey:@(TelemetryStringApplicationVersionKey)];
+    if (bundleVersion)      [stringMap setObject:(__bridge id)bundleVersion      forKey:@(TelemetryStringApplicationBuildKey)];
 
-#endif
-
-    [stringMap setObject:@(path) forKey:@(MTSTelemetryStringApplicationPathKey)];
-
-    if (bundleName)         [stringMap setObject:(__bridge id)bundleName         forKey:@(MTSTelemetryStringApplicationNameKey)];
-    if (bundleIdentifier)   [stringMap setObject:(__bridge id)bundleIdentifier   forKey:@(MTSTelemetryStringBundleIdentifierKey)];
-    if (bundleShortVersion) [stringMap setObject:(__bridge id)bundleShortVersion forKey:@(MTSTelemetryStringApplicationVersionKey)];
-    if (bundleVersion)      [stringMap setObject:(__bridge id)bundleVersion      forKey:@(MTSTelemetryStringApplicationBuildKey)];
-
-    if (sArch) [stringMap setObject:@(sArch) forKey:@(MTSTelemetryStringArchitectureKey)];
+    if (sArch) [stringMap setObject:@(sArch) forKey:@(TelemetryStringDeviceArchitectureKey)];
 
     sStringMap = stringMap;
 }
@@ -150,7 +71,7 @@ static void sSendContents(NSString *name, BOOL force, void (^callback)())
 
     NSURL    *URL = [sURLMap objectForKey:name];
 
-    NSString *basePath = [MTSTelemetryGetBasePath() stringByAppendingPathComponent:name];
+    NSString *basePath = [TelemetryGetBasePath() stringByAppendingPathComponent:name];
     NSArray  *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:basePath error:NULL];
 
     if ([contents count] > 0) {
@@ -230,14 +151,14 @@ static void sSendContents(NSString *name, BOOL force, void (^callback)())
 
 #pragma mark - Public Functions
 
-void MTSTelemetrySetBasePath(NSString *basePath)
+void TelemetrySetBasePath(NSString *basePath)
 {
     sBasePath = basePath;
     sDidInitBasePath = YES;
 }
 
 
-NSString *MTSTelemetryGetBasePath(void)
+NSString *TelemetryGetBasePath(void)
 {
     if (!sDidInitBasePath) {
         NSArray *appSupportPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -253,26 +174,26 @@ NSString *MTSTelemetryGetBasePath(void)
 }
 
 
-BOOL MTSTelemetryHasContents(NSString *name)
+BOOL TelemetryHasContents(NSString *name)
 {
-    NSString *basePath = [MTSTelemetryGetBasePath() stringByAppendingPathComponent:name];
+    NSString *basePath = [TelemetryGetBasePath() stringByAppendingPathComponent:name];
     NSArray  *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:basePath error:NULL];
 
     return [contents count] > 0;
 }
 
 
-void MTSTelemetryRegisterURL(NSString *name, NSURL *url)
+void TelemetryRegisterURL(NSString *name, NSURL *url)
 {
     if (!sURLMap) sURLMap = [NSMutableDictionary dictionary];
     [sURLMap setObject:url forKey:name];
 }
 
 
-static void _MTSTelemetrySend(NSString *name, BOOL force, void (^callback)())
+static void _TelemetrySend(NSString *name, BOOL force, void (^callback)())
 {
     if (!sTelemetryQueue) {
-        sTelemetryQueue = dispatch_queue_create("MTSTelemetry", DISPATCH_QUEUE_SERIAL);
+        sTelemetryQueue = dispatch_queue_create("Telemetry", DISPATCH_QUEUE_SERIAL);
     }
 
     dispatch_async(sTelemetryQueue, ^{
@@ -282,50 +203,41 @@ static void _MTSTelemetrySend(NSString *name, BOOL force, void (^callback)())
 }
 
 
-void MTSTelemetrySend(NSString *name, BOOL force)
+void TelemetrySend(NSString *name, BOOL force)
 {
-    _MTSTelemetrySend(name, force, nil);
+    _TelemetrySend(name, force, nil);
 }
 
 
-void MTSTelemetrySendAll(BOOL force)
+void TelemetrySendAll(BOOL force)
 {
     for (NSString *name in sURLMap) {
-        _MTSTelemetrySend(name, force, nil);
+        _TelemetrySend(name, force, nil);
     }
 }
 
-extern void MTSTelemetrySendWithCallback(NSString *name, void (^callback)())
+extern void TelemetrySendWithCallback(NSString *name, void (^callback)())
 {
-    _MTSTelemetrySend(name, YES, callback);
+    _TelemetrySend(name, YES, callback);
 }
 
 
-NSData *MTSTelemetryGetUUIDData()
+NSNumber *TelemetryGetUIDNumber()
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    NSData *uuidData = [defaults objectForKey:@"IXUUID"];
-    if (!uuidData) {
-        uuid_t uuidBytes;
-        [[NSUUID UUID] getUUIDBytes:uuidBytes];
-
-        uuidData = [[NSData alloc] initWithBytes:uuidBytes length:sizeof(uuidBytes)];
-        [defaults setObject:uuidData forKey:@"IXUUID"];
+    NSNumber *uidNumber = [defaults objectForKey:@"TelemetryUID"];
+    if (!uidNumber) {
+        uidNumber = @( arc4random() % 0xfffff);
+        [defaults setObject:uidNumber forKey:@"TelemetryUID"];
         [defaults synchronize];
     }
 
-    return uuidData;
+    return uidNumber;
 }
 
 
-NSString *MTSTelemetryGetUUIDString()
-{
-    return MTSGetHexStringWithData(MTSTelemetryGetUUIDData());
-}
-
-
-NSString *MTSTelemetryGetString(MTSTelemetryStringKey key)
+NSString *TelemetryGetString(TelemetryStringKey key)
 {
     if (!sStringMap) sSetupStringMap();
     return [sStringMap objectForKey:@(key)];
