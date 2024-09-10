@@ -25,6 +25,11 @@ int main(int argc, const char * argv[])
     NSString *logPath = GetApplicationSupportDirectory();
     logPath = [logPath stringByAppendingPathComponent:@"Logs"];
 
+#warning Future Ricci - if you are reading this, you are trying to build a copy of 3.x from the
+#warning public GitHub repository. None of our work on open-sourcing Embrace was ported to 3.x.
+#warning Your best bet is to grab the 3.x branch from the internal source server.
+#warning Additionally, since we always forget: you should be using Xcode 11.3.1 on the Mojave laptop.
+
     EmbraceLogSetDirectory(logPath);
     sLogHello();
     
