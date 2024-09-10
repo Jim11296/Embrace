@@ -306,6 +306,7 @@ static double sMaxVolume = 1.0 - (2.0 / 32767.0);
 - (void) _sendDistributedNotification
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        // This is public API, use "com.iccir.Embrace" even if our bundle ID is "com.ricciadams.opensource.Embrace"
         [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"com.iccir.Embrace.playerUpdate" object:nil userInfo:nil options:NSDistributedNotificationDeliverImmediately];
     });
 }

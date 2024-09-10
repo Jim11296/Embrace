@@ -548,6 +548,13 @@ NSString *GetApplicationSupportDirectory()
 }
 
 
+NSString *GetBundleIdentifierWithSuffix(NSString *suffix)
+{
+    NSString *mainBundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    return [NSString stringWithFormat:@"%@.%@", mainBundleIdentifier, suffix];
+}
+
+
 BOOL IsAppearanceDarkAqua(NSView *view)
 {
     NSAppearance *effectiveAppearance = view ?

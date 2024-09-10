@@ -376,7 +376,7 @@
 
         NSXPCInterface *interface = [NSXPCInterface interfaceWithProtocol:@protocol(WorkerProtocol)];
 
-        NSString *serviceName = @"com.iccir.Embrace.EmbraceWorker";
+        NSString *serviceName = GetBundleIdentifierWithSuffix(@"EmbraceWorker");
     
         NSXPCConnection *connection = [[NSXPCConnection alloc] initWithServiceName:serviceName];
         [connection setRemoteObjectInterface:interface];

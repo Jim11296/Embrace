@@ -49,7 +49,9 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *)notification
 {
-    _embracesAtLaunch = [NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.iccir.Embrace"];
+    NSString *embraceBundleIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"EmbraceBundleIdentifier"];
+    
+    _embracesAtLaunch = [NSRunningApplication runningApplicationsWithBundleIdentifier:embraceBundleIdentifier];
 
     _timer = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
     
