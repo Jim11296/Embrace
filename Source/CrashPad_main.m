@@ -28,7 +28,7 @@
 }
 
 
-- (BOOL) _runAlert
+- (BOOL) _runAlertWithIcon:(NSImage *)icon
 {
     [NSApp activateIgnoringOtherApps:YES];
 
@@ -36,7 +36,8 @@
 
     [alert setMessageText:    NSLocalizedString(@"Embrace encountered a critical error.", nil)];
     [alert setInformativeText:NSLocalizedString(@"Your current song will continue to play, but you must reopen the app to play other songs or access other features.", nil)];
-    
+    [alert setIcon:icon];
+
     NSButton *reopenButton = [alert addButtonWithTitle:NSLocalizedString(@"Reopen",  nil)];
     NSButton *quitButton   = [alert addButtonWithTitle:NSLocalizedString(@"Quit", nil)];
         
@@ -58,9 +59,10 @@
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
     
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        BOOL restart = [self _runAlert];
+        NSImage *embraceIcon = [[_embracesAtLaunch lastObject] icon];
+        
+        BOOL restart = [self _runAlertWithIcon:embraceIcon];
         NSURL *bundleURL = nil;
         
         for (NSRunningApplication *app in _embracesAtLaunch) {

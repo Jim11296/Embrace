@@ -1139,6 +1139,7 @@
 		};
 		55E1F6BB18AB146C00CF847C /* Remove Debug Files */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 8;
 			files = (
 			);
