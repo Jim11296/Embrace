@@ -3,6 +3,46 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import <dlfcn.h>
+
+
+// See SecTranslocate.h in Security/libsecurity_translocate
+// 
+static Boolean  (*SecTranslocateIsTranslocatedURL)(CFURLRef path, bool *isTranslocated, CFErrorRef *error);
+static CFURLRef (*SecTranslocateCreateOriginalPathForURL)(CFURLRef translocatedPath, CFErrorRef *error);
+
+static void *sGetSecTranslocateSymbol(NSString *suffix)
+{
+    NSString *name = [NSString stringWithFormat:@"SecTranslocate%@", suffix];
+    return dlsym(RTLD_NEXT, [name cStringUsingEncoding:NSUTF8StringEncoding]);
+}
+
+
+static NSURL *sGetRelaunchURL(NSURL *inURL)
+{
+    if (!SecTranslocateIsTranslocatedURL) {
+        SecTranslocateIsTranslocatedURL = sGetSecTranslocateSymbol(@"IsTranslocatedURL");
+    }
+    
+    if (!SecTranslocateCreateOriginalPathForURL) {
+        SecTranslocateCreateOriginalPathForURL = sGetSecTranslocateSymbol(@"CreateOriginalPathForURL");
+    }
+
+    NSURL *originalURL = nil;
+    CFURLRef cfURL = (__bridge CFURLRef)inURL;
+
+    if (SecTranslocateIsTranslocatedURL && SecTranslocateCreateOriginalPathForURL) {
+        bool isTranslocated = false;
+        CFErrorRef error;
+        SecTranslocateIsTranslocatedURL(cfURL, &isTranslocated, &error);
+        
+        if (isTranslocated) {
+            originalURL = CFBridgingRelease(SecTranslocateCreateOriginalPathForURL(cfURL, &error));
+        }
+    }
+    
+    return originalURL ? originalURL : inURL;
+}
 
 
 @interface CrashPadAppDelegate : NSObject <NSApplicationDelegate>
@@ -58,7 +98,7 @@
     
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         NSImage *embraceIcon = [[_embracesAtLaunch lastObject] icon];
         
@@ -66,7 +106,7 @@
         NSURL *bundleURL = nil;
         
         for (NSRunningApplication *app in _embracesAtLaunch) {
-            bundleURL = [app bundleURL];
+            bundleURL = sGetRelaunchURL([app bundleURL]);
             kill([app processIdentifier], 9);
         }
 
@@ -75,10 +115,15 @@
             [configuration setCreatesNewApplicationInstance:YES];
             [configuration setAllowsRunningApplicationSubstitution:NO];
 
-            [[NSWorkspace sharedWorkspace] openApplicationAtURL:bundleURL configuration:configuration completionHandler:nil];
+            [[NSWorkspace sharedWorkspace] openApplicationAtURL: bundleURL
+                                                  configuration: configuration
+                                              completionHandler: ^(NSRunningApplication *app, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [NSApp terminate:self];
+                });
+            }];
         }
 
-        [NSApp terminate:self];
     });
 }
 
