@@ -4,8 +4,6 @@
 #import <Foundation/Foundation.h>
 
 
-extern NSString * const EmbraceLockedTrackPasteboardType;
-extern NSString * const EmbraceQueuedTrackPasteboardType;
 
 extern NSColor * const TrackTableViewGetPlayingTextColor(void);
 extern NSColor * const TrackTableViewGetRowHighlightColor(BOOL emphasized);

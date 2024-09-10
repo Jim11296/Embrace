@@ -15,6 +15,9 @@
 
 NSString * const TracksControllerDidModifyTracksNotificationName = @"TracksControllerDidModifyTracks";
 
+NSString *EmbraceLockedTrackPasteboardType = nil;
+NSString *EmbraceQueuedTrackPasteboardType = nil;
+
 static NSString * const sTrackUUIDsKey = @"track-uuids";
 static NSString * const sModifiedAtKey = @"modified-at";
 
@@ -35,6 +38,20 @@ static NSString * const sModifiedAtKey = @"modified-at";
     NSArray   *_dragCacheMetadataArray;
     NSArray   *_dragCacheFileURLs;
     NSInteger  _dragCacheChangeCount;
+}
+
++ (void) initialize
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        long pid = (long)getpid();
+
+        NSString *lockedSuffix = [NSString stringWithFormat:@"%ld.Track.Locked", pid];
+        NSString *queuedSuffix = [NSString stringWithFormat:@"%ld.Track.Queued", pid];
+
+        EmbraceLockedTrackPasteboardType = GetBundleIdentifierWithSuffix(lockedSuffix);
+        EmbraceQueuedTrackPasteboardType = GetBundleIdentifierWithSuffix(queuedSuffix);
+    });
 }
 
 

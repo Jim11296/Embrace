@@ -4,9 +4,7 @@
 #import "TrackTableView.h"
 #import "TrackTableCellView.h"
 #import "Preferences.h"
-
-NSString * const EmbraceLockedTrackPasteboardType = @"com.iccir.Embrace.Track.Locked";
-NSString * const EmbraceQueuedTrackPasteboardType = @"com.iccir.Embrace.Track.Queued";
+#import "TracksController.h"
 
 
 extern NSColor * const TrackTableViewGetPlayingTextColor(void)

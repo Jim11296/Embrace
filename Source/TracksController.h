@@ -5,6 +5,9 @@
 
 extern NSString * const TracksControllerDidModifyTracksNotificationName;
 
+extern NSString *EmbraceLockedTrackPasteboardType;
+extern NSString *EmbraceQueuedTrackPasteboardType;
+
 @class Track, TrackTableView;
 
 @interface TracksController : NSObject <NSTableViewDelegate, NSTableViewDataSource>
